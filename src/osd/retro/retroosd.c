@@ -11,8 +11,9 @@ void osd_exit(running_machine &machine)
 
    	global_free(P1_device);
   	global_free(P2_device);
+  	global_free(P3_device);
+  	global_free(P4_device);
    	global_free(retrokbd_device);
-   	global_free(mouse_device);
 }
 
 void osd_init(running_machine *machine)
@@ -150,10 +151,11 @@ void osd_update(running_machine *machine, int skip_redraw)
    	if (keyboard_input)
 		if (ui_ipt_pushchar != -1)
    		{
-      			ui_input_push_char_event(machine, our_target, (unicode_char)ui_ipt_pushchar);
       			ui_ipt_pushchar = -1;
+      			ui_input_push_char_event(machine, our_target, (unicode_char)ui_ipt_pushchar);
    		}
 }
+
 
  //============================================================
 // osd_wait_for_debugger
@@ -163,6 +165,7 @@ void osd_wait_for_debugger(running_device *device, int firststop)
 {
    // we don't have a debugger, so we just return here
 }
+
 
 //============================================================
 //  update_audio_stream
