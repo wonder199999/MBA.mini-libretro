@@ -35,6 +35,72 @@ extern "C" int mmain(int argc, const char *argv);
 #endif
 #include "rendersw.c"
 
+//============================================================
+//  CONSTANTS
+//============================================================
+
+// fake a keyboard mapped to retro joypad
+enum
+{
+	KEY_F11,
+	KEY_TAB,
+	KEY_F3,
+	KEY_F2,
+	KEY_START,
+	KEY_COIN,
+	KEY_BUTTON_1,
+	KEY_BUTTON_2,
+	KEY_BUTTON_3,
+	KEY_BUTTON_4,
+	KEY_BUTTON_5,
+	KEY_BUTTON_6,
+	KEY_JOYSTICK_U,
+	KEY_JOYSTICK_D,
+	KEY_JOYSTICK_L,
+	KEY_JOYSTICK_R,
+	KEY_TOTAL
+};
+
+#ifdef DEBUG_LOG
+   #define LOG(msg) fprintf(stderr, "%s\n", msg)
+#else
+   #define LOG(msg)
+#endif
+
+//============================================================
+//  GLOBALS
+//============================================================
+
+// rendering target
+static render_target *our_target = NULL;
+
+// input device
+static input_device *P1_device; // P1 JOYPAD
+static input_device *P2_device; // P2 JOYPAD
+static input_device *P3_device; // P3 JOYPAD
+static input_device *P4_device; // P4 JOYPAD
+static input_device *retrokbd_device; // KEYBD
+
+// state
+static UINT8 pad_state[4][KEY_TOTAL];
+static UINT16 retrokbd_state[RETROK_LAST];
+static UINT16 retrokbd_state2[RETROK_LAST];
+
+struct kt_table
+{
+	const char *mame_key_name;
+   	int retro_key_name;
+   	input_item_id mame_key;
+};
+
+//enables / disables tate mode
+static int tate = 0;
+static int screenRot = 0;
+int vertical, orient;
+
+static char MgamePath[1024];
+static char MgameName[512];
+
 char g_rom_dir[1024];
 static bool draw_this_frame;
 static bool set_par = false;
@@ -46,7 +112,7 @@ static unsigned int pauseg = 0;
 static unsigned int mame_reset = 0;
 static unsigned int FirstTimeUpdate = 1;
 static unsigned int turbo_enable;
-static unsigned int turbo_delay = 5;
+static unsigned int turbo_delay;
 static unsigned int turbo_state;
 static unsigned int sample_rate = 48000;
 static double refresh_rate = 60.0;
@@ -90,83 +156,6 @@ static void extract_directory(char *buf, const char *path, size_t size)
       		buf[0] = '\0';
 }
 
-
-//============================================================
-//  CONSTANTS
-//============================================================
-
-// fake a keyboard mapped to retro joypad
-enum
-{
-	KEY_F11,
-	KEY_TAB,
-	KEY_F3,
-	KEY_F2,
-	KEY_START,
-	KEY_COIN,
-	KEY_BUTTON_1,
-	KEY_BUTTON_2,
-	KEY_BUTTON_3,
-	KEY_BUTTON_4,
-	KEY_BUTTON_5,
-	KEY_BUTTON_6,
-	KEY_JOYSTICK_U,
-	KEY_JOYSTICK_D,
-	KEY_JOYSTICK_L,
-	KEY_JOYSTICK_R,
-	KEY_TOTAL
-};
-
-#ifdef DEBUG_LOG
-   #define LOG(msg) fprintf(stderr, "%s\n", msg)
-#else
-   #define LOG(msg)
-#endif
-
-
-//============================================================
-//  GLOBALS
-//============================================================
-
-// rendering target
-static render_target *our_target = NULL;
-
-// input device
-static input_device *P1_device; // P1 JOYPAD
-static input_device *P2_device; // P2 JOYPAD
-static input_device *retrokbd_device; // KEYBD
-static input_device *mouse_device;    // MOUSE
-
-// state
-static UINT8 P1_state[KEY_TOTAL];
-static UINT8 P2_state[KEY_TOTAL];
-static UINT16 retrokbd_state[RETROK_LAST];
-static UINT16 retrokbd_state2[RETROK_LAST];
-
-struct kt_table
-{
-	const char *mame_key_name;
-   	int retro_key_name;
-   	input_item_id mame_key;
-};
-
-/*
-static int mouseLX,mouseLY;
-static int mouseBUT[4];
-*/
-
-int optButtonLayoutP1 = 0; //for player 1
-int optButtonLayoutP2 = 0; //for player 2
-
-//enables / disables tate mode
-static int tate = 0;
-static int screenRot = 0;
-int vertical, orient;
-
-static char MgamePath[1024];
-static char MgameName[512];
-
-
 //============================================================
 //  RETRO
 //============================================================
@@ -192,8 +181,9 @@ static const char *xargv[] = {
 	"-gamma",
 	"1.0",
 	"-rompath",
-	NULL, NULL,
-	NULL, NULL,
+	NULL,
+	NULL,
+	NULL,
 };
 
 
@@ -291,7 +281,7 @@ int executeGame(char *path)
 	{
 		write_log("parse path failed! path=%s\n", path);
 		strcpy(MgameName, path);
-	//	return -1;
+//		return -1;
 	}
 
 	//Find the game info. Exit if game driver was not found.
