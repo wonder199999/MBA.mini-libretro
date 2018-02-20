@@ -1,6 +1,6 @@
-MAME.0139-LIBRETRO
+MAME-mini :
 
-Port of MAME 0.139 for libretro.
+From MAME2010-libretro.
  
 Source base is mame0.139 official source: 
 
