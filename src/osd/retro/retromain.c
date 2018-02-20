@@ -75,11 +75,11 @@ enum
 static render_target *our_target = NULL;
 
 // input device
-static input_device *P1_device; // P1 JOYPAD
-static input_device *P2_device; // P2 JOYPAD
-static input_device *P3_device; // P3 JOYPAD
-static input_device *P4_device; // P4 JOYPAD
-static input_device *retrokbd_device; // KEYBD
+static input_device *P1_device;		// P1 JOYPAD
+static input_device *P2_device; 	// P2 JOYPAD
+static input_device *P3_device; 	// P3 JOYPAD
+static input_device *P4_device; 	// P4 JOYPAD
+static input_device *retrokbd_device;	// KEYBD
 
 // state
 static UINT8 pad_state[4][KEY_TOTAL];
@@ -94,8 +94,8 @@ struct kt_table
 };
 
 //enables / disables tate mode
-static int tate = 0;
-static int screenRot = 0;
+static unsigned int tate;
+static unsigned int screenRot;
 int vertical, orient;
 
 static char MgamePath[1024];
@@ -181,6 +181,8 @@ static const char *xargv[] = {
 	"-gamma",
 	"1.0",
 	"-rompath",
+
+	NULL,
 	NULL,
 	NULL,
 	NULL,
@@ -235,13 +237,10 @@ static int parsePath(char *path, char *gamePath, char *gameName)
 	return 1;
 }
 
-
 static int getGameInfo(char *gameName, int *rotation, int *driverIndex)
 {
 	int gameFound = 0;
 	int drvindex;
-
-//FIXME for 0.149 , prevouisly in driver.h
 #if 1
 	//check invalid game name
 	if (gameName[0] == 0)
@@ -266,13 +265,13 @@ static int getGameInfo(char *gameName, int *rotation, int *driverIndex)
 int executeGame(char *path)
 {
 	/* cli_frontend does the heavy lifting; if we have osd-specific options, we create a derivative of cli_options and add our own */
-	int paramCount;
 	int result = 0;
 	int gameRot = 0;
+	int paramCount;
 	int driverIndex;
 
-	FirstTimeUpdate = 1;
 	screenRot = 0;
+	FirstTimeUpdate = 1;
 
 	//split the path to directory and the name without the zip extension
 	result = parsePath(path, MgamePath, MgameName);
@@ -291,46 +290,24 @@ int executeGame(char *path)
 		return -2;
 	}
 
-	//tate enabled
-	if (tate)
+	if (gameRot != ROT0)
 	{
-		if (gameRot == ROT0)		/* horizontal game */
-			screenRot = 1;
-		else if (gameRot & ORIENTATION_FLIP_X)
+		screenRot = 1;
+		if (gameRot & ORIENTATION_FLIP_X)
 		{
 			write_log("*********** flip X \n");
-			screenRot = 3;
-		}
-	}
-	else
-	{
-		if (gameRot != ROT0)
-		{
-			screenRot = 1;
-
-			if (gameRot & ORIENTATION_FLIP_X)
-			{
-				write_log("*********** flip X \n");
-				screenRot = 2;
-			}
+			screenRot = 2;
 		}
 	}
 
 	write_log("creating frontend... game=%s\n", MgameName);
 
 	//find how many parameters we have
-	for (paramCount = 0; xargv[paramCount] != NULL; paramCount++);
+	for (paramCount = 0; xargv[paramCount] != NULL; paramCount++) ;
 
 	xargv[paramCount++] = (char*)g_rom_dir;
 
-	if (tate)
-	{
-		if (screenRot == 3)
-			xargv[paramCount++] = (char*)"-rol";
-		else if (screenRot)
-			xargv[paramCount++] = (char*)"-ror";
-	}
-	else
+	if (!tate)
 	{
 		if (screenRot == 2)
 			xargv[paramCount++] = (char*)"-rol";
