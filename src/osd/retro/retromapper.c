@@ -49,6 +49,7 @@ void retro_set_environment(retro_environment_t cb)
       	{ "mame_mini_turbo_delay", 	"Set autofire pulse speed; medium|slow|fast" },
       	{ "mame_mini_sample_rate", 	"Set sample rate (Restart); 48000Hz|44100Hz|32000Hz|22050Hz" },
       	{ "mame_mini_kb_input", 	"Keyboard input; enabled|disabled" },
+      	{ "mame_mini_tate_mode", 	"TATE mode(Restart); disabled|enabled" },
       	{ "mame_mini_adj_brightness",
 	   "Set brightness; default|+1%|+2%|+3%|+4%|+5%|+6%|+7%|+8%|+9%|+10%|+11%|+12%|+13%|+14%|+15%|+16%|+17%|+18%|+19%|+20%|-20%|-19%|-18%|-17%|-16%|-15%|-14%|-13%|-12%|-11%|-10%|-9%|-8%|-7%|-6%|-5%|-4%|-3%|-2%|-1%" },
       	{ "mame_mini_adj_contrast",
@@ -77,6 +78,17 @@ static void check_variables(void)
 		else
 			set_par = false;
    	}
+
+   	var.key = "mame_mini_tate_mode";
+   	var.value = NULL;
+   	if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
+   	{
+      		if (!strcmp(var.value, "enabled"))
+			tate = 1;
+		else
+			tate = 0;
+   	}
+	else tate = 0;
 
    	var.key = "mame_mini_kb_input";
    	var.value = NULL;
@@ -211,23 +223,10 @@ void init_input_descriptors(void)
    		{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_START,	"Start" },
 
 	struct retro_input_descriptor desc[] = {
-		{ 0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_LEFT,	"Joystick Left" }, \
-   		{ 0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_RIGHT, 	"Joystick Right" }, \
-   		{ 0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_UP,    	"Joystick Up" }, \
-   		{ 0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_DOWN,  	"Joystick Down" }, \
-   		{ 0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_A,     	"Button 1" }, \
-   		{ 0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_B,     	"Button 2" }, \
-   		{ 0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_X,     	"Button 3" }, \
-   		{ 0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_Y,     	"Button 4" }, \
-   		{ 0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_L,     	"Button 5" }, \
-   		{ 0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_R,     	"Button 6" }, \
-   		{ 0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_L2,     "UI Menu" }, \
-   		{ 0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_R2,     "Turbo Button" }, \
-   		{ 0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_L3,     "Service" }, \
-   		{ 0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_R3,     "Framerate" }, \
-   		{ 0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_SELECT,	"Insert Coin" }, \
-   		{ 0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_START,	"Start" },
-
+   		{ 0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_L2,     	"UI Menu" },
+   		{ 0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_L3,     	"Service" },
+   		{ 0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_R3,     	"Framerate" },
+      		describe_buttons(0)
       		describe_buttons(1)
       		describe_buttons(2)
       		describe_buttons(3)
@@ -244,7 +243,7 @@ void retro_get_system_info(struct retro_system_info *info)
 #ifndef GIT_VERSION
 	#define GIT_VERSION ""
 #endif
-   	info->library_version = GIT_VERSION  "(Based by MAME0.139)";
+   	info->library_version = GIT_VERSION  "(Based by 0.139 romset)";
    	info->valid_extensions = "zip|chd|7z";
    	info->need_fullpath = true;
    	info->block_extract = true;
@@ -252,13 +251,16 @@ void retro_get_system_info(struct retro_system_info *info)
 
 void retro_get_system_av_info(struct retro_system_av_info *info)
 {
-	info->geometry.base_width   = rtwi;
-   	info->geometry.base_height  = rthe;
+	int width =  (tate && vertical) ? rthe : rtwi;
+	int height = (tate && vertical) ? rtwi : rthe;
 
-   	info->geometry.max_width    = rtwi * 2;
-   	info->geometry.max_height   = rthe * 2;
+	info->geometry.base_width   = width;
+   	info->geometry.base_height  = height;
 
-   	float display_ratio = set_par ? vertical ? (float)rthe / (float)rtwi : (float)rtwi / (float)rthe : vertical ? 3.0f / 4.0f : 4.0f / 3.0f;
+   	info->geometry.max_width    = width * 2;
+   	info->geometry.max_height   = height * 2;
+
+   	float display_ratio = set_par ? (vertical && !tate) ? (float)height / (float)width : (float)width / (float)height : (vertical && !tate) ? 3.0f / 4.0f : 4.0f / 3.0f;
    	info->geometry.aspect_ratio = display_ratio;
 
    	info->timing.fps            = refresh_rate;
@@ -444,13 +446,13 @@ void retro_unload_game(void)
 
 
 // Stubs
+unsigned retro_get_region(void) {return RETRO_REGION_NTSC; }
 size_t retro_serialize_size(void) { return 0; }
+size_t retro_get_memory_size(unsigned type) {return 0; }
 bool retro_serialize(void *data, size_t size) { return false; }
 bool retro_unserialize(const void *data, size_t size) { return false; }
-unsigned retro_get_region(void) {return RETRO_REGION_NTSC; }
-void *retro_get_memory_data(unsigned type) {return 0; }
-size_t retro_get_memory_size(unsigned type) {return 0; }
 bool retro_load_game_special(unsigned game_type, const struct retro_game_info *info, size_t num_info) { return false; }
+void *retro_get_memory_data(unsigned type) {return 0; }
 void retro_cheat_reset(void) { }
 void retro_cheat_set(unsigned unused, bool unused1, const char *unused2) { }
 void retro_set_controller_port_device(unsigned in_port, unsigned device) { }
