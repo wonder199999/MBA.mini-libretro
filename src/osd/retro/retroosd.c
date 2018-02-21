@@ -69,45 +69,6 @@ void osd_update(running_machine *machine, int skip_redraw)
       		/* get the minimum width/height for the current layout */
 		render_target_get_minimum_size(our_target, &minwidth, &minheight);
 
-      		if (adjust_opt[0])
-      		{
-			adjust_opt[0] = 0;
-
-			if (adjust_opt[2] && adjust_opt[1])
-			{
-				adjust_opt[2] = 0;
-				refresh_rate = (machine->primary_screen == NULL) ? screen_device::k_default_frame_rate : ATTOSECONDS_TO_HZ(machine->primary_screen->frame_period().attoseconds);
-				update_geometry();
-			}
-
-			if ((adjust_opt[3] || adjust_opt[4] || adjust_opt[5]) && adjust_opt[1])
-			{
-				screen_device *screen = screen_first(*machine);
-				render_container *container = render_container_get_screen(screen);
-				render_container_user_settings settings;
-				render_container_get_user_settings(container, &settings);
-
-				if (adjust_opt[3])
-				{
-					adjust_opt[3] = 0;
-					settings.brightness = arroffset[0] + 1.0f;
-					render_container_set_user_settings(container, &settings);
-				}
-				if (adjust_opt[4])
-				{
-					adjust_opt[4] = 0;
-					settings.contrast = arroffset[1] + 1.0f;
-					render_container_set_user_settings(container, &settings);
-				}
-				if (adjust_opt[5])
-				{
-					adjust_opt[5] = 0;
-					settings.gamma = arroffset[2] + 1.0f;
-					render_container_set_user_settings(container, &settings);
-				}
-			}
-      		}
-
 		if (FirstTimeUpdate)
 		{
          		FirstTimeUpdate = 0;
@@ -117,16 +78,57 @@ void osd_update(running_machine *machine, int skip_redraw)
          		rthe = minheight;
       		}
 
-		if (minwidth != rtwi || minheight != rthe)
-		{
-         		write_log("Res change: old(%dX%d) new(%dX%d) %d\n", rtwi, rthe, minwidth, minheight, topw);
+      		if (adjust_opt[0])
+      		{
+			adjust_opt[0] = 0;
+			if (adjust_opt[1])
+			{
+				if (adjust_opt[2])
+				{
+					adjust_opt[2] = 0;
+					refresh_rate = (machine->primary_screen == NULL) ? screen_device::k_default_frame_rate :
+							ATTOSECONDS_TO_HZ(machine->primary_screen->frame_period().attoseconds);
+					update_geometry();
+				}
 
-         		rtwi = topw = minwidth;
-         		rthe = minheight;
+				if ((adjust_opt[3] || adjust_opt[4] || adjust_opt[5]))
+				{
+					screen_device *screen = screen_first(*machine);
+					render_container *container = render_container_get_screen(screen);
+					render_container_user_settings settings;
+					render_container_get_user_settings(container, &settings);
 
-	 		adjust_opt[0] = adjust_opt[2] = 1;
-      		}
+					if (adjust_opt[3])
+					{
+						adjust_opt[3] = 0;
+						settings.brightness = arroffset[0] + 1.0f;
+						render_container_set_user_settings(container, &settings);
+					}
+					if (adjust_opt[4])
+					{
+						adjust_opt[4] = 0;
+						settings.contrast = arroffset[1] + 1.0f;
+						render_container_set_user_settings(container, &settings);
+					}
+					if (adjust_opt[5])
+					{
+						adjust_opt[5] = 0;
+						settings.gamma = arroffset[2] + 1.0f;
+						render_container_set_user_settings(container, &settings);
+					}
+				}
 
+				if (adjust_opt[6])
+				{
+					adjust_opt[6] = 0;
+					machine->device("maincpu")->set_clock_scale(arroffset[3]);
+					/*
+					machine->device("slave")->set_clock_scale(1.0f);
+					machine->device("mcu")->set_clock_scale(1.0f);
+					*/
+				}
+      			}
+		}
       		/* make that the size of our target */
       		render_target_set_bounds(our_target, rtwi, rthe, 0);
       		/* get the list of primitives for the target at the current size */
@@ -141,7 +143,6 @@ void osd_update(running_machine *machine, int skip_redraw)
       		rgb888_draw_primitives(primlist->head, surfptr, rtwi, rthe, rtwi);
 #endif
       		osd_lock_release(primlist->lock);
-
 	}
    	else
       		draw_this_frame = false;
