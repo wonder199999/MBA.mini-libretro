@@ -116,8 +116,8 @@ static unsigned int turbo_delay;
 static unsigned int turbo_state;
 static unsigned int sample_rate = 48000;
 static double refresh_rate = 60.0;
-static unsigned adjust_opt[6] = {0/*Enable/Disable*/, 0/*Limit*/, 0/*GetRefreshRate*/, 0/*Brightness*/, 0/*Contrast*/, 0/*Gamma*/};
-static float arroffset[3] = {0/*For brightness*/, 0/*For contrast*/, 0/*For gamma*/};
+static unsigned adjust_opt[7] = {0/*Enable/Disable*/, 0/*Limit*/, 0/*GetRefreshRate*/, 0/*Brightness*/, 0/*Contrast*/, 0/*Gamma*/, 0/*Overclock*/};
+static float arroffset[4] = {0/*For brightness*/, 0/*For contrast*/, 0/*For gamma*/, 1.0/*For overclock*/};
 static void update_geometry();
 
 static void extract_basename(char *buf, const char *path, size_t size)
@@ -181,7 +181,6 @@ static const char *xargv[] = {
 	"-gamma",
 	"1.0",
 	"-rompath",
-
 	NULL,
 	NULL,
 	NULL,
