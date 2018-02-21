@@ -196,7 +196,7 @@ static void check_variables(void)
    	{
 		float temp_value = arroffset[3];
 		if (!strcmp(var.value, "disabled"))
-			arroffset[3] = 1.0;
+			arroffset[3] = 1.0f;
 		else
 			arroffset[3] = (float)atoi(var.value) / 100.0f;
 
