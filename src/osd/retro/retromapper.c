@@ -43,13 +43,14 @@ void retro_set_video_refresh(retro_video_refresh_t cb) { video_cb = cb; }
 void retro_set_environment(retro_environment_t cb)
 {
 	static const struct retro_variable vars[] = {
+      	{ "mame_mini_cpu_overclock",	"CPU overclock; disabled|110%|120%|130%|140%|150%|160%|170%|180%|190%|200%" },
       	{ "mame_mini_frame_skip", 	"Set frameskip; 0|1|2|3|4|automatic" },
 	{ "mame_mini_aspect_ratio",	"Core provided aspect ratio; DAR|PAR" },
       	{ "mame_mini_turbo_button", 	"Enable autofire; disabled|button 1|button 2|R2 to button 1 mapping|R2 to button 2 mapping" },
       	{ "mame_mini_turbo_delay", 	"Set autofire pulse speed; medium|slow|fast" },
       	{ "mame_mini_sample_rate", 	"Set sample rate (Restart); 48000Hz|44100Hz|32000Hz|22050Hz" },
       	{ "mame_mini_kb_input", 	"Keyboard input; enabled|disabled" },
-      	{ "mame_mini_tate_mode", 	"TATE mode(Restart); disabled|enabled" },
+      	{ "mame_mini_tate_mode", 	"T.A.T.E mode(Restart); disabled|enabled" },
       	{ "mame_mini_adj_brightness",
 	   "Set brightness; default|+1%|+2%|+3%|+4%|+5%|+6%|+7%|+8%|+9%|+10%|+11%|+12%|+13%|+14%|+15%|+16%|+17%|+18%|+19%|+20%|-20%|-19%|-18%|-17%|-16%|-15%|-14%|-13%|-12%|-11%|-10%|-9%|-8%|-7%|-6%|-5%|-4%|-3%|-2%|-1%" },
       	{ "mame_mini_adj_contrast",
@@ -189,6 +190,20 @@ static void check_variables(void)
 			adjust_opt[0] = adjust_opt[5] = 1;
    	}
 
+   	var.key = "mame_mini_cpu_overclock";
+   	var.value = NULL;
+   	if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
+   	{
+		float temp_value = arroffset[3];
+		if (!strcmp(var.value, "disabled"))
+			arroffset[3] = 1.0;
+		else
+			arroffset[3] = (float)atoi(var.value) / 100.0f;
+
+		if (temp_value != arroffset[3])
+			adjust_opt[0] = adjust_opt[6] = 1;
+   	}
+
    	if (tmp_ar != set_par)
 		update_geometry();
 }
@@ -235,11 +250,10 @@ void init_input_descriptors(void)
    	environ_cb(RETRO_ENVIRONMENT_SET_INPUT_DESCRIPTORS, desc);
 }
 
-
 void retro_get_system_info(struct retro_system_info *info)
 {
 	memset(info, 0, sizeof(*info));
-   	info->library_name = "MAME2010_MINI";
+   	info->library_name = "MAME2010 MINI";
 #ifndef GIT_VERSION
 	#define GIT_VERSION ""
 #endif
@@ -281,8 +295,8 @@ void retro_get_system_av_info(struct retro_system_av_info *info)
 		}
 		common_factor = temp_height;
 	}
-	write_log("Current aspect ratio = %d : %d , screen refresh rate = %f , sound sample rate = %.1f \n", set_par ? vertical ? rthe / common_factor : rtwi / common_factor :
-			vertical ? 3 : 4, set_par ? vertical ? rtwi / common_factor : rthe / common_factor : vertical ? 4 : 3, info->timing.fps, info->timing.sample_rate);
+	write_log("Current aspect ratio = %d : %d , screen refresh rate = %f , sound sample rate = %.1f \n", set_par ? vertical ? height / common_factor : width / common_factor :
+			vertical ? 3 : 4, set_par ? vertical ? width / common_factor : height / common_factor : vertical ? 4 : 3, info->timing.fps, info->timing.sample_rate);
 #endif
 }
 
@@ -315,7 +329,6 @@ void retro_init (void)
 
    	if (log_cb)
       		log_cb(RETRO_LOG_INFO, "CONTENT_DIRECTORY: %s", retro_content_directory);
-
 
    	if (environ_cb(RETRO_ENVIRONMENT_GET_SAVE_DIRECTORY, &save_dir) && save_dir)
    	{
@@ -380,19 +393,16 @@ bool retro_load_game(const struct retro_game_info *info)
 {
 	char basename[128];
    	int result;
-
 #ifdef M16B
 	enum retro_pixel_format fmt = RETRO_PIXEL_FORMAT_RGB565;
 #else
    	enum retro_pixel_format fmt = RETRO_PIXEL_FORMAT_XRGB8888;
 #endif
-
    	if (!environ_cb(RETRO_ENVIRONMENT_SET_PIXEL_FORMAT, &fmt))
    	{
       		fprintf(stderr, "RGB pixel format is not supported.\n");
       		exit(0);
    	}
-
 	init_input_descriptors();
 
    	check_variables();
@@ -401,7 +411,6 @@ bool retro_load_game(const struct retro_game_info *info)
 #else
    	memset(videoBuffer, 0, 1024 * 1024 * 2 * 2);
 #endif
-
 #if defined(HAVE_OPENGL) || defined(HAVE_OPENGLES)
 	#ifdef HAVE_OPENGLES
    	   hw_render.context_type = RETRO_HW_CONTEXT_OPENGLES2;
@@ -430,7 +439,7 @@ bool retro_load_game(const struct retro_game_info *info)
 
    	video_set_frameskip(set_frame_skip);
 
-   	for (int i = 0; i < 6; i++)
+   	for (int i = 0; i < 7; i++)
 		adjust_opt[i] = 1;
 
    	return 1;
