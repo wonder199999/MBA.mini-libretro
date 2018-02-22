@@ -1,3 +1,184 @@
-Support the following :
+Support the following :  (Parent roms with the "*")
 
-/* Capcom System 1 */
+Capcom System 1 - 
+*1941:Counter Attack(World)
+	1941:Counter Attack(Japan)
+
+*Adventure Quiz Capcom World 2(Japan 920611)
+
+*Cadillacs and Dinosaurs(World 930201)
+	Cadillacs and Dinosaurs(bootleg with PIC16c57, set1)  - /* Not Working */
+	Cadillacs and Dinosaurs(bootleg with PIC16c57, set2)  - /* Not Working */
+	Cadillacs and Dinosaurs(USA 930201)
+	Cadillacs Kyouryuu Shin Seiki(Japan 930201)
+	Dinosaur Hunter(Chinese bootleg Cadillacs and Dinosaurs)  - /* Not Working */
+
+*Captain Commando(World 911202)
+	Captain Commando(bootleg)  - /* Not Working */
+	Captain Commando(Japan 910928)
+	Captain Commando(Japan 911202)
+	Captain Commando(USA 910928)
+	Captain Commando(World 911104)
+
+*Carrier Air Wing(World 901012)
+	Carrier Air Wing(USA 901012)
+	Carrier Air Wing(World 901009)
+	U.S Navy(Japan 901012)
+
+*Dynasty Wars(USA, set1)
+	Dynasty Wars(USA, set2)
+	Tenchi wo Kurau(Japan)
+
+*Final Fight(World)
+	Final Fight(Japan 900112)
+	Final Fight(Japan 900305)
+	Final Fight(Japan)
+	Final Fight(USA 900112)
+	Final Fight(USA 900613)
+	Final Fight(USA)
+	Street Smart / Final Fight(Japan, hack)
+
+*Forgotten Worlds(World)
+	Forgotten Worlds(USA, 88618B B-Board)
+	Forgotten Worlds(USA, 88621B B-Board)
+	Forgotten Worlds(Japan Old Ver.)
+	Lost Worlds(Japan)
+
+*Ghouls'n Ghosts(World)
+	Daimakaimura(Japan Resale Ver.)
+	Daimakaimura(Japan)
+	Ghouls'n Ghosts(USA)
+
+*King of Dragons, The(World 910711)
+	King of Dragons, The(Japan 910805)
+	King of Dragons, The(USA 910910)
+
+*Knight of the Round(World 911127)
+	Knight of the Round(Japan 911127)
+	Knight of the Round(USA 911127)
+	Knight of the Round(bootleg)  - /* Not Working */
+
+*Magic Sword : Heroic Fantasy(World 900725)
+	Magic Sword : Heroic Fantasy(USA 900725)
+	Magic Sword : Heroic Fantasy(World 900623)
+	Magic Sword(Japan 900623)
+
+*Mega Man : The Power Battle(CPS1, Asia 951006)
+	Rockman : The Power Battle(CPS1, Japan 950923)
+
+*Mega Twins(World 900619)
+	Chiki Chiki Boys(Japan 900619)
+
+*Mercs(World 900302)
+	Mercs(USA 900302)
+	Mercs(USA 900608)
+	Senjou no Ookami II(Japan 900302)
+
+*Muscle Bomber Duo : Ultimate Team Battle(World 931206)
+	Muscle Bomber Duo : Ultimate Team Battle(Japan 931206)
+
+*Nemo(World 901130)
+	Nemo(Japan 901120)
+
+*Pang! 3(Euro 950601)
+	Pang! 3(Euro 950511, not encrypted)
+	Pang! 3 : Kaitou Tachi no Karei na Gogo(Japan 950511)
+
+*Pnickies(Japan 940608)
+
+*Punisher, The(World 930422)
+	Biaofeng Zhanjing(Chinese bootleg of the Punisher)
+	Punisher, The(bootleg with PIC16c57, set1)  - /* Not Working */
+	Punisher, The(bootleg with PIC16c57, set2)  - /* Not Working */
+	Punisher, The(bootleg with PIC16c57, set3)  - /* Not Working */
+	Punisher, The(Japan 930422)
+	Punisher, The(USA 930422)
+
+*Quiz & Dragons : Capcom Quiz Game(USA 920701)
+	Quiz & Dragons : Capcom Quiz Game(Japan 940921)
+
+*Quiz Tonosama no Yabou 2 : Zenkoku-ban(Japan 950123)
+
+*Saturday Night Slam Masters(World 930713)
+	Muscle Bomber : The Boby Explosion(Japan 930713)
+	Saturday Night Slam Masters(USA 930713)
+
+*Street Fighter II': Champion Edition(World 920313)
+	Street Fighter II': Champion Edition(Accelerator Pt.II, Bootleg)
+	Street Fighter II': Champion Edition(Accelerator!, Bootleg)
+	Street Fighter II': Champion Edition(Double K.O. TurboII, bootleg)
+	Street Fighter II': Champion Edition(Japan 920513)
+	Street Fighter II': Champion Edition(M1, bootleg)  - /* Not Working */
+	Street Fighter II': Champion Edition(M2, bootleg)
+	Street Fighter II': Champion Edition(M3, bootleg)  - /* Not Working */
+	Street Fighter II': Champion Edition(M4, bootleg)
+	Street Fighter II': Champion Edition(M5, bootleg)
+	Street Fighter II': Champion Edition(M6, bootleg)
+	Street Fighter II': Champion Edition(M7, bootleg)
+	Street Fighter II': Champion Edition(Rainbow set 1, bootleg)
+	Street Fighter II': Champion Edition(Rainbow set 2, bootleg)
+	Street Fighter II': Champion Edition(Rainbow set 3, bootleg)
+	Street Fighter II': Champion Edition(Red Wave, bootleg)
+	Street Fighter II': Champion Edition(USA 920313)
+	Street Fighter II': Champion Edition(USA 920513)
+	Street Fighter II': Champion Edition(USA 920803)
+	Street Fighter II': Champion Edition(V004, bootleg)
+	Street Fighter II': Champion Edition(Xiang long, Chinese bootleg)
+	Street Fighter II': Champion Edition(YYC, bootleg)
+	Street Fighter II': Magic Delta Turbo(bootleg)  - /* Not Working */
+
+*Street Fighter II': Hyper Fighting(World 921209)
+	Street Fighter II' Turbo: Hyper Fighting(Japan 921209)
+	Street Fighter II': Hyper Fighting(USA 921209)
+
+*Street Fighter II: The World Warrior(World 910522)
+	Street Fighter II: The World Warrior(Japan 910214)
+	Street Fighter II: The World Warrior(Japan 910306)
+	Street Fighter II: The World Warrior(Japn 911210)
+	Street Fighter II: The World Warrior(Quicken Pt-I, bootleg)
+	Street Fighter II: The World Warrior(TAB Austria, bootleg)
+	Street Fighter II: The World Warrior(Thunder Edition, bootleg)
+	Street Fighter II: The World Warrior(USA 910206)
+	Street Fighter II: The World Warrior(USA 910214)
+	Street Fighter II: The World Warrior(USA 910228)
+	Street Fighter II: The World Warrior(USA 910318)
+	Street Fighter II: The World Warrior(USA 910411)
+	Street Fighter II: The World Warrior(USA 910522)
+	Street Fighter II: The World Warrior(USA 911101)
+	Street Fighter II: The World Warrior(World 910214)
+
+*Strider(USA, set 1)
+	Strider(USA, set 2)
+	Strider Hiryu(Japan Resale Ver.)
+	Strider Hiryu(Japan)
+
+*Three Wonders(World 910520)
+	Three Wonders(hack)
+	Three Wonders(USA 910520)
+	Wonders 3(Japan 910520)
+
+*U.N. Squadron(USA)
+	Area 88(Japan)
+
+*Varth: Operation Thunderstorm(World 920714)
+	Varth: Operation Thunderstorm(Japan 920714)
+	Varth: Operation Thunderstorm(USA 920612)
+	Varth: Operation Thunderstorm(World 920612)
+
+*Warriors of Fate(World 921002)
+	Huo Feng Huang(Chinese bootleg of Sangokushi II)
+	Sangokushi II(Asia 921005)
+	Tenchi wo Kurau II: Sekiheki no Tatakai(Japan 921031)
+	Warriors of Fate(USA 921031)
+
+*Willow(USA)
+	Willow(Japan, English)
+	Willow(Japan, Japanese)
+
+
+
+
+
+
+
+
