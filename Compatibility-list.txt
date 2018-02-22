@@ -1,6 +1,9 @@
-Support the following :  (Parent roms with the "*")
+Support the following :  (Parent roms with the "*" && based by mame0.139 romset)
 
-Capcom System 1 - 
+/ ******************** /
+/ * Capcom System 1  * /
+/ ******************** /
+
 *1941:Counter Attack(World)
 	1941:Counter Attack(Japan)
 
@@ -177,8 +180,19 @@ Capcom System 1 -
 
 
 
+/ ******************** /
+/ * Capcom System 2  * /
+/ ******************** /
 
 
 
+/ ******************** /
+/ * IREM M92 Board  * /
+/ ******************** /
 
+
+
+/ ******************** /
+/ * NEO GEO  * /
+/ ******************** /
 
