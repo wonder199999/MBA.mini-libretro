@@ -234,6 +234,10 @@ const game_driver * const drivers[] =
 
 	DRIVER( fcrash )	/* bootleg of Final Fight */
 
+	/* New clones */
+	DRIVER( sfzch )
+	DRIVER( wofch )
+
 	/* Part 3 - Capcom CPS2 games */
 	/* list completed by CPS2Shock */
 	/* http://cps2shock.retrogames.com */
