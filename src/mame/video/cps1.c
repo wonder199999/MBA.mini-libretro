@@ -1152,8 +1152,6 @@ static const struct gfx_range mapper_pang3_table[] =
 };
 
 
-#ifdef MESS
-
 #define mapper_sfzch	{ 0x20000, 0, 0, 0 }, mapper_sfzch_table
 static const struct gfx_range mapper_sfzch_table[] =
 {
@@ -1161,8 +1159,6 @@ static const struct gfx_range mapper_sfzch_table[] =
 	{ GFXTYPE_SPRITES | GFXTYPE_SCROLL1 | GFXTYPE_SCROLL2 | GFXTYPE_SCROLL3, 0x00000, 0x1ffff, 0 },
 	{ 0 }
 };
-
-#endif
 
 
 
@@ -1328,9 +1324,9 @@ static const struct CPS1config cps1_config_table[]=
 	{"pang3",      CPS_B_21_DEF, mapper_pang3 },	/* EEPROM port is among the CPS registers (handled by DRIVER_INIT) */	// should use one of these three CP1B1F,CP1B8K,CP1B9KA still not dumped
 	{"pang3n",     CPS_B_21_DEF, mapper_pang3 },	/* EEPROM port is among the CPS registers (handled by DRIVER_INIT) */	// should use one of these three CP1B1F,CP1B8K,CP1B9KA still not dumped
 	{"pang3j",     CPS_B_21_DEF, mapper_pang3 },	/* EEPROM port is among the CPS registers (handled by DRIVER_INIT) */	// should use one of these three CP1B1F,CP1B8K,CP1B9KA still not dumped
-	#ifdef MESS
+
 	{"sfzch",      CPS_B_21_DEF, mapper_sfzch },	// not an arcade game and no more in MAME, should not be removed?
-	#endif
+	{"wofch",      CPS_B_21_DEF, mapper_sfzch },	// not an arcade game and no more in MAME, should not be removed?
 
     /* CPS2 games */
 	{"cps2",       CPS_B_21_DEF, mapper_cps2 },
