@@ -2979,7 +2979,7 @@ static MACHINE_DRIVER_START( cps1_10MHz )
 
 	/* video hardware */
 	MDRV_SCREEN_ADD("screen", RASTER)
-	MDRV_SCREEN_REFRESH_RATE(59.61) /* verified on one of the input gates of the 74ls08@4J on GNG romboard 88620-b-2 */
+	MDRV_SCREEN_REFRESH_RATE(59.637405)		/* verified on one of the input gates of the 74ls08@4J on GNG romboard 88620-b-2 */
 	MDRV_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MDRV_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
 	MDRV_SCREEN_SIZE(64*8, 32*8)
@@ -9451,6 +9451,15 @@ ROM_START( rockmanj )
 ROM_END
 
 
+/* ********** */
+/* additional */
+/* ********** */
+#include "cps1_add.c"
+/* ********** */
+/* additional */
+/* ********** */
+
+
 #ifndef MESS
 
 static DRIVER_INIT( forgottn )
@@ -9704,11 +9713,13 @@ GAME( 1992, varthu,     varth,    cps1_12MHz, varth,      cps1,     ROT270, "Cap
 GAME( 1992, varthj,     varth,    cps1_12MHz, varth,      cps1,     ROT270, "Capcom", "Varth: Operation Thunderstorm (Japan 920714)", GAME_SUPPORTS_SAVE )
 GAME( 1992, qad,        0,        cps1_12MHz, qad,        cps1,     ROT0,   "Capcom", "Quiz & Dragons: Capcom Quiz Game (USA 920701)", GAME_SUPPORTS_SAVE )	// 12MHz verified
 GAME( 1994, qadj,       qad,      cps1_12MHz, qadj,       cps1,     ROT0,   "Capcom", "Quiz & Dragons: Capcom Quiz Game (Japan 940921)", GAME_SUPPORTS_SAVE )
+
 GAME( 1992, wof,        0,        qsound,     wof,        wof,      ROT0,   "Capcom", "Warriors of Fate (World 921002)", GAME_SUPPORTS_SAVE )	// "ETC"
 GAME( 1992, wofu,       wof,      qsound,     wof,        wof,      ROT0,   "Capcom", "Warriors of Fate (USA 921031)", GAME_SUPPORTS_SAVE )	// World "warning"
 GAME( 1992, wofa,       wof,      qsound,     wof,        wof,      ROT0,   "Capcom", "Sangokushi II (Asia 921005)", GAME_SUPPORTS_SAVE )	// World "warning"
 GAME( 1992, wofj,       wof,      qsound,     wof,        wof,      ROT0,   "Capcom", "Tenchi wo Kurau II: Sekiheki no Tatakai (Japan 921031)", GAME_SUPPORTS_SAVE )
 GAME( 1999, wofhfb,     wof,      wofhfb,     wofhfb,     cps1,     ROT0,   "bootleg", "Huo Feng Huang (Chinese bootleg of Sangokushi II)", GAME_SUPPORTS_SAVE )	// 921005 - based on Asia version
+
 GAME( 1992, sf2hf,      0,        cps1_12MHz, sf2,        cps1,     ROT0,   "Capcom", "Street Fighter II': Hyper Fighting (World 921209)", GAME_SUPPORTS_SAVE )	// "ETC"
 GAME( 1992, sf2hfu,     sf2hf,    cps1_12MHz, sf2,        cps1,     ROT0,   "Capcom", "Street Fighter II': Hyper Fighting (USA 921209)", GAME_SUPPORTS_SAVE )
 GAME( 1992, sf2hfj,     sf2hf,    cps1_12MHz, sf2j,       cps1,     ROT0,   "Capcom", "Street Fighter II' Turbo: Hyper Fighting (Japan 921209)", GAME_SUPPORTS_SAVE )
@@ -9740,3 +9751,9 @@ GAME( 1995, rockmanj,   megaman,  cps1_12MHz, rockmanj,   cps1,     ROT0,   "Cap
 GAME( 1995, pang3,      0,        pang3,      pang3,      pang3,    ROT0,  "Mitchell", "Pang! 3 (Euro 950601)", GAME_SUPPORTS_SAVE )
 GAME( 1995, pang3n,     pang3,    pang3,      pang3n,     pang3n,   ROT0,  "Mitchell", "Pang! 3 (Euro 950511, not encrypted)", GAME_SUPPORTS_SAVE )
 GAME( 1995, pang3j,     pang3,    pang3,      pang3n,     pang3,    ROT0,  "Mitchell", "Pang! 3: Kaitou Tachi no Karei na Gogo (Japan 950511)", GAME_SUPPORTS_SAVE )
+
+
+/* Home 'CPS Changer Unit' - For MESS */
+GAME( 1995, sfzch,      0,       cps1_12MHz,  sfzch,	  cps1,	    ROT0,   "Capcom", "CPS Changer - Street Fighter Zero (Japan 951020)", 0 )
+GAME( 1995, wofch,	0,	 qsound,      wofch,	  wof,      ROT0,   "Capcom", "CPS Changer - Tenchi Wo Kurau II (Japan 921031)", 0 )
+
