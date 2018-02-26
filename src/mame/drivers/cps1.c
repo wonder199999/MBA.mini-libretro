@@ -9747,13 +9747,14 @@ GAME( 1995, megaman,    0,        cps1_12MHz, megaman,    cps1,     ROT0,   "Cap
 GAME( 1995, rockmanj,   megaman,  cps1_12MHz, rockmanj,   cps1,     ROT0,   "Capcom", "Rockman: The Power Battle (CPS1, Japan 950922)", GAME_SUPPORTS_SAVE )
 
 /* Games released on CPS-1 hardware by Mitchell */
-
 GAME( 1995, pang3,      0,        pang3,      pang3,      pang3,    ROT0,  "Mitchell", "Pang! 3 (Euro 950601)", GAME_SUPPORTS_SAVE )
 GAME( 1995, pang3n,     pang3,    pang3,      pang3n,     pang3n,   ROT0,  "Mitchell", "Pang! 3 (Euro 950511, not encrypted)", GAME_SUPPORTS_SAVE )
 GAME( 1995, pang3j,     pang3,    pang3,      pang3n,     pang3,    ROT0,  "Mitchell", "Pang! 3: Kaitou Tachi no Karei na Gogo (Japan 950511)", GAME_SUPPORTS_SAVE )
 
-
 /* Home 'CPS Changer Unit' - For MESS */
+/*
+GAME( year,  archives name,  parent name,  MACHINE_DRIVER_START, INPUT_PORTS, DRIVER_INIT, flip, producer name, support )
+*/
 GAME( 1995, sfzch,      0,       cps1_12MHz,  sfzch,	  cps1,	    ROT0,   "Capcom", "CPS Changer - Street Fighter Zero (Japan 951020)", 0 )
-GAME( 1995, wofch,	0,	 qsound,      wofch,	  wof,      ROT0,   "Capcom", "CPS Changer - Tenchi Wo Kurau II (Japan 921031)", 0 )
-
+GAME( 1995, wofch,	0,	 qsound,      wofch,	  wof,      ROT0,   "Capcom", "CPS Changer - Tenchi Wo Kurau II (Japan 921031)", GAME_SUPPORTS_SAVE )
+GAME( 1995, wofchdx,	wofch,	 qsound,      wofch,	  wof,      ROT0,   "Capcom", "CPS Changer - Tenchi Wo Kurau II (Hack)", GAME_SUPPORTS_SAVE )
