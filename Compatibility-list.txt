@@ -4,179 +4,185 @@ Support the following :  (Parent roms with the "*" && based by mame0.139 romset)
 / * Capcom System 1  * /
 / ******************** /
 
-*1941:Counter Attack(World)
-	1941:Counter Attack(Japan)
+*1941:Counter Attack(World)		 	- /* Archives name: 1941 ,  Parent set: Itself , Verify CRC: Yes , Rom set: 0.139 , Remark: */
+	1941:Counter Attack(Japan)	 	- /* Archives name: 1941j , Parent set: 1941 ,   Verify CRC: Yes , Rom set: 0.139 , Remark: */
 
-*Adventure Quiz Capcom World 2(Japan 920611)
+*Adventure Quiz Capcom World 2(Japan 920611) - /* Archives name: cworld2j , Parent set: Itself , Verify CRC: Yes , Rom set: 0.139 , Remark: */
 
-*Cadillacs and Dinosaurs(World 930201)
-	Cadillacs and Dinosaurs(bootleg with PIC16c57, set1)  - /* Not Working */
-	Cadillacs and Dinosaurs(bootleg with PIC16c57, set2)  - /* Not Working */
-	Cadillacs and Dinosaurs(USA 930201)
-	Cadillacs Kyouryuu Shin Seiki(Japan 930201)
-	Dinosaur Hunter(Chinese bootleg Cadillacs and Dinosaurs)  - /* Not Working */
+*Cadillacs and Dinosaurs(World 930201)						  - /* Archives name: dino ,    Parent set: Itself ,Verify CRC: Yes , Rom set: 0.139 , Remark: */
+	Cadillacs and Dinosaurs(bootleg with PIC16c57, set1)	  - /* Archives name: dinopic , Parent set: dino ,  Verify CRC: Yes , Rom set: 0.139 , Remark: Not Working */
+	Cadillacs and Dinosaurs(bootleg with PIC16c57, set2)	  - /* Archives name: dinopic2 ,Parent set: dino ,  Verify CRC: Yes , Rom set: 0.139 , Remark: Not Working */
+	Cadillacs and Dinosaurs(USA 930201)					      - /* Archives name: dinou , 	Parent set: dino ,  Verify CRC: Yes , Rom set: 0.139 , Remark: */
+	Cadillacs Kyouryuu Shin Seiki(Japan 930201)				  - /* Archives name: dinoj , 	Parent set: dino ,  Verify CRC: Yes , Rom set: 0.139 , Remark: */
+	Dinosaur Hunter(Chinese bootleg Cadillacs and Dinosaurs)  - /* Archives name: dinohunt ,Parent set: dino ,  Verify CRC: Yes , Rom set: 0.139 , Remark: Not Working */
 
-*Captain Commando(World 911202)
-	Captain Commando(bootleg)  - /* Not Working */
-	Captain Commando(Japan 910928)
-	Captain Commando(Japan 911202)
-	Captain Commando(USA 910928)
-	Captain Commando(World 911104)
+*Captain Commando(World 911202)		 - /* Archives name: captcomm ,    Parent set: Itself ,   Verify CRC: Yes , Rom set: 0.139 , Remark: */
+	Captain Commando(bootleg)		 - /* Archives name: captcommb ,   Parent set: captcomm , Verify CRC: Yes , Rom set: 0.139 , Remark: Not Working */
+	Captain Commando(Japan 910928)	 - /* Archives name: captcommjr1 , Parent set: captcomm , Verify CRC: Yes , Rom set: 0.139 , Remark: */
+	Captain Commando(Japan 911202)	 - /* Archives name: captcommj ,   Parent set: captcomm , Verify CRC: Yes , Rom set: 0.139 , Remark: */
+	Captain Commando(USA 910928)	 - /* Archives name: captcommu ,   Parent set: captcomm , Verify CRC: Yes , Rom set: 0.139 , Remark: */
+	Captain Commando(World 911104)	 - /* Archives name: captcommr1 ,  Parent set: captcomm , Verify CRC: Yes , Rom set: 0.139 , Remark: */
 
-*Carrier Air Wing(World 901012)
-	Carrier Air Wing(USA 901012)
-	Carrier Air Wing(World 901009)
-	U.S Navy(Japan 901012)
+*Carrier Air Wing(World 901012)		 - /* Archives name: cawing ,   Parent set: Itself , Verify CRC: Yes , Rom set: 0.139 , Remark: */
+	Carrier Air Wing(USA 901012)	 - /* Archives name: cawingu ,  Parent set: cawing , Verify CRC: Yes , Rom set: 0.139 , Remark: */
+	Carrier Air Wing(World 901009)	 - /* Archives name: cawingr1 , Parent set: cawing , Verify CRC: Yes , Rom set: 0.139 , Remark: */
+	U.S Navy(Japan 901012)			 - /* Archives name: cawingj ,  Parent set: cawing , Verify CRC: Yes , Rom set: 0.139 , Remark: */
 
-*Dynasty Wars(USA, set1)
-	Dynasty Wars(USA, set2)
-	Tenchi wo Kurau(Japan)
+*Dynasty Wars(USA, set1)	 	- /* Archives name: dynwar ,  Parent set: Itself , Verify CRC: Yes , Rom set: 0.139 , Remark: */
+	Dynasty Wars(USA, set2)	 	- /* Archives name: dynwaru , Parent set: dynwar , Verify CRC: Yes , Rom set: 0.139 , Remark: */
+	Tenchi wo Kurau(Japan)	 	- /* Archives name: dynwarj , Parent set: dynwar , Verify CRC: Yes , Rom set: 0.139 , Remark: */
 
-*Final Fight(World)
-	Final Fight(Japan 900112)
-	Final Fight(Japan 900305)
-	Final Fight(Japan)
-	Final Fight(USA 900112)
-	Final Fight(USA 900613)
-	Final Fight(USA)
-	Street Smart / Final Fight(Japan, hack)
+*Final Fight(World)							 - /* Archives name: ffight ,   Parent set: Itself , Verify CRC: Yes , Rom set: 0.139 , Remark: */
+	Final Fight(Japan 900112)				 - /* Archives name: ffightj1 , Parent set: ffight , Verify CRC: Yes , Rom set: 0.139 , Remark: */
+	Final Fight(Japan 900305)				 - /* Archives name: ffightj2 , Parent set: ffight , Verify CRC: Yes , Rom set: 0.139 , Remark: */
+	Final Fight(Japan)						 - /* Archives name: ffightj ,  Parent set: ffight , Verify CRC: Yes , Rom set: 0.139 , Remark: */
+	Final Fight(USA 900112)		 			 - /* Archives name: ffightua , Parent set: ffight , Verify CRC: Yes , Rom set: 0.139 , Remark: */
+	Final Fight(USA 900613)					 - /* Archives name: ffightub , Parent set: ffight , Verify CRC: Yes , Rom set: 0.139 , Remark: */
+	Final Fight(USA)						 - /* Archives name: ffightu ,  Parent set: ffight , Verify CRC: Yes , Rom set: 0.139 , Remark: */
+	Street Smart / Final Fight(Japan, hack)  - /* Archives name: ffightjh , Parent set: ffight , Verify CRC: Yes , Rom set: 0.139 , Remark: */
 
-*Forgotten Worlds(World)
-	Forgotten Worlds(USA, 88618B B-Board)
-	Forgotten Worlds(USA, 88621B B-Board)
-	Forgotten Worlds(Japan Old Ver.)
-	Lost Worlds(Japan)
+*Forgotten Worlds(World)					- /* Archives name: forgottn ,   Parent set: Itself ,   Verify CRC: Yes , Rom set: 0.139 , Remark: */
+	Forgotten Worlds(USA, 88618B B-Board)	- /* Archives name: forgottnu ,  Parent set: forgottn , Verify CRC: Yes , Rom set: 0.139 , Remark: */
+	Forgotten Worlds(USA, 88621B B-Board)	- /* Archives name: forgottnua , Parent set: forgottn , Verify CRC: Yes , Rom set: 0.139 , Remark: */
+	Forgotten Worlds(Japan Old Ver.)		- /* Archives name: lostwrldo ,  Parent set: forgottn , Verify CRC: Yes , Rom set: 0.139 , Remark: */
+	Lost Worlds(Japan)						- /* Archives name: lostwrld ,   Parent set: forgottn , Verify CRC: Yes , Rom set: 0.139 , Remark: */
 
-*Ghouls'n Ghosts(World)
-	Daimakaimura(Japan Resale Ver.)
-	Daimakaimura(Japan)
-	Ghouls'n Ghosts(USA)
+*Ghouls'n Ghosts(World)					- /* Archives name: ghouls ,    Parent set: Itself , Verify CRC: Yes , Rom set: 0.139 , Remark: */
+	Daimakaimura(Japan Resale Ver.)		- /* Archives name: daimakair , Parent set: ghouls , Verify CRC: Yes , Rom set: 0.139 , Remark: */
+	Daimakaimura(Japan)					- /* Archives name: daimakai ,  Parent set: ghouls , Verify CRC: Yes , Rom set: 0.139 , Remark: */
+	Ghouls'n Ghosts(USA)				- /* Archives name: ghoulsu ,   Parent set: ghouls , Verify CRC: Yes , Rom set: 0.139 , Remark: */
 
-*King of Dragons, The(World 910711)
-	King of Dragons, The(Japan 910805)
-	King of Dragons, The(USA 910910)
+*King of Dragons, The(World 910711)		- /* Archives name: kod ,  Parent set: Itself , Verify CRC: Yes , Rom set: 0.139 , Remark: */
+	King of Dragons, The(Japan 910805)	- /* Archives name: kodj , Parent set: kod ,    Verify CRC: Yes , Rom set: 0.139 , Remark: */
+	King of Dragons, The(USA 910910)	- /* Archives name: kodu , Parent set: kod ,    Verify CRC: Yes , Rom set: 0.139 , Remark: */
 
-*Knight of the Round(World 911127)
-	Knight of the Round(Japan 911127)
-	Knight of the Round(USA 911127)
-	Knight of the Round(bootleg)  - /* Not Working */
+*Knight of the Round(World 911127)		- /* Archives name: knights ,  Parent set: Itself ,  Verify CRC: Yes , Rom set: 0.139 , Remark: */
+	Knight of the Round(Japan 911127)	- /* Archives name: knightsj , Parent set: knights , Verify CRC: Yes , Rom set: 0.139 , Remark: */
+	Knight of the Round(USA 911127)		- /* Archives name: knightsu , Parent set: knights , Verify CRC: Yes , Rom set: 0.139 , Remark: */
+	Knight of the Round(bootleg)		- /* Archives name: knightsb , Parent set: knights , Verify CRC: Yes , Rom set: 0.139 , Remark: Not Working */
+	
+*Magic Sword : Heroic Fantasy(World 900725)		- /* Archives name: msword ,   Parent set: Itself ,  Verify CRC: Yes , Rom set: 0.139 , Remark: */
+	Magic Sword : Heroic Fantasy(USA 900725)	- /* Archives name: mswordu ,  Parent set: msword ,  Verify CRC: Yes , Rom set: 0.139 , Remark: */
+	Magic Sword : Heroic Fantasy(World 900623)	- /* Archives name: mswordr1 , Parent set: msword ,  Verify CRC: Yes , Rom set: 0.139 , Remark: */
+	Magic Sword(Japan 900623)					- /* Archives name: mswordj ,  Parent set: msword ,  Verify CRC: Yes , Rom set: 0.139 , Remark: */
 
-*Magic Sword : Heroic Fantasy(World 900725)
-	Magic Sword : Heroic Fantasy(USA 900725)
-	Magic Sword : Heroic Fantasy(World 900623)
-	Magic Sword(Japan 900623)
+*Mega Man : The Power Battle(CPS1, Asia 951006)		- /* Archives name: megaman ,  Parent set: Itself ,   Verify CRC: Yes , Rom set: 0.139 , Remark: */
+	Rockman : The Power Battle(CPS1, Japan 950923)	- /* Archives name: rockmanj , Parent set: megaman ,  Verify CRC: Yes , Rom set: 0.139 , Remark: */
 
-*Mega Man : The Power Battle(CPS1, Asia 951006)
-	Rockman : The Power Battle(CPS1, Japan 950923)
+*Mega Twins(World 900619)			- /* Archives name: mtwins , Parent set: Itself , Verify CRC: Yes , Rom set: 0.139 , Remark: */
+	Chiki Chiki Boys(Japan 900619)	- /* Archives name: chikij , Parent set: mtwins , Verify CRC: Yes , Rom set: 0.139 , Remark: */
 
-*Mega Twins(World 900619)
-	Chiki Chiki Boys(Japan 900619)
+*Mercs(World 900302)						- /* Archives name: mercs ,  Parent set: Itself , Verify CRC: Yes , Rom set: 0.139 , Remark: */
+	Mercs(USA 900302)						- /* Archives name: mercsu , Parent set: mercs ,  Verify CRC: Yes , Rom set: 0.139 , Remark: */
+	Mercs(USA 900608)						- /* Archives name: mercsua ,Parent set: mercs ,  Verify CRC: Yes , Rom set: 0.139 , Remark: */
+	Senjou no Ookami II(Japan 900302)		- /* Archives name: mercsj , Parent set: mercs ,  Verify CRC: Yes , Rom set: 0.139 , Remark: */
 
-*Mercs(World 900302)
-	Mercs(USA 900302)
-	Mercs(USA 900608)
-	Senjou no Ookami II(Japan 900302)
+*Muscle Bomber Duo : Ultimate Team Battle(World 931206)		- /* Archives name: mbombrd , Parent set: Itself ,  Verify CRC: Yes , Rom set: 0.139 , Remark: */
+	Muscle Bomber Duo : Ultimate Team Battle(Japan 931206)	- /* Archives name: mbombrdj ,Parent set: mbombrd , Verify CRC: Yes , Rom set: 0.139 , Remark: */
 
-*Muscle Bomber Duo : Ultimate Team Battle(World 931206)
-	Muscle Bomber Duo : Ultimate Team Battle(Japan 931206)
+*Nemo(World 901130)		- /* Archives name: nemo , Parent set: Itself , Verify CRC: Yes , Rom set: 0.139 , Remark: */
+	Nemo(Japan 901120)	- /* Archives name: nemoj ,Parent set: nemo ,   Verify CRC: Yes , Rom set: 0.139 , Remark: */
 
-*Nemo(World 901130)
-	Nemo(Japan 901120)
+*Pang! 3(Euro 950601)										- /* Archives name: pang3 , Parent set: Itself , Verify CRC: Yes , Rom set: 0.139 , Remark: */
+	Pang! 3(Euro 950511, not encrypted)						- /* Archives name: pang3n ,Parent set: pang3 ,  Verify CRC: Yes , Rom set: 0.139 , Remark: */
+	Pang! 3 : Kaitou Tachi no Karei na Gogo(Japan 950511)	- /* Archives name: pang3j ,Parent set: pang3 ,  Verify CRC: Yes , Rom set: 0.139 , Remark: */
 
-*Pang! 3(Euro 950601)
-	Pang! 3(Euro 950511, not encrypted)
-	Pang! 3 : Kaitou Tachi no Karei na Gogo(Japan 950511)
+*Pnickies(Japan 940608)	- /* Archives name: pnickj , Parent set: Itself , Verify CRC: Yes , Rom set: 0.139 , Remark: */
 
-*Pnickies(Japan 940608)
+*Punisher, The(World 930422)							- /* Archives name: punisher ,  Parent set: Itself ,   Verify CRC: Yes , Rom set: 0.139 , Remark: */
+	Biaofeng Zhanjing(Chinese bootleg of the Punisher)	- /* Archives name: punisherbz ,Parent set: punisher , Verify CRC: Yes , Rom set: 0.139 , Remark: */
+	Punisher, The(bootleg with PIC16c57, set1)			- /* Archives name: punipic ,   Parent set: punisher , Verify CRC: Yes , Rom set: 0.139 , Remark: Not Working */
+	Punisher, The(bootleg with PIC16c57, set2)			- /* Archives name: punipic2 ,  Parent set: punisher , Verify CRC: Yes , Rom set: 0.139 , Remark: Not Working */
+	Punisher, The(bootleg with PIC16c57, set3)			- /* Archives name: punipic3 ,  Parent set: punisher , Verify CRC: Yes , Rom set: 0.139 , Remark: Not Working */
+	Punisher, The(Japan 930422)							- /* Archives name: punisherj , Parent set: punisher , Verify CRC: Yes , Rom set: 0.139 , Remark: */
+	Punisher, The(USA 930422)							- /* Archives name: punisheru , Parent set: punisher , Verify CRC: Yes , Rom set: 0.139 , Remark: */
 
-*Punisher, The(World 930422)
-	Biaofeng Zhanjing(Chinese bootleg of the Punisher)
-	Punisher, The(bootleg with PIC16c57, set1)  - /* Not Working */
-	Punisher, The(bootleg with PIC16c57, set2)  - /* Not Working */
-	Punisher, The(bootleg with PIC16c57, set3)  - /* Not Working */
-	Punisher, The(Japan 930422)
-	Punisher, The(USA 930422)
+*Quiz & Dragons : Capcom Quiz Game(USA 920701)			- /* Archives name: qad ,  Parent set: Itself , Verify CRC: Yes , Rom set: 0.139 , Remark: */
+	Quiz & Dragons : Capcom Quiz Game(Japan 940921)		- /* Archives name: qadj , Parent set: qad ,    Verify CRC: Yes , Rom set: 0.139 , Remark: */
 
-*Quiz & Dragons : Capcom Quiz Game(USA 920701)
-	Quiz & Dragons : Capcom Quiz Game(Japan 940921)
+*Quiz Tonosama no Yabou 2 : Zenkoku-ban(Japan 950123)	- /* Archives name: qtono2j , Parent set: Itself ,  Verify CRC: Yes , Rom set: 0.139 , Remark: */
 
-*Quiz Tonosama no Yabou 2 : Zenkoku-ban(Japan 950123)
+*Saturday Night Slam Masters(World 930713)				- /* Archives name: slammast , Parent set: Itself ,   Verify CRC: Yes , Rom set: 0.139 , Remark: */
+	Muscle Bomber : The Boby Explosion(Japan 930713)	- /* Archives name: mbomberj , Parent set: slammast , Verify CRC: Yes , Rom set: 0.139 , Remark: */
+	Saturday Night Slam Masters(USA 930713)				- /* Archives name: slammastu ,Parent set: slammast , Verify CRC: Yes , Rom set: 0.139 , Remark: */
+	
+*Street Fighter II': Champion Edition(World 920313)						- /* Archives name: sf2ce ,   Parent set: Itself , Verify CRC: Yes , Rom set: 0.139 , Remark: */
+	Street Fighter II': Champion Edition(Accelerator Pt.II, Bootleg)	- /* Archives name: sf2accp2 ,Parent set: sf2ce ,  Verify CRC: Yes , Rom set: 0.139 , Remark: */
+	Street Fighter II': Champion Edition(Accelerator!, Bootleg)			- /* Archives name: sf2acc ,  Parent set: sf2ce ,  Verify CRC: Yes , Rom set: 0.139 , Remark: */
+	Street Fighter II': Champion Edition(Double K.O. TurboII, bootleg)	- /* Archives name: sf2dkot2 ,Parent set: sf2ce ,  Verify CRC: Yes , Rom set: 0.139 , Remark: */
+	Street Fighter II': Champion Edition(Japan 920513)					- /* Archives name: sf2cej ,  Parent set: sf2ce ,  Verify CRC: Yes , Rom set: 0.139 , Remark: */
+	Street Fighter II': Champion Edition(M1, bootleg)					- /* Archives name: sf2m1 ,   Parent set: sf2ce ,  Verify CRC: Yes , Rom set: 0.139 , Remark: Not Working */
+	Street Fighter II': Champion Edition(M2, bootleg)					- /* Archives name: sf2m2 ,   Parent set: sf2ce ,  Verify CRC: Yes , Rom set: 0.139 , Remark: */
+	Street Fighter II': Champion Edition(M3, bootleg)					- /* Archives name: sf2m3 ,   Parent set: sf2ce ,  Verify CRC: Yes , Rom set: 0.139 , Remark: Not Working */
+	Street Fighter II': Champion Edition(M4, bootleg)					- /* Archives name: sf2m4 ,   Parent set: sf2ce ,  Verify CRC: Yes , Rom set: 0.139 , Remark: */
+	Street Fighter II': Champion Edition(M5, bootleg)					- /* Archives name: sf2m5 ,   Parent set: sf2ce ,  Verify CRC: Yes , Rom set: 0.139 , Remark: */
+	Street Fighter II': Champion Edition(M6, bootleg)					- /* Archives name: sf2m6 ,   Parent set: sf2ce ,  Verify CRC: Yes , Rom set: 0.139 , Remark: */
+	Street Fighter II': Champion Edition(M7, bootleg)					- /* Archives name: sf2m7 ,   Parent set: sf2ce ,  Verify CRC: Yes , Rom set: 0.139 , Remark: */
+	Street Fighter II': Champion Edition(Rainbow set 1, bootleg)		- /* Archives name: sf2rb ,   Parent set: sf2ce ,  Verify CRC: Yes , Rom set: 0.139 , Remark: */
+	Street Fighter II': Champion Edition(Rainbow set 2, bootleg)		- /* Archives name: sf2rb2 ,  Parent set: sf2ce ,  Verify CRC: Yes , Rom set: 0.139 , Remark: */
+	Street Fighter II': Champion Edition(Rainbow set 3, bootleg)		- /* Archives name: sf2rb3 ,  Parent set: sf2ce ,  Verify CRC: Yes , Rom set: 0.139 , Remark: */
+	Street Fighter II': Champion Edition(Red Wave, bootleg)				- /* Archives name: sf2red ,  Parent set: sf2ce ,  Verify CRC: Yes , Rom set: 0.139 , Remark: */
+	Street Fighter II': Champion Edition(USA 920313)					- /* Archives name: sf2ceua , Parent set: sf2ce ,  Verify CRC: Yes , Rom set: 0.139 , Remark: */
+	Street Fighter II': Champion Edition(USA 920513)					- /* Archives name: sf2ceub , Parent set: sf2ce ,  Verify CRC: Yes , Rom set: 0.139 , Remark: */
+	Street Fighter II': Champion Edition(USA 920803)					- /* Archives name: sf2ceuc , Parent set: sf2ce ,  Verify CRC: Yes , Rom set: 0.139 , Remark: */
+	Street Fighter II': Champion Edition(V004, bootleg)					- /* Archives name: sf2v004 , Parent set: sf2ce ,  Verify CRC: Yes , Rom set: 0.139 , Remark: */
+	Street Fighter II': Champion Edition(Xiang long, Chinese bootleg)	- /* Archives name: sf2koryu ,Parent set: sf2ce ,  Verify CRC: Yes , Rom set: 0.139 , Remark: */
+	Street Fighter II': Champion Edition(YYC, bootleg)					- /* Archives name: sf2yyc ,  Parent set: sf2ce ,  Verify CRC: Yes , Rom set: 0.139 , Remark: */
+	Street Fighter II': Magic Delta Turbo(bootleg)						- /* Archives name: sf2mdt ,  Parent set: sf2ce ,  Verify CRC: Yes , Rom set: 0.139 , Remark: Not Working */
 
-*Saturday Night Slam Masters(World 930713)
-	Muscle Bomber : The Boby Explosion(Japan 930713)
-	Saturday Night Slam Masters(USA 930713)
+*Street Fighter II': Hyper Fighting(World 921209)			- /* Archives name: sf2hf ,  Parent set: Itself , Verify CRC: Yes , Rom set: 0.139 , Remark: */
+	Street Fighter II' Turbo: Hyper Fighting(Japan 921209)	- /* Archives name: sf2hfj , Parent set: sf2hf ,  Verify CRC: Yes , Rom set: 0.139 , Remark: */
+	Street Fighter II': Hyper Fighting(USA 921209)			- /* Archives name: sf2hfu , Parent set: sf2hf ,  Verify CRC: Yes , Rom set: 0.139 , Remark: */
 
-*Street Fighter II': Champion Edition(World 920313)
-	Street Fighter II': Champion Edition(Accelerator Pt.II, Bootleg)
-	Street Fighter II': Champion Edition(Accelerator!, Bootleg)
-	Street Fighter II': Champion Edition(Double K.O. TurboII, bootleg)
-	Street Fighter II': Champion Edition(Japan 920513)
-	Street Fighter II': Champion Edition(M1, bootleg)  - /* Not Working */
-	Street Fighter II': Champion Edition(M2, bootleg)
-	Street Fighter II': Champion Edition(M3, bootleg)  - /* Not Working */
-	Street Fighter II': Champion Edition(M4, bootleg)
-	Street Fighter II': Champion Edition(M5, bootleg)
-	Street Fighter II': Champion Edition(M6, bootleg)
-	Street Fighter II': Champion Edition(M7, bootleg)
-	Street Fighter II': Champion Edition(Rainbow set 1, bootleg)
-	Street Fighter II': Champion Edition(Rainbow set 2, bootleg)
-	Street Fighter II': Champion Edition(Rainbow set 3, bootleg)
-	Street Fighter II': Champion Edition(Red Wave, bootleg)
-	Street Fighter II': Champion Edition(USA 920313)
-	Street Fighter II': Champion Edition(USA 920513)
-	Street Fighter II': Champion Edition(USA 920803)
-	Street Fighter II': Champion Edition(V004, bootleg)
-	Street Fighter II': Champion Edition(Xiang long, Chinese bootleg)
-	Street Fighter II': Champion Edition(YYC, bootleg)
-	Street Fighter II': Magic Delta Turbo(bootleg)  - /* Not Working */
+*Street Fighter II: The World Warrior(World 910522)					- /* Archives name: sf2 ,     Parent set: Itself , Verify CRC: Yes , Rom set: 0.139 , Remark: */
+	Street Fighter II: The World Warrior(Japan 910214)				- /* Archives name: sf2ja ,   Parent set: sf2 ,    Verify CRC: Yes , Rom set: 0.139 , Remark: */
+	Street Fighter II: The World Warrior(Japan 910306)				- /* Archives name: sf2jc ,   Parent set: sf2 ,    Verify CRC: Yes , Rom set: 0.139 , Remark: */
+	Street Fighter II: The World Warrior(Japan 911210)				- /* Archives name: sf2j ,    Parent set: sf2 ,    Verify CRC: Yes , Rom set: 0.139 , Remark: */
+	Street Fighter II: The World Warrior(Quicken Pt-I, bootleg)		- /* Archives name: sf2qp1 ,  Parent set: sf2 ,    Verify CRC: Yes , Rom set: 0.139 , Remark: */
+	Street Fighter II: The World Warrior(TAB Austria, bootleg)		- /* Archives name: sf2ebbl , Parent set: sf2 ,    Verify CRC: Yes , Rom set: 0.139 , Remark: */
+	Street Fighter II: The World Warrior(Thunder Edition, bootleg)	- /* Archives name: sf2thndr ,Parent set: sf2 ,    Verify CRC: Yes , Rom set: 0.139 , Remark: */
+	Street Fighter II: The World Warrior(USA 910206)				- /* Archives name: sf2ua ,   Parent set: sf2 ,    Verify CRC: Yes , Rom set: 0.139 , Remark: */
+	Street Fighter II: The World Warrior(USA 910214)				- /* Archives name: sf2ub ,   Parent set: sf2 ,    Verify CRC: Yes , Rom set: 0.139 , Remark: */
+	Street Fighter II: The World Warrior(USA 910228)				- /* Archives name: sf2ue ,   Parent set: sf2 ,    Verify CRC: Yes , Rom set: 0.139 , Remark: */
+	Street Fighter II: The World Warrior(USA 910318)				- /* Archives name: sf2ud ,   Parent set: sf2 ,    Verify CRC: Yes , Rom set: 0.139 , Remark: */
+	Street Fighter II: The World Warrior(USA 910411)				- /* Archives name: sf2uf ,   Parent set: sf2 ,    Verify CRC: Yes , Rom set: 0.139 , Remark: */
+	Street Fighter II: The World Warrior(USA 910522)				- /* Archives name: sf2ui ,   Parent set: sf2 ,    Verify CRC: Yes , Rom set: 0.139 , Remark: */
+	Street Fighter II: The World Warrior(USA 911101)				- /* Archives name: sf2uk ,   Parent set: sf2 ,    Verify CRC: Yes , Rom set: 0.139 , Remark: */
+	Street Fighter II: The World Warrior(World 910214)				- /* Archives name: sf2eb ,   Parent set: sf2 ,    Verify CRC: Yes , Rom set: 0.139 , Remark: */
 
-*Street Fighter II': Hyper Fighting(World 921209)
-	Street Fighter II' Turbo: Hyper Fighting(Japan 921209)
-	Street Fighter II': Hyper Fighting(USA 921209)
+*Strider(USA, set 1)					- /* Archives name: strider ,   Parent set: Itself ,  Verify CRC: Yes , Rom set: 0.139 , Remark: */
+	Strider(USA, set 2)					- /* Archives name: striderua , Parent set: strider , Verify CRC: Yes , Rom set: 0.139 , Remark: */
+	Strider Hiryu(Japan Resale Ver.)	- /* Archives name: striderjr , Parent set: strider , Verify CRC: Yes , Rom set: 0.139 , Remark: */
+	Strider Hiryu(Japan)				- /* Archives name: striderj ,  Parent set: strider , Verify CRC: Yes , Rom set: 0.139 , Remark: */
 
-*Street Fighter II: The World Warrior(World 910522)
-	Street Fighter II: The World Warrior(Japan 910214)
-	Street Fighter II: The World Warrior(Japan 910306)
-	Street Fighter II: The World Warrior(Japn 911210)
-	Street Fighter II: The World Warrior(Quicken Pt-I, bootleg)
-	Street Fighter II: The World Warrior(TAB Austria, bootleg)
-	Street Fighter II: The World Warrior(Thunder Edition, bootleg)
-	Street Fighter II: The World Warrior(USA 910206)
-	Street Fighter II: The World Warrior(USA 910214)
-	Street Fighter II: The World Warrior(USA 910228)
-	Street Fighter II: The World Warrior(USA 910318)
-	Street Fighter II: The World Warrior(USA 910411)
-	Street Fighter II: The World Warrior(USA 910522)
-	Street Fighter II: The World Warrior(USA 911101)
-	Street Fighter II: The World Warrior(World 910214)
+*Three Wonders(World 910520)		- /* Archives name: 3wonders ,  Parent set: Itself ,   Verify CRC: Yes , Rom set: 0.139 , Remark: */
+	Three Wonders(hack)				- /* Archives name: 3wondersh , Parent set: 3wonders , Verify CRC: Yes , Rom set: 0.139 , Remark: */
+	Three Wonders(USA 910520)		- /* Archives name: 3wondersu , Parent set: 3wonders , Verify CRC: Yes , Rom set: 0.139 , Remark: */
+	Wonders 3(Japan 910520)			- /* Archives name: wonder3 ,   Parent set: 3wonders , Verify CRC: Yes , Rom set: 0.139 , Remark: */
 
-*Strider(USA, set 1)
-	Strider(USA, set 2)
-	Strider Hiryu(Japan Resale Ver.)
-	Strider Hiryu(Japan)
+*U.N. Squadron(USA)		- /* Archives name: unsquad , Parent set: Itself , Verify CRC: Yes , Rom set: 0.139 , Remark: */
+	Area 88(Japan)		- /* Archives name: area88 ,  Parent set: unsquad ,Verify CRC: Yes , Rom set: 0.139 , Remark: */
 
-*Three Wonders(World 910520)
-	Three Wonders(hack)
-	Three Wonders(USA 910520)
-	Wonders 3(Japan 910520)
+*Varth: Operation Thunderstorm(World 920714)		- /* Archives name: varth ,  Parent set: Itself , Verify CRC: Yes , Rom set: 0.139 , Remark: */
+	Varth: Operation Thunderstorm(Japan 920714)		- /* Archives name: varthj , Parent set: varth ,  Verify CRC: Yes , Rom set: 0.139 , Remark: */
+	Varth: Operation Thunderstorm(USA 920612)		- /* Archives name: varthu , Parent set: varth ,  Verify CRC: Yes , Rom set: 0.139 , Remark: */
+	Varth: Operation Thunderstorm(World 920612)		- /* Archives name: varthr1 ,Parent set: varth ,  Verify CRC: Yes , Rom set: 0.139 , Remark: */
 
-*U.N. Squadron(USA)
-	Area 88(Japan)
+*Warriors of Fate(World 921002)								- /* Archives name: wof ,    Parent set: Itself ,Verify CRC: Yes , Rom set: 0.139 , Remark: */
+	Huo Feng Huang(Chinese bootleg of Sangokushi II)		- /* Archives name: wofhfb , Parent set: wof ,   Verify CRC: Yes , Rom set: 0.139 , Remark: */
+	Sangokushi II(Asia 921005)								- /* Archives name: wofa ,   Parent set: wof ,   Verify CRC: Yes , Rom set: 0.139 , Remark: */
+	Tenchi wo Kurau II: Sekiheki no Tatakai(Japan 921031)	- /* Archives name: wofj ,   Parent set: wof ,   Verify CRC: Yes , Rom set: 0.139 , Remark: */
+	Warriors of Fate(USA 921031)							- /* Archives name: wofu ,   Parent set: wof ,   Verify CRC: Yes , Rom set: 0.139 , Remark: */
 
-*Varth: Operation Thunderstorm(World 920714)
-	Varth: Operation Thunderstorm(Japan 920714)
-	Varth: Operation Thunderstorm(USA 920612)
-	Varth: Operation Thunderstorm(World 920612)
+*Willow(USA)						- /* Archives name: willow ,  Parent set: Itself , Verify CRC: Yes , Rom set: 0.139 , Remark: */
+	Willow(Japan, English)			- /* Archives name: willowje ,Parent set: willow , Verify CRC: Yes , Rom set: 0.139 , Remark: */
+	Willow(Japan, Japanese			- /* Archives name: willowj , Parent set: willow , Verify CRC: Yes , Rom set: 0.139 , Remark: */
 
-*Warriors of Fate(World 921002)
-	Huo Feng Huang(Chinese bootleg of Sangokushi II)
-	Sangokushi II(Asia 921005)
-	Tenchi wo Kurau II: Sekiheki no Tatakai(Japan 921031)
-	Warriors of Fate(USA 921031)
+*Street Fighter Zero (CPS Changer)(Japan 951020)		- /* Archives name: sfzch ,  Parent set: Itself , Verify CRC: No , Rom set: FBA02.97.38(mame0.172) , Remark: */
 
-*Willow(USA)
-	Willow(Japan, English)
-	Willow(Japan, Japanese)
+*Tenchi Wo Kurau II (CPS Changer)(Japan 921031)			- /* Archives name: wofch ,   Parent set: Itself , Verify CRC: No , Rom set: FBA02.97.38(mame0.172) , Remark: */
+	Sangokushi III Gaiden: Kakou-On's Revenge DX (hack)	- /* Archives name: wofchdx , Parent set: wofch ,  Verify CRC: No , Rom set: FBA02.97.38(mame0.172) , Remark: */
+
 
 
 
@@ -187,12 +193,12 @@ Support the following :  (Parent roms with the "*" && based by mame0.139 romset)
 
 
 / ******************** /
-/ * IREM M92 Board  * /
+/ * IREM M92 Board   * /
 / ******************** /
 
 
 
 / ******************** /
-/ * NEO GEO  * /
+/ * NEO GEO  		 * /
 / ******************** /
 
