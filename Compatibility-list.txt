@@ -9,12 +9,12 @@ Support the following :  (Parent roms with the "*" && based by mame0.139 romset)
 
 *Adventure Quiz Capcom World 2(Japan 920611) - /* Archives name: cworld2j , Parent set: Itself , Verify CRC: Yes , Rom set: 0.139 , Remark: */
 
-*Cadillacs and Dinosaurs(World 930201)				- /* Archives name: dino ,      Parent set: Itself , Verify CRC: Yes , Rom set: 0.139 , Remark: */
-	Cadillacs and Dinosaurs(bootleg with PIC16c57, set1)	- /* Archives name: dinopic ,   Parent set: dino ,   Verify CRC: Yes , Rom set: 0.139 , Remark: Not Working */
-	Cadillacs and Dinosaurs(bootleg with PIC16c57, set2)	- /* Archives name: dinopic2 ,  Parent set: dino ,   Verify CRC: Yes , Rom set: 0.139 , Remark: Not Working */
-	Cadillacs and Dinosaurs(USA 930201)			- /* Archives name: dinou , 	Parent set: dino ,   Verify CRC: Yes , Rom set: 0.139 , Remark: */
-	Cadillacs Kyouryuu Shin Seiki(Japan 930201)		- /* Archives name: dinoj , 	Parent set: dino ,   Verify CRC: Yes , Rom set: 0.139 , Remark: */
-	Dinosaur Hunter(Chinese bootleg Cadillacs and Dinosaurs)  - /* Archives name: dinohunt ,Parent set: dino ,   Verify CRC: Yes , Rom set: 0.139 , Remark: Not Working */
+*Cadillacs and Dinosaurs(World 930201)				  - /* Archives name: dino ,     Parent set: Itself , Verify CRC: Yes , Rom set: 0.139 , Remark: */
+	Cadillacs and Dinosaurs(bootleg with PIC16c57, set1)	  - /* Archives name: dinopic ,  Parent set: dino ,   Verify CRC: Yes , Rom set: 0.139 , Remark: Not Working */
+	Cadillacs and Dinosaurs(bootleg with PIC16c57, set2)	  - /* Archives name: dinopic2 , Parent set: dino ,   Verify CRC: Yes , Rom set: 0.139 , Remark: Not Working */
+	Cadillacs and Dinosaurs(USA 930201)			  - /* Archives name: dinou , 	 Parent set: dino ,   Verify CRC: Yes , Rom set: 0.139 , Remark: */
+	Cadillacs Kyouryuu Shin Seiki(Japan 930201)		  - /* Archives name: dinoj , 	 Parent set: dino ,   Verify CRC: Yes , Rom set: 0.139 , Remark: */
+	Dinosaur Hunter(Chinese bootleg Cadillacs and Dinosaurs)  - /* Archives name: dinohunt , Parent set: dino ,   Verify CRC: Yes , Rom set: 0.139 , Remark: Not Working */
 
 *Captain Commando(World 911202)		 - /* Archives name: captcomm ,    Parent set: Itself ,   Verify CRC: Yes , Rom set: 0.139 , Remark: */
 	Captain Commando(bootleg)	 - /* Archives name: captcommb ,   Parent set: captcomm , Verify CRC: Yes , Rom set: 0.139 , Remark: Not Working */
@@ -87,7 +87,7 @@ Support the following :  (Parent roms with the "*" && based by mame0.139 romset)
 	Pang! 3(Euro 950511, not encrypted)			- /* Archives name: pang3n ,Parent set: pang3 ,  Verify CRC: Yes , Rom set: 0.139 , Remark: */
 	Pang! 3 : Kaitou Tachi no Karei na Gogo(Japan 950511)	- /* Archives name: pang3j ,Parent set: pang3 ,  Verify CRC: Yes , Rom set: 0.139 , Remark: */
 
-*Pnickies(Japan 940608)		- /* Archives name: pnickj , Parent set: Itself , Verify CRC: Yes , Rom set: 0.139 , Remark: */
+*Pnickies(Japan 940608)		- /* Archives name: pnickj ,  Parent set: Itself , Verify CRC: Yes , Rom set: 0.139 , Remark: */
 
 *Punisher, The(World 930422)					- /* Archives name: punisher ,  Parent set: Itself ,   Verify CRC: Yes , Rom set: 0.139 , Remark: */
 	Biaofeng Zhanjing(Chinese bootleg of the Punisher)	- /* Archives name: punisherbz ,Parent set: punisher , Verify CRC: Yes , Rom set: 0.139 , Remark: */
@@ -168,11 +168,12 @@ Support the following :  (Parent roms with the "*" && based by mame0.139 romset)
 	Varth: Operation Thunderstorm(USA 920612)	- /* Archives name: varthu , Parent set: varth ,  Verify CRC: Yes , Rom set: 0.139 , Remark: */
 	Varth: Operation Thunderstorm(World 920612)	- /* Archives name: varthr1 ,Parent set: varth ,  Verify CRC: Yes , Rom set: 0.139 , Remark: */
 
-*Warriors of Fate(World 921002)					- /* Archives name: wof ,    Parent set: Itself ,Verify CRC: Yes , Rom set: 0.139 , Remark: */
+*Warriors of Fate(World 921031)					- /* Archives name: wof ,    Parent set: Itself ,Verify CRC: Yes , Rom set: 0.139 , Remark: */
 	Huo Feng Huang(Chinese bootleg of Sangokushi II)	- /* Archives name: wofhfb , Parent set: wof ,   Verify CRC: Yes , Rom set: 0.139 , Remark: */
 	Sangokushi II(Asia 921005)				- /* Archives name: wofa ,   Parent set: wof ,   Verify CRC: Yes , Rom set: 0.139 , Remark: */
 	Tenchi wo Kurau II: Sekiheki no Tatakai(Japan 921031)	- /* Archives name: wofj ,   Parent set: wof ,   Verify CRC: Yes , Rom set: 0.139 , Remark: */
 	Warriors of Fate(USA 921031)				- /* Archives name: wofu ,   Parent set: wof ,   Verify CRC: Yes , Rom set: 0.139 , Remark: */
+	Warriors of Fate (World 921020)				- /* Archives name: wofr1 ,  Parent set: wof ,   Verify CRC: No ,  Rom set: FBA02.97.38(mame0.172) , Remark: */
 
 *Willow(USA)				- /* Archives name: willow ,  Parent set: Itself , Verify CRC: Yes , Rom set: 0.139 , Remark: */
 	Willow(Japan, English)		- /* Archives name: willowje ,Parent set: willow , Verify CRC: Yes , Rom set: 0.139 , Remark: */
@@ -183,7 +184,7 @@ Support the following :  (Parent roms with the "*" && based by mame0.139 romset)
 *Tenchi Wo Kurau II (CPS Changer)(Japan 921031)			- /* Archives name: wofch ,   Parent set: Itself , Verify CRC: No , Rom set: FBA02.97.38(mame0.172) , Remark: */
 	Sangokushi III Gaiden: Kakou-On's Revenge DX (hack)	- /* Archives name: wofchdx , Parent set: wofch ,  Verify CRC: No , Rom set: FBA02.97.38(mame0.172) , Remark: */
 
-
+*Huo Feng Huang (Chinese bootleg)				- /* Archives name: wofhfh ,   Parent set: Itself , Verify CRC: No , Rom set: FBA02.97.38(mame0.172) , Remark: */
 
 
 / ******************** /
