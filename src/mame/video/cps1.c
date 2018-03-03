@@ -1356,10 +1356,12 @@ static const struct CPS1config cps1_config_table[]=
 	{"willowj",    CPS_B_03,     mapper_WL24B },	// wrong, this set uses WL22B, still non dumped
 	{"willowje",   CPS_B_03,     mapper_WL24B },
 
+	/* New added */
 	{"sfzch",      CPS_B_21_DEF, mapper_sfzch },	// not an arcade game and no more in MAME, should not be removed?
-//	{"wofch",      CPS_B_21_DEF, mapper_sfzch },	// not an arcade game and no more in MAME, should not be removed?
-	{"wofch",      CPS_B_21_DEF, mapper_TK263B },
+	{"wofch",      CPS_B_21_DEF, mapper_TK263B },	// not an arcade game and no more in MAME, should not be removed?
 	{"wofchdx",    CPS_B_21_DEF, mapper_TK263B },
+	{"wofr1",      CPS_B_21_DEF, mapper_TK263B },
+	{"wofhfh",     CPS_B_21_DEF, mapper_TK263B, 0x36 },
 
     /* CPS2 games */
 	{"cps2",       CPS_B_21_DEF, mapper_cps2 },
@@ -2250,20 +2252,19 @@ static void cps1_render_sprites( running_machine *machine, bitmap_t *bitmap, con
 {																	\
 	if (flip_screen_get(machine))											\
 		pdrawgfx_transpen(bitmap,\
-				cliprect,machine->gfx[2],							\
+				cliprect, machine->gfx[2],							\
 				CODE,												\
 				COLOR,												\
 				!(FLIPX), !(FLIPY),									\
-				511-16-(SX), 255-16-(SY),	machine->priority_bitmap, 0x02, 15);					\
+				511 - 16 - (SX), 255 - 16 - (SY), machine->priority_bitmap, 0x02, 15);					\
 	else															\
 		pdrawgfx_transpen(bitmap,\
-				cliprect,machine->gfx[2],							\
+				cliprect, machine->gfx[2],							\
 				CODE,												\
 				COLOR,												\
-				FLIPX,FLIPY,										\
-				SX,SY,				machine->priority_bitmap, 0x02, 15);					\
+				FLIPX, FLIPY,										\
+				SX,SY,				  machine->priority_bitmap, 0x02, 15);					\
 }
-
 
 	int i, baseadd;
 	UINT16 *base = state->buffered_obj;
@@ -2493,18 +2494,18 @@ static void cps2_render_sprites( running_machine *machine, bitmap_t *bitmap, con
 {																					\
 	if (flip_screen_get(machine))															\
 		pdrawgfx_transpen(bitmap,\
-				cliprect,machine->gfx[2],											\
+				cliprect, machine->gfx[2],											\
 				CODE,																\
 				COLOR,																\
-				!(FLIPX),!(FLIPY),													\
-				511-16-(SX),255-16-(SY),				machine->priority_bitmap,primasks[priority],15);					\
+				!(FLIPX), !(FLIPY),													\
+				511 - 16 - (SX), 255 - 16 - (SY),		machine->priority_bitmap,primasks[priority], 15);					\
 	else																			\
 		pdrawgfx_transpen(bitmap,\
 				cliprect,machine->gfx[2],											\
 				CODE,																\
 				COLOR,																\
-				FLIPX,FLIPY,														\
-				SX,SY,							machine->priority_bitmap,primasks[priority],15);					\
+				FLIPX, FLIPY,														\
+				SX, SY,						machine->priority_bitmap,primasks[priority], 15);					\
 }
 
 	int i;
