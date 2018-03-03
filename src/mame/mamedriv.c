@@ -235,6 +235,8 @@ const game_driver * const drivers[] =
 	DRIVER( sfzch )
 	DRIVER( wofch )
 	DRIVER( wofchdx )
+	DRIVER( wofr1 )
+	DRIVER( wofhfh )
 
 
 
