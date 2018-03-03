@@ -2219,7 +2219,8 @@ static INPUT_PORTS_START( wof )
 	PORT_START( "EEPROMOUT" )
 	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_OUTPUT ) PORT_WRITE_LINE_DEVICE("eeprom", eeprom_write_bit)
 	PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_OUTPUT ) PORT_WRITE_LINE_DEVICE("eeprom", eeprom_set_clock_line)
-	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_OUTPUT ) PORT_WRITE_LINE_DEVICE("eeprom", eeprom_set_cs_line)
+//	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_OUTPUT ) PORT_WRITE_LINE_DEVICE("eeprom", eeprom_set_cs_line)
+	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_OUTPUT ) PORT_WRITE_LINE_DEVICE("eeprom", eeprom_set_cs_line)
 INPUT_PORTS_END
 
 /* Needs further checking */
@@ -6788,7 +6789,7 @@ ROM_START( knightsu )
 	ROM_LOAD16_WORD_SWAP( "kr_23u.8f",   0x00000, 0x80000, CRC(252bc2ba) SHA1(4f4901c253bd64bbe68ea01994ae663fe2ccd056) )
 	ROM_LOAD16_WORD_SWAP( "kr_22.7f",    0x80000, 0x80000, CRC(d0b671a9) SHA1(9865472c5fc3f617345e23b5de5a9ba177945b5a) )
 
-	ROM_REGION( 0x400000, "gfx", 0 )
+	ROM_REGION( 0x400000, "gfx", 0 )	/* MASK roms */
 	ROMX_LOAD( "kr-5m.3a",   0x000000, 0x80000, CRC(9e36c1a4) SHA1(772daae74e119371dfb76fde9775bda78a8ba125) , ROM_GROUPWORD | ROM_SKIP(6) )	// in "1" socket
 	ROMX_LOAD( "kr-7m.5a",   0x000002, 0x80000, CRC(c5832cae) SHA1(a188cf401cd3a2909b377d3059f14d22ec3b0643) , ROM_GROUPWORD | ROM_SKIP(6) )	// in "3" socket
 	ROMX_LOAD( "kr-1m.4a",   0x000004, 0x80000, CRC(f095be2d) SHA1(0427d1574062f277a9d04440019d5638b05de561) , ROM_GROUPWORD | ROM_SKIP(6) )	// in "2" socket
@@ -9603,28 +9604,34 @@ static DRIVER_INIT( dinohunt )
 	DRIVER_INIT_CALL(cps1);
 }
 
-
+//
 GAME( 1988, forgottn,   0,        cps1_10MHz, forgottn,   forgottn, ROT0,   "Capcom", "Forgotten Worlds (World)", GAME_SUPPORTS_SAVE )	// (c) Capcom U.S.A. but World "warning"
 GAME( 1988, forgottnua, forgottn, cps1_10MHz, forgottn,   forgottn, ROT0,   "Capcom", "Forgotten Worlds (USA, 88621B B-Board)", GAME_SUPPORTS_SAVE )
 GAME( 1988, forgottnu,  forgottn, cps1_10MHz, forgottn,   forgottn, ROT0,   "Capcom", "Forgotten Worlds (USA, 88618B B-Board)", GAME_SUPPORTS_SAVE )
 GAME( 1988, lostwrld,   forgottn, cps1_10MHz, forgottn,   forgottn, ROT0,   "Capcom", "Lost Worlds (Japan)", GAME_SUPPORTS_SAVE )
 GAME( 1988, lostwrldo,  forgottn, cps1_10MHz, forgottn,   forgottn, ROT0,   "Capcom", "Lost Worlds (Japan Old Ver.)", GAME_SUPPORTS_SAVE )
+//
 GAME( 1988, ghouls,     0,        cps1_10MHz, ghouls,     cps1,     ROT0,   "Capcom", "Ghouls'n Ghosts (World)", GAME_SUPPORTS_SAVE )	// "EXPORT" // Wed.26.10.1988 in the ROMs
 GAME( 1988, ghoulsu,    ghouls,   cps1_10MHz, ghoulsu,    cps1,     ROT0,   "Capcom", "Ghouls'n Ghosts (USA)", GAME_SUPPORTS_SAVE )	// "EXPORT" // Wed.26.10.1988 in the ROMs
 GAME( 1988, daimakai,   ghouls,   cps1_10MHz, daimakai,   cps1,     ROT0,   "Capcom", "Daimakaimura (Japan)", GAME_SUPPORTS_SAVE )			// Wed.26.10.1988 in the ROMs
 GAME( 1988, daimakair,  ghouls,   cps1_10MHz, daimakai,   cps1,     ROT0,   "Capcom", "Daimakaimura (Japan Resale Ver.)", GAME_SUPPORTS_SAVE )	// Wed.26.10.1988 in the ROMs
+//
 GAME( 1989, strider,    0,        cps1_10MHz, strider,    cps1,     ROT0,   "Capcom", "Strider (USA, set 1)", GAME_SUPPORTS_SAVE )
 GAME( 1989, striderua,  strider,  cps1_10MHz, stridrua,   cps1,     ROT0,   "Capcom", "Strider (USA, set 2)", GAME_SUPPORTS_SAVE )
 GAME( 1989, striderj,   strider,  cps1_10MHz, strider,    cps1,     ROT0,   "Capcom", "Strider Hiryu (Japan)", GAME_SUPPORTS_SAVE )
 GAME( 1989, striderjr,  strider,  cps1_10MHz, strider,    cps1,     ROT0,   "Capcom", "Strider Hiryu (Japan Resale Ver.)", GAME_SUPPORTS_SAVE )
+//
 GAME( 1989, dynwar,     0,        cps1_10MHz, dynwar,     cps1,     ROT0,   "Capcom", "Dynasty Wars (USA, set 1)", GAME_SUPPORTS_SAVE )	// (c) Capcom U.S.A.
 GAME( 1989, dynwaru,    dynwar,   cps1_10MHz, dynwar,     cps1,     ROT0,   "Capcom", "Dynasty Wars (USA, set 2)", GAME_SUPPORTS_SAVE )	// (c) Capcom U.S.A. but World version since ROMs region labels are "TKE"
 GAME( 1989, dynwarj,    dynwar,   cps1_10MHz, dynwar,     cps1,     ROT0,   "Capcom", "Tenchi wo Kurau (Japan)", GAME_SUPPORTS_SAVE )
+//
 GAME( 1989, willow,     0,        cps1_10MHz, willow,     cps1,     ROT0,   "Capcom", "Willow (USA)", GAME_SUPPORTS_SAVE )
 GAME( 1989, willowj,    willow,   cps1_10MHz, willow,     cps1,     ROT0,   "Capcom", "Willow (Japan, Japanese)", GAME_SUPPORTS_SAVE )	// Japan "warning"
 GAME( 1989, willowje,   willow,   cps1_10MHz, willow,     cps1,     ROT0,   "Capcom", "Willow (Japan, English)", GAME_SUPPORTS_SAVE )	// (c) Capcom U.S.A. but Japan "warning"
+//
 GAME( 1989, unsquad,    0,        cps1_10MHz, unsquad,    cps1,     ROT0,   "Capcom / Daipro", "U.N. Squadron (USA)", GAME_SUPPORTS_SAVE )
 GAME( 1989, area88,     unsquad,  cps1_10MHz, unsquad,    cps1,     ROT0,   "Capcom / Daipro", "Area 88 (Japan)", GAME_SUPPORTS_SAVE )
+//
 GAME( 1989, ffight,     0,        cps1_10MHz, ffight,     cps1,     ROT0,   "Capcom", "Final Fight (World)", GAME_SUPPORTS_SAVE )
 GAME( 1989, ffightu,    ffight,   cps1_10MHz, ffight,     cps1,     ROT0,   "Capcom", "Final Fight (USA)", GAME_SUPPORTS_SAVE )
 GAME( 1989, ffightua,   ffight,   cps1_10MHz, ffight,     cps1,     ROT0,   "Capcom", "Final Fight (USA 900112)", GAME_SUPPORTS_SAVE )
@@ -9633,24 +9640,31 @@ GAME( 1989, ffightj,    ffight,   cps1_10MHz, ffight,     cps1,     ROT0,   "Cap
 GAME( 1989, ffightj1,   ffight,   cps1_10MHz, ffight,     cps1,     ROT0,   "Capcom", "Final Fight (Japan 900112)", GAME_SUPPORTS_SAVE )
 GAME( 1989, ffightj2,   ffight,   cps1_10MHz, ffight,     cps1,     ROT0,   "Capcom", "Final Fight (Japan 900305)", GAME_SUPPORTS_SAVE )
 GAME( 1989, ffightjh,   ffight,   cps1_10MHz, ffight,     cps1,     ROT0,   "bootleg", "Street Smart / Final Fight (Japan, hack)", GAME_SUPPORTS_SAVE )
+//
 GAME( 1990, 1941,       0,        cps1_10MHz, 1941,       cps1,     ROT270, "Capcom", "1941: Counter Attack (World)", GAME_SUPPORTS_SAVE )
 GAME( 1990, 1941j,      1941,     cps1_10MHz, 1941,       cps1,     ROT270, "Capcom", "1941: Counter Attack (Japan)", GAME_SUPPORTS_SAVE )
+//
 GAME( 1990, mercs,      0,        cps1_10MHz, mercs,      cps1,     ROT270, "Capcom", "Mercs (World 900302)", GAME_SUPPORTS_SAVE )	// "ETC"
 GAME( 1990, mercsu,     mercs,    cps1_10MHz, mercs,      cps1,     ROT270, "Capcom", "Mercs (USA 900302)", GAME_SUPPORTS_SAVE )
 GAME( 1990, mercsua,    mercs,    cps1_10MHz, mercs,      cps1,     ROT270, "Capcom", "Mercs (USA 900608)", GAME_SUPPORTS_SAVE )
 GAME( 1990, mercsj,     mercs,    cps1_10MHz, mercs,      cps1,     ROT270, "Capcom", "Senjou no Ookami II (Japan 900302)", GAME_SUPPORTS_SAVE )
+//
 GAME( 1990, mtwins,     0,        cps1_10MHz, mtwins,     cps1,     ROT0,   "Capcom", "Mega Twins (World 900619)", GAME_SUPPORTS_SAVE )	// "ETC" - (c) Capcom U.S.A. but World "warning"
 GAME( 1990, chikij,     mtwins,   cps1_10MHz, mtwins,     cps1,     ROT0,   "Capcom", "Chiki Chiki Boys (Japan 900619)", GAME_SUPPORTS_SAVE )
+//
 GAME( 1990, msword,     0,        cps1_10MHz, msword,     cps1,     ROT0,   "Capcom", "Magic Sword: Heroic Fantasy (World 900725)", GAME_SUPPORTS_SAVE )	// 25.07.1990  "OTHER COUNTRY"
 GAME( 1990, mswordr1,   msword,   cps1_10MHz, msword,     cps1,     ROT0,   "Capcom", "Magic Sword: Heroic Fantasy (World 900623)", GAME_SUPPORTS_SAVE )	// 23.06.1990  "OTHER COUNTRY"
 GAME( 1990, mswordu,    msword,   cps1_10MHz, msword,     cps1,     ROT0,   "Capcom", "Magic Sword: Heroic Fantasy (USA 900725)", GAME_SUPPORTS_SAVE )	// 25.07.1990  "U.S.A."
 GAME( 1990, mswordj,    msword,   cps1_10MHz, msword,     cps1,     ROT0,   "Capcom", "Magic Sword (Japan 900623)", GAME_SUPPORTS_SAVE )			// 23.06.1990  "JAPAN"
+//
 GAME( 1990, cawing,     0,        cps1_10MHz, cawing,     cps1,     ROT0,   "Capcom", "Carrier Air Wing (World 901012)", GAME_SUPPORTS_SAVE )	// "ETC"
 GAME( 1990, cawingr1,   cawing,   cps1_10MHz, cawing,     cps1,     ROT0,   "Capcom", "Carrier Air Wing (World 901009)", GAME_SUPPORTS_SAVE )	// "ETC"
 GAME( 1990, cawingu,    cawing,   cps1_10MHz, cawing,     cps1,     ROT0,   "Capcom", "Carrier Air Wing (USA 901012)", GAME_SUPPORTS_SAVE )
 GAME( 1990, cawingj,    cawing,   cps1_10MHz, cawing,     cps1,     ROT0,   "Capcom", "U.S. Navy (Japan 901012)", GAME_SUPPORTS_SAVE )
+//
 GAME( 1990, nemo,       0,        cps1_10MHz, nemo,       cps1,     ROT0,   "Capcom", "Nemo (World 901130)", GAME_SUPPORTS_SAVE )	// "ETC"
 GAME( 1990, nemoj,      nemo,     cps1_10MHz, nemo,       cps1,     ROT0,   "Capcom", "Nemo (Japan 901120)", GAME_SUPPORTS_SAVE )
+//
 GAME( 1991, sf2,        0,        cps1_10MHz, sf2,        cps1,     ROT0,   "Capcom", "Street Fighter II: The World Warrior (World 910522)", GAME_SUPPORTS_SAVE )	// "ETC"
 GAME( 1991, sf2eb,      sf2,      cps1_10MHz, sf2,        cps1,     ROT0,   "Capcom", "Street Fighter II: The World Warrior (World 910214)", GAME_SUPPORTS_SAVE )	// "ETC"
 GAME( 1992, sf2ebbl,    sf2,      cps1_10MHz, sf2hack,    sf2hack,  ROT0,   "bootleg", "Street Fighter II: The World Warrior (TAB Austria, bootleg)", GAME_SUPPORTS_SAVE )	// 910214 - based on World version
@@ -9666,23 +9680,28 @@ GAME( 1991, sf2ja,      sf2,      cps1_10MHz, sf2j,       cps1,     ROT0,   "Cap
 GAME( 1991, sf2jc,      sf2,      cps1_10MHz, sf2j,       cps1,     ROT0,   "Capcom", "Street Fighter II: The World Warrior (Japan 910306)", GAME_SUPPORTS_SAVE )
 GAME( 1991, sf2qp1,     sf2,      cps1_10MHz, sf2,        cps1,     ROT0,   "bootleg", "Street Fighter II: The World Warrior (Quicken Pt-I, bootleg)", GAME_SUPPORTS_SAVE )	// 910214 - based on World version
 GAME( 1991, sf2thndr,   sf2,      cps1_10MHz, sf2,        sf2thndr, ROT0,   "bootleg", "Street Fighter II: The World Warrior (Thunder Edition, bootleg)", GAME_SUPPORTS_SAVE )	// 910214 - based on World version
+//
 GAME( 1991, 3wonders,   0,        cps1_10MHz, 3wonders,   cps1,     ROT0,   "Capcom", "Three Wonders (World 910520)", GAME_SUPPORTS_SAVE )	// "ETC"
 GAME( 1991, 3wondersu,  3wonders, cps1_10MHz, 3wonders,   cps1,     ROT0,   "Capcom", "Three Wonders (USA 910520)", GAME_SUPPORTS_SAVE )
 GAME( 1991, wonder3,    3wonders, cps1_10MHz, 3wonders,   cps1,     ROT0,   "Capcom", "Wonder 3 (Japan 910520)", GAME_SUPPORTS_SAVE )
 GAME( 1991, 3wondersh,  3wonders, cps1_10MHz, 3wonders,   cps1,     ROT0,   "bootleg", "Three Wonders (hack)", GAME_SUPPORTS_SAVE )	// 910520 - based on World version
+//
 GAME( 1991, kod,        0,        cps1_10MHz, kod,        cps1,     ROT0,   "Capcom", "The King of Dragons (World 910711)", GAME_SUPPORTS_SAVE )	// "ETC"
 GAME( 1991, kodu,       kod,      cps1_10MHz, kodj,       cps1,     ROT0,   "Capcom", "The King of Dragons (USA 910910)", GAME_SUPPORTS_SAVE )
 GAME( 1991, kodj,       kod,      cps1_10MHz, kodj,       cps1,     ROT0,   "Capcom", "The King of Dragons (Japan 910805)", GAME_SUPPORTS_SAVE )
+//
 GAME( 1991, captcomm,   0,        cps1_10MHz, captcomm,   cps1,     ROT0,   "Capcom", "Captain Commando (World 911202)", GAME_SUPPORTS_SAVE )	// "OTHER COUNTRY"
 GAME( 1991, captcommr1, captcomm, cps1_10MHz, captcomm,   cps1,     ROT0,   "Capcom", "Captain Commando (World 911014)", GAME_SUPPORTS_SAVE )	// "OTHER COUNTRY"
 GAME( 1991, captcommu,  captcomm, cps1_10MHz, captcomm,   cps1,     ROT0,   "Capcom", "Captain Commando (USA 910928)", GAME_SUPPORTS_SAVE )
 GAME( 1991, captcommj,  captcomm, cps1_10MHz, captcomm,   cps1,     ROT0,   "Capcom", "Captain Commando (Japan 911202)", GAME_SUPPORTS_SAVE )
 GAME( 1991, captcommjr1,captcomm, cps1_10MHz, captcomm,   cps1,     ROT0,   "Capcom", "Captain Commando (Japan 910928)", GAME_SUPPORTS_SAVE )
 GAME( 1991, captcommb,  captcomm, cps1_10MHz, captcomm,   cps1,     ROT0,   "bootleg", "Captain Commando (bootleg)", GAME_NOT_WORKING | GAME_SUPPORTS_SAVE )	// 911014 - based on World version
+//
 GAME( 1991, knights,    0,        cps1_10MHz, knights,    cps1,     ROT0,   "Capcom", "Knights of the Round (World 911127)", GAME_SUPPORTS_SAVE )	// "ETC"
 GAME( 1991, knightsu,   knights,  cps1_10MHz, knights,    cps1,     ROT0,   "Capcom", "Knights of the Round (USA 911127)", GAME_SUPPORTS_SAVE )
 GAME( 1991, knightsj,   knights,  cps1_10MHz, knights,    cps1,     ROT0,   "Capcom", "Knights of the Round (Japan 911127)", GAME_SUPPORTS_SAVE )
 GAME( 1991, knightsb,   knights,  knightsb,   knights,    cps1,     ROT0,   "bootleg", "Knights of the Round (bootleg)", GAME_NOT_WORKING | GAME_SUPPORTS_SAVE )	// 911127 - based on World version
+//
 GAME( 1992, sf2ce,      0,        cps1_12MHz, sf2,        cps1,     ROT0,   "Capcom", "Street Fighter II': Champion Edition (World 920313)", GAME_SUPPORTS_SAVE )	// "ETC"
 GAME( 1992, sf2ceua,    sf2ce,    cps1_12MHz, sf2,        cps1,     ROT0,   "Capcom", "Street Fighter II': Champion Edition (USA 920313)", GAME_SUPPORTS_SAVE )
 GAME( 1992, sf2ceub,    sf2ce,    cps1_12MHz, sf2,        cps1,     ROT0,   "Capcom", "Street Fighter II': Champion Edition (USA 920513)", GAME_SUPPORTS_SAVE )
@@ -9706,29 +9725,34 @@ GAME( 1992, sf2m7,      sf2ce,    cps1_12MHz, sf2hack,    sf2hack,  ROT0,   "boo
 GAME( 1992, sf2yyc,     sf2ce,    cps1_12MHz, sf2hack,    sf2hack,  ROT0,   "bootleg", "Street Fighter II': Champion Edition (YYC, bootleg)", GAME_SUPPORTS_SAVE )				// 920313 - based on World version
 GAME( 1992, sf2koryu,   sf2ce,    cps1_12MHz, sf2hack,    sf2hack,  ROT0,   "bootleg", "Street Fighter II': Champion Edition (Xiang Long, Chinese bootleg)", GAME_SUPPORTS_SAVE )		// 811102 !!! - based on World version
 GAME( 1992, sf2mdt,     sf2ce,    sf2mdt,     sf2hack,    sf2mdt,   ROT0,   "bootleg", "Street Fighter II': Magic Delta Turbo (bootleg)", GAME_NOT_WORKING | GAME_NO_SOUND | GAME_SUPPORTS_SAVE )	// 920313 - based on (heavily modified) World version
+//
 GAME( 1992, cworld2j,   0,        cps1_12MHz, cworld2j,   cps1,     ROT0,   "Capcom", "Adventure Quiz Capcom World 2 (Japan 920611)", GAME_SUPPORTS_SAVE )
+//
 GAME( 1992, varth,      0,        cps1_12MHz, varth,      cps1,     ROT270, "Capcom", "Varth: Operation Thunderstorm (World 920714)", GAME_SUPPORTS_SAVE )	// "ETC"    // 12MHz verified
 GAME( 1992, varthr1,    varth,    cps1_12MHz, varth,      cps1,     ROT270, "Capcom", "Varth: Operation Thunderstorm (World 920612)", GAME_SUPPORTS_SAVE )	// "ETC"
 GAME( 1992, varthu,     varth,    cps1_12MHz, varth,      cps1,     ROT270, "Capcom, distributed by Romstar", "Varth: Operation Thunderstorm (USA 920612)", GAME_SUPPORTS_SAVE )
 GAME( 1992, varthj,     varth,    cps1_12MHz, varth,      cps1,     ROT270, "Capcom", "Varth: Operation Thunderstorm (Japan 920714)", GAME_SUPPORTS_SAVE )
+//
 GAME( 1992, qad,        0,        cps1_12MHz, qad,        cps1,     ROT0,   "Capcom", "Quiz & Dragons: Capcom Quiz Game (USA 920701)", GAME_SUPPORTS_SAVE )	// 12MHz verified
 GAME( 1994, qadj,       qad,      cps1_12MHz, qadj,       cps1,     ROT0,   "Capcom", "Quiz & Dragons: Capcom Quiz Game (Japan 940921)", GAME_SUPPORTS_SAVE )
-
-GAME( 1992, wof,        0,        qsound,     wof,        wof,      ROT0,   "Capcom", "Warriors of Fate (World 921002)", GAME_SUPPORTS_SAVE )	// "ETC"
+//
+GAME( 1992, wof,        0,        qsound,     wof,        wof,      ROT0,   "Capcom", "Warriors of Fate (World 921031)", GAME_SUPPORTS_SAVE )	// "ETC"
 GAME( 1992, wofu,       wof,      qsound,     wof,        wof,      ROT0,   "Capcom", "Warriors of Fate (USA 921031)", GAME_SUPPORTS_SAVE )	// World "warning"
 GAME( 1992, wofa,       wof,      qsound,     wof,        wof,      ROT0,   "Capcom", "Sangokushi II (Asia 921005)", GAME_SUPPORTS_SAVE )	// World "warning"
 GAME( 1992, wofj,       wof,      qsound,     wof,        wof,      ROT0,   "Capcom", "Tenchi wo Kurau II: Sekiheki no Tatakai (Japan 921031)", GAME_SUPPORTS_SAVE )
 GAME( 1999, wofhfb,     wof,      wofhfb,     wofhfb,     cps1,     ROT0,   "bootleg", "Huo Feng Huang (Chinese bootleg of Sangokushi II)", GAME_SUPPORTS_SAVE )	// 921005 - based on Asia version
-
+//
 GAME( 1992, sf2hf,      0,        cps1_12MHz, sf2,        cps1,     ROT0,   "Capcom", "Street Fighter II': Hyper Fighting (World 921209)", GAME_SUPPORTS_SAVE )	// "ETC"
 GAME( 1992, sf2hfu,     sf2hf,    cps1_12MHz, sf2,        cps1,     ROT0,   "Capcom", "Street Fighter II': Hyper Fighting (USA 921209)", GAME_SUPPORTS_SAVE )
 GAME( 1992, sf2hfj,     sf2hf,    cps1_12MHz, sf2j,       cps1,     ROT0,   "Capcom", "Street Fighter II' Turbo: Hyper Fighting (Japan 921209)", GAME_SUPPORTS_SAVE )
+//
 GAME( 1993, dino,       0,        qsound,     dino,       dino,     ROT0,   "Capcom", "Cadillacs and Dinosaurs (World 930201)", GAME_SUPPORTS_SAVE )	// "ETC"
 GAME( 1993, dinou,      dino,     qsound,     dino,       dino,     ROT0,   "Capcom", "Cadillacs and Dinosaurs (USA 930201)", GAME_SUPPORTS_SAVE )
 GAME( 1993, dinoj,      dino,     qsound,     dino,       dino,     ROT0,   "Capcom", "Cadillacs: Kyouryuu Shin Seiki (Japan 930201)", GAME_SUPPORTS_SAVE )
 GAME( 1993, dinopic,    dino,     cpspicb,    dinopic,    dino,     ROT0,   "bootleg", "Cadillacs and Dinosaurs (bootleg with PIC16c57, set 1)", GAME_NOT_WORKING | GAME_SUPPORTS_SAVE )
 GAME( 1993, dinopic2,   dino,     cpspicb,    dinopic,    dino,     ROT0,   "bootleg", "Cadillacs and Dinosaurs (bootleg with PIC16c57, set 2)", GAME_NOT_WORKING | GAME_SUPPORTS_SAVE )
 GAME( 1993, dinohunt,   dino,     wofhfb,     dinoh,      dinohunt, ROT0,   "bootleg", "Dinosaur Hunter (Chinese bootleg of Cadillacs and Dinosaurs)", GAME_NOT_WORKING | GAME_SUPPORTS_SAVE )	// 930223 - based on Asia TW version, the original is still undumped
+//
 GAME( 1993, punisher,   0,        qsound,     punisher,   punisher, ROT0,   "Capcom", "The Punisher (World 930422)", GAME_SUPPORTS_SAVE )	// "ETC"
 GAME( 1993, punisheru,  punisher, qsound,     punisher,   punisher, ROT0,   "Capcom", "The Punisher (USA 930422)", GAME_SUPPORTS_SAVE )
 GAME( 1993, punisherj,  punisher, qsound,     punisher,   punisher, ROT0,   "Capcom", "The Punisher (Japan 930422)", GAME_SUPPORTS_SAVE )
@@ -9736,25 +9760,37 @@ GAME( 1993, punipic,    punisher, cpspicb,    punipic,    punisher, ROT0,   "boo
 GAME( 1993, punipic2,   punisher, cpspicb,    punipic,    punisher, ROT0,   "bootleg", "The Punisher (bootleg with PIC16c57, set 2)", GAME_NOT_WORKING | GAME_SUPPORTS_SAVE )
 GAME( 1993, punipic3,   punisher, cpspicb,    punipic,    punisher, ROT0,   "bootleg", "The Punisher (bootleg with PIC16c57, set 3)", GAME_NOT_WORKING | GAME_SUPPORTS_SAVE )
 GAME( 1993, punisherbz, punisher, wofhfb,     punisherbz, cps1,     ROT0,   "bootleg", "Biaofeng Zhanjing (Chinese bootleg of The Punisher)", GAME_SUPPORTS_SAVE )	// (c) 2002, they ripped the sound from Final Fight!
+//
 GAME( 1993, slammast,   0,        qsound,     slammast,   slammast, ROT0,   "Capcom", "Saturday Night Slam Masters (World 930713)", GAME_SUPPORTS_SAVE )	// "ETC"
 GAME( 1993, slammastu,  slammast, qsound,     slammast,   slammast, ROT0,   "Capcom", "Saturday Night Slam Masters (USA 930713)", GAME_SUPPORTS_SAVE )
+//
 GAME( 1993, mbomberj,   slammast, qsound,     slammast,   slammast, ROT0,   "Capcom", "Muscle Bomber: The Body Explosion (Japan 930713)", GAME_SUPPORTS_SAVE )
 GAME( 1993, mbombrd,    0,        qsound,     slammast,   slammast, ROT0,   "Capcom", "Muscle Bomber Duo: Ultimate Team Battle (World 931206)", GAME_SUPPORTS_SAVE )	// "ETC"
 GAME( 1993, mbombrdj,   mbombrd,  qsound,     slammast,   slammast, ROT0,   "Capcom", "Muscle Bomber Duo: Heat Up Warriors (Japan 931206)", GAME_SUPPORTS_SAVE )
+//
 GAME( 1994, pnickj,     0,        cps1_12MHz, pnickj,     cps1,     ROT0,   "Capcom, licensed by Compile)", "Pnickies (Japan 940608)", GAME_SUPPORTS_SAVE )
+//
 GAME( 1995, qtono2j,    0,        cps1_12MHz, qtono2j,    cps1,     ROT0,   "Capcom", "Quiz Tonosama no Yabou 2: Zenkoku-ban (Japan 950123)", GAME_SUPPORTS_SAVE )
+//
 GAME( 1995, megaman,    0,        cps1_12MHz, megaman,    cps1,     ROT0,   "Capcom", "Mega Man: The Power Battle (CPS1, Asia 951006)", GAME_SUPPORTS_SAVE )
 GAME( 1995, rockmanj,   megaman,  cps1_12MHz, rockmanj,   cps1,     ROT0,   "Capcom", "Rockman: The Power Battle (CPS1, Japan 950922)", GAME_SUPPORTS_SAVE )
-
+//
 /* Games released on CPS-1 hardware by Mitchell */
 GAME( 1995, pang3,      0,        pang3,      pang3,      pang3,    ROT0,  "Mitchell", "Pang! 3 (Euro 950601)", GAME_SUPPORTS_SAVE )
 GAME( 1995, pang3n,     pang3,    pang3,      pang3n,     pang3n,   ROT0,  "Mitchell", "Pang! 3 (Euro 950511, not encrypted)", GAME_SUPPORTS_SAVE )
 GAME( 1995, pang3j,     pang3,    pang3,      pang3n,     pang3,    ROT0,  "Mitchell", "Pang! 3: Kaitou Tachi no Karei na Gogo (Japan 950511)", GAME_SUPPORTS_SAVE )
 
-/* Home 'CPS Changer Unit' - For MESS */
+
+
+/* New Added */
 /*
 GAME( year,  archives name,  parent name,  MACHINE_DRIVER_START, INPUT_PORTS, DRIVER_INIT, flip, producer name, support )
 */
 GAME( 1995, sfzch,      0,       cps1_12MHz,  sfzch,	  cps1,	    ROT0,   "Capcom", "CPS Changer - Street Fighter Zero (Japan 951020)", 0 )
 GAME( 1995, wofch,	0,	 qsound,      wofch,	  wof,      ROT0,   "Capcom", "CPS Changer - Tenchi Wo Kurau II (Japan 921031)", GAME_SUPPORTS_SAVE )
-GAME( 1995, wofchdx,	wofch,	 qsound,      wofch,	  wof,      ROT0,   "Capcom", "CPS Changer - Tenchi Wo Kurau II (Hack)", GAME_SUPPORTS_SAVE )
+GAME( 2010, wofchdx,	wofch,	 qsound,      wofch,	  wof,      ROT0,   "Capcom", "CPS Changer - Sangokushi III Gaiden: Kakou-On's Revenge DX (hack)", GAME_SUPPORTS_SAVE )
+/*
+GAME( year,  archives name,  parent name,  MACHINE_DRIVER_START, INPUT_PORTS, DRIVER_INIT, flip, producer name, support )
+*/
+GAME( 1992, wofr1,      wof,     qsound,      wof,       wof,      ROT0,   "Capcom", "Warriors of Fate (World 921020)", GAME_SUPPORTS_SAVE )
+GAME( 1999, wofhfh,     0,       wofhfb,     wofhfb,     cps1,     ROT0,   "bootleg", "Huo Feng Huang , Chinese bootleg", GAME_SUPPORTS_SAVE )
