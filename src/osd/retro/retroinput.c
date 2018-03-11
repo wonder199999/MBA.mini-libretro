@@ -1,6 +1,5 @@
 
 #define PLAYER_PRESS(button)			input_state_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_##button)
-#define input_device_item_add_kbd(a,b,c,d,e) 	input_device_item_add(a,b,c,d,e)
 
 /* 6-buttons fighting games */
 #define SF_LAYOUT	(core_stricmp(machine->gamedrv->name, "dstlk") == 0) || (core_stricmp(machine->gamedrv->parent, "dstlk") == 0) || \
@@ -28,30 +27,27 @@
 			(core_stricmp(machine->gamedrv->name, "soldier") == 0) || (core_stricmp(machine->gamedrv->parent, "soldier") == 0) || \
 			(core_stricmp(machine->gamedrv->name, "sfzch") == 0) || (core_stricmp(machine->gamedrv->parent, "sfzch") == 0)
 /* Neo Geo */
-/*
-#define NEOGEO_LAYOUT	(core_stricmp(machine->gamedrv->parent, "aof") == 0) || (core_stricmp(machine->gamedrv->parent, "aof2") == 0) || (core_stricmp(machine->gamedrv->parent, "aof3") == 0) || \
-         		(core_stricmp(machine->gamedrv->parent, "breakers") == 0) || (core_stricmp(machine->gamedrv->parent, "breakrev") == 0) || (core_stricmp(machine->gamedrv->parent, "doubledr") == 0) || \
-         		(core_stricmp(machine->gamedrv->parent, "fatfursp") == 0) || (core_stricmp(machine->gamedrv->parent, "fatfury1") == 0) || (core_stricmp(machine->gamedrv->parent, "fatfury2") == 0) || \
-         		(core_stricmp(machine->gamedrv->parent, "fatfury3") == 0) || (core_stricmp(machine->gamedrv->parent, "fightfev") == 0) || (core_stricmp(machine->gamedrv->parent, "galaxyfg") == 0) || \
-         		(core_stricmp(machine->gamedrv->parent, "garou") == 0) || (core_stricmp(machine->gamedrv->parent, "gowcaizr") == 0) || (core_stricmp(machine->gamedrv->parent, "kabukikl") == 0) || \
-         		(core_stricmp(machine->gamedrv->parent, "kizuna") == 0) || (core_stricmp(machine->gamedrv->parent, "kof94") == 0) || (core_stricmp(machine->gamedrv->parent, "kof95") == 0) || \
-         		(core_stricmp(machine->gamedrv->parent, "kof96") == 0) || (core_stricmp(machine->gamedrv->parent, "kof97") == 0) || (core_stricmp(machine->gamedrv->parent, "kof98") == 0) || \
-         		(core_stricmp(machine->gamedrv->parent, "kof99") == 0) || (core_stricmp(machine->gamedrv->parent, "kof2000") == 0) || (core_stricmp(machine->gamedrv->parent, "kof2001") == 0) || \
-         		(core_stricmp(machine->gamedrv->parent, "kof2002") == 0) || (core_stricmp(machine->gamedrv->parent, "kof2003") == 0) || (core_stricmp(machine->gamedrv->parent, "lastblad") == 0) || \
-         		(core_stricmp(machine->gamedrv->parent, "lastbld2") == 0) || (core_stricmp(machine->gamedrv->parent, "lresort") == 0) || (core_stricmp(machine->gamedrv->parent, "matrim") == 0) || \
-         		(core_stricmp(machine->gamedrv->parent, "mslug") == 0) || (core_stricmp(machine->gamedrv->parent, "mslug2") == 0) || (core_stricmp(machine->gamedrv->parent, "mslug3") == 0) || \
-         		(core_stricmp(machine->gamedrv->parent, "mslug4") == 0) || (core_stricmp(machine->gamedrv->parent, "mslug5") == 0) || (core_stricmp(machine->gamedrv->parent, "rbff1") == 0) || \
-         		(core_stricmp(machine->gamedrv->parent, "mslugx") == 0) || (core_stricmp(machine->gamedrv->parent, "neogeo") == 0) ||(core_stricmp(machine->gamedrv->parent, "ninjamas") == 0) || \
-         		(core_stricmp(machine->gamedrv->parent, "rbff2") == 0) || (core_stricmp(machine->gamedrv->parent, "rbffspec") == 0) || (core_stricmp(machine->gamedrv->parent, "rotd") == 0) || \
-         		(core_stricmp(machine->gamedrv->parent, "samsh5sp") == 0) || (core_stricmp(machine->gamedrv->parent, "samsho") == 0) || (core_stricmp(machine->gamedrv->parent, "samsho2") == 0) || \
-         		(core_stricmp(machine->gamedrv->parent, "samsho3") == 0) || (core_stricmp(machine->gamedrv->parent, "samsho4") == 0) || (core_stricmp(machine->gamedrv->parent, "samsho5") == 0) || \
-         		(core_stricmp(machine->gamedrv->parent, "savagere") == 0) || (core_stricmp(machine->gamedrv->parent, "sengoku3") == 0) || (core_stricmp(machine->gamedrv->parent, "svc") == 0) || \
-         		(core_stricmp(machine->gamedrv->parent, "viewpoin") == 0) || (core_stricmp(machine->gamedrv->parent, "wakuwak7") == 0) || (core_stricmp(machine->gamedrv->parent, "wh1") == 0) || \
-         		(core_stricmp(machine->gamedrv->parent, "wh2") == 0) || (core_stricmp(machine->gamedrv->parent, "wh2j") == 0) || (core_stricmp(machine->gamedrv->parent, "whp") == 0) || \
-       			(core_stricmp(machine->gamedrv->parent, "karnovr") == 0) || (core_stricmp(machine->gamedrv->parent, "aodk") == 0) || (core_stricmp(machine->gamedrv->parent, "kf2k3pcb") == 0) || \
-			(core_stricmp(machine->gamedrv->parent, "svcpcb") == 0) || (core_stricmp(machine->gamedrv->parent, "ms5pcb") == 0)
-*/
-#define NEOGEO_LAYOUT	(core_stricmp(machine->gamedrv->parent, "neogeo") == 0)
+#define NEOGEO_LAYOUT	(core_stricmp(machine->gamedrv->parent, "aof") == 0) || (core_stricmp(machine->gamedrv->parent, "aof2") == 0) || \
+			(core_stricmp(machine->gamedrv->parent, "aof3") == 0) || (core_stricmp(machine->gamedrv->parent, "breakers") == 0) || \
+			(core_stricmp(machine->gamedrv->parent, "breakrev") == 0) || (core_stricmp(machine->gamedrv->parent, "doubledr") == 0) || \
+         		(core_stricmp(machine->gamedrv->parent, "fatfursp") == 0) || (core_stricmp(machine->gamedrv->parent, "fatfury1") == 0) || \
+			(core_stricmp(machine->gamedrv->parent, "fatfury2") == 0) || (core_stricmp(machine->gamedrv->parent, "fatfury3") == 0) || \
+			(core_stricmp(machine->gamedrv->parent, "kof94") == 0) || (core_stricmp(machine->gamedrv->parent, "kof95") == 0) || \
+         		(core_stricmp(machine->gamedrv->parent, "kof96") == 0) || (core_stricmp(machine->gamedrv->parent, "kof97") == 0) || \
+			(core_stricmp(machine->gamedrv->parent, "kof98") == 0) || (core_stricmp(machine->gamedrv->parent, "kof99") == 0) || \
+			(core_stricmp(machine->gamedrv->parent, "kof2000") == 0) || (core_stricmp(machine->gamedrv->parent, "kof2001") == 0) || \
+         		(core_stricmp(machine->gamedrv->parent, "kof2002") == 0) || (core_stricmp(machine->gamedrv->parent, "kof2003") == 0) || \
+			(core_stricmp(machine->gamedrv->parent, "lastblad") == 0) || (core_stricmp(machine->gamedrv->parent, "lastbld2") == 0) || \
+			(core_stricmp(machine->gamedrv->parent, "rbff1") == 0) || (core_stricmp(machine->gamedrv->parent, "rbff2") == 0) || \
+			(core_stricmp(machine->gamedrv->parent, "rbffspec") == 0) || (core_stricmp(machine->gamedrv->parent, "svcpcb") == 0) || \
+         		(core_stricmp(machine->gamedrv->parent, "samsh5sp") == 0) || (core_stricmp(machine->gamedrv->parent, "samsho") == 0) || \
+			(core_stricmp(machine->gamedrv->parent, "samsho2") == 0) || (core_stricmp(machine->gamedrv->parent, "samsho3") == 0) || \
+			(core_stricmp(machine->gamedrv->parent, "samsho4") == 0) || (core_stricmp(machine->gamedrv->parent, "samsho5") == 0) || \
+         		(core_stricmp(machine->gamedrv->parent, "savagere") == 0) || (core_stricmp(machine->gamedrv->parent, "svc") == 0) || \
+			(core_stricmp(machine->gamedrv->parent, "wakuwak7") == 0) || (core_stricmp(machine->gamedrv->parent, "wh1") == 0) || \
+			(core_stricmp(machine->gamedrv->parent, "wh2") == 0) || (core_stricmp(machine->gamedrv->parent, "wh2j") == 0) || \
+			(core_stricmp(machine->gamedrv->parent, "whp") == 0) || (core_stricmp(machine->gamedrv->parent, "karnovr") == 0) || \
+			(core_stricmp(machine->gamedrv->parent, "aodk") == 0) || (core_stricmp(machine->gamedrv->parent, "kf2k3pcb") == 0)
 
 /* Capcom Eco Fighter , use L & R button to turn the weapon */
 #define ECOFGT_LAYOUT	(core_stricmp(machine->gamedrv->name, "ecofghtr") == 0) || (core_stricmp(machine->gamedrv->parent, "ecofghtr") == 0)
@@ -187,11 +183,15 @@ static void initInput(running_machine *machine)
 {
 	unsigned int i;
 
+   	retrokbd_device = input_device_add(machine, DEVICE_CLASS_KEYBOARD, "Retrokdb", NULL);
+
    	P1_device = input_device_add(machine, DEVICE_CLASS_KEYBOARD, "Pad1", NULL);
    	P2_device = input_device_add(machine, DEVICE_CLASS_KEYBOARD, "Pad2", NULL);
    	P3_device = input_device_add(machine, DEVICE_CLASS_KEYBOARD, "Pad3", NULL);
    	P4_device = input_device_add(machine, DEVICE_CLASS_KEYBOARD, "Pad4", NULL);
 
+   	if (retrokbd_device == NULL)
+      		fatalerror("KBD Error creating keyboard device! \n");
    	if (P1_device == NULL)
 		fatalerror("P1 Error creating keyboard device\n");
    	if (P2_device == NULL)
@@ -201,13 +201,8 @@ static void initInput(running_machine *machine)
    	if (P4_device == NULL)
 		fatalerror("P4 Error creating keyboard device\n");
 
-   	// our faux keyboard only has a couple of keys (corresponding to the common defaults)
-   	fprintf(stderr, "SOURCE FILE: %s\n", machine->gamedrv->source_file);
-   	fprintf(stderr, "PARENT: %s\n", machine->gamedrv->parent);
-   	fprintf(stderr, "NAME: %s\n", machine->gamedrv->name);
-   	fprintf(stderr, "DESCRIPTION: %s\n", machine->gamedrv->description);
-   	fprintf(stderr, "YEAR: %s\n", machine->gamedrv->year);
-   	fprintf(stderr, "MANUFACTURER: %s\n", machine->gamedrv->manufacturer);
+   	for (i = 0; i < RETROK_LAST; i++)
+      		retrokbd_state[i] = retrokbd_state2[i] = 0;
 
 	for (i = 0; i < 4; i++)
 	{
@@ -217,6 +212,17 @@ static void initInput(running_machine *machine)
 		pad_state[i][KEY_BUTTON_5] = pad_state[i][KEY_BUTTON_6] = pad_state[i][KEY_JOYSTICK_U] =
 		pad_state[i][KEY_JOYSTICK_D] = pad_state[i][KEY_JOYSTICK_L] = pad_state[i][KEY_JOYSTICK_R] = 0;
 	}
+
+   	/* our faux keyboard only has a couple of keys (corresponding to the common defaults) */
+   	fprintf(stderr, "SOURCE FILE: %s\n", machine->gamedrv->source_file);
+   	fprintf(stderr, "PARENT: %s\n", machine->gamedrv->parent);
+   	fprintf(stderr, "NAME: %s\n", machine->gamedrv->name);
+   	fprintf(stderr, "DESCRIPTION: %s\n", machine->gamedrv->description);
+   	fprintf(stderr, "YEAR: %s\n", machine->gamedrv->year);
+   	fprintf(stderr, "MANUFACTURER: %s\n", machine->gamedrv->manufacturer);
+
+	for (i = 0; ktable[i].retro_key_name != -1; i++)
+      		input_device_item_add(retrokbd_device, ktable[i].mame_key_name, &retrokbd_state[ktable[i].retro_key_name], ktable[i].mame_key, retrokbd_get_state);
 
 	/* P1 init */
 #ifdef WIIU
@@ -313,15 +319,11 @@ static void initInput(running_machine *machine)
       		input_device_item_add(P1_device, "P1 B2", &pad_state[0][KEY_BUTTON_2], ITEM_ID_LALT, pad_get_state);
       		input_device_item_add(P1_device, "P1 B3", &pad_state[0][KEY_BUTTON_3], ITEM_ID_SPACE, pad_get_state);
       		input_device_item_add(P1_device, "P1 B4", &pad_state[0][KEY_BUTTON_4], ITEM_ID_LSHIFT, pad_get_state);
-//     		input_device_item_add(P1_device, "P1 B5", &pad_state[0][KEY_BUTTON_5], ITEM_ID_Z, pad_get_state);
-//     		input_device_item_add(P1_device, "P1 B6", &pad_state[0][KEY_BUTTON_6], ITEM_ID_X, pad_get_state);
 
       		input_device_item_add(P2_device, "P2 B1", &pad_state[1][KEY_BUTTON_1], ITEM_ID_A, pad_get_state);
       		input_device_item_add(P2_device, "P2 B2", &pad_state[1][KEY_BUTTON_2], ITEM_ID_S, pad_get_state);
       		input_device_item_add(P2_device, "P2 B3", &pad_state[1][KEY_BUTTON_3], ITEM_ID_Q, pad_get_state);
       		input_device_item_add(P2_device, "P2 B4", &pad_state[1][KEY_BUTTON_4], ITEM_ID_W, pad_get_state);
-//     		input_device_item_add(P2_device, "P2 B5", &pad_state[1][KEY_BUTTON_5], ITEM_ID_I, pad_get_state);
-//     		input_device_item_add(P2_device, "P2 B6", &pad_state[1][KEY_BUTTON_6], ITEM_ID_K, pad_get_state);
 
       		input_device_item_add(P3_device, "P3 B1", &pad_state[2][KEY_BUTTON_1], ITEM_ID_RCONTROL, pad_get_state);
       		input_device_item_add(P3_device, "P3 B2", &pad_state[2][KEY_BUTTON_2], ITEM_ID_RSHIFT, pad_get_state);
@@ -331,22 +333,6 @@ static void initInput(running_machine *machine)
       		input_device_item_add(P4_device, "P4 B2", &pad_state[3][KEY_BUTTON_2], ITEM_ID_DEL_PAD, pad_get_state);
       		input_device_item_add(P4_device, "P4 B3", &pad_state[3][KEY_BUTTON_3], ITEM_ID_ENTER_PAD, pad_get_state);
    	}
-
-   	retrokbd_device = input_device_add(machine, DEVICE_CLASS_KEYBOARD, "Retrokdb", NULL);
-   	if (retrokbd_device == NULL)
-      		fatalerror("KBD Error creating keyboard device! \n");
-
-   	for (i = 0; i < RETROK_LAST; i++)
-      		retrokbd_state[i] = retrokbd_state2[i] = 0;
-
-   	i = 0;
-   	do
-   	{
-      		input_device_item_add_kbd(retrokbd_device, ktable[i].mame_key_name,
-			&retrokbd_state[ktable[i].retro_key_name], ktable[i].mame_key, retrokbd_get_state);
-      		i++;
-   	}
-	while (ktable[i].retro_key_name != -1);
 }
 #undef SF_LAYOUT
 #undef NEOGEO_LAYOUT
@@ -360,8 +346,7 @@ void retro_poll_mame_input()
 
 	unsigned int i;
 
-   	// process_keyboard_state
-   	/* TODO: handle mods:SHIFT/CTRL/ALT/META/NUMLOCK/CAPSLOCK/SCROLLOCK */
+   	/* process_keyboard_state  TODO: handle mods:SHIFT/CTRL/ALT/META/NUMLOCK/CAPSLOCK/SCROLLOCK */
 	if (keyboard_input)
 	{
 		for (i = 0; ktable[i].retro_key_name != -1; i++)
@@ -377,6 +362,10 @@ void retro_poll_mame_input()
          			retrokbd_state2[ktable[i].retro_key_name] = 0;
    		}
 	}
+
+	pad_state[0][KEY_F11] = input_state_cb(0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_R3);
+	pad_state[0][KEY_TAB] = input_state_cb(0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_L2);
+	pad_state[0][KEY_F2]  = input_state_cb(0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_L3);
 
 	for (i = 0; i < 4; i++)
 	{
@@ -411,8 +400,4 @@ void retro_poll_mame_input()
          		break;
    		}
 	}
-
-	pad_state[0][KEY_F11] = input_state_cb(0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_R3);
-	pad_state[0][KEY_TAB] = input_state_cb(0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_L2);
-	pad_state[0][KEY_F2]  = input_state_cb(0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_L3);
 }

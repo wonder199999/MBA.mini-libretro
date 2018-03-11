@@ -1,28 +1,23 @@
-MAME2010-mini:
-
-From MAME2010-libretro:
-https://github.com/libretro/mame2010-libretro
- 
-Source base is mame0.139 official source: 
-http://www.mamedev.org/downloader.php?file=releases/mame0139s.zip
-
+Mame2010-mini from MAME2010-libretro (https://github.com/libretro/mame2010-libretro)
+After the codes is streamlined , only CPS 1/2,NEOGEO,IREM M92 roms is supported.
 
 Build :
 
      for now you must build in 2 pass: 
      one for the native buildtools and second for the target emulator build.
   
-     build for android:
+ build for android:
 
      make -f Makefile "VRENDER=soft" "NATIVE=1" buildtools
-     make -f Makefile "VRENDER=soft" platform=android emulator -j4
+     make -f Makefile "VRENDER=soft" platform=android emulator
      
-     build for pc linux/win:
+ build for pc linux/win:
 
      make -f Makefile "VRENDER=soft" buildtools
      make -f Makefile "VRENDER=soft" platform= #platform name
   
      (NB: for 64 bits build export PTR64=1 at least on win64)
+
 
  controls are: 
 

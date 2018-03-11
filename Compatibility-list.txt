@@ -1,7 +1,7 @@
 Support the following :  (Parent roms with the "*" && based by mame0.139 romset)
 
 / ******************** /
-/ * Capcom System 1  * /
+/ *  Capcom System 1 * /
 / ******************** /
 
 *1941:Counter Attack(World)		 - /* Archives name: 1941 ,  Parent set: Itself , Verify CRC: Yes , Rom set: 0.139 , Remark: */
@@ -52,7 +52,7 @@ Support the following :  (Parent roms with the "*" && based by mame0.139 romset)
 	Daimakaimura(Japan)			- /* Archives name: daimakai ,  Parent set: ghouls , Verify CRC: Yes , Rom set: 0.139 , Remark: */
 	Ghouls'n Ghosts(USA)			- /* Archives name: ghoulsu ,   Parent set: ghouls , Verify CRC: Yes , Rom set: 0.139 , Remark: */
 
-*King of Dragons, The(World 910711)		- /* Archives name: kod ,  Parent set: Itself , Verify CRC: Yes , Rom set: 0.139 , Remark: */
+*King of Dragons, The(World 910711)		- /* Archives name: kod ,  Parent set: Itself,  Verify CRC: Yes , Rom set: 0.139 , Remark: */
 	King of Dragons, The(Japan 910805)	- /* Archives name: kodj , Parent set: kod ,    Verify CRC: Yes , Rom set: 0.139 , Remark: */
 	King of Dragons, The(USA 910910)	- /* Archives name: kodu , Parent set: kod ,    Verify CRC: Yes , Rom set: 0.139 , Remark: */
 
@@ -78,7 +78,7 @@ Support the following :  (Parent roms with the "*" && based by mame0.139 romset)
 	Senjou no Ookami II(Japan 900302)	- /* Archives name: mercsj , Parent set: mercs ,  Verify CRC: Yes , Rom set: 0.139 , Remark: */
 
 *Muscle Bomber Duo : Ultimate Team Battle(World 931206)		- /* Archives name: mbombrd , Parent set: Itself ,  Verify CRC: Yes , Rom set: 0.139 , Remark: */
-	Muscle Bomber Duo : Ultimate Team Battle(Japan 931206)	- /* Archives name: mbombrdj ,Parent set: mbombrd , Verify CRC: Yes , Rom set: 0.139 , Remark: */
+	Muscle Bomber Duo : Ultimate Team Battle(Japan 931206)	- /* Archives name: mbombrdj, Parent set: mbombrd , Verify CRC: Yes , Rom set: 0.139 , Remark: */
 
 *Nemo(World 901130)		- /* Archives name: nemo , Parent set: Itself , Verify CRC: Yes , Rom set: 0.139 , Remark: */
 	Nemo(Japan 901120)	- /* Archives name: nemoj ,Parent set: nemo ,   Verify CRC: Yes , Rom set: 0.139 , Remark: */
@@ -163,12 +163,12 @@ Support the following :  (Parent roms with the "*" && based by mame0.139 romset)
 *U.N. Squadron(USA)		- /* Archives name: unsquad , Parent set: Itself , Verify CRC: Yes , Rom set: 0.139 , Remark: */
 	Area 88(Japan)		- /* Archives name: area88 ,  Parent set: unsquad ,Verify CRC: Yes , Rom set: 0.139 , Remark: */
 
-*Varth: Operation Thunderstorm(World 920714)		- /* Archives name: varth ,  Parent set: Itself , Verify CRC: Yes , Rom set: 0.139 , Remark: */
+*Varth: Operation Thunderstorm(World 920714)		- /* Archives name: varth ,  Parent set: Itself,  Verify CRC: Yes , Rom set: 0.139 , Remark: */
 	Varth: Operation Thunderstorm(Japan 920714)	- /* Archives name: varthj , Parent set: varth ,  Verify CRC: Yes , Rom set: 0.139 , Remark: */
 	Varth: Operation Thunderstorm(USA 920612)	- /* Archives name: varthu , Parent set: varth ,  Verify CRC: Yes , Rom set: 0.139 , Remark: */
 	Varth: Operation Thunderstorm(World 920612)	- /* Archives name: varthr1 ,Parent set: varth ,  Verify CRC: Yes , Rom set: 0.139 , Remark: */
 
-*Warriors of Fate(World 921031)					- /* Archives name: wof ,    Parent set: Itself ,Verify CRC: Yes , Rom set: 0.139 , Remark: */
+*Warriors of Fate(World 921031)					- /* Archives name: wof ,    Parent set: Itself, Verify CRC: Yes , Rom set: 0.139 , Remark: */
 	Huo Feng Huang(Chinese bootleg of Sangokushi II)	- /* Archives name: wofhfb , Parent set: wof ,   Verify CRC: Yes , Rom set: 0.139 , Remark: */
 	Sangokushi II(Asia 921005)				- /* Archives name: wofa ,   Parent set: wof ,   Verify CRC: Yes , Rom set: 0.139 , Remark: */
 	Tenchi wo Kurau II: Sekiheki no Tatakai(Japan 921031)	- /* Archives name: wofj ,   Parent set: wof ,   Verify CRC: Yes , Rom set: 0.139 , Remark: */
@@ -188,18 +188,18 @@ Support the following :  (Parent roms with the "*" && based by mame0.139 romset)
 
 
 / ******************** /
-/ * Capcom System 2  * /
+/ *  Capcom System 2 * /
 / ******************** /
 
 
 
 / ******************** /
-/ * IREM M92 Board   * /
+/ *  IREM M92 Board  * /
 / ******************** /
 
 
 
 / ******************** /
-/ * NEO GEO  	     * /
+/ *     NEO GEO      * /
 / ******************** /
 
