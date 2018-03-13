@@ -1,5 +1,5 @@
 
-void retro_poll_mame_input();
+static void retro_poll_mame_input();
 
 static int rtwi = 320, rthe = 240, topw = 1024;		/* DEFAULT TEXW/TEXH/PITCH */
 int SHIFTON = -1;
@@ -213,14 +213,14 @@ unsigned retro_api_version(void)
 	return RETRO_API_VERSION;
 }
 
-static void update_geometry()
+static void update_geometry(void)
 {
 	struct retro_system_av_info av_info;
-   	retro_get_system_av_info( &av_info);
+   	retro_get_system_av_info(&av_info);
    	environ_cb(RETRO_ENVIRONMENT_SET_GEOMETRY, &av_info);
 }
 
-void init_input_descriptors(void)
+static void init_input_descriptors(void)
 {
 #define describe_buttons(INDEX) \
 		{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_UP,    	"Joystick Up" }, \

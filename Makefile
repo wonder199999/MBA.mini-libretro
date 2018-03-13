@@ -116,7 +116,7 @@ ifeq ($(platform), unix)
    TARGETOS=linux 
    fpic = -fPIC
    SHARED := -shared -Wl,--version-script=src/osd/retro/link.T
-   CCOMFLAGS += -fsigned-char -finline  -fno-common -fno-builtin -fweb -frename-registers -falign-functions=16 -fsingle-precision-constant
+   CCOMFLAGS += -fsigned-char -finline -fno-common -fno-builtin -fweb -frename-registers -falign-functions=16 -fsingle-precision-constant
    ALIGNED = 1
    PLATCFLAGS += -fstrict-aliasing -fno-merge-constants 
 ifeq ($(VRENDER),opengl) 
@@ -148,7 +148,7 @@ else ifeq ($(platform), android)
    CC = @arm-linux-androideabi-g++
    AR = @arm-linux-androideabi-ar
    LD = @arm-linux-androideabi-g++ 
-   CCOMFLAGS += -mstructure-size-boundary=32 -mthumb-interwork -fsigned-char -finline  -fno-common -fno-builtin -fweb -frename-registers -falign-functions=16 -fsingle-precision-constant
+   CCOMFLAGS += -mstructure-size-boundary=32 -mthumb-interwork -fsigned-char -finline -fno-common -fno-builtin -fweb -frename-registers -falign-functions=16 -fsingle-precision-constant
    PLATCFLAGS += -march=armv7-a -mfloat-abi=softfp -fstrict-aliasing -fno-merge-constants -DSDLMAME_NO64BITIO -DANDTIME -DRANDPATH
    PLATCFLAGS += -DANDROID
    LDFLAGS += -Wl,--fix-cortex-a8 -llog $(SHARED)

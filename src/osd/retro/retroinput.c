@@ -47,7 +47,7 @@
 			(core_stricmp(machine->gamedrv->parent, "wakuwak7") == 0) || (core_stricmp(machine->gamedrv->parent, "wh1") == 0) || \
 			(core_stricmp(machine->gamedrv->parent, "wh2") == 0) || (core_stricmp(machine->gamedrv->parent, "wh2j") == 0) || \
 			(core_stricmp(machine->gamedrv->parent, "whp") == 0) || (core_stricmp(machine->gamedrv->parent, "karnovr") == 0) || \
-			(core_stricmp(machine->gamedrv->parent, "aodk") == 0) || (core_stricmp(machine->gamedrv->parent, "kf2k3pcb") == 0)
+			(core_stricmp(machine->gamedrv->parent, "kf2k3pcb") == 0)
 
 /* Capcom Eco Fighter , use L & R button to turn the weapon */
 #define ECOFGT_LAYOUT	(core_stricmp(machine->gamedrv->name, "ecofghtr") == 0) || (core_stricmp(machine->gamedrv->parent, "ecofghtr") == 0)
@@ -167,15 +167,9 @@ kt_table ktable[] = {
    {"-1",       -1,                 ITEM_ID_INVALID},
 };
 
-static INT32 pad_get_state(void *device_internal, void *item_internal)
+static INT32 iptdev_get_state(void *device_internal, void *item_internal)
 {
 	UINT8 *itemdata = (UINT8 *)item_internal;
-   	return *itemdata;
-}
-
-static INT32 retrokbd_get_state(void *device_internal, void *item_internal)
-{
-   	UINT8 *itemdata = (UINT8 *)item_internal;
    	return *itemdata;
 }
 
@@ -222,116 +216,118 @@ static void initInput(running_machine *machine)
    	fprintf(stderr, "MANUFACTURER: %s\n", machine->gamedrv->manufacturer);
 
 	for (i = 0; ktable[i].retro_key_name != -1; i++)
-      		input_device_item_add(retrokbd_device, ktable[i].mame_key_name, &retrokbd_state[ktable[i].retro_key_name], ktable[i].mame_key, retrokbd_get_state);
+      		input_device_item_add(retrokbd_device, ktable[i].mame_key_name, &retrokbd_state[ktable[i].retro_key_name], ktable[i].mame_key, iptdev_get_state);
 
 	/* P1 init */
 #ifdef WIIU
 	//FIXME: HACK WIIU GUI CONFIRM (ENTER) MAP TO R3
-   	input_device_item_add(P1_device, "F11",	     &pad_state[0][KEY_F11], 	    ITEM_ID_ENTER/* ITEM_ID_F11*/, pad_get_state);
+   	input_device_item_add(P1_device, "F11",	     &pad_state[0][KEY_F11], 	    ITEM_ID_ENTER/* ITEM_ID_F11*/, iptdev_get_state);
 #else
-   	input_device_item_add(P1_device, "F11",	     &pad_state[0][KEY_F11], 	    ITEM_ID_F11, pad_get_state);
+   	input_device_item_add(P1_device, "F11",	     &pad_state[0][KEY_F11], 	    ITEM_ID_F11, iptdev_get_state);
 #endif
-   	input_device_item_add(P1_device, "Tab",      &pad_state[0][KEY_TAB], 	    ITEM_ID_TAB, pad_get_state);
-   	input_device_item_add(P1_device, "F3", 	     &pad_state[0][KEY_F3], 	    ITEM_ID_F3, pad_get_state);
-   	input_device_item_add(P1_device, "F2",	     &pad_state[0][KEY_F2], 	    ITEM_ID_F2, pad_get_state);
-   	input_device_item_add(P1_device, "P1 Start", &pad_state[0][KEY_START],	    ITEM_ID_1, pad_get_state);
-   	input_device_item_add(P1_device, "COIN1",    &pad_state[0][KEY_COIN],	    ITEM_ID_5, pad_get_state);
-   	input_device_item_add(P1_device, "P1 JoyU",  &pad_state[0][KEY_JOYSTICK_U], ITEM_ID_UP, pad_get_state);
-   	input_device_item_add(P1_device, "P1 JoyD",  &pad_state[0][KEY_JOYSTICK_D], ITEM_ID_DOWN, pad_get_state);
-   	input_device_item_add(P1_device, "P1 JoyL",  &pad_state[0][KEY_JOYSTICK_L], ITEM_ID_LEFT, pad_get_state);
-   	input_device_item_add(P1_device, "P1 JoyR",  &pad_state[0][KEY_JOYSTICK_R], ITEM_ID_RIGHT, pad_get_state);
+   	input_device_item_add(P1_device, "Tab",      &pad_state[0][KEY_TAB], 	    ITEM_ID_TAB, iptdev_get_state);
+   	input_device_item_add(P1_device, "F3", 	     &pad_state[0][KEY_F3], 	    ITEM_ID_F3, iptdev_get_state);
+   	input_device_item_add(P1_device, "F2",	     &pad_state[0][KEY_F2], 	    ITEM_ID_F2, iptdev_get_state);
+   	input_device_item_add(P1_device, "P1 Start", &pad_state[0][KEY_START],	    ITEM_ID_1, iptdev_get_state);
+   	input_device_item_add(P1_device, "COIN1",    &pad_state[0][KEY_COIN],	    ITEM_ID_5, iptdev_get_state);
+   	input_device_item_add(P1_device, "P1 JoyU",  &pad_state[0][KEY_JOYSTICK_U], ITEM_ID_UP, iptdev_get_state);
+   	input_device_item_add(P1_device, "P1 JoyD",  &pad_state[0][KEY_JOYSTICK_D], ITEM_ID_DOWN, iptdev_get_state);
+   	input_device_item_add(P1_device, "P1 JoyL",  &pad_state[0][KEY_JOYSTICK_L], ITEM_ID_LEFT, iptdev_get_state);
+   	input_device_item_add(P1_device, "P1 JoyR",  &pad_state[0][KEY_JOYSTICK_R], ITEM_ID_RIGHT, iptdev_get_state);
 	/* P2 init */
-   	input_device_item_add(P2_device, "P2 Start", &pad_state[1][KEY_START], 	    ITEM_ID_2, pad_get_state);
-   	input_device_item_add(P2_device, "COIN2",    &pad_state[1][KEY_COIN], 	    ITEM_ID_6, pad_get_state);
-   	input_device_item_add(P2_device, "P2 JoyU",  &pad_state[1][KEY_JOYSTICK_U], ITEM_ID_R, pad_get_state);
-   	input_device_item_add(P2_device, "P2 JoyD",  &pad_state[1][KEY_JOYSTICK_D], ITEM_ID_F, pad_get_state);
-   	input_device_item_add(P2_device, "P2 JoyL",  &pad_state[1][KEY_JOYSTICK_L], ITEM_ID_D, pad_get_state);
-   	input_device_item_add(P2_device, "P2 JoyR",  &pad_state[1][KEY_JOYSTICK_R], ITEM_ID_G, pad_get_state);
+   	input_device_item_add(P2_device, "P2 Start", &pad_state[1][KEY_START], 	    ITEM_ID_2, iptdev_get_state);
+   	input_device_item_add(P2_device, "COIN2",    &pad_state[1][KEY_COIN], 	    ITEM_ID_6, iptdev_get_state);
+   	input_device_item_add(P2_device, "P2 JoyU",  &pad_state[1][KEY_JOYSTICK_U], ITEM_ID_R, iptdev_get_state);
+   	input_device_item_add(P2_device, "P2 JoyD",  &pad_state[1][KEY_JOYSTICK_D], ITEM_ID_F, iptdev_get_state);
+   	input_device_item_add(P2_device, "P2 JoyL",  &pad_state[1][KEY_JOYSTICK_L], ITEM_ID_D, iptdev_get_state);
+   	input_device_item_add(P2_device, "P2 JoyR",  &pad_state[1][KEY_JOYSTICK_R], ITEM_ID_G, iptdev_get_state);
 	/* P3 init */
-   	input_device_item_add(P3_device, "P3 Start", &pad_state[2][KEY_START],	    ITEM_ID_3, pad_get_state);
-   	input_device_item_add(P3_device, "COIN3",    &pad_state[2][KEY_COIN], 	    ITEM_ID_7, pad_get_state);
-   	input_device_item_add(P3_device, "P3 JoyU",  &pad_state[2][KEY_JOYSTICK_U], ITEM_ID_I, pad_get_state);
-   	input_device_item_add(P3_device, "P3 JoyD",  &pad_state[2][KEY_JOYSTICK_D], ITEM_ID_K, pad_get_state);
-   	input_device_item_add(P3_device, "P3 JoyL",  &pad_state[2][KEY_JOYSTICK_L], ITEM_ID_J, pad_get_state);
-   	input_device_item_add(P3_device, "P3 JoyR",  &pad_state[2][KEY_JOYSTICK_R], ITEM_ID_L, pad_get_state);
+   	input_device_item_add(P3_device, "P3 Start", &pad_state[2][KEY_START],	    ITEM_ID_3, iptdev_get_state);
+   	input_device_item_add(P3_device, "COIN3",    &pad_state[2][KEY_COIN], 	    ITEM_ID_7, iptdev_get_state);
+   	input_device_item_add(P3_device, "P3 JoyU",  &pad_state[2][KEY_JOYSTICK_U], ITEM_ID_I, iptdev_get_state);
+   	input_device_item_add(P3_device, "P3 JoyD",  &pad_state[2][KEY_JOYSTICK_D], ITEM_ID_K, iptdev_get_state);
+   	input_device_item_add(P3_device, "P3 JoyL",  &pad_state[2][KEY_JOYSTICK_L], ITEM_ID_J, iptdev_get_state);
+   	input_device_item_add(P3_device, "P3 JoyR",  &pad_state[2][KEY_JOYSTICK_R], ITEM_ID_L, iptdev_get_state);
 	/* P4 init */
-   	input_device_item_add(P4_device, "P4 Start", &pad_state[3][KEY_START],	    ITEM_ID_4, pad_get_state);
-   	input_device_item_add(P4_device, "COIN4",    &pad_state[3][KEY_COIN], 	    ITEM_ID_8, pad_get_state);
-   	input_device_item_add(P4_device, "P4 JoyU",  &pad_state[3][KEY_JOYSTICK_U], ITEM_ID_8_PAD, pad_get_state);
-   	input_device_item_add(P4_device, "P4 JoyD",  &pad_state[3][KEY_JOYSTICK_D], ITEM_ID_2_PAD, pad_get_state);
-   	input_device_item_add(P4_device, "P4 JoyL",  &pad_state[3][KEY_JOYSTICK_L], ITEM_ID_4_PAD, pad_get_state);
-   	input_device_item_add(P4_device, "P4 JoyR",  &pad_state[3][KEY_JOYSTICK_R], ITEM_ID_6_PAD, pad_get_state);
+   	input_device_item_add(P4_device, "P4 Start", &pad_state[3][KEY_START],	    ITEM_ID_4, iptdev_get_state);
+   	input_device_item_add(P4_device, "COIN4",    &pad_state[3][KEY_COIN], 	    ITEM_ID_8, iptdev_get_state);
+   	input_device_item_add(P4_device, "P4 JoyU",  &pad_state[3][KEY_JOYSTICK_U], ITEM_ID_8_PAD, iptdev_get_state);
+   	input_device_item_add(P4_device, "P4 JoyD",  &pad_state[3][KEY_JOYSTICK_D], ITEM_ID_2_PAD, iptdev_get_state);
+   	input_device_item_add(P4_device, "P4 JoyL",  &pad_state[3][KEY_JOYSTICK_L], ITEM_ID_4_PAD, iptdev_get_state);
+   	input_device_item_add(P4_device, "P4 JoyR",  &pad_state[3][KEY_JOYSTICK_R], ITEM_ID_6_PAD, iptdev_get_state);
 
    	if (SF_LAYOUT)      /* 6-buttons fighting games */
    	{
-      		input_device_item_add(P1_device, "RetroPad P1 Y", &pad_state[0][KEY_BUTTON_4], ITEM_ID_LCONTROL, pad_get_state);
-      		input_device_item_add(P1_device, "RetroPad P1 X", &pad_state[0][KEY_BUTTON_3], ITEM_ID_LALT, pad_get_state);
-      		input_device_item_add(P1_device, "RetroPad P1 L", &pad_state[0][KEY_BUTTON_5], ITEM_ID_SPACE, pad_get_state);
-      		input_device_item_add(P1_device, "RetroPad P1 B", &pad_state[0][KEY_BUTTON_2], ITEM_ID_LSHIFT, pad_get_state);
-      		input_device_item_add(P1_device, "RetroPad P1 A", &pad_state[0][KEY_BUTTON_1], ITEM_ID_Z, pad_get_state);
-      		input_device_item_add(P1_device, "RetroPad P1 R", &pad_state[0][KEY_BUTTON_6], ITEM_ID_X, pad_get_state);
+      		input_device_item_add(P1_device, "RetroPad P1 Y", &pad_state[0][KEY_BUTTON_4], ITEM_ID_LCONTROL, iptdev_get_state);
+      		input_device_item_add(P1_device, "RetroPad P1 X", &pad_state[0][KEY_BUTTON_3], ITEM_ID_LALT, iptdev_get_state);
+      		input_device_item_add(P1_device, "RetroPad P1 L", &pad_state[0][KEY_BUTTON_5], ITEM_ID_SPACE, iptdev_get_state);
+      		input_device_item_add(P1_device, "RetroPad P1 B", &pad_state[0][KEY_BUTTON_2], ITEM_ID_LSHIFT, iptdev_get_state);
+      		input_device_item_add(P1_device, "RetroPad P1 A", &pad_state[0][KEY_BUTTON_1], ITEM_ID_Z, iptdev_get_state);
+      		input_device_item_add(P1_device, "RetroPad P1 R", &pad_state[0][KEY_BUTTON_6], ITEM_ID_X, iptdev_get_state);
 
-      		input_device_item_add(P2_device, "RetroPad P2 Y", &pad_state[1][KEY_BUTTON_4], ITEM_ID_A, pad_get_state);
-      		input_device_item_add(P2_device, "RetroPad P2 X", &pad_state[1][KEY_BUTTON_3], ITEM_ID_S, pad_get_state);
-      		input_device_item_add(P2_device, "RetroPad P2 L", &pad_state[1][KEY_BUTTON_5], ITEM_ID_Q, pad_get_state);
-      		input_device_item_add(P2_device, "RetroPad P2 B", &pad_state[1][KEY_BUTTON_2], ITEM_ID_W, pad_get_state);
-      		input_device_item_add(P2_device, "RetroPad P2 A", &pad_state[1][KEY_BUTTON_1], ITEM_ID_I, pad_get_state);
-      		input_device_item_add(P2_device, "RetroPad P2 R", &pad_state[1][KEY_BUTTON_6], ITEM_ID_K, pad_get_state);
+      		input_device_item_add(P2_device, "RetroPad P2 Y", &pad_state[1][KEY_BUTTON_4], ITEM_ID_A, iptdev_get_state);
+      		input_device_item_add(P2_device, "RetroPad P2 X", &pad_state[1][KEY_BUTTON_3], ITEM_ID_S, iptdev_get_state);
+      		input_device_item_add(P2_device, "RetroPad P2 L", &pad_state[1][KEY_BUTTON_5], ITEM_ID_Q, iptdev_get_state);
+      		input_device_item_add(P2_device, "RetroPad P2 B", &pad_state[1][KEY_BUTTON_2], ITEM_ID_W, iptdev_get_state);
+      		input_device_item_add(P2_device, "RetroPad P2 A", &pad_state[1][KEY_BUTTON_1], ITEM_ID_C, iptdev_get_state);
+      		input_device_item_add(P2_device, "RetroPad P2 R", &pad_state[1][KEY_BUTTON_6], ITEM_ID_V, iptdev_get_state);
    	}
    	else      	/* Neo Geo */
    	if (NEOGEO_LAYOUT)
    	{
-      		input_device_item_add(P1_device, "RetroPad P1 B", &pad_state[0][KEY_BUTTON_2], ITEM_ID_LCONTROL, pad_get_state);
-      		input_device_item_add(P1_device, "RetroPad P1 A", &pad_state[0][KEY_BUTTON_1], ITEM_ID_LALT, pad_get_state);
-      		input_device_item_add(P1_device, "RetroPad P1 Y", &pad_state[0][KEY_BUTTON_4], ITEM_ID_SPACE, pad_get_state);
-      		input_device_item_add(P1_device, "RetroPad P1 X", &pad_state[0][KEY_BUTTON_3], ITEM_ID_LSHIFT, pad_get_state);
+      		input_device_item_add(P1_device, "RetroPad P1 B", &pad_state[0][KEY_BUTTON_2], ITEM_ID_LCONTROL, iptdev_get_state);
+      		input_device_item_add(P1_device, "RetroPad P1 A", &pad_state[0][KEY_BUTTON_1], ITEM_ID_LALT, iptdev_get_state);
+      		input_device_item_add(P1_device, "RetroPad P1 Y", &pad_state[0][KEY_BUTTON_4], ITEM_ID_SPACE, iptdev_get_state);
+      		input_device_item_add(P1_device, "RetroPad P1 X", &pad_state[0][KEY_BUTTON_3], ITEM_ID_LSHIFT, iptdev_get_state);
 
-      		input_device_item_add(P2_device, "RetroPad P2 B", &pad_state[1][KEY_BUTTON_2], ITEM_ID_A, pad_get_state);
-      		input_device_item_add(P2_device, "RetroPad P2 A", &pad_state[1][KEY_BUTTON_1], ITEM_ID_S, pad_get_state);
-      		input_device_item_add(P2_device, "RetroPad P2 Y", &pad_state[1][KEY_BUTTON_4], ITEM_ID_Q, pad_get_state);
-      		input_device_item_add(P2_device, "RetroPad P2 X", &pad_state[1][KEY_BUTTON_3], ITEM_ID_W, pad_get_state);
+      		input_device_item_add(P2_device, "RetroPad P2 B", &pad_state[1][KEY_BUTTON_2], ITEM_ID_A, iptdev_get_state);
+      		input_device_item_add(P2_device, "RetroPad P2 A", &pad_state[1][KEY_BUTTON_1], ITEM_ID_S, iptdev_get_state);
+      		input_device_item_add(P2_device, "RetroPad P2 Y", &pad_state[1][KEY_BUTTON_4], ITEM_ID_Q, iptdev_get_state);
+      		input_device_item_add(P2_device, "RetroPad P2 X", &pad_state[1][KEY_BUTTON_3], ITEM_ID_W, iptdev_get_state);
    	}
    	else	    	/* Capcom Eco Fighters */
    	if (ECOFGT_LAYOUT)
    	{
-      		input_device_item_add(P1_device, "P1 B1", &pad_state[0][KEY_BUTTON_5], ITEM_ID_LCONTROL, pad_get_state);
-      		input_device_item_add(P1_device, "P1 B2", &pad_state[0][KEY_BUTTON_2], ITEM_ID_LALT, pad_get_state);
-      		input_device_item_add(P1_device, "P1 B3", &pad_state[0][KEY_BUTTON_6], ITEM_ID_SPACE, pad_get_state);
+      		input_device_item_add(P1_device, "P1 B1", &pad_state[0][KEY_BUTTON_5], ITEM_ID_LCONTROL, iptdev_get_state);
+      		input_device_item_add(P1_device, "P1 B2", &pad_state[0][KEY_BUTTON_2], ITEM_ID_LALT, iptdev_get_state);
+      		input_device_item_add(P1_device, "P1 B3", &pad_state[0][KEY_BUTTON_6], ITEM_ID_SPACE, iptdev_get_state);
 
-      		input_device_item_add(P2_device, "P2 B1", &pad_state[1][KEY_BUTTON_5], ITEM_ID_A, pad_get_state);
-      		input_device_item_add(P2_device, "P2 B2", &pad_state[1][KEY_BUTTON_2], ITEM_ID_S, pad_get_state);
-      		input_device_item_add(P2_device, "P2 B3", &pad_state[1][KEY_BUTTON_6], ITEM_ID_Q, pad_get_state);
+      		input_device_item_add(P2_device, "P2 B1", &pad_state[1][KEY_BUTTON_5], ITEM_ID_A, iptdev_get_state);
+      		input_device_item_add(P2_device, "P2 B2", &pad_state[1][KEY_BUTTON_2], ITEM_ID_S, iptdev_get_state);
+      		input_device_item_add(P2_device, "P2 B3", &pad_state[1][KEY_BUTTON_6], ITEM_ID_Q, iptdev_get_state);
    	}
    	else	    	/* Capcom Dynasty Wars */
    	if (DYNWAR_LAYOUT)
 	{
-      		input_device_item_add(P1_device, "P1 B1", &pad_state[0][KEY_BUTTON_2], ITEM_ID_LCONTROL, pad_get_state);
-      		input_device_item_add(P1_device, "P1 B2", &pad_state[0][KEY_BUTTON_1], ITEM_ID_LALT, pad_get_state);
-      		input_device_item_add(P1_device, "P1 B3", &pad_state[0][KEY_BUTTON_3], ITEM_ID_SPACE, pad_get_state);
+      		input_device_item_add(P1_device, "P1 B1", &pad_state[0][KEY_BUTTON_2], ITEM_ID_LCONTROL, iptdev_get_state);
+      		input_device_item_add(P1_device, "P1 B2", &pad_state[0][KEY_BUTTON_1], ITEM_ID_LALT, iptdev_get_state);
+      		input_device_item_add(P1_device, "P1 B3", &pad_state[0][KEY_BUTTON_3], ITEM_ID_SPACE, iptdev_get_state);
 
-      		input_device_item_add(P2_device, "P2 B1", &pad_state[1][KEY_BUTTON_2], ITEM_ID_A, pad_get_state);
-      		input_device_item_add(P2_device, "P2 B2", &pad_state[1][KEY_BUTTON_1], ITEM_ID_S, pad_get_state);
-      		input_device_item_add(P2_device, "P2 B3", &pad_state[1][KEY_BUTTON_3], ITEM_ID_Q, pad_get_state);
+      		input_device_item_add(P2_device, "P2 B1", &pad_state[1][KEY_BUTTON_2], ITEM_ID_A, iptdev_get_state);
+      		input_device_item_add(P2_device, "P2 B2", &pad_state[1][KEY_BUTTON_1], ITEM_ID_S, iptdev_get_state);
+      		input_device_item_add(P2_device, "P2 B3", &pad_state[1][KEY_BUTTON_3], ITEM_ID_Q, iptdev_get_state);
 	}
    	else      /* Default config */
    	{
-      		input_device_item_add(P1_device, "P1 B1", &pad_state[0][KEY_BUTTON_1], ITEM_ID_LCONTROL, pad_get_state);
-      		input_device_item_add(P1_device, "P1 B2", &pad_state[0][KEY_BUTTON_2], ITEM_ID_LALT, pad_get_state);
-      		input_device_item_add(P1_device, "P1 B3", &pad_state[0][KEY_BUTTON_3], ITEM_ID_SPACE, pad_get_state);
-      		input_device_item_add(P1_device, "P1 B4", &pad_state[0][KEY_BUTTON_4], ITEM_ID_LSHIFT, pad_get_state);
+      		input_device_item_add(P1_device, "P1 B1", &pad_state[0][KEY_BUTTON_1], ITEM_ID_LCONTROL, iptdev_get_state);
+      		input_device_item_add(P1_device, "P1 B2", &pad_state[0][KEY_BUTTON_2], ITEM_ID_LALT, iptdev_get_state);
+      		input_device_item_add(P1_device, "P1 B3", &pad_state[0][KEY_BUTTON_3], ITEM_ID_SPACE, iptdev_get_state);
+      		input_device_item_add(P1_device, "P1 B4", &pad_state[0][KEY_BUTTON_4], ITEM_ID_LSHIFT, iptdev_get_state);
 
-      		input_device_item_add(P2_device, "P2 B1", &pad_state[1][KEY_BUTTON_1], ITEM_ID_A, pad_get_state);
-      		input_device_item_add(P2_device, "P2 B2", &pad_state[1][KEY_BUTTON_2], ITEM_ID_S, pad_get_state);
-      		input_device_item_add(P2_device, "P2 B3", &pad_state[1][KEY_BUTTON_3], ITEM_ID_Q, pad_get_state);
-      		input_device_item_add(P2_device, "P2 B4", &pad_state[1][KEY_BUTTON_4], ITEM_ID_W, pad_get_state);
+      		input_device_item_add(P2_device, "P2 B1", &pad_state[1][KEY_BUTTON_1], ITEM_ID_A, iptdev_get_state);
+      		input_device_item_add(P2_device, "P2 B2", &pad_state[1][KEY_BUTTON_2], ITEM_ID_S, iptdev_get_state);
+      		input_device_item_add(P2_device, "P2 B3", &pad_state[1][KEY_BUTTON_3], ITEM_ID_Q, iptdev_get_state);
+      		input_device_item_add(P2_device, "P2 B4", &pad_state[1][KEY_BUTTON_4], ITEM_ID_W, iptdev_get_state);
 
-      		input_device_item_add(P3_device, "P3 B1", &pad_state[2][KEY_BUTTON_1], ITEM_ID_RCONTROL, pad_get_state);
-      		input_device_item_add(P3_device, "P3 B2", &pad_state[2][KEY_BUTTON_2], ITEM_ID_RSHIFT, pad_get_state);
-      		input_device_item_add(P3_device, "P3 B3", &pad_state[2][KEY_BUTTON_3], ITEM_ID_ENTER, pad_get_state);
+      		input_device_item_add(P3_device, "P3 B1", &pad_state[2][KEY_BUTTON_1], ITEM_ID_RCONTROL, iptdev_get_state);
+      		input_device_item_add(P3_device, "P3 B2", &pad_state[2][KEY_BUTTON_2], ITEM_ID_RSHIFT, iptdev_get_state);
+      		input_device_item_add(P3_device, "P3 B3", &pad_state[2][KEY_BUTTON_3], ITEM_ID_ENTER, iptdev_get_state);
+      		input_device_item_add(P3_device, "P3 B4", &pad_state[2][KEY_BUTTON_4], ITEM_ID_RALT, iptdev_get_state);
 
-      		input_device_item_add(P4_device, "P4 B1", &pad_state[3][KEY_BUTTON_1], ITEM_ID_0_PAD, pad_get_state);
-      		input_device_item_add(P4_device, "P4 B2", &pad_state[3][KEY_BUTTON_2], ITEM_ID_DEL_PAD, pad_get_state);
-      		input_device_item_add(P4_device, "P4 B3", &pad_state[3][KEY_BUTTON_3], ITEM_ID_ENTER_PAD, pad_get_state);
+      		input_device_item_add(P4_device, "P4 B1", &pad_state[3][KEY_BUTTON_1], ITEM_ID_0_PAD, iptdev_get_state);
+      		input_device_item_add(P4_device, "P4 B2", &pad_state[3][KEY_BUTTON_2], ITEM_ID_DEL_PAD, iptdev_get_state);
+      		input_device_item_add(P4_device, "P4 B3", &pad_state[3][KEY_BUTTON_3], ITEM_ID_ENTER_PAD, iptdev_get_state);
+      		input_device_item_add(P4_device, "P4 B4", &pad_state[3][KEY_BUTTON_4], ITEM_ID_3_PAD, iptdev_get_state);
    	}
 }
 #undef SF_LAYOUT
@@ -340,7 +336,7 @@ static void initInput(running_machine *machine)
 #undef DYNWAR_LAYOUT
 
 
-void retro_poll_mame_input()
+static inline void retro_poll_mame_input(void)
 {
 	input_poll_cb();
 

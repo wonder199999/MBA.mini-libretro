@@ -17,3 +17,5 @@
 /snap
 /sta
 *.so
+*.bak
+*.backup
