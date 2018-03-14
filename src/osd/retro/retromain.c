@@ -79,7 +79,7 @@ static input_device *P1_device;		// P1 JOYPAD
 static input_device *P2_device; 	// P2 JOYPAD
 static input_device *P3_device; 	// P3 JOYPAD
 static input_device *P4_device; 	// P4 JOYPAD
-static input_device *retrokbd_device;	// KEYBD
+static input_device *KB_device;		// KEYBD
 
 // state
 static UINT8 pad_state[4][KEY_TOTAL];

@@ -13,7 +13,7 @@ void osd_exit(running_machine &machine)
   	global_free(P2_device);
   	global_free(P3_device);
   	global_free(P4_device);
-   	global_free(retrokbd_device);
+   	global_free(KB_device);
 }
 
 void osd_init(running_machine *machine)
