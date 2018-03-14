@@ -219,12 +219,7 @@ static void initInput(running_machine *machine)
       		input_device_item_add(retrokbd_device, ktable[i].mame_key_name, &retrokbd_state[ktable[i].retro_key_name], ktable[i].mame_key, iptdev_get_state);
 
 	/* P1 init */
-#ifdef WIIU
-	//FIXME: HACK WIIU GUI CONFIRM (ENTER) MAP TO R3
-   	input_device_item_add(P1_device, "F11",	     &pad_state[0][KEY_F11], 	    ITEM_ID_ENTER/* ITEM_ID_F11*/, iptdev_get_state);
-#else
    	input_device_item_add(P1_device, "F11",	     &pad_state[0][KEY_F11], 	    ITEM_ID_F11, iptdev_get_state);
-#endif
    	input_device_item_add(P1_device, "Tab",      &pad_state[0][KEY_TAB], 	    ITEM_ID_TAB, iptdev_get_state);
    	input_device_item_add(P1_device, "F3", 	     &pad_state[0][KEY_F3], 	    ITEM_ID_F3, iptdev_get_state);
    	input_device_item_add(P1_device, "F2",	     &pad_state[0][KEY_F2], 	    ITEM_ID_F2, iptdev_get_state);

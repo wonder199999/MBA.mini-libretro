@@ -288,28 +288,6 @@ else ifeq ($(platform), wii)
    LIBS += -lstdc++ -lpthread
 
 
-# Nintendo Wii U
-else ifeq ($(platform), wiiu)
-   TARGETLIB := $(TARGET_NAME)_libretro_wiiu.a
-   CC = $(DEVKITPPC)/bin/powerpc-eabi-g++$(EXE_EXT)
-   CXX = $(DEVKITPPC)/bin/powerpc-eabi-g++$(EXE_EXT)
-   AR = $(DEVKITPPC)/bin/powerpc-eabi-ar$(EXE_EXT)
-   COMMONFLAGS += -DGEKKO -mwup -mcpu=750 -meabi -mhard-float -D__POWERPC__ -D__ppc__ -DWORDS_BIGENDIAN=1 -malign-natural 
-   COMMONFLAGS += -U__INT32_TYPE__ -U __UINT32_TYPE__ -D__INT32_TYPE__=int -fsingle-precision-constant -mno-bit-align
-   COMMONFLAGS += -DHAVE_STRTOUL -DBIGENDIAN=1 -DWIIU -DOLEFIX
-   DEFS       += -DMSB_FIRST
-   PLATCFLAGS += -DMSB_FIRST
-   BIGENDIAN=1
-   STATIC_LINKING = 1
-   FORCE_DRC_C_BACKEND = 1
-   PLATCFLAGS += -DSDLMAME_NO64BITIO $(COMMONFLAGS) -falign-functions=16
-   PTR64 = 0
-   REALCC   = $(DEVKITPPC)/bin/powerpc-eabi-gcc$(EXE_EXT)
-   NATIVECC = g++
-   NATIVECFLAGS = -std=gnu99
-   CCOMFLAGS += $(PLATCFLAGS) -Iwiiu-deps
-
-
 # Raspberry Pi 2/3
 else ifneq (,$(findstring rpi,$(platform)))
    CC_AS = gcc
@@ -481,11 +459,7 @@ CROSS_BUILD_OSD = retro
 
 # specify optimization level or leave commented to use the default
 # (default is OPTIMIZE = 3 normally, or OPTIMIZE = 0 with symbols)
-ifeq ($(platform), wiiu)
-OPTIMIZE = s
-else
 OPTIMIZE = 3
-endif
 
 ###########################################################################
 ##################   END USER-CONFIGURABLE OPTIONS   ######################
@@ -728,14 +702,8 @@ endif
 #-------------------------------------------------
 $(EMULATOR): $(OBJECTS)
 	@echo Linking $(TARGETLIB)
-ifeq ($(platform), wiiu)
-	echo $(LDFLAGS) $(LDFLAGSEMULATOR) $^ $(LIBS) -o $(TARGETLIB)
-	$(AR) -M < full.mri
-else
 	$(LD) $(LDFLAGS) $(LDFLAGSEMULATOR) $^ $(LIBS) -o $(TARGETLIB)
-endif
 
-#endif
 #-------------------------------------------------
 # generic rules
 #-------------------------------------------------

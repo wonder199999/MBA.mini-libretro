@@ -553,9 +553,6 @@ void render_init(running_machine *machine)
 	/* zap the free lists */
 	render_primitive_free_list = NULL;
 	container_item_free_list = NULL;
-#ifdef WIIU
-	render_texture_free_list = NULL;	//OLE: fixes neogeo exit crash
-#endif
 	/* zap more variables */
 	ui_target = NULL;
 
@@ -1247,17 +1244,11 @@ UINT32 render_target_get_view_screens(render_target *target, int viewindex)
 void render_target_get_bounds(render_target *target, INT32 *width, INT32 *height, float *pixel_aspect)
 {
 	if (width != NULL)
-#ifdef WIIU
-*width = !(target->base_orientation & ORIENTATION_SWAP_XY) ? target->width : target->height;
-#else
-	*width = target->width;
-#endif
+		*width = target->width;
+
 	if (height != NULL)
-#ifdef WIIU
-*height = !(target->base_orientation & ORIENTATION_SWAP_XY) ? target->height : target->width;
-#else	
-	*height = target->height;
-#endif
+		*height = target->height;
+
 	if (pixel_aspect != NULL)
 		*pixel_aspect = target->pixel_aspect;
 }

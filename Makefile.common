@@ -2942,17 +2942,9 @@ OSDCOREOBJS := \
 	$(MINIOBJ)/retrodir.o \
 	$(MINIOBJ)/retrofile.o \
 	$(MINIOBJ)/retromisc.o \
-	$(MINIOBJ)/retroos.o
-
-ifeq ($(platform), wiiu)
-OSDCOREOBJS += \
-	$(MINIOBJ)/minisync.o \
-	$(MINIOBJ)/miniwork.o 
-else
-OSDCOREOBJS += \
 	$(MINIOBJ)/retrosync.o \
-	$(MINIOBJ)/retrowork.o 
-endif
+	$(MINIOBJ)/retrowork.o \
+	$(MINIOBJ)/retroos.o
 
 #-------------------------------------------------
 # OSD mini library

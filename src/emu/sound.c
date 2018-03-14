@@ -541,9 +541,7 @@ speaker_device::~speaker_device()
 //  device_start - perform device-specific
 //  startup
 //-------------------------------------------------
-#ifdef WIIU
-extern int speaker_started;
-#endif
+
 void speaker_device::device_start()
 {
 	// scan all the sound devices and count our inputs
@@ -560,14 +558,8 @@ void speaker_device::device_start()
 			{
 				// if the sound device is not yet started, bail however -- we need the its stream
 				if (!sound->device().started())
-#ifndef WIIU
-                 throw device_missing_dependencies();
-#else
-				{
-					speaker_started=0;
-					return;
-				}else speaker_started=1;
-#endif
+					throw device_missing_dependencies();
+
 				// accumulate inputs
 				inputs += (route->m_output == ALL_OUTPUTS) ? stream_get_device_outputs(*sound) : 1;
 			}

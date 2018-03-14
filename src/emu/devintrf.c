@@ -124,11 +124,7 @@ void device_list::import_config_list(const device_config_list &list, running_mac
 //  start_all - start all the devices in the
 //  list
 //-------------------------------------------------
-#ifdef WIIU
-//FIXME: HACK TO BYPASS C++ EXCEPTION NEED WITH RPX
-int speaker_started;
-int laserdisc_started;
-#endif
+
 void device_list::start_all()
 {
 	// add exit and reset callbacks
@@ -148,27 +144,17 @@ void device_list::start_all()
 		// iterate over devices and start them
 		int prevstarted = numstarted;
 		for (device_t *device = first(); device != NULL; device = device->next())
+		{
 			if (!device->started())
 			{
-#ifdef WIIU
-	speaker_started=1;
-	laserdisc_started=1;
-	device->start();
-	if(speaker_started==0 || laserdisc_started==0);
-	else numstarted++;
-#else	
-			// attempt to start the device, catching any expected exceptions
 				try
 				{
 					device->start();
 					numstarted++;
 				}
-				catch (device_missing_dependencies &)
-				{
-				}
-#endif
+				catch (device_missing_dependencies &) { }
 			}
-
+		}
 		// if we didn't start anything new, we're in trouble
 		if (numstarted == prevstarted)
 			fatalerror("Circular dependency in device startup; unable to start %d/%d devices\n", devcount - numstarted, devcount);
@@ -864,9 +850,7 @@ void device_t::start()
 
 	// start the device
 	device_start();
-#ifdef WIIU
-	if(speaker_started==0 || laserdisc_started==0)return;
-#endif
+
 	// complain if nothing was registered by the device
 	state_registrations = state_save_get_reg_count(machine) - state_registrations;
 	device_execute_interface *exec;

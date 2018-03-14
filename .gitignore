@@ -1,13 +1,15 @@
+###########
+# Exclude
+###########
 *~
 /*
 !/*/
 !/.gitattributes
 !/.gitignore
-!/makefile
 !/*.md
-!/*.mri
-!/Makefile.tiny
-!/*.
+#########
+# Ignore
+#########
 /cfg
 /diff
 /ini
@@ -16,6 +18,8 @@
 /obj
 /snap
 /sta
+*.a
+*.o
 *.so
 *.bak
 *.backup
