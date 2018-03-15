@@ -1,5 +1,6 @@
 #include <unistd.h>
 #include <stdint.h>
+
 #include "osdepend.h"
 #include "emu.h"
 #include "clifront.h"
@@ -8,12 +9,33 @@
 #include "uiinput.h"
 #include "libretro.h"
 #include "log.h"
+#include "options.h"
 
 extern "C" int mmain(int argc, const char *argv);
 
+/* ============================================================ */
+void osd_init(running_machine *machine);
+void osd_update(running_machine *machine, int skip_redraw);
+void osd_update_audio_stream(running_machine *machine, short *buffer, int samples_this_frame);
+void osd_set_mastervolume(int attenuation);
+void osd_customize_input_type_list(input_type_desc *typelist);
+void osd_exit(running_machine &machine);
+
+/* ============================================================ */
+void CLIB_DECL mame_printf_verbose(const char *text, ...) ATTR_PRINTF(1, 2);	/* use if you want to print something with the verbose flag */
+
+extern int osd_num_processors;
+extern void retro_finish();
+extern void retro_main_loop();
+
+static void retro_poll_mame_input();
+static void update_geometry();
+
+/* ============================================================ */
 #if !defined(HAVE_OPENGL) && !defined(HAVE_OPENGLES) && !defined(HAVE_RGB32)
    #define M16B
 #endif
+
 #ifdef M16B
    #define FUNC_PREFIX(x) rgb565_##x
    #define PIXEL_TYPE UINT16
@@ -34,10 +56,6 @@ extern "C" int mmain(int argc, const char *argv);
    #define DSTSHIFT_B 0
 #endif
 #include "rendersw.c"
-
-//============================================================
-//  CONSTANTS
-//============================================================
 
 // fake a keyboard mapped to retro joypad
 enum
@@ -67,6 +85,14 @@ enum
    #define LOG(msg)
 #endif
 
+#ifdef M16B
+	uint16_t videoBuffer[384 * 384];
+	#define PITCH 1
+#else
+	unsigned int videoBuffer[384 * 384];
+	#define PITCH 1 * 2
+#endif
+
 //============================================================
 //  GLOBALS
 //============================================================
@@ -75,11 +101,11 @@ enum
 static render_target *our_target = NULL;
 
 // input device
-static input_device *P1_device;		// P1 JOYPAD
-static input_device *P2_device; 	// P2 JOYPAD
-static input_device *P3_device; 	// P3 JOYPAD
-static input_device *P4_device; 	// P4 JOYPAD
-static input_device *KB_device;		// KEYBD
+static input_device *P1_device = NULL;		// P1 JOYPAD
+static input_device *P2_device = NULL;		// P2 JOYPAD
+static input_device *P3_device = NULL; 		// P3 JOYPAD
+static input_device *P4_device = NULL; 		// P4 JOYPAD
+static input_device *KB_device = NULL;		// KEYBD
 
 // state
 static UINT8 pad_state[4][KEY_TOTAL];
@@ -97,15 +123,19 @@ struct kt_table
 static unsigned int tate;
 static unsigned int screenRot;
 int vertical, orient;
+int RLOOP = 1;
+int SHIFTON = -1;
 
 static char MgamePath[1024];
 static char MgameName[512];
-
+char RPATH[512];
 char g_rom_dir[1024];
+
 static bool draw_this_frame;
 static bool set_par = false;
 static bool retro_load_ok = false;
 static bool keyboard_input = true;
+static int rtwi = 320, rthe = 240, topw = 320;		/* DEFAULT TEXW/TEXH/PITCH */
 static int ui_ipt_pushchar = -1;
 static int set_frame_skip;
 static unsigned int pauseg = 0;
@@ -118,7 +148,6 @@ static unsigned int sample_rate = 48000;
 static double refresh_rate = 60.0;
 static unsigned adjust_opt[7] = {0/*Enable/Disable*/, 0/*Limit*/, 0/*GetRefreshRate*/, 0/*Brightness*/, 0/*Contrast*/, 0/*Gamma*/, 0/*Overclock*/};
 static float arroffset[4] = {0/*For brightness*/, 0/*For contrast*/, 0/*For gamma*/, 1.0/*For overclock*/};
-static void update_geometry();
 
 static void extract_basename(char *buf, const char *path, size_t size)
 {
@@ -156,6 +185,46 @@ static void extract_directory(char *buf, const char *path, size_t size)
       		buf[0] = '\0';
 }
 
+/* =========================================================== */
+unsigned retro_get_region(void)
+{
+	return RETRO_REGION_NTSC;
+}
+
+size_t retro_serialize_size(void)
+{
+	return 0;
+}
+
+size_t retro_get_memory_size(unsigned type)
+{
+	return 0;
+}
+
+bool retro_serialize(void *data, size_t size)
+{
+	return false;
+}
+
+bool retro_unserialize(const void *data, size_t size)
+{
+	return false;
+}
+
+bool retro_load_game_special(unsigned game_type, const struct retro_game_info *info, size_t num_info)
+{
+	return false;
+}
+
+void *retro_get_memory_data(unsigned type)
+{
+	return 0;
+}
+
+void retro_cheat_reset(void) { }
+void retro_cheat_set(unsigned unused, bool unused1, const char *unused2) { }
+void retro_set_controller_port_device(unsigned in_port, unsigned device) { }
+
 //============================================================
 //  RETRO
 //============================================================
@@ -186,7 +255,6 @@ static const char *xargv[] = {
 	NULL,
 	NULL,
 };
-
 
 #ifdef _WIN32
 	char slash = '\\';

@@ -1,4 +1,3 @@
-#include "retroosd.h"
 
 void osd_exit(running_machine &machine)
 {
@@ -158,15 +157,13 @@ void osd_update(running_machine *machine, int skip_redraw)
 }
 
 
- //============================================================
+//============================================================
 // osd_wait_for_debugger
 //============================================================
-
 void osd_wait_for_debugger(running_device *device, int firststop)
 {
    // we don't have a debugger, so we just return here
 }
-
 
 //============================================================
 //  update_audio_stream
@@ -177,7 +174,6 @@ void osd_update_audio_stream(running_machine *machine, short *buffer, int sample
 		audio_batch_cb(buffer, samples_this_frame);
 }
 
-
 //============================================================
 //  set_mastervolume
 //============================================================
@@ -186,7 +182,6 @@ void osd_set_mastervolume(int attenuation)
    // if we had actual sound output, we would adjust the global
    // volume in response to this function
 }
-
 
 //============================================================
 //  customize_input_type_list

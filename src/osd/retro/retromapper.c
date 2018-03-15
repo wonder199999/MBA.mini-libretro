@@ -1,39 +1,19 @@
-
-static void retro_poll_mame_input();
-
-static int rtwi = 320, rthe = 240, topw = 1024;		/* DEFAULT TEXW/TEXH/PITCH */
-int SHIFTON = -1;
-char RPATH[512];
-
-#ifdef M16B
-	uint16_t videoBuffer[1024 * 1024];
-	#define PITCH 1
-#else
-	unsigned int videoBuffer[1024 * 1024];
-	#define PITCH 1 * 2
+#if defined(HAVE_OPENGL) || defined(HAVE_OPENGLES)
+	#include "retroogl.c"
 #endif
-
-retro_video_refresh_t video_cb = NULL;
-retro_environment_t environ_cb = NULL;
-
-extern void retro_finish();
-extern void retro_main_loop();
-int RLOOP = 1;
 
 const char *retro_save_directory;
 const char *retro_system_directory;
 const char *retro_content_directory;
 
-retro_log_printf_t log_cb;
+retro_log_printf_t    log_cb = NULL;
+retro_environment_t   environ_cb = NULL;
+retro_video_refresh_t video_cb = NULL;
 
 static retro_input_state_t input_state_cb = NULL;
 static retro_audio_sample_batch_t audio_batch_cb = NULL;
+static retro_input_poll_t input_poll_cb = NULL;
 
-#if defined(HAVE_OPENGL) || defined(HAVE_OPENGLES)
-	#include "retroogl.c"
-#endif
-
-static retro_input_poll_t input_poll_cb;
 void retro_set_audio_sample_batch(retro_audio_sample_batch_t cb) { audio_batch_cb = cb; }
 void retro_set_input_state(retro_input_state_t cb) { input_state_cb = cb; }
 void retro_set_input_poll(retro_input_poll_t cb) { input_poll_cb = cb; }
@@ -407,16 +387,16 @@ bool retro_load_game(const struct retro_game_info *info)
 
    	check_variables();
 #ifdef M16B
-	memset(videoBuffer, 0, 1024 * 1024 * 2);
+	memset(videoBuffer, 0, 384 * 384 * 2);
 #else
-   	memset(videoBuffer, 0, 1024 * 1024 * 2 * 2);
+   	memset(videoBuffer, 0, 384 * 384 * 2 * 2);
 #endif
 #if defined(HAVE_OPENGL) || defined(HAVE_OPENGLES)
-	#ifdef HAVE_OPENGLES
+   #ifdef HAVE_OPENGLES
    	   hw_render.context_type = RETRO_HW_CONTEXT_OPENGLES2;
-	#else
+   #else
    	   hw_render.context_type = RETRO_HW_CONTEXT_OPENGL;
-	#endif
+   #endif
 	hw_render.context_reset = context_reset;
    	hw_render.context_destroy = context_destroy;
 
@@ -452,16 +432,3 @@ void retro_unload_game(void)
 
 	LOGI("Retro unload_game \n");
 }
-
-
-// Stubs
-unsigned retro_get_region(void) {return RETRO_REGION_NTSC; }
-size_t retro_serialize_size(void) { return 0; }
-size_t retro_get_memory_size(unsigned type) {return 0; }
-bool retro_serialize(void *data, size_t size) { return false; }
-bool retro_unserialize(const void *data, size_t size) { return false; }
-bool retro_load_game_special(unsigned game_type, const struct retro_game_info *info, size_t num_info) { return false; }
-void *retro_get_memory_data(unsigned type) {return 0; }
-void retro_cheat_reset(void) { }
-void retro_cheat_set(unsigned unused, bool unused1, const char *unused2) { }
-void retro_set_controller_port_device(unsigned in_port, unsigned device) { }
