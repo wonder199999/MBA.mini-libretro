@@ -241,7 +241,7 @@ static const char priortext[] = "Return to Prior Menu";
 static const char backtext[] = "Return to " CAPSTARTGAMENOUN;
 static const char exittext[] = "Exit";
 
-
+extern unsigned int allow_select_newgame;
 
 /***************************************************************************
     FUNCTION PROTOTYPES
@@ -1544,10 +1544,10 @@ static void menu_main_populate(running_machine *machine, ui_menu *menu, void *st
 
 		/* add file manager menu */
 		ui_menu_item_append(menu, "File Manager", NULL, 0, (void*)ui_image_menu_file_manager);
-	#ifdef MESS
+#ifdef MESS
 		/* add MESS-specific menus */
 		ui_mess_main_menu_populate(machine, menu);
-	#endif /* MESS */
+#endif /* MESS */
 	}
 	/* add keyboard mode menu */
 	if (input_machine_has_keyboard(machine) && inputx_can_post(machine))
@@ -1572,7 +1572,8 @@ static void menu_main_populate(running_machine *machine, ui_menu *menu, void *st
 		ui_menu_item_append(menu, "Memory Card", NULL, 0, (void *)menu_memory_card);
 
 	/* add reset and exit menus */
-	ui_menu_item_append(menu, "Select New " CAPSTARTGAMENOUN, NULL, 0, (void *)menu_select_game);
+	if (allow_select_newgame)
+		ui_menu_item_append(menu, "Select New " CAPSTARTGAMENOUN, NULL, 0, (void *)menu_select_game );
 }
 
 

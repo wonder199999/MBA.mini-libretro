@@ -119,9 +119,7 @@ struct kt_table
    	input_item_id mame_key;
 };
 
-//enables / disables tate mode
-static unsigned int tate;
-static unsigned int screenRot;
+unsigned int allow_select_newgame = 0;
 int vertical, orient;
 int RLOOP = 1;
 int SHIFTON = -1;
@@ -138,6 +136,8 @@ static bool keyboard_input = true;
 static int rtwi = 320, rthe = 240, topw = 320;		/* DEFAULT TEXW/TEXH/PITCH */
 static int ui_ipt_pushchar = -1;
 static int set_frame_skip;
+static unsigned int tate;
+static unsigned int screenRot;
 static unsigned int pauseg = 0;
 static unsigned int mame_reset = 0;
 static unsigned int FirstTimeUpdate = 1;
