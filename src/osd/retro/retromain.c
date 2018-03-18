@@ -186,41 +186,13 @@ static void extract_directory(char *buf, const char *path, size_t size)
 }
 
 /* =========================================================== */
-unsigned retro_get_region(void)
-{
-	return RETRO_REGION_NTSC;
-}
-
-size_t retro_serialize_size(void)
-{
-	return 0;
-}
-
-size_t retro_get_memory_size(unsigned type)
-{
-	return 0;
-}
-
-bool retro_serialize(void *data, size_t size)
-{
-	return false;
-}
-
-bool retro_unserialize(const void *data, size_t size)
-{
-	return false;
-}
-
-bool retro_load_game_special(unsigned game_type, const struct retro_game_info *info, size_t num_info)
-{
-	return false;
-}
-
-void *retro_get_memory_data(unsigned type)
-{
-	return 0;
-}
-
+unsigned retro_get_region(void) { return RETRO_REGION_NTSC; }
+size_t retro_serialize_size(void) { return 0; }
+size_t retro_get_memory_size(unsigned type) { return 0; }
+bool retro_serialize(void *data, size_t size) { return false; }
+bool retro_unserialize(const void *data, size_t size) { return false; }
+bool retro_load_game_special(unsigned game_type, const struct retro_game_info *info, size_t num_info) { return false; }
+void *retro_get_memory_data(unsigned type) { return 0; }
 void retro_cheat_reset(void) { }
 void retro_cheat_set(unsigned unused, bool unused1, const char *unused2) { }
 void retro_set_controller_port_device(unsigned in_port, unsigned device) { }
@@ -238,22 +210,8 @@ void retro_set_controller_port_device(unsigned in_port, unsigned device) { }
 //============================================================
 
 static const char *xargv[] = {
-	"-joystick",
-	"-noautoframeskip",
-	"-sound",
-	"-samplerate",
-	"48000",
-	"-contrast",
-	"1.0",
-	"-brightness",
-	"1.0",
-	"-gamma",
-	"1.0",
-	"-rompath",
-	NULL,
-	NULL,
-	NULL,
-	NULL,
+	"-joystick", "-noautoframeskip", "-sound", "-rompath",
+	 NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
 };
 
 #ifdef _WIN32
@@ -308,8 +266,8 @@ static int getGameInfo(char *gameName, int *rotation, int *driverIndex)
 {
 	int gameFound = 0;
 	int drvindex;
-#if 1
-	//check invalid game name
+
+	/* check invalid game name */
 	if (gameName[0] == 0)
 		return 0;
 
@@ -323,9 +281,6 @@ static int getGameInfo(char *gameName, int *rotation, int *driverIndex)
 			write_log("%-18s\"%s\" rot=%i \n", drivers[drvindex]->name, drivers[drvindex]->description, *rotation);
 		}
 	}
-#else
-	gameFound = 1;
-#endif
 	return gameFound;
 }
 
@@ -347,7 +302,6 @@ int executeGame(char *path)
 	{
 		write_log("parse path failed! path=%s\n", path);
 		strcpy(MgameName, path);
-//		return -1;
 	}
 
 	//Find the game info. Exit if game driver was not found.
@@ -370,8 +324,17 @@ int executeGame(char *path)
 	write_log("creating frontend... game=%s\n", MgameName);
 
 	//find how many parameters we have
-	for (paramCount = 0; xargv[paramCount] != NULL; paramCount++) ;
+	for (paramCount = 0; xargv[paramCount] != NULL; paramCount++) { };
 
+	xargv[paramCount++] = (char*)g_rom_dir;
+
+	xargv[paramCount++] = (char*)"-cfg_directory";
+	xargv[paramCount++] = (char*)g_rom_dir;
+
+	xargv[paramCount++] = (char*)"-nvram_directory";
+	xargv[paramCount++] = (char*)g_rom_dir;
+
+	xargv[paramCount++] = (char*)"-memcard_directory";
 	xargv[paramCount++] = (char*)g_rom_dir;
 
 	if (!tate)
