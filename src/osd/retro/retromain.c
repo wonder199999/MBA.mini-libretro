@@ -8,7 +8,6 @@
 #include "ui.h"
 #include "uiinput.h"
 #include "libretro.h"
-#include "log.h"
 #include "options.h"
 
 extern "C" int mmain(int argc, const char *argv);
@@ -32,6 +31,16 @@ static void retro_poll_mame_input();
 static void update_geometry();
 
 /* ============================================================ */
+#ifdef ANDROID
+   #include <android/log.h>
+   #define LOGI(...) ((void)__android_log_print(ANDROID_LOG_INFO, "mame139-retro", __VA_ARGS__))
+   #undef write_log
+   #define write_log LOGI
+#else
+   #define write_log	printf
+   #define LOGI		printf
+#endif
+
 #if !defined(HAVE_OPENGL) && !defined(HAVE_OPENGLES) && !defined(HAVE_RGB32)
    #define M16B
 #endif
@@ -57,7 +66,25 @@ static void update_geometry();
 #endif
 #include "rendersw.c"
 
-// fake a keyboard mapped to retro joypad
+#ifdef DEBUG_LOG
+   #define LOG(msg) fprintf(stderr, "%s\n", msg)
+#else
+   #define LOG(msg)
+#endif
+
+#ifdef M16B
+	uint16_t videoBuffer[384 * 384];
+	#define PITCH 1
+#else
+	unsigned int videoBuffer[384 * 384];
+	#define PITCH 1 * 2
+#endif
+
+//============================================================
+//  GLOBALS
+//============================================================
+
+/* fake a keyboard mapped to retro joypad */
 enum
 {
 	KEY_F11,
@@ -79,23 +106,12 @@ enum
 	KEY_TOTAL
 };
 
-#ifdef DEBUG_LOG
-   #define LOG(msg) fprintf(stderr, "%s\n", msg)
-#else
-   #define LOG(msg)
-#endif
-
-#ifdef M16B
-	uint16_t videoBuffer[384 * 384];
-	#define PITCH 1
-#else
-	unsigned int videoBuffer[384 * 384];
-	#define PITCH 1 * 2
-#endif
-
-//============================================================
-//  GLOBALS
-//============================================================
+struct kt_table
+{
+	const char *mame_key_name;
+	int retro_key_name;
+	input_item_id mame_key;
+};
 
 // rendering target
 static render_target *our_target = NULL;
@@ -112,22 +128,15 @@ static UINT8 pad_state[4][KEY_TOTAL];
 static UINT16 retrokbd_state[RETROK_LAST];
 static UINT16 retrokbd_state2[RETROK_LAST];
 
-struct kt_table
-{
-	const char *mame_key_name;
-   	int retro_key_name;
-   	input_item_id mame_key;
-};
-
 unsigned int allow_select_newgame = 0;
 int vertical, orient;
 int RLOOP = 1;
 int SHIFTON = -1;
 
+char RPATH[512];
+char retro_content_dir[1024];
 static char MgamePath[1024];
 static char MgameName[512];
-char RPATH[512];
-char g_rom_dir[1024];
 
 static bool draw_this_frame;
 static bool set_par = false;
@@ -326,16 +335,16 @@ int executeGame(char *path)
 	//find how many parameters we have
 	for (paramCount = 0; xargv[paramCount] != NULL; paramCount++) { };
 
-	xargv[paramCount++] = (char*)g_rom_dir;
+	xargv[paramCount++] = (char*)retro_content_dir;
 
 	xargv[paramCount++] = (char*)"-cfg_directory";
-	xargv[paramCount++] = (char*)g_rom_dir;
+	xargv[paramCount++] = (char*)retro_content_dir;
 
 	xargv[paramCount++] = (char*)"-nvram_directory";
-	xargv[paramCount++] = (char*)g_rom_dir;
+	xargv[paramCount++] = (char*)retro_content_dir;
 
 	xargv[paramCount++] = (char*)"-memcard_directory";
-	xargv[paramCount++] = (char*)g_rom_dir;
+	xargv[paramCount++] = (char*)retro_content_dir;
 
 	if (!tate)
 	{

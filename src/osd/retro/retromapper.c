@@ -405,7 +405,7 @@ bool retro_load_game(const struct retro_game_info *info)
 #endif
 	basename[0] = '\0';
    	extract_basename(basename, info->path, sizeof(basename));
-   	extract_directory(g_rom_dir, info->path, sizeof(g_rom_dir));
+   	extract_directory(retro_content_dir, info->path, sizeof(retro_content_dir));
    	strcpy(RPATH, info->path);
 
    	result = mmain(1, RPATH);
