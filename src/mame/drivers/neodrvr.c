@@ -7694,6 +7694,15 @@ static INPUT_PORTS_START( jockeygp )
 	STANDARD_IN4
 INPUT_PORTS_END
 
+/****************************************************************************/
+
+/* ==================== */
+/*	additional	*/
+/* ==================== */
+#include "neogeo_add.c"
+/* ==================== */
+/*	additional	*/
+/* ==================== */
 
 /****************************************************************************/
 
@@ -8611,3 +8620,14 @@ GAME( 2000, diggerma,  neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "Kyle Hodge
 
 /* Neo Print */
 GAME( 1998, 98best44,  0,        neogeo,   neogeo,   neogeo,   ROT0, "SNK", "'98 NeoPri Best 44 (Neo Print)", GAME_NOT_WORKING | GAME_SUPPORTS_SAVE )
+
+
+/* ==================================== */
+/* 	new added support		*/
+/* ==================================== */
+/*
+GAME( year, archives name, parent name, MACHINE_DRIVER_START, INPUT_PORTS, DRIVER_INIT, flip, producer name, info, support )
+*/
+GAME( 1997, kof97hfa,  neogeo,   neogeo,   neogeo,   neogeo,   ROT0,   "SNK",	  "The King of Fighters '97 (Simplified operation version by FlanagAnagency)",	GAME_SUPPORTS_SAVE )
+GAME( 1994, ss2hfa,    neogeo,   neogeo,   neogeo,   neogeo,   ROT0,   "SNK",  	  "Samurai Shodown II / Shin Samurai Spirits - Haohmaru jigokuhen (Simplified operation version by FlanagAnagency)",  GAME_SUPPORTS_SAVE )
+GAME( 1996, sokhfa,    neogeo,   neogeo,   neogeo,   neogeo,   ROT0,   "Saurus",  "Ragnagard / Shin-Oh-Ken (Simplified operation version by FlanagAnagency)",	GAME_SUPPORTS_SAVE )
