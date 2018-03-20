@@ -37,6 +37,9 @@ void osd_init(running_machine *machine)
    	prep_retro_rotation(gamRot);
    	machine->sample_rate = sample_rate;	/* Override original value */
 
+	if (!macro_enable)
+		macro_state = 0;
+
    	write_log("osd init done\n");
 }
 

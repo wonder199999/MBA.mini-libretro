@@ -73,10 +73,10 @@ static void update_geometry();
 #endif
 
 #ifdef M16B
-	uint16_t videoBuffer[384 * 384];
+	uint16_t videoBuffer[512 * 512];
 	#define PITCH 1
 #else
-	unsigned int videoBuffer[384 * 384];
+	unsigned int videoBuffer[512 * 512];
 	#define PITCH 1 * 2
 #endif
 
@@ -142,6 +142,7 @@ static bool draw_this_frame;
 static bool set_par = false;
 static bool retro_load_ok = false;
 static bool keyboard_input = true;
+static bool macro_enable = true;
 static int rtwi = 320, rthe = 240, topw = 320;		/* DEFAULT TEXW/TEXH/PITCH */
 static int ui_ipt_pushchar = -1;
 static int set_frame_skip;
@@ -153,6 +154,7 @@ static unsigned int FirstTimeUpdate = 1;
 static unsigned int turbo_enable;
 static unsigned int turbo_delay;
 static unsigned int turbo_state;
+static unsigned int macro_state;
 static unsigned int sample_rate = 48000;
 static double refresh_rate = 60.0;
 static unsigned adjust_opt[7] = {0/*Enable/Disable*/, 0/*Limit*/, 0/*GetRefreshRate*/, 0/*Brightness*/, 0/*Contrast*/, 0/*Gamma*/, 0/*Overclock*/};
@@ -219,8 +221,15 @@ void retro_set_controller_port_device(unsigned in_port, unsigned device) { }
 //============================================================
 
 static const char *xargv[] = {
-	"-joystick", "-noautoframeskip", "-sound", "-rompath",
-	 NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
+	"-joystick",
+	"-noautoframeskip",
+	"-sound",
+	"-rompath",
+	NULL, NULL,
+	NULL, NULL,
+	NULL, NULL,
+	NULL, NULL,
+	NULL,
 };
 
 #ifdef _WIN32
