@@ -28,6 +28,7 @@ void retro_set_environment(retro_environment_t cb)
       	{ "mame_mini_macro_button", 	"Use macro button; disabled|assign A+B to L|assign A+B to R|assign C+D to L|assign C+D to R|assign A+B to L & C+D to R|assign A+B to R & C+D to L" },
       	{ "mame_mini_tate_mode", 	"T.A.T.E mode(Restart); disabled|enabled" },
       	{ "mame_mini_sample_rate", 	"Set sample rate (Restart); 48000Hz|44100Hz|32000Hz|22050Hz" },
+	{ "mame_mini_rom_hash",		"Forced off ROM CRC verfiy(Restart); No|Yes" },
       	{ "mame_mini_adj_brightness",
 	   "Set brightness; default|+1%|+2%|+3%|+4%|+5%|+6%|+7%|+8%|+9%|+10%|+11%|+12%|+13%|+14%|+15%|+16%|+17%|+18%|+19%|+20%|-20%|-19%|-18%|-17%|-16%|-15%|-14%|-13%|-12%|-11%|-10%|-9%|-8%|-7%|-6%|-5%|-4%|-3%|-2%|-1%" },
       	{ "mame_mini_adj_contrast",
@@ -202,6 +203,16 @@ static void check_variables(void)
 
 		if (!macro_enable)
 			macro_state = 0;
+	}
+
+   	var.key = "mame_mini_rom_hash";
+   	var.value = NULL;
+   	if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
+	{
+		if (!strcmp(var.value, "No"))
+			verify_rom_hash = true;
+		else
+			verify_rom_hash = false;
 	}
 
    	if (tmp_ar != set_par)

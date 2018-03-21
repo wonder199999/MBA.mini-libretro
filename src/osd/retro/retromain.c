@@ -132,6 +132,7 @@ unsigned int allow_select_newgame = 0;
 int vertical, orient;
 int RLOOP = 1;
 int SHIFTON = -1;
+bool verify_rom_hash = false;
 
 char RPATH[512];
 char retro_content_dir[1024];

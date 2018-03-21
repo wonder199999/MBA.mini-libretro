@@ -21,6 +21,7 @@
 #define LOG_LOAD 0
 #define LOG(x) do { if (LOG_LOAD) debugload x; } while(0)
 
+extern bool verify_rom_hash;
 
 /***************************************************************************
     CONSTANTS
@@ -951,10 +952,10 @@ static void process_rom_entries(rom_load_data *romdata, const char *regiontag, c
 					if (!ROMENTRY_ISIGNORE(&modified_romp) && !irrelevantbios)
 						/*readresult = */read_rom_data(romdata, &modified_romp);
 				}
-				while (ROMENTRY_ISCONTINUE(romp) || ROMENTRY_ISIGNORE(romp));
+				while ( ROMENTRY_ISCONTINUE(romp) || ROMENTRY_ISIGNORE(romp) ) ;
 
 				/* if this was the first use of this file, verify the length and CRC */
-				if (baserom)
+				if (baserom && verify_rom_hash)
 				{
 					LOG(("Verifying length (%X) and checksums\n", explength));
 					verify_length_and_hash(romdata, ROM_GETNAME(baserom), explength, ROM_GETHASHDATA(baserom));
