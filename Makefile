@@ -313,34 +313,29 @@ endif
 
 # ARM
 else ifneq (,$(findstring armv,$(platform)))
+   CC = g++
+   LD = g++
    TARGETLIB := $(TARGET_NAME)_libretro.so
    SHARED := -shared -Wl,--no-undefined
    fpic = -fPIC
-   CC = g++
    LDFLAGS +=  $(SHARED)
    ARM_ENABLED = 1
+   CCOMFLAGS += -marm -ffast-math
+   LIBS += -lstdc++ -lpthread
+
 ifneq (,$(findstring cortexa8,$(platform)))
    CCOMFLAGS += -marm -mcpu=cortex-a8
-   ASFLAGS += -mcpu=cortex-a8
 else ifneq (,$(findstring cortexa9,$(platform)))
    CCOMFLAGS += -marm -mcpu=cortex-a9
-   ASFLAGS += -mcpu=cortex-a9
 endif
-   CCOMFLAGS += -marm
 ifneq (,$(findstring neon,$(platform)))
    CCOMFLAGS += -mfpu=neon
-   ASFLAGS += -mfpu=neon
-   HAVE_NEON = 1
 endif
 ifneq (,$(findstring softfloat,$(platform)))
    CCOMFLAGS += -mfloat-abi=softfp
-   ASFLAGS += -mfloat-abi=softfp
 else ifneq (,$(findstring hardfloat,$(platform)))
    CCOMFLAGS += -mfloat-abi=hard
-   ASFLAGS += -mfloat-abi=hard
 endif
-   CFLAGS += -DARM
-	LIBS += -lstdc++ -lpthread
 
 
 else ifeq ($(platform), wincross)
