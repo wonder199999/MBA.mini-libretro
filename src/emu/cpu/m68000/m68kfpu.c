@@ -257,9 +257,9 @@ INLINE void store_pack_float80(m68ki_cpu_core *m68k, UINT32 ea, int k, floatx80 
 
 INLINE void SET_CONDITION_CODES(m68ki_cpu_core *m68k, floatx80 reg)
 {
-	UINT64 *regi;
+/*	UINT64 *regi;
 
-	regi = (UINT64 *)&reg;
+	regi = (UINT64 *)&reg; */
 
 	REG_FPSR &= ~(FPCC_N|FPCC_Z|FPCC_I|FPCC_NAN);
 
