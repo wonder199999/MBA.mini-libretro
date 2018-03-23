@@ -559,105 +559,144 @@
 
 */
 
-#define ROM_LOAD16_WORD_SWAP_BIOS(bios,name,offset,length,hash) \
-		ROMX_LOAD(name, offset, length, hash, ROM_GROUPWORD | ROM_REVERSE | ROM_BIOS(bios+1)) /* Note '+1' */
+#define ROM_LOAD16_WORD_SWAP_BIOS(bios, name, offset, length, hash) \
+		ROMX_LOAD(name, offset, length, hash, ROM_GROUPWORD | ROM_REVERSE | ROM_BIOS(bios + 1)) /* Note '+1' */
 
-#define NEOGEO_BIOS \
-	ROM_REGION16_BE( 0x80000, "mainbios", 0 )													\
-	ROM_SYSTEM_BIOS( 0, "euro",        "Europe MVS (Ver. 2)" ) \
-	ROM_LOAD16_WORD_SWAP_BIOS( 0, "sp-s2.sp1",    0x00000, 0x020000, CRC(9036d879) SHA1(4f5ed7105b7128794654ce82b51723e16e389543) ) /* Europe, 1 Slot, has also been found on 2 Slot and 4 Slot (the old hacks were designed for this one) */ \
-	ROM_SYSTEM_BIOS( 1, "euro-s1",     "Europe MVS (Ver. 1)" ) \
-	ROM_LOAD16_WORD_SWAP_BIOS( 1, "sp-s.sp1",     0x00000, 0x020000, CRC(c7f2fa45) SHA1(09576ff20b4d6b365e78e6a5698ea450262697cd) ) /* Europe, 4 Slot */ \
-	ROM_SYSTEM_BIOS( 2, "us",          "US MVS (Ver. 2?)" ) \
-	ROM_LOAD16_WORD_SWAP_BIOS( 2, "usa_2slt.bin", 0x00000, 0x020000, CRC(e72943de) SHA1(5c6bba07d2ec8ac95776aa3511109f5e1e2e92eb) ) /* US, 2 Slot */ \
-	ROM_SYSTEM_BIOS( 3, "us-e",        "US MVS (Ver. 1)" ) \
-	ROM_LOAD16_WORD_SWAP_BIOS( 3, "sp-e.sp1",     0x00000, 0x020000, CRC(2723a5b5) SHA1(5dbff7531cf04886cde3ef022fb5ca687573dcb8) ) /* US, 6 Slot (V5?) */ \
-	ROM_SYSTEM_BIOS( 4, "asia",        "Asia MVS (Ver. 3)" ) \
-	ROM_LOAD16_WORD_SWAP_BIOS( 4, "asia-s3.rom",  0x00000, 0x020000, CRC(91b64be3) SHA1(720a3e20d26818632aedf2c2fd16c54f213543e1) ) /* Asia */ \
-	ROM_SYSTEM_BIOS( 5, "japan",       "Japan MVS (Ver. 3)" ) \
-	ROM_LOAD16_WORD_SWAP_BIOS( 5, "vs-bios.rom",  0x00000, 0x020000, CRC(f0e8f27d) SHA1(ecf01eda815909f1facec62abf3594eaa8d11075) ) /* Japan, Ver 6 VS Bios */ \
-	ROM_SYSTEM_BIOS( 6, "japan-s2",    "Japan MVS (Ver. 2)" ) \
-	ROM_LOAD16_WORD_SWAP_BIOS( 6, "sp-j2.sp1",    0x00000, 0x020000, CRC(acede59c) SHA1(b6f97acd282fd7e94d9426078a90f059b5e9dd91) ) /* Japan, Older */ \
-	ROM_SYSTEM_BIOS( 7, "japan-s1",    "Japan MVS (Ver. 1)" ) \
-	ROM_LOAD16_WORD_SWAP_BIOS( 7, "sp1.jipan.1024",0x00000, 0x020000, CRC(9fb0abe4) SHA1(18a987ce2229df79a8cf6a84f968f0e42ce4e59d) ) /* Japan, Older */ \
-	ROM_SYSTEM_BIOS( 8, "mv1c",        "NEO-MVH MV1C" ) \
-	ROM_LOAD16_WORD_SWAP_BIOS( 8, "sp-45.sp1",0x00000, 0x080000, CRC(03cc9f6a) SHA1(cdf1f49e3ff2bac528c21ed28449cf35b7957dc1) ) /* Latest Asia bios */ \
-	ROM_SYSTEM_BIOS( 9, "japan-j3",    "Japan MVS (J3)" ) \
-	ROM_LOAD16_WORD_SWAP_BIOS( 9, "japan-j3.bin",0x00000, 0x020000, CRC(dff6d41f) SHA1(e92910e20092577a4523a6b39d578a71d4de7085) ) /* Latest Japan bios; correct chip label unknown */ \
-	ROM_SYSTEM_BIOS( 10, "japan-hotel","Custom Japanese Hotel" ) \
-	ROM_LOAD16_WORD_SWAP_BIOS( 10, "sp-1v1_3db8c.bin",0x00000, 0x020000, CRC(162f0ebe) SHA1(fe1c6dd3dfcf97d960065b1bb46c1e11cb7bf271) ) /* 'rare MVS found in japanese hotels' shows v1.3 in test mode */ \
-	ROM_SYSTEM_BIOS( 11, "uni-bios_2_3","Universe Bios (Hack, Ver. 2.3)" ) \
-	ROM_LOAD16_WORD_SWAP_BIOS( 11, "uni-bios_2_3.rom",  0x00000, 0x020000, CRC(27664eb5) SHA1(5b02900a3ccf3df168bdcfc98458136fd2b92ac0) ) /* Universe Bios v2.3 (hack) */ \
-	ROM_SYSTEM_BIOS( 12, "uni-bios_2_3o","Universe Bios (Hack, Ver. 2.3, older?)" ) \
-	ROM_LOAD16_WORD_SWAP_BIOS( 12, "uni-bios_2_3o.rom",  0x00000, 0x020000, CRC(601720ae) SHA1(1b8a72c720cdb5ee3f1d735bbcf447b09204b8d9) ) /* Universe Bios v2.3 (hack) alt version, withdrawn? */ \
-	ROM_SYSTEM_BIOS( 13, "uni-bios_2_2","Universe Bios (Hack, Ver. 2.2)" ) \
-	ROM_LOAD16_WORD_SWAP_BIOS( 13, "uni-bios_2_2.rom",  0x00000, 0x020000, CRC(2d50996a) SHA1(5241a4fb0c63b1a23fd1da8efa9c9a9bd3b4279c) ) /* Universe Bios v2.2 (hack) */ \
-	ROM_SYSTEM_BIOS( 14, "uni-bios_2_1","Universe Bios (Hack, Ver. 2.1)" ) \
-	ROM_LOAD16_WORD_SWAP_BIOS( 14, "uni-bios_2_1.rom",  0x00000, 0x020000, CRC(8dabf76b) SHA1(c23732c4491d966cf0373c65c83c7a4e88f0082c) ) /* Universe Bios v2.1 (hack) */ \
-	ROM_SYSTEM_BIOS( 15, "uni-bios_2_0","Universe Bios (Hack, Ver. 2.0)" ) \
-	ROM_LOAD16_WORD_SWAP_BIOS( 15, "uni-bios_2_0.rom",  0x00000, 0x020000, CRC(0c12c2ad) SHA1(37bcd4d30f3892078b46841d895a6eff16dc921e) ) /* Universe Bios v2.0 (hack) */ \
-	ROM_SYSTEM_BIOS( 16, "uni-bios_1_3","Universe Bios (Hack, Ver. 1.3)" ) \
-	ROM_LOAD16_WORD_SWAP_BIOS( 16, "uni-bios_1_3.rom",  0x00000, 0x020000, CRC(b24b44a0) SHA1(eca8851d30557b97c309a0d9f4a9d20e5b14af4e) ) /* Universe Bios v1.3 (hack) */ \
-	ROM_SYSTEM_BIOS( 17, "uni-bios_1_2","Universe Bios (Hack, Ver. 1.2)" ) \
-	ROM_LOAD16_WORD_SWAP_BIOS( 17, "uni-bios_1_2.rom",  0x00000, 0x020000, CRC(4fa698e9) SHA1(682e13ec1c42beaa2d04473967840c88fd52c75a) ) /* Universe Bios v1.2 (hack) */ \
-	ROM_SYSTEM_BIOS( 18, "uni-bios_1_2o","Universe Bios (Hack, Ver. 1.2, older)" ) \
-	ROM_LOAD16_WORD_SWAP_BIOS( 18, "uni-bios_1_2o.rom", 0x00000, 0x020000, CRC(e19d3ce9) SHA1(af88ef837f44a3af2d7144bb46a37c8512b67770) ) /* Universe Bios v1.2 (hack) alt version */ \
-	ROM_SYSTEM_BIOS( 19, "uni-bios_1_1","Universe Bios (Hack, Ver. 1.1)" ) \
-	ROM_LOAD16_WORD_SWAP_BIOS( 19, "uni-bios_1_1.rom",  0x00000, 0x020000, CRC(5dda0d84) SHA1(4153d533c02926a2577e49c32657214781ff29b7) ) /* Universe Bios v1.1 (hack) */ \
-	ROM_SYSTEM_BIOS( 20, "uni-bios_1_0","Universe Bios (Hack, Ver. 1.0)" ) \
-	ROM_LOAD16_WORD_SWAP_BIOS( 20, "uni-bios_1_0.rom",  0x00000, 0x020000, CRC(0ce453a0) SHA1(3b4c0cd26c176fc6b26c3a2f95143dd478f6abf9) ) /* Universe Bios v1.0 (hack) */ \
-//  ROM_SYSTEM_BIOS( 21, "debug",      "Debug MVS (Hack?)" )
-//  ROM_LOAD16_WORD_SWAP_BIOS( 21, "neodebug.rom", 0x00000, 0x020000, CRC(698ebb7d) SHA1(081c49aa8cc7dad5939833dc1b18338321ea0a07) ) /* Debug (Development) Bios */
-//  ROM_SYSTEM_BIOS( 22, "asia-aes",   "Asia AES" )
-//  ROM_LOAD16_WORD_SWAP_BIOS( 22, "neo-epo.bin", 0x00000, 0x020000, CRC(d27a71f1) SHA1(1b3b22092f30c4d1b2c15f04d1670eb1e9fbea07) ) /* AES Console (Asia?) Bios */
-//  ROM_SYSTEM_BIOS( 23, "jap-aes",   "Japan AES" )
-//  ROM_LOAD16_WORD_SWAP_BIOS( 23, "neo-po.bin", 0x00000, 0x020000, CRC(16d0c132) SHA1(4e4a440cae46f3889d20234aebd7f8d5f522e22c) ) /* AES Console (Japan) Bios */
+/* Universe Bios v2.3 (hack) */ 
+#define	NG_UNI_H_V23	ROM_SYSTEM_BIOS( 0,	"uni-bios_2_3",		"Universe Bios (Hack, Ver. 2.3)" ) \
+			ROM_LOAD16_WORD_SWAP_BIOS( 0, "uni-bios_2_3.rom", 0x00000, 0x020000, CRC(27664eb5) SHA1(5b02900a3ccf3df168bdcfc98458136fd2b92ac0) ) 
+
+/* Universe Bios v2.3 (hack) alt version, withdrawn? */ 
+#define NG_UNI_H_V23A	ROM_SYSTEM_BIOS( 0, 	"uni-bios_2_3o",	"Universe Bios (Hack, Ver. 2.3, older?)" ) \
+			ROM_LOAD16_WORD_SWAP_BIOS( 0, "uni-bios_2_3o.rom",  0x00000, 0x020000, CRC(601720ae) SHA1(1b8a72c720cdb5ee3f1d735bbcf447b09204b8d9) ) 
+
+/* Universe Bios v2.2 (hack) */ 
+#define NG_UNI_H_V22	ROM_SYSTEM_BIOS( 0, 	"uni-bios_2_2",		"Universe Bios (Hack, Ver. 2.2)" ) \
+			ROM_LOAD16_WORD_SWAP_BIOS( 0, "uni-bios_2_2.rom",  0x00000, 0x020000, CRC(2d50996a) SHA1(5241a4fb0c63b1a23fd1da8efa9c9a9bd3b4279c) ) 
+
+/* Universe Bios v2.1 (hack) */ 
+#define NG_UNI_H_V21	ROM_SYSTEM_BIOS( 0, 	"uni-bios_2_1",		"Universe Bios (Hack, Ver. 2.1)" ) \
+			ROM_LOAD16_WORD_SWAP_BIOS( 0, "uni-bios_2_1.rom",  0x00000, 0x020000, CRC(8dabf76b) SHA1(c23732c4491d966cf0373c65c83c7a4e88f0082c) ) 
+
+/* Universe Bios v2.0 (hack) */ 
+#define NG_UNI_H_V20	ROM_SYSTEM_BIOS( 0, 	"uni-bios_2_0",		"Universe Bios (Hack, Ver. 2.0)" ) \
+			ROM_LOAD16_WORD_SWAP_BIOS( 0, "uni-bios_2_0.rom",  0x00000, 0x020000, CRC(0c12c2ad) SHA1(37bcd4d30f3892078b46841d895a6eff16dc921e) ) 
+
+/* Universe Bios v1.3 (hack) */ 
+#define NG_UNI_H_V13	ROM_SYSTEM_BIOS( 0, 	"uni-bios_1_3",		"Universe Bios (Hack, Ver. 1.3)" ) \
+			ROM_LOAD16_WORD_SWAP_BIOS( 0, "uni-bios_1_3.rom",  0x00000, 0x020000, CRC(b24b44a0) SHA1(eca8851d30557b97c309a0d9f4a9d20e5b14af4e) ) 
+
+/* Universe Bios v1.2 (hack) */ 
+#define NG_UNI_H_V12	ROM_SYSTEM_BIOS( 0, 	"uni-bios_1_2",		"Universe Bios (Hack, Ver. 1.2)" ) \
+			ROM_LOAD16_WORD_SWAP_BIOS( 0, "uni-bios_1_2.rom",  0x00000, 0x020000, CRC(4fa698e9) SHA1(682e13ec1c42beaa2d04473967840c88fd52c75a) ) 
+
+ /* Universe Bios v1.2 (hack) alt version */ 
+#define NG_UNI_H_V12A	ROM_SYSTEM_BIOS( 0, 	"uni-bios_1_2o",	"Universe Bios (Hack, Ver. 1.2, older)" ) \
+			ROM_LOAD16_WORD_SWAP_BIOS( 0, "uni-bios_1_2o.rom", 0x00000, 0x020000, CRC(e19d3ce9) SHA1(af88ef837f44a3af2d7144bb46a37c8512b67770) )
+
+/* Universe Bios v1.1 (hack) */ 
+#define NG_UNI_H_V11	ROM_SYSTEM_BIOS( 0, 	"uni-bios_1_1",		"Universe Bios (Hack, Ver. 1.1)" ) \
+			ROM_LOAD16_WORD_SWAP_BIOS( 0, "uni-bios_1_1.rom",  0x00000, 0x020000, CRC(5dda0d84) SHA1(4153d533c02926a2577e49c32657214781ff29b7) ) 
+
+/* Universe Bios v1.0 (hack) */ 
+#define NG_UNI_H_V10	ROM_SYSTEM_BIOS( 0, 	"uni-bios_1_0",		"Universe Bios (Hack, Ver. 1.0)" ) \
+			ROM_LOAD16_WORD_SWAP_BIOS( 0, "uni-bios_1_0.rom",  0x00000, 0x020000, CRC(0ce453a0) SHA1(3b4c0cd26c176fc6b26c3a2f95143dd478f6abf9) ) 
+
+/* Europe, 1 Slot, has also been found on 2 Slot and 4 Slot (the old hacks were designed for this one) */ 
+#define NG_MVS_E_V2	ROM_SYSTEM_BIOS( 0, 	"euro",       	"Europe MVS (Ver. 2)" ) \
+			ROM_LOAD16_WORD_SWAP_BIOS( 0, "sp-s2.sp1",    0x00000, 0x020000, CRC(9036d879) SHA1(4f5ed7105b7128794654ce82b51723e16e389543) ) 
+
+/* Europe, 4 Slot */ 
+#define NG_MVS_E_V1	ROM_SYSTEM_BIOS( 0, 	"euro-s1",    	"Europe MVS (Ver. 1)" ) \
+			ROM_LOAD16_WORD_SWAP_BIOS( 0, "sp-s.sp1",     0x00000, 0x020000, CRC(c7f2fa45) SHA1(09576ff20b4d6b365e78e6a5698ea450262697cd) ) 
+
+/* US, 2 Slot */ 
+#define NG_MVS_U_V2	ROM_SYSTEM_BIOS( 0, 	"us",         	"US MVS (Ver. 2?)" ) \
+			ROM_LOAD16_WORD_SWAP_BIOS( 0, "usa_2slt.bin", 0x00000, 0x020000, CRC(e72943de) SHA1(5c6bba07d2ec8ac95776aa3511109f5e1e2e92eb) ) 
+
+/* US, 6 Slot (V5?) */ 
+#define NG_MVS_U_V1	ROM_SYSTEM_BIOS( 0, 	"us-e",       	"US MVS (Ver. 1)" ) \
+			ROM_LOAD16_WORD_SWAP_BIOS( 0, "sp-e.sp1",     0x00000, 0x020000, CRC(2723a5b5) SHA1(5dbff7531cf04886cde3ef022fb5ca687573dcb8) ) 
+
+/* Asia */ 
+#define NG_MVS_A_V3	ROM_SYSTEM_BIOS( 0, 	"asia",       	"Asia MVS (Ver. 3)" ) \
+			ROM_LOAD16_WORD_SWAP_BIOS( 0, "asia-s3.rom",  0x00000, 0x020000, CRC(91b64be3) SHA1(720a3e20d26818632aedf2c2fd16c54f213543e1) ) 
+
+/* Japan, Ver 6 VS Bios */ 
+#define NG_MVS_J_V3	ROM_SYSTEM_BIOS( 0, 	"japan",      	"Japan MVS (Ver. 3)" ) \
+			ROM_LOAD16_WORD_SWAP_BIOS( 0, "vs-bios.rom",  0x00000, 0x020000, CRC(f0e8f27d) SHA1(ecf01eda815909f1facec62abf3594eaa8d11075) ) 
+
+/* Japan, Older */ 
+#define NG_MVS_J_V2	ROM_SYSTEM_BIOS( 0, 	"japan-s2",    "Japan MVS (Ver. 2)" ) \
+			ROM_LOAD16_WORD_SWAP_BIOS( 0, "sp-j2.sp1",    0x00000, 0x020000, CRC(acede59c) SHA1(b6f97acd282fd7e94d9426078a90f059b5e9dd91) ) 
+
+/* Japan, Older */ 
+#define NG_MVS_J_V1	ROM_SYSTEM_BIOS( 0, 	"japan-s1",    	"Japan MVS (Ver. 1)" ) \
+			ROM_LOAD16_WORD_SWAP_BIOS( 0, "sp1.jipan.1024",0x00000, 0x020000, CRC(9fb0abe4) SHA1(18a987ce2229df79a8cf6a84f968f0e42ce4e59d) ) 
+
+/* Latest Asia bios */ 
+#define NG_MVS_A_LATEST	ROM_SYSTEM_BIOS( 0, 	"mv1c",        	"NEO-MVH MV1C" ) \
+			ROM_LOAD16_WORD_SWAP_BIOS( 0, "sp-45.sp1",0x00000, 0x080000, CRC(03cc9f6a) SHA1(cdf1f49e3ff2bac528c21ed28449cf35b7957dc1) ) 
+
+/* Latest Japan bios; correct chip label unknown */ 
+#define NG_MVS_J_LATEST	ROM_SYSTEM_BIOS( 0, 	"japan-j3",    	"Japan MVS (J3)" ) \
+			ROM_LOAD16_WORD_SWAP_BIOS( 0, "japan-j3.bin",0x00000, 0x020000, CRC(dff6d41f) SHA1(e92910e20092577a4523a6b39d578a71d4de7085) ) 
+
+/* 'rare MVS found in japanese hotels' shows v1.3 in test mode */ 
+#define NG_CTM_J_HOTEL	ROM_SYSTEM_BIOS( 0, 	"japan-hotel",	"Custom Japanese Hotel" ) \
+			ROM_LOAD16_WORD_SWAP_BIOS( 0, "sp-1v1_3db8c.bin",0x00000, 0x020000, CRC(162f0ebe) SHA1(fe1c6dd3dfcf97d960065b1bb46c1e11cb7bf271) ) 
 
 /*  Note you'll have to modify the last for lines of each block to use the extra bios roms,
     they're hacks / homebrew / console bios roms so MAME doesn't list them by default. */
 
-#define NEO_BIOS_AUDIO_64K(name, hash)																			\
-	NEOGEO_BIOS 																								\
-																												\
-	ROM_REGION( 0x20000, "audiobios", 0 )														\
-	ROM_LOAD( "sm1.sm1", 0x00000, 0x20000, CRC(94416d67) SHA1(42f9d7ddd6c0931fd64226a60dc73602b2819dcf) )		\
-																												\
-	ROM_REGION( 0x20000, "audiocpu", 0 )													\
-	ROM_LOAD( name, 	 0x00000, 0x10000, hash )																\
+#define NEOGEO_BIOS \
+	ROM_REGION16_BE( 0x80000, "mainbios", 0 ) \
+	NG_UNI_H_V23
+
+
+#define NEO_BIOS_AUDIO_64K(name, hash)		\
+	NEOGEO_BIOS 				\
+	\
+	ROM_REGION( 0x20000, "audiobios", 0 )	\
+	ROM_LOAD( "sm1.sm1", 0x00000, 0x20000, CRC(94416d67) SHA1(42f9d7ddd6c0931fd64226a60dc73602b2819dcf) )	\
+	\
+	ROM_REGION( 0x20000, "audiocpu", 0 )									\
+	ROM_LOAD( name, 	 0x00000, 0x10000, hash )							\
 	ROM_RELOAD(          0x10000, 0x10000 )
 
 
-#define NEO_BIOS_AUDIO_128K(name, hash) 																		\
-	NEOGEO_BIOS 																								\
-																												\
-	ROM_REGION( 0x20000, "audiobios", 0 )														\
+#define NEO_BIOS_AUDIO_128K(name, hash) 	\
+	NEOGEO_BIOS 				\
+	\
+	ROM_REGION( 0x20000, "audiobios", 0 )	\
 	ROM_LOAD( "sm1.sm1", 0x00000, 0x20000, CRC(94416d67) SHA1(42f9d7ddd6c0931fd64226a60dc73602b2819dcf) )		\
-																												\
-	ROM_REGION( 0x30000, "audiocpu", 0 )													\
-	ROM_LOAD( name, 	 0x00000, 0x20000, hash )																\
+	\
+	ROM_REGION( 0x30000, "audiocpu", 0 )										\
+	ROM_LOAD( name, 	 0x00000, 0x20000, hash )								\
 	ROM_RELOAD(          0x10000, 0x20000 )
 
 
-#define NEO_BIOS_AUDIO_256K(name, hash) 																		\
-	NEOGEO_BIOS 																								\
-																												\
-	ROM_REGION( 0x20000, "audiobios", 0 )														\
+#define NEO_BIOS_AUDIO_256K(name, hash) 	\
+	NEOGEO_BIOS 				\
+	\
+	ROM_REGION( 0x20000, "audiobios", 0 )	\
 	ROM_LOAD( "sm1.sm1", 0x00000, 0x20000, CRC(94416d67) SHA1(42f9d7ddd6c0931fd64226a60dc73602b2819dcf) )		\
-																												\
-	ROM_REGION( 0x50000, "audiocpu", 0 )													\
-	ROM_LOAD( name, 	 0x00000, 0x40000, hash )																\
+	\
+	ROM_REGION( 0x50000, "audiocpu", 0 )										\
+	ROM_LOAD( name, 	 0x00000, 0x40000, hash )								\
 	ROM_RELOAD(          0x10000, 0x40000 )
 
 
-#define NEO_BIOS_AUDIO_512K(name, hash) 																		\
-	NEOGEO_BIOS 																								\
-																												\
-	ROM_REGION( 0x20000, "audiobios", 0 )														\
+#define NEO_BIOS_AUDIO_512K(name, hash) 	\
+	NEOGEO_BIOS 				\
+	\
+	ROM_REGION( 0x20000, "audiobios", 0 )	\
 	ROM_LOAD( "sm1.sm1", 0x00000, 0x20000, CRC(94416d67) SHA1(42f9d7ddd6c0931fd64226a60dc73602b2819dcf) )		\
-																												\
-	ROM_REGION( 0x90000, "audiocpu", 0 )													\
-	ROM_LOAD( name, 	 0x00000, 0x80000, hash )																\
+	\
+	ROM_REGION( 0x90000, "audiocpu", 0 )										\
+	ROM_LOAD( name, 	 0x00000, 0x80000, hash )								\
 	ROM_RELOAD(          0x10000, 0x80000 )
+
 
 #define NEO_BIOS_AUDIO_ENCRYPTED_512K(name, hash) \
 	NEOGEO_BIOS \
@@ -667,6 +706,7 @@
 	ROM_REGION( 0x80000, "audiocrypt", 0 ) \
 	ROM_LOAD( name, 	 0x00000, 0x80000, hash ) \
 
+
 #define NEO_BIOS_AUDIO_ENCRYPTED_256K(name, hash) \
 	NEOGEO_BIOS \
 	ROM_REGION( 0x20000, "audiobios", 0 ) \
@@ -674,6 +714,7 @@
 	ROM_REGION( 0x90000, "audiocpu", ROMREGION_ERASEFF ) \
 	ROM_REGION( 0x80000, "audiocrypt", 0 ) \
 	ROM_LOAD( name, 	 0x00000, 0x40000, hash ) \
+
 
 #define NEO_BIOS_AUDIO_ENCRYPTED_128K(name, hash) \
 	NEOGEO_BIOS \
@@ -687,38 +728,38 @@
 #define NO_DELTAT_REGION
 
 
-#define NEO_SFIX_32K(name, hash)																				\
-	ROM_REGION( 0x20000, "fixed", 0 )												\
-	ROM_LOAD( name,       0x000000, 0x08000, hash ) 															\
-																												\
-	ROM_REGION( 0x20000, "fixedbios", 0 )													\
-	ROM_LOAD( "sfix.sfix", 0x000000, 0x20000, CRC(c2ea0cfd) SHA1(fd4a618cdcdbf849374f0a50dd8efe9dbab706c3) )		\
-																												\
+#define NEO_SFIX_32K(name, hash)		\
+	ROM_REGION( 0x20000, "fixed", 0 )	\
+	ROM_LOAD( name,       0x000000, 0x08000, hash ) 	\
+	\
+	ROM_REGION( 0x20000, "fixedbios", 0 )		\
+	ROM_LOAD( "sfix.sfix", 0x000000, 0x20000, CRC(c2ea0cfd) SHA1(fd4a618cdcdbf849374f0a50dd8efe9dbab706c3) ) \
+	\
 	ROM_Y_ZOOM
 
 
-#define NEO_SFIX_64K(name, hash)																				\
-	ROM_REGION( 0x20000, "fixed", 0 )												\
-	ROM_LOAD( name,       0x000000, 0x10000, hash ) 															\
-																												\
-	ROM_REGION( 0x20000, "fixedbios", 0 )													\
-	ROM_LOAD( "sfix.sfix", 0x000000, 0x20000, CRC(c2ea0cfd) SHA1(fd4a618cdcdbf849374f0a50dd8efe9dbab706c3) )		\
-																												\
+#define NEO_SFIX_64K(name, hash)		\
+	ROM_REGION( 0x20000, "fixed", 0 )	\
+	ROM_LOAD( name,       0x000000, 0x10000, hash ) 	\
+	\
+	ROM_REGION( 0x20000, "fixedbios", 0 )			\
+	ROM_LOAD( "sfix.sfix", 0x000000, 0x20000, CRC(c2ea0cfd) SHA1(fd4a618cdcdbf849374f0a50dd8efe9dbab706c3) )	\
+	\
 	ROM_Y_ZOOM
 
 
-#define NEO_SFIX_128K(name, hash)																				\
-	ROM_REGION( 0x20000, "fixed", 0 )												\
-	ROM_LOAD( name,       0x000000, 0x20000, hash ) 															\
-																												\
-	ROM_REGION( 0x20000, "fixedbios", 0 )													\
-	ROM_LOAD( "sfix.sfix", 0x000000, 0x20000, CRC(c2ea0cfd) SHA1(fd4a618cdcdbf849374f0a50dd8efe9dbab706c3) )		\
-																												\
+#define NEO_SFIX_128K(name, hash)		\
+	ROM_REGION( 0x20000, "fixed", 0 )	\
+	ROM_LOAD( name,       0x000000, 0x20000, hash ) \
+	\
+	ROM_REGION( 0x20000, "fixedbios", 0 )	\
+	ROM_LOAD( "sfix.sfix", 0x000000, 0x20000, CRC(c2ea0cfd) SHA1(fd4a618cdcdbf849374f0a50dd8efe9dbab706c3) ) \
+	\
 	ROM_Y_ZOOM
 
 
-#define ROM_Y_ZOOM																								\
-	ROM_REGION( 0x20000, "zoomy", 0 )														\
+#define ROM_Y_ZOOM	\
+	ROM_REGION( 0x20000, "zoomy", 0 )	\
 	ROM_LOAD( "000-lo.lo", 0x00000, 0x20000, CRC(5a86cff2) SHA1(5992277debadeb64d1c1c64b0a92d9293eaf7e4a) )
 
 
