@@ -113,13 +113,13 @@ CORE_DIR = .
 # UNIX
 ifeq ($(platform), unix)
    TARGETLIB := $(TARGET_NAME)_libretro.so
-   TARGETOS=linux 
+   TARGETOS=linux
    fpic = -fPIC
    SHARED := -shared -Wl,--version-script=src/osd/retro/link.T
    CCOMFLAGS += -fsigned-char -finline -fno-common -fno-builtin -fweb -frename-registers -falign-functions=16 -fsingle-precision-constant
    ALIGNED = 1
-   PLATCFLAGS += -fstrict-aliasing -fno-merge-constants 
-ifeq ($(VRENDER),opengl) 
+   PLATCFLAGS += -fstrict-aliasing -fno-merge-constants
+ifeq ($(VRENDER),opengl)
    LIBS += -lGL
 endif
    LDFLAGS += $(SHARED)
@@ -127,12 +127,12 @@ endif
    NATIVELDFLAGS = -Wl,--warn-common -lstdc++
    NATIVECC = g++
    NATIVECFLAGS = -std=gnu99
-   CC_AS = gcc 
+   CC_AS = gcc
    CC = g++
    AR = @ar
-   LD = g++ 
-   CCOMFLAGS += $(PLATCFLAGS) -ffast-math 
-   LIBS += -lstdc++ -lpthread 
+   LD = g++
+   CCOMFLAGS += $(PLATCFLAGS) -ffast-math
+   LIBS += -lstdc++ -lpthread
 
 
 # Android
@@ -141,13 +141,13 @@ else ifeq ($(platform), android)
    ARM_ENABLED = 1
    ALIGNED=1
    TARGETLIB := $(TARGET_NAME)_libretro_android.so
-   TARGETOS=linux 
+   TARGETOS=linux
    fpic = -fPIC
    SHARED := -shared -Wl,--version-script=src/osd/retro/link.T
    CC_AS = @arm-linux-androideabi-gcc
    CC = @arm-linux-androideabi-g++
    AR = @arm-linux-androideabi-ar
-   LD = @arm-linux-androideabi-g++ 
+   LD = @arm-linux-androideabi-g++
    CCOMFLAGS += -mstructure-size-boundary=32 -mthumb-interwork -fsigned-char -finline -fno-common -fno-builtin -fweb -frename-registers -falign-functions=16 -fsingle-precision-constant
    PLATCFLAGS += -march=armv7-a -mfloat-abi=softfp -fstrict-aliasing -fno-merge-constants -DSDLMAME_NO64BITIO -DANDTIME -DRANDPATH
    PLATCFLAGS += -DANDROID
@@ -155,9 +155,9 @@ else ifeq ($(platform), android)
    NATIVELD = g++
    NATIVELDFLAGS = -Wl,--warn-common -lstdc++
    NATIVECC = g++
-   NATIVECFLAGS = -std=gnu99 
-   CCOMFLAGS += $(PLATCFLAGS) -ffast-math 
-   LIBS += -lstdc++ 
+   NATIVECFLAGS = -std=gnu99
+   CCOMFLAGS += $(PLATCFLAGS) -ffast-math
+   LIBS += -lstdc++
 
 
 # OS X
@@ -303,7 +303,6 @@ else ifneq (,$(findstring rpi,$(platform)))
    CCOMFLAGS += -fomit-frame-pointer -ffast-math -fsigned-char -falign-functions=16 -fno-merge-constants
    ARM_ENABLED = 1
    ALIGNED = 1
-
 ifneq (,$(findstring rpi2, $(platform)))
    CCOMFLAGS += -marm -mcpu=cortex-a7 -mfpu=neon-vfpv4 -mfloat-abi=hard
 else ifneq (,$(findstring rpi3, $(platform)))
@@ -318,24 +317,10 @@ else ifneq (,$(findstring armv,$(platform)))
    TARGETLIB := $(TARGET_NAME)_libretro.so
    SHARED := -shared -Wl,--no-undefined
    fpic = -fPIC
-   LDFLAGS +=  $(SHARED)
-   ARM_ENABLED = 1
-   CCOMFLAGS += -marm -ffast-math
+   LDFLAGS += -Wl,--fix-cortex-a8 $(SHARED)
    LIBS += -lstdc++ -lpthread
-
-ifneq (,$(findstring cortexa8,$(platform)))
-   CCOMFLAGS += -marm -mcpu=cortex-a8
-else ifneq (,$(findstring cortexa9,$(platform)))
-   CCOMFLAGS += -marm -mcpu=cortex-a9
-endif
-ifneq (,$(findstring neon,$(platform)))
-   CCOMFLAGS += -mfpu=neon
-endif
-ifneq (,$(findstring softfloat,$(platform)))
-   CCOMFLAGS += -mfloat-abi=softfp
-else ifneq (,$(findstring hardfloat,$(platform)))
-   CCOMFLAGS += -mfloat-abi=hard
-endif
+   CCOMFLAGS += -marm -ffast-math -mfloat-abi=hard
+   ARM_ENABLED = 1
 
 
 else ifeq ($(platform), wincross)
@@ -521,7 +506,6 @@ CFLAGS = $(CCOMFLAGS) $(CPPONLYFLAGS)
 
 # we compile C-only to C89 standard with GNU extensions
 # we compile C++ code to C++98 standard with GNU extensions
-#CONLYFLAGS += -std=gnu89
 ifeq ($(platform), osx)
    CONLYFLAGS += -ansi
 else

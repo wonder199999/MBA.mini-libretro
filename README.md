@@ -34,6 +34,6 @@ Build :
 	RETRO_DEVICE_ID_JOYPAD_LEFT		[KEY_JOYSTICK_L]
 	RETRO_DEVICE_ID_JOYPAD_RIGHT		[KEY_JOYSTICK_R]
 
-        tips: P1 L2 to tab and select newgame from mameui
+        tips: P1 L2 to show MAMEUI
               P1 R3 to show framerate
               P1 L3 to access Service Mode
