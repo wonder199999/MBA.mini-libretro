@@ -36,9 +36,10 @@ const game_driver *const drivers[] =
 
 #else	/* DRIVER_RECURSIVE */
 
-	/* Irem games - trivia: IREM means "International Rental Electronics Machines" */
+	/* *************** */
+	/*  Part 1 - M92   */
+	/* *************** */
 
-	/* Part 1 - M92 */
 	DRIVER( gunforce )	/* (c) 1991 Irem (World) */
 	DRIVER( gunforceu )	/* (c) 1991 Irem America (US) */
 	DRIVER( gunforcej )	/* (c) 1991 Irem (Japan) */
@@ -70,25 +71,15 @@ const game_driver *const drivers[] =
 	DRIVER( leaguemn )	/* (c) 1993 Irem (Japan) */
 	DRIVER( ssoldier )	/* (c) 1993 Irem America (US) */
 	DRIVER( psoldier )	/* (c) 1993 Irem (Japan) */
-	DRIVER( dsoccr94j )	/* (c) 1994 Irem (Japan) */
 	DRIVER( gunforc2 )	/* (c) 1994 Irem */
 	DRIVER( geostorm )	/* (c) 1994 Irem (Japan) */
-	/* M107 */
-	DRIVER( firebarr )	/* (c) 1993 Irem (Japan) */
-	DRIVER( dsoccr94 )	/* (c) 1993 Irem (Japan) */
-	DRIVER( kftgoal )	/* (c) 1993 Irem (Japan) */
-	DRIVER( wpksoc )	/* (c) 1993 Irem (Japan) */
 
 
 
-	/* The following is a COMPLETE list of the Capcom games up to 1997, as shown on */
-	/* their web site. The list is sorted by production date.                       */
-	/* A comprehensive list of Capcom games with board info can be found here:      */
-	/* http://www.arcadeflyers.com/strider/capcom_list.html                         */
+	/* ************************* */
+	/*  Part 2 - Capcom System 1 */
+	/* ************************* */
 
-	/* Part 2 - Capcom games */
-
-	/* Capcom CPS1 games */
 	DRIVER( forgottn )	/*  7/1988 (c) 1988 (World) */
 	DRIVER( forgottnu )	/*  7/1988 (c) 1988 (US) */
 	DRIVER( forgottnua )	/*  7/1988 (c) 1988 (US) */
@@ -242,10 +233,12 @@ const game_driver *const drivers[] =
 	DRIVER( wofr1 )
 	DRIVER( wofhfh )
 
-	/* list completed by CPS2Shock */
-	/* http://cps2shock.retrogames.com */
 
-	/* Part 3 - Capcom CPS2 games */
+
+	/* ************************* */
+	/*  Part 3 - Capcom System 2 */
+	/* ************************* */
+
 	DRIVER( ssf2 )		/* 11/09/1993 (c) 1993 (World) */
 	DRIVER( ssf2u )		/* 11/09/1993 (c) 1993 (US) */
 	DRIVER( ssf2a )		/* 05/10/1993 (c) 1993 (Asia) */
@@ -509,10 +502,10 @@ const game_driver *const drivers[] =
 
 
 
-	/* the four digits number is the game ID stored at address 0x0108 of the program ROM */
-	/* info on prototypes taken from http://www.members.tripod.com/fresa/proto/puzzle.htm */
+	/* ***************** */
+	/*  Part 4 - Neo Geo */
+	/* ***************** */
 
-	/* Part 4 - Neo Geo games */
 	DRIVER( neogeo )
 	DRIVER( nam1975 )	/* 0001 (c) 1990 SNK */
 	DRIVER( bstars )	/* 0002 (c) 1990 SNK */

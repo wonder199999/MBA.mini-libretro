@@ -19,24 +19,23 @@ INCFLAGS += -I$(DEPS_DIR)/expat
 EXPAT = $(OBJ)/libexpat.a
 
 # add ZLIB compression library
-ifeq ($(BUILD_ZLIB),1)
-INCFLAGS += -I$(DEPS_DIR)/zlib
-ZLIB = $(OBJ)/libz.a
+ifeq ($(BUILD_ZLIB), 1)
+   INCFLAGS += -I$(DEPS_DIR)/zlib
+   ZLIB = $(OBJ)/libz.a
 else
-LIBS += -lz
-ZLIB =
+   LIBS += -lz
+   ZLIB =
 endif
 
 # add SoftFloat floating point emulation library
 SOFTFLOAT = $(OBJ)/libsoftfloat.a
 
 # add PortMidi MIDI library
-ifeq ($(BUILD_MIDILIB),1)
-INCFLAGS += -I$(DEPS_DIR)/portmidi
-MIDI_LIB = $(OBJ)/libportmidi.a
+ifeq ($(BUILD_MIDILIB), 1)
+   INCFLAGS += -I$(DEPS_DIR)/portmidi
+   MIDI_LIB = $(OBJ)/libportmidi.a
 else
-#LIBS += -lportmidi
-MIDI_LIB =
+   MIDI_LIB =
 endif
 
 # then the various core pieces
@@ -68,7 +67,6 @@ OBJDIRS += \
 	$(LAYOUT) \
 	$(MACHINE) \
 	$(VIDEO) \
-
 
 
 #-------------------------------------------------
@@ -127,7 +125,6 @@ $(MAMEOBJ)/capcom.a: \
 
 $(MAMEOBJ)/irem.a: \
 	$(DRIVERS)/m92.o $(VIDEO)/m92.o \
-	$(DRIVERS)/m107.o $(VIDEO)/m107.o \
 	$(MACHINE)/irem_cpu.o \
 
 $(MAMEOBJ)/neogeo.a: \
@@ -135,6 +132,7 @@ $(MAMEOBJ)/neogeo.a: \
 	$(MACHINE)/neoboot.o \
 	$(MACHINE)/neocrypt.o \
 	$(MACHINE)/neoprot.o \
+#	$(DRIVERS)/m107.o $(VIDEO)/m107.o \
 
 #-------------------------------------------------
 # manufacturer-specific groupings for drivers

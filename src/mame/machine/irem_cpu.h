@@ -11,8 +11,6 @@ extern const UINT8 inthunt_decryption_table[];
 extern const UINT8 gussun_decryption_table[];
 extern const UINT8 leagueman_decryption_table[];
 extern const UINT8 psoldier_decryption_table[];
-extern const UINT8 dsoccr94_decryption_table[];
 extern const UINT8 matchit2_decryption_table[];
 
 extern const UINT8 test_decryption_table[];
-
