@@ -10,26 +10,27 @@
 ###########################################################################
 
 NATIVE := 0
+ALIGNED = 0
+MDEBUG = 0
 
 UNAME = $(shell uname -a)
-
 ifeq ($(platform),)
-platform = unix
-ifeq ($(UNAME),)
-   platform = win
-else ifneq ($(findstring MINGW,$(UNAME)),)
-   platform = win
-else ifneq ($(findstring Darwin,$(UNAME)),)
-   platform = osx
-else ifneq ($(findstring win,$(UNAME)),)
-   platform = win
-endif
+   platform = unix
+   ifeq ($(UNAME),)
+	platform = win
+   else ifneq ($(findstring MINGW,$(UNAME)),)
+   	platform = win
+   else ifneq ($(findstring Darwin,$(UNAME)),)
+   	platform = osx
+   else ifneq ($(findstring win,$(UNAME)),)
+   	platform = win
+   endif
 endif
 
 # system platform
 system_platform = unix
 ifeq ($(UNAME),)
-EXE_EXT = .exe
+   EXE_EXT = .exe
    system_platform = win
 else ifneq ($(findstring Darwin,$(UNAME)),)
    system_platform = osx
@@ -37,14 +38,30 @@ else ifneq ($(findstring MINGW,$(UNAME)),)
    system_platform = win
 endif
 
+UNAME = $(shell uname -m)
+ifeq ($(firstword $(filter x86_64,$(UNAME))),x86_64)
+   PTR64 = 1
+endif
+ifeq ($(firstword $(filter amd64,$(UNAME))),amd64)
+   PTR64 = 1
+endif
+ifeq ($(firstword $(filter ppc64,$(UNAME))),ppc64)
+   PTR64 = 1
+endif
+ifneq (,$(findstring mingw64-w64,$(PATH)))
+   PTR64 = 1
+endif
+ifneq (,$(findstring Power,$(UNAME)))
+   BIGENDIAN = 1
+endif
+ifneq (,$(findstring ppc,$(UNAME)))
+   BIGENDIAN = 1
+endif
+
 # CR/LF setup: use both on win32/os2, CR only on everything else
 DEFS = -DCRLF=2 -DDISABLE_MIDI=1
 # Default to something reasonable for all platforms
 ARFLAGS = -cr
-
-TARGET_NAME := mame2010_mini
-EXE = 
-LIBS = 
 
 #-------------------------------------------------
 # compile flags
@@ -59,57 +76,38 @@ CCOMFLAGS = -DDISABLE_MIDI
 CONLYFLAGS =
 COBJFLAGS =
 CPPONLYFLAGS =
-# LDFLAGS are used generally; LDFLAGSEMULATOR are additional
-# flags only used when linking the core emulator
+
+# LDFLAGS are used generally; LDFLAGSEMULATOR are additional flags only used when linking the core emulator
 LDFLAGS =
 LDFLAGSEMULATOR =
 
-GIT_VERSION ?= " $(shell git rev-parse --short HEAD || echo unknown)"
-ifneq ($(GIT_VERSION)," unknown")
-	CCOMFLAGS += -DGIT_VERSION=\"$(GIT_VERSION)\"
-endif
-
 # uncomment next line to build zlib as part of MAME build
-#BUILD_ZLIB = 1
+BUILD_ZLIB = 0
 
 # uncomment next line to build PortMidi as part of MAME/MESS build
-#BUILD_MIDILIB = 1
-VRENDER ?= soft
+BUILD_MIDILIB = 0
+
+TARGET_NAME := mame2010_mini
+fpic := 
+EXE = 
+LIBS = 
+CORE_DIR = .
 
 PLATCFLAGS += -D__LIBRETRO__
 CCOMFLAGS  += -D__LIBRETRO__
 
-fpic := 
-ALIGNED = 0
+VRENDER ?= soft
 
 ifeq ($(VRENDER),opengl)
 	PLATCFLAGS += -DHAVE_OPENGL
 	CCOMFLAGS  += -DHAVE_OPENGL
 endif
-
-UNAME=$(shell uname -m)
-
-ifeq ($(firstword $(filter x86_64,$(UNAME))),x86_64)
-PTR64 = 1
-endif
-ifeq ($(firstword $(filter amd64,$(UNAME))),amd64)
-PTR64 = 1
-endif
-ifeq ($(firstword $(filter ppc64,$(UNAME))),ppc64)
-PTR64 = 1
-endif
-ifneq (,$(findstring mingw64-w64,$(PATH)))
-PTR64=1
-endif
-ifneq (,$(findstring Power,$(UNAME)))
-BIGENDIAN=1
-endif
-ifneq (,$(findstring ppc,$(UNAME)))
-BIGENDIAN=1
+GIT_VERSION ?= " $(shell git rev-parse --short HEAD || echo unknown)"
+ifneq ($(GIT_VERSION)," unknown")
+	CCOMFLAGS += -DGIT_VERSION=\"$(GIT_VERSION)\"
 endif
 
-CORE_DIR = .
-
+# Define platform parameters 
 # UNIX
 ifeq ($(platform), unix)
    TARGETLIB := $(TARGET_NAME)_libretro.so
@@ -319,7 +317,7 @@ else ifneq (,$(findstring armv,$(platform)))
    fpic = -fPIC
    LDFLAGS += -Wl,--fix-cortex-a8 $(SHARED)
    LIBS += -lstdc++ -lpthread
-   CCOMFLAGS += -marm -ffast-math -mfloat-abi=hard
+   CCOMFLAGS += -fsigned-char -marm -ffast-math -mfloat-abi=hard
    ARM_ENABLED = 1
 
 
@@ -362,8 +360,9 @@ endif
    DEFS += -DX64_WINDOWS_ABI
 endif
 
+# Define platform parameters finish
 
-ifeq ($(ALIGNED),1)
+ifeq ($(ALIGNED), 1)
 	PLATCFLAGS += -DALIGN_INTS -DALIGN_SHORTS 
 endif
 
@@ -405,7 +404,6 @@ CROSS_BUILD_OSD = retro
 # uncomment and specify suffix to be added to the name
 # SUFFIX =
 
-
 #-------------------------------------------------
 # specify architecture-specific optimizations
 #-------------------------------------------------
@@ -419,7 +417,6 @@ CROSS_BUILD_OSD = retro
 # note that we leave this commented by default so that you can
 # configure this in your environment and never have to think about it
 # ARCHOPTS =
-
 
 #-------------------------------------------------
 # specify program options; see each option below
@@ -435,7 +432,6 @@ CROSS_BUILD_OSD = retro
 # specify build options; see each option below 
 # for details
 #-------------------------------------------------
-
 
 # specify optimization level or leave commented to use the default
 # (default is OPTIMIZE = 3 normally, or OPTIMIZE = 0 with symbols)
@@ -464,8 +460,8 @@ SUFFIXDEBUG =
 SUFFIXPROFILE =
 
 # 64-bit builds get a '64' suffix
-ifeq ($(PTR64),1)
-SUFFIX64 = 64
+ifeq ($(PTR64), 1)
+   SUFFIX64 = 64
 endif
 
 # add an EXE suffix to get the final emulator name
@@ -486,13 +482,13 @@ DEFS += -DINLINE="static inline"
 
 # define MSB_FIRST if we are a big-endian target
 ifdef BIGENDIAN
-DEFS       += -DMSB_FIRST
-PLATCFLAGS += -DMSB_FIRST
+   DEFS       += -DMSB_FIRST
+   PLATCFLAGS += -DMSB_FIRST
 endif
 
 # define PTR64 if we are a 64-bit target
-ifeq ($(PTR64),1)
-DEFS += -DPTR64
+ifeq ($(PTR64), 1)
+   DEFS += -DPTR64
 endif
 
 DEFS += -DNDEBUG 
@@ -518,21 +514,21 @@ COBJFLAGS += -x objective-c++
 # this speeds it up a bit by piping between the preprocessor/compiler/assembler
 CCOMFLAGS += -pipe
 
-ifeq ($(MDEBUG),1)
-CCOMFLAGS +=  -O0 -g
-else
 # add the optimization flag
-CCOMFLAGS += -O$(OPTIMIZE)
+ifeq ($(MDEBUG), 1)
+   CCOMFLAGS +=  -O0 -g
+else
+   CCOMFLAGS += -O$(OPTIMIZE)
 endif
 
 # add the error warning flag
 ifndef NOWERROR
-CCOMFLAGS += -Werror
+   CCOMFLAGS += -Werror
 endif
 
 # if we are optimizing, include optimization options
-ifneq ($(OPTIMIZE),0)
-CCOMFLAGS += -fno-strict-aliasing $(ARCHOPTS)
+ifneq ($(OPTIMIZE), 0)
+   CCOMFLAGS += -fno-strict-aliasing $(ARCHOPTS)
 endif
 
 # add a basic set of warnings
@@ -577,7 +573,6 @@ endif
 #-------------------------------------------------
 
 OBJDIRS = $(OBJ) $(OBJ)/$(TARGET)/$(SUBTARGET)
-
 
 #-------------------------------------------------
 # define standard libarires for CPU and sounds
