@@ -6748,7 +6748,7 @@ ROM_START( knights )
 	ROM_LOAD16_WORD_SWAP( "kr_23e.8f",   0x00000, 0x80000, CRC(1b3997eb) SHA1(724b68eff319fcdf0dd3bc1eb6662996c1f6ecd9) )
 	ROM_LOAD16_WORD_SWAP( "kr_22.7f",    0x80000, 0x80000, CRC(d0b671a9) SHA1(9865472c5fc3f617345e23b5de5a9ba177945b5a) )
 
-	ROM_REGION( 0x400000, "gfx", 0 )
+	ROM_REGION( 0x400000, "gfx", 0 ) /* Mask roms */
 	ROMX_LOAD( "kr-5m.3a",   0x000000, 0x80000, CRC(9e36c1a4) SHA1(772daae74e119371dfb76fde9775bda78a8ba125) , ROM_GROUPWORD | ROM_SKIP(6) )	// in "1" socket
 	ROMX_LOAD( "kr-7m.5a",   0x000002, 0x80000, CRC(c5832cae) SHA1(a188cf401cd3a2909b377d3059f14d22ec3b0643) , ROM_GROUPWORD | ROM_SKIP(6) )	// in "3" socket
 	ROMX_LOAD( "kr-1m.4a",   0x000004, 0x80000, CRC(f095be2d) SHA1(0427d1574062f277a9d04440019d5638b05de561) , ROM_GROUPWORD | ROM_SKIP(6) )	// in "2" socket
@@ -9786,11 +9786,9 @@ GAME( 1995, pang3j,     pang3,    pang3,      pang3n,     pang3,    ROT0,  "Mitc
 /*
 GAME( year,  archives name,  parent name,  MACHINE_DRIVER_START, INPUT_PORTS, DRIVER_INIT, flip, producer name, support )
 */
-GAME( 1995, sfzch,      0,       cps1_12MHz,  sfzch,	  cps1,	    ROT0,   "Capcom", "CPS Changer - Street Fighter Zero (Japan 951020)", 0 )
-GAME( 1995, wofch,	0,	 qsound,      wofch,	  wof,      ROT0,   "Capcom", "CPS Changer - Tenchi Wo Kurau II (Japan 921031)", GAME_SUPPORTS_SAVE )
-GAME( 2010, wofchdx,	wofch,	 qsound,      wofch,	  wof,      ROT0,   "Capcom", "CPS Changer - Sangokushi III Gaiden: Kakou-On's Revenge DX (hack)", GAME_SUPPORTS_SAVE )
-/*
-GAME( year,  archives name,  parent name,  MACHINE_DRIVER_START, INPUT_PORTS, DRIVER_INIT, flip, producer name, support )
-*/
-GAME( 1992, wofr1,      wof,     qsound,      wof,       wof,      ROT0,   "Capcom", "Warriors of Fate (World 921020)", GAME_SUPPORTS_SAVE )
-GAME( 1999, wofhfh,     0,       wofhfb,     wofhfb,     cps1,     ROT0,   "bootleg", "Huo Feng Huang , Chinese bootleg", GAME_SUPPORTS_SAVE )
+GAME( 1995, sfzch,      0,       cps1_12MHz,	sfzch,	  cps1,	    ROT0,   "Capcom",	"CPS Changer - Street Fighter Zero (Japan 951020)", 0 )
+GAME( 1995, wofch,	0,	 qsound,      	wofch,	  wof,      ROT0,   "Capcom",	"CPS Changer - Tenchi Wo Kurau II (Japan 921031)", GAME_SUPPORTS_SAVE )
+GAME( 1999, wofhfh,     0,       wofhfb,     	wofhfb,   cps1,     ROT0,   "bootleg",	"Huo Feng Huang , Chinese bootleg", GAME_SUPPORTS_SAVE )
+GAME( 2010, wofchdx,	wofch,	 qsound,      	wofch,	  wof,      ROT0,   "Capcom",	"CPS Changer - Sangokushi III Gaiden: Kakou-On's Revenge DX (hack)", GAME_SUPPORTS_SAVE )
+GAME( 1992, wofr1,      wof,     qsound,      	wof,      wof,      ROT0,   "Capcom",	"Warriors of Fate (World 921020)", GAME_SUPPORTS_SAVE )
+GAME( 1995, wofchh,	wofch,	 qsound,      	wofch,	  wof,      ROT0,   "Capcom",	"CPS Changer - Tenchi Wo Kurau II (Blue title, secret mode by hacked)", GAME_SUPPORTS_SAVE )

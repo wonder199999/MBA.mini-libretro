@@ -375,39 +375,13 @@ LDFLAGS   += $(fpic)
 
 TARGET = mame
 SUBTARGET = mame
-OSD = retro
-
 NOWERROR = 1
-
-#-------------------------------------------------
-# specify core target: mame, mess, etc.
-# specify subtarget: mame, mess, tiny, etc.
-# build rules will be included from
-# src/$(TARGET)/$(SUBTARGET).mak
-#-------------------------------------------------
-
-#-------------------------------------------------
-# specify OSD layer: windows, sdl, etc.
-# build rules will be included from
-# src/osd/$(OSD)/$(OSD).mak
-#-------------------------------------------------
-
+OSD = retro
 CROSS_BUILD_OSD = retro
-
-#-------------------------------------------------
-# configure name of final executable
-#-------------------------------------------------
-
-# uncomment and specify prefix to be added to the name
-# PREFIX =
-
-# uncomment and specify suffix to be added to the name
-# SUFFIX =
 
 #-------------------------------------------------
 # specify architecture-specific optimizations
 #-------------------------------------------------
-
 # uncomment and specify architecture-specific optimizations here
 # some examples:
 #   ARCHOPTS = -march=pentiumpro  # optimize for I686
@@ -418,28 +392,9 @@ CROSS_BUILD_OSD = retro
 # configure this in your environment and never have to think about it
 # ARCHOPTS =
 
-#-------------------------------------------------
-# specify program options; see each option below
-# for details
-#-------------------------------------------------
-
-# uncomment the force the universal DRC to always use the C backend
-# you may need to do this if your target architecture does not have
-# a native backend
-# FORCE_DRC_C_BACKEND = 1
-
-#-------------------------------------------------
-# specify build options; see each option below 
-# for details
-#-------------------------------------------------
-
 # specify optimization level or leave commented to use the default
 # (default is OPTIMIZE = 3 normally, or OPTIMIZE = 0 with symbols)
 OPTIMIZE = 3
-
-###########################################################################
-##################   END USER-CONFIGURABLE OPTIONS   ######################
-###########################################################################
 
 #-------------------------------------------------
 # platform-specific definitions
@@ -662,13 +617,12 @@ $(sort $(OBJDIRS)):
 	$(MD) -p $@
 
 ifeq ($(EXTRA_RULES), 1)
-ifeq ($(NATIVE),0)
-$(OBJ)/build/makedep:
-	cp -R prec-build/makelist $(OBJ)/build
-
-$(OBJ)/build/makelist:
-	cp -R prec-build/makelist $(OBJ)/build
-endif
+   ifeq ($(NATIVE), 0)
+      $(OBJ)/build/makedep:
+	 cp -R prec-build/makelist $(OBJ)/build
+     $(OBJ)/build/makelist:
+	 cp -R prec-build/makelist $(OBJ)/build
+   endif
 endif
 
 #-------------------------------------------------
@@ -683,7 +637,7 @@ $(EMULATOR): $(OBJECTS)
 #-------------------------------------------------
 
 ifeq ($(ARM_ENABLED), 1)
-CFLAGS += -DARM_ENABLED
+   CFLAGS += -DARM_ENABLED
 endif
 
 $(OBJ)/%.o: $(CORE_DIR)/src/%.c | $(OSPREBUILD)
