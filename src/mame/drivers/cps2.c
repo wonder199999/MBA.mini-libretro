@@ -9188,3 +9188,4 @@ GAME( year,   archives,   parent name,   MACHINE_DRIVER,   INPUT_PORT,   DRIVER_
 */
 GAME( 1994,   ringdesta,   ringdest,   cps2,   cps2_2p6b,   cps2,   ROT0,   "Capcom",   "Ring of Destruction: Slammasters II (Asia 940831)",   GAME_SUPPORTS_SAVE )
 GAME( 1994,   ringdesth,   ringdest,   cps2,   cps2_2p6b,   cps2,   ROT0,   "Capcom",   "Ring of Destruction: Slammasters II (Hispanic 940902)",   GAME_SUPPORTS_SAVE )
+GAME( 1998,   sfa3us,      sfa3,       cps2,   cps2_2p6b,   cps2,   ROT0,   "Capcom",   "Street Fighter Alpha 3 (USA 980616 SAMPLE Version)",   GAME_SUPPORTS_SAVE )
