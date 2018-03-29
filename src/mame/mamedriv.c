@@ -507,6 +507,9 @@ const game_driver *const drivers[] =
 	DRIVER( ringdesth )
 	DRIVER( sfa3us )
 
+	/* New added Phoenix bootlegs */
+	DRIVER( sfz3jr2d )
+
 
 	/* ***************** */
 	/*  Part 4 - Neo Geo */
