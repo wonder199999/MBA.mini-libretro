@@ -950,7 +950,7 @@ static const struct game_keys keys_table[] =
 	{ "sfz3jr2",  	{ 0x7d49f803,0x0cbe2d79 }, 0x100000 },	// 0C80 1C62 F5A8  cmpi.l  #$1C62F5A8,D0
 	{ "sfz3a",    	{ 0x990b9301,0xa4e42c7e }, 0x100000 },	// 0C80 1C62 F5A8  cmpi.l  #$1C62F5A8,D0
 	{ "sfz3ar1",  	{ 0x990b9301,0xa4e42c7e }, 0x100000 },	// 0C80 1C62 F5A8  cmpi.l  #$1C62F5A8,D0
-	{ "sfa3h",     	{ 0x8422df8c,0x7b17a361 }, 0x100000 },
+	{ "sfa3us",	{ 0xe7bbf0e5,0x67943248 }, 0x100000 },
 
 	{ "jyangoku", 	{ 0x6ca42ae6,0x92f63f59 },  /*?*/   },	// 0C80 3652 1573  cmpi.l  #$36521573,D0
 	{ "hsf2",     	{ 0x5a369ddd,0xfea3189c }, 0x100000 },	// 0838 0007 2000  btst    #7,$2000
