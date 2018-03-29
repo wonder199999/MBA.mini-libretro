@@ -102,10 +102,6 @@ ifeq ($(VRENDER),opengl)
 	PLATCFLAGS += -DHAVE_OPENGL
 	CCOMFLAGS  += -DHAVE_OPENGL
 endif
-GIT_VERSION ?= " $(shell git rev-parse --short HEAD || echo unknown)"
-ifneq ($(GIT_VERSION)," unknown")
-	CCOMFLAGS += -DGIT_VERSION=\"$(GIT_VERSION)\"
-endif
 
 # Define platform parameters 
 # UNIX
@@ -137,7 +133,7 @@ endif
 else ifeq ($(platform), android)
    EXTRA_RULES = 1
    ARM_ENABLED = 1
-   ALIGNED=1
+   ALIGNED = 1
    TARGETLIB := $(TARGET_NAME)_libretro_android.so
    TARGETOS=linux
    fpic = -fPIC
@@ -228,7 +224,7 @@ else ifeq ($(platform), sncps3)
    AR = $(CELL_SDK)/host-win32/sn/bin/ps3snarl.exe
    CFLAGS += -DBLARGG_BIG_ENDIAN=1 -D__ppc__
    STATIC_LINKING = 1
-   BIGENDIAN=1
+   BIGENDIAN = 1
    LIBS += -lstdc++ -lpthread
 
 
@@ -239,7 +235,7 @@ else ifeq ($(platform), psl1ght)
    AR = $(PS3DEV)/ppu/bin/ppu-ar$(EXE_EXT)
    CFLAGS += -DBLARGG_BIG_ENDIAN=1 -D__ppc__
    STATIC_LINKING = 1
-   BIGENDIAN=1
+   BIGENDIAN = 1
    LIBS += -lstdc++ -lpthread
 
 
@@ -260,7 +256,7 @@ else ifeq ($(platform), xenon)
    AR = xenon-ar$(EXE_EXT)
    CFLAGS += -D__LIBXENON__ -m32 -D__ppc__
    STATIC_LINKING = 1
-   BIGENDIAN=1
+   BIGENDIAN = 1
    LIBS += -lstdc++ -lpthread
 
 
@@ -271,7 +267,7 @@ else ifeq ($(platform), ngc)
    AR = $(DEVKITPPC)/bin/powerpc-eabi-ar$(EXE_EXT)
    CFLAGS += -DGEKKO -DHW_DOL -mrvl -mcpu=750 -meabi -mhard-float -DBLARGG_BIG_ENDIAN=1 -D__ppc__
    STATIC_LINKING = 1
-   BIGENDIAN=1
+   BIGENDIAN = 1
    LIBS += -lstdc++ -lpthread
 
 
@@ -282,7 +278,7 @@ else ifeq ($(platform), wii)
    AR = $(DEVKITPPC)/bin/powerpc-eabi-ar$(EXE_EXT)
    CFLAGS += -DGEKKO -DHW_RVL -mrvl -mcpu=750 -meabi -mhard-float -DBLARGG_BIG_ENDIAN=1 -D__ppc__
    STATIC_LINKING = 1
-   BIGENDIAN=1
+   BIGENDIAN = 1
    LIBS += -lstdc++ -lpthread
 
 
@@ -333,7 +329,7 @@ else ifeq ($(platform), wincross)
 ifeq ($(VRENDER),opengl) 
    LIBS += -lopengl32
 endif
-   LDFLAGS +=   $(SHARED)
+   LDFLAGS += $(SHARED)
    EXE = .exe
    DEFS = -DCRLF=3
 
@@ -361,6 +357,11 @@ endif
 endif
 
 # Define platform parameters finish
+
+GIT_VERSION ?= " $(shell git rev-parse --short HEAD || echo unknown)"
+ifneq ($(GIT_VERSION)," unknown")
+	CCOMFLAGS += -DGIT_VERSION=\"$(GIT_VERSION)\"
+endif
 
 ifeq ($(ALIGNED), 1)
 	PLATCFLAGS += -DALIGN_INTS -DALIGN_SHORTS 
