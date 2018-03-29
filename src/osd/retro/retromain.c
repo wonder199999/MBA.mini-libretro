@@ -230,7 +230,7 @@ static const char *xargv[] = {
 	NULL, NULL,
 	NULL, NULL,
 	NULL, NULL,
-	NULL,
+	NULL, NULL,
 };
 
 #ifdef _WIN32
