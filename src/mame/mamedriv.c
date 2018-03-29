@@ -74,6 +74,7 @@ const game_driver *const drivers[] =
 	DRIVER( gunforc2 )	/* (c) 1994 Irem */
 	DRIVER( geostorm )	/* (c) 1994 Irem (Japan) */
 
+	/* new added */
 
 
 	/* ************************* */
@@ -149,7 +150,6 @@ const game_driver *const drivers[] =
 	DRIVER( kod )		/* 11/07/1991 (c) 1991 (World) */
 	DRIVER( kodu )		/* 10/09/1991 (c) 1991 (US)    */
 	DRIVER( kodj )		/* 05/08/1991 (c) 1991 (Japan) */
-	DRIVER( kodb )		/* bootleg */
 	DRIVER( captcomm )	/* 02/12/1991 (c) 1991 (World) */
 	DRIVER( captcommr1 )	/* 14/10/1991 (c) 1991 (World) */
 	DRIVER( captcommu )	/* 28/ 9/1991 (c) 1991 (US)    */
@@ -225,11 +225,12 @@ const game_driver *const drivers[] =
 	DRIVER( rockmanj )	/* 22/09/1995 (c) 1995 (Japan) */
 
 	DRIVER( fcrash )	/* bootleg of Final Fight */
+	DRIVER( kodb )		/* bootleg */
 
 	/* new added */
 	DRIVER( sfzch )
 	DRIVER( wofch )
-	DRIVER( wofchh )
+	DRIVER( wofches )
 	DRIVER( wofchdx )
 	DRIVER( wofr1 )
 	DRIVER( wofhfh )
@@ -501,6 +502,8 @@ const game_driver *const drivers[] =
 	DRIVER( dimahoud )
 	DRIVER( mmatrixd )
 
+	/* New added */
+	DRIVER( ringdesta )
 
 
 	/* ***************** */
