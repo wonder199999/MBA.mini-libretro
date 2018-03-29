@@ -9187,3 +9187,4 @@ GAME( 2000, dimahoud, dimahoo,  dead_cps2, cps2_2p3b, cps2,    ROT270, "bootleg"
 GAME( year,   archives,   parent name,   MACHINE_DRIVER,   INPUT_PORT,   DRIVER_INIT,   flip,   producer name,   support )
 */
 GAME( 1994,   ringdesta,   ringdest,   cps2,   cps2_2p6b,   cps2,   ROT0,   "Capcom",   "Ring of Destruction: Slammasters II (Asia 940831)",   GAME_SUPPORTS_SAVE )
+GAME( 1994,   ringdesth,   ringdest,   cps2,   cps2_2p6b,   cps2,   ROT0,   "Capcom",   "Ring of Destruction: Slammasters II (Hispanic 940902)",   GAME_SUPPORTS_SAVE )

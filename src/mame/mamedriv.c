@@ -504,6 +504,7 @@ const game_driver *const drivers[] =
 
 	/* New added */
 	DRIVER( ringdesta )
+	DRIVER( ringdesth )
 
 
 	/* ***************** */
