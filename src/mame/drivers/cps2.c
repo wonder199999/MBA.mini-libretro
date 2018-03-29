@@ -9186,7 +9186,8 @@ GAME( 2000, dimahoud, dimahoo,  dead_cps2, cps2_2p3b, cps2,    ROT270, "bootleg"
 /*
 GAME( year,   archives,   parent name,   MACHINE_DRIVER,   INPUT_PORT,   DRIVER_INIT,   flip,   producer name,   support )
 */
-GAME( 1998,   sfz3jr2d,    sfa3,     dead_cps2,   cps2_2p6b,   cps2,   ROT0,   "Capcom",   "Street Fighter Zero 3 (Japan 980629 Phoenix Edition) (bootleg)", GAME_SUPPORTS_SAVE ) /* Phoenix Edition */
+GAME( 1996,   sfz2jd,      sfa2,     dead_cps2,   cps2_2p6b,   cps2,   ROT0,   "Capcom",   "Street Fighter Zero 2 (Japan 960227 Phoenix Edition) (bootleg)", GAME_SUPPORTS_SAVE )
+GAME( 1998,   sfz3jr2d,    sfa3,     dead_cps2,   cps2_2p6b,   cps2,   ROT0,   "Capcom",   "Street Fighter Zero 3 (Japan 980629 Phoenix Edition) (bootleg)", GAME_SUPPORTS_SAVE )
 
 GAME( 1994,   ringdesta,   ringdest,   cps2,   cps2_2p6b,   cps2,   ROT0,   "Capcom",   "Ring of Destruction: Slammasters II (Asia 940831)",   GAME_SUPPORTS_SAVE )
 GAME( 1994,   ringdesth,   ringdest,   cps2,   cps2_2p6b,   cps2,   ROT0,   "Capcom",   "Ring of Destruction: Slammasters II (Hispanic 940902)",   GAME_SUPPORTS_SAVE )

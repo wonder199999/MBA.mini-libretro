@@ -508,6 +508,7 @@ const game_driver *const drivers[] =
 	DRIVER( sfa3us )
 
 	/* New added Phoenix bootlegs */
+	DRIVER( sfz2jd )
 	DRIVER( sfz3jr2d )
 
 
