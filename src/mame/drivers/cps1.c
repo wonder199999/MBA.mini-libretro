@@ -9791,4 +9791,4 @@ GAME( 1995, wofch,	0,	 qsound,      	wofch,	  wof,      ROT0,   "Capcom",	"CPS C
 GAME( 1999, wofhfh,     0,       wofhfb,     	wofhfb,   cps1,     ROT0,   "bootleg",	"Huo Feng Huang , Chinese bootleg", GAME_SUPPORTS_SAVE )
 GAME( 2010, wofchdx,	wofch,	 qsound,      	wofch,	  wof,      ROT0,   "Capcom",	"CPS Changer - Sangokushi III Gaiden: Kakou-On's Revenge DX (hack)", GAME_SUPPORTS_SAVE )
 GAME( 1992, wofr1,      wof,     qsound,      	wof,      wof,      ROT0,   "Capcom",	"Warriors of Fate (World 921020)", GAME_SUPPORTS_SAVE )
-GAME( 1995, wofchh,	wofch,	 qsound,      	wofch,	  wof,      ROT0,   "Capcom",	"CPS Changer - Tenchi Wo Kurau II (Blue title, secret mode by hacked)", GAME_SUPPORTS_SAVE )
+GAME( 1995, wofches,	wofch,	 qsound,      	wofch,	  wof,      ROT0,   "Capcom",	"CPS Changer - Tenchi Wo Kurau II (Blue title, enabled the skill-enhanced secret mode)", GAME_SUPPORTS_SAVE )
