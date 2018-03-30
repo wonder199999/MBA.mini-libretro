@@ -19,7 +19,7 @@ void retro_set_video_refresh(retro_video_refresh_t cb) { video_cb = cb; }
 void retro_set_environment(retro_environment_t cb)
 {
 	static const struct retro_variable vars[] = {
-      	{ "mame_mini_cpu_overclock",	"CPU overclock; disabled|110%|120%|130%|140%|150%|160%|170%|180%|190%|200%" },
+      	{ "mame_mini_cpu_overclock",	"Adjust CPU speed; disabled|110%|120%|130%|140%|150%|160%|170%|180%|190%|200%|50%|60%|70%|80%|90%" },
       	{ "mame_mini_frame_skip", 	"Set frameskip; 0|1|2|3|4|automatic" },
 	{ "mame_mini_aspect_ratio",	"Core provided aspect ratio; DAR|PAR" },
       	{ "mame_mini_turbo_button", 	"Enable autofire; disabled|button 1|button 2|R2 to button 1 mapping|R2 to button 2 mapping" },
@@ -264,11 +264,11 @@ static void init_input_descriptors(void)
 void retro_get_system_info(struct retro_system_info *info)
 {
 	memset(info, 0, sizeof(*info));
-   	info->library_name = "MAME2010 MINI";
+   	info->library_name = "Mame2010 mini";
 #ifndef GIT_VERSION
 	#define GIT_VERSION ""
 #endif
-   	info->library_version = GIT_VERSION  "(Based by 0.139 romset)";
+   	info->library_version = GIT_VERSION " (Based by 0.139 romset)";
    	info->valid_extensions = "zip|chd|7z";
    	info->need_fullpath = true;
    	info->block_extract = true;
