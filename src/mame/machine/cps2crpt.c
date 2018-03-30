@@ -929,6 +929,7 @@ static const struct game_keys keys_table[] =
 	{ "vsava",    	{ 0x47ee9930,0x90b412ac }, 0x100000 },	// 0C80 726A 4BAF  cmpi.l  #$726A4BAF,D0
 	{ "vsavh",    	{ 0xb2d37c8d,0xd3b7aadd }, 0x100000 },	// 0C80 726A 4BAF  cmpi.l  #$726A4BAF,D0
 	{ "vsav2",    	{ 0xd681e4f4,0x60371edf }, 0x100000 },	// 0C80 0692 0760  cmpi.l  #$06920760,D0
+
 	{ "mvsc",     	{ 0x48025ade,0x1c697b27 }, 0x100000 },	// 0C81 1972 0121  cmpi.l  #$19720121,D1
 	{ "mvscr1",   	{ 0x48025ade,0x1c697b27 }, 0x100000 },	// 0C81 1972 0121  cmpi.l  #$19720121,D1
 	{ "mvscu",    	{ 0x692dc41b,0x7ef1c805 }, 0x100000 },	// 0C81 1972 0121  cmpi.l  #$19720121,D1
@@ -939,6 +940,7 @@ static const struct game_keys keys_table[] =
 	{ "mvscar1",  	{ 0xf248aec6,0x7905cd17 }, 0x100000 },	// 0C81 1972 0121  cmpi.l  #$19720121,D1
 	{ "mvsch",    	{ 0x9d5c7a23,0xe56b18ef }, 0x100000 },	// 0C81 1972 0121  cmpi.l  #$19720121,D1
 	{ "mvscb",    	{ 0x0874d6eb,0x51c2b798 }, 0x100000 },	// 0C81 1972 0121  cmpi.l  #$19720121,D1
+	{ "mvscjsing",	{ 0xafc16138,0x97123eb0 }, 0x100000 },
 
 	{ "sfa3",     	{ 0x6abfc8e0,0x2780ddc1 }, 0x100000 },	// 0C80 1C62 F5A8  cmpi.l  #$1C62F5A8,D0
 	{ "sfa3u",    	{ 0xe7bbf0e5,0x67943248 }, 0x100000 },	// 0C80 1C62 F5A8  cmpi.l  #$1C62F5A8,D0
@@ -956,23 +958,30 @@ static const struct game_keys keys_table[] =
 	{ "hsf2",     	{ 0x5a369ddd,0xfea3189c }, 0x100000 },	// 0838 0007 2000  btst    #7,$2000
 	{ "hsf2a",    	{ 0xb8ed3630,0xaae30a3d }, 0x100000 },	// 0838 0007 2000  btst    #7,$2000
 	{ "hsf2j",    	{ 0x65d82fe0,0xdbb83e47 }, 0x100000 },	// 0838 0007 2000  btst    #7,$2000
+
 	{ "gigawing", 	{ 0xe52de290,0x1b60d780 }, 0x100000 },	// 0C81 1972 1027  cmpi.l  #$19721027,D1
 	{ "gigawingj",	{ 0x1126196a,0xbef50895 }, 0x100000 },	// 0C81 1972 1027  cmpi.l  #$19721027,D1
 	{ "gigawinga",	{ 0x3506a85a,0x66b1b768 }, 0x100000 },	// 0C81 1972 1027  cmpi.l  #$19721027,D1
 	{ "gigawingh",	{ 0xcea74211,0x400da385 }, 0x100000 },	// 0C81 1972 1027  cmpi.l  #$19721027,D1
 	{ "gigawingb",	{ 0x0fe745b0,0x96ef7f9d }, 0x100000 },	// 0C81 1972 1027  cmpi.l  #$19721027,D1
+
 	{ "mmatrix",  	{ 0xac9ebd79,0x410467df }, 0x180000 },	// B6C0 B447 BACF  cmpa.w  D0,A3   cmp.w   D7,D2   cmpa.w  A7,A5
 	{ "mmatrixj", 	{ 0x4df81e95,0x72ed9823 }, 0x180000 },	// B6C0 B447 BACF  cmpa.w  D0,A3   cmp.w   D7,D2   cmpa.w  A7,A5
+
 	{ "mpang",    	{ 0x95f741c6,0xe547a21b }, 0x100000 },	// 0C84 347D 89A3  cmpi.l  #$347D89A3,D4
 	{ "mpangr1",  	{ 0x95f741c6,0xe547a21b }, 0x100000 },	// 0C84 347D 89A3  cmpi.l  #$347D89A3,D4
 	{ "mpangu",   	{ 0x95f741c6,0xe547a21b }, 0x100000 },	// 0C84 347D 89A3  cmpi.l  #$347D89A3,D4
 	{ "mpangj",   	{ 0x95f741c6,0xe547a21b }, 0x100000 },	// 0C84 347D 89A3  cmpi.l  #$347D89A3,D4
+
 	{ "pzloop2",  	{ 0xa054f812,0xc40d36b4 }, 0x400000 },	// 0C82 9A73 15F1  cmpi.l  #$9A7315F1,D2
 	{ "pzloop2j", 	{ 0xa054f812,0xc40d36b4 }, 0x400000 },	// 0C82 9A73 15F1  cmpi.l  #$9A7315F1,D2
+
 	{ "choko",    	{ 0xd3fb12c6,0x7f8e17b5 }, 0x400000 },	// 0C86 4D17 5B3C  cmpi.l  #$4D175B3C,D6
+
 	{ "dimahoo",  	{ 0x0ddb8e40,0x2817fd2b }, 0x080000 },	// BE4C B244 B6C5  cmp.w   A4,D7   cmp.w   D4,D1   cmpa.w  D5,A3
 	{ "dimahoou", 	{ 0x6575af59,0xb0fea691 }, 0x080000 },	// BE4C B244 B6C5  cmp.w   A4,D7   cmp.w   D4,D1   cmpa.w  D5,A3
 	{ "gmahou",   	{ 0x97f7be58,0x6121eb62 }, 0x080000 },	// BE4C B244 B6C5  cmp.w   A4,D7   cmp.w   D4,D1   cmpa.w  D5,A3
+
 	{ "1944",     	{ 0x1d3e724c,0x8b59fc7a }, 0x080000 },	// 0C86 7B5D 94F1  cmpi.l  #$7B5D94F1,D6
 	{ "1944j",    	{ 0x23d79c3a,0xe18b2746 }, 0x080000 },	// 0C86 7B5D 94F1  cmpi.l  #$7B5D94F1,D6
 	{ "progear",  	{ 0x639ad8c6,0xef130df3 }, 0x400000 },	// 0C81 63A1 B8D3  cmpi.l  #$63A1B8D3,D1
