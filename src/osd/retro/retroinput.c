@@ -328,7 +328,7 @@ static void initInput(running_machine *machine)
       		input_device_item_add(P4_device, "P4 B4", &pad_state[3][KEY_BUTTON_4], ITEM_ID_3_PAD, 	  iptdev_get_state);
    	}
 }
-#undef SF_LAYOUT
+#undef VS6B_LAYOUT
 #undef NEOGEO_LAYOUT
 #undef ECOFGT_LAYOUT
 #undef DYNWAR_LAYOUT
