@@ -9191,7 +9191,9 @@ GAME( 1996,   sfz2jd,      sfa2,     dead_cps2,   cps2_2p6b,   cps2,   ROT0,   "
 GAME( 1998,   sfz3jr2d,    sfa3,     dead_cps2,   cps2_2p6b,   cps2,   ROT0,   "Bootleg", "Street Fighter Zero 3 (Japan 980629 Phoenix Edition) (bootleg)", GAME_SUPPORTS_SAVE )
 GAME( 2001,   progearjbl,  progear,  dead_cps2,   cps2_2p3b,   cps2,   ROT0,   "Bootleg", "Progear no Arashi (Japan 010117) (decrypted bootleg)", GAME_SUPPORTS_SAVE )
 
-GAME( 1994,   ringdesta,   ringdest,	cps2,   cps2_2p6b,   cps2,   ROT0,   "Capcom",   "Ring of Destruction: Slammasters II (Asia 940831)", GAME_SUPPORTS_SAVE )
-GAME( 1994,   ringdesth,   ringdest,	cps2,   cps2_2p6b,   cps2,   ROT0,   "Capcom",   "Ring of Destruction: Slammasters II (Hispanic 940902)", GAME_SUPPORTS_SAVE )
-GAME( 1998,   sfa3us,      sfa3,	cps2,   cps2_2p6b,   cps2,   ROT0,   "Capcom",   "Street Fighter Alpha 3 (USA 980616 SAMPLE Version)", GAME_SUPPORTS_SAVE )
-GAME( 1998,   mvscjsing,   mvsc,	cps2,	cps2_2p6b,   cps2,   ROT0,   "Capcom",	 "Marvel Vs. Capcom: Clash of Super Heroes (Japan 980123) (Single PCB)", GAME_SUPPORTS_SAVE )
+GAME( 1994,   ringdesta,   ringdest,	cps2,   cps2_2p6b,   cps2,   ROT0,   "Capcom", "Ring of Destruction: Slammasters II (Asia 940831)", GAME_SUPPORTS_SAVE )
+GAME( 1994,   ringdesth,   ringdest,	cps2,   cps2_2p6b,   cps2,   ROT0,   "Capcom", "Ring of Destruction: Slammasters II (Hispanic 940902)", GAME_SUPPORTS_SAVE )
+GAME( 1998,   sfa3us,      sfa3,	cps2,   cps2_2p6b,   cps2,   ROT0,   "Capcom", "Street Fighter Alpha 3 (USA 980616 SAMPLE Version)", GAME_SUPPORTS_SAVE )
+GAME( 1998,   mvscjsing,   mvsc,	cps2,	cps2_2p6b,   cps2,   ROT0,   "Capcom", "Marvel Vs. Capcom: Clash of Super Heroes (Japan 980123) (Single PCB)", GAME_SUPPORTS_SAVE )
+GAME( 1994,   ssf2th,      ssf2t,       cps2,   cps2_2p6b,   cps2,   ROT0,   "Capcom", "Super Street Fighter II Turbo (Hispanic 940223)", GAME_SUPPORTS_SAVE )
+GAME( 1993,   ssf2tbh,	   ssf2,	cps2, 	cps2_2p6b,   ssf2tb, ROT0,   "Capcom", "Super Street Fighter II: The Tournament Battle (Hispanic 931005)", GAME_SUPPORTS_SAVE )	// works, but not in tournament mode
