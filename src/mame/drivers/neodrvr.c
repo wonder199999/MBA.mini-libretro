@@ -562,14 +562,14 @@
 #define ROM_LOAD16_WORD_SWAP_BIOS(bios, name, offset, length, hash) \
 		ROMX_LOAD(name, offset, length, hash, ROM_GROUPWORD | ROM_REVERSE | ROM_BIOS(bios + 1)) /* Note '+1' */
 
-#define	NG_UNIBIOS_NEW	ROM_SYSTEM_BIOS( 0,	"uni-bios_3_2",		"Universe Bios (Hack, Ver. 3.2)" ) \
+#define	NG_UNIBIOS_3X	ROM_SYSTEM_BIOS( 0,	"uni-bios_3_2",		"Universe Bios (Hack, Ver. 3.2)" ) \
 			ROM_LOAD16_WORD_SWAP_BIOS( 0,	"uni-bios_3_2.rom", 0x00000, 0x020000, CRC(a4e8b9b3) SHA1(c92f18c3f1edda543d264ecd0ea915240e7c8258) ) /* Universe Bios v3.2 (hack) */ \
 			ROM_SYSTEM_BIOS( 1,	"uni-bios_3_1",		"Universe Bios (Hack, Ver. 3.1)" ) \
 			ROM_LOAD16_WORD_SWAP_BIOS( 1,	"uni-bios_3_1.rom", 0x00000, 0x020000, CRC(0c58093f) SHA1(29329a3448c2505e1ff45ffa75e61e9693165153) ) /* Universe Bios v3.1 (hack) */ \
 			ROM_SYSTEM_BIOS( 2,	"uni-bios_3_0",		"Universe Bios (Hack, Ver. 3.0)" ) \
 			ROM_LOAD16_WORD_SWAP_BIOS( 2,	"uni-bios_3_0.rom", 0x00000, 0x020000, CRC(a97c89a9) SHA1(97a5eff3b119062f10e31ad6f04fe4b90d366e7f) ) /* Universe Bios v3.0 (hack) */ 
 
-#define NG_UNIBIOS	ROM_SYSTEM_BIOS( 0,	"uni-bios_2_3",		"Universe Bios (Hack, Ver. 2.3)" ) \
+#define NG_UNIBIOS_2X	ROM_SYSTEM_BIOS( 0,	"uni-bios_2_3",		"Universe Bios (Hack, Ver. 2.3)" ) \
 			ROM_LOAD16_WORD_SWAP_BIOS( 0,	"uni-bios_2_3.rom", 0x00000, 0x020000, CRC(27664eb5) SHA1(5b02900a3ccf3df168bdcfc98458136fd2b92ac0) ) /* Universe Bios v2.3 (hack) */ \
 			ROM_SYSTEM_BIOS( 1, 	"uni-bios_2_3o",	"Universe Bios (Hack, Ver. 2.3, older?)" ) \
 			ROM_LOAD16_WORD_SWAP_BIOS( 1,  "uni-bios_2_3o.rom", 0x00000, 0x020000, CRC(601720ae) SHA1(1b8a72c720cdb5ee3f1d735bbcf447b09204b8d9) ) /* Universe Bios v2.3 (hack) alt version, withdrawn? */ \
@@ -578,17 +578,18 @@
 			ROM_SYSTEM_BIOS( 3, 	"uni-bios_2_1",		"Universe Bios (Hack, Ver. 2.1)" ) \
 			ROM_LOAD16_WORD_SWAP_BIOS( 3,	"uni-bios_2_1.rom", 0x00000, 0x020000, CRC(8dabf76b) SHA1(c23732c4491d966cf0373c65c83c7a4e88f0082c) ) /* Universe Bios v2.1 (hack) */ \
 			ROM_SYSTEM_BIOS( 4, 	"uni-bios_2_0",		"Universe Bios (Hack, Ver. 2.0)" ) \
-			ROM_LOAD16_WORD_SWAP_BIOS( 4,	"uni-bios_2_0.rom", 0x00000, 0x020000, CRC(0c12c2ad) SHA1(37bcd4d30f3892078b46841d895a6eff16dc921e) ) /* Universe Bios v2.0 (hack) */ \
-			ROM_SYSTEM_BIOS( 5, 	"uni-bios_1_3",		"Universe Bios (Hack, Ver. 1.3)" ) \
-			ROM_LOAD16_WORD_SWAP_BIOS( 5,	"uni-bios_1_3.rom",  0x00000, 0x020000, CRC(b24b44a0) SHA1(eca8851d30557b97c309a0d9f4a9d20e5b14af4e) ) /* Universe Bios v1.3 (hack) */ \
-			ROM_SYSTEM_BIOS( 6, 	"uni-bios_1_2",		"Universe Bios (Hack, Ver. 1.2)" ) \
-			ROM_LOAD16_WORD_SWAP_BIOS( 6,	"uni-bios_1_2.rom",  0x00000, 0x020000, CRC(4fa698e9) SHA1(682e13ec1c42beaa2d04473967840c88fd52c75a) ) /* Universe Bios v1.2 (hack) */ \
-			ROM_SYSTEM_BIOS( 7, 	"uni-bios_1_2o",	"Universe Bios (Hack, Ver. 1.2, older)" ) \
-			ROM_LOAD16_WORD_SWAP_BIOS( 7,	"uni-bios_1_2o.rom", 0x00000, 0x020000, CRC(e19d3ce9) SHA1(af88ef837f44a3af2d7144bb46a37c8512b67770) ) /* Universe Bios v1.2 (hack) alt version */ \
-			ROM_SYSTEM_BIOS( 8, 	"uni-bios_1_1",		"Universe Bios (Hack, Ver. 1.1)" ) \
-			ROM_LOAD16_WORD_SWAP_BIOS( 8,	"uni-bios_1_1.rom",  0x00000, 0x020000, CRC(5dda0d84) SHA1(4153d533c02926a2577e49c32657214781ff29b7) ) /* Universe Bios v1.1 (hack) */ \
-			ROM_SYSTEM_BIOS( 9, 	"uni-bios_1_0",		"Universe Bios (Hack, Ver. 1.0)" ) \
-			ROM_LOAD16_WORD_SWAP_BIOS( 9,	"uni-bios_1_0.rom",  0x00000, 0x020000, CRC(0ce453a0) SHA1(3b4c0cd26c176fc6b26c3a2f95143dd478f6abf9) ) /* Universe Bios v1.0 (hack) */ 
+			ROM_LOAD16_WORD_SWAP_BIOS( 4,	"uni-bios_2_0.rom", 0x00000, 0x020000, CRC(0c12c2ad) SHA1(37bcd4d30f3892078b46841d895a6eff16dc921e) ) /* Universe Bios v2.0 (hack) */ 
+
+#define NG_UNIBIOS_1X	ROM_SYSTEM_BIOS( 0, 	"uni-bios_1_3",		"Universe Bios (Hack, Ver. 1.3)" ) \
+			ROM_LOAD16_WORD_SWAP_BIOS( 0,	"uni-bios_1_3.rom",  0x00000, 0x020000, CRC(b24b44a0) SHA1(eca8851d30557b97c309a0d9f4a9d20e5b14af4e) ) /* Universe Bios v1.3 (hack) */ \
+			ROM_SYSTEM_BIOS( 1, 	"uni-bios_1_2",		"Universe Bios (Hack, Ver. 1.2)" ) \
+			ROM_LOAD16_WORD_SWAP_BIOS( 1,	"uni-bios_1_2.rom",  0x00000, 0x020000, CRC(4fa698e9) SHA1(682e13ec1c42beaa2d04473967840c88fd52c75a) ) /* Universe Bios v1.2 (hack) */ \
+			ROM_SYSTEM_BIOS( 2, 	"uni-bios_1_2o",	"Universe Bios (Hack, Ver. 1.2, older)" ) \
+			ROM_LOAD16_WORD_SWAP_BIOS( 2,	"uni-bios_1_2o.rom", 0x00000, 0x020000, CRC(e19d3ce9) SHA1(af88ef837f44a3af2d7144bb46a37c8512b67770) ) /* Universe Bios v1.2 (hack) alt version */ \
+			ROM_SYSTEM_BIOS( 3, 	"uni-bios_1_1",		"Universe Bios (Hack, Ver. 1.1)" ) \
+			ROM_LOAD16_WORD_SWAP_BIOS( 3,	"uni-bios_1_1.rom",  0x00000, 0x020000, CRC(5dda0d84) SHA1(4153d533c02926a2577e49c32657214781ff29b7) ) /* Universe Bios v1.1 (hack) */ \
+			ROM_SYSTEM_BIOS( 4, 	"uni-bios_1_0",		"Universe Bios (Hack, Ver. 1.0)" ) \
+			ROM_LOAD16_WORD_SWAP_BIOS( 4,	"uni-bios_1_0.rom",  0x00000, 0x020000, CRC(0ce453a0) SHA1(3b4c0cd26c176fc6b26c3a2f95143dd478f6abf9) ) /* Universe Bios v1.0 (hack) */ 
 
 #define NG_MVSBIOS	ROM_SYSTEM_BIOS( 0, 	"japan",      	"Japan MVS (Ver. 3)" ) \
 			ROM_LOAD16_WORD_SWAP_BIOS( 0,	"vs-bios.rom",		0x00000, 0x020000, CRC(f0e8f27d) SHA1(ecf01eda815909f1facec62abf3594eaa8d11075) ) /* Japan, Ver 6 VS Bios */ \
@@ -621,7 +622,7 @@
 
 #define NEOGEO_BIOS \
 	ROM_REGION16_BE( 0x80000, "mainbios", 0 ) \
-	NG_UNIBIOS
+	NG_UNIBIOS_2X
 
 
 #define NEO_BIOS_AUDIO_64K(name, hash)		\
