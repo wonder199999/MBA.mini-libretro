@@ -9192,6 +9192,7 @@ GAME( 1998,   sfz3jr2d,    sfa3,     dead_cps2,   cps2_2p6b,   cps2,   ROT0,   "
 GAME( 2001,   progearjbl,  progear,  dead_cps2,   cps2_2p3b,   cps2,   ROT0,   "Bootleg", "Progear no Arashi (Japan 010117) (decrypted bootleg)", GAME_SUPPORTS_SAVE )
 GAME( 1994,   ssf2tad,	   ssf2t,    dead_cps2,	  cps2_2p6b,   cps2,   ROT0,   "bootleg", "Super Street Fighter II Turbo (Asia 940223 Phoenix Edition) (bootleg)", GAME_SUPPORTS_SAVE )
 GAME( 1994,   ssf2td,	   ssf2t,    dead_cps2,	  cps2_2p6b,   cps2,   ROT0,   "bootleg", "Super Street Fighter II Turbo (Etc 940223 Phoenix Edition) (bootleg)", GAME_SUPPORTS_SAVE )
+GAME( 1993,   ssf2d,	   ssf2,     dead_cps2,   cps2_2p6b,   cps2,   ROT0,   "bootleg", "Super Street Fighter II - the new challengers (Etc 930911 Phoenix Edition) (bootleg)", GAME_SUPPORTS_SAVE )
 
 GAME( 1994,   ringdesta,   ringdest,	cps2,   cps2_2p6b,   cps2,   ROT0,   "Capcom", "Ring of Destruction: Slammasters II (Asia 940831)", GAME_SUPPORTS_SAVE )
 GAME( 1994,   ringdesth,   ringdest,	cps2,   cps2_2p6b,   cps2,   ROT0,   "Capcom", "Ring of Destruction: Slammasters II (Hispanic 940902)", GAME_SUPPORTS_SAVE )

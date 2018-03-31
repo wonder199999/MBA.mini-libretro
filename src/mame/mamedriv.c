@@ -517,6 +517,7 @@ const game_driver *const drivers[] =
 	DRIVER( progearjbl )
 	DRIVER( ssf2td )
 	DRIVER( ssf2tad )
+	DRIVER( ssf2d )
 
 
 	/* ***************** */
