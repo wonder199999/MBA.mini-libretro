@@ -518,6 +518,7 @@ const game_driver *const drivers[] =
 	DRIVER( ssf2td )
 	DRIVER( ssf2tad )
 	DRIVER( ssf2d )
+	DRIVER( cybotsud )
 
 
 	/* ***************** */
