@@ -9186,10 +9186,10 @@ GAME( 2000, dimahoud, dimahoo,  dead_cps2, cps2_2p3b, cps2,    ROT270, "bootleg"
 /*
 GAME( year,   archives,   parent name,   MACHINE_DRIVER,   INPUT_PORT,   DRIVER_INIT,   flip,   producer name,   support )
 */
-GAME( 1995,   sfaud,       sfa,      dead_cps2,   cps2_2p6b,   cps2,   ROT0,   "Bootleg", "Street Fighter Alpha: Warriors' Dreams (USA 950727 Phoenix Edition) (bootleg)", GAME_SUPPORTS_SAVE )
-GAME( 1996,   sfz2jd,      sfa2,     dead_cps2,   cps2_2p6b,   cps2,   ROT0,   "Bootleg", "Street Fighter Zero 2 (Japan 960227 Phoenix Edition) (bootleg)", GAME_SUPPORTS_SAVE )
-GAME( 1998,   sfz3jr2d,    sfa3,     dead_cps2,   cps2_2p6b,   cps2,   ROT0,   "Bootleg", "Street Fighter Zero 3 (Japan 980629 Phoenix Edition) (bootleg)", GAME_SUPPORTS_SAVE )
-GAME( 2001,   progearjbl,  progear,  dead_cps2,   cps2_2p3b,   cps2,   ROT0,   "Bootleg", "Progear no Arashi (Japan 010117) (decrypted bootleg)", GAME_SUPPORTS_SAVE )
+GAME( 1995,   sfaud,       sfa,      dead_cps2,   cps2_2p6b,   cps2,   ROT0,   "bootleg", "Street Fighter Alpha: Warriors' Dreams (USA 950727 Phoenix Edition) (bootleg)", GAME_SUPPORTS_SAVE )
+GAME( 1996,   sfz2jd,      sfa2,     dead_cps2,   cps2_2p6b,   cps2,   ROT0,   "bootleg", "Street Fighter Zero 2 (Japan 960227 Phoenix Edition) (bootleg)", GAME_SUPPORTS_SAVE )
+GAME( 1998,   sfz3jr2d,    sfa3,     dead_cps2,   cps2_2p6b,   cps2,   ROT0,   "bootleg", "Street Fighter Zero 3 (Japan 980629 Phoenix Edition) (bootleg)", GAME_SUPPORTS_SAVE )
+GAME( 2001,   progearjbl,  progear,  dead_cps2,   cps2_2p3b,   cps2,   ROT0,   "bootleg", "Progear no Arashi (Japan 010117) (decrypted bootleg)", GAME_SUPPORTS_SAVE )
 GAME( 1994,   ssf2tad,	   ssf2t,    dead_cps2,	  cps2_2p6b,   cps2,   ROT0,   "bootleg", "Super Street Fighter II Turbo (Asia 940223 Phoenix Edition) (bootleg)", GAME_SUPPORTS_SAVE )
 GAME( 1994,   ssf2td,	   ssf2t,    dead_cps2,	  cps2_2p6b,   cps2,   ROT0,   "bootleg", "Super Street Fighter II Turbo (Etc 940223 Phoenix Edition) (bootleg)", GAME_SUPPORTS_SAVE )
 GAME( 1993,   ssf2d,	   ssf2,     dead_cps2,   cps2_2p6b,   cps2,   ROT0,   "bootleg", "Super Street Fighter II - the new challengers (Etc 930911 Phoenix Edition) (bootleg)", GAME_SUPPORTS_SAVE )
@@ -9197,6 +9197,7 @@ GAME( 1995,   cybotsud,    cybots,   dead_cps2,   cybots,      cps2,   ROT0,   "
 GAME( 1993,   ecofghtrd,   ecofghtr, dead_cps2,   cps2_2p3b,   cps2,   ROT0,   "bootleg", "Eco Fighters (World 931203 Phoenix Edition) (bootleg)", GAME_SUPPORTS_SAVE )
 GAME( 2000,   mpangjd,     mpang,    dead_cps2,   cps2_2p1b,   cps2,   ROT0,   "bootleg", "Mighty! Pang (Japan 001011 Phoenix Edition) (bootleg)", GAME_SUPPORTS_SAVE )
 GAME( 2001,   progearud,   progear,  dead_cps2,   cps2_2p3b,   cps2,   ROT0,   "bootleg", "Progear (USA 010117 Phoenix Edition) (bootleg)", GAME_SUPPORTS_SAVE )
+GAME( 1999,   gigawingd,   gigawing, dead_cps2,   cps2_2p2b,   cps2,   ROT0,   "bootleg", "Giga Wing (USA 990222 Phoenix Edition) (bootleg)", GAME_SUPPORTS_SAVE )
 
 
 GAME( 1994,   ringdesta,   ringdest,	cps2,   cps2_2p6b,   cps2,   ROT0,   "Capcom", "Ring of Destruction: Slammasters II (Asia 940831)", GAME_SUPPORTS_SAVE )
