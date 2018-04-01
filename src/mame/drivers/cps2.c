@@ -9194,6 +9194,7 @@ GAME( 1994,   ssf2tad,	   ssf2t,    dead_cps2,	  cps2_2p6b,   cps2,   ROT0,   "b
 GAME( 1994,   ssf2td,	   ssf2t,    dead_cps2,	  cps2_2p6b,   cps2,   ROT0,   "bootleg", "Super Street Fighter II Turbo (Etc 940223 Phoenix Edition) (bootleg)", GAME_SUPPORTS_SAVE )
 GAME( 1993,   ssf2d,	   ssf2,     dead_cps2,   cps2_2p6b,   cps2,   ROT0,   "bootleg", "Super Street Fighter II - the new challengers (Etc 930911 Phoenix Edition) (bootleg)", GAME_SUPPORTS_SAVE )
 GAME( 1995,   cybotsud,    cybots,   dead_cps2,   cybots,      cps2,   ROT0,   "bootleg", "Cyberbots: Fullmetal Madness (USA 950424 Phoenix Edition) (bootleg)", GAME_SUPPORTS_SAVE )
+GAME( 1993,   ecofghtrd,   ecofghtr, dead_cps2,   cps2_2p3b,   cps2,   ROT0,   "bootleg", "Eco Fighters (World 931203 Phoenix Edition) (bootleg)", GAME_SUPPORTS_SAVE )
 
 
 GAME( 1994,   ringdesta,   ringdest,	cps2,   cps2_2p6b,   cps2,   ROT0,   "Capcom", "Ring of Destruction: Slammasters II (Asia 940831)", GAME_SUPPORTS_SAVE )
