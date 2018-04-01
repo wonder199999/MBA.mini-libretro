@@ -521,6 +521,7 @@ const game_driver *const drivers[] =
 	DRIVER( cybotsud )
 	DRIVER( ecofghtrd )
 	DRIVER( mpangjd )
+	DRIVER( progearud )
 
 
 	/* ***************** */
