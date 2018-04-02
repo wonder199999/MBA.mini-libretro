@@ -525,6 +525,7 @@ const game_driver *const drivers[] =
 	DRIVER( gigawingd )
 	DRIVER( mshvsfu1d )
 	DRIVER( vhunt2d )
+	DRIVER( vsav2d )
 
 
 	/* ***************** */
