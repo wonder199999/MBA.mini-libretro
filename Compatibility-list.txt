@@ -173,7 +173,7 @@ Support the following :  (Parent roms with the "*" && based by mame0.139 romset)
 	Sangokushi II(Asia 921005)				- /* Archives name: wofa ,   Parent set: wof ,   Verify CRC: Yes , Rom set: 0.139 , Remark: */
 	Tenchi wo Kurau II: Sekiheki no Tatakai(Japan 921031)	- /* Archives name: wofj ,   Parent set: wof ,   Verify CRC: Yes , Rom set: 0.139 , Remark: */
 	Warriors of Fate(USA 921031)				- /* Archives name: wofu ,   Parent set: wof ,   Verify CRC: Yes , Rom set: 0.139 , Remark: */
-	Warriors of Fate (World 921020)				- /* Archives name: wofr1 ,  Parent set: wof ,   Verify CRC: No ,  Rom set: FBA02.97.38(mame0.172) , Remark: */
+	Warriors of Fate(World 921020)				- /* Archives name: wofr1 ,  Parent set: wof ,   Verify CRC: No ,  Rom set: FBA02.97.38(mame0.172) , Remark: */
 
 *Willow(USA)				- /* Archives name: willow ,  Parent set: Itself , Verify CRC: Yes , Rom set: 0.139 , Remark: */
 	Willow(Japan, English)		- /* Archives name: willowje ,Parent set: willow , Verify CRC: Yes , Rom set: 0.139 , Remark: */
@@ -183,6 +183,7 @@ Support the following :  (Parent roms with the "*" && based by mame0.139 romset)
 
 *Tenchi Wo Kurau II (CPS Changer)(Japan 921031)			- /* Archives name: wofch ,   Parent set: Itself , Verify CRC: No , Rom set: FBA02.97.38(mame0.172) , Remark: */
 	Sangokushi III Gaiden: Kakou-On's Revenge DX (hack)	- /* Archives name: wofchdx , Parent set: wofch ,  Verify CRC: No , Rom set: FBA02.97.38(mame0.172) , Remark: */
+	Tenchi Wo Kurau II (CPS Changer)(hack, enabled skill enhanced mode)	- /* Archives name: wofches , Parent set: wofch ,  Verify CRC: No , Rom set: FBA02.97.38(mame0.172) , Remark: */
 
 *Huo Feng Huang (Chinese bootleg)				- /* Archives name: wofhfh ,   Parent set: Itself , Verify CRC: No , Rom set: FBA02.97.38(mame0.172) , Remark: */
 
@@ -191,7 +192,27 @@ Support the following :  (Parent roms with the "*" && based by mame0.139 romset)
 / *  Capcom System 2 * /
 / ******************** /
 
-
+ringdesta
+ringdesth
+sfaud
+sfz2jd
+sfa3h
+sfz3jr2d
+progearjbl
+mvscjsing
+ssf2tbh
+ssf2th
+ssf2tad
+ssf2td
+ssf2d
+cybotsud
+ecofghtrd
+mpangjd
+progearud
+gigawingd
+mshvsfu1d
+vhunt2d
+vsav2d
 
 / ******************** /
 / *  IREM M92 Board  * /
@@ -203,3 +224,6 @@ Support the following :  (Parent roms with the "*" && based by mame0.139 romset)
 / *     NEO GEO      * /
 / ******************** /
 
+kof97hfa
+sokhfa
+ss2hfa

@@ -8,13 +8,13 @@ Build :
   
  build for android:
 
-     make -f Makefile "VRENDER=soft" "NATIVE=1" buildtools
-     make -f Makefile "VRENDER=soft" platform=android emulator
+     make -f Makefile "NATIVE=1" buildtools
+     make -f Makefile platform=android
      
  build for pc linux/win:
 
-     make -f Makefile "VRENDER=soft" buildtools
-     make -f Makefile "VRENDER=soft" platform= #platform name
+     make -f Makefile buildtools
+     make -f Makefile platform= #platform name
   
      (NB: for 64 bits build export PTR64=1 at least on win64)
 
