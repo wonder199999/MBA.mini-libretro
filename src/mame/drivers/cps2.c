@@ -9198,6 +9198,7 @@ GAME( 1993,   ecofghtrd,   ecofghtr, dead_cps2,   cps2_2p3b,   cps2,   ROT0,   "
 GAME( 2000,   mpangjd,     mpang,    dead_cps2,   cps2_2p1b,   cps2,   ROT0,   "bootleg", "Mighty! Pang (Japan 001011 Phoenix Edition) (bootleg)", GAME_SUPPORTS_SAVE )
 GAME( 2001,   progearud,   progear,  dead_cps2,   cps2_2p3b,   cps2,   ROT0,   "bootleg", "Progear (USA 010117 Phoenix Edition) (bootleg)", GAME_SUPPORTS_SAVE )
 GAME( 1999,   gigawingd,   gigawing, dead_cps2,   cps2_2p2b,   cps2,   ROT0,   "bootleg", "Giga Wing (USA 990222 Phoenix Edition) (bootleg)", GAME_SUPPORTS_SAVE )
+GAME( 1997,   mshvsfu1d,   mshvsf,   dead_cps2,   cps2_2p6b,   cps2,   ROT0,   "bootleg", "Marvel Super Heroes Vs. Street Fighter (USA 970625 Phoenix Edition) (bootleg)", GAME_SUPPORTS_SAVE )
 
 
 GAME( 1994,   ringdesta,   ringdest,	cps2,   cps2_2p6b,   cps2,   ROT0,   "Capcom", "Ring of Destruction: Slammasters II (Asia 940831)", GAME_SUPPORTS_SAVE )
