@@ -813,6 +813,7 @@ const game_driver *const drivers[] =
 	DRIVER( kof97hfa )	/* kof97's hackrom */
 	DRIVER( ss2hfa )	/* samsho2's hackrom */
 	DRIVER( sokhfa )	/* ragnagrd's hackrom */
+	DRIVER( crswd2bl )
 
 
 #endif	/* DRIVER_RECURSIVE */
