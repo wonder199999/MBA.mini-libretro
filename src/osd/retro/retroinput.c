@@ -151,28 +151,11 @@ kt_table ktable[] = {
 			(core_stricmp(machine->gamedrv->name, "soldier") == 0) || (core_stricmp(machine->gamedrv->parent, "soldier") == 0) 
 
 /* Neo Geo */
-#define NEOGEO_LAYOUT	(core_stricmp(machine->gamedrv->name, "aof") == 0) || (core_stricmp(machine->gamedrv->name, "aof2") == 0) || \
-			(core_stricmp(machine->gamedrv->name, "aof3") == 0) || (core_stricmp(machine->gamedrv->name, "breakers") == 0) || \
-			(core_stricmp(machine->gamedrv->name, "breakrev") == 0) || (core_stricmp(machine->gamedrv->name, "doubledr") == 0) || \
-			(core_stricmp(machine->gamedrv->name, "fatfursp") == 0) || (core_stricmp(machine->gamedrv->name, "fatfury1") == 0) || \
-			(core_stricmp(machine->gamedrv->name, "fatfury2") == 0) || (core_stricmp(machine->gamedrv->name, "fatfury3") == 0) || \
-			(core_stricmp(machine->gamedrv->name, "kof94") == 0) || (core_stricmp(machine->gamedrv->name, "kof95") == 0) || \
-			(core_stricmp(machine->gamedrv->name, "kof96") == 0) || (core_stricmp(machine->gamedrv->name, "kof97") == 0) || \
-			(core_stricmp(machine->gamedrv->name, "kof98") == 0) || (core_stricmp(machine->gamedrv->name, "kof99") == 0) || \
-			(core_stricmp(machine->gamedrv->name, "kof2000") == 0) || (core_stricmp(machine->gamedrv->name, "kof2001") == 0) || \
-			(core_stricmp(machine->gamedrv->name, "kof2002") == 0) || (core_stricmp(machine->gamedrv->name, "kof2003") == 0) || \
-			(core_stricmp(machine->gamedrv->name, "lastblad") == 0) || (core_stricmp(machine->gamedrv->name, "lastbld2") == 0) || \
-			(core_stricmp(machine->gamedrv->name, "rbff1") == 0) || (core_stricmp(machine->gamedrv->name, "rbff2") == 0) || \
-			(core_stricmp(machine->gamedrv->name, "rbffspec") == 0) || (core_stricmp(machine->gamedrv->name, "samsho") == 0) || \
-			(core_stricmp(machine->gamedrv->name, "samsho2") == 0) || (core_stricmp(machine->gamedrv->name, "samsho3") == 0) || \
-			(core_stricmp(machine->gamedrv->name, "samsho4") == 0) || (core_stricmp(machine->gamedrv->name, "samsho5") == 0) || \
-			(core_stricmp(machine->gamedrv->name, "samsho5sp") == 0) || (core_stricmp(machine->gamedrv->name, "svcpcb") == 0) || \
-			(core_stricmp(machine->gamedrv->name, "svc") == 0) || (core_stricmp(machine->gamedrv->name, "savagere") == 0) || \
-			(core_stricmp(machine->gamedrv->name, "wakuwak7") == 0) || (core_stricmp(machine->gamedrv->name, "wh1") == 0) || \
-			(core_stricmp(machine->gamedrv->name, "wh2") == 0) || (core_stricmp(machine->gamedrv->name, "whp") == 0) || \
-			(core_stricmp(machine->gamedrv->name, "karnovr") == 0) || (core_stricmp(machine->gamedrv->name, "kf2k3pcb") == 0) || \
-			(core_stricmp(machine->gamedrv->name, "kof97hfa") == 0) || (core_stricmp(machine->gamedrv->name, "ss2hfa") == 0) || \
-			(core_stricmp(machine->gamedrv->name, "sokhfa") == 0) 
+#define NEOGEO_LAYOUT   (core_stricmp(machine->gamedrv->name, "ms5pcb") == 0) || (core_stricmp(machine->gamedrv->parent, "ms5pcb") == 0) || \
+			(core_stricmp(machine->gamedrv->name, "svcpcb") == 0) || (core_stricmp(machine->gamedrv->parent, "svcpcb") == 0) || \
+			(core_stricmp(machine->gamedrv->name, "kf2k3pcb") == 0) || (core_stricmp(machine->gamedrv->parent, "kf2k3pcb") == 0) || \
+			(core_stricmp(machine->gamedrv->parent, "neogeo") == 0) 
+
 
 static void initInput(running_machine *machine)
 {
