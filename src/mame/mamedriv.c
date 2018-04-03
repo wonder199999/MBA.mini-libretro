@@ -81,27 +81,27 @@ const game_driver *const drivers[] =
 	/*  Part 2 - Capcom System 1 */
 	/* ************************* */
 
-	DRIVER( forgottn )	/*  7/1988 (c) 1988 (World) */
-	DRIVER( forgottnu )	/*  7/1988 (c) 1988 (US) */
-	DRIVER( forgottnua )	/*  7/1988 (c) 1988 (US) */
-	DRIVER( lostwrld )	/*  7/1988 (c) 1988 (Japan) */
-	DRIVER( lostwrldo )	/*  7/1988 (c) 1988 (Japan) */
+	DRIVER( forgottn )	/* 07/1988 (c) 1988 (World) */
+	DRIVER( forgottnu )	/* 07/1988 (c) 1988 (US) */
+	DRIVER( forgottnua )	/* 07/1988 (c) 1988 (US) */
+	DRIVER( lostwrld )	/* 07/1988 (c) 1988 (Japan) */
+	DRIVER( lostwrldo )	/* 07/1988 (c) 1988 (Japan) */
 	DRIVER( ghouls )	/* 12/1988 (c) 1988 (World) */
 	DRIVER( ghoulsu )	/* 12/1988 (c) 1988 (US) */
 	DRIVER( daimakai )	/* 12/1988 (c) 1988 (Japan) */
 	DRIVER( daimakair )	/* 12/1988 (c) 1988 (Japan) */
-	DRIVER( strider )	/*  3/1989 (c) 1989 (not explicitly stated but should be US) */
-	DRIVER( striderua )	/*  3/1989 (c) 1989 (not explicitly stated but should be US) */
-	DRIVER( striderj )	/*  3/1989 (c) 1989 */
-	DRIVER( striderjr )	/*  3/1989 (c) 1989 */
-	DRIVER( dynwar )	/*  4/1989 (c) 1989 (World) */
-	DRIVER( dynwaru )	/*  4/1989 (c) 1989 (US) */
-	DRIVER( dynwarj )	/*  4/1989 (c) 1989 (Japan) */
-	DRIVER( willow )	/*  6/1989 (c) 1989 (US) */
-	DRIVER( willowj )	/*  6/1989 (c) 1989 (Japan) */
-	DRIVER( willowje )	/*  6/1989 (c) 1989 (Japan) */
-	DRIVER( unsquad )	/*  8/1989 (c) 1989 */
-	DRIVER( area88 )	/*  8/1989 (c) 1989 */
+	DRIVER( strider )	/* 03/1989 (c) 1989 (not explicitly stated but should be US) */
+	DRIVER( striderua )	/* 03/1989 (c) 1989 (not explicitly stated but should be US) */
+	DRIVER( striderj )	/* 03/1989 (c) 1989 */
+	DRIVER( striderjr )	/* 03/1989 (c) 1989 */
+	DRIVER( dynwar )	/* 04/1989 (c) 1989 (World) */
+	DRIVER( dynwaru )	/* 04/1989 (c) 1989 (US) */
+	DRIVER( dynwarj )	/* 04/1989 (c) 1989 (Japan) */
+	DRIVER( willow )	/* 06/1989 (c) 1989 (US) */
+	DRIVER( willowj )	/* 06/1989 (c) 1989 (Japan) */
+	DRIVER( willowje )	/* 06/1989 (c) 1989 (Japan) */
+	DRIVER( unsquad )	/* 08/1989 (c) 1989 */
+	DRIVER( area88 )	/* 08/1989 (c) 1989 */
 	DRIVER( ffight )	/* 12/1989 (c) (World) */
 	DRIVER( ffightu )	/* 12/1989 (c) (US)    */
 	DRIVER( ffightua )	/* 12/1989 (c) (US)    */
@@ -110,8 +110,8 @@ const game_driver *const drivers[] =
 	DRIVER( ffightj1 )	/* 12/1989 (c) (Japan) */
 	DRIVER( ffightj2 )	/* 12/1989 (c) (Japan) */
 	DRIVER( ffightjh )	/* 12/1989 (c) (Japan) */
-	DRIVER( 1941 )		/*  2/1990 (c) 1990 (World) */
-	DRIVER( 1941j )		/*  2/1990 (c) 1990 (Japan) */
+	DRIVER( 1941 )		/* 02/1990 (c) 1990 (World) */
+	DRIVER( 1941j )		/* 02/1990 (c) 1990 (Japan) */
 	DRIVER( mercs )		/* 02/03/1990 (c) 1990 (World) */
 	DRIVER( mercsu )	/* 02/03/1990 (c) 1990 (US)    */
 	DRIVER( mercsua )	/* 08/06/1990 (c) 1990 (US)    */
@@ -228,12 +228,11 @@ const game_driver *const drivers[] =
 	DRIVER( kodb )		/* bootleg */
 
 	/* new added */
-	DRIVER( sfzch )
-	DRIVER( wofch )
-	DRIVER( wofches )
-	DRIVER( wofchdx )
-	DRIVER( wofr1 )
-	DRIVER( wofhfh )
+	DRIVER( sfzch )		/* 20/10/1995 (c) CPS Changer version - Street Fighter Zero */
+	DRIVER( wofch )		/* 31/10/1992 (c) CPS Changer version - Tenchi Wo Kurau II */
+	DRIVER( wofches )	/* hackrom , based by wofch */
+	DRIVER( wofchdx )	/* hackro, bootleg, CPS Changer version -Sangokushi III Gaiden: Kakou-On's Revenge DX, based by wofch */
+	DRIVER( wofhfh )	/* Huo Feng Huang, Chinese bootleg, hackrom */
 
 
 
@@ -279,7 +278,6 @@ const game_driver *const drivers[] =
 	DRIVER( avspj )		/* 20/05/1994 (c) 1994 (Japan) */
 	DRIVER( avspa )		/* 20/05/1994 (c) 1994 (Asia) */
 	DRIVER( avsph )		/* 20/05/1994 (c) 1994 (Hispanic) */
-				/*   06/1994? Galum Pa! (not listed on Capcom's site) */
 	DRIVER( dstlk )		/* 05/07/1994 (c) 1994 (Euro) */
 	DRIVER( dstlku )	/* 18/08/1994 (c) 1994 (US) */
 	DRIVER( dstlkur1 )	/* 05/07/1994 (c) 1994 (US) */
@@ -503,29 +501,29 @@ const game_driver *const drivers[] =
 	DRIVER( mmatrixd )
 
 	/* New added */
-	DRIVER( ringdesta )
-	DRIVER( ringdesth )
-	DRIVER( sfa3us )
-	DRIVER( mvscjsing )
-	DRIVER( ssf2th )
-	DRIVER( ssf2tbh )
+	DRIVER( ringdesta )	/* 31/08/1994 (c) Ring of Destruction: Slammasters II, Asia */
+	DRIVER( ringdesth )	/* 02/09/1994 (c) Ring of Destruction: Slammasters II, Hispanic */
+	DRIVER( sfa3us )	/* 16/06/1998 (c) Street Fighter Alpha 3, USA, Sample Version */
+	DRIVER( mvscjsing )	/* 23/01/1998 (c) Marvel Vs. Capcom: Clash of Super Heroes, Japan, Single PCB version */
+	DRIVER( ssf2th )	/* 23/02/1994 (c) Super Street Fighter II Turbo, Hispanic */
+	DRIVER( ssf2tbh )	/* 05/10/1993 (c) Super Street Fighter II: The Tournament Battle, Hispanic */
 
 	/* New added Phoenix bootlegs */
-	DRIVER( sfaud )
-	DRIVER( sfz2jd )
-	DRIVER( sfz3jr2d )
-	DRIVER( progearjbl )
-	DRIVER( ssf2td )
-	DRIVER( ssf2tad )
-	DRIVER( ssf2d )
-	DRIVER( cybotsud )
-	DRIVER( ecofghtrd )
-	DRIVER( mpangjd )
-	DRIVER( progearud )
-	DRIVER( gigawingd )
-	DRIVER( mshvsfu1d )
-	DRIVER( vhunt2d )
-	DRIVER( vsav2d )
+	DRIVER( sfaud )		/* Phoenix Edition, Street Fighter Alpha: Warrior's Dream, USA */
+	DRIVER( sfz2jd )	/* Phoenix Edition, Street Fighter Zero 2, Japan */
+	DRIVER( sfz3jr2d )	/* Phoenix Edition, Street Fighter Zero 3, Japan */
+	DRIVER( progearjbl )	/* Phoenix Edition, Progear no Arashi, Japan */
+	DRIVER( ssf2tad )	/* Phoenix Edition, Super Street Fighter II Turbo, Asia */
+	DRIVER( ssf2td )	/* Phoenix Edition, Super Street Fighter II Turbo, Etc */
+	DRIVER( ssf2d )		/* Phoenix Edition, Super Street Fighter II: the new challengers, Etc */
+	DRIVER( cybotsud )	/* Phoenix Edition, Cyberbots: Fullmetal Madness, USA */
+	DRIVER( ecofghtrd )	/* Phoenix Edition, Eco fighters, World */
+	DRIVER( mpangjd )	/* Phoenix Edition, Mighty! Pang, Japan */
+	DRIVER( progearud )	/* Phoenix Edition, Progear, USA */
+	DRIVER( gigawingd )	/* Phoenix Edition, Giga Wing, USA */
+	DRIVER( mshvsfu1d )	/* Phoenix Edition, Marvel Super Heroes Vs. Street Fighter, USA */
+	DRIVER( vhunt2d )	/* Phoenix Edition, Vampire Hunter 2: Darkstalkers Revenge, Japan */
+	DRIVER( vsav2d )	/* Phoenix Edition, Vampire Savior 2: The Lord of Vampire, Japan */
 
 
 	/* ***************** */
@@ -543,15 +541,15 @@ const game_driver *const drivers[] =
 	DRIVER( ridhero )	/* 0006 (c) 1990 SNK */
 	DRIVER( ridheroh )	/* 0006 (c) 1990 SNK */
 	DRIVER( alpham2 )	/* 0007 (c) 1991 SNK */
-						/* 0008 Sunshine (prototype) 1990 SNK */
+				/* 0008 Sunshine (prototype) 1990 SNK */
 	DRIVER( ncombat )	/* 0009 (c) 1990 Alpha Denshi Co. */
 	DRIVER( ncombath )	/* 0009 (c) 1990 Alpha Denshi Co. */
 	DRIVER( cyberlip )	/* 0010 (c) 1990 SNK */
 	DRIVER( superspy )	/* 0011 (c) 1990 SNK */
-						/* 0012 */
-						/* 0013 */
+				/* 0012 */
+				/* 0013 */
 	DRIVER( mutnat )	/* 0014 (c) 1992 SNK */
-						/* 0015 */
+				/* 0015 */
 	DRIVER( kotm )		/* 0016 (c) 1991 SNK */
 	DRIVER( kotmh )		/* 0016 (c) 1991 SNK */
 	DRIVER( sengoku )	/* 0017 (c) 1991 SNK */
@@ -567,9 +565,9 @@ const game_driver *const drivers[] =
 	DRIVER( quizdaisk )	/* 0123 (c) 1991 SNK */
 	DRIVER( lresort )	/* 0024 (c) 1992 SNK */
 	DRIVER( eightman )	/* 0025 (c) 1991 SNK / Pallas */
-						/* 0026 Fun Fun Brothers (prototype) 1991 Alpha */
+				/* 0026 Fun Fun Brothers (prototype) 1991 Alpha */
 	DRIVER( minasan )	/* 0027 (c) 1990 Monolith Corp. */
-						/* 0028 Dunk Star (prototype) Sammy */
+				/* 0028 Dunk Star (prototype) Sammy */
 	DRIVER( legendos )	/* 0029 (c) 1991 SNK */
 	DRIVER( 2020bb )	/* 0030 (c) 1991 SNK / Pallas */
 	DRIVER( 2020bba )	/* 0030 (c) 1991 SNK / Pallas */
@@ -579,7 +577,7 @@ const game_driver *const drivers[] =
 	DRIVER( roboarmy )	/* 0032 (c) 1991 SNK */
 	DRIVER( fatfury1 )	/* 0033 (c) 1991 SNK */
 	DRIVER( fbfrenzy )	/* 0034 (c) 1992 SNK */
-						/* 0035 Mystic Wand (prototype) 1991 Alpha */
+				/* 0035 Mystic Wand (prototype) 1991 Alpha */
 	DRIVER( bakatono )	/* 0036 (c) 1991 Monolith Corp. */
 	DRIVER( crsword )	/* 0037 (c) 1991 Alpha Denshi Co. */
 	DRIVER( trally )	/* 0038 (c) 1991 Alpha Denshi Co. */
@@ -602,7 +600,7 @@ const game_driver *const drivers[] =
 	DRIVER( wh1 )		/* 0053 (c) 1992 Alpha Denshi Co. */
 	DRIVER( wh1h )		/* 0053 (c) 1992 Alpha Denshi Co. */
 	DRIVER( wh1ha )		/* 0053 (c) 1992 Alpha Denshi Co. */
-						/* 0054 Crossed Swords 2  (CD only? not confirmed, MVS might exist) */
+				/* 0054 Crossed Swords 2  (CD only? not confirmed, MVS might exist) */
 	DRIVER( kof94 )		/* 0055 (c) 1994 SNK */
 	DRIVER( aof2 )		/* 0056 (c) 1994 SNK */
 	DRIVER( aof2a )		/* 0056 (c) 1994 SNK */
@@ -622,16 +620,16 @@ const game_driver *const drivers[] =
 	DRIVER( karnovr )	/* 0066 (c) 1994 Data East Corporation */
 	DRIVER( gururin )	/* 0067 (c) 1994 Face */
 	DRIVER( pspikes2 )	/* 0068 (c) 1994 Video System Co. */
-						/* Super Volley '94 was once released in Mar.1994, and recalled. Then released as Power Spikes 2 (with some tweaks). */
+				/* Super Volley '94 was once released in Mar.1994, and recalled. Then released as Power Spikes 2 (with some tweaks). */
 	DRIVER( fatfury3 )	/* 0069 (c) 1995 SNK */
 	DRIVER( zupapa )	/* 0070 Zupapa - released in 2001, 1994 prototype probably exists */
-						/* 0071 Bang Bang Busters (prototype) 1994 Visco */
-						/* 0072 Last Odyssey Pinball Fantasia (prototype) 1995 Monolith */
+				/* 0071 Bang Bang Busters (prototype) 1994 Visco */
+				/* 0072 Last Odyssey Pinball Fantasia (prototype) 1995 Monolith */
 	DRIVER( panicbom )	/* 0073 (c) 1994 Eighting / Hudson */
 	DRIVER( aodk )		/* 0074 (c) 1994 ADK / SNK */
 	DRIVER( sonicwi2 )	/* 0075 (c) 1994 Video System Co. */
 	DRIVER( zedblade )	/* 0076 (c) 1994 NMK */
-						/* 0077 The Warlocks of the Fates (prototype) 1995 Astec */
+				/* 0077 The Warlocks of the Fates (prototype) 1995 Astec */
 	DRIVER( galaxyfg )	/* 0078 (c) 1995 Sunsoft */
 	DRIVER( strhoop )	/* 0079 (c) 1994 Data East Corporation */
 	DRIVER( quizkof )	/* 0080 (c) 1995 Saurus */
@@ -642,7 +640,7 @@ const game_driver *const drivers[] =
 	DRIVER( pbobblenb )	/* bootleg */
 	DRIVER( kof95 )		/* 0084 (c) 1995 SNK */
 	DRIVER( kof95h )	/* 0084 (c) 1995 SNK */
-						/* 0085 Shinsetsu Samurai Spirits Bushidoretsuden / Samurai Shodown RPG (CD only) */
+				/* 0085 Shinsetsu Samurai Spirits Bushidoretsuden / Samurai Shodown RPG (CD only) */
 	DRIVER( tws96 )		/* 0086 (c) 1996 Tecmo */
 	DRIVER( samsho3 )	/* 0087 (c) 1995 SNK */
 	DRIVER( samsho3h )	/* 0087 (c) 1995 SNK */
@@ -650,7 +648,7 @@ const game_driver *const drivers[] =
 	DRIVER( stakwin )	/* 0088 (c) 1995 Saurus */
 	DRIVER( pulstar )	/* 0089 (c) 1995 Aicom */
 	DRIVER( whp )		/* 0090 (c) 1995 ADK / SNK */
-						/* 0091 */
+				/* 0091 */
 	DRIVER( kabukikl )	/* 0092 (c) 1995 Hudson */
 	DRIVER( neobombe )	/* 0093 (c) 1997 Hudson */
 	DRIVER( gowcaizr )	/* 0094 (c) 1995 Technos */
@@ -659,20 +657,20 @@ const game_driver *const drivers[] =
 	DRIVER( aof3 )		/* 0096 (c) 1996 SNK */
 	DRIVER( aof3k )		/* 0196 Censored Korean release of aof3 */
 	DRIVER( sonicwi3 )	/* 0097 (c) 1995 Video System Co. */
-						/* 0098 Idol Mahjong - final romance 2 (CD only? not confirmed, MVS might exist) */
-						/* 0099 Neo Pool Masters */
+				/* 0098 Idol Mahjong - final romance 2 (CD only? not confirmed, MVS might exist) */
+				/* 0099 Neo Pool Masters */
 	DRIVER( turfmast )	/* 0200 (c) 1996 Nazca */
 	DRIVER( mslug )		/* 0201 (c) 1996 Nazca */
 	DRIVER( puzzledp )	/* 0202 (c) 1995 Taito (Visco license) */
 	DRIVER( mosyougi )	/* 0203 (c) 1995 ADK / SNK */
-						/* 0204 QP (prototype) */
-						/* 0205 Neo-Geo CD Special (CD only) */
+				/* 0204 QP (prototype) */
+				/* 0205 Neo-Geo CD Special (CD only) */
 	DRIVER( marukodq )	/* 0206 (c) 1995 Takara */
 	DRIVER( neomrdo )	/* 0207 (c) 1996 Visco */
 	DRIVER( sdodgeb )	/* 0208 (c) 1996 Technos */
 	DRIVER( goalx3 )	/* 0209 (c) 1995 Visco */
-						/* 0210 Karate Ninja Sho (prototype) 1995 Yumekobo */
-						/* 0211 Oshidashi Zintrick (CD only? not confirmed, MVS might exist) 1996 SNK/ADK */
+				/* 0210 Karate Ninja Sho (prototype) 1995 Yumekobo */
+				/* 0211 Oshidashi Zintrick (CD only? not confirmed, MVS might exist) 1996 SNK/ADK */
 	DRIVER( zintrckb )	/* 0211 hack - this is not a genuine MVS proto, its a bootleg made from the CD version */
 	DRIVER( overtop )	/* 0212 (c) 1996 ADK */
 	DRIVER( neodrift )	/* 0213 (c) 1996 Visco */
@@ -680,11 +678,11 @@ const game_driver *const drivers[] =
 	DRIVER( kof96h )	/* 0214 (c) 1996 SNK */
 	DRIVER( ssideki4 )	/* 0215 (c) 1996 SNK */
 	DRIVER( kizuna )	/* 0216 (c) 1996 SNK */
-						/*  Fu-un Super Tag Battle Special Version (4-player battle available) exists */
+				/*  Fu-un Super Tag Battle Special Version (4-player battle available) exists */
 	DRIVER( ninjamas )	/* 0217 (c) 1996 ADK / SNK */
 	DRIVER( ragnagrd )	/* 0218 (c) 1996 Saurus */
 	DRIVER( pgoal )		/* 0219 (c) 1996 Saurus */
-						/* 0220 (c) 1996 Saurus - Choutetsu Brikin'ger - Iron clad (undumped protoype) */
+				/* 0220 (c) 1996 Saurus - Choutetsu Brikin'ger - Iron clad (undumped protoype) */
 	DRIVER( magdrop2 )	/* 0221 (c) 1996 Data East Corporation */
 	DRIVER( samsho4 )	/* 0222 (c) 1996 SNK */
 	DRIVER( samsho4k )	/* Censored Korean release of samsho4 */
@@ -692,10 +690,10 @@ const game_driver *const drivers[] =
 	DRIVER( rbffspeck )	/* 0124 (c) 1996 SNK */
 	DRIVER( twinspri )	/* 0224 (c) 1996 ADK */
 	DRIVER( wakuwak7 )	/* 0225 (c) 1996 Sunsoft */
-						/* 0226 Pair Pair Wars (prototype) 1996 Sunsoft? */
+				/* 0226 Pair Pair Wars (prototype) 1996 Sunsoft? */
 	DRIVER( stakwin2 )	/* 0227 (c) 1996 Saurus */
 	DRIVER( ghostlop )	/* 0228 GhostLop (prototype) 1996? Data East */
-						/* 0229 King of Fighters '96 CD Collection (CD only) */
+				/* 0229 King of Fighters '96 CD Collection (CD only) */
 	DRIVER( breakers )	/* 0230 (c) 1996 Visco */
 	DRIVER( miexchng )	/* 0231 (c) 1997 Face */
 	DRIVER( kof97 )		/* 0232 (c) 1997 SNK */
@@ -746,7 +744,7 @@ const game_driver *const drivers[] =
 	DRIVER( mslug3b6 )	/* bootleg */
 	DRIVER( kof2000 )	/* 0257 (c) 2000 SNK */
 	DRIVER( kof2000n )	/* 0257 (c) 2000 SNK */
-						/* 0258 SNK vs. Capcom? */
+				/* 0258 SNK vs. Capcom? */
 	DRIVER( bangbead )	/* 0259 (c) 2000 Visco */
 	DRIVER( nitd )		/* 0260 (c) 2000 Eleven / Gavaking */
 	DRIVER( nitdbl )	/* bootleg */
@@ -810,10 +808,10 @@ const game_driver *const drivers[] =
 	DRIVER( 98best44 )
 
 	/* new added */
-	DRIVER( kof97hfa )	/* kof97's hackrom */
-	DRIVER( ss2hfa )	/* samsho2's hackrom */
-	DRIVER( sokhfa )	/* ragnagrd's hackrom */
-	DRIVER( crswd2bl )
+	DRIVER( kof97hfa )	/* hackrom, based by kof97 */
+	DRIVER( ss2hfa )	/* hackrom, based by samsho2 */
+	DRIVER( sokhfa )	/* hackrom, based by ragnagrd */
+	DRIVER( crswd2bl )	/* Crossed Sword 2, bootleg of NGCD version */
 
 
 #endif	/* DRIVER_RECURSIVE */

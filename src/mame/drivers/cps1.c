@@ -9736,7 +9736,7 @@ GAME( 1992, varthj,     varth,    cps1_12MHz, varth,      cps1,     ROT270, "Cap
 GAME( 1992, qad,        0,        cps1_12MHz, qad,        cps1,     ROT0,   "Capcom", "Quiz & Dragons: Capcom Quiz Game (USA 920701)", GAME_SUPPORTS_SAVE )	// 12MHz verified
 GAME( 1994, qadj,       qad,      cps1_12MHz, qadj,       cps1,     ROT0,   "Capcom", "Quiz & Dragons: Capcom Quiz Game (Japan 940921)", GAME_SUPPORTS_SAVE )
 //
-GAME( 1992, wof,        0,        qsound,     wof,        wof,      ROT0,   "Capcom", "Warriors of Fate (World 921031)", GAME_SUPPORTS_SAVE )	// "ETC"
+GAME( 1992, wof,        0,        qsound,     wof,        wof,      ROT0,   "Capcom", "Warriors of Fate (World 921020)", GAME_SUPPORTS_SAVE )	// "ETC"
 GAME( 1992, wofu,       wof,      qsound,     wof,        wof,      ROT0,   "Capcom", "Warriors of Fate (USA 921031)", GAME_SUPPORTS_SAVE )	// World "warning"
 GAME( 1992, wofa,       wof,      qsound,     wof,        wof,      ROT0,   "Capcom", "Sangokushi II (Asia 921005)", GAME_SUPPORTS_SAVE )	// World "warning"
 GAME( 1992, wofj,       wof,      qsound,     wof,        wof,      ROT0,   "Capcom", "Tenchi wo Kurau II: Sekiheki no Tatakai (Japan 921031)", GAME_SUPPORTS_SAVE )
@@ -9790,5 +9790,4 @@ GAME( 1995, sfzch,      0,       cps1_12MHz,	sfzch,	  cps1,	    ROT0,   "Capcom"
 GAME( 1995, wofch,	0,	 qsound,      	wofch,	  wof,      ROT0,   "Capcom",	"CPS Changer - Tenchi Wo Kurau II (Japan 921031)", GAME_SUPPORTS_SAVE )
 GAME( 1999, wofhfh,     0,       wofhfb,     	wofhfb,   cps1,     ROT0,   "bootleg",	"Huo Feng Huang , Chinese bootleg", GAME_SUPPORTS_SAVE )
 GAME( 2010, wofchdx,	wofch,	 qsound,      	wofch,	  wof,      ROT0,   "Capcom",	"CPS Changer - Sangokushi III Gaiden: Kakou-On's Revenge DX (hack)", GAME_SUPPORTS_SAVE )
-GAME( 1992, wofr1,      wof,     qsound,      	wof,      wof,      ROT0,   "Capcom",	"Warriors of Fate (World 921020)", GAME_SUPPORTS_SAVE )
 GAME( 1995, wofches,	wofch,	 qsound,      	wofch,	  wof,      ROT0,   "Capcom",	"CPS Changer - Tenchi Wo Kurau II (Blue title, enabled the skill-enhanced secret mode)", GAME_SUPPORTS_SAVE )

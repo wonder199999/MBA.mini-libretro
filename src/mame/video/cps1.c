@@ -1356,10 +1356,9 @@ static const struct CPS1config cps1_config_table[]=
 	{"willowje",   CPS_B_03,     mapper_WL24B },
 
 	/* New added */
-	{"sfzch",      CPS_B_21_DEF, mapper_sfzch },	// not an arcade game and no more in MAME, should not be removed?
+	{"sfzch",      CPS_B_21_DEF, mapper_sfzch },
 	{"wofch",      CPS_B_21_DEF, mapper_TK263B },
 	{"wofchdx",    CPS_B_21_DEF, mapper_TK263B },
-	{"wofr1",      CPS_B_21_DEF, mapper_TK263B },
 	{"wofhfh",     CPS_B_21_DEF, mapper_TK263B, 0x36 },
 	{"wofches",    CPS_B_21_DEF, mapper_TK263B },
 
