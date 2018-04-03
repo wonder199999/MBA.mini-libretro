@@ -2007,6 +2007,15 @@ ROM_START( geostorm )
 ROM_END
 
 
+/* =============== */
+/*   additional	   */
+/* =============== */
+#include "m92_add.c"
+/* =============== */
+/*   additional	   */
+/* =============== */
+
+
 static void init_m92(running_machine *machine, int hasbanks)
 {
 	UINT8 *RAM = memory_region(machine, "maincpu");
