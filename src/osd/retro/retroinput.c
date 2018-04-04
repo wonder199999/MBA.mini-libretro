@@ -151,11 +151,10 @@ kt_table ktable[] = {
 			(core_stricmp(machine->gamedrv->name, "soldier") == 0) || (core_stricmp(machine->gamedrv->parent, "soldier") == 0) 
 
 /* Neo Geo */
-#define NEOGEO_LAYOUT   (core_stricmp(machine->gamedrv->name, "ms5pcb") == 0) || (core_stricmp(machine->gamedrv->parent, "ms5pcb") == 0) || \
+#define NEOGEO_LAYOUT	(core_stricmp(machine->gamedrv->parent, "neogeo") == 0) || (core_stricmp(machine->gamedrv->name, "3countba") == 0) \
+			(core_stricmp(machine->gamedrv->name, "ms5pcb") == 0) || (core_stricmp(machine->gamedrv->parent, "ms5pcb") == 0) || \
 			(core_stricmp(machine->gamedrv->name, "svcpcb") == 0) || (core_stricmp(machine->gamedrv->parent, "svcpcb") == 0) || \
-			(core_stricmp(machine->gamedrv->name, "kf2k3pcb") == 0) || (core_stricmp(machine->gamedrv->parent, "kf2k3pcb") == 0) || \
-			(core_stricmp(machine->gamedrv->parent, "neogeo") == 0) 
-
+			(core_stricmp(machine->gamedrv->name, "kf2k3pcb") == 0) || (core_stricmp(machine->gamedrv->parent, "kf2k3pcb") == 0) 
 
 static void initInput(running_machine *machine)
 {
@@ -194,8 +193,7 @@ static void initInput(running_machine *machine)
 
 	for (i = 0; ktable[i].retro_key_name != -1; i++)
       		input_device_item_add(KB_device, ktable[i].mame_key_name,
-			&retrokbd_state[ktable[i].retro_key_name],
-				ktable[i].mame_key, iptdev_get_state);
+			&retrokbd_state[ktable[i].retro_key_name], ktable[i].mame_key, iptdev_get_state);
 
 	/* Only for P1 */
    	input_device_item_add(P1_device, "F11",	     &pad_state[0][KEY_F11], 	    ITEM_ID_F11,   iptdev_get_state);	/* Bind display fps */
