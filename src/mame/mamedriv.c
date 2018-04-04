@@ -814,6 +814,7 @@ const game_driver *const drivers[] =
 	DRIVER( crswd2bl )	/* Crossed Sword 2, bootleg of NGCD version */
 	DRIVER( 3countba )	/* */
 	DRIVER( fatfury2a )	/* */
+	DRIVER( fatfury3a )	/* */
 
 
 #endif	/* DRIVER_RECURSIVE */
