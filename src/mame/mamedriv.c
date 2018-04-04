@@ -813,6 +813,7 @@ const game_driver *const drivers[] =
 	DRIVER( sokhfa )	/* hackrom, based by ragnagrd */
 	DRIVER( crswd2bl )	/* Crossed Sword 2, bootleg of NGCD version */
 	DRIVER( 3countba )	/* */
+	DRIVER( fatfury2a )	/* */
 
 
 #endif	/* DRIVER_RECURSIVE */

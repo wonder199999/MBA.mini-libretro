@@ -118,7 +118,6 @@ kt_table ktable[] = {
    	{"-1",       -1,                 ITEM_ID_INVALID},
 };
 
-
 /* Capcom Eco Fighter , use L & R button to turn the weapon */
 #define ECOFGT_LAYOUT	(core_stricmp(machine->gamedrv->name, "ecofghtr") == 0) || (core_stricmp(machine->gamedrv->parent, "ecofghtr") == 0)
 
@@ -151,14 +150,15 @@ kt_table ktable[] = {
 			(core_stricmp(machine->gamedrv->name, "soldier") == 0) || (core_stricmp(machine->gamedrv->parent, "soldier") == 0) 
 
 /* Neo Geo */
-#define NEOGEO_LAYOUT	(core_stricmp(machine->gamedrv->parent, "neogeo") == 0) || (core_stricmp(machine->gamedrv->name, "3countba") == 0) \
+#define NEOGEO_LAYOUT	(core_stricmp(machine->gamedrv->parent, "neogeo") == 0) || (core_stricmp(machine->gamedrv->name, "3countba") == 0) || \
 			(core_stricmp(machine->gamedrv->name, "ms5pcb") == 0) || (core_stricmp(machine->gamedrv->parent, "ms5pcb") == 0) || \
 			(core_stricmp(machine->gamedrv->name, "svcpcb") == 0) || (core_stricmp(machine->gamedrv->parent, "svcpcb") == 0) || \
-			(core_stricmp(machine->gamedrv->name, "kf2k3pcb") == 0) || (core_stricmp(machine->gamedrv->parent, "kf2k3pcb") == 0) 
+			(core_stricmp(machine->gamedrv->name, "kf2k3pcb") == 0) || (core_stricmp(machine->gamedrv->parent, "kf2k3pcb") == 0) || \
+			(core_stricmp(machine->gamedrv->name, "fatfury2a") == 0) 
 
 static void initInput(running_machine *machine)
 {
-	unsigned int i;
+	UINT32 i;
 
    	KB_device = input_device_add(machine, DEVICE_CLASS_KEYBOARD, "Retrokdb", NULL);
    	if (KB_device == NULL) fatalerror("KBD Error creating keyboard device! \n");
@@ -318,7 +318,7 @@ static inline void retro_poll_mame_input(void)
 {
 	input_poll_cb();
 
-	unsigned int i;
+	UINT32 i;
 
 	if (keyboard_input)
 	{
