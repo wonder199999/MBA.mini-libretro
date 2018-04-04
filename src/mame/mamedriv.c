@@ -230,9 +230,9 @@ const game_driver *const drivers[] =
 	/* new added */
 	DRIVER( sfzch )		/* 20/10/1995 (c) CPS Changer version - Street Fighter Zero */
 	DRIVER( wofch )		/* 31/10/1992 (c) CPS Changer version - Tenchi Wo Kurau II */
-	DRIVER( wofches )	/* hackrom , based by wofch */
-	DRIVER( wofchdx )	/* hackro, bootleg, CPS Changer version -Sangokushi III Gaiden: Kakou-On's Revenge DX, based by wofch */
-	DRIVER( wofhfh )	/* Huo Feng Huang, Chinese bootleg, hackrom */
+	DRIVER( wofches )	/* hackrom, based by wofch */
+	DRIVER( wofchdx )	/* hackrom, bootleg, CPS Changer version -Sangokushi III Gaiden: Kakou-On's Revenge DX, based by wofch */
+	DRIVER( wofhfh )	/* hackrom, Huo Feng Huang, Chinese bootleg */
 
 
 
@@ -812,6 +812,7 @@ const game_driver *const drivers[] =
 	DRIVER( ss2hfa )	/* hackrom, based by samsho2 */
 	DRIVER( sokhfa )	/* hackrom, based by ragnagrd */
 	DRIVER( crswd2bl )	/* Crossed Sword 2, bootleg of NGCD version */
+	DRIVER( 3countba )	/* */
 
 
 #endif	/* DRIVER_RECURSIVE */

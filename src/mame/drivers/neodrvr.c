@@ -8716,7 +8716,8 @@ GAME( 1998, 98best44,  0,        neogeo,   neogeo,   neogeo,   ROT0, "SNK", "'98
 /*
 GAME( year,	archives name,	parent name,	MACHINE_DRIVER_START,	INPUT_PORTS,	DRIVER_INIT,	flip,	producer name,	info, support )
 */
-GAME( 1997,	kof97hfa,	neogeo,		neogeo,		neogeo,		neogeo,   ROT0,   "SNK", "The King of Fighters '97 (Simplified operation version by FlanagAnagency)", GAME_SUPPORTS_SAVE )
-GAME( 1994,	ss2hfa,    	neogeo,   	neogeo,   	neogeo,   	neogeo,   ROT0,   "SNK", "Samurai Shodown II / Shin Samurai Spirits - Haohmaru jigokuhen (Simplified operation version by FlanagAnagency)", GAME_SUPPORTS_SAVE )
 GAME( 1996,	sokhfa,    	neogeo,   	neogeo,   	neogeo,   	neogeo,   ROT0,   "Saurus", "Ragnagard / Shin-Oh-Ken (Simplified operation version by FlanagAnagency)", GAME_SUPPORTS_SAVE )
 GAME( 1996,	crswd2bl,    	neogeo,   	neogeo,   	neogeo,   	neogeo,   ROT0,   "bootleg (Razoola)", "Crossed Swords 2 (bootleg of CD version)", GAME_SUPPORTS_SAVE )
+GAME( 1997,	kof97hfa,	neogeo,		neogeo,		neogeo,		neogeo,   ROT0,   "SNK", "The King of Fighters '97 (Simplified operation version by FlanagAnagency)", GAME_SUPPORTS_SAVE )
+GAME( 1994,	ss2hfa,    	neogeo,   	neogeo,   	neogeo,   	neogeo,   ROT0,   "SNK", "Samurai Shodown II / Shin Samurai Spirits - Haohmaru jigokuhen (Simplified operation version by FlanagAnagency)", GAME_SUPPORTS_SAVE )
+GAME( 1993,	3countba,	3countb,	neogeo,		neogeo,		neogeo,   ROT0,   "SNK", "3 Count Bout / Fire Suplex (NGM-043)", GAME_SUPPORTS_SAVE )
