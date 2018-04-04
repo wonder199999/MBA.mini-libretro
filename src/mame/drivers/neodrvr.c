@@ -8724,3 +8724,4 @@ GAME( 1993,	3countba,	3countb,	neogeo,		neogeo,		neogeo,	   ROT0,   "SNK", "3 Co
 GAME( 1992,	fatfury2a,	fatfury2,	neogeo,		neogeo,		fatfury2,  ROT0,   "SNK", "Fatal Fury 2 / Garou Densetsu 2 - arata-naru tatakai (NGM-047)", GAME_SUPPORTS_SAVE )
 GAME( 1995,	fatfury3a,	fatfury3,	neogeo,		neogeo,		neogeo,    ROT0,   "SNK", "Fatal Fury 3 - Road to the Final Victory / Garou Densetsu 3 - haruka-naru tatakai (NGM-069) (NGH-069) (alternate set)", GAME_SUPPORTS_SAVE )
 GAME( 1991,	alpham2p,	alpham2,	neogeo,		neogeo,		neogeo,    ROT0,   "SNK", "Alpha Mission II / ASO II - Last Guardian (prototype)", GAME_SUPPORTS_SAVE )
+GAME( 2000,	b2b,		neogeo,		neogeo,		neogeo,		neogeo,    ROT0,   "Visco", "Bang Bang Busters (2010 NCI release)", GAME_SUPPORTS_SAVE )
