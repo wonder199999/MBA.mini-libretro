@@ -1,5 +1,5 @@
 
-ROM_START( ringdesta )
+ROM_START( ringdesta )		/* Ring of Destruction: Slammasters II (Asia 940831) */
 	ROM_REGION( CODE_SIZE, "maincpu", 0 )
 	ROM_LOAD16_WORD_SWAP( "smba.03a", 0x000000, 0x80000, NO_DUMP )
 	ROM_LOAD16_WORD_SWAP( "smba.04a", 0x080000, 0x80000, NO_DUMP )
@@ -29,7 +29,7 @@ ROM_START( ringdesta )
 	ROM_LOAD16_WORD_SWAP( "smb.12m",   0x200000, 0x200000, CRC(955b0782) SHA1(ee09500e7b44e923126533613bfe26cdabc7ab5f) )
 ROM_END
 
-ROM_START( ringdesth )
+ROM_START( ringdesth )		/* Ring of Destruction: Slammasters II (Hispanic 940902) */
 	ROM_REGION( CODE_SIZE, "maincpu", 0 )
 	ROM_LOAD16_WORD_SWAP( "smbh.03b", 0x000000, 0x80000, NO_DUMP )
 	ROM_LOAD16_WORD_SWAP( "smbh.04b", 0x080000, 0x80000, NO_DUMP )
@@ -59,7 +59,7 @@ ROM_START( ringdesth )
 	ROM_LOAD16_WORD_SWAP( "smb.12m",   0x200000, 0x200000, CRC(955b0782) SHA1(ee09500e7b44e923126533613bfe26cdabc7ab5f) )
 ROM_END
 
-ROM_START( sfa3us )
+ROM_START( sfa3us )		/* Street Fighter Alpha 3 (USA 980616 Sample version) */
 	ROM_REGION( CODE_SIZE, "maincpu", 0 )
 	ROM_LOAD16_WORD_SWAP( "sz3-usam_03.6a",  0x000000, 0x80000, NO_DUMP )
 	ROM_LOAD16_WORD_SWAP( "sz3-usam_04.7a",  0x080000, 0x80000, NO_DUMP )
@@ -87,7 +87,7 @@ ROM_START( sfa3us )
 	ROM_LOAD16_WORD_SWAP( "sz3.12m",   0x400000, 0x400000, CRC(f392b13a) SHA1(fa04ce0370144a49bd1d5acd873eef87b0dc9d15) )
 ROM_END
 
-ROM_START( sfaud )	/* Phoenix Edition */
+ROM_START( sfaud )	/* Phoenix Edition, Street Fighter Alpha: Warrior's Dreams (USA 950727) */
 	ROM_REGION( CODE_SIZE, "maincpu", 0 )
 	ROM_LOAD16_WORD_SWAP( "sfzud.03a", 0x000000, 0x80000, NO_DUMP )
 	ROM_LOAD16_WORD_SWAP( "sfz.04b",   0x080000, 0x80000, CRC(8b73b0e5) SHA1(5318761f615c21395366b5333e75eaaa73ef2073) )
@@ -108,7 +108,7 @@ ROM_START( sfaud )	/* Phoenix Edition */
 	ROM_LOAD16_WORD_SWAP( "sfz.12m",   0x200000, 0x200000, CRC(8bdbc4b4) SHA1(0e21c9a75a17a7e7dfd8bb51098c2b9dc4c933ec) )
 ROM_END
 
-ROM_START( sfz2jd )	/* Phoenix Edition */
+ROM_START( sfz2jd )	/* Phoenix Edition, Street Fighter Alpha 2 (Japan 960227) */
 	ROM_REGION( CODE_SIZE, "maincpu", 0 )
 	ROM_LOAD16_WORD_SWAP( "sz2j_d.03a", 0x000000, 0x80000, NO_DUMP )
 	ROM_LOAD16_WORD_SWAP( "sz2j_d.04a", 0x080000, 0x80000, NO_DUMP )
@@ -134,7 +134,7 @@ ROM_START( sfz2jd )	/* Phoenix Edition */
 	ROM_LOAD16_WORD_SWAP( "sz2.12m",   0x200000, 0x200000, CRC(2237bc53) SHA1(96d5693047e4cf1ed10a8ee1905cea267a278e92) )
 ROM_END
 
-ROM_START( sfz3jr2d )	/* Phoenix Edition */
+ROM_START( sfz3jr2d )	/* Phoenix Edition, Street Fighter Alpha 3 (Japan 980629) */
 	ROM_REGION( CODE_SIZE, "maincpu", 0 )
 	ROM_LOAD16_WORD_SWAP( "sz3j_d.03", 0x000000, 0x80000, NO_DUMP )
 	ROM_LOAD16_WORD_SWAP( "sz3j_d.04", 0x080000, 0x80000, NO_DUMP )
@@ -163,7 +163,7 @@ ROM_START( sfz3jr2d )	/* Phoenix Edition */
 ROM_END
 
 ROM_START( progearjbl )
-	ROM_REGION( CODE_SIZE, "maincpu", 0 )	/* Phoenix Edition */
+	ROM_REGION( CODE_SIZE, "maincpu", 0 )	/* Phoenix Edition, Progear no Arashi (Japan 010117) */
 	ROM_LOAD16_WORD_SWAP( "pgaj_bl.03", 0x000000, 0x80000, NO_DUMP )
 	ROM_LOAD16_WORD_SWAP( "pgaj_bl.04",  0x080000, 0x80000, NO_DUMP )
 	ROM_REGION( 0x1000000, "gfx", 0 )
@@ -179,7 +179,7 @@ ROM_START( progearjbl )
 	ROM_LOAD16_WORD_SWAP( "pga.12m", 0x400000, 0x400000, NO_DUMP )
 ROM_END
 
-ROM_START( mvscjsing )
+ROM_START( mvscjsing )		/* Marvel Vs. Capcom: Clash of Super Heroes (Japan 980123) (Single PCB) */
 	ROM_REGION( CODE_SIZE, "maincpu", 0 )
 	ROM_LOAD16_BYTE( "mvc_ja.simm1", 0x000000, 0x200000, NO_DUMP )
 	ROM_LOAD16_BYTE( "mvc_ja.simm3", 0x000001, 0x200000, NO_DUMP )
@@ -196,7 +196,7 @@ ROM_START( mvscjsing )
 	ROM_LOAD16_WORD_SWAP( "mvc64-11m.11",   0x000000, 0x800000, NO_DUMP )
 ROM_END
 
-ROM_START( ssf2th )
+ROM_START( ssf2th )		/* Super Street Fighter II Turbo (Hispanic 940223) */
 	ROM_REGION( CODE_SIZE, "maincpu", 0 )
 	ROM_LOAD16_WORD_SWAP( "sfxh.03c", 0x000000, 0x80000, NO_DUMP )
 	ROM_LOAD16_WORD_SWAP( "sfxh.04a", 0x080000, 0x80000, NO_DUMP )
@@ -227,7 +227,7 @@ ROM_START( ssf2th )
 	ROM_LOAD16_WORD_SWAP( "sfx.12m",   0x200000, 0x200000, CRC(a05e3aab) SHA1(d4eb9cae66c74e956569fea8b815156fbd420f83) )
 ROM_END
 
-ROM_START( ssf2tbh )
+ROM_START( ssf2tbh )		/* Super Street Fighter II: The Tournament Battle (Hispanic 931005) */
 	ROM_REGION( CODE_SIZE, "maincpu", 0 )
 	ROM_LOAD16_WORD_SWAP( "ssfh.03tb",  0x000000, 0x80000, NO_DUMP )
 	ROM_LOAD16_WORD_SWAP( "ssfh.04t",   0x080000, 0x80000, NO_DUMP )
@@ -257,7 +257,7 @@ ROM_START( ssf2tbh )
 	ROM_LOAD( "ssf.q08",  0x380000, 0x080000, CRC(6f5a088c) SHA1(6c0b4690479647a99d76335f174be8455b4ff118) )
 ROM_END
 
-ROM_START( ssf2tad )	/* Phoenix Edition */
+ROM_START( ssf2tad )	/* Phoenix Edition, Super Street Fighter II Turbo (Asia 940223) */
 	ROM_REGION( CODE_SIZE, "maincpu", 0 )
 	ROM_LOAD16_WORD_SWAP( "sfxad.03c", 0x000000, 0x80000, NO_DUMP )
 	ROM_LOAD16_WORD_SWAP( "sfxad.04a", 0x080000, 0x80000, NO_DUMP )
@@ -288,7 +288,7 @@ ROM_START( ssf2tad )	/* Phoenix Edition */
 	ROM_LOAD16_WORD_SWAP( "sfx.12m",   0x200000, 0x200000, CRC(a05e3aab) SHA1(d4eb9cae66c74e956569fea8b815156fbd420f83) )
 ROM_END
 
-ROM_START( ssf2td )	/* Phoenix Edition */
+ROM_START( ssf2td )	/* Phoenix Edition, Super Street Fighter II Turbo (Etc 940223)  */
 	ROM_REGION( CODE_SIZE, "maincpu", 0 )
 	ROM_LOAD16_WORD_SWAP( "sfxed.03c", 0x000000, 0x80000, NO_DUMP )
 	ROM_LOAD16_WORD_SWAP( "sfxed.04a", 0x080000, 0x80000, NO_DUMP )
@@ -319,7 +319,7 @@ ROM_START( ssf2td )	/* Phoenix Edition */
 	ROM_LOAD16_WORD_SWAP( "sfx.12m",   0x200000, 0x200000, CRC(a05e3aab) SHA1(d4eb9cae66c74e956569fea8b815156fbd420f83) )
 ROM_END
 
-ROM_START( ssf2d )	/* Phoenix Edition */
+ROM_START( ssf2d )	/* Phoenix Edition, Super Street Fighters II - the new challengers (Etc  930911) */
 	ROM_REGION( CODE_SIZE, "maincpu", 0 )
 	ROM_LOAD16_WORD_SWAP( "ssfed.03",  0x000000, 0x80000, NO_DUMP )
 	ROM_LOAD16_WORD_SWAP( "ssfed.04",  0x080000, 0x80000, NO_DUMP )
@@ -349,8 +349,8 @@ ROM_START( ssf2d )	/* Phoenix Edition */
 	ROM_LOAD( "ssf.q08",  0x380000, 0x080000, CRC(6f5a088c) SHA1(6c0b4690479647a99d76335f174be8455b4ff118) )
 ROM_END
 
-ROM_START( cybotsud )
-	ROM_REGION( CODE_SIZE, "maincpu", 0 )	/* Phoenix Edition */
+ROM_START( cybotsud )		/* Phoenix Edition, Cyberbots: Fullmetal madness (USA 950424) */
+	ROM_REGION( CODE_SIZE, "maincpu", 0 )
 	ROM_LOAD16_WORD_SWAP( "cybu_d.03", 0x000000, 0x80000, NO_DUMP )
 	ROM_LOAD16_WORD_SWAP( "cybu_d.04", 0x080000, 0x80000, NO_DUMP )
 	ROM_LOAD16_WORD_SWAP( "cyb.05",    0x100000, 0x80000, CRC(ec40408e) SHA1(dd611c1708e7ef86e4f7cac4b7b0dff7baaee5ed) )
@@ -377,7 +377,7 @@ ROM_START( cybotsud )
 	ROM_LOAD16_WORD_SWAP( "cyb.12m",   0x200000, 0x200000, CRC(7066e9cc) SHA1(eb6a9d4998b3311344d73bae88d661d81609c492) )
 ROM_END
 
-ROM_START( ecofghtrd )		/* Phoenix Edition */
+ROM_START( ecofghtrd )		/* Phoenix Edition, Eco Fighters (World 931203) */
 	ROM_REGION( CODE_SIZE, "maincpu", 0 )
 	ROM_LOAD16_WORD_SWAP( "ueced.03", 0x000000, 0x80000, NO_DUMP )
 	ROM_LOAD16_WORD_SWAP( "ueced.04", 0x080000, 0x80000, NO_DUMP )
@@ -400,7 +400,7 @@ ROM_START( ecofghtrd )		/* Phoenix Edition */
 	ROM_LOAD16_WORD_SWAP( "uec.12m",   0x200000, 0x200000, CRC(27729e52) SHA1(a55c8159adf766dda70cb047f5ac85ce6bc0a3f3) )
 ROM_END
 
-ROM_START( mpangjd )		/* Phoenix Edition */
+ROM_START( mpangjd )		/* Phoenix Edition, Mighty! Pang (Japan 001011) */
 	ROM_REGION( CODE_SIZE, "maincpu", 0 )
 	ROM_LOAD16_WORD_SWAP( "mpnj-pnx.03", 0x000000, 0x80000, NO_DUMP )
 	ROM_LOAD16_WORD_SWAP( "mpnj-pnx.04", 0x080000, 0x80000, NO_DUMP )
@@ -421,7 +421,7 @@ ROM_START( mpangjd )		/* Phoenix Edition */
 	ROM_LOAD16_WORD_SWAP( "mpn-simm.05b",   0x200000, 0x200000, CRC(5462f4e8) SHA1(299fbdab700e735e6395c5d9e3f079bb2e3dbd73) ) // ROM on a simm
 ROM_END
 
-ROM_START( progearud )		/* Phoenix Edition */
+ROM_START( progearud )		/* Phoenix Edition, Progear (USA 010117) */
 	ROM_REGION( CODE_SIZE, "maincpu", 0 )
 	ROM_LOAD16_WORD_SWAP( "pgau_d.03", 0x000000, 0x80000, NO_DUMP )
 	ROM_LOAD16_WORD_SWAP( "pgau_d.04", 0x080000, 0x80000, NO_DUMP )
@@ -444,7 +444,7 @@ ROM_START( progearud )		/* Phoenix Edition */
 	ROM_LOAD16_WORD_SWAP( "pga-simm.06b",   0x600000, 0x200000, CRC(8b39489a) SHA1(fd790efaf37dc2c4c16f657941044e3e2d3c2711) ) // ROM on a simm
 ROM_END
 
-ROM_START( gigawingd )		/* Phoenix Edition */
+ROM_START( gigawingd )		/* Phoenix Edition, Giga Wing (USA 990222) */
 	ROM_REGION(CODE_SIZE, "maincpu", 0 )
 	ROM_LOAD16_WORD_SWAP( "ggwu_d.03", 0x000000, 0x80000, NO_DUMP )
 	ROM_LOAD16_WORD_SWAP( "ggwu_d.04", 0x080000, 0x80000, NO_DUMP )
@@ -462,7 +462,7 @@ ROM_START( gigawingd )		/* Phoenix Edition */
 	ROM_LOAD16_WORD_SWAP( "ggw.12m",   0x400000, 0x400000, CRC(4bee4e8f) SHA1(c440b5a38359ec3b8002f39690b79bf78703f5d0) )
 ROM_END
 
-ROM_START( mshvsfu1d )		/* Phoenix Edition */
+ROM_START( mshvsfu1d )		/* Phoenix Edition, Marvel Super Heroes Vs. Street Fighter (USA 970625) */
 	ROM_REGION( CODE_SIZE, "maincpu", 0 )
 	ROM_LOAD16_WORD_SWAP( "mvsu_d.03d", 0x000000, 0x80000, NO_DUMP )
 	ROM_LOAD16_WORD_SWAP( "mvsu_d.04d", 0x080000, 0x80000, NO_DUMP )
@@ -490,7 +490,7 @@ ROM_START( mshvsfu1d )		/* Phoenix Edition */
 	ROM_LOAD16_WORD_SWAP( "mvs.12m",   0x400000, 0x400000, CRC(f2fd7f68) SHA1(28a30d55d3eaf963006c7cbe7c288099cd3ba536) )
 ROM_END
 
-ROM_START( vhunt2d )		/* Phoenix Edition */
+ROM_START( vhunt2d )		/* Phoenix Edition, Vampire Hunter 2: Darkstalkers Revenge (Japan 970913) */
 	ROM_REGION( CODE_SIZE, "maincpu", 0 )
 	ROM_LOAD16_WORD_SWAP( "vh2j_d.03a", 0x000000, 0x80000, NO_DUMP )
 	ROM_LOAD16_WORD_SWAP( "vh2j_d.04a", 0x080000, 0x80000, NO_DUMP )
@@ -520,7 +520,7 @@ ROM_START( vhunt2d )		/* Phoenix Edition */
 	ROM_LOAD16_WORD_SWAP( "vh2.12m",  0x400000, 0x400000, CRC(6e2430af) SHA1(b475faf943bec4171ba0130f287e1948743ca273) )
 ROM_END
 
-ROM_START( vsav2d )		/* Phoenix Edition */
+ROM_START( vsav2d )		/* Phoenix Edition, Vampire Savior 2: The Lord of Vampire (Japan 970913) */
 	ROM_REGION( CODE_SIZE, "maincpu", 0 )
 	ROM_LOAD16_WORD_SWAP( "vs2j_d.03", 0x000000, 0x80000, NO_DUMP )
 	ROM_LOAD16_WORD_SWAP( "vs2j_d.04", 0x080000, 0x80000, NO_DUMP )
