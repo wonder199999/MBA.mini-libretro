@@ -812,9 +812,10 @@ const game_driver *const drivers[] =
 	DRIVER( ss2hfa )	/* hackrom, based by samsho2 */
 	DRIVER( sokhfa )	/* hackrom, based by ragnagrd */
 	DRIVER( crswd2bl )	/* Crossed Sword 2, bootleg of NGCD version */
-	DRIVER( 3countba )	/* */
-	DRIVER( fatfury2a )	/* */
-	DRIVER( fatfury3a )	/* */
+	DRIVER( 3countba )	/* 3 Count Bout / Fire Suplex (NGM-043) */
+	DRIVER( fatfury2a )	/* Fatal Fury 2 / Garou Densetsu 2 - arata-naru tatakai (NGM-047) */
+	DRIVER( fatfury3a )	/* Fatal Fury 3 - Road to the Final Victory / Garou Densetsu 3 - arata-naru tatakai (NGM-069) (NGH-069) (alternate set) */
+	DRIVER( alpham2p )	/* Alpha Mission 2 /ASO 2 (prototype) */
 
 
 #endif	/* DRIVER_RECURSIVE */
