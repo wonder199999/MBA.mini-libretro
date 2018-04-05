@@ -817,6 +817,7 @@ const game_driver *const drivers[] =
 	DRIVER( fatfury3a )	/* Fatal Fury 3 - Road to the Final Victory / Garou Densetsu 3 - arata-naru tatakai (NGM-069) (NGH-069) (alternate set) */
 	DRIVER( alpham2p )	/* Alpha Mission 2 /ASO 2 (prototype) */
 	DRIVER( b2b )		/* Bang Bang Busters (NCI release) */
+	DRIVER( bangbedp )	/* Bang Bead (prototype) */
 
 
 #endif	/* DRIVER_RECURSIVE */

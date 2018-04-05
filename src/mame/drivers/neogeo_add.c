@@ -1,5 +1,5 @@
 
-ROM_START( kof97hfa ) /* hacked by FlanagAnagency */
+ROM_START( kof97hfa ) /* kof97, hacked by FlanagAnagency */
 	ROM_REGION( 0x500000, "maincpu", 0 )
 	ROM_LOAD16_WORD_SWAP( "232-p1.p1", 0x000000, 0x100000, NO_DUMP )
 	ROM_LOAD16_WORD_SWAP( "232-p2.sp2", 0x100000, 0x400000, NO_DUMP )
@@ -24,7 +24,7 @@ ROM_START( kof97hfa ) /* hacked by FlanagAnagency */
 	ROM_LOAD16_BYTE( "232-c6.c6", 0x2000001, 0x400000, NO_DUMP )
 ROM_END
 
-ROM_START( ss2hfa ) /* hacked by FlanagAnagency */
+ROM_START( ss2hfa ) /* samsho2, hacked by FlanagAnagency */
 	ROM_REGION( 0x200000, "maincpu", 0 )
 	ROM_LOAD16_WORD_SWAP( "063-p1.p1", 0x100000, 0x100000, NO_DUMP )
 	ROM_CONTINUE( 0x000000, 0x100000 )
@@ -52,7 +52,7 @@ ROM_START( ss2hfa ) /* hacked by FlanagAnagency */
 	ROM_LOAD16_BYTE( "063-c8.c8", 0xc00001, 0x200000, NO_DUMP )
 ROM_END
 
-ROM_START( sokhfa ) /* hacked by FlanagAnagency */
+ROM_START( sokhfa ) /* ragnagrd, hacked by FlanagAnagency */
 	ROM_REGION( 0x200000, "maincpu", 0 )
 	ROM_LOAD16_WORD_SWAP( "218-p1.p1", 0x100000, 0x100000, NO_DUMP )
 	ROM_CONTINUE( 0x000000, 0x100000 )
@@ -176,8 +176,8 @@ ROM_END
 
 ROM_START( alpham2p )		/* ASO II - Last Guardian / Alpha Mission II (prototype) */
 	ROM_REGION( 0x100000, "maincpu", 0 )
-	ROM_LOAD16_WORD_SWAP( "007_p1_faac.p1", 0x000001, 0x080000, NO_DUMP )
-	ROM_LOAD16_WORD_SWAP( "007_p2_1813.p2", 0x000000, 0x080000, NO_DUMP )
+	ROM_LOAD16_BYTE( "007_p1_faac.p1", 0x000001, 0x080000, NO_DUMP )
+	ROM_LOAD16_BYTE( "007_p2_1813.p2", 0x000000, 0x080000, NO_DUMP )
 
 	NEO_SFIX_128K( "007_s1_36f1.s1", NO_DUMP )
 
@@ -190,7 +190,7 @@ ROM_START( alpham2p )		/* ASO II - Last Guardian / Alpha Mission II (prototype) 
 	ROM_LOAD( "007_v21_28c2.v21", 0x180000, 0x080000, NO_DUMP )
 
 	ROM_REGION( 0x80000, "ymsnd.deltat", 0 )
-	ROM_COPY( "ymsnd", 0x180000, 0x000000, 0x080000 )
+	ROM_COPY( "ymsnd", 0x180000, 0x00000, 0x080000 )
 
 	ROM_REGION( 0x400000, "sprites", 0 )
 	ROM_LOAD32_BYTE( "007_c1_210e.c11", 0x000000, 0x80000, NO_DUMP )
@@ -219,4 +219,27 @@ ROM_START( b2b )		/* Bang Bang Busters (2010 NCI release) */
 	ROM_REGION( 0x400000, "sprites", 0 )
 	ROM_LOAD16_BYTE( "071.c1", 0x000000, 0x200000, NO_DUMP )
 	ROM_LOAD16_BYTE( "071.c2", 0x000001, 0x200000, NO_DUMP )
+ROM_END
+
+ROM_START( bangbedp ) /* Bang Bead (prototype) */
+	ROM_REGION( 0x200000, "maincpu", 0 )
+	ROM_LOAD16_WORD_SWAP( "259-p1.bin", 0x100000, 0x100000, NO_DUMP )
+	ROM_CONTINUE( 0x000000, 0x100000 )
+
+	NEO_SFIX_128K( "259-s1p.bin", NO_DUMP )
+
+	NEO_BIOS_AUDIO_128K( "259-m1.bin", NO_DUMP )
+
+	ROM_REGION( 0x500000, "ymsnd", 0 )
+	ROM_LOAD( "259-v1p.bin", 0x000000, 0x200000, NO_DUMP )
+	ROM_LOAD( "259-v2p.bin", 0x200000, 0x200000, NO_DUMP )
+	ROM_LOAD( "259-v3p.bin", 0x400000, 0x100000, NO_DUMP )
+
+	NO_DELTAT_REGION
+
+	ROM_REGION( 0x600000, "sprites", 0 )
+	ROM_LOAD16_BYTE( "259-c1p.bin", 0x000000, 0x200000, NO_DUMP )
+	ROM_LOAD16_BYTE( "259-c2p.bin", 0x000001, 0x200000, NO_DUMP )
+	ROM_LOAD16_BYTE( "259-c3p.bin", 0x400000, 0x100000, NO_DUMP )
+	ROM_LOAD16_BYTE( "259-c4p.bin", 0x400001, 0x100000, NO_DUMP )
 ROM_END

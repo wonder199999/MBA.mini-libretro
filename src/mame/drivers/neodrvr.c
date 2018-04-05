@@ -5387,33 +5387,6 @@ ROM_START( bangbead ) /* Original Version - Encrypted GFX */ /* MVS ONLY RELEASE
 	ROM_LOAD16_BYTE( "259-c2.bin", 0x0000001, 0x800000, CRC(0efd98ff) SHA1(d350315d3c7f26d638458e5ccf2126069a4c7a5b) ) /* Plane 2,3 */
 ROM_END
 
-/* same data, diff. format roms, not encrypted, it could be a bootleg, not a prototype, since its identical
-   when decrypted i'm disabling it for now */
-#if 0
-ROM_START( bangbedp )
-	ROM_REGION( 0x200000, "maincpu", 0 )
-	ROM_LOAD16_WORD_SWAP( "259-p1.bin", 0x100000, 0x100000, CRC(88a37f8b) SHA1(566db84850fad5e8fe822e8bba910a33e083b550) )
-	ROM_CONTINUE( 0x000000, 0x100000 )
-
-	NEO_SFIX_128K( "259-s1p.bin", CRC(bb50fb2d) SHA1(7372939f328fb5e7d09c16985e09ae8c34702b0c) )
-
-	NEO_BIOS_AUDIO_128K( "259-m1.bin", CRC(85668ee9) SHA1(7d3f51710cf90c097cd3faaeeef10ceb85cbb3e8) )
-
-	ROM_REGION( 0x500000, "ymsnd", 0 )
-	ROM_LOAD( "259-v1p.bin", 0x000000, 0x200000, CRC(e97b9385) SHA1(d213cae6cf5732b8ab1f8a8cf04afee5dfd9a260) )
-	ROM_LOAD( "259-v2p.bin", 0x200000, 0x200000, CRC(b0cbd70a) SHA1(fc7c8183f8ff9800e8aae7c8d44d962300058cfb) )
-	ROM_LOAD( "259-v3p.bin", 0x400000, 0x100000, CRC(97528fe9) SHA1(8f5eddbb3a9a225492479d1a44801f3916c8e791) )
-
-	NO_DELTAT_REGION
-
-	ROM_REGION( 0x600000, "sprites", 0 )
-	ROM_LOAD16_BYTE( "259-c1p.bin", 0x000000, 0x200000, CRC(e3919e44) SHA1(54c722414b5a7ad311dc8ddf6fdda88535e829d1) ) /* Plane 0,1 */
-	ROM_LOAD16_BYTE( "259-c2p.bin", 0x000001, 0x200000, CRC(baf5a320) SHA1(ead3d81d9b4aeb45af4f9cb5c38157f2236b506c) ) /* Plane 2,3 */
-	ROM_LOAD16_BYTE( "259-c3p.bin", 0x400000, 0x100000, CRC(c8e52157) SHA1(f10f58e905c4cbaf182b20e63abe5364462133c5) ) /* Plane 0,1 */
-	ROM_LOAD16_BYTE( "259-c4p.bin", 0x400001, 0x100000, CRC(69fa8e60) SHA1(29c1fbdb79dedf1470683202e2cb3435732d9275) ) /* Plane 2,3 */
-ROM_END
-#endif
-
 ROM_START( nitd ) /* Original Version - Encrypted GFX */ /* MVS ONLY RELEASE */
 	ROM_REGION( 0x100000, "maincpu", 0 )
 	ROM_LOAD16_WORD_SWAP( "260-p1.bin", 0x000000, 0x080000, CRC(61361082) SHA1(441f3f41c1aa752c0e0a9a0b1d92711d9e636b85) )
@@ -8684,7 +8657,6 @@ GAME( 1998, flipshot,  neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "Visco", "B
 GAME( 1999, ctomaday,  neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "Visco", "Captain Tomaday", GAME_SUPPORTS_SAVE )
 GAME( 1999, ganryu,    neogeo,   neogeo,   neogeo,   ganryu,   ROT0, "Visco", "Ganryu / Musashi Ganryuki" , GAME_SUPPORTS_SAVE )	/* Encrypted GFX */
 GAME( 2000, bangbead,  neogeo,   neogeo,   neogeo,   bangbead, ROT0, "Visco", "Bang Bead", GAME_SUPPORTS_SAVE )
-//GAME( 2000, bangbedp,  bangbead, neogeo,   neogeo,   neogeo,   ROT0, "Visco", "Bang Bead (prototype)", GAME_SUPPORTS_SAVE )
 
 /* Mega Enterprise */
 GAME( 2002, mslug4,    neogeo,   neogeo,   neogeo,   mslug4,   ROT0, "Mega / Playmore", "Metal Slug 4 (set 1)", GAME_SUPPORTS_SAVE )
@@ -8725,3 +8697,4 @@ GAME( 1992,	fatfury2a,	fatfury2,	neogeo,		neogeo,		fatfury2,  ROT0,   "SNK", "Fa
 GAME( 1995,	fatfury3a,	fatfury3,	neogeo,		neogeo,		neogeo,    ROT0,   "SNK", "Fatal Fury 3 - Road to the Final Victory / Garou Densetsu 3 - haruka-naru tatakai (NGM-069) (NGH-069) (alternate set)", GAME_SUPPORTS_SAVE )
 GAME( 1991,	alpham2p,	alpham2,	neogeo,		neogeo,		neogeo,    ROT0,   "SNK", "Alpha Mission II / ASO II - Last Guardian (prototype)", GAME_SUPPORTS_SAVE )
 GAME( 2000,	b2b,		neogeo,		neogeo,		neogeo,		neogeo,    ROT0,   "Visco", "Bang Bang Busters (2010 NCI release)", GAME_SUPPORTS_SAVE )
+GAME( 2000,	bangbedp,	bangbead,	neogeo,		neogeo,		neogeo,    ROT0,   "Visco", "Bang Bead (prototype)", GAME_SUPPORTS_SAVE )

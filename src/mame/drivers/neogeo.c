@@ -200,13 +200,6 @@ NOTE: On CTRG2-B, The "A" lines start at "A1". If you trace this on an
 
 #include "../lh/neogeo.lh"
 
-
-#define LOG_VIDEO_SYSTEM         (0)
-#define LOG_CPU_COMM             (0)
-#define LOG_MAIN_CPU_BANKING     (0)
-#define LOG_AUDIO_CPU_BANKING    (0)
-
-
 /*************************************
  *
  *  Global variables
@@ -246,8 +239,6 @@ static void adjust_display_position_interrupt_timer( running_machine *machine )
 	if ((state->display_counter + 1) != 0)
 	{
 		attotime period = attotime_mul(ATTOTIME_IN_HZ(NEOGEO_PIXEL_CLOCK), state->display_counter + 1);
-		if (LOG_VIDEO_SYSTEM) logerror("adjust_display_position_interrupt_timer  current y: %02x  current x: %02x   target y: %x  target x: %x\n", machine->primary_screen->vpos(), machine->primary_screen->hpos(), (state->display_counter + 1) / NEOGEO_HTOTAL, (state->display_counter + 1) % NEOGEO_HTOTAL);
-
 		timer_adjust_oneshot(state->display_position_interrupt_timer, period, 0);
 	}
 }
@@ -263,10 +254,7 @@ void neogeo_set_display_position_interrupt_control( running_machine *machine, UI
 void neogeo_set_display_counter_msb( const address_space *space, UINT16 data )
 {
 	neogeo_state *state = (neogeo_state *)space->machine->driver_data;
-
 	state->display_counter = (state->display_counter & 0x0000ffff) | ((UINT32)data << 16);
-
-	if (LOG_VIDEO_SYSTEM) logerror("PC %06x: set_display_counter %08x\n", cpu_get_pc(space->cpu), state->display_counter);
 }
 
 
@@ -276,13 +264,8 @@ void neogeo_set_display_counter_lsb( const address_space *space, UINT16 data )
 
 	state->display_counter = (state->display_counter & 0xffff0000) | data;
 
-	if (LOG_VIDEO_SYSTEM) logerror("PC %06x: set_display_counter %08x\n", cpu_get_pc(space->cpu), state->display_counter);
-
 	if (state->display_position_interrupt_control & IRQ2CTRL_LOAD_RELATIVE)
-	{
-		if (LOG_VIDEO_SYSTEM) logerror("AUTOLOAD_RELATIVE ");
 		adjust_display_position_interrupt_timer(space->machine);
-	}
 }
 
 
@@ -315,21 +298,14 @@ static TIMER_CALLBACK( display_position_interrupt_callback )
 {
 	neogeo_state *state = (neogeo_state *)machine->driver_data;
 
-	if (LOG_VIDEO_SYSTEM) logerror("--- Scanline @ %d,%d\n", machine->primary_screen->vpos(), machine->primary_screen->hpos());
-
 	if (state->display_position_interrupt_control & IRQ2CTRL_ENABLE)
 	{
-		if (LOG_VIDEO_SYSTEM) logerror("*** Scanline interrupt (IRQ2) ***  y: %02x  x: %02x\n", machine->primary_screen->vpos(), machine->primary_screen->hpos());
 		state->display_position_interrupt_pending = 1;
-
 		update_interrupts(machine);
 	}
 
 	if (state->display_position_interrupt_control & IRQ2CTRL_AUTOLOAD_REPEAT)
-	{
-		if (LOG_VIDEO_SYSTEM) logerror("AUTOLOAD_REPEAT ");
 		adjust_display_position_interrupt_timer(machine);
-	}
 }
 
 
@@ -338,10 +314,7 @@ static TIMER_CALLBACK( display_position_vblank_callback )
 	neogeo_state *state = (neogeo_state *)machine->driver_data;
 
 	if (state->display_position_interrupt_control & IRQ2CTRL_AUTOLOAD_VBLANK)
-	{
-		if (LOG_VIDEO_SYSTEM) logerror("AUTOLOAD_VBLANK ");
 		adjust_display_position_interrupt_timer(machine);
-	}
 
 	/* set timer for next screen */
 	timer_adjust_oneshot(state->display_position_vblank_timer, machine->primary_screen->time_until_pos(NEOGEO_VBSTART, NEOGEO_VBLANK_RELOAD_HPOS), 0);
@@ -351,8 +324,6 @@ static TIMER_CALLBACK( display_position_vblank_callback )
 static TIMER_CALLBACK( vblank_interrupt_callback )
 {
 	neogeo_state *state = (neogeo_state *)machine->driver_data;
-
-	if (LOG_VIDEO_SYSTEM) logerror("+++ VBLANK @ %d,%d\n", machine->primary_screen->vpos(), machine->primary_screen->hpos());
 
 	/* add a timer tick to the pd4990a */
 	upd4990a_addretrace(state->upd4990a);
@@ -431,9 +402,9 @@ static CUSTOM_INPUT( multiplexed_controller_r )
 	int port = (FPTR)param;
 
 	static const char *const cntrl[2][2] =
-		{
-			{ "IN0-0", "IN0-1" }, { "IN1-0", "IN1-1" }
-		};
+	{
+		{ "IN0-0", "IN0-1" }, { "IN1-0", "IN1-1" }
+	};
 
 	return input_port_read_safe(field->port->machine, cntrl[port][state->controller_select & 0x01], 0x00);
 }
@@ -442,23 +413,30 @@ static CUSTOM_INPUT( multiplexed_controller_r )
 static CUSTOM_INPUT( mahjong_controller_r )
 {
 	neogeo_state *state = (neogeo_state *)field->port->machine->driver_data;
-	UINT32 ret;
+	UINT32 ret = 0x00;
 
-/*
-cpu #0 (PC=00C18B9A): unmapped memory word write to 00380000 = 0012 & 00FF
-cpu #0 (PC=00C18BB6): unmapped memory word write to 00380000 = 001B & 00FF
-cpu #0 (PC=00C18D54): unmapped memory word write to 00380000 = 0024 & 00FF
-cpu #0 (PC=00C18D6C): unmapped memory word write to 00380000 = 0009 & 00FF
-cpu #0 (PC=00C18C40): unmapped memory word write to 00380000 = 0000 & 00FF
-*/
+	/*
+	cpu #0 (PC=00C18B9A): unmapped memory word write to 00380000 = 0012 & 00FF
+	cpu #0 (PC=00C18BB6): unmapped memory word write to 00380000 = 001B & 00FF
+	cpu #0 (PC=00C18D54): unmapped memory word write to 00380000 = 0024 & 00FF
+	cpu #0 (PC=00C18D6C): unmapped memory word write to 00380000 = 0009 & 00FF
+	cpu #0 (PC=00C18C40): unmapped memory word write to 00380000 = 0000 & 00FF
+	*/
+
 	switch (state->controller_select)
 	{
-	default:
-	case 0x00: ret = 0x0000; break; /* nothing? */
-	case 0x09: ret = input_port_read(field->port->machine, "MAHJONG1"); break;
-	case 0x12: ret = input_port_read(field->port->machine, "MAHJONG2"); break;
-	case 0x1b: ret = input_port_read(field->port->machine, "MAHJONG3"); break; /* player 1 normal inputs? */
-	case 0x24: ret = input_port_read(field->port->machine, "MAHJONG4"); break;
+		case 0x09:
+			ret = input_port_read(field->port->machine, "MAHJONG1");
+		break;
+		case 0x12:
+			ret = input_port_read(field->port->machine, "MAHJONG2");
+		break;
+		case 0x1b:
+			ret = input_port_read(field->port->machine, "MAHJONG3");	/* player 1 normal inputs? */
+		break;
+		case 0x24:
+			ret = input_port_read(field->port->machine, "MAHJONG4");
+		break;
 	}
 
 	return ret;
@@ -468,19 +446,29 @@ cpu #0 (PC=00C18C40): unmapped memory word write to 00380000 = 0000 & 00FF
 static WRITE16_HANDLER( io_control_w )
 {
 	neogeo_state *state = (neogeo_state *)space->machine->driver_data;
+
 	switch (offset)
 	{
-	case 0x00: select_controller(space->machine, data & 0x00ff); break;
-	case 0x18: set_output_latch(space->machine, data & 0x00ff); break;
-	case 0x20: set_output_data(space->machine, data & 0x00ff); break;
-	case 0x28: upd4990a_control_16_w(state->upd4990a, 0, data, mem_mask); break;
-//  case 0x30: break; // coin counters
-//  case 0x31: break; // coin counters
-//  case 0x32: break; // coin lockout
-//  case 0x33: break; // coui lockout
-
-	default:
-		logerror("PC: %x  Unmapped I/O control write.  Offset: %x  Data: %x\n", cpu_get_pc(space->cpu), offset, data);
+		case 0x00:
+			select_controller(space->machine, data & 0x00ff);
+		break;
+		case 0x18:
+			set_output_latch(space->machine, data & 0x00ff);
+		break;
+		case 0x20:
+			set_output_data(space->machine, data & 0x00ff);
+		break;
+		case 0x28:
+			upd4990a_control_16_w(state->upd4990a, 0, data, mem_mask);
+		break;
+		/*
+		case 0x30: break; // coin counters
+		case 0x31: break; // coin counters
+		case 0x32: break; // coin lockout
+		case 0x33: break; // coui lockout
+		*/
+		default:
+			logerror("PC: %x  Unmapped I/O control write.  Offset: %x  Data: %x\n", cpu_get_pc(space->cpu), offset, data);
 		break;
 	}
 }
@@ -499,7 +487,7 @@ READ16_HANDLER( neogeo_unmapped_r )
 	UINT16 ret;
 
 	/* unmapped memory returns the last word on the data bus, which is almost always the opcode
-       of the next instruction due to prefetch */
+	   of the next instruction due to prefetch */
 
 	/* prevent recursion */
 	if (state->recurse)
@@ -581,7 +569,7 @@ static WRITE16_HANDLER( save_ram_w )
 static CUSTOM_INPUT( get_memcard_status )
 {
 	/* D0 and D1 are memcard presence indicators, D2 indicates memcard
-       write protect status (we are always write enabled) */
+	   write protect status (we are always write enabled) */
 	return (memcard_present(field->port->machine) == -1) ? 0x07 : 0x00;
 }
 
@@ -647,8 +635,6 @@ static WRITE16_HANDLER( audio_command_w )
 
 		/* boost the interleave to let the audio CPU read the command */
 		cpuexec_boost_interleave(space->machine, attotime_zero, ATTOTIME_IN_USEC(50));
-
-		if (LOG_CPU_COMM) logerror("MAIN CPU PC %06x: audio_command_w %04x - %04x\n", cpu_get_pc(space->cpu), data, mem_mask);
 	}
 }
 
@@ -656,8 +642,6 @@ static WRITE16_HANDLER( audio_command_w )
 static READ8_HANDLER( audio_command_r )
 {
 	UINT8 ret = soundlatch_r(space, 0);
-
-	if (LOG_CPU_COMM) logerror(" AUD CPU PC   %04x: audio_command_r %02x\n", cpu_get_pc(space->cpu), ret);
 
 	/* this is a guess */
 	audio_cpu_clear_nmi_w(space, 0, 0);
@@ -669,9 +653,6 @@ static READ8_HANDLER( audio_command_r )
 static WRITE8_HANDLER( audio_result_w )
 {
 	neogeo_state *state = (neogeo_state *)space->machine->driver_data;
-
-	if (LOG_CPU_COMM && (state->audio_result != data)) logerror(" AUD CPU PC   %04x: audio_result_w %02x\n", cpu_get_pc(space->cpu), data);
-
 	state->audio_result = data;
 }
 
@@ -680,8 +661,6 @@ static CUSTOM_INPUT( get_audio_result )
 {
 	neogeo_state *state = (neogeo_state *)field->port->machine->driver_data;
 	UINT32 ret = state->audio_result;
-
-//  if (LOG_CPU_COMM) logerror("MAIN CPU PC %06x: audio_result_r %02x\n", cpu_get_pc(field->port->machine->device("maincpu")), ret);
 
 	return ret;
 }
@@ -721,10 +700,7 @@ void neogeo_set_main_cpu_bank_address( const address_space *space, UINT32 bank_a
 {
 	neogeo_state *state = (neogeo_state *)space->machine->driver_data;
 
-	if (LOG_MAIN_CPU_BANKING) logerror("MAIN CPU PC %06x: neogeo_set_main_cpu_bank_address %06x\n", cpu_get_pc(space->cpu), bank_address);
-
 	state->main_cpu_bank_address = bank_address;
-
 	_set_main_cpu_bank_address(space->machine);
 }
 
@@ -734,18 +710,20 @@ static WRITE16_HANDLER( main_cpu_bank_select_w )
 	UINT32 bank_address;
 	UINT32 len = memory_region_length(space->machine, "maincpu");
 
-	if ((len <= 0x100000) && (data & 0x07))
-		logerror("PC %06x: warning: bankswitch to %02x but no banks available\n", cpu_get_pc(space->cpu), data);
+	if ( len <= 0x100000 )
+	{
+		if ( data & 0x07 ) ;
+			/* logerror("PC %06x: warning: bankswitch to %02x but no banks available\n", cpu_get_pc(space->cpu), data); */
+	}
 	else
 	{
 		bank_address = ((data & 0x07) + 1) * 0x100000;
 
 		if (bank_address >= len)
 		{
-			logerror("PC %06x: warning: bankswitch to empty bank %02x\n", cpu_get_pc(space->cpu), data);
+			/* logerror("PC %06x: warning: bankswitch to empty bank %02x\n", cpu_get_pc(space->cpu), data); */
 			bank_address = 0x100000;
 		}
-
 		neogeo_set_main_cpu_bank_address(space, bank_address);
 	}
 }
@@ -777,8 +755,8 @@ static void main_cpu_banking_init( running_machine *machine )
 static void set_audio_cpu_banking( running_machine *machine )
 {
 	neogeo_state *state = (neogeo_state *)machine->driver_data;
-	int region;
 
+	UINT32 region;
 	for (region = 0; region < 4; region++)
 		memory_set_bank(machine, NEOGEO_BANK_AUDIO_CPU_CART_BANK + region, state->audio_cpu_banks[region]);
 }
@@ -788,10 +766,7 @@ static void audio_cpu_bank_select( const address_space *space, int region, UINT8
 {
 	neogeo_state *state = (neogeo_state *)space->machine->driver_data;
 
-	if (LOG_AUDIO_CPU_BANKING) logerror("Audio CPU PC %03x: audio_cpu_bank_select: Region: %d   Bank: %02x\n", cpu_get_pc(space->cpu), region, bank);
-
 	state->audio_cpu_banks[region] = bank;
-
 	set_audio_cpu_banking(space->machine);
 }
 
@@ -832,7 +807,7 @@ static void _set_audio_cpu_rom_source( const address_space *space )
 {
 	neogeo_state *state = (neogeo_state *)space->machine->driver_data;
 
-/*  if (!memory_region(machine, "audiobios"))   */
+	/* if (!memory_region(machine, "audiobios")) */
 		state->audio_cpu_rom_source = 1;
 
 	memory_set_bank(space->machine, NEOGEO_BANK_AUDIO_CPU_MAIN_BANK, state->audio_cpu_rom_source);
@@ -841,10 +816,7 @@ static void _set_audio_cpu_rom_source( const address_space *space )
 	if (state->audio_cpu_rom_source != state->audio_cpu_rom_source_last)
 	{
 		state->audio_cpu_rom_source_last = state->audio_cpu_rom_source;
-
 		cputag_set_input_line(space->machine, "audiocpu", INPUT_LINE_RESET, PULSE_LINE);
-
-		if (LOG_AUDIO_CPU_BANKING) logerror("Audio CPU PC %03x: selectign %s ROM\n", cpu_get_pc(space->cpu), state->audio_cpu_rom_source ? "CARTRIDGE" : "BIOS");
 	}
 }
 
@@ -852,8 +824,8 @@ static void _set_audio_cpu_rom_source( const address_space *space )
 static void set_audio_cpu_rom_source( const address_space *space, UINT8 data )
 {
 	neogeo_state *state = (neogeo_state *)space->machine->driver_data;
-	state->audio_cpu_rom_source = data;
 
+	state->audio_cpu_rom_source = data;
 	_set_audio_cpu_rom_source(space);
 }
 
@@ -861,19 +833,18 @@ static void set_audio_cpu_rom_source( const address_space *space, UINT8 data )
 static void audio_cpu_banking_init( running_machine *machine )
 {
 	neogeo_state *state = (neogeo_state *)machine->driver_data;
-	int region;
-	int bank;
-	UINT8 *rgn;
+	UINT8  *rgn;
 	UINT32 address_mask;
 
 	/* audio bios/cartridge selection */
 	if (memory_region(machine, "audiobios"))
 		memory_configure_bank(machine, NEOGEO_BANK_AUDIO_CPU_MAIN_BANK, 0, 1, memory_region(machine, "audiobios"), 0);
-	memory_configure_bank(machine, NEOGEO_BANK_AUDIO_CPU_MAIN_BANK, 1, 1, memory_region(machine, "audiocpu"), 0);
 
+	memory_configure_bank(machine, NEOGEO_BANK_AUDIO_CPU_MAIN_BANK, 1, 1, memory_region(machine, "audiocpu"), 0);
 	/* audio banking */
 	address_mask = memory_region_length(machine, "audiocpu") - 0x10000 - 1;
 
+	UINT32 region, bank;
 	rgn = memory_region(machine, "audiocpu");
 	for (region = 0; region < 4; region++)
 	{
@@ -884,8 +855,7 @@ static void audio_cpu_banking_init( running_machine *machine )
 		}
 	}
 
-	/* set initial audio banks --
-       how does this really work, or is it even neccessary? */
+	/* set initial audio banks -- how does this really work, or is it even neccessary? */
 	state->audio_cpu_banks[0] = 0x1e;
 	state->audio_cpu_banks[1] = 0x0e;
 	state->audio_cpu_banks[2] = 0x06;
@@ -913,26 +883,31 @@ static WRITE16_HANDLER( system_control_w )
 
 		switch (offset & 0x07)
 		{
-		default:
-		case 0x00: neogeo_set_screen_dark(space->machine, bit); break;
-		case 0x01: set_main_cpu_vector_table_source(space->machine, bit);
-				   set_audio_cpu_rom_source(space, bit); /* this is a guess */
-				   break;
-		case 0x05: neogeo_set_fixed_layer_source(space->machine, bit); break;
-		case 0x06: set_save_ram_unlock(space->machine, bit); break;
-		case 0x07: neogeo_set_palette_bank(space->machine, bit); break;
-
-		case 0x02: /* unknown - HC32 middle pin 1 */
-		case 0x03: /* unknown - uPD4990 pin ? */
-		case 0x04: /* unknown - HC32 middle pin 10 */
-			logerror("PC: %x  Unmapped system control write.  Offset: %x  Data: %x\n", cpu_get_pc(space->cpu), offset & 0x07, bit);
+			default:
+			case 0x00:
+				neogeo_set_screen_dark(space->machine, bit);
+			break;
+			case 0x01:
+				set_main_cpu_vector_table_source(space->machine, bit);
+				set_audio_cpu_rom_source(space, bit); /* this is a guess */
+			break;
+			case 0x05:
+				neogeo_set_fixed_layer_source(space->machine, bit);
+			break;
+			case 0x06:
+				set_save_ram_unlock(space->machine, bit);
+			break;
+			case 0x07:
+				neogeo_set_palette_bank(space->machine, bit);
+			break;
+			case 0x02: /* unknown - HC32 middle pin 1 */
+			case 0x03: /* unknown - uPD4990 pin ? */
+			case 0x04: /* unknown - HC32 middle pin 10 */
+				logerror("PC: %x  Unmapped system control write.  Offset: %x  Data: %x\n", cpu_get_pc(space->cpu), offset & 0x07, bit);
 			break;
 		}
-
-		if (LOG_VIDEO_SYSTEM && ((offset & 0x07) != 0x06)) logerror("PC: %x  System control write.  Offset: %x  Data: %x\n", cpu_get_pc(space->cpu), offset & 0x07, bit);
 	}
 }
-
 
 
 /*************************************
@@ -990,7 +965,7 @@ static void set_outputs( running_machine *machine )
 {
 	neogeo_state *state = (neogeo_state *)machine->driver_data;
 	static const UINT8 led_map[0x10] =
-		{ 0x3f,0x06,0x5b,0x4f,0x66,0x6d,0x7d,0x07,0x7f,0x6f,0x58,0x4c,0x62,0x69,0x78,0x00 };
+		{ 0x3f, 0x06, 0x5b, 0x4f, 0x66, 0x6d, 0x7d, 0x07, 0x7f, 0x6f, 0x58, 0x4c, 0x62, 0x69, 0x78, 0x00 };
 
 	/* EL */
 	output_set_digit_value(0, led_map[state->el_value]);
@@ -1009,8 +984,7 @@ static void set_output_latch( running_machine *machine, UINT8 data )
 {
 	neogeo_state *state = (neogeo_state *)machine->driver_data;
 
-	/* looks like the LEDs are set on the
-       falling edge */
+	/* looks like the LEDs are set on the falling edge */
 	UINT8 falling_bits = state->output_latch & ~data;
 
 	if (falling_bits & 0x08)
@@ -1229,83 +1203,83 @@ static const ym2610_interface ym2610_config =
  *
  *************************************/
 
-#define STANDARD_DIPS																		\
-	PORT_DIPNAME( 0x0001, 0x0001, "Test Switch" ) PORT_DIPLOCATION("SW:1")					\
-	PORT_DIPSETTING(	  0x0001, DEF_STR( Off ) )											\
-	PORT_DIPSETTING(	  0x0000, DEF_STR( On ) )											\
-	PORT_DIPNAME( 0x0002, 0x0002, "Coin Chutes?" ) PORT_DIPLOCATION("SW:2")					\
-	PORT_DIPSETTING(	  0x0000, "1?" )													\
-	PORT_DIPSETTING(	  0x0002, "2?" )													\
-	PORT_DIPNAME( 0x0004, 0x0004, "Autofire (in some games)" ) PORT_DIPLOCATION("SW:3")		\
-	PORT_DIPSETTING(	  0x0004, DEF_STR( Off ) )											\
-	PORT_DIPSETTING(	  0x0000, DEF_STR( On ) )											\
+#define STANDARD_DIPS										\
+	PORT_DIPNAME( 0x0001, 0x0001, "Test Switch" ) PORT_DIPLOCATION("SW:1")			\
+	PORT_DIPSETTING(	  0x0001, DEF_STR( Off ) )					\
+	PORT_DIPSETTING(	  0x0000, DEF_STR( On ) )					\
+	PORT_DIPNAME( 0x0002, 0x0002, "Coin Chutes?" ) PORT_DIPLOCATION("SW:2")			\
+	PORT_DIPSETTING(	  0x0000, "1?" )						\
+	PORT_DIPSETTING(	  0x0002, "2?" )						\
+	PORT_DIPNAME( 0x0004, 0x0004, "Autofire (in some games)" ) PORT_DIPLOCATION("SW:3")	\
+	PORT_DIPSETTING(	  0x0004, DEF_STR( Off ) )					\
+	PORT_DIPSETTING(	  0x0000, DEF_STR( On ) )					\
 	PORT_DIPNAME( 0x0018, 0x0018, "COMM Setting (Cabinet No.)" ) PORT_DIPLOCATION("SW:4,5")	\
-	PORT_DIPSETTING(	  0x0018, "1" )														\
-	PORT_DIPSETTING(	  0x0010, "2" )														\
-	PORT_DIPSETTING(	  0x0008, "3" )														\
-	PORT_DIPSETTING(	  0x0000, "4" )														\
+	PORT_DIPSETTING(	  0x0018, "1" )							\
+	PORT_DIPSETTING(	  0x0010, "2" )							\
+	PORT_DIPSETTING(	  0x0008, "3" )							\
+	PORT_DIPSETTING(	  0x0000, "4" )							\
 	PORT_DIPNAME( 0x0020, 0x0020, "COMM Setting (Link Enable)" ) PORT_DIPLOCATION("SW:6")	\
-	PORT_DIPSETTING(	  0x0020, DEF_STR( Off ) )											\
-	PORT_DIPSETTING(	  0x0000, DEF_STR( On ) )											\
-	PORT_DIPNAME( 0x0040, 0x0040, DEF_STR( Free_Play ) ) PORT_DIPLOCATION("SW:7")			\
-	PORT_DIPSETTING(	  0x0040, DEF_STR( Off ) )											\
-	PORT_DIPSETTING(	  0x0000, DEF_STR( On ) )											\
-	PORT_DIPNAME( 0x0080, 0x0080, "Freeze" ) PORT_DIPLOCATION("SW:8")						\
-	PORT_DIPSETTING(	  0x0080, DEF_STR( Off ) )											\
+	PORT_DIPSETTING(	  0x0020, DEF_STR( Off ) )					\
+	PORT_DIPSETTING(	  0x0000, DEF_STR( On ) )					\
+	PORT_DIPNAME( 0x0040, 0x0040, DEF_STR( Free_Play ) ) PORT_DIPLOCATION("SW:7")		\
+	PORT_DIPSETTING(	  0x0040, DEF_STR( Off ) )					\
+	PORT_DIPSETTING(	  0x0000, DEF_STR( On ) )					\
+	PORT_DIPNAME( 0x0080, 0x0080, "Freeze" ) PORT_DIPLOCATION("SW:8")			\
+	PORT_DIPSETTING(	  0x0080, DEF_STR( Off ) )					\
 	PORT_DIPSETTING(	  0x0000, DEF_STR( On ) )
 
 
-#define STANDARD_IN0														\
-	PORT_START("IN0")														\
-	STANDARD_DIPS															\
-	PORT_BIT( 0x0100, IP_ACTIVE_LOW, IPT_JOYSTICK_UP ) PORT_PLAYER(1)		\
-	PORT_BIT( 0x0200, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN ) PORT_PLAYER(1)		\
-	PORT_BIT( 0x0400, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT ) PORT_PLAYER(1)		\
+#define STANDARD_IN0								\
+	PORT_START("IN0")							\
+	STANDARD_DIPS								\
+	PORT_BIT( 0x0100, IP_ACTIVE_LOW, IPT_JOYSTICK_UP ) PORT_PLAYER(1)	\
+	PORT_BIT( 0x0200, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN ) PORT_PLAYER(1)	\
+	PORT_BIT( 0x0400, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT ) PORT_PLAYER(1)	\
 	PORT_BIT( 0x0800, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT ) PORT_PLAYER(1)	\
-	PORT_BIT( 0x1000, IP_ACTIVE_LOW, IPT_BUTTON1 ) PORT_PLAYER(1)			\
-	PORT_BIT( 0x2000, IP_ACTIVE_LOW, IPT_BUTTON2 ) PORT_PLAYER(1)			\
-	PORT_BIT( 0x4000, IP_ACTIVE_LOW, IPT_BUTTON3 ) PORT_PLAYER(1)			\
+	PORT_BIT( 0x1000, IP_ACTIVE_LOW, IPT_BUTTON1 ) PORT_PLAYER(1)		\
+	PORT_BIT( 0x2000, IP_ACTIVE_LOW, IPT_BUTTON2 ) PORT_PLAYER(1)		\
+	PORT_BIT( 0x4000, IP_ACTIVE_LOW, IPT_BUTTON3 ) PORT_PLAYER(1)		\
 	PORT_BIT( 0x8000, IP_ACTIVE_LOW, IPT_BUTTON4 ) PORT_PLAYER(1)
 
 
-#define STANDARD_IN1														\
-	PORT_START("IN1")														\
-	PORT_BIT( 0x00ff, IP_ACTIVE_LOW, IPT_UNUSED )							\
-	PORT_BIT( 0x0100, IP_ACTIVE_LOW, IPT_JOYSTICK_UP ) PORT_PLAYER(2)		\
-	PORT_BIT( 0x0200, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN ) PORT_PLAYER(2)		\
-	PORT_BIT( 0x0400, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT ) PORT_PLAYER(2)		\
+#define STANDARD_IN1								\
+	PORT_START("IN1")							\
+	PORT_BIT( 0x00ff, IP_ACTIVE_LOW, IPT_UNUSED )				\
+	PORT_BIT( 0x0100, IP_ACTIVE_LOW, IPT_JOYSTICK_UP ) PORT_PLAYER(2)	\
+	PORT_BIT( 0x0200, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN ) PORT_PLAYER(2)	\
+	PORT_BIT( 0x0400, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT ) PORT_PLAYER(2)	\
 	PORT_BIT( 0x0800, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT ) PORT_PLAYER(2)	\
-	PORT_BIT( 0x1000, IP_ACTIVE_LOW, IPT_BUTTON1 ) PORT_PLAYER(2)			\
-	PORT_BIT( 0x2000, IP_ACTIVE_LOW, IPT_BUTTON2 ) PORT_PLAYER(2)			\
-	PORT_BIT( 0x4000, IP_ACTIVE_LOW, IPT_BUTTON3 ) PORT_PLAYER(2)			\
+	PORT_BIT( 0x1000, IP_ACTIVE_LOW, IPT_BUTTON1 ) PORT_PLAYER(2)		\
+	PORT_BIT( 0x2000, IP_ACTIVE_LOW, IPT_BUTTON2 ) PORT_PLAYER(2)		\
+	PORT_BIT( 0x4000, IP_ACTIVE_LOW, IPT_BUTTON3 ) PORT_PLAYER(2)		\
 	PORT_BIT( 0x8000, IP_ACTIVE_LOW, IPT_BUTTON4 ) PORT_PLAYER(2)
 
 
-#define STANDARD_IN2																				\
-	PORT_START("IN2")																				\
-	PORT_BIT( 0x00ff, IP_ACTIVE_LOW, IPT_UNUSED )													\
-	PORT_BIT( 0x0100, IP_ACTIVE_LOW, IPT_START1 )   												\
-	PORT_BIT( 0x0200, IP_ACTIVE_LOW, IPT_OTHER ) PORT_NAME("Next Game") PORT_CODE(KEYCODE_7)		\
-	PORT_BIT( 0x0400, IP_ACTIVE_LOW, IPT_START2 )   												\
+#define STANDARD_IN2								\
+	PORT_START("IN2")								\
+	PORT_BIT( 0x00ff, IP_ACTIVE_LOW, IPT_UNUSED )						\
+	PORT_BIT( 0x0100, IP_ACTIVE_LOW, IPT_START1 )   						\
+	PORT_BIT( 0x0200, IP_ACTIVE_LOW, IPT_OTHER ) PORT_NAME("Next Game") PORT_CODE(KEYCODE_7)	\
+	PORT_BIT( 0x0400, IP_ACTIVE_LOW, IPT_START2 )   						\
 	PORT_BIT( 0x0800, IP_ACTIVE_LOW, IPT_OTHER ) PORT_NAME("Previous Game") PORT_CODE(KEYCODE_8)	\
-	PORT_BIT( 0x7000, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(get_memcard_status, NULL)			\
+	PORT_BIT( 0x7000, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(get_memcard_status, NULL)		\
 	PORT_BIT( 0x8000, IP_ACTIVE_LOW, IPT_UNKNOWN ) /* In AES 'mode' nitd, kof2000, sengoku3, matrim and mslug5 check if this is ACTIVE_HIGH */
 
 
-#define STANDARD_IN3																				\
-	PORT_START("IN3")																				\
-	PORT_BIT( 0x0001, IP_ACTIVE_LOW, IPT_COIN1 )													\
-	PORT_BIT( 0x0002, IP_ACTIVE_LOW, IPT_COIN2 )													\
-	PORT_BIT( 0x0004, IP_ACTIVE_LOW, IPT_SERVICE1 )													\
+#define STANDARD_IN3											\
+	PORT_START("IN3")										\
+	PORT_BIT( 0x0001, IP_ACTIVE_LOW, IPT_COIN1 )							\
+	PORT_BIT( 0x0002, IP_ACTIVE_LOW, IPT_COIN2 )							\
+	PORT_BIT( 0x0004, IP_ACTIVE_LOW, IPT_SERVICE1 )							\
 	PORT_BIT( 0x0008, IP_ACTIVE_LOW, IPT_UNKNOWN ) /* having this ACTIVE_HIGH causes you to start with 2 credits using USA bios roms; if ACTIVE_HIGH + IN4 bit 6 ACTIVE_HIGH = AES 'mode' */	\
 	PORT_BIT( 0x0010, IP_ACTIVE_LOW, IPT_UNKNOWN ) /* having this ACTIVE_HIGH causes you to start with 2 credits using USA bios roms; if ACTIVE_HIGH + IN4 bit 6 ACTIVE_HIGH = AES 'mode' */	\
 	PORT_BIT( 0x0020, IP_ACTIVE_LOW, IPT_SPECIAL ) /* what is this? When ACTIVE_HIGH + IN4 bit 6 ACTIVE_LOW MVS-4 slot is detected */	\
-	PORT_BIT( 0x00c0, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(get_calendar_status, NULL)			\
+	PORT_BIT( 0x00c0, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(get_calendar_status, NULL)		\
 	PORT_BIT( 0xff00, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(get_audio_result, NULL)
 
 
-#define STANDARD_IN4																			\
-	PORT_START("IN4")																			\
+#define STANDARD_IN4																\
+	PORT_START("IN4")															\
 	PORT_BIT( 0x0001, IP_ACTIVE_HIGH, IPT_UNKNOWN )												\
 	PORT_BIT( 0x0002, IP_ACTIVE_HIGH, IPT_UNKNOWN )												\
 	PORT_BIT( 0x0004, IP_ACTIVE_HIGH, IPT_UNKNOWN )												\

@@ -154,7 +154,8 @@ kt_table ktable[] = {
 			(core_stricmp(machine->gamedrv->name, "ms5pcb") == 0) || (core_stricmp(machine->gamedrv->parent, "ms5pcb") == 0) || \
 			(core_stricmp(machine->gamedrv->name, "svcpcb") == 0) || (core_stricmp(machine->gamedrv->parent, "svcpcb") == 0) || \
 			(core_stricmp(machine->gamedrv->name, "kf2k3pcb") == 0) || (core_stricmp(machine->gamedrv->parent, "kf2k3pcb") == 0) || \
-			(core_stricmp(machine->gamedrv->name, "fatfury2a") == 0) || (core_stricmp(machine->gamedrv->name, "fatfury3a") == 0) 
+			(core_stricmp(machine->gamedrv->name, "fatfury2a") == 0) || (core_stricmp(machine->gamedrv->name, "fatfury3a") == 0) || \
+			(core_stricmp(machine->gamedrv->name, "alpham2p") == 0) || (core_stricmp(machine->gamedrv->name, "bangbedp") == 0)
 
 static void initInput(running_machine *machine)
 {
