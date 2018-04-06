@@ -818,6 +818,7 @@ const game_driver *const drivers[] =
 	DRIVER( alpham2p )	/* Alpha Mission 2 /ASO 2 (prototype) */
 	DRIVER( b2b )		/* Bang Bang Busters (NCI release) */
 	DRIVER( bangbedp )	/* Bang Bead (prototype) */
+	DRIVER( burningfp )	/* Burning Fight (prototype) */
 
 
 #endif	/* DRIVER_RECURSIVE */

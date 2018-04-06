@@ -8698,3 +8698,4 @@ GAME( 1995,	fatfury3a,	fatfury3,	neogeo,		neogeo,		neogeo,    ROT0,   "SNK", "Fa
 GAME( 1991,	alpham2p,	alpham2,	neogeo,		neogeo,		neogeo,    ROT0,   "SNK", "Alpha Mission II / ASO II - Last Guardian (prototype)", GAME_SUPPORTS_SAVE )
 GAME( 2000,	b2b,		neogeo,		neogeo,		neogeo,		neogeo,    ROT0,   "Visco", "Bang Bang Busters (2010 NCI release)", GAME_SUPPORTS_SAVE )
 GAME( 2000,	bangbedp,	bangbead,	neogeo,		neogeo,		neogeo,    ROT0,   "Visco", "Bang Bead (prototype)", GAME_SUPPORTS_SAVE )
+GAME( 1991,	burningfp,	burningf,	neogeo,		neogeo,		neogeo,    ROT0,   "SNK", "Burning Fight (prototype)", GAME_SUPPORTS_SAVE )

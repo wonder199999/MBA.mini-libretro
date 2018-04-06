@@ -129,7 +129,7 @@ kt_table ktable[] = {
 			(core_stricmp(machine->gamedrv->name, "sf2ce") == 0) || (core_stricmp(machine->gamedrv->parent, "sf2ce") == 0) || \
          		(core_stricmp(machine->gamedrv->name, "sf2hf") == 0) || (core_stricmp(machine->gamedrv->parent, "sf2hf") == 0) || \
 			(core_stricmp(machine->gamedrv->name, "sfzch") == 0) || (core_stricmp(machine->gamedrv->parent, "sfzch") == 0) || \
-         		(core_stricmp(machine->gamedrv->name, "ssf2") == 0) || (core_stricmp(machine->gamedrv->parent, "ssf2") == 0) || \
+         		(core_stricmp(machine->gamedrv->name, "ssf2") == 0) || (core_stricmp(machine->gamedrv->parent, "ssf2") == 0) ||	\
 			(core_stricmp(machine->gamedrv->name, "ssf2t") == 0) || (core_stricmp(machine->gamedrv->parent, "ssf2t") == 0) || \
 			(core_stricmp(machine->gamedrv->name, "sfa") == 0) || (core_stricmp(machine->gamedrv->parent, "sfa") == 0) || \
 			(core_stricmp(machine->gamedrv->name, "sfa2") == 0) || (core_stricmp(machine->gamedrv->parent, "sfa2") == 0) || \
@@ -155,7 +155,8 @@ kt_table ktable[] = {
 			(core_stricmp(machine->gamedrv->name, "svcpcb") == 0) || (core_stricmp(machine->gamedrv->parent, "svcpcb") == 0) || \
 			(core_stricmp(machine->gamedrv->name, "kf2k3pcb") == 0) || (core_stricmp(machine->gamedrv->parent, "kf2k3pcb") == 0) || \
 			(core_stricmp(machine->gamedrv->name, "fatfury2a") == 0) || (core_stricmp(machine->gamedrv->name, "fatfury3a") == 0) || \
-			(core_stricmp(machine->gamedrv->name, "alpham2p") == 0) || (core_stricmp(machine->gamedrv->name, "bangbedp") == 0)
+			(core_stricmp(machine->gamedrv->name, "alpham2p") == 0) || (core_stricmp(machine->gamedrv->name, "bangbedp") == 0) || \
+			(core_stricmp(machine->gamedrv->name, "burningfp") == 0) 
 
 static void initInput(running_machine *machine)
 {
