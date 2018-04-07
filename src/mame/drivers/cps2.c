@@ -9217,3 +9217,4 @@ GAME( 1993,   ssf2tbh,	   ssf2,	cps2, 	cps2_2p6b,   ssf2tb, ROT0,   "Capcom", "S
 GAME( 1997,   csclubjy,    csclub,      cps2,   cps2_2p3b,   cps2,   ROT0,   "Capcom", "Capcom Sports Club (Japan 970722, yellow case)", GAME_SUPPORTS_SAVE )
 GAME( 1996,   ddsomar1,    ddsom,       cps2,   cps2_4p4b,   cps2,   ROT0,   "Capcom", "Dungeons & Dragons: Shadow over Mystara (Asia 960208)", GAME_SUPPORTS_SAVE )
 GAME( 1995,   mmancp2ur1,  megaman,  	cps2, 	cps2_2p3b,   cps2,   ROT0,   "Capcom", "Mega Man - The Power Battle (CPS2, USA 950926, SAMPLE Version)", GAME_SUPPORTS_SAVE )
+GAME( 1995,   vhuntjr1s,   nwarr,    	cps2, 	cps2_2p6b,   cps2,   ROT0,   "Capcom", "Vampire Hunter: Darkstalkers' Revenge (Japan 950307 stop version)", GAME_SUPPORTS_SAVE )
