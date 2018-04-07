@@ -526,6 +526,7 @@ const game_driver *const drivers[] =
 	DRIVER( vhunt2d )	/* Phoenix Edition, Vampire Hunter 2: Darkstalkers Revenge, Japan */
 	DRIVER( vsav2d )	/* Phoenix Edition, Vampire Savior 2: The Lord of Vampire, Japan */
 	DRIVER( csclub1d )	/* Phoenix Edition, Capcom Sports Club, Euro */
+	DRIVER( cybotsjd )	/* Decrypted bootleg, Cyberbots: Fullmetal Madness, Japan */
 
 
 	/* ***************** */
