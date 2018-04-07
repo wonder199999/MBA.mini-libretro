@@ -9210,3 +9210,4 @@ GAME( 1998,   sfa3us,      sfa3,	cps2,   cps2_2p6b,   cps2,   ROT0,   "Capcom", 
 GAME( 1998,   mvscjsing,   mvsc,	cps2,	cps2_2p6b,   cps2,   ROT0,   "Capcom", "Marvel Vs. Capcom: Clash of Super Heroes (Japan 980123) (Single PCB)", GAME_SUPPORTS_SAVE )
 GAME( 1994,   ssf2th,      ssf2t,       cps2,   cps2_2p6b,   cps2,   ROT0,   "Capcom", "Super Street Fighter II Turbo (Hispanic 940223)", GAME_SUPPORTS_SAVE )
 GAME( 1993,   ssf2tbh,	   ssf2,	cps2, 	cps2_2p6b,   ssf2tb, ROT0,   "Capcom", "Super Street Fighter II: The Tournament Battle (Hispanic 931005)", GAME_SUPPORTS_SAVE )	// works, but not in tournament mode
+GAME( 1997,   csclubjy,    csclub,      cps2,   cps2_2p3b,   cps2,   ROT0,   "Capcom", "Capcom Sports Club (Japan 970722, yellow case)", GAME_SUPPORTS_SAVE )
