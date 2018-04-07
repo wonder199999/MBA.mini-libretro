@@ -530,6 +530,7 @@ const game_driver *const drivers[] =
 	DRIVER( cybotsjd )	/* Decrypted bootleg, Cyberbots: Fullmetal Madness, Japan */
 	DRIVER( spf2td )	/* Phoenix Edition, Super Puzzle Fighter II Turbo (USA 960620) */
 	DRIVER( 1944ad )	/* Phoenix Edition, 1944 - the loop master (USA 000620) */
+	DRIVER( hsf2da )	/* Phoenix Edition, Hyper Street Fighter 2 (Asia 040202 alt) */
 
 
 	/* ***************** */

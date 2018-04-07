@@ -9205,6 +9205,7 @@ GAME( 1997,   csclub1d,    csclub,   dead_cps2,   cps2_2p3b,   cps2,   ROT0,   "
 GAME( 1995,   cybotsjd,    cybots,   dead_cps2,   cybots,      cps2,   ROT0,   "bootleg", "Cyberbots: Fullmetal Madness (Japan 950424) (decrypted bootleg)", GAME_SUPPORTS_SAVE )
 GAME( 1996,   spf2td,	   spf2t,    dead_cps2,   cps2_2p2b,   cps2,   ROT0,   "bootleg", "Super Puzzle Fighter II Turbo (USA 960620 Phoenix Edition) (bootleg)", GAME_SUPPORTS_SAVE )
 GAME( 2000,   1944ad,      1944,     dead_cps2,   cps2_2p2b,   cps2,   ROT0,   "bootleg", "1944: The Loop Master (USA 000620 Phoenix Edition alt) (bootleg)", GAME_SUPPORTS_SAVE )
+GAME( 2004,   hsf2da,      hsf2,     dead_cps2,	  cps2_2p6b,   cps2,   ROT0,   "bootleg", "Hyper Street Fighter 2: The Anniversary Edition (Asia 040202 Phoenix Edition alt) (bootleg)", GAME_SUPPORTS_SAVE )
 
 
 GAME( 1994,   ringdesta,   ringdest,	cps2,   cps2_2p6b,   cps2,   ROT0,   "Capcom", "Ring of Destruction: Slammasters II (Asia 940831)", GAME_SUPPORTS_SAVE )
