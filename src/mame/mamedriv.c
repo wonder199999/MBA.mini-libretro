@@ -528,6 +528,7 @@ const game_driver *const drivers[] =
 	DRIVER( csclub1d )	/* Phoenix Edition, Capcom Sports Club, Euro */
 	DRIVER( cybotsjd )	/* Decrypted bootleg, Cyberbots: Fullmetal Madness, Japan */
 	DRIVER( spf2td )	/* Phoenix Edition, Super Puzzle Fighter II Turbo (USA 960620) */
+	DRIVER( 1944ad )	/* Phoenix Edition, 1944 - the loop master (USA 000620) */
 
 
 	/* ***************** */
