@@ -508,6 +508,7 @@ const game_driver *const drivers[] =
 	DRIVER( ssf2th )	/* 23/02/1994 (c) Super Street Fighter II Turbo, Hispanic */
 	DRIVER( ssf2tbh )	/* 05/10/1993 (c) Super Street Fighter II: The Tournament Battle, Hispanic */
 	DRIVER( csclubjy )	/* 22/07/1997 (c) Capcom Sports Club, Japan, Yellow case */
+	DRIVER( ddsomar1 )	/* 08/02/1996 (c) Dungeons & Dragons: Shadow over Mystara, Asia */
 
 	/* New added Phoenix bootlegs */
 	DRIVER( sfaud )		/* Phoenix Edition, Street Fighter Alpha: Warrior's Dream, USA */

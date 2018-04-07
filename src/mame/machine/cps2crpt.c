@@ -709,7 +709,6 @@ static void cps2_decrypt(running_machine *machine, const UINT32 *master_key, UIN
 
 
 		// decrypt the opcodes
-/*		for (a = i; a < length / 2 && a < upper_limit / 2; a += 0x10000) */
 		for (a = i; a < tmp1 && a < tmp2; a += 0x10000)
 		{
 			dec[a] = feistel(rom[a], fn2_groupA, fn2_groupB,
@@ -717,7 +716,6 @@ static void cps2_decrypt(running_machine *machine, const UINT32 *master_key, UIN
 				key2[0], key2[1], key2[2], key2[3]);
 		}
 		// copy the unencrypted part (not really needed)
-/*		while (a < length / 2) */
 		while (a < tmp1)
 		{
 			dec[a] = rom[a];
@@ -773,19 +771,21 @@ static const struct game_keys keys_table[] =
 	{ "ddtodh",   	{ 0x19691019, 0xe825dde0 }, 0x180000 },	// 0C78 1019 4000  cmpi.w  #$1019,$4000
 	{ "ddtodhr1", 	{ 0x19691019, 0xe825dde0 }, 0x180000 },	// 0C78 1019 4000  cmpi.w  #$1019,$4000
 	{ "ddtodhr2", 	{ 0x19691019, 0xe825dde0 }, 0x180000 },	// 0C78 1019 4000  cmpi.w  #$1019,$4000
+
 	{ "ecofghtr", 	{ 0x931031dc, 0xba987654 }, 0x200000 },	// 0838 0003 7345  btst    #3,$7345
 	{ "ecofghtru",	{ 0x931031ed, 0xcba98765 }, 0x200000 },	// 0838 0003 7345  btst    #3,$7345
 	{ "ecofghtru1",	{ 0x931031ed, 0xcba98765 }, 0x200000 },	// 0838 0003 7345  btst    #3,$7345
 	{ "uecology", 	{ 0x931031fe, 0xdcba9876 }, 0x200000 },	// 0838 0003 7345  btst    #3,$7345
 	{ "ecofghtra",	{ 0x931031ba, 0x98765432 }, 0x200000 },	// 0838 0003 7345  btst    #3,$7345
 	{ "ecofghtrh",	{ 0x931031cb, 0xa9876543 }, 0x200000 },	// 0838 0003 7345  btst    #3,$7345
+
 	{ "ssf2t",    	{ 0x944e8302, 0x56d3143c }, 0x400000 },	// 0838 0007 2000  btst    #7,$2000
 	{ "ssf2ta",   	{ 0x94c4d002, 0x664a1471 }, 0x400000 },	// 0838 0007 2000  btst    #7,$2000
 	{ "ssf2tu",   	{ 0x94fa8902, 0x4c77143f }, 0x400000 },	// 0838 0007 2000  btst    #7,$2000
 	{ "ssf2tur1", 	{ 0x94fa8902, 0x4c77143f }, 0x400000 },	// 0838 0007 2000  btst    #7,$2000
+	{ "ssf2xj",   	{ 0x942a5702, 0x05ac140e }, 0x400000 },	// 0838 0007 2000  btst    #7,$2000
 	{ "ssf2th",  	{ 0x940e2d02, 0x75211432 }, 0x400000 },
 
-	{ "ssf2xj",   	{ 0x942a5702, 0x05ac140e }, 0x400000 },	// 0838 0007 2000  btst    #7,$2000
 	{ "xmcota",   	{ 0x3bc6eda4, 0x97f80251 }, 0x100000 },	// 0C80 1972 0301  cmpi.l  #$19720301,D0
 	{ "xmcotau",  	{ 0x32a57ecd, 0x98016f4b }, 0x100000 },	// 0C80 1972 0301  cmpi.l  #$19720301,D0
 	{ "xmcotah",  	{ 0xf5e8dc34, 0xa096b217 }, 0x100000 },	// 0C80 1972 0301  cmpi.l  #$19720301,D0
@@ -796,6 +796,7 @@ static const struct game_keys keys_table[] =
 	{ "xmcotaj3", 	{ 0x46027315, 0xaf8bcd9e }, 0x100000 },	// 0C80 1972 0301  cmpi.l  #$19720301,D0
 	{ "xmcotajr", 	{ 0x46027315, 0xaf8bcd9e }, 0x100000 },	// 0C80 1972 0301  cmpi.l  #$19720301,D0
 	{ "xmcotaa",  	{ 0x0795a4e2, 0xdb3f861c }, 0x100000 },	// 0C80 1972 0301  cmpi.l  #$19720301,D0
+
 	{ "armwar",   	{ 0x9e9d4c0b, 0x8a39081f }, 0x100000 },	// 3039 0080 4020  move.w  $00804020,D0
 	{ "armwarr1", 	{ 0x9e9d4c0b, 0x8a39081f }, 0x100000 },	// 3039 0080 4020  move.w  $00804020,D0
 	{ "armwaru",  	{ 0xd4c0b8a3, 0x9081f9e9 }, 0x100000 },	// 3039 0080 4020  move.w  $00804020,D0
@@ -803,11 +804,13 @@ static const struct game_keys keys_table[] =
 	{ "pgear",    	{ 0x9d4c0b8a, 0x39081f9e }, 0x100000 },	// 3039 0080 4020  move.w  $00804020,D0
 	{ "pgearr1",  	{ 0x9d4c0b8a, 0x39081f9e }, 0x100000 },	// 3039 0080 4020  move.w  $00804020,D0
 	{ "armwara",  	{ 0x1f9e9d4c, 0x0b8a3908 }, 0x100000 },	// 3039 0080 4020  move.w  $00804020,D0
+
 	{ "avsp",     	{ 0x15208f79, 0x4ade6cb3 }, 0x100000 },	// 0C80 1234 5678  cmpi.l  #$12345678,D0
 	{ "avspu",    	{ 0xb4f61089, 0xccf75a23 }, 0x100000 },	// 0C80 1234 5678  cmpi.l  #$12345678,D0
 	{ "avspj",    	{ 0xe9dcb8fa, 0x51372064 }, 0x100000 },	// 0C80 1234 5678  cmpi.l  #$12345678,D0
 	{ "avspa",    	{ 0xc168f3bd, 0x2e4a5970 }, 0x100000 },	// 0C80 1234 5678  cmpi.l  #$12345678,D0
 	{ "avsph",    	{ 0x712b690a, 0x43cd8e5f }, 0x100000 },	// 0C80 1234 5678  cmpi.l  #$12345678,D0
+
 	{ "dstlk",    	{ 0x13d8a7a8, 0x0008b090 }, 0x100000 },	// 0838 0000 6160  btst    #0,$6160
 	{ "dstlku",   	{ 0x1e80ebf0, 0x10227119 }, 0x100000 },	// 0838 0000 6160  btst    #0,$6160
 	{ "dstlkur1", 	{ 0x1e80ebf0, 0x10227119 }, 0x100000 },	// 0838 0000 6160  btst    #0,$6160
@@ -826,6 +829,7 @@ static const struct game_keys keys_table[] =
 	{ "cybots",   	{ 0x45425943, 0x05090901 }, 0x100000 },	// 0C38 00FF 0C38  cmpi.b  #$FF,$0C38
 	{ "cybotsu",  	{ 0x43050909, 0x01554259 }, 0x100000 },	// 0C38 00FF 0C38  cmpi.b  #$FF,$0C38
 	{ "cybotsj",  	{ 0x05090901, 0x4a425943 }, 0x100000 },	// 0C38 00FF 0C38  cmpi.b  #$FF,$0C38
+
 	{ "msh",      	{ 0x1a11ee26, 0xe7955d17 }, 0x100000 },	// 0C81 1966 0419  cmpi.l  #$19660419,D1
 	{ "mshu",     	{ 0x8705a24e, 0x4a17319b }, 0x100000 },	// 0C81 1966 0419  cmpi.l  #$19660419,D1
 	{ "mshj",     	{ 0x05e88219, 0x31ad2142 }, 0x100000 },	// 0C81 1966 0419  cmpi.l  #$19660419,D1
@@ -833,6 +837,7 @@ static const struct game_keys keys_table[] =
 	{ "msha",     	{ 0x457aeb01, 0x3897c53d }, 0x100000 },	// 0C81 1966 0419  cmpi.l  #$19660419,D1
 	{ "mshh",     	{ 0xfc4c5a50, 0xb59cc190 }, 0x100000 },	// 0C81 1966 0419  cmpi.l  #$19660419,D1
 	{ "mshb",     	{ 0x7a152416, 0xad27f8e6 }, 0x100000 },	// 0C81 1966 0419  cmpi.l  #$19660419,D1
+
 	{ "nwarr",    	{ 0x1019d145, 0x03f05a05 }, 0x180000 },	// 0838 0000 6160  btst    #0,$6160
 	{ "nwarru",   	{ 0x104a7d0c, 0x3f1b7a1e }, 0x180000 },	// 0838 0000 6160  btst    #0,$6160
 	{ "nwarrh",   	{ 0xc4961b01, 0x2a946020 }, 0x180000 },	// 0838 0000 6160  btst    #0,$6160
@@ -841,6 +846,7 @@ static const struct game_keys keys_table[] =
 	{ "vhuntj",   	{ 0x1135b2c3, 0xa4e9d7f2 }, 0x180000 },	// 0838 0000 6160  btst    #0,$6160
 	{ "vhuntjr1", 	{ 0x1135b2c3, 0xa4e9d7f2 }, 0x180000 },	// 0838 0000 6160  btst    #0,$6160
 	{ "vhuntjr2", 	{ 0x1135b2c3, 0xa4e9d7f2 }, 0x180000 },	// 0838 0000 6160  btst    #0,$6160
+
 	{ "sfa",      	{ 0x0f895d6e, 0xc4273a1b }, 0x080000 },	// 0C80 0564 2194  cmpi.l  #$05642194,D0
 	{ "sfar1",    	{ 0x0f895d6e, 0xc4273a1b }, 0x080000 },	// 0C80 0564 2194  cmpi.l  #$05642194,D0
 	{ "sfar2",    	{ 0x0f895d6e, 0xc4273a1b }, 0x080000 },	// 0C80 0564 2194  cmpi.l  #$05642194,D0
@@ -854,14 +860,17 @@ static const struct game_keys keys_table[] =
 	{ "sfzhr1",   	{ 0x876b0e39, 0x5ca24fd1 }, 0x080000 },	// 0C80 0564 2194  cmpi.l  #$05642194,D0
 	{ "sfzb",     	{ 0xef415bd3, 0x7a92c680 }, 0x080000 },	// 0C80 0564 2194  cmpi.l  #$05642194,D0
 	{ "sfzbr1",   	{ 0xef415bd3, 0x7a92c680 }, 0x080000 },	// 0C80 0564 2194  cmpi.l  #$05642194,D0
+
 	{ "mmancp2u", 	{ 0x054893fa, 0x94642525 }, 0x100000 },	// 0C80 0564 2194  cmpi.l  #$05642194,D0
 	{ "rmancp2j", 	{ 0x07215501, 0x37fa32d0 }, 0x100000 },	// 0C80 0564 2194  cmpi.l  #$05642194,D0
+
 	{ "19xx",     	{ 0x0e07181f, 0x5fd0f080 }, 0x200000 },	// 0C81 0095 1101  cmpi.l  #$00951101,D1
 	{ "19xxa",    	{ 0xcce74cf5, 0xb7da3711 }, 0x200000 },	// 0C81 0095 1101  cmpi.l  #$00951101,D1
 	{ "19xxj",    	{ 0x00115df8, 0x000ff87e }, 0x200000 },	// 0C81 0095 1101  cmpi.l  #$00951101,D1
 	{ "19xxjr1",  	{ 0x00115df8, 0x000ff87e }, 0x200000 },	// 0C81 0095 1101  cmpi.l  #$00951101,D1
 	{ "19xxh",    	{ 0x5d49bafa, 0xf7216c9f }, 0x200000 },	// 0C81 0095 1101  cmpi.l  #$00951101,D1
 	{ "19xxb",    	{ 0xe5f9476a, 0x2dfb623f }, 0x200000 },	// 0C81 0095 1101  cmpi.l  #$00951101,D1
+
 	{ "ddsom",    	{ 0x87889abc, 0xd81f5f63 }, 0x100000 },	// 0C81 1966 0419  cmpi.l  #$19660419,D1
 	{ "ddsomr1",  	{ 0x87889abc, 0xd81f5f63 }, 0x100000 },	// 0C81 1966 0419  cmpi.l  #$19660419,D1
 	{ "ddsomr2",  	{ 0x87889abc, 0xd81f5f63 }, 0x100000 },	// 0C81 1966 0419  cmpi.l  #$19660419,D1
@@ -873,11 +882,15 @@ static const struct game_keys keys_table[] =
 	{ "ddsoma",   	{ 0x8719abcd, 0xef028345 }, 0x100000 },	// 0C81 1966 0419  cmpi.l  #$19660419,D1
 	{ "ddsomh",   	{ 0x42134245, 0x120de607 }, 0x100000 },	// 0C81 1966 0419  cmpi.l  #$19660419,D1
 	{ "ddsomb",   	{ 0x7149a782, 0xf3a5bfce }, 0x100000 },	// 0C81 1966 0419  cmpi.l  #$19660419,D1
+	{ "ddsomar1",  	{ 0x8719abcd, 0xef028345 }, 0x100000 }, 
+
 	{ "megaman2", 	{ 0x50501cac, 0xed346550 }, 0x100000 },	// 0C80 0164 7101  cmpi.l  #$01647101,D0
 	{ "megaman2a",	{ 0x3f148a2b, 0xd6790a15 }, 0x100000 },	// 0C80 0164 7101  cmpi.l  #$01647101,D0
 	{ "rockman2j",	{ 0x319eca73, 0x10551270 }, 0x100000 },	// 0C80 0164 7101  cmpi.l  #$01647101,D0
 	{ "megaman2h",	{ 0x765573ca, 0x250210d0 }, 0x100000 },	// 0C80 0164 7101  cmpi.l  #$01647101,D0
+
 	{ "qndream",  	{ 0x5804ea73, 0xf66b0798 }, 0x080000 },	// 0C81 1973 0827  cmpi.l  #$19730827,D1
+
 	{ "sfa2",     	{ 0xfc4acf9c, 0x3bfbe1f9 }, 0x100000 },	// 0C80 3039 9783  cmpi.l  #$30399783,D0
 	{ "sfa2u",    	{ 0x1bbf3d96, 0x8af4614a }, 0x100000 },	// 0C80 3039 9783  cmpi.l  #$30399783,D0
 	{ "sfz2j",    	{ 0x83f47e99, 0xda772111 }, 0x100000 },	// 0C80 3039 9783  cmpi.l  #$30399783,D0
@@ -894,6 +907,7 @@ static const struct game_keys keys_table[] =
 	{ "spf2xj",   	{ 0xb12c835a, 0xe90976ff }, 0x040000 },	// 0C80 3039 9819  cmpi.l  #$30399819,D0
 	{ "spf2ta",   	{ 0x9c48e1ab, 0xd60f34fb }, 0x040000 },	// 0C80 3039 9819  cmpi.l  #$30399819,D0
 	{ "spf2th",   	{ 0x51ed8cab, 0x228f85b6 }, 0x040000 },	// 0C80 3039 9819  cmpi.l  #$30399819,D0
+
 	{ "xmvsf",    	{ 0xbdcf8519, 0x3fb2acea }, 0x100000 },	// 0C81 1972 0327  cmpi.l  #$19720327,D1
 	{ "xmvsfr1",  	{ 0xbdcf8519, 0x3fb2acea }, 0x100000 },	// 0C81 1972 0327  cmpi.l  #$19720327,D1
 	{ "xmvsfu",   	{ 0x4fcb03d2, 0xf8653bc1 }, 0x100000 },	// 0C81 1972 0327  cmpi.l  #$19720327,D1
@@ -906,9 +920,11 @@ static const struct game_keys keys_table[] =
 	{ "xmvsfar2", 	{ 0x7438fc3e, 0x19abed90 }, 0x100000 },	// 0C81 1972 0327  cmpi.l  #$19720327,D1
 	{ "xmvsfh",   	{ 0x835fb2d0, 0x42fa9137 }, 0x100000 },	// 0C81 1972 0327  cmpi.l  #$19720327,D1
 	{ "xmvsfb",   	{ 0x8ead9e4a, 0xb02184f0 }, 0x100000 },	// 0C81 1972 0327  cmpi.l  #$19720327,D1
+
 	{ "batcir",   	{ 0xd195e597, 0x3cbce2b5 }, 0x200000 },	// 0C81 0097 0131  cmpi.l  #$00970131,D1
 	{ "batcira",  	{ 0x1e5d80cb, 0x98882ec7 }, 0x200000 },	// 0C81 0097 0131  cmpi.l  #$00970131,D1
 	{ "batcirj",  	{ 0x00ff4dd8, 0x000008e8 }, 0x200000 },	// 0C81 0097 0131  cmpi.l  #$00970131,D1
+
 	{ "csclub",   	{ 0x662e9fa0, 0x4210e7c1 }, 0x200000 },	// 0C81 0097 0310  cmpi.l  #$00970310,D1
 	{ "csclub1",  	{ 0x662e9fa0, 0x4210e7c1 }, 0x200000 },	// 0C81 0097 0310  cmpi.l  #$00970310,D1
 	{ "cscluba",  	{ 0x1366de2a, 0x9ab42937 }, 0x200000 },	// 0C81 0097 0310  cmpi.l  #$00970310,D1
@@ -927,17 +943,21 @@ static const struct game_keys keys_table[] =
 	{ "mshvsfa1", 	{ 0x52e3fa61, 0x0c497bd8 }, 0x100000 },	// 0C81 1972 1027  cmpi.l  #$19721027,D1
 	{ "mshvsfb",  	{ 0xda68c749, 0x5bf3e201 }, 0x100000 },	// 0C81 1972 1027  cmpi.l  #$19721027,D1
 	{ "mshvsfb1", 	{ 0xda68c749, 0x5bf3e201 }, 0x100000 },	// 0C81 1972 1027  cmpi.l  #$19721027,D1
+
 	{ "sgemf",    	{ 0x84234976, 0x5e0fbb7e }, 0x080000 },	// 0C80 1F74 0D12  cmpi.l  #$1F740D12,D0
 	{ "pfghtj",   	{ 0x97d2ebc0, 0x308f94d7 }, 0x080000 },	// 0C80 1F74 0D12  cmpi.l  #$1F740D12,D0
 	{ "sgemfa",   	{ 0x090b412a, 0xc47ee993 }, 0x080000 },	// 0C80 1F74 0D12  cmpi.l  #$1F740D12,D0
 	{ "sgemfh",   	{ 0x8163a71b, 0x7c8fd224 }, 0x080000 },	// 0C80 1F74 0D12  cmpi.l  #$1F740D12,D0
+
 	{ "vhunt2",   	{ 0x36c1eba3, 0x26b10f18 }, 0x100000 },	// 0C80 0692 0760  cmpi.l  #$06920760,D0
 	{ "vhunt2r1", 	{ 0x36c1eba3, 0x26b10f18 }, 0x100000 },	// 0C80 0692 0760  cmpi.l  #$06920760,D0
+
 	{ "vsav",     	{ 0xe0cd5881, 0x71babb70 }, 0x100000 },	// 0C80 726A 4BAF  cmpi.l  #$726A4BAF,D0
 	{ "vsavu",    	{ 0xa62ea0ee, 0x573e03e6 }, 0x100000 },	// 0C80 726A 4BAF  cmpi.l  #$726A4BAF,D0
 	{ "vsavj",    	{ 0xfa8f4e33, 0xa4b881b9 }, 0x100000 },	// 0C80 726A 4BAF  cmpi.l  #$726A4BAF,D0
 	{ "vsava",    	{ 0x47ee9930, 0x90b412ac }, 0x100000 },	// 0C80 726A 4BAF  cmpi.l  #$726A4BAF,D0
 	{ "vsavh",    	{ 0xb2d37c8d, 0xd3b7aadd }, 0x100000 },	// 0C80 726A 4BAF  cmpi.l  #$726A4BAF,D0
+
 	{ "vsav2",    	{ 0xd681e4f4, 0x60371edf }, 0x100000 },	// 0C80 0692 0760  cmpi.l  #$06920760,D0
 
 	{ "mvsc",     	{ 0x48025ade, 0x1c697b27 }, 0x100000 },	// 0C81 1972 0121  cmpi.l  #$19720121,D1
@@ -965,6 +985,7 @@ static const struct game_keys keys_table[] =
 	{ "sfa3us",	{ 0xe7bbf0e5, 0x67943248 }, 0x100000 },
 
 	{ "jyangoku", 	{ 0x6ca42ae6, 0x92f63f59 },  /*?*/   },	// 0C80 3652 1573  cmpi.l  #$36521573,D0
+
 	{ "hsf2",     	{ 0x5a369ddd, 0xfea3189c }, 0x100000 },	// 0838 0007 2000  btst    #7,$2000
 	{ "hsf2a",    	{ 0xb8ed3630, 0xaae30a3d }, 0x100000 },	// 0838 0007 2000  btst    #7,$2000
 	{ "hsf2j",    	{ 0x65d82fe0, 0xdbb83e47 }, 0x100000 },	// 0838 0007 2000  btst    #7,$2000
@@ -994,6 +1015,7 @@ static const struct game_keys keys_table[] =
 
 	{ "1944",     	{ 0x1d3e724c, 0x8b59fc7a }, 0x080000 },	// 0C86 7B5D 94F1  cmpi.l  #$7B5D94F1,D6
 	{ "1944j",    	{ 0x23d79c3a, 0xe18b2746 }, 0x080000 },	// 0C86 7B5D 94F1  cmpi.l  #$7B5D94F1,D6
+
 	{ "progear",  	{ 0x639ad8c6, 0xef130df3 }, 0x400000 },	// 0C81 63A1 B8D3  cmpi.l  #$63A1B8D3,D1
 	{ "progearj", 	{ 0x9f7edc56, 0x39fb47be }, 0x400000 },	// 0C81 63A1 B8D3  cmpi.l  #$63A1B8D3,D1
 	{ "progeara", 	{ 0x658ab128, 0xfddc9b5e }, 0x400000 },	// 0C81 63A1 B8D3  cmpi.l  #$63A1B8D3,D1
