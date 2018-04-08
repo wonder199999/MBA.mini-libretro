@@ -373,7 +373,7 @@ const game_driver *const drivers[] =
 	DRIVER( megaman2a )	/* 08/07/1996 (c) 1996 (Asia) */
 	DRIVER( rockman2j )	/* 08/07/1996 (c) 1996 (Japan) */
 	DRIVER( megaman2h )	/* 12/07/1996 (c) 1996 (Hispanic) */
-	DRIVER( gigamn2 )	/* bootleg */
+	DRIVER( gigaman2 )	/* bootleg */
 	DRIVER( sfz2al )	/* 26/08/1996 (c) 1996 (Asia) */
 	DRIVER( sfz2alj )	/* 05/08/1996 (c) 1996 (Japan) */
 	DRIVER( sfz2alh )	/* 13/08/1996 (c) 1996 (Hispanic) */

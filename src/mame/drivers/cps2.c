@@ -597,9 +597,9 @@ Stephh's inputs notes (based on some tests on the "parent" set) :
 #include "machine/eeprom.h"
 #include "cpu/m68000/m68000.h"
 #include "sound/qsound.h"
-#include "sound/okim6295.h" // gigamn2 bootleg
+#include "sound/okim6295.h"	/* gigaman2 bootleg */
 
-#include "includes/cps1.h"       /* External CPS1 definitions */
+#include "includes/cps1.h"	/* External CPS1 definitions */
 
 
 /*************************************
@@ -1200,7 +1200,7 @@ static MACHINE_START( cps2 )
 
 	state_save_register_global(machine, state->scancount);
 
-	if (state->audiocpu != NULL)	// gigamn2 has no audiocpu
+	if (state->audiocpu != NULL)	// gigaman2 has no audiocpu
 		memory_configure_bank(machine, "bank1", 0, (QSOUND_SIZE - 0x10000) / 0x4000, memory_region(machine, "audiocpu") + 0x10000, 0x4000);
 }
 
@@ -1263,7 +1263,7 @@ static MACHINE_DRIVER_START( dead_cps2 )
 	MDRV_CPU_PROGRAM_MAP(dead_cps2_map)
 MACHINE_DRIVER_END
 
-static MACHINE_DRIVER_START( gigamn2 )
+static MACHINE_DRIVER_START( gigaman2 )
 	MDRV_IMPORT_FROM(cps2)
 
 	MDRV_DEVICE_REMOVE("audiocpu")
@@ -3582,43 +3582,6 @@ ROM_START( megaman2h )
 	ROM_REGION( 0x400000, "qsound", 0 ) /* QSound samples */
 	ROM_LOAD16_WORD_SWAP( "rm2.11m",   0x000000, 0x200000, CRC(2106174d) SHA1(0a35d9ca8ebcad74904b20648d5320f839d6377e) )
 	ROM_LOAD16_WORD_SWAP( "rm2.12m",   0x200000, 0x200000, CRC(546c1636) SHA1(f96b172ab899f2c6ee17a5dd1fb61af9432e3cd2) )
-ROM_END
-
-/*
-
-Gigaman 2 - 2004 Chinese rebuild Bootleg
-
-Just dumped the program roms. Other 3 are soldered and are MX26L6420MC-90
-Probably a rebuild for chinese market
-Copyrighted J-TECH 2004 on game :)
-
-
-CPU : Motorola 68000 16 mhz
-video : Actel A54SX16A-F
-Sound : Atmel AT89C4051-24PI + M6295 (noted AD-65)
-
-*/
-
-ROM_START( gigamn2 )
-	ROM_REGION(CODE_SIZE, "maincpu", 0 )      /* 68000 code */
-	ROM_LOAD16_WORD_SWAP( "prog.bin", 0x000000, 0x400000, CRC(2eaa5e10) SHA1(79f9a137bf5b3317579c548f346c1dc1cccdb771) )
-
-	ROM_REGION(0x10000, "mcu", 0 )      /* sound MCU code */
-	ROM_LOAD( "89c4051.bin", 0x000000, 0x10000, NO_DUMP )
-
-	ROM_REGION( 0x1000000, "gfx", 0 )
-	ROM_FILL(              0x000000, 0x800000, 0 )
-	/* you can use the original CPS2 gfx roms, but the 'GIGA part of GIGAMAN2 is missing, on real HW it isn't, roms are different */
-//  ROMX_LOAD( "rm2.14m",  0x800000, 0x200000, CRC(9b1f00b4) SHA1(c1c5c2d9d00121425ae6598444d704f420ef4eef) , ROM_GROUPWORD | ROM_SKIP(6) )
-//  ROMX_LOAD( "rm2.16m",  0x800002, 0x200000, CRC(c2bb0c24) SHA1(38724c49d9db49765a4ed9bc2dc8f57cec45ec7c) , ROM_GROUPWORD | ROM_SKIP(6) )
-//  ROMX_LOAD( "rm2.18m",  0x800004, 0x200000, CRC(12257251) SHA1(20cb58afda0e6200991277817485340a6a41ae2b) , ROM_GROUPWORD | ROM_SKIP(6) )
-//  ROMX_LOAD( "rm2.20m",  0x800006, 0x200000, CRC(f9b6e786) SHA1(aeb4acff7208e66a35198143fd2478039fdaa3a6) , ROM_GROUPWORD | ROM_SKIP(6) )
-	ROM_LOAD( "gfx1.bin", 0x800000, 0x400000, NO_DUMP )
-	ROM_LOAD( "gfx2.bin", 0xc00000, 0x400000, NO_DUMP )
-
-	ROM_REGION( 0x400000, "oki", 0 ) /* QSound samples */
-	/* No Qsound, OKI instead.. */
-	ROM_LOAD( "oki.bin", 0x000000, 0x400000, NO_DUMP )
 ROM_END
 
 ROM_START( mmatrix )
@@ -7835,13 +7798,8 @@ ROM_START( xmvsfb )
 	ROM_LOAD16_WORD_SWAP( "xvs.12m",   0x200000, 0x200000, CRC(7b11e460) SHA1(a581c84acaaf0ce056841c15a6f36889e88be68d) )
 ROM_END
 
-/* ============== */
 /*   additional   */
-/* ============== */
 #include "cps2_add.c"
-/* ============== */
-/*   additional   */
-/* ============== */
 
 /*************************************
  *
@@ -7892,32 +7850,38 @@ static DRIVER_INIT ( pzloop2 )
 	memory_install_read16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x804000, 0x804001, 0, 0, joy_or_paddle_r);
 }
 
-static READ16_HANDLER( gigamn2_dummyqsound_r )
+static READ16_HANDLER( gigaman2_dummyqsound_r )
 {
 	cps_state *state = (cps_state *)space->machine->driver_data;
-	return state->gigamn2_dummyqsound_ram[offset];
+	return state->gigaman2_dummyqsound_ram[offset];
 };
 
-static WRITE16_HANDLER( gigamn2_dummyqsound_w )
+static WRITE16_HANDLER( gigaman2_dummyqsound_w )
 {
 	cps_state *state = (cps_state *)space->machine->driver_data;
-	state->gigamn2_dummyqsound_ram[offset] = data;
+	state->gigaman2_dummyqsound_ram[offset] = data;
 };
 
-static DRIVER_INIT( gigamn2 )
+static DRIVER_INIT( gigaman2 )
 {
 	cps_state *state = (cps_state *)machine->driver_data;
+
 	const address_space *space = cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM);
+
 	UINT16 *rom = (UINT16 *)memory_region(machine, "maincpu");
+	UINT16 *gfxrom = (UINT16 *)memory_region(machine, "gfx");
 	int length = memory_region_length(machine, "maincpu");
+	int gfx_len = memory_region_length(machine, "gfx");
+
+	gigaman2_gfx_reorder(machine, gfx_len, gfxrom);
 
 	DRIVER_INIT_CALL(cps2);
 
-	state->gigamn2_dummyqsound_ram = auto_alloc_array(machine, UINT16, 0x20000 / 2);
-	state_save_register_global_pointer(machine, state->gigamn2_dummyqsound_ram, 0x20000 / 2);
+	state->gigaman2_dummyqsound_ram = auto_alloc_array(machine, UINT16, 0x20000 / 2);
+	state_save_register_global_pointer(machine, state->gigaman2_dummyqsound_ram, 0x20000 / 2);
 
-	memory_install_readwrite16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x618000, 0x619fff, 0, 0, gigamn2_dummyqsound_r, gigamn2_dummyqsound_w); // no qsound..
-	memory_set_decrypted_region(space, 0x000000, (length) - 1, &rom[length/4]);
+	memory_install_readwrite16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x618000, 0x619fff, 0, 0, gigaman2_dummyqsound_r, gigaman2_dummyqsound_w); // no qsound..
+	memory_set_decrypted_region(space, 0x000000, (length) - 1, &rom[length / 4]);
 	m68k_set_encrypted_opcode_range(machine->device("maincpu"), 0, length);
 }
 
@@ -8228,13 +8192,6 @@ GAME( 2001, progeara,   progear,  cps2, cps2_2p3b, cps2,     ROT0,   "Cave (Capc
 
  This may not be a complete list of sets, it was taken from MamePlus.  Other sets, and
  further customized bootlegs boards are known to exist.
-
- ------------------------
- Other bootlegs
- ------------------------
-
- There is a bootleg of Megaman 2 called 'Gigaman 2' which has SMT roms, and replaces
- the Qsound hardware with an OKI6295 / AD-65 chip.  No known complete dump exists.
 
 */
 
@@ -9163,7 +9120,6 @@ GAME( 1996, 19xxd,    19xx,     dead_cps2, cps2_2p2b, cps2,    ROT270, "bootleg"
 GAME( 1996, sfz2ad,   sfa2,     dead_cps2, cps2_2p6b, cps2,    ROT0,   "bootleg", "Street Fighter Zero 2 (Asia 960227 Phoenix Edition) (bootleg)", GAME_SUPPORTS_SAVE )
 GAME( 1996, spf2xjd,  spf2t,    dead_cps2, cps2_2p2b, cps2,    ROT0,   "bootleg", "Super Puzzle Fighter II X (Japan 960531 Phoenix Edition) (bootleg)", GAME_SUPPORTS_SAVE )
 GAME( 1996, ddsomud,  ddsom,    dead_cps2, cps2_4p4b, cps2,    ROT0,   "bootleg", "Dungeons & Dragons: Shadow over Mystara (USA 960619 Phoenix Edition) (bootleg)", GAME_SUPPORTS_SAVE )
-GAME( 1996, gigamn2,  megaman2, gigamn2,   cps2_2p3b, gigamn2, ROT0,   "bootleg", "Giga Man 2: The Power Fighters (bootleg of Mega Man 2: The Power Fighters)", GAME_NOT_WORKING | GAME_SUPPORTS_SAVE ) // flash roms aren't dumped, layer offsets different, different sound system
 GAME( 1996, megamn2d, megaman2, dead_cps2, cps2_2p3b, cps2,    ROT0,   "bootleg", "Mega Man 2: The Power Fighters (USA 960708 Phoenix Edition) (bootleg)", GAME_SUPPORTS_SAVE )
 GAME( 1996, sfz2ald,  sfz2al,   dead_cps2, cps2_2p6b, cps2,    ROT0,   "bootleg", "Street Fighter Zero 2 Alpha (Asia 960826 Phoenix Edition) (bootleg)", GAME_SUPPORTS_SAVE )
 GAME( 1996, xmvsfu1d, xmvsf,    dead_cps2, cps2_2p6b, cps2,    ROT0,   "bootleg", "X-Men Vs. Street Fighter (USA 961004 Phoenix Edition) (bootleg)", GAME_SUPPORTS_SAVE )
@@ -9186,35 +9142,36 @@ GAME( 2000, dimahoud, dimahoo,  dead_cps2, cps2_2p3b, cps2,    ROT270, "bootleg"
 /*
 GAME( year,   archives,   parent name,   MACHINE_DRIVER,   INPUT_PORT,   DRIVER_INIT,   flip,   producer name,   support )
 */
-GAME( 1995,   sfaud,       sfa,      dead_cps2,   cps2_2p6b,   cps2,   ROT0,   "bootleg", "Street Fighter Alpha: Warriors' Dreams (USA 950727 Phoenix Edition) (bootleg)", GAME_SUPPORTS_SAVE )
-GAME( 1996,   sfz2jd,      sfa2,     dead_cps2,   cps2_2p6b,   cps2,   ROT0,   "bootleg", "Street Fighter Zero 2 (Japan 960227 Phoenix Edition) (bootleg)", GAME_SUPPORTS_SAVE )
-GAME( 1998,   sfz3jr2d,    sfa3,     dead_cps2,   cps2_2p6b,   cps2,   ROT0,   "bootleg", "Street Fighter Zero 3 (Japan 980629 Phoenix Edition) (bootleg)", GAME_SUPPORTS_SAVE )
-GAME( 2001,   progearjbl,  progear,  dead_cps2,   cps2_2p3b,   cps2,   ROT0,   "bootleg", "Progear no Arashi (Japan 010117) (decrypted bootleg)", GAME_SUPPORTS_SAVE )
-GAME( 1994,   ssf2tad,	   ssf2t,    dead_cps2,	  cps2_2p6b,   cps2,   ROT0,   "bootleg", "Super Street Fighter II Turbo (Asia 940223 Phoenix Edition) (bootleg)", GAME_SUPPORTS_SAVE )
-GAME( 1994,   ssf2td,	   ssf2t,    dead_cps2,	  cps2_2p6b,   cps2,   ROT0,   "bootleg", "Super Street Fighter II Turbo (Etc 940223 Phoenix Edition) (bootleg)", GAME_SUPPORTS_SAVE )
-GAME( 1993,   ssf2d,	   ssf2,     dead_cps2,   cps2_2p6b,   cps2,   ROT0,   "bootleg", "Super Street Fighter II - the new challengers (Etc 930911 Phoenix Edition) (bootleg)", GAME_SUPPORTS_SAVE )
-GAME( 1995,   cybotsud,    cybots,   dead_cps2,   cybots,      cps2,   ROT0,   "bootleg", "Cyberbots: Fullmetal Madness (USA 950424 Phoenix Edition) (bootleg)", GAME_SUPPORTS_SAVE )
-GAME( 1993,   ecofghtrd,   ecofghtr, dead_cps2,   cps2_2p3b,   cps2,   ROT0,   "bootleg", "Eco Fighters (World 931203 Phoenix Edition) (bootleg)", GAME_SUPPORTS_SAVE )
-GAME( 2000,   mpangjd,     mpang,    dead_cps2,   cps2_2p1b,   cps2,   ROT0,   "bootleg", "Mighty! Pang (Japan 001011 Phoenix Edition) (bootleg)", GAME_SUPPORTS_SAVE )
-GAME( 2001,   progearud,   progear,  dead_cps2,   cps2_2p3b,   cps2,   ROT0,   "bootleg", "Progear (USA 010117 Phoenix Edition) (bootleg)", GAME_SUPPORTS_SAVE )
-GAME( 1999,   gigawingd,   gigawing, dead_cps2,   cps2_2p2b,   cps2,   ROT0,   "bootleg", "Giga Wing (USA 990222 Phoenix Edition) (bootleg)", GAME_SUPPORTS_SAVE )
-GAME( 1997,   mshvsfu1d,   mshvsf,   dead_cps2,   cps2_2p6b,   cps2,   ROT0,   "bootleg", "Marvel Super Heroes Vs. Street Fighter (USA 970625 Phoenix Edition) (bootleg)", GAME_SUPPORTS_SAVE )
-GAME( 1997,   vhunt2d,     vhunt2,   dead_cps2,   cps2_2p6b,   cps2,   ROT0,   "bootleg", "Vampire Hunter 2: Darkstalkers Revenge (Japan 970913 Phoenix Edition) (bootleg)", GAME_SUPPORTS_SAVE )
-GAME( 1997,   vsav2d,      vsav2,    dead_cps2,   cps2_2p6b,   cps2,   ROT0,   "bootleg", "Vampire Savior 2: The Lord of Vampire (Japan 970913 Phoenix Edition) (bootleg)", GAME_SUPPORTS_SAVE )
-GAME( 1997,   csclub1d,    csclub,   dead_cps2,   cps2_2p3b,   cps2,   ROT0,   "bootleg", "Capcom Sports Club (Euro 970722 Phoenix Edition) (bootleg)", GAME_SUPPORTS_SAVE )
-GAME( 1995,   cybotsjd,    cybots,   dead_cps2,   cybots,      cps2,   ROT0,   "bootleg", "Cyberbots: Fullmetal Madness (Japan 950424) (decrypted bootleg)", GAME_SUPPORTS_SAVE )
-GAME( 1996,   spf2td,	   spf2t,    dead_cps2,   cps2_2p2b,   cps2,   ROT0,   "bootleg", "Super Puzzle Fighter II Turbo (USA 960620 Phoenix Edition) (bootleg)", GAME_SUPPORTS_SAVE )
-GAME( 2000,   1944ad,      1944,     dead_cps2,   cps2_2p2b,   cps2,   ROT0,   "bootleg", "1944: The Loop Master (USA 000620 Phoenix Edition alt) (bootleg)", GAME_SUPPORTS_SAVE )
-GAME( 2004,   hsf2da,      hsf2,     dead_cps2,	  cps2_2p6b,   cps2,   ROT0,   "bootleg", "Hyper Street Fighter 2: The Anniversary Edition (Asia 040202 Phoenix Edition alt) (bootleg)", GAME_SUPPORTS_SAVE )
+GAME( 1995,   sfaud,       sfa,      dead_cps2,   cps2_2p6b,   cps2,     ROT0,   "bootleg", "Street Fighter Alpha: Warriors' Dreams (USA 950727 Phoenix Edition) (bootleg)", GAME_SUPPORTS_SAVE )
+GAME( 1996,   sfz2jd,      sfa2,     dead_cps2,   cps2_2p6b,   cps2,     ROT0,   "bootleg", "Street Fighter Zero 2 (Japan 960227 Phoenix Edition) (bootleg)", GAME_SUPPORTS_SAVE )
+GAME( 1998,   sfz3jr2d,    sfa3,     dead_cps2,   cps2_2p6b,   cps2,     ROT0,   "bootleg", "Street Fighter Zero 3 (Japan 980629 Phoenix Edition) (bootleg)", GAME_SUPPORTS_SAVE )
+GAME( 2001,   progearjbl,  progear,  dead_cps2,   cps2_2p3b,   cps2,     ROT0,   "bootleg", "Progear no Arashi (Japan 010117) (decrypted bootleg)", GAME_SUPPORTS_SAVE )
+GAME( 1994,   ssf2tad,	   ssf2t,    dead_cps2,	  cps2_2p6b,   cps2,     ROT0,   "bootleg", "Super Street Fighter II Turbo (Asia 940223 Phoenix Edition) (bootleg)", GAME_SUPPORTS_SAVE )
+GAME( 1994,   ssf2td,	   ssf2t,    dead_cps2,	  cps2_2p6b,   cps2,     ROT0,   "bootleg", "Super Street Fighter II Turbo (Etc 940223 Phoenix Edition) (bootleg)", GAME_SUPPORTS_SAVE )
+GAME( 1993,   ssf2d,	   ssf2,     dead_cps2,   cps2_2p6b,   cps2,     ROT0,   "bootleg", "Super Street Fighter II - the new challengers (Etc 930911 Phoenix Edition) (bootleg)", GAME_SUPPORTS_SAVE )
+GAME( 1995,   cybotsud,    cybots,   dead_cps2,   cybots,      cps2,     ROT0,   "bootleg", "Cyberbots: Fullmetal Madness (USA 950424 Phoenix Edition) (bootleg)", GAME_SUPPORTS_SAVE )
+GAME( 1993,   ecofghtrd,   ecofghtr, dead_cps2,   cps2_2p3b,   cps2,     ROT0,   "bootleg", "Eco Fighters (World 931203 Phoenix Edition) (bootleg)", GAME_SUPPORTS_SAVE )
+GAME( 2000,   mpangjd,     mpang,    dead_cps2,   cps2_2p1b,   cps2,     ROT0,   "bootleg", "Mighty! Pang (Japan 001011 Phoenix Edition) (bootleg)", GAME_SUPPORTS_SAVE )
+GAME( 2001,   progearud,   progear,  dead_cps2,   cps2_2p3b,   cps2,     ROT0,   "bootleg", "Progear (USA 010117 Phoenix Edition) (bootleg)", GAME_SUPPORTS_SAVE )
+GAME( 1999,   gigawingd,   gigawing, dead_cps2,   cps2_2p2b,   cps2,     ROT0,   "bootleg", "Giga Wing (USA 990222 Phoenix Edition) (bootleg)", GAME_SUPPORTS_SAVE )
+GAME( 1997,   mshvsfu1d,   mshvsf,   dead_cps2,   cps2_2p6b,   cps2,     ROT0,   "bootleg", "Marvel Super Heroes Vs. Street Fighter (USA 970625 Phoenix Edition) (bootleg)", GAME_SUPPORTS_SAVE )
+GAME( 1997,   vhunt2d,     vhunt2,   dead_cps2,   cps2_2p6b,   cps2,     ROT0,   "bootleg", "Vampire Hunter 2: Darkstalkers Revenge (Japan 970913 Phoenix Edition) (bootleg)", GAME_SUPPORTS_SAVE )
+GAME( 1997,   vsav2d,      vsav2,    dead_cps2,   cps2_2p6b,   cps2,     ROT0,   "bootleg", "Vampire Savior 2: The Lord of Vampire (Japan 970913 Phoenix Edition) (bootleg)", GAME_SUPPORTS_SAVE )
+GAME( 1997,   csclub1d,    csclub,   dead_cps2,   cps2_2p3b,   cps2,     ROT0,   "bootleg", "Capcom Sports Club (Euro 970722 Phoenix Edition) (bootleg)", GAME_SUPPORTS_SAVE )
+GAME( 1995,   cybotsjd,    cybots,   dead_cps2,   cybots,      cps2,     ROT0,   "bootleg", "Cyberbots: Fullmetal Madness (Japan 950424) (decrypted bootleg)", GAME_SUPPORTS_SAVE )
+GAME( 1996,   spf2td,	   spf2t,    dead_cps2,   cps2_2p2b,   cps2,     ROT0,   "bootleg", "Super Puzzle Fighter II Turbo (USA 960620 Phoenix Edition) (bootleg)", GAME_SUPPORTS_SAVE )
+GAME( 2000,   1944ad,      1944,     dead_cps2,   cps2_2p2b,   cps2,     ROT0,   "bootleg", "1944: The Loop Master (USA 000620 Phoenix Edition alt) (bootleg)", GAME_SUPPORTS_SAVE )
+GAME( 2004,   hsf2da,      hsf2,     dead_cps2,	  cps2_2p6b,   cps2,     ROT0,   "bootleg", "Hyper Street Fighter 2: The Anniversary Edition (Asia 040202 Phoenix Edition alt) (bootleg)", GAME_SUPPORTS_SAVE )
+GAME( 1996,   gigaman2,	   megaman2, gigaman2,    cps2_2p3b,   gigaman2, ROT0,   "bootleg", "Giga Man 2: The Power Fighters (bootleg of Mega Man 2: The Power Fighters)", GAME_IMPERFECT_GRAPHICS | GAME_NO_SOUND | GAME_SUPPORTS_SAVE ) // flash roms aren't dumped, layer offsets different, different sound system
 
 
-GAME( 1994,   ringdesta,   ringdest,	cps2,   cps2_2p6b,   cps2,   ROT0,   "Capcom", "Ring of Destruction: Slammasters II (Asia 940831)", GAME_SUPPORTS_SAVE )
-GAME( 1994,   ringdesth,   ringdest,	cps2,   cps2_2p6b,   cps2,   ROT0,   "Capcom", "Ring of Destruction: Slammasters II (Hispanic 940902)", GAME_SUPPORTS_SAVE )
-GAME( 1998,   sfa3us,      sfa3,	cps2,   cps2_2p6b,   cps2,   ROT0,   "Capcom", "Street Fighter Alpha 3 (USA 980616 SAMPLE Version)", GAME_SUPPORTS_SAVE )
-GAME( 1998,   mvscjsing,   mvsc,	cps2,	cps2_2p6b,   cps2,   ROT0,   "Capcom", "Marvel Vs. Capcom: Clash of Super Heroes (Japan 980123) (Single PCB)", GAME_SUPPORTS_SAVE )
-GAME( 1994,   ssf2th,      ssf2t,       cps2,   cps2_2p6b,   cps2,   ROT0,   "Capcom", "Super Street Fighter II Turbo (Hispanic 940223)", GAME_SUPPORTS_SAVE )
-GAME( 1993,   ssf2tbh,	   ssf2,	cps2, 	cps2_2p6b,   ssf2tb, ROT0,   "Capcom", "Super Street Fighter II: The Tournament Battle (Hispanic 931005)", GAME_SUPPORTS_SAVE )	// works, but not in tournament mode
-GAME( 1997,   csclubjy,    csclub,      cps2,   cps2_2p3b,   cps2,   ROT0,   "Capcom", "Capcom Sports Club (Japan 970722, yellow case)", GAME_SUPPORTS_SAVE )
-GAME( 1996,   ddsomar1,    ddsom,       cps2,   cps2_4p4b,   cps2,   ROT0,   "Capcom", "Dungeons & Dragons: Shadow over Mystara (Asia 960208)", GAME_SUPPORTS_SAVE )
-GAME( 1995,   mmancp2ur1,  megaman,  	cps2, 	cps2_2p3b,   cps2,   ROT0,   "Capcom", "Mega Man - The Power Battle (CPS2, USA 950926, SAMPLE Version)", GAME_SUPPORTS_SAVE )
-GAME( 1995,   vhuntjr1s,   nwarr,    	cps2, 	cps2_2p6b,   cps2,   ROT0,   "Capcom", "Vampire Hunter: Darkstalkers' Revenge (Japan 950307 stop version)", GAME_SUPPORTS_SAVE )
+GAME( 1994,   ringdesta,   ringdest,	cps2,       cps2_2p6b,   cps2,      ROT0,   "Capcom", "Ring of Destruction: Slammasters II (Asia 940831)", GAME_SUPPORTS_SAVE )
+GAME( 1994,   ringdesth,   ringdest,	cps2,       cps2_2p6b,   cps2,      ROT0,   "Capcom", "Ring of Destruction: Slammasters II (Hispanic 940902)", GAME_SUPPORTS_SAVE )
+GAME( 1998,   sfa3us,      sfa3,	cps2,       cps2_2p6b,   cps2,      ROT0,   "Capcom", "Street Fighter Alpha 3 (USA 980616 SAMPLE Version)", GAME_SUPPORTS_SAVE )
+GAME( 1998,   mvscjsing,   mvsc,	cps2,	    cps2_2p6b,   cps2,      ROT0,   "Capcom", "Marvel Vs. Capcom: Clash of Super Heroes (Japan 980123) (Single PCB)", GAME_SUPPORTS_SAVE )
+GAME( 1994,   ssf2th,      ssf2t,       cps2,       cps2_2p6b,   cps2,      ROT0,   "Capcom", "Super Street Fighter II Turbo (Hispanic 940223)", GAME_SUPPORTS_SAVE )
+GAME( 1993,   ssf2tbh,	   ssf2,	cps2, 	    cps2_2p6b,   ssf2tb,    ROT0,   "Capcom", "Super Street Fighter II: The Tournament Battle (Hispanic 931005)", GAME_SUPPORTS_SAVE )	// works, but not in tournament mode
+GAME( 1997,   csclubjy,    csclub,      cps2,       cps2_2p3b,   cps2,      ROT0,   "Capcom", "Capcom Sports Club (Japan 970722, yellow case)", GAME_SUPPORTS_SAVE )
+GAME( 1996,   ddsomar1,    ddsom,       cps2,       cps2_4p4b,   cps2,      ROT0,   "Capcom", "Dungeons & Dragons: Shadow over Mystara (Asia 960208)", GAME_SUPPORTS_SAVE )
+GAME( 1995,   mmancp2ur1,  megaman,  	cps2, 	    cps2_2p3b,   cps2,      ROT0,   "Capcom", "Mega Man - The Power Battle (CPS2, USA 950926, SAMPLE Version)", GAME_SUPPORTS_SAVE )
+GAME( 1995,   vhuntjr1s,   nwarr,    	cps2, 	    cps2_2p6b,   cps2,	    ROT0,   "Capcom", "Vampire Hunter: Darkstalkers' Revenge (Japan 950307 stop version)", GAME_SUPPORTS_SAVE )

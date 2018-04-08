@@ -775,7 +775,7 @@ ROM_START( hsf2da )		/* Phoenix Edition, Hyper Street Fighter II: The Anniversar
 	ROM_LOAD16_WORD_SWAP( "hs2.12m",	   0x400000, 0x400000, NO_DUMP )
 ROM_END
 
-ROM_START( mmancp2ur1 )
+ROM_START( mmancp2ur1 )		/* Mega Man: The Power Battle (USA 950926, SAMPLE version) */
 	ROM_REGION(CODE_SIZE, "maincpu", 0 )
 	ROM_LOAD16_WORD_SWAP( "rcmu.03a", 0x000000, 0x80000, NO_DUMP )
 	ROM_LOAD16_WORD_SWAP( "rcmu.04a", 0x080000, 0x80000, NO_DUMP )
@@ -815,7 +815,7 @@ ROM_START( mmancp2ur1 )
 	ROM_LOAD16_WORD_SWAP( "rcm.58",   0x380000, 0x80000, NO_DUMP )
 ROM_END
 
-ROM_START( vhuntjr1s )
+ROM_START( vhuntjr1s )		/* Vampire Hunter: Darkstalkers's Revenge (950307 Japan, stop version) */
 	ROM_REGION( CODE_SIZE, "maincpu", 0 )
 	ROM_LOAD16_WORD_SWAP( "vphjstop.03b",	0x000000, 0x80000, NO_DUMP )
 	ROM_LOAD16_WORD_SWAP( "vphj.04c",	0x080000, 0x80000, NO_DUMP )
@@ -845,3 +845,44 @@ ROM_START( vhuntjr1s )
 	ROM_LOAD16_WORD_SWAP( "vph.11m",   0x000000, 0x200000, CRC(e1837d33) SHA1(e3cb69f64767bacbec7286d0b4cd0ce7a0ba13d8) )
 	ROM_LOAD16_WORD_SWAP( "vph.12m",   0x200000, 0x200000, CRC(fbd3cd90) SHA1(4813c25802ad71b77ca04fd8f3a86344f99f0d6a) )
 ROM_END
+
+ROM_START( gigaman2 )		/* Giga Man - bootleg of Mega Man 2: The Power Fighters */
+	ROM_REGION( CODE_SIZE, "maincpu", 0 )
+	ROM_LOAD16_WORD_SWAP( "sys_rom1.bin", 0x000000, 0x400000, NO_DUMP )
+
+	ROM_REGION( 0x10000, "mcu", 0x00 )
+	ROM_LOAD( "89c4051.bin", 0x0000, 0x010000, NO_DUMP )
+
+	ROM_REGION( 0x800000, "gfx", 0 )
+	ROM_LOAD( "cg_rom1.bin", 0x0000000, 0x400000, NO_DUMP )
+	ROM_IGNORE( 0x400000 )
+	ROM_LOAD( "cg_rom2.bin", 0x0400000, 0x400000, NO_DUMP )
+	ROM_IGNORE( 0x400000 )
+
+	ROM_REGION( 0x800000, "oki", 0 )
+	ROM_LOAD( "pcm_rom1.bin", 0x000000, 0x800000, NO_DUMP )
+ROM_END
+
+/*
+Gigaman 2 - 2004 Chinese rebuild bootleg
+
+Just dumped the program roms. Other 3 are soldered and are MX26L6420MC-90
+Probably a rebuild for chinese market
+Copyrighted J-TECH 2004 on game :)
+
+CPU : Motorola 68K 16MHz
+video : Actel A54SX16A-F
+sound : Atmel AT89C4051-24PI + M6295 (noted AD-65)
+*/
+
+static void gigaman2_gfx_reorder( running_machine *machine, int gfx_len, UINT16 *gfxrom )
+{
+	int i, half_len = gfx_len / 2;
+	UINT16 *buf = auto_alloc_array(machine, UINT16, gfx_len);
+	memcpy( buf, gfxrom, gfx_len );
+
+	for (i = 0; i < half_len; i++)
+		gfxrom[i] = buf[ ((i & ~7) >> 2) | ((i & 4) << 18) | ((i & 2) >> 1) | ((i & 1) << 21) ];
+
+	auto_free( machine, buf );
+}
