@@ -1012,11 +1012,11 @@ static MACHINE_DRIVER_START( ppan )
 	MDRV_SCREEN_SIZE(512, 256)
 	MDRV_SCREEN_VISIBLE_AREA(80, 511-112, 8, 247) /* 320 x 240 */
 
-	MDRV_VIDEO_UPDATE(m92)
+	MDRV_VIDEO_UPDATE(ppan)
 	MDRV_GFXDECODE(m92)
 	MDRV_PALETTE_LENGTH(2048)
 
-	MDRV_VIDEO_START(m92)
+	MDRV_VIDEO_START(ppan)
 
 	/* sound hardware */
 	MDRV_SPEAKER_STANDARD_MONO("mono")
@@ -2036,7 +2036,6 @@ ROM_END
 static void init_m92(running_machine *machine, int hasbanks)
 {
 	UINT8 *RAM = memory_region(machine, "maincpu");
-//	m92_state *state = (m92_state *)machine->driver_data;
 
 	if (hasbanks)
 	{
@@ -2159,6 +2158,36 @@ static DRIVER_INIT( gunforc2 )
 	memcpy(RAM + 0x80000, RAM + 0x100000, 0x20000);
 }
 
+#if 0
+static void init_ppan(running_machine *machine)
+{
+	UINT8 *RAM = memory_region(machine, "maincpu");
+//	m92_state *state = (m92_state *)machine->driver_data;
+
+	if (hasbanks)
+	{
+		memcpy(RAM + 0xffff0, RAM + 0x7fff0, 0x10);	/* Start vector */
+		bankaddress = 0xa0000;				/* Initial bank */
+		set_m92_bank(machine);
+
+		/* Mirror used by In The Hunt for protection */
+		memcpy(RAM + 0xc0000, RAM + 0x00000, 0x10000);
+		memory_set_bankptr(machine, "bank2", &RAM[0xc0000]);
+	}
+
+	RAM = memory_region(machine, "soundcpu");
+
+	if (RAM)
+		memcpy(RAM + 0xffff0, RAM + 0x1fff0, 0x10);	/* Sound cpu Start vector */
+
+	m92_game_kludge = 0;
+	m92_irq_vectorbase = 0x80;
+	m92_sprite_buffer_busy = 1;
+
+	setvector_callback(machine, NULL, VECTOR_INIT);
+}
+#endif
+
 /***************************************************************************/
 
 GAME( 1991,  gunforce,   0,	      gunforce,	   gunforce,	gunforce,   ROT0,   "Irem",         "Gunforce - Battle Fire Engulfed Terror Island (World)", 0 )
@@ -2188,7 +2217,7 @@ GAME( 1992,  skingame2,  majtitl2,    majtitl2,    majtitl2, 	majtitl2,   ROT0, 
 GAME( 1992,  hook,       0,           hook,        hook,     	hook,       ROT0,   "Irem",         "Hook (World)", 0 )
 GAME( 1992,  hooku,      hook,        hook,        hook,     	hook,       ROT0,   "Irem America", "Hook (US)", 0 )
 GAME( 1992,  hookj,      hook,        hook,        hook,     	hook,       ROT0,   "Irem",         "Hook (Japan)", 0 )
-GAME( 1992,  ppan,       hook,        ppan,        hook,     	hook,       ROT0,   "bootleg",      "Peter Pan (bootleg of Hook)", GAME_NOT_WORKING ) // PCB marked 'Peter Pan', no title screen, made in Italy?
+GAME( 1992,  ppan,       hook,        ppan,        hook,     	hook,       ROT0,   "bootleg",      "Peter Pan (bootleg of Hook)", GAME_IMPERFECT_GRAPHICS ) // PCB marked 'Peter Pan', no title screen, made in Italy?
 //
 GAME( 1992,  rtypeleo,   0,           rtypeleo,    rtypeleo, 	rtypeleo,   ROT0,   "Irem",         "R-Type Leo (World)", 0 )
 GAME( 1992,  rtypeleoj,  rtypeleo,    rtypeleo,    rtypeleo, 	rtypelej,   ROT0,   "Irem",         "R-Type Leo (Japan)", 0 )
@@ -2206,4 +2235,4 @@ GAME( 1993,  psoldier,   ssoldier,    psoldier,    psoldier, 	psoldier,   ROT0, 
 GAME( 1994,  gunforc2,   0,           gunforc2,    gunforc2, 	gunforc2,   ROT0,   "Irem",         "Gunforce 2 (US)", 0 )
 GAME( 1994,  geostorm,   gunforc2,    gunforc2,    gunforc2, 	gunforc2,   ROT0,   "Irem",         "Geostorm (Japan)", 0 )
 
-/*    year,  archives,  parent,  MACHINE_DRIVER,  INPUT_PORT,  DRIVER_INIT,   flip,    producer name,    title  */
+/*    year,  archives,  parent,  MACHINE_DRIVER,  INPUT_PORT,  DRIVER_INIT,  flip,  producer name,  title,  information */

@@ -68,7 +68,7 @@ static int m92_palette_bank;
 static TIMER_CALLBACK( spritebuffer_callback )
 {
 	m92_sprite_buffer_busy = 1;
-	if (m92_game_kludge!=2) /* Major Title 2 doesn't like this interrupt!? */
+	if (m92_game_kludge!=2)		/* Major Title 2 doesn't like this interrupt!? */
 		m92_sprite_interrupt(machine);
 }
 
@@ -96,34 +96,32 @@ WRITE16_HANDLER( m92_spritecontrol_w )
 		m92_sprite_buffer_busy = 0;
 
 		/* Pixel clock is 26.6666 MHz, we have 0x800 bytes, or 0x400 words
-           to copy from spriteram to the buffer.  It seems safe to assume 1
-           word can be copied per clock.*/
+		   to copy from spriteram to the buffer.  It seems safe to assume 1
+		   word can be copied per clock.*/
 		timer_set(space->machine, attotime_mul(ATTOTIME_IN_HZ(26666000), 0x400), NULL, 0, spritebuffer_callback);
 	}
-//  logerror("%04x: m92_spritecontrol_w %08x %08x\n",cpu_get_pc(space->cpu),offset,data);
 }
 
 WRITE16_HANDLER( m92_videocontrol_w )
 {
 	/*
-        Many games write:
+         Many games write:
             0x2000
             0x201b in alternate frames.
 
-        Some games write to this both before and after the sprite buffer
-        register - perhaps some kind of acknowledge bit is in there?
+         Some games write to this both before and after the sprite buffer
+         register - perhaps some kind of acknowledge bit is in there?
 
-        Lethal Thunder fails it's RAM test with the upper palette bank
-        enabled.  This was one of the earlier games and could actually
-        be a different motherboard revision (most games use M92-A-B top
-        pcb, a M92-A-A revision could exist...).
-    */
+         Lethal Thunder fails it's RAM test with the upper palette bank
+         enabled.  This was one of the earlier games and could actually
+         be a different motherboard revision (most games use M92-A-B top
+         pcb, a M92-A-A revision could exist...).
+	*/
 	if (ACCESSING_BITS_0_7)
 	{
 		/* Access to upper palette bank */
 		m92_palette_bank = (data >> 1) & 1;
 	}
-//  logerror("%04x: m92_videocontrol_w %d = %02x\n",cpu_get_pc(space->cpu),offset,data);
 }
 
 READ16_HANDLER( m92_paletteram_r )
@@ -293,6 +291,24 @@ VIDEO_START( m92 )
 	state_save_register_global_pointer(machine, machine->generic.paletteram.u16, 0x1000);
 }
 
+VIDEO_START( ppan )
+{
+	VIDEO_START_CALL( m92 );
+
+	int laynum;
+	for (laynum = 0; laynum < 3; laynum++)
+	{
+		pf_layer_info *layer = &pf_layer[laynum];
+
+		tilemap_set_scrolldx(layer->tmap, 2 * laynum + 11, -2 * laynum + 11);
+		tilemap_set_scrolldy(layer->tmap, -8, -8);
+		tilemap_set_scrolldx(layer->wide_tmap, 2 * laynum - 256 + 11, -2 * laynum + 11 - 256);
+		tilemap_set_scrolldy(layer->wide_tmap, -8, -8);
+	}
+
+	machine->generic.buffered_spriteram.u16 = machine->generic.spriteram.u16;
+}
+
 /*****************************************************************************/
 
 static void draw_sprites(running_machine *machine, bitmap_t *bitmap, const rectangle *cliprect)
@@ -378,6 +394,94 @@ static void draw_sprites(running_machine *machine, bitmap_t *bitmap, const recta
 	}
 }
 
+static void ppan_draw_sprites(running_machine *machine, bitmap_t *bitmap, const rectangle *cliprect)
+{
+	UINT16 *buffered_spriteram16 = machine->generic.buffered_spriteram.u16;
+	int offs, k;
+
+	for (k = 0; k < 8; k++)
+	{
+		for (offs = 0; offs < m92_sprite_list; )
+		{
+			int x, y, sprite, colour, fx, fy, x_multi, y_multi, i, j, s_ptr, pri_back, pri_sprite;
+
+			y = buffered_spriteram16[offs + 0] & 0x1ff;
+			x = buffered_spriteram16[offs + 3] & 0x1ff;
+
+			if (buffered_spriteram16[offs + 2] & 0x0080) pri_back = 0; else pri_back = 2;
+
+			sprite= buffered_spriteram16[offs + 1];
+			colour = buffered_spriteram16[offs + 2] & 0x007f;
+			pri_sprite= (buffered_spriteram16[offs + 0] & 0xe000) >> 13;
+
+			fx = (buffered_spriteram16[offs + 2] >> 8) & 1;
+			fy = (buffered_spriteram16[offs + 2] >> 9) & 1;
+			y_multi = (buffered_spriteram16[offs + 0] >> 9) & 3;
+			x_multi = (buffered_spriteram16[offs + 0] >> 11) & 3;
+
+			y_multi = 1 << y_multi;
+			x_multi = 1 << x_multi;
+
+			offs += 4 * x_multi;
+			if (pri_sprite != k) continue;
+
+			x = x - 0;
+			y = 384 - 16 - 7 - y;
+
+			y -= 128;
+			if (y < 0) y += 512;
+
+			if (fx) x += 16 * (x_multi - 1);
+
+			for (j = 0; j < x_multi; j++)
+			{
+				s_ptr = 8 * j;
+				if (!fy) s_ptr += y_multi - 1;
+
+				x &= 0x1ff;
+				for (i = 0; i < y_multi; i++)
+				{
+					if (flip_screen_get(machine))
+					{
+						pdrawgfx_transpen(bitmap,cliprect,machine->gfx[1],
+								sprite + s_ptr,
+								colour,
+								!fx,!fy,
+								464-x,240-(y-i*16),
+								machine->priority_bitmap,pri_back,0);
+
+						// wrap around x
+						pdrawgfx_transpen(bitmap,cliprect,machine->gfx[1],
+								sprite + s_ptr,
+								colour,
+								!fx,!fy,
+								464-x+512,240-(y-i*16),
+								machine->priority_bitmap,pri_back,0);
+					}
+					else
+					{
+						pdrawgfx_transpen(bitmap,cliprect,machine->gfx[1],
+								sprite + s_ptr,
+								colour,
+								fx,fy,
+								x,y-i*16,
+								machine->priority_bitmap,pri_back,0);
+
+						// wrap around x
+						pdrawgfx_transpen(bitmap,cliprect,machine->gfx[1],
+								sprite + s_ptr,
+								colour,
+								fx,fy,
+								x-512,y-i*16,
+								machine->priority_bitmap,pri_back,0);
+					}
+					if (fy) s_ptr++; else s_ptr--;
+				}
+				if (fx) x-=16; else x+=16;
+			}
+		}
+	}
+}
 
 /*****************************************************************************/
 
@@ -397,9 +501,9 @@ static void m92_update_scroll_positions(void)
 
     */
 
-    for (laynum = 0; laynum < 3; laynum++)
-    {
-    	pf_layer_info *layer = &pf_layer[laynum];
+	for (laynum = 0; laynum < 3; laynum++)
+    	{
+    		pf_layer_info *layer = &pf_layer[laynum];
 
 		if (pf_master_control[laynum] & 0x40)
 		{
@@ -451,8 +555,6 @@ static void m92_screenrefresh(running_machine *machine, bitmap_t *bitmap,const r
 	tilemap_draw(bitmap, cliprect, pf_layer[0].tmap,      TILEMAP_DRAW_LAYER1, 0);
 	tilemap_draw(bitmap, cliprect, pf_layer[0].wide_tmap, TILEMAP_DRAW_LAYER0, 1);
 	tilemap_draw(bitmap, cliprect, pf_layer[0].tmap,      TILEMAP_DRAW_LAYER0, 1);
-
-	draw_sprites(machine, bitmap, cliprect);
 }
 
 
@@ -460,6 +562,23 @@ VIDEO_UPDATE( m92 )
 {
 	m92_update_scroll_positions();
 	m92_screenrefresh(screen->machine, bitmap, cliprect);
+
+	draw_sprites(screen->machine, bitmap, cliprect);
+
+	/* Flipscreen appears hardwired to the dipswitch - strange */
+	if (input_port_read(screen->machine, "DSW") & 0x100)
+		flip_screen_set(screen->machine, 0);
+	else
+		flip_screen_set(screen->machine, 1);
+	return 0;
+}
+
+VIDEO_UPDATE( ppan )
+{
+	m92_update_scroll_positions();
+	m92_screenrefresh(screen->machine, bitmap, cliprect);
+
+	ppan_draw_sprites(screen->machine, bitmap, cliprect);
 
 	/* Flipscreen appears hardwired to the dipswitch - strange */
 	if (input_port_read(screen->machine, "DSW") & 0x100)
