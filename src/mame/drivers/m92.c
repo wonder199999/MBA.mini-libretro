@@ -209,10 +209,10 @@ static emu_timer *scanline_timer;
 
 static UINT8 m92_irq_vectorbase;
 
-#define M92_IRQ_0 ((m92_irq_vectorbase+0)/4)  /* VBL interrupt*/
-#define M92_IRQ_1 ((m92_irq_vectorbase+4)/4)  /* Sprite buffer complete interrupt */
-#define M92_IRQ_2 ((m92_irq_vectorbase+8)/4)  /* Raster interrupt */
-#define M92_IRQ_3 ((m92_irq_vectorbase+12)/4) /* Sound cpu interrupt */
+#define M92_IRQ_0 ((m92_irq_vectorbase + 0) / 4)  /* VBL interrupt*/
+#define M92_IRQ_1 ((m92_irq_vectorbase + 4) / 4)  /* Sprite buffer complete interrupt */
+#define M92_IRQ_2 ((m92_irq_vectorbase + 8) / 4)  /* Raster interrupt */
+#define M92_IRQ_3 ((m92_irq_vectorbase + 12) / 4) /* Sound cpu interrupt */
 
 
 static TIMER_CALLBACK( m92_scanline_interrupt );
@@ -222,7 +222,7 @@ static TIMER_CALLBACK( m92_scanline_interrupt );
 static void set_m92_bank(running_machine *machine)
 {
 	UINT8 *RAM = memory_region(machine, "maincpu");
-	memory_set_bankptr(machine, "bank1",&RAM[bankaddress]);
+	memory_set_bankptr(machine, "bank1", &RAM[bankaddress]);
 }
 
 static STATE_POSTLOAD( m92_postload )
@@ -276,14 +276,12 @@ static TIMER_CALLBACK( m92_scanline_interrupt )
 static READ16_HANDLER( m92_eeprom_r )
 {
 	UINT8 *RAM = memory_region(space->machine, "user1");
-//  logerror("%05x: EEPROM RE %04x\n",cpu_get_pc(space->cpu),offset);
 	return RAM[offset] | 0xff00;
 }
 
 static WRITE16_HANDLER( m92_eeprom_w )
 {
 	UINT8 *RAM = memory_region(space->machine, "user1");
-//  logerror("%05x: EEPROM WR %04x\n",cpu_get_pc(space->cpu),offset);
 	if (ACCESSING_BITS_0_7)
 		RAM[offset] = data;
 }
@@ -351,7 +349,6 @@ static WRITE16_HANDLER( m92_soundlatch_w )
 
 static READ16_HANDLER( m92_sound_status_r )
 {
-//logerror("%06x: read sound status\n",cpu_get_pc(space->cpu));
 	return sound_status;
 }
 
@@ -374,6 +371,11 @@ static WRITE16_HANDLER( m92_sound_status_w )
 static WRITE16_HANDLER( m92_sound_reset_w )	/* Added sound reset line for IREM M92 */
 {
 	cputag_set_input_line(space->machine, "soundcpu", INPUT_LINE_RESET, (data) ? CLEAR_LINE : ASSERT_LINE);
+}
+
+static WRITE16_DEVICE_HANDLER( oki_bank_w )	/* for ppan (bootleg of hook) */
+{
+	downcast<okim6295_device *>(device)->set_bank_base( 0x40000 * ((data + 1) & 0x03) );
 }
 
 /*****************************************************************************/
@@ -418,6 +420,22 @@ static ADDRESS_MAP_START( m92_portmap, ADDRESS_SPACE_IO, 16 )
 	AM_RANGE(0x90, 0x97) AM_WRITE(m92_pf3_control_w)
 	AM_RANGE(0x98, 0x9f) AM_WRITE(m92_master_control_w)
 	AM_RANGE(0xc0, 0xc1) AM_WRITE(m92_sound_reset_w)
+ADDRESS_MAP_END
+
+static ADDRESS_MAP_START( ppan_portmap, ADDRESS_SPACE_IO, 16 )		/* ppan (bootleg of hook) */
+	AM_RANGE(0x00, 0x01) AM_READ_PORT("P1_P2")
+	AM_RANGE(0x02, 0x03) AM_READ_PORT("COINS_DSW3")
+	AM_RANGE(0x04, 0x05) AM_READ_PORT("DSW")
+	AM_RANGE(0x06, 0x07) AM_READ_PORT("P3_P4")
+	AM_RANGE(0x08, 0x09) AM_READ(m92_sound_status_r)
+	AM_RANGE(0x10, 0x11) AM_DEVWRITE("oki", oki_bank_w)
+	AM_RANGE(0x18, 0x19) AM_DEVREADWRITE8("oki", okim6295_r, okim6295_w, 0x00ff)
+	AM_RANGE(0x02, 0x03) AM_WRITE(m92_coincounter_w)
+	AM_RANGE(0x40, 0x43) AM_WRITENOP
+	AM_RANGE(0x80, 0x87) AM_WRITE(m92_pf1_control_w)
+	AM_RANGE(0x88, 0x8f) AM_WRITE(m92_pf2_control_w)
+	AM_RANGE(0x90, 0x97) AM_WRITE(m92_pf3_control_w)
+	AM_RANGE(0x98, 0x9f) AM_WRITE(m92_master_control_w)
 ADDRESS_MAP_END
 
 /******************************************************************************/
@@ -924,7 +942,7 @@ static MACHINE_DRIVER_START( m92 )
 MACHINE_DRIVER_END
 
 
-static const nec_config gunforce_config ={	gunforce_decryption_table, };
+static const nec_config gunforce_config ={ gunforce_decryption_table, };
 static MACHINE_DRIVER_START( gunforce )
 	MDRV_IMPORT_FROM( m92 )
 	MDRV_CPU_MODIFY("soundcpu")
@@ -976,20 +994,17 @@ static MACHINE_DRIVER_START( hook )
 MACHINE_DRIVER_END
 
 static MACHINE_DRIVER_START( ppan )
-
 	/* basic machine hardware */
-	MDRV_CPU_ADD("maincpu",V33,18000000/2)
+	MDRV_CPU_ADD("maincpu",V33, 18000000 / 2)
 	MDRV_CPU_PROGRAM_MAP(m92_map)
-	MDRV_CPU_IO_MAP(m92_portmap)
+	MDRV_CPU_IO_MAP(ppan_portmap)
 
 	/* no Sound CPU */
-
 	MDRV_MACHINE_START(m92)
 	MDRV_MACHINE_RESET(m92)
 
 	/* video hardware */
 	MDRV_VIDEO_ATTRIBUTES(VIDEO_BUFFERS_SPRITERAM)
-
 	MDRV_SCREEN_ADD("screen", RASTER)
 	MDRV_SCREEN_REFRESH_RATE(60)
 	MDRV_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
@@ -997,15 +1012,14 @@ static MACHINE_DRIVER_START( ppan )
 	MDRV_SCREEN_SIZE(512, 256)
 	MDRV_SCREEN_VISIBLE_AREA(80, 511-112, 8, 247) /* 320 x 240 */
 
+	MDRV_VIDEO_UPDATE(m92)
 	MDRV_GFXDECODE(m92)
 	MDRV_PALETTE_LENGTH(2048)
 
 	MDRV_VIDEO_START(m92)
-	MDRV_VIDEO_UPDATE(m92)
 
 	/* sound hardware */
 	MDRV_SPEAKER_STANDARD_MONO("mono")
-
 	MDRV_OKIM6295_ADD("oki", 1000000, OKIM6295_PIN7_HIGH) // clock frequency & pin 7 not verified
 	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.0)
 MACHINE_DRIVER_END
@@ -1503,13 +1517,13 @@ ROM_START( ppan )
 	ROM_LOAD16_BYTE( "1.u6", 0x000001, 0x080000, CRC(b135dd6e) SHA1(3e7ac75db53804c605fb628546f5a506ba7f7a5f) )
 	ROM_LOAD16_BYTE( "2.u5", 0x000000, 0x080000, CRC(7785289c) SHA1(8125c4ae8e99b6eed5216c1d956426bf2034ada0) )
 
-	ROM_REGION( 0x100000, "gfx1", 0 ) /* Tiles */
+	ROM_REGION( 0x100000, "gfx1", 0 )	/* Tiles */
 	ROM_LOAD( "7.u114", 0x000000, 0x040000, CRC(dec63dcf) SHA1(e9869110f832d782c460b123928b042c65fdf8bd) )
 	ROM_LOAD( "6.u115", 0x040000, 0x040000, CRC(e4eb0b92) SHA1(159da3ec973490a153c69c96c1373cf4e0290736) )
 	ROM_LOAD( "5.u116", 0x080000, 0x040000, CRC(a52b320b) SHA1(1522562239bb3b93ef552c47445daa4ee021495c) )
 	ROM_LOAD( "4.u117", 0x0c0000, 0x040000, CRC(7ef67731) SHA1(af0b0ee6e1c06af04c609af7e077d4a7d76d8817) )
 
-	ROM_REGION( 0x400000, "gfx2", 0 ) /* Sprites */
+	ROM_REGION( 0x400000, "gfx2", 0 )	/* Sprites */
 	ROM_LOAD( "15.u106", 0x000000, 0x080000, CRC(cdfc2f78) SHA1(02981c5b48afe532a74c9aa72ebdaaaca7a091e5) )
 	ROM_LOAD( "14.u110", 0x080000, 0x080000, CRC(87e767f0) SHA1(ddf3c5a04c8fc1551bddb7e7753972a80442b88b) )
 	ROM_LOAD( "13.u107", 0x100000, 0x080000, CRC(e07f2abe) SHA1(1b404fcf6bcc1a25e510c95a9eb83df0c780934a) )
@@ -1519,8 +1533,18 @@ ROM_START( ppan )
 	ROM_LOAD( "9.u109",  0x300000, 0x080000, CRC(9d466b1a) SHA1(c65b7afcfbd6bfec1b495a5dbce806ff34a7cbc1) )
 	ROM_LOAD( "8.u113",  0x380000, 0x080000, CRC(d08a5f6b) SHA1(ab762be9e5fadac2dc3149bfa69b8cbdbac3218b) )
 
-	ROM_REGION( 0x80000, "oki", 0 ) /* OKI M6295 samples */
+	ROM_REGION( 0x80000, "okidata", 0 )	/* OKI M6295 samples */
 	ROM_LOAD( "3.u122", 0x000000, 0x080000, CRC(d0d37028) SHA1(0f58d220a1972bafa1299a19e704b7735886c8b6) )
+
+	ROM_REGION( 0x100000, "oki", 0 )	/* OKI samples copied here */
+	ROM_COPY( "okidata", 0x000000, 0x000000, 0x020000 )
+	ROM_COPY( "okidata", 0x000000, 0x020000, 0x020000 )
+	ROM_COPY( "okidata", 0x000000, 0x040000, 0x020000 )
+	ROM_COPY( "okidata", 0x020000, 0x060000, 0x020000 )
+	ROM_COPY( "okidata", 0x000000, 0x080000, 0x020000 )
+	ROM_COPY( "okidata", 0x040000, 0x0a0000, 0x020000 )
+	ROM_COPY( "okidata", 0x000000, 0x0c0000, 0x020000 )
+	ROM_COPY( "okidata", 0x060000, 0x0e0000, 0x020000 )
 ROM_END
 
 ROM_START( rtypeleo )
@@ -1659,7 +1683,6 @@ ROM_START( mysticrib )
 	ROM_LOAD( "mr-da.bin", 0x000000, 0x040000, CRC(1a11fc59) SHA1(6d1f4ca688bf015ecbbe369fbc0eb5e2bcaefcfc) )
 ROM_END
 
-
 ROM_START( uccops )
 	ROM_REGION( 0x100000, "maincpu", 0 )
 	ROM_LOAD16_BYTE( "uc_h0.rom", 0x000001, 0x040000, CRC(240aa5f7) SHA1(8d864bb1377e9f6d266631ed365c5809b9da33f8) )
@@ -1714,18 +1737,17 @@ ROM_START( uccopsu )
 	ROM_LOAD( "uc_w42.rom", 0x000000, 0x080000, CRC(d17d3fd6) SHA1(b02da0d01c41c7bf50cd35d6c75bacc3e3e0b85a) )
 ROM_END
 
-
 /*
-Undercover Cops Alpha Renewal Version
-Irem, 1992
+	Undercover Cops Alpha Renewal Version
+	Irem, 1992
 
-An alt. version, runs on standard
-M92 main board:  M92-A-B 05C04170B1
+	An alt. version, runs on standard
+	M92 main board:  M92-A-B 05C04170B1
 
-ROM board:  M92-E-B 05C04238B1
-Chips used are...
-Nanao 08J27504A1
-Nanao 08J27291A5  @ 14.31818MHz
+	ROM board:  M92-E-B 05C04238B1
+	Chips used are...
+	Nanao 08J27504A1
+	Nanao 08J27291A5  @ 14.31818MHz
 */
 
 ROM_START( uccopsar ) /* Alpha Renewal Version */
@@ -2007,23 +2029,19 @@ ROM_START( geostorm )
 ROM_END
 
 
-/* =============== */
-/*   additional	   */
-/* =============== */
+/*  additional  */
 #include "m92_add.c"
-/* =============== */
-/*   additional	   */
-/* =============== */
 
 
 static void init_m92(running_machine *machine, int hasbanks)
 {
 	UINT8 *RAM = memory_region(machine, "maincpu");
+//	m92_state *state = (m92_state *)machine->driver_data;
 
 	if (hasbanks)
 	{
-		memcpy(RAM + 0xffff0, RAM + 0x7fff0, 0x10); /* Start vector */
-		bankaddress = 0xa0000; /* Initial bank */
+		memcpy(RAM + 0xffff0, RAM + 0x7fff0, 0x10);	/* Start vector */
+		bankaddress = 0xa0000;				/* Initial bank */
 		set_m92_bank(machine);
 
 		/* Mirror used by In The Hunt for protection */
@@ -2034,7 +2052,7 @@ static void init_m92(running_machine *machine, int hasbanks)
 	RAM = memory_region(machine, "soundcpu");
 
 	if (RAM)
-		memcpy(RAM + 0xffff0, RAM + 0x1fff0, 0x10); /* Sound cpu Start vector */
+		memcpy(RAM + 0xffff0, RAM + 0x1fff0, 0x10);	/* Sound cpu Start vector */
 
 	m92_game_kludge = 0;
 	m92_irq_vectorbase = 0x80;
@@ -2100,7 +2118,6 @@ static DRIVER_INIT( inthunt )
 	init_m92(machine, 1);
 }
 
-
 static DRIVER_INIT( lethalth )
 {
 	init_m92(machine, 0);
@@ -2144,38 +2161,49 @@ static DRIVER_INIT( gunforc2 )
 
 /***************************************************************************/
 
-GAME( 1991, gunforce, 0,        gunforce,      gunforce, gunforce, ROT0,   "Irem",         "Gunforce - Battle Fire Engulfed Terror Island (World)", 0 )
-GAME( 1991, gunforcej,gunforce, gunforce,      gunforce, gunforce, ROT0,   "Irem",         "Gunforce - Battle Fire Engulfed Terror Island (Japan)", 0 )
-GAME( 1991, gunforceu,gunforce, gunforce,      gunforce, gunforce, ROT0,   "Irem America", "Gunforce - Battle Fire Engulfed Terror Island (US)", 0 )
-GAME( 1991, bmaster,  0,        bmaster,       bmaster,  bmaster,  ROT0,   "Irem",         "Blade Master (World)", 0 )
-GAME( 1991, crossbld, bmaster,  bmaster,       bmaster,  bmaster,  ROT0,   "Irem",         "Cross Blades! (Japan)", 0 )
-GAME( 1991, lethalth, 0,        lethalth,      lethalth, lethalth, ROT270, "Irem",         "Lethal Thunder (World)", 0 )
-GAME( 1991, thndblst, lethalth, lethalth,      lethalth, lethalth, ROT270, "Irem",         "Thunder Blaster (Japan)", 0 )
-GAME( 1992, uccops,   0,        uccops,        uccops,   uccops,   ROT0,   "Irem",         "Undercover Cops (World)", 0 )
-GAME( 1992, uccopsu,  uccops,   uccops,        uccops,   uccops,   ROT0,   "Irem",         "Undercover Cops (US)", 0 )
-GAME( 1992, uccopsar, uccops,   uccops,        uccops,   uccops,   ROT0,   "Irem",         "Undercover Cops (Alpha Renewal Version)", 0 )
-GAME( 1992, uccopsj,  uccops,   uccops,        uccops,   uccops,   ROT0,   "Irem",         "Undercover Cops (Japan)", 0 )
-GAME( 1992, mysticri, 0,        mysticri,      mysticri, mysticri, ROT0,   "Irem",         "Mystic Riders (World)", 0 )
-GAME( 1992, gunhohki, mysticri, mysticri,      mysticri, mysticri, ROT0,   "Irem",         "Gun Hohki (Japan)", 0 )
-// cheaply produced Korean board, has original chips, but lacks any proper labels - uses older revision sound program that doesn't work in MAME right now
-// main code is also significantly different to the supported original set, so it might just be a legitimate early revision on a cheap board
-GAME( 1992, mysticrib,mysticri, mysticri,      mysticri, mysticri, ROT0,   "Irem",         "Mystic Riders (bootleg?)", GAME_NO_SOUND )
-GAME( 1992, majtitl2, 0,        majtitl2,      majtitl2, majtitl2, ROT0,   "Irem",         "Major Title 2 (World)", 0 )
-GAME( 1992, majtitl2j,majtitl2, majtitl2,      majtitl2, majtitl2, ROT0,   "Irem",         "Major Title 2 (Japan)", 0 )
-GAME( 1992, skingame, majtitl2, majtitl2,      majtitl2, majtitl2, ROT0,   "Irem America", "The Irem Skins Game (US set 1)", 0 )
-GAME( 1992, skingame2,majtitl2, majtitl2,      majtitl2, majtitl2, ROT0,   "Irem America", "The Irem Skins Game (US set 2)", 0 )
-GAME( 1992, hook,     0,        hook,          hook,     hook,     ROT0,   "Irem",         "Hook (World)", 0 )
-GAME( 1992, hooku,    hook,     hook,          hook,     hook,     ROT0,   "Irem America", "Hook (US)", 0 )
-GAME( 1992, hookj,    hook,     hook,          hook,     hook,     ROT0,   "Irem",         "Hook (Japan)", 0 )
-GAME( 1992, ppan,     hook,     ppan,          hook,     hook,     ROT0,   "bootleg",      "Peter Pan (bootleg of Hook)", GAME_NOT_WORKING ) // PCB marked 'Peter Pan', no title screen, made in Italy?
-GAME( 1992, rtypeleo, 0,        rtypeleo,      rtypeleo, rtypeleo, ROT0,   "Irem",         "R-Type Leo (World)", 0 )
-GAME( 1992, rtypeleoj,rtypeleo, rtypeleo,      rtypeleo, rtypelej, ROT0,   "Irem",         "R-Type Leo (Japan)", 0 )
-GAME( 1993, inthunt,  0,        inthunt,       inthunt,  inthunt,  ROT0,   "Irem",         "In The Hunt (World)", 0 )
-GAME( 1993, inthuntu, inthunt,  inthunt,       inthunt,  inthunt,  ROT0,   "Irem America", "In The Hunt (US)", 0 )
-GAME( 1993, kaiteids, inthunt,  inthunt,       inthunt,  kaiteids, ROT0,   "Irem",         "Kaitei Daisensou (Japan)", 0 )
-GAME( 1993, nbbatman, 0,        nbbatman,      nbbatman, nbbatman, ROT0,   "Irem America", "Ninja Baseball Batman (US)", GAME_IMPERFECT_GRAPHICS )
-GAME( 1993, leaguemn, nbbatman, nbbatman,      nbbatman, nbbatman, ROT0,   "Irem",         "Yakyuu Kakutou League-Man (Japan)", GAME_IMPERFECT_GRAPHICS )
-GAME( 1993, ssoldier, 0,        psoldier,      psoldier, ssoldier, ROT0,   "Irem America", "Superior Soldiers (US)", 0 )
-GAME( 1993, psoldier, ssoldier, psoldier,      psoldier, psoldier, ROT0,   "Irem",         "Perfect Soldiers (Japan)", 0 )
-GAME( 1994, gunforc2, 0,        gunforc2,      gunforc2, gunforc2, ROT0,   "Irem",         "Gunforce 2 (US)", 0 )
-GAME( 1994, geostorm, gunforc2, gunforc2,      gunforc2, gunforc2, ROT0,   "Irem",         "Geostorm (Japan)", 0 )
+GAME( 1991,  gunforce,   0,	      gunforce,	   gunforce,	gunforce,   ROT0,   "Irem",         "Gunforce - Battle Fire Engulfed Terror Island (World)", 0 )
+GAME( 1991,  gunforcej,  gunforce,    gunforce,    gunforce, 	gunforce,   ROT0,   "Irem",         "Gunforce - Battle Fire Engulfed Terror Island (Japan)", 0 )
+GAME( 1991,  gunforceu,  gunforce,    gunforce,    gunforce,	gunforce,   ROT0,   "Irem America", "Gunforce - Battle Fire Engulfed Terror Island (US)", 0 )
+//
+GAME( 1991,  bmaster,    0,           bmaster,     bmaster,  	bmaster,    ROT0,   "Irem",         "Blade Master (World)", 0 )
+GAME( 1991,  crossbld,   bmaster,     bmaster,     bmaster,  	bmaster,    ROT0,   "Irem",         "Cross Blades! (Japan)", 0 )
+//
+GAME( 1991,  lethalth,   0,           lethalth,    lethalth, 	lethalth,   ROT270, "Irem",         "Lethal Thunder (World)", 0 )
+GAME( 1991,  thndblst,   lethalth,    lethalth,    lethalth, 	lethalth,   ROT270, "Irem",         "Thunder Blaster (Japan)", 0 )
+//
+GAME( 1992,  uccops,     0,           uccops,      uccops,   	uccops,     ROT0,   "Irem",         "Undercover Cops (World)", 0 )
+GAME( 1992,  uccopsu,    uccops,      uccops,      uccops,   	uccops,     ROT0,   "Irem",         "Undercover Cops (US)", 0 )
+GAME( 1992,  uccopsar,   uccops,      uccops,      uccops,   	uccops,     ROT0,   "Irem",         "Undercover Cops (Alpha Renewal Version)", 0 )
+GAME( 1992,  uccopsj,    uccops,      uccops,      uccops,   	uccops,     ROT0,   "Irem",         "Undercover Cops (Japan)", 0 )
+//
+GAME( 1992,  mysticri,   0,           mysticri,    mysticri, 	mysticri,   ROT0,   "Irem",         "Mystic Riders (World)", 0 )
+GAME( 1992,  gunhohki,   mysticri,    mysticri,    mysticri, 	mysticri,   ROT0,   "Irem",         "Gun Hohki (Japan)", 0 )
+GAME( 1992,  mysticrib,  mysticri,    mysticri,    mysticri, 	mysticri,   ROT0,   "Irem",         "Mystic Riders (bootleg?)", GAME_NO_SOUND )
+//
+GAME( 1992,  majtitl2,   0,           majtitl2,    majtitl2, 	majtitl2,   ROT0,   "Irem",         "Major Title 2 (World)", 0 )
+GAME( 1992,  majtitl2j,  majtitl2,    majtitl2,    majtitl2, 	majtitl2,   ROT0,   "Irem",         "Major Title 2 (Japan)", 0 )
+GAME( 1992,  skingame,   majtitl2,    majtitl2,    majtitl2, 	majtitl2,   ROT0,   "Irem America", "The Irem Skins Game (US set 1)", 0 )
+GAME( 1992,  skingame2,  majtitl2,    majtitl2,    majtitl2, 	majtitl2,   ROT0,   "Irem America", "The Irem Skins Game (US set 2)", 0 )
+//
+GAME( 1992,  hook,       0,           hook,        hook,     	hook,       ROT0,   "Irem",         "Hook (World)", 0 )
+GAME( 1992,  hooku,      hook,        hook,        hook,     	hook,       ROT0,   "Irem America", "Hook (US)", 0 )
+GAME( 1992,  hookj,      hook,        hook,        hook,     	hook,       ROT0,   "Irem",         "Hook (Japan)", 0 )
+GAME( 1992,  ppan,       hook,        ppan,        hook,     	hook,       ROT0,   "bootleg",      "Peter Pan (bootleg of Hook)", GAME_NOT_WORKING ) // PCB marked 'Peter Pan', no title screen, made in Italy?
+//
+GAME( 1992,  rtypeleo,   0,           rtypeleo,    rtypeleo, 	rtypeleo,   ROT0,   "Irem",         "R-Type Leo (World)", 0 )
+GAME( 1992,  rtypeleoj,  rtypeleo,    rtypeleo,    rtypeleo, 	rtypelej,   ROT0,   "Irem",         "R-Type Leo (Japan)", 0 )
+//
+GAME( 1993,  inthunt,    0,           inthunt,     inthunt,  	inthunt,    ROT0,   "Irem",         "In The Hunt (World)", 0 )
+GAME( 1993,  inthuntu,   inthunt,     inthunt,     inthunt,  	inthunt,    ROT0,   "Irem America", "In The Hunt (US)", 0 )
+GAME( 1993,  kaiteids,   inthunt,     inthunt,     inthunt,  	kaiteids,   ROT0,   "Irem",         "Kaitei Daisensou (Japan)", 0 )
+//
+GAME( 1993,  nbbatman,   0,           nbbatman,    nbbatman, 	nbbatman,   ROT0,   "Irem America", "Ninja Baseball Batman (US)", GAME_IMPERFECT_GRAPHICS )
+GAME( 1993,  leaguemn,   nbbatman,    nbbatman,    nbbatman, 	nbbatman,   ROT0,   "Irem",         "Yakyuu Kakutou League-Man (Japan)", GAME_IMPERFECT_GRAPHICS )
+//
+GAME( 1993,  ssoldier,   0,           psoldier,    psoldier, 	ssoldier,   ROT0,   "Irem America", "Superior Soldiers (US)", 0 )
+GAME( 1993,  psoldier,   ssoldier,    psoldier,    psoldier, 	psoldier,   ROT0,   "Irem",         "Perfect Soldiers (Japan)", 0 )
+//
+GAME( 1994,  gunforc2,   0,           gunforc2,    gunforc2, 	gunforc2,   ROT0,   "Irem",         "Gunforce 2 (US)", 0 )
+GAME( 1994,  geostorm,   gunforc2,    gunforc2,    gunforc2, 	gunforc2,   ROT0,   "Irem",         "Geostorm (Japan)", 0 )
+
+/*    year,  archives,  parent,  MACHINE_DRIVER,  INPUT_PORT,  DRIVER_INIT,   flip,    producer name,    title  */
