@@ -3,9 +3,10 @@
 
 struct gfx_range
 {
-	// start and end are as passed by the game (shift adjusted to be all
-	// in the same scale a 8x8 tiles): they don't necessarily match the
-	// position in ROM.
+	/* start and end are as passed by the game (shift adjusted to be all
+	   in the same scale a 8x8 tiles): they don't necessarily match the
+	   position in ROM.
+	*/
 	int type;
 	int start;
 	int end;
@@ -98,11 +99,11 @@ public:
 	int          scroll2x, scroll2y;
 	int          scroll3x, scroll3y;
 
-	int          stars_enabled[2];		/* Layer enabled [Y/N] */
+	int          stars_enabled[2];				/* Layer enabled [Y/N] */
 	int          stars1x, stars1y, stars2x, stars2y;
-	int          last_sprite_offset;		/* Offset of the last sprite */
-	int          cps2_last_sprite_offset;	/* Offset of the last sprite */
-	int          pri_ctrl;				/* Sprite layer priorities */
+	int          last_sprite_offset;			/* Offset of the last sprite */
+	int          cps2_last_sprite_offset;			/* Offset of the last sprite */
+	int          pri_ctrl;					/* Sprite layer priorities */
 	int          objram_bank;
 
 	/* misc */
@@ -201,5 +202,7 @@ void wof_decode(running_machine *machine);
 void dino_decode(running_machine *machine);
 void punisher_decode(running_machine *machine);
 void slammast_decode(running_machine *machine);
+
+static void gigaman2_gfx_reorder( running_machine *machine, int gfx_len, UINT16 *gfxrom );
 
 #endif

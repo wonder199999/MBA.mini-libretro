@@ -640,17 +640,14 @@ static INTERRUPT_GEN( cps2_interrupt )
 	if (state->cps_b_regs[0x12 / 2] & 0x8000)
 		state->cps_b_regs[0x12 / 2] &= 0x1ff;
 
-//  popmessage("%04x %04x - %04x %04x",state->scanline1,state->scanline2,state->cps_b_regs[0x10/2],state->cps_b_regs[0x12/2]);
-
 	/* raster effects */
 	if (state->scanline1 == state->scancount || (state->scanline1 < state->scancount && !state->scancalls))
 	{
-		state->cps_b_regs[0x10/2] = 0;
+		state->cps_b_regs[0x10 / 2] = 0;
 		cpu_set_input_line(device, 4, HOLD_LINE);
 		cps2_set_sprite_priorities(device->machine);
 		device->machine->primary_screen->update_partial(16 - 10 + state->scancount);	/* visarea.min_y - [first visible line?] + scancount */
 		state->scancalls++;
-//          popmessage("IRQ4 scancounter = %04i", state->scancount);
 	}
 
 	/* raster effects */
@@ -661,7 +658,6 @@ static INTERRUPT_GEN( cps2_interrupt )
 		cps2_set_sprite_priorities(device->machine);
 		device->machine->primary_screen->update_partial(16 - 10 + state->scancount);	/* visarea.min_y - [first visible line?] + scancount */
 		state->scancalls++;
-//          popmessage("IRQ4 scancounter = %04i",scancount);
 	}
 
 	if (state->scancount == 240)  /* VBlank */
@@ -669,6 +665,7 @@ static INTERRUPT_GEN( cps2_interrupt )
 		state->cps_b_regs[0x10 / 2] = state->scanline1;
 		state->cps_b_regs[0x12 / 2] = state->scanline2;
 		cpu_set_input_line(device, 2, HOLD_LINE);
+
 		if(state->scancalls)
 		{
 			cps2_set_sprite_priorities(device->machine);
@@ -676,7 +673,6 @@ static INTERRUPT_GEN( cps2_interrupt )
 		}
 		cps2_objram_latch(device->machine);
 	}
-	//popmessage("Raster calls = %i", state->scancalls);
 }
 
 
@@ -688,11 +684,11 @@ static INTERRUPT_GEN( cps2_interrupt )
 
 static const eeprom_interface cps2_eeprom_interface =
 {
-	6,		/* address bits */
-	16,		/* data bits */
-	"0110",	/*  read command */
-	"0101",	/* write command */
-	"0111"	/* erase command */
+	   6,		/* address bits */
+	  16,		/* data bits */
+	"0110",		/* read command */
+	"0101",		/* write command */
+	"0111"		/* erase command */
 };
 
 static WRITE16_HANDLER( cps2_eeprom_port_w )
@@ -730,16 +726,11 @@ static WRITE16_HANDLER( cps2_eeprom_port_w )
 			cpu_set_input_line(state->audiocpu, INPUT_LINE_RESET, (data & 0x0008) ? CLEAR_LINE : ASSERT_LINE);
 
 		coin_counter_w(space->machine, 0, data & 0x0001);
-		if ((strncmp(space->machine->gamedrv->name, "pzloop2", 8) == 0) ||
-		    (strncmp(space->machine->gamedrv->name, "pzloop2j", 8) == 0))
-		{
-			// Puzz Loop 2 uses coin counter 2 input to switch between stick and paddle controls
-			state->readpaddle = data & 0x0002;
-		}
+
+		if ((strncmp(space->machine->gamedrv->name, "pzloop2", 8) == 0) || (strncmp(space->machine->gamedrv->name, "pzloop2j", 8) == 0))
+			state->readpaddle = data & 0x0002;	/* Puzz Loop 2 uses coin counter 2 input to switch between stick and paddle controls */
 		else
-		{
 			coin_counter_w(space->machine, 1, data & 0x0002);
-		}
 
 		if (strncmp(space->machine->gamedrv->name, "mmatrix", 7) == 0)		// Mars Matrix seems to require the coin lockout bit to be reversed
 		{
@@ -755,13 +746,7 @@ static WRITE16_HANDLER( cps2_eeprom_port_w )
 			coin_lockout_w(space->machine, 2, ~data & 0x0040);
 			coin_lockout_w(space->machine, 3, ~data & 0x0080);
 		}
-
-		/*
-        set_led_status(space->machine, 0, data & 0x01);
-        set_led_status(space->machine, 1, data & 0x10);
-        set_led_status(space->machine, 2, data & 0x20);
-        */
-    }
+	}
 }
 
 
@@ -815,64 +800,64 @@ static READ16_HANDLER( joy_or_paddle_r )
  *************************************/
 
 static ADDRESS_MAP_START( cps2_map, ADDRESS_SPACE_PROGRAM, 16 )
-	AM_RANGE(0x000000, 0x3fffff) AM_ROM																			/* 68000 ROM */
+	AM_RANGE(0x000000, 0x3fffff) AM_ROM												/* 68000 ROM */
 	AM_RANGE(0x400000, 0x40000b) AM_RAM AM_BASE_SIZE_MEMBER(cps_state, output, output_size)						/* CPS2 object output */
 	AM_RANGE(0x618000, 0x619fff) AM_READWRITE(qsound_sharedram1_r, qsound_sharedram1_w)     					/* Q RAM */
-	AM_RANGE(0x662000, 0x662001) AM_RAM																			/* Network adapter related, accessed in SSF2TB */
-	AM_RANGE(0x662008, 0x662009) AM_RAM																			/* Network adapter related, accessed in SSF2TB */
-	AM_RANGE(0x662020, 0x662021) AM_RAM																			/* Network adapter related, accessed in SSF2TB */
-	AM_RANGE(0x660000, 0x663fff) AM_RAM																			/* When bit 14 of 0x804030 equals 0 this space is available. Many games store highscores and other info here if available. */
-	AM_RANGE(0x664000, 0x664001) AM_RAM																			/* Unknown - Only used if 0x660000-0x663fff available (could be RAM enable?) */
-	AM_RANGE(0x700000, 0x701fff) AM_WRITE(cps2_objram1_w) AM_BASE_MEMBER(cps_state, objram1)    							/* Object RAM, no game seems to use it directly */
+	AM_RANGE(0x662000, 0x662001) AM_RAM												/* Network adapter related, accessed in SSF2TB */
+	AM_RANGE(0x662008, 0x662009) AM_RAM												/* Network adapter related, accessed in SSF2TB */
+	AM_RANGE(0x662020, 0x662021) AM_RAM												/* Network adapter related, accessed in SSF2TB */
+	AM_RANGE(0x660000, 0x663fff) AM_RAM												/* When bit 14 of 0x804030 equals 0 this space is available. Many games store highscores and other info here if available. */
+	AM_RANGE(0x664000, 0x664001) AM_RAM												/* Unknown - Only used if 0x660000-0x663fff available (could be RAM enable?) */
+	AM_RANGE(0x700000, 0x701fff) AM_WRITE(cps2_objram1_w) AM_BASE_MEMBER(cps_state, objram1)    					/* Object RAM, no game seems to use it directly */
 	AM_RANGE(0x708000, 0x709fff) AM_READWRITE(cps2_objram2_r, cps2_objram2_w) AM_BASE_MEMBER(cps_state, objram2)			/* Object RAM */
 	AM_RANGE(0x70a000, 0x70bfff) AM_READWRITE(cps2_objram2_r, cps2_objram2_w) AM_BASE_MEMBER(cps_state, objram2)			/* mirror */
 	AM_RANGE(0x70c000, 0x70dfff) AM_READWRITE(cps2_objram2_r, cps2_objram2_w) AM_BASE_MEMBER(cps_state, objram2)			/* mirror */
 	AM_RANGE(0x70e000, 0x70ffff) AM_READWRITE(cps2_objram2_r, cps2_objram2_w) AM_BASE_MEMBER(cps_state, objram2)			/* mirror */
-	AM_RANGE(0x800100, 0x80013f) AM_WRITE(cps1_cps_a_w) AM_BASE_MEMBER(cps_state, cps_a_regs)								/* mirror (sfa) */
+	AM_RANGE(0x800100, 0x80013f) AM_WRITE(cps1_cps_a_w) AM_BASE_MEMBER(cps_state, cps_a_regs)					/* mirror (sfa) */
 	AM_RANGE(0x800140, 0x80017f) AM_READWRITE(cps1_cps_b_r, cps1_cps_b_w) AM_BASE_MEMBER(cps_state, cps_b_regs) 			/* mirror (sfa) */
-	AM_RANGE(0x804000, 0x804001) AM_READ_PORT("IN0")                											/* IN0 */
-	AM_RANGE(0x804010, 0x804011) AM_READ_PORT("IN1")                											/* IN1 */
-	AM_RANGE(0x804020, 0x804021) AM_READ_PORT("IN2")                											/* IN2 + EEPROM */
-	AM_RANGE(0x804030, 0x804031) AM_READ(cps2_qsound_volume_r)      											/* Master volume. Also when bit 14=0 addon memory is present, when bit 15=0 network adapter present. */
-	AM_RANGE(0x804040, 0x804041) AM_WRITE(cps2_eeprom_port_w)													/* EEPROM */
-	AM_RANGE(0x8040a0, 0x8040a1) AM_WRITENOP                													/* Unknown (reset once on startup) */
-	AM_RANGE(0x8040b0, 0x8040b3) AM_READ(kludge_r)																/* unknown (xmcotaj hangs if this is 0) */
-	AM_RANGE(0x8040e0, 0x8040e1) AM_WRITE(cps2_objram_bank_w)													/* bit 0 = Object ram bank swap */
-	AM_RANGE(0x804100, 0x80413f) AM_WRITE(cps1_cps_a_w) AM_BASE_MEMBER(cps_state, cps_a_regs)							/* CPS-A custom */
-	AM_RANGE(0x804140, 0x80417f) AM_READWRITE(cps1_cps_b_r, cps1_cps_b_w)           							/* CPS-B custom */
-	AM_RANGE(0x900000, 0x92ffff) AM_RAM_WRITE(cps1_gfxram_w) AM_BASE_SIZE_MEMBER(cps_state, gfxram, gfxram_size)	/* Video RAM */
-	AM_RANGE(0xff0000, 0xffffff) AM_RAM																			/* RAM */
+	AM_RANGE(0x804000, 0x804001) AM_READ_PORT("IN0")                								/* IN0 */
+	AM_RANGE(0x804010, 0x804011) AM_READ_PORT("IN1")                								/* IN1 */
+	AM_RANGE(0x804020, 0x804021) AM_READ_PORT("IN2")                								/* IN2 + EEPROM */
+	AM_RANGE(0x804030, 0x804031) AM_READ(cps2_qsound_volume_r)      								/* Master volume. Also when bit 14=0 addon memory is present, when bit 15=0 network adapter present. */
+	AM_RANGE(0x804040, 0x804041) AM_WRITE(cps2_eeprom_port_w)									/* EEPROM */
+	AM_RANGE(0x8040a0, 0x8040a1) AM_WRITENOP                									/* Unknown (reset once on startup) */
+	AM_RANGE(0x8040b0, 0x8040b3) AM_READ(kludge_r)											/* unknown (xmcotaj hangs if this is 0) */
+	AM_RANGE(0x8040e0, 0x8040e1) AM_WRITE(cps2_objram_bank_w)									/* bit 0 = Object ram bank swap */
+	AM_RANGE(0x804100, 0x80413f) AM_WRITE(cps1_cps_a_w) AM_BASE_MEMBER(cps_state, cps_a_regs)					/* CPS-A custom */
+	AM_RANGE(0x804140, 0x80417f) AM_READWRITE(cps1_cps_b_r, cps1_cps_b_w)           						/* CPS-B custom */
+	AM_RANGE(0x900000, 0x92ffff) AM_RAM_WRITE(cps1_gfxram_w) AM_BASE_SIZE_MEMBER(cps_state, gfxram, gfxram_size)			/* Video RAM */
+	AM_RANGE(0xff0000, 0xffffff) AM_RAM												/* RAM */
 ADDRESS_MAP_END
 
 
 static ADDRESS_MAP_START( dead_cps2_map, ADDRESS_SPACE_PROGRAM, 16 )
-	AM_RANGE(0x000000, 0x3fffff) AM_ROM																			/* 68000 ROM */
+	AM_RANGE(0x000000, 0x3fffff) AM_ROM												/* 68000 ROM */
 	AM_RANGE(0x400000, 0x40000b) AM_RAM AM_BASE_SIZE_MEMBER(cps_state, output, output_size)						/* CPS2 object output */
 	AM_RANGE(0x618000, 0x619fff) AM_READWRITE(qsound_sharedram1_r, qsound_sharedram1_w)     					/* Q RAM */
-	AM_RANGE(0x662000, 0x662001) AM_RAM																			/* Network adapter related, accessed in SSF2TB */
-	AM_RANGE(0x662008, 0x662009) AM_RAM																			/* Network adapter related, accessed in SSF2TB */
-	AM_RANGE(0x662020, 0x662021) AM_RAM																			/* Network adapter related, accessed in SSF2TB */
-	AM_RANGE(0x660000, 0x663fff) AM_RAM																			/* When bit 14 of 0x804030 equals 0 this space is available. Many games store highscores and other info here if available. */
-	AM_RANGE(0x664000, 0x664001) AM_RAM																			/* Unknown - Only used if 0x660000-0x663fff available (could be RAM enable?) */
-	AM_RANGE(0x700000, 0x701fff) AM_WRITE(cps2_objram1_w) AM_BASE_MEMBER(cps_state, objram1)    							/* Object RAM, no game seems to use it directly */
+	AM_RANGE(0x662000, 0x662001) AM_RAM												/* Network adapter related, accessed in SSF2TB */
+	AM_RANGE(0x662008, 0x662009) AM_RAM												/* Network adapter related, accessed in SSF2TB */
+	AM_RANGE(0x662020, 0x662021) AM_RAM												/* Network adapter related, accessed in SSF2TB */
+	AM_RANGE(0x660000, 0x663fff) AM_RAM												/* When bit 14 of 0x804030 equals 0 this space is available. Many games store highscores and other info here if available. */
+	AM_RANGE(0x664000, 0x664001) AM_RAM												/* Unknown - Only used if 0x660000-0x663fff available (could be RAM enable?) */
+	AM_RANGE(0x700000, 0x701fff) AM_WRITE(cps2_objram1_w) AM_BASE_MEMBER(cps_state, objram1)    					/* Object RAM, no game seems to use it directly */
 	AM_RANGE(0x708000, 0x709fff) AM_READWRITE(cps2_objram2_r, cps2_objram2_w) AM_BASE_MEMBER(cps_state, objram2)			/* Object RAM */
 	AM_RANGE(0x70a000, 0x70bfff) AM_READWRITE(cps2_objram2_r, cps2_objram2_w) AM_BASE_MEMBER(cps_state, objram2)			/* mirror */
 	AM_RANGE(0x70c000, 0x70dfff) AM_READWRITE(cps2_objram2_r, cps2_objram2_w) AM_BASE_MEMBER(cps_state, objram2)			/* mirror */
 	AM_RANGE(0x70e000, 0x70ffff) AM_READWRITE(cps2_objram2_r, cps2_objram2_w) AM_BASE_MEMBER(cps_state, objram2)			/* mirror */
-	AM_RANGE(0x800100, 0x80013f) AM_WRITE(cps1_cps_a_w) AM_BASE_MEMBER(cps_state, cps_a_regs)								/* mirror (sfa) */
+	AM_RANGE(0x800100, 0x80013f) AM_WRITE(cps1_cps_a_w) AM_BASE_MEMBER(cps_state, cps_a_regs)					/* mirror (sfa) */
 	AM_RANGE(0x800140, 0x80017f) AM_READWRITE(cps1_cps_b_r, cps1_cps_b_w) AM_BASE_MEMBER(cps_state, cps_b_regs) 			/* mirror (sfa) */
-	AM_RANGE(0x804000, 0x804001) AM_READ_PORT("IN0")                											/* IN0 */
-	AM_RANGE(0x804010, 0x804011) AM_READ_PORT("IN1")                											/* IN1 */
-	AM_RANGE(0x804020, 0x804021) AM_READ_PORT("IN2")                											/* IN2 + EEPROM */
-	AM_RANGE(0x804030, 0x804031) AM_READ(cps2_qsound_volume_r)      											/* Master volume. Also when bit 14=0 addon memory is present, when bit 15=0 network adapter present. */
-	AM_RANGE(0x804040, 0x804041) AM_WRITE(cps2_eeprom_port_w)													/* EEPROM */
-	AM_RANGE(0x8040a0, 0x8040a1) AM_WRITENOP                													/* Unknown (reset once on startup) */
-	AM_RANGE(0x8040b0, 0x8040b3) AM_READ(kludge_r)																/* unknown (xmcotaj hangs if this is 0) */
-	AM_RANGE(0x8040e0, 0x8040e1) AM_WRITE(cps2_objram_bank_w)													/* bit 0 = Object ram bank swap */
-	AM_RANGE(0x804100, 0x80413f) AM_WRITE(cps1_cps_a_w) AM_BASE_MEMBER(cps_state, cps_a_regs)								/* CPS-A custom */
-	AM_RANGE(0x804140, 0x80417f) AM_READWRITE(cps1_cps_b_r, cps1_cps_b_w)           							/* CPS-B custom */
+	AM_RANGE(0x804000, 0x804001) AM_READ_PORT("IN0")                								/* IN0 */
+	AM_RANGE(0x804010, 0x804011) AM_READ_PORT("IN1")                								/* IN1 */
+	AM_RANGE(0x804020, 0x804021) AM_READ_PORT("IN2")                								/* IN2 + EEPROM */
+	AM_RANGE(0x804030, 0x804031) AM_READ(cps2_qsound_volume_r)      								/* Master volume. Also when bit 14=0 addon memory is present, when bit 15=0 network adapter present. */
+	AM_RANGE(0x804040, 0x804041) AM_WRITE(cps2_eeprom_port_w)									/* EEPROM */
+	AM_RANGE(0x8040a0, 0x8040a1) AM_WRITENOP                									/* Unknown (reset once on startup) */
+	AM_RANGE(0x8040b0, 0x8040b3) AM_READ(kludge_r)											/* unknown (xmcotaj hangs if this is 0) */
+	AM_RANGE(0x8040e0, 0x8040e1) AM_WRITE(cps2_objram_bank_w)									/* bit 0 = Object ram bank swap */
+	AM_RANGE(0x804100, 0x80413f) AM_WRITE(cps1_cps_a_w) AM_BASE_MEMBER(cps_state, cps_a_regs)					/* CPS-A custom */
+	AM_RANGE(0x804140, 0x80417f) AM_READWRITE(cps1_cps_b_r, cps1_cps_b_w)           						/* CPS-B custom */
 	AM_RANGE(0x900000, 0x92ffff) AM_RAM_WRITE(cps1_gfxram_w) AM_BASE_SIZE_MEMBER(cps_state, gfxram, gfxram_size)	/* Video RAM */
-	AM_RANGE(0xff0000, 0xffffef) AM_RAM																			/* RAM */
+	AM_RANGE(0xff0000, 0xffffef) AM_RAM												/* RAM */
 	AM_RANGE(0xfffff0, 0xfffffb) AM_RAM AM_BASE_SIZE_MEMBER(cps_state, output, output_size)						/* CPS2 output */
 ADDRESS_MAP_END
 
@@ -1154,28 +1139,28 @@ INPUT_PORTS_END
 
 static const gfx_layout cps1_layout8x8 =
 {
-	8,8,
-	RGN_FRAC(1,1),
+	8, 8,
+	RGN_FRAC(1, 1),
 	4,
 	{ 0, 1, 2, 3 },
-	{ 1*4, 0*4, 3*4, 2*4, 5*4, 4*4, 7*4, 6*4 },
-	{ 0*64, 1*64, 2*64, 3*64, 4*64, 5*64, 6*64, 7*64 },
-	64*8
+	{ 1 * 4, 0 * 4, 3 * 4, 2 * 4, 5 * 4, 4 * 4, 7 * 4, 6 * 4 },
+	{ 0 * 64, 1 * 64, 2 * 64, 3 * 64, 4 * 64, 5 * 64, 6 * 64, 7 * 64 },
+	64 * 8
 };
 
 static const gfx_layout cps1_layout8x8_2 =
 {
-	8,8,
-	RGN_FRAC(1,1),
+	8, 8,
+	RGN_FRAC(1, 1),
 	4,
 	{ 0, 1, 2, 3 },
-	{ 9*4, 8*4, 11*4, 10*4, 13*4, 12*4, 15*4, 14*4 },
-	{ 0*64, 1*64, 2*64, 3*64, 4*64, 5*64, 6*64, 7*64 },
-	64*8
+	{ 9 * 4, 8 * 4, 11 * 4, 10 * 4, 13 * 4, 12 * 4, 15 * 4, 14 * 4 },
+	{ 0 * 64, 1 * 64, 2 * 64, 3 * 64, 4 * 64, 5 * 64, 6 * 64, 7 * 64 },
+	64 * 8
 };
 
-static GFXLAYOUT_RAW( layout16x16, 4, 16, 16, 8*8, 128*8 )
-static GFXLAYOUT_RAW( layout32x32, 4, 32, 32, 16*8, 512*8 )
+static GFXLAYOUT_RAW( layout16x16, 4, 16, 16, 8 * 8, 128 * 8 )
+static GFXLAYOUT_RAW( layout32x32, 4, 32, 32, 16 * 8, 512 * 8 )
 
 static GFXDECODE_START( cps2 )
 	GFXDECODE_ENTRY( "gfx", 0, cps1_layout8x8,   0, 0x100 )
@@ -1200,7 +1185,7 @@ static MACHINE_START( cps2 )
 
 	state_save_register_global(machine, state->scancount);
 
-	if (state->audiocpu != NULL)	// gigaman2 has no audiocpu
+	if (state->audiocpu != NULL)	/* gigaman2 has no audiocpu */
 		memory_configure_bank(machine, "bank1", 0, (QSOUND_SIZE - 0x10000) / 0x4000, memory_region(machine, "audiocpu") + 0x10000, 0x4000);
 }
 
@@ -1230,15 +1215,15 @@ static MACHINE_DRIVER_START( cps2 )
 	MDRV_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
 	MDRV_SCREEN_RAW_PARAMS(XTAL_8MHz, 518, 64, 448, 259, 16, 240)
 /*
-    Measured clocks:
-        V = 59.6376Hz
-        H = 15.4445kHz
-        H/V = 258.973 ~ 259 lines
+	Measured clocks:
+         V = 59.6376Hz
+         H = 15.4445kHz
+         H/V = 258.973 ~ 259 lines
 
-    Possible video clocks:
-        60MHz / 15.4445kHz = 3884.878 / 8 = 485.610 -> unlikely
-         8MHz / 15.4445kHz =  517.983 ~ 518 -> likely
-        16MHz -> same as 8 but with a /2 divider; also a possibility
+	Possible video clocks:
+         60MHz / 15.4445kHz = 3884.878 / 8 = 485.610 -> unlikely
+          8MHz / 15.4445kHz =  517.983 ~ 518 -> likely
+         16MHz -> same as 8 but with a /2 divider; also a possibility
 */
 	MDRV_GFXDECODE(cps2)
 	MDRV_PALETTE_LENGTH(0xc00)
@@ -2007,7 +1992,6 @@ ROM_START( csclub )
 	ROM_LOAD16_WORD_SWAP( "csc.57",   0x300000, 0x080000, CRC(aedc27f2) SHA1(55137f0f22c4823558e6a8ba76011695579a4f1f) )
 	ROM_LOAD16_WORD_SWAP( "csc.58",   0x380000, 0x080000, CRC(2300b7b3) SHA1(f5ecbb45c24f7de1c1aa435870695551d4e343ca) )
 ROM_END
-
 
 ROM_START( csclub1 )
 	ROM_REGION( CODE_SIZE, "maincpu", 0 )      /* 68000 code */
@@ -7798,7 +7782,7 @@ ROM_START( xmvsfb )
 	ROM_LOAD16_WORD_SWAP( "xvs.12m",   0x200000, 0x200000, CRC(7b11e460) SHA1(a581c84acaaf0ce056841c15a6f36889e88be68d) )
 ROM_END
 
-/*   additional   */
+/*  additional  */
 #include "cps2_add.c"
 
 /*************************************
@@ -7831,9 +7815,10 @@ static DRIVER_INIT( ssf2tb )
 
 	state->cps2networkpresent = 0;
 
-	/* we don't emulate the network board, so don't say it's present for now, otherwise the game will
-       attempt to boot in tournament mode and fail */
-	//state->cps2networkpresent = 1;
+	/* we don't emulate the network board, so don't say it's present for now,
+	   otherwise the game will attempt to boot in tournament mode and fail */
+
+	/* state->cps2networkpresent = 1; */
 
 }
 
@@ -8194,7 +8179,6 @@ GAME( 2001, progeara,   progear,  cps2, cps2_2p3b, cps2,     ROT0,   "Cave (Capc
  further customized bootlegs boards are known to exist.
 
 */
-
 
 ROM_START( 1944d )
 	ROM_REGION( CODE_SIZE, "maincpu", 0 )      /* 68000 code */
@@ -9140,7 +9124,7 @@ GAME( 2000, dimahoud, dimahoo,  dead_cps2, cps2_2p3b, cps2,    ROT270, "bootleg"
 
 /* Added games */
 /*
-GAME( year,   archives,   parent name,   MACHINE_DRIVER,   INPUT_PORT,   DRIVER_INIT,   flip,   producer name,   support )
+GAME( year, archives,   parent,   MACHINE_DRIVER, INPUT_PORT, DRIVER_INIT, flip,  producer, 	title, 		information )
 */
 GAME( 1995,   sfaud,       sfa,      dead_cps2,   cps2_2p6b,   cps2,     ROT0,   "bootleg", "Street Fighter Alpha: Warriors' Dreams (USA 950727 Phoenix Edition) (bootleg)", GAME_SUPPORTS_SAVE )
 GAME( 1996,   sfz2jd,      sfa2,     dead_cps2,   cps2_2p6b,   cps2,     ROT0,   "bootleg", "Street Fighter Zero 2 (Japan 960227 Phoenix Edition) (bootleg)", GAME_SUPPORTS_SAVE )
@@ -9162,7 +9146,7 @@ GAME( 1995,   cybotsjd,    cybots,   dead_cps2,   cybots,      cps2,     ROT0,  
 GAME( 1996,   spf2td,	   spf2t,    dead_cps2,   cps2_2p2b,   cps2,     ROT0,   "bootleg", "Super Puzzle Fighter II Turbo (USA 960620 Phoenix Edition) (bootleg)", GAME_SUPPORTS_SAVE )
 GAME( 2000,   1944ad,      1944,     dead_cps2,   cps2_2p2b,   cps2,     ROT0,   "bootleg", "1944: The Loop Master (USA 000620 Phoenix Edition alt) (bootleg)", GAME_SUPPORTS_SAVE )
 GAME( 2004,   hsf2da,      hsf2,     dead_cps2,	  cps2_2p6b,   cps2,     ROT0,   "bootleg", "Hyper Street Fighter 2: The Anniversary Edition (Asia 040202 Phoenix Edition alt) (bootleg)", GAME_SUPPORTS_SAVE )
-GAME( 1996,   gigaman2,	   megaman2, gigaman2,    cps2_2p3b,   gigaman2, ROT0,   "bootleg", "Giga Man 2: The Power Fighters (bootleg of Mega Man 2: The Power Fighters)", GAME_IMPERFECT_GRAPHICS | GAME_NO_SOUND | GAME_SUPPORTS_SAVE ) // flash roms aren't dumped, layer offsets different, different sound system
+GAME( 1996,   gigaman2,	   megaman2, gigaman2,    cps2_2p3b,   gigaman2, ROT0,   "bootleg", "Giga Man 2: The Power Fighters (bootleg of Mega Man 2: The Power Fighters)", GAME_IMPERFECT_GRAPHICS | GAME_NO_SOUND | GAME_SUPPORTS_SAVE )
 
 
 GAME( 1994,   ringdesta,   ringdest,	cps2,       cps2_2p6b,   cps2,      ROT0,   "Capcom", "Ring of Destruction: Slammasters II (Asia 940831)", GAME_SUPPORTS_SAVE )
