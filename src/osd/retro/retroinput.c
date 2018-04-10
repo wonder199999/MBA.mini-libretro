@@ -147,7 +147,7 @@ kt_table ktable[] = {
 			(core_stricmp(machine->gamedrv->name, "xmvsf") == 0) || (core_stricmp(machine->gamedrv->parent, "xmvsf") == 0) || \
 			(core_stricmp(machine->gamedrv->name, "ringdest") == 0) || (core_stricmp(machine->gamedrv->parent, "ringdest") == 0) || \
 			(core_stricmp(machine->gamedrv->name, "nwarr") == 0) || (core_stricmp(machine->gamedrv->parent, "nwarr") == 0) || /* Before is the Capcom games */ \
-			(core_stricmp(machine->gamedrv->name, "soldier") == 0) || (core_stricmp(machine->gamedrv->parent, "soldier") == 0) 
+			(core_stricmp(machine->gamedrv->name, "ssoldier") == 0) || (core_stricmp(machine->gamedrv->parent, "ssoldier") == 0) 
 
 /* Neo Geo */
 #define NEOGEO_LAYOUT	(core_stricmp(machine->gamedrv->parent, "neogeo") == 0) || (core_stricmp(machine->gamedrv->name, "3countba") == 0) || \
