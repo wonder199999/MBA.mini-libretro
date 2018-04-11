@@ -2123,7 +2123,7 @@ GAME( 1992,  uccopsj,    uccops,      uccops,      uccops,   	m92_most,     	ROT
 //
 GAME( 1992,  mysticri,   0,           mysticri,    mysticri, 	m92_most,   	ROT0,   "Irem",         "Mystic Riders (World)", 0 )
 GAME( 1992,  gunhohki,   mysticri,    mysticri,    mysticri, 	m92_most,   	ROT0,   "Irem",         "Gun Hohki (Japan)", 0 )
-GAME( 1992,  mysticrib,  mysticri,    mysticri,    mysticri, 	m92_most,   	ROT0,   "Irem",         "Mystic Riders (bootleg?)", GAME_NO_SOUND )
+GAME( 1992,  mysticrib,  mysticri,    mysticri,    mysticri, 	m92_most,   	ROT0,   "Irem",         "Mystic Riders (bootleg?)", 0 )
 //
 GAME( 1992,  majtitl2,   0,           majtitl2,    majtitl2, 	m92_majtitl2,   ROT0,   "Irem",         "Major Title 2 (World)", 0 )
 GAME( 1992,  majtitl2j,  majtitl2,    majtitl2,    majtitl2, 	m92_majtitl2,   ROT0,   "Irem",         "Major Title 2 (Japan)", 0 )
