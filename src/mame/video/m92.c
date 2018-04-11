@@ -43,90 +43,87 @@
 #include "includes/m92.h"
 
 typedef struct _pf_layer_info pf_layer_info;
+
 struct _pf_layer_info
 {
-	tilemap_t *		tmap;
-	tilemap_t *		wide_tmap;
-	UINT16			vram_base;
-	UINT16			control[4];
+	tilemap_t *	tmap;
+	tilemap_t *	wide_tmap;
+	UINT16		vram_base;
+	UINT16		control[4];
 };
 
 static pf_layer_info pf_layer[3];
 
 static UINT16 pf_master_control[4];
 static INT32 m92_sprite_list;
+static int m92_palette_bank;
 
 UINT32 m92_raster_irq_position;
-UINT16 *m92_vram_data,*m92_spritecontrol;
-UINT8 m92_game_kludge;
-
-UINT8 m92_sprite_buffer_busy;
-static int m92_palette_bank;
+UINT8  m92_game_kludge;
+UINT8  m92_sprite_buffer_busy;
+UINT16 *m92_vram_data, *m92_spritecontrol;
 
 /*****************************************************************************/
 
 static TIMER_CALLBACK( spritebuffer_callback )
 {
 	m92_sprite_buffer_busy = 1;
-	if (m92_game_kludge!=2)		/* Major Title 2 doesn't like this interrupt!? */
+
+	/* Major Title 2 doesn't like this interrupt !? */
+	if (m92_game_kludge != 2)
 		m92_sprite_interrupt(machine);
 }
 
 WRITE16_HANDLER( m92_spritecontrol_w )
 {
-	COMBINE_DATA(&m92_spritecontrol[offset]);
+	COMBINE_DATA( &m92_spritecontrol[offset] );
+	/*
+		offset0: sprite list size (negative)
+		offset1: ? (always 0)
+		offset2: sprite control
+		offset3: ? (always 0)
+		offset4: sprite dma
+		offset5: ?
 
-	/* Sprite list size register - used in spriteroutine */
+	Sprite control - display all sprites, or partial list */
 
-	/* Sprite control - display all sprites, or partial list */
-	if (offset==2 && ACCESSING_BITS_0_7)
-	{
-		if ((data & 0xff) == 8)
-			m92_sprite_list = (((0x100 - m92_spritecontrol[0]) & 0xff) * 4);
-		else
-			m92_sprite_list = 0x400;
-
-		/* Bit 0 is also significant */
-	}
+	/* Bit 0 is also significant */
+	if (ACCESSING_BITS_0_7 && offset == 2)
+		m92_sprite_list = ((data & 0xff) == 8) ? (((0x0100 - m92_spritecontrol[0]) & 0xff) * 4) : 0x0400;
 
 	/* Sprite buffer - the data written doesn't matter (confirmed by several games) */
-	if (offset==4)
+	if (offset == 4)
 	{
-			buffer_spriteram16_w(space,0,0,0xffff);
+		buffer_spriteram16_w(space, 0, 0, 0xffff);
 		m92_sprite_buffer_busy = 0;
 
-		/* Pixel clock is 26.6666 MHz, we have 0x800 bytes, or 0x400 words
-		   to copy from spriteram to the buffer.  It seems safe to assume 1
-		   word can be copied per clock.*/
+	/*	Pixel clock is 26.6666 MHz (some boards 27MHz ?), we have 0x800 bytes, or 0x400 words to copy from
+		spriteram to the buffer.  It seems safe to assume 1 word can be copied per clock.	*/
 		timer_set(space->machine, attotime_mul(ATTOTIME_IN_HZ(26666000), 0x400), NULL, 0, spritebuffer_callback);
 	}
 }
 
 WRITE16_HANDLER( m92_videocontrol_w )
 {
-	/*
-         Many games write:
-            0x2000
-            0x201b in alternate frames.
+	/*	Many games write:
+            		0x2000
+            		0x201b in alternate frames.
 
-         Some games write to this both before and after the sprite buffer
-         register - perhaps some kind of acknowledge bit is in there?
+         	Some games write to this both before and after the sprite buffer
+         	register - perhaps some kind of acknowledge bit is in there?
+         	Lethal Thunder fails it's RAM test with the upper palette bank
+         	enabled.  This was one of the earlier games and could actually
+         	be a different motherboard revision (most games use M92-A-B top
+         	pcb, a M92-A-A revision could exist...).	*/
 
-         Lethal Thunder fails it's RAM test with the upper palette bank
-         enabled.  This was one of the earlier games and could actually
-         be a different motherboard revision (most games use M92-A-B top
-         pcb, a M92-A-A revision could exist...).
-	*/
+	/* Access to upper palette bank */
 	if (ACCESSING_BITS_0_7)
-	{
-		/* Access to upper palette bank */
-		m92_palette_bank = (data >> 1) & 1;
-	}
+		m92_palette_bank = (data >> 1) & 0x01;
 }
 
 READ16_HANDLER( m92_paletteram_r )
 {
-	return space->machine->generic.paletteram.u16[offset + 0x400 * m92_palette_bank];
+	return space->machine->generic.paletteram.u16[offset + 0x0400 * m92_palette_bank];
 }
 
 WRITE16_HANDLER( m92_paletteram_w )
@@ -145,13 +142,13 @@ static TILE_GET_INFO( get_pf_tile_info )
 	attrib = m92_vram_data[tile_index + 1];
 	tile = m92_vram_data[tile_index] + ((attrib & 0x8000) << 1);
 
-	SET_TILE_INFO(
-			0,
-			tile,
-			attrib & 0x7f,
-			TILE_FLIPYX(attrib >> 9));
+	SET_TILE_INFO( 0, tile,
+		       attrib & 0x7f,
+		       TILE_FLIPYX( attrib >> 9) );
+
 	if (attrib & 0x100) tileinfo->group = 2;
-	else if (attrib & 0x80) tileinfo->group = 1;
+	else
+	if (attrib & 0x80) tileinfo->group = 1;
 	else tileinfo->group = 0;
 }
 
@@ -161,7 +158,7 @@ WRITE16_HANDLER( m92_vram_w )
 {
 	int laynum;
 
-	COMBINE_DATA(&m92_vram_data[offset]);
+	COMBINE_DATA( &m92_vram_data[offset] );
 
 	for (laynum = 0; laynum < 3; laynum++)
 	{
@@ -170,6 +167,7 @@ WRITE16_HANDLER( m92_vram_w )
 			tilemap_mark_tile_dirty(pf_layer[laynum].tmap, (offset & 0x1fff) / 2);
 			tilemap_mark_tile_dirty(pf_layer[laynum].wide_tmap, (offset & 0x3fff) / 2);
 		}
+
 		if ((offset & 0x6000) == pf_layer[laynum].vram_base + 0x2000)
 			tilemap_mark_tile_dirty(pf_layer[laynum].wide_tmap, (offset & 0x3fff) / 2);
 	}
@@ -213,11 +211,11 @@ WRITE16_HANDLER( m92_master_control_w )
 			if (pf_master_control[offset] & 0x04)
 			{
 				tilemap_set_enable(layer->tmap, FALSE);
-				tilemap_set_enable(layer->wide_tmap, (~pf_master_control[offset] >> 4) & 1);
+				tilemap_set_enable(layer->wide_tmap, (~pf_master_control[offset] >> 4) & 0x01);
 			}
 			else
 			{
-				tilemap_set_enable(layer->tmap, (~pf_master_control[offset] >> 4) & 1);
+				tilemap_set_enable(layer->tmap, (~pf_master_control[offset] >> 4) & 0x01);
 				tilemap_set_enable(layer->wide_tmap, FALSE);
 			}
 
@@ -242,13 +240,14 @@ VIDEO_START( m92 )
 	int laynum;
 
 	memset(&pf_layer, 0, sizeof(pf_layer));
+
 	for (laynum = 0; laynum < 3; laynum++)
 	{
 		pf_layer_info *layer = &pf_layer[laynum];
 
 		/* allocate two tilemaps per layer, one normal, one wide */
-		layer->tmap = tilemap_create(machine, get_pf_tile_info, tilemap_scan_rows,  8,8, 64,64);
-		layer->wide_tmap = tilemap_create(machine, get_pf_tile_info, tilemap_scan_rows,  8,8, 128,64);
+		layer->tmap = tilemap_create(machine, get_pf_tile_info, tilemap_scan_rows, 8, 8, 64, 64);
+		layer->wide_tmap = tilemap_create(machine, get_pf_tile_info, tilemap_scan_rows, 8, 8, 128, 64);
 
 		/* set the user data for each one to point to the layer */
 		tilemap_set_user_data(layer->tmap, &pf_layer[laynum]);
@@ -276,10 +275,10 @@ VIDEO_START( m92 )
 		state_save_register_item_array(machine, "layer", NULL, laynum, layer->control);
 	}
 
-	machine->generic.paletteram.u16 = auto_alloc_array(machine, UINT16, 0x1000/2);
+	machine->generic.paletteram.u16 = auto_alloc_array(machine, UINT16, 0x1000 / 2);
 
-	memset(machine->generic.spriteram.u16,0,0x800);
-	memset(machine->generic.buffered_spriteram.u16,0,0x800);
+	memset( machine->generic.spriteram.u16, 0, 0x0800 );
+	memset( machine->generic.buffered_spriteram.u16, 0, 0x0800 );
 
 	state_save_register_global_array(machine, pf_master_control);
 
@@ -310,85 +309,72 @@ VIDEO_START( ppan )
 }
 
 /*****************************************************************************/
-
 static void draw_sprites(running_machine *machine, bitmap_t *bitmap, const rectangle *cliprect)
 {
-	UINT16 *buffered_spriteram16 = machine->generic.buffered_spriteram.u16;
-	int offs,k;
+	UINT16 *source = machine->generic.buffered_spriteram.u16;
+	int offs, layer, x, y, sprite, color, pri_sprite, pri_back, fx, fy, x_multi, y_multi, row, col, s_ptr;
 
-	for (k=0; k<8; k++)
+	for (layer = 0; layer < 8; layer++)
 	{
 		for (offs = 0; offs < m92_sprite_list; )
 		{
-			int x,y,sprite,colour,fx,fy,x_multi,y_multi,i,j,s_ptr,pri_back,pri_sprite;
+			x = source[offs + 3] & 0x01ff;
+			y = source[offs + 0] & 0x01ff;
+			sprite = source[offs + 1];
+			color = source[offs + 2] & 0x7f;
+			fx = (source[offs + 2] >> 8) & 0x01;
+			fy = (source[offs + 2] >> 9) & 0x01;
+			pri_back = (~source[offs + 2] >> 6) & 0x02;
+			pri_sprite = (source[offs + 0] >> 13) & 0x07;
+			x_multi = 1 << ( (source[offs + 0] >> 11) & 0x03 );
+			y_multi = 1 << ( (source[offs + 0] >> 9) & 0x03 );
 
-			y = buffered_spriteram16[offs+0] & 0x1ff;
-			x = buffered_spriteram16[offs+3] & 0x1ff;
+			offs += x_multi * 4;
+			if (pri_sprite != layer) continue;
 
-			if (buffered_spriteram16[offs+2] & 0x0080) pri_back=0; else pri_back=2;
-
-			sprite= buffered_spriteram16[offs+1];
-			colour = buffered_spriteram16[offs+2] & 0x007f;
-			pri_sprite= (buffered_spriteram16[offs+0] & 0xe000) >> 13;
-
-			fx = (buffered_spriteram16[offs+2] >> 8) & 1;
-			fy = (buffered_spriteram16[offs+2] >> 9) & 1;
-			y_multi = (buffered_spriteram16[offs+0] >> 9) & 3;
-			x_multi = (buffered_spriteram16[offs+0] >> 11) & 3;
-
-			y_multi = 1 << y_multi;
-			x_multi = 1 << x_multi;
-
-			offs += 4 * x_multi;
-			if (pri_sprite != k) continue;
-
-			x = x - 16;
+			x = (x - 16) & 0x01ff;
 			y = 384 - 16 - y;
 
-			if (fx) x+=16 * (x_multi - 1);
+			if (fx) x += 16 * (x_multi - 1);
 
-			for (j=0; j<x_multi; j++)
+			for (col = 0; col < x_multi; col++)
 			{
-				s_ptr=8 * j;
-				if (!fy) s_ptr+=y_multi-1;
+				s_ptr = col * 8;
+				if (!fy) s_ptr += y_multi - 1;
 
-				x &= 0x1ff;
-				for (i=0; i<y_multi; i++)
+				for (row = 0; row < y_multi; row++)
 				{
-					if (flip_screen_get(machine)) {
-						pdrawgfx_transpen(bitmap,cliprect,machine->gfx[1],
-								sprite + s_ptr,
-								colour,
-								!fx,!fy,
-								464-x,240-(y-i*16),
-								machine->priority_bitmap,pri_back,0);
+					if (flip_screen_get(machine))
+					{
+						pdrawgfx_transpen( bitmap, cliprect, machine->gfx[1],
+								sprite + s_ptr, color, !fx, !fy,
+								464 - x, 240 - (y - row * 16),
+								machine->priority_bitmap, pri_back, 0 );
 
 						// wrap around x
-						pdrawgfx_transpen(bitmap,cliprect,machine->gfx[1],
-								sprite + s_ptr,
-								colour,
-								!fx,!fy,
-								464-x+512,240-(y-i*16),
-								machine->priority_bitmap,pri_back,0);
-					} else {
-						pdrawgfx_transpen(bitmap,cliprect,machine->gfx[1],
-								sprite + s_ptr,
-								colour,
-								fx,fy,
-								x,y-i*16,
-								machine->priority_bitmap,pri_back,0);
-
-						// wrap around x
-						pdrawgfx_transpen(bitmap,cliprect,machine->gfx[1],
-								sprite + s_ptr,
-								colour,
-								fx,fy,
-								x-512,y-i*16,
-								machine->priority_bitmap,pri_back,0);
+						pdrawgfx_transpen( bitmap, cliprect, machine->gfx[1],
+								sprite + s_ptr, color, !fx, !fy,
+								464 - x + 512, 240 - (y - row * 16),
+								machine->priority_bitmap, pri_back, 0 );
 					}
-					if (fy) s_ptr++; else s_ptr--;
+					else
+					{
+						pdrawgfx_transpen( bitmap, cliprect, machine->gfx[1],
+								sprite + s_ptr, color, fx, fy,
+								x, y - row * 16,
+								machine->priority_bitmap, pri_back, 0 );
+
+						// wrap around x
+						pdrawgfx_transpen( bitmap, cliprect, machine->gfx[1],
+								sprite + s_ptr, color, fx, fy,
+								x - 512, y - row * 16,
+								machine->priority_bitmap, pri_back, 0 );
+					}
+					if (fy) s_ptr++;
+					else s_ptr--;
 				}
-				if (fx) x-=16; else x+=16;
+				if (fx) x -= 16;
+				else x += 16;
 			}
 		}
 	}
@@ -396,88 +382,70 @@ static void draw_sprites(running_machine *machine, bitmap_t *bitmap, const recta
 
 static void ppan_draw_sprites(running_machine *machine, bitmap_t *bitmap, const rectangle *cliprect)
 {
-	UINT16 *buffered_spriteram16 = machine->generic.buffered_spriteram.u16;
-	int offs, k;
+	UINT16 *source = machine->generic.buffered_spriteram.u16;
+	int offs, layer, x, y, sprite, color, pri_sprite, pri_back, fx, fy, x_multi, y_multi, row, col, s_ptr;
 
-	for (k = 0; k < 8; k++)
+	for (layer = 0; layer < 8; layer++)
 	{
 		for (offs = 0; offs < m92_sprite_list; )
 		{
-			int x, y, sprite, colour, fx, fy, x_multi, y_multi, i, j, s_ptr, pri_back, pri_sprite;
+			x = source[offs + 3] & 0x01ff;
+			y = source[offs + 0] & 0x01ff;
+			sprite = source[offs + 1];
+			color = source[offs + 2] & 0x7f;
+			fx = (source[offs + 2] >> 8) & 0x01;
+			fy = (source[offs + 2] >> 9) & 0x01;
+			pri_sprite = (source[offs + 0] >> 13) & 0x07;
+			pri_back = (~source[offs + 2] >> 6) & 0x02;
+			x_multi = 1 << ( (source[offs + 0] >> 11) & 0x03 );
+			y_multi = 1 << ( (source[offs + 0] >> 9) & 0x03 );
 
-			y = buffered_spriteram16[offs + 0] & 0x1ff;
-			x = buffered_spriteram16[offs + 3] & 0x1ff;
+			offs += x_multi * 4;
+			if (pri_sprite != layer) continue;
 
-			if (buffered_spriteram16[offs + 2] & 0x0080) pri_back = 0; else pri_back = 2;
-
-			sprite= buffered_spriteram16[offs + 1];
-			colour = buffered_spriteram16[offs + 2] & 0x007f;
-			pri_sprite= (buffered_spriteram16[offs + 0] & 0xe000) >> 13;
-
-			fx = (buffered_spriteram16[offs + 2] >> 8) & 1;
-			fy = (buffered_spriteram16[offs + 2] >> 9) & 1;
-			y_multi = (buffered_spriteram16[offs + 0] >> 9) & 3;
-			x_multi = (buffered_spriteram16[offs + 0] >> 11) & 3;
-
-			y_multi = 1 << y_multi;
-			x_multi = 1 << x_multi;
-
-			offs += 4 * x_multi;
-			if (pri_sprite != k) continue;
-
-			x = x - 0;
-			y = 384 - 16 - 7 - y;
-
-			y -= 128;
+			y = 384 - 128 - 16 - 7 - y;
 			if (y < 0) y += 512;
 
 			if (fx) x += 16 * (x_multi - 1);
 
-			for (j = 0; j < x_multi; j++)
+			for (col = 0; col < x_multi; col++)
 			{
-				s_ptr = 8 * j;
+				s_ptr = col * 8;
 				if (!fy) s_ptr += y_multi - 1;
 
-				x &= 0x1ff;
-				for (i = 0; i < y_multi; i++)
+				for (row = 0; row < y_multi; row++)
 				{
 					if (flip_screen_get(machine))
 					{
-						pdrawgfx_transpen(bitmap,cliprect,machine->gfx[1],
-								sprite + s_ptr,
-								colour,
-								!fx,!fy,
-								464-x,240-(y-i*16),
-								machine->priority_bitmap,pri_back,0);
+						pdrawgfx_transpen( bitmap, cliprect, machine->gfx[1],
+								sprite + s_ptr, color, !fx, !fy,
+								464 - x, 240 - (y - row * 16),
+								machine->priority_bitmap, pri_back, 0 );
 
 						// wrap around x
-						pdrawgfx_transpen(bitmap,cliprect,machine->gfx[1],
-								sprite + s_ptr,
-								colour,
-								!fx,!fy,
-								464-x+512,240-(y-i*16),
-								machine->priority_bitmap,pri_back,0);
+						pdrawgfx_transpen( bitmap, cliprect, machine->gfx[1],
+								sprite + s_ptr, color, !fx, !fy,
+								464 - x + 512, 240 - (y - row * 16),
+								machine->priority_bitmap, pri_back, 0 );
 					}
 					else
 					{
-						pdrawgfx_transpen(bitmap,cliprect,machine->gfx[1],
-								sprite + s_ptr,
-								colour,
-								fx,fy,
-								x,y-i*16,
-								machine->priority_bitmap,pri_back,0);
+						pdrawgfx_transpen( bitmap, cliprect, machine->gfx[1],
+								sprite + s_ptr, color, fx, fy,
+								x, y - row * 16,
+								machine->priority_bitmap, pri_back, 0 );
 
 						// wrap around x
-						pdrawgfx_transpen(bitmap,cliprect,machine->gfx[1],
-								sprite + s_ptr,
-								colour,
-								fx,fy,
-								x-512,y-i*16,
-								machine->priority_bitmap,pri_back,0);
+						pdrawgfx_transpen( bitmap, cliprect, machine->gfx[1],
+								sprite + s_ptr, color, fx, fy,
+								x - 512, y - row * 16,
+								machine->priority_bitmap, pri_back, 0 );
 					}
-					if (fy) s_ptr++; else s_ptr--;
+					if (fy) s_ptr++;
+					else s_ptr--;
 				}
-				if (fx) x-=16; else x+=16;
+				if (fx) x -= 16;
+				else x += 16;
 			}
 		}
 	}
@@ -487,19 +455,17 @@ static void ppan_draw_sprites(running_machine *machine, bitmap_t *bitmap, const 
 
 static void m92_update_scroll_positions(void)
 {
-	int laynum;
-	int i;
+	int laynum, i;
 
-	/*  Playfield 3 rowscroll data is 0xdfc00 - 0xdffff
-        Playfield 2 rowscroll data is 0xdf800 - 0xdfbff
-        Playfield 1 rowscroll data is 0xdf400 - 0xdf7ff
+	/*   Playfield 3 rowscroll data is 0xdfc00 - 0xdffff
+             Playfield 2 rowscroll data is 0xdf800 - 0xdfbff
+             Playfield 1 rowscroll data is 0xdf400 - 0xdf7ff
 
-        It appears to be hardwired to those locations.
+             It appears to be hardwired to those locations.
 
-        In addition, each playfield is staggered 2 pixels horizontally from the
-        previous one.  This is most obvious in Hook & Blademaster.
-
-    */
+             In addition, each playfield is staggered 2 pixels horizontally from the
+             previous one.  This is most obvious in Hook & Blademaster.
+	*/
 
 	for (laynum = 0; laynum < 3; laynum++)
     	{
@@ -507,14 +473,20 @@ static void m92_update_scroll_positions(void)
 
 		if (pf_master_control[laynum] & 0x40)
 		{
-			const UINT16 *scrolldata = m92_vram_data + (0xf400 + 0x400 * laynum) / 2;
+			const UINT16 *scrolldata = m92_vram_data + (0xf400 + 0x0400 * laynum) / 2;
 
 			tilemap_set_scroll_rows(layer->tmap, 512);
 			tilemap_set_scroll_rows(layer->wide_tmap, 512);
-			for (i = 0; i < 512; i++)
+			for (i = 0; i < 512; )
 			{
 				tilemap_set_scrollx(layer->tmap, i, scrolldata[i]);
-				tilemap_set_scrollx(layer->wide_tmap, i, scrolldata[i]);
+				tilemap_set_scrollx(layer->wide_tmap, i, scrolldata[i]); i++;
+				tilemap_set_scrollx(layer->tmap, i, scrolldata[i]);
+				tilemap_set_scrollx(layer->wide_tmap, i, scrolldata[i]); i++;
+				tilemap_set_scrollx(layer->tmap, i, scrolldata[i]);
+				tilemap_set_scrollx(layer->wide_tmap, i, scrolldata[i]); i++;
+				tilemap_set_scrollx(layer->tmap, i, scrolldata[i]);
+				tilemap_set_scrollx(layer->wide_tmap, i, scrolldata[i]); i++;
 			}
 		}
 		else
@@ -532,11 +504,11 @@ static void m92_update_scroll_positions(void)
 
 /*****************************************************************************/
 
-static void m92_screenrefresh(running_machine *machine, bitmap_t *bitmap,const rectangle *cliprect)
+static void m92_screenrefresh(running_machine *machine, bitmap_t *bitmap, const rectangle *cliprect)
 {
 	bitmap_fill(machine->priority_bitmap, cliprect, 0);
 
-	if ((~pf_master_control[2] >> 4) & 1)
+	if ( (~pf_master_control[2] >> 4) & 0x01 )
 	{
 		tilemap_draw(bitmap, cliprect, pf_layer[2].wide_tmap, TILEMAP_DRAW_LAYER1, 0);
 		tilemap_draw(bitmap, cliprect, pf_layer[2].tmap,      TILEMAP_DRAW_LAYER1, 0);
@@ -562,11 +534,10 @@ VIDEO_UPDATE( m92 )
 {
 	m92_update_scroll_positions();
 	m92_screenrefresh(screen->machine, bitmap, cliprect);
-
 	draw_sprites(screen->machine, bitmap, cliprect);
 
 	/* Flipscreen appears hardwired to the dipswitch - strange */
-	if (input_port_read(screen->machine, "DSW") & 0x100)
+	if (input_port_read(screen->machine, "DSW") & 0x0100)
 		flip_screen_set(screen->machine, 0);
 	else
 		flip_screen_set(screen->machine, 1);
@@ -577,11 +548,10 @@ VIDEO_UPDATE( ppan )
 {
 	m92_update_scroll_positions();
 	m92_screenrefresh(screen->machine, bitmap, cliprect);
-
 	ppan_draw_sprites(screen->machine, bitmap, cliprect);
 
 	/* Flipscreen appears hardwired to the dipswitch - strange */
-	if (input_port_read(screen->machine, "DSW") & 0x100)
+	if (input_port_read(screen->machine, "DSW") & 0x0100)
 		flip_screen_set(screen->machine, 0);
 	else
 		flip_screen_set(screen->machine, 1);

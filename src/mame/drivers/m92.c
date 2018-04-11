@@ -194,25 +194,24 @@ psoldier dip locations still need veritication.
 *****************************************************************************/
 
 #include "emu.h"
-#include "cpu/nec/nec.h"
 #include "includes/m92.h"
 #include "includes/iremipt.h"
+#include "cpu/nec/nec.h"
 #include "machine/irem_cpu.h"
 #include "sound/2151intf.h"
 #include "sound/iremga20.h"
 #include "sound/okim6295.h"
 
-static UINT8 irqvector;
+static UINT8  m92_irq_vectorbase;
+static UINT8  irqvector;
 static UINT16 sound_status;
 static UINT32 bankaddress;
 static emu_timer *scanline_timer;
 
-static UINT8 m92_irq_vectorbase;
-
-#define M92_IRQ_0 ((m92_irq_vectorbase + 0) / 4)  /* VBL interrupt*/
-#define M92_IRQ_1 ((m92_irq_vectorbase + 4) / 4)  /* Sprite buffer complete interrupt */
-#define M92_IRQ_2 ((m92_irq_vectorbase + 8) / 4)  /* Raster interrupt */
-#define M92_IRQ_3 ((m92_irq_vectorbase + 12) / 4) /* Sound cpu interrupt */
+#define M92_IRQ_0 ((m92_irq_vectorbase +  0) / 4)	/* VBL interrupt */
+#define M92_IRQ_1 ((m92_irq_vectorbase +  4) / 4)  	/* Sprite buffer complete interrupt */
+#define M92_IRQ_2 ((m92_irq_vectorbase +  8) / 4)  	/* Raster interrupt */
+#define M92_IRQ_3 ((m92_irq_vectorbase + 12) / 4) 	/* Sound cpu interrupt */
 
 
 static TIMER_CALLBACK( m92_scanline_interrupt );
@@ -249,7 +248,7 @@ static MACHINE_RESET( m92 )
 
 static TIMER_CALLBACK( m92_scanline_interrupt )
 {
-	int scanline = param;
+	UINT32 scanline = param;
 
 	/* raster interrupt */
 	if (scanline == m92_raster_irq_position)
@@ -259,7 +258,8 @@ static TIMER_CALLBACK( m92_scanline_interrupt )
 	}
 
 	/* VBLANK interrupt */
-	else if (scanline == machine->primary_screen->visible_area().max_y + 1)
+	else
+	if (scanline == machine->primary_screen->visible_area().max_y + 1)
 	{
 		machine->primary_screen->update_partial(scanline);
 		cputag_set_input_line_and_vector(machine, "maincpu", 0, HOLD_LINE, M92_IRQ_0);
@@ -268,6 +268,7 @@ static TIMER_CALLBACK( m92_scanline_interrupt )
 	/* adjust for next scanline */
 	if (++scanline >= machine->primary_screen->height())
 		scanline = 0;
+
 	timer_adjust_oneshot(scanline_timer, machine->primary_screen->time_until_pos(scanline), scanline);
 }
 
@@ -282,6 +283,7 @@ static READ16_HANDLER( m92_eeprom_r )
 static WRITE16_HANDLER( m92_eeprom_w )
 {
 	UINT8 *RAM = memory_region(space->machine, "user1");
+
 	if (ACCESSING_BITS_0_7)
 		RAM[offset] = data;
 }
@@ -292,9 +294,9 @@ static WRITE16_HANDLER( m92_coincounter_w )
 	{
 		coin_counter_w(space->machine, 0, data & 0x01);
 		coin_counter_w(space->machine, 1, data & 0x02);
-		/* Bit 0x8 is Motor(?!), used in Hook, In The Hunt, UCops */
-		/* Bit 0x8 is Memcard related in RTypeLeo */
-		/* Bit 0x40 set in Blade Master test mode input check */
+	/*	Bit 0x8 is Motor(?!), used in Hook, In The Hunt, UCops
+		Bit 0x8 is Memcard related in RTypeLeo
+		Bit 0x40 set in Blade Master test mode input check */
 	}
 }
 
@@ -302,7 +304,7 @@ static WRITE16_HANDLER( m92_bankswitch_w )
 {
 	if (ACCESSING_BITS_0_7)
 	{
-		bankaddress = 0x100000 + ((data & 0x7) * 0x10000);
+		bankaddress = 0x100000 + ((data & 0x07) * 0x10000);
 		set_m92_bank(space->machine);
 	}
 }
@@ -318,26 +320,26 @@ enum { VECTOR_INIT, YM2151_ASSERT, YM2151_CLEAR, V30_ASSERT, V30_CLEAR };
 
 static TIMER_CALLBACK( setvector_callback )
 {
-	if (!machine->device("soundcpu"))
-		return;
+	if (!machine->device("soundcpu")) return;
 
-	switch(param)
+	switch (param)
 	{
-		case VECTOR_INIT:	irqvector = 0;		break;
-		case YM2151_ASSERT:	irqvector |= 0x2;	break;
-		case YM2151_CLEAR:	irqvector &= ~0x2;	break;
-		case V30_ASSERT:	irqvector |= 0x1;	break;
-		case V30_CLEAR:		irqvector &= ~0x1;	break;
+		case VECTOR_INIT:   irqvector  =  0x00; break;
+		case YM2151_ASSERT: irqvector |=  0x02; break;
+		case YM2151_CLEAR:  irqvector &= ~0x02; break;
+		case V30_ASSERT:    irqvector |=  0x01; break;
+		case V30_CLEAR:     irqvector &= ~0x01; break;
 	}
 
-	if (irqvector & 0x2)		/* YM2151 has precedence */
+	if (irqvector & 0x02)		/* YM2151 has precedence */
 		cpu_set_input_line_vector(machine->device("soundcpu"), 0, 0x18);
-	else if (irqvector & 0x1)	/* V30 */
+	else
+	if (irqvector & 0x01)		/* V30 */
 		cpu_set_input_line_vector(machine->device("soundcpu"), 0, 0x19);
 
-	if (irqvector == 0)	/* no IRQs pending */
+	if (irqvector == 0)		/* no IRQs pending */
 		cputag_set_input_line(machine, "soundcpu", 0, CLEAR_LINE);
-	else	/* IRQ pending */
+	else				/* IRQ pending */
 		cputag_set_input_line(machine, "soundcpu", 0, ASSERT_LINE);
 }
 
@@ -368,7 +370,7 @@ static WRITE16_HANDLER( m92_sound_status_w )
 	cputag_set_input_line_and_vector(space->machine, "maincpu", 0, HOLD_LINE, M92_IRQ_3);
 }
 
-static WRITE16_HANDLER( m92_sound_reset_w )	/* Added sound reset line for IREM M92 */
+static WRITE16_HANDLER( m92_sound_reset_w )	/* Added sound reset line for ssoldier */
 {
 	cputag_set_input_line(space->machine, "soundcpu", INPUT_LINE_RESET, (data) ? CLEAR_LINE : ASSERT_LINE);
 }
@@ -384,7 +386,7 @@ static WRITE16_DEVICE_HANDLER( oki_bank_w )	/* for ppan (bootleg of hook) */
 static ADDRESS_MAP_START( lethalth_map, ADDRESS_SPACE_PROGRAM, 16 )
 	AM_RANGE(0x00000, 0x7ffff) AM_ROM
 	AM_RANGE(0x80000, 0x8ffff) AM_RAM_WRITE(m92_vram_w) AM_BASE(&m92_vram_data)
-	AM_RANGE(0xe0000, 0xeffff) AM_RAM /* System ram */
+	AM_RANGE(0xe0000, 0xeffff) AM_RAM	/* System ram */
 	AM_RANGE(0xf8000, 0xf87ff) AM_RAM AM_BASE_SIZE_GENERIC(spriteram)
 	AM_RANGE(0xf8800, 0xf8fff) AM_READWRITE(m92_paletteram_r, m92_paletteram_w)
 	AM_RANGE(0xf9000, 0xf900f) AM_WRITE(m92_spritecontrol_w) AM_BASE(&m92_spritecontrol)
@@ -395,9 +397,9 @@ ADDRESS_MAP_END
 static ADDRESS_MAP_START( m92_map, ADDRESS_SPACE_PROGRAM, 16 )
 	AM_RANGE(0x00000, 0x9ffff) AM_ROM
 	AM_RANGE(0xa0000, 0xbffff) AM_ROMBANK("bank1")
-	AM_RANGE(0xc0000, 0xcffff) AM_ROMBANK("bank2")	/* Mirror of rom:  Used by In The Hunt as protection */
+	AM_RANGE(0xc0000, 0xcffff) AM_ROMBANK("bank2")	/* Mirror of rom: Used by In The Hunt as protection */
 	AM_RANGE(0xd0000, 0xdffff) AM_RAM_WRITE(m92_vram_w) AM_BASE(&m92_vram_data)
-	AM_RANGE(0xe0000, 0xeffff) AM_RAM /* System ram */
+	AM_RANGE(0xe0000, 0xeffff) AM_RAM	/* System ram */
 	AM_RANGE(0xf8000, 0xf87ff) AM_RAM AM_BASE_SIZE_GENERIC(spriteram)
 	AM_RANGE(0xf8800, 0xf8fff) AM_READWRITE(m92_paletteram_r, m92_paletteram_w)
 	AM_RANGE(0xf9000, 0xf900f) AM_WRITE(m92_spritecontrol_w) AM_BASE(&m92_spritecontrol)
@@ -414,7 +416,7 @@ static ADDRESS_MAP_START( m92_portmap, ADDRESS_SPACE_IO, 16 )
 	AM_RANGE(0x00, 0x01) AM_WRITE(m92_soundlatch_w)
 	AM_RANGE(0x02, 0x03) AM_WRITE(m92_coincounter_w)
 	AM_RANGE(0x20, 0x21) AM_WRITE(m92_bankswitch_w)
-	AM_RANGE(0x40, 0x43) AM_WRITENOP /* Interrupt controller, only written to at bootup */
+	AM_RANGE(0x40, 0x43) AM_WRITENOP			/* Interrupt controller, only written to at bootup */
 	AM_RANGE(0x80, 0x87) AM_WRITE(m92_pf1_control_w)
 	AM_RANGE(0x88, 0x8f) AM_WRITE(m92_pf2_control_w)
 	AM_RANGE(0x90, 0x97) AM_WRITE(m92_pf3_control_w)
@@ -641,18 +643,18 @@ static INPUT_PORTS_START( majtitl2 )
 	PORT_MODIFY("COINS_DSW3")
 	/* Dip switch bank 3 */
 	PORT_DIPNAME( 0x0100, 0x0100, "Ticket Dispenser" ) PORT_DIPLOCATION("SW3:1")
-	PORT_DIPSETTING(      0x0100, DEF_STR( Off ) )	/* "Ticket payout function is not working now" will be shown on screen */
-	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )	/* Stored data is shown on screen with the option to clear data */
-	PORT_DIPNAME( 0x0600, 0x0600, "Points Per Ticket" ) PORT_DIPLOCATION("SW3:2,3") /* Conversion Rate for Ticket */
+	PORT_DIPSETTING(      0x0100, DEF_STR( Off ) )						/* "Ticket payout function is not working now" will be shown on screen */
+	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )						/* Stored data is shown on screen with the option to clear data */
+	PORT_DIPNAME( 0x0600, 0x0600, "Points Per Ticket" ) PORT_DIPLOCATION("SW3:2,3")		/* Conversion Rate for Ticket */
 	PORT_DIPSETTING(      0x0600, "1 Point - 1 Ticket" )
 	PORT_DIPSETTING(      0x0400, "2 Points - 1 Ticket" )
 	PORT_DIPSETTING(      0x0200, "5 Points - 1 Ticket" )
 	PORT_DIPSETTING(      0x0000, "10 Points - 1 Ticket" )
-	PORT_DIPUNUSED_DIPLOC( 0x0800, 0x0800, "SW3:4" ) /* Game manual states dips 4, 5, 6 & 7 are "Unused" */
+	PORT_DIPUNUSED_DIPLOC( 0x0800, 0x0800, "SW3:4" )					/* Game manual states dips 4, 5, 6 & 7 are "Unused" */
 	PORT_DIPUNUSED_DIPLOC( 0x1000, 0x1000, "SW3:5" )
 	PORT_DIPUNUSED_DIPLOC( 0x2000, 0x2000, "SW3:6" )
 	PORT_DIPUNUSED_DIPLOC( 0x4000, 0x4000, "SW3:7" )
-	PORT_DIPNAME( 0x8000, 0x8000, "Deltronics Model" ) PORT_DIPLOCATION("SW3:8") /* Ticket Despenser Model Type */
+	PORT_DIPNAME( 0x8000, 0x8000, "Deltronics Model" ) PORT_DIPLOCATION("SW3:8")		/* Ticket Despenser Model Type */
 	PORT_DIPSETTING(      0x8000, "DL 1275" )
 	PORT_DIPSETTING(      0x0000, "DL 4SS" )
 
@@ -672,10 +674,10 @@ static INPUT_PORTS_START( majtitl2 )
 	PORT_DIPNAME( 0x0004, 0x0004, DEF_STR( Difficulty ) ) PORT_DIPLOCATION("SW1:3")
 	PORT_DIPSETTING(      0x0004, DEF_STR( Normal ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( Hard ) )
-	PORT_DIPNAME( 0x0008, 0x0008, "Joystick Configuration" ) PORT_DIPLOCATION("SW1:4")    /* Listed as "Joysticks on" */
-	PORT_DIPSETTING(      0x0008, DEF_STR( Upright ) )          /* "One Side" */
-	PORT_DIPSETTING(      0x0000, DEF_STR( Cocktail ) )         /* "Both Sides" */
-	PORT_DIPNAME( 0x0010, 0x0010, "Number of Joysticks" ) PORT_DIPLOCATION("SW1:5")	/* 4 Way joysticks with 2 buttons each player */
+	PORT_DIPNAME( 0x0008, 0x0008, "Joystick Configuration" ) PORT_DIPLOCATION("SW1:4")    	/* Listed as "Joysticks on" */
+	PORT_DIPSETTING(      0x0008, DEF_STR( Upright ) )					/* "One Side" */
+	PORT_DIPSETTING(      0x0000, DEF_STR( Cocktail ) )					/* "Both Sides" */
+	PORT_DIPNAME( 0x0010, 0x0010, "Number of Joysticks" ) PORT_DIPLOCATION("SW1:5")		/* 4 Way joysticks with 2 buttons each player */
 	PORT_DIPSETTING(      0x0010, "2 Joysticks" )
 	PORT_DIPSETTING(      0x0000, "4 Joysticks" )
 	PORT_DIPNAME( 0x0020, 0x0000, "Any Button to Start" ) PORT_DIPLOCATION("SW1:6")
@@ -837,35 +839,35 @@ INPUT_PORTS_END
 
 static const gfx_layout charlayout =
 {
-	8,8,	/* 8*8 characters */
-	RGN_FRAC(1,4),
-	4,	/* 4 bits per pixel */
-	{ RGN_FRAC(3,4), RGN_FRAC(2,4), RGN_FRAC(1,4), RGN_FRAC(0,4) },
-	{ STEP8(0,1) },
-	{ STEP8(0,8) },
-	8*8	/* every char takes 8 consecutive bytes */
+	8, 8,			/* 8*8 characters */
+	RGN_FRAC(1, 4),
+	4,			/* 4 bits per pixel */
+	{ RGN_FRAC(3, 4), RGN_FRAC(2, 4), RGN_FRAC(1, 4), RGN_FRAC(0, 4) },
+	{ STEP8(0, 1) },
+	{ STEP8(0, 8) },
+	8 * 8			/* every char takes 8 consecutive bytes */
 };
 
 static const gfx_layout spritelayout =
 {
-	16,16,
-	RGN_FRAC(1,4),
+	16, 16,
+	RGN_FRAC(1, 4),
 	4,
-	{ RGN_FRAC(3,4), RGN_FRAC(2,4), RGN_FRAC(1,4), RGN_FRAC(0,4) },
-	{ STEP8(0,1), STEP8(16*8,1) },
-	{ STEP16(0,8) },
-	32*8
+	{ RGN_FRAC(3, 4), RGN_FRAC(2, 4), RGN_FRAC(1, 4), RGN_FRAC(0, 4) },
+	{ STEP8(0, 1), STEP8(16 * 8, 1) },
+	{ STEP16(0, 8) },
+	32 * 8
 };
 
 static const gfx_layout spritelayout2 =
 {
-	16,16,
-	RGN_FRAC(1,4),
+	16, 16,
+	RGN_FRAC(1, 4),
 	4,
-	{ RGN_FRAC(3,4), RGN_FRAC(2,4), RGN_FRAC(1,4), RGN_FRAC(0,4) },
-	{ STEP16(0,1) },
-	{ STEP16(0,16) },
-	32*8
+	{ RGN_FRAC(3, 4), RGN_FRAC(2, 4), RGN_FRAC(1, 4), RGN_FRAC(0, 4) },
+	{ STEP16(0, 1) },
+	{ STEP16(0, 16) },
+	32 * 8
 };
 
 static GFXDECODE_START( m92 )
@@ -873,7 +875,7 @@ static GFXDECODE_START( m92 )
 	GFXDECODE_ENTRY( "gfx2", 0, spritelayout, 0, 128 )
 GFXDECODE_END
 
-static GFXDECODE_START( 2 )
+static GFXDECODE_START( psoldier )
 	GFXDECODE_ENTRY( "gfx1", 0, charlayout,    0, 128 )
 	GFXDECODE_ENTRY( "gfx2", 0, spritelayout2, 0, 128 )
 GFXDECODE_END
@@ -903,11 +905,11 @@ void m92_sprite_interrupt(running_machine *machine)
 static MACHINE_DRIVER_START( m92 )
 
 	/* basic machine hardware */
-	MDRV_CPU_ADD("maincpu",V33,18000000/2)	/* NEC V33, 18 MHz clock */
+	MDRV_CPU_ADD("maincpu", V33, 18000000 / 2)	/* NEC V33, 18 MHz clock */
 	MDRV_CPU_PROGRAM_MAP(m92_map)
 	MDRV_CPU_IO_MAP(m92_portmap)
 
-	MDRV_CPU_ADD("soundcpu" ,V30, 14318180/2)	/* 14.31818 MHz */
+	MDRV_CPU_ADD("soundcpu" , V30, 14318180 / 2)	/* 14.31818 MHz */
 	MDRV_CPU_PROGRAM_MAP(sound_map)
 
 	MDRV_MACHINE_START(m92)
@@ -921,7 +923,7 @@ static MACHINE_DRIVER_START( m92 )
 	MDRV_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MDRV_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
 	MDRV_SCREEN_SIZE(512, 256)
-	MDRV_SCREEN_VISIBLE_AREA(80, 511-112, 8, 247) /* 320 x 240 */
+	MDRV_SCREEN_VISIBLE_AREA(80, 511-112, 8, 247)	/* 320 x 240 */
 
 	MDRV_GFXDECODE(m92)
 	MDRV_PALETTE_LENGTH(2048)
@@ -932,76 +934,75 @@ static MACHINE_DRIVER_START( m92 )
 	/* sound hardware */
 	MDRV_SPEAKER_STANDARD_MONO("mono")
 
-	MDRV_SOUND_ADD("ymsnd", YM2151, 14318180/4)
+	MDRV_SOUND_ADD("ymsnd", YM2151, 14318180 / 4)
 	MDRV_SOUND_CONFIG(ym2151_config)
 	MDRV_SOUND_ROUTE(0, "mono", 0.40)
 	MDRV_SOUND_ROUTE(1, "mono", 0.40)
 
-	MDRV_SOUND_ADD("irem", IREMGA20, 14318180/4)
+	MDRV_SOUND_ADD("irem", IREMGA20, 14318180 / 4)
 	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.0)
 MACHINE_DRIVER_END
 
-
-static const nec_config gunforce_config ={ gunforce_decryption_table, };
+static const nec_config gunforce_config = { gunforce_decryption_table, };
 static MACHINE_DRIVER_START( gunforce )
 	MDRV_IMPORT_FROM( m92 )
-	MDRV_CPU_MODIFY("soundcpu")
-	MDRV_CPU_CONFIG(gunforce_config)
+	MDRV_CPU_MODIFY( "soundcpu" )
+	MDRV_CPU_CONFIG( gunforce_config )
 MACHINE_DRIVER_END
 
-static const nec_config bmaster_config ={ bomberman_decryption_table, };
+static const nec_config bmaster_config = { bomberman_decryption_table, };
 static MACHINE_DRIVER_START( bmaster )
 	MDRV_IMPORT_FROM( m92 )
-	MDRV_CPU_MODIFY("soundcpu")
-	MDRV_CPU_CONFIG(bmaster_config)
+	MDRV_CPU_MODIFY( "soundcpu" )
+	MDRV_CPU_CONFIG( bmaster_config )
 MACHINE_DRIVER_END
 
-static const nec_config lethalth_config ={ lethalth_decryption_table, };
+static const nec_config lethalth_config = { lethalth_decryption_table, };
 static MACHINE_DRIVER_START( lethalth )
-	MDRV_IMPORT_FROM(m92)
-	MDRV_CPU_MODIFY("maincpu")
-	MDRV_CPU_PROGRAM_MAP(lethalth_map)
-	MDRV_CPU_MODIFY("soundcpu")
-	MDRV_CPU_CONFIG(lethalth_config)
+	MDRV_IMPORT_FROM( m92 )
+	MDRV_CPU_MODIFY( "maincpu" )
+	MDRV_CPU_PROGRAM_MAP( lethalth_map )
+	MDRV_CPU_MODIFY( "soundcpu" )
+	MDRV_CPU_CONFIG( lethalth_config )
 MACHINE_DRIVER_END
 
-static const nec_config uccops_config ={ dynablaster_decryption_table, };
+static const nec_config uccops_config = { dynablaster_decryption_table, };
 static MACHINE_DRIVER_START( uccops )
-	MDRV_IMPORT_FROM(m92)
-	MDRV_CPU_MODIFY("soundcpu")
-	MDRV_CPU_CONFIG(uccops_config)
+	MDRV_IMPORT_FROM( m92 )
+	MDRV_CPU_MODIFY( "soundcpu" )
+	MDRV_CPU_CONFIG( uccops_config )
 MACHINE_DRIVER_END
 
-static const nec_config mysticri_config ={ mysticri_decryption_table, };
+static const nec_config mysticri_config = { mysticri_decryption_table, };
 static MACHINE_DRIVER_START( mysticri )
-	MDRV_IMPORT_FROM(m92)
-	MDRV_CPU_MODIFY("soundcpu")
-	MDRV_CPU_CONFIG(mysticri_config)
+	MDRV_IMPORT_FROM( m92 )
+	MDRV_CPU_MODIFY( "soundcpu" )
+	MDRV_CPU_CONFIG( mysticri_config )
 MACHINE_DRIVER_END
 
-static const nec_config majtitl2_config ={ majtitl2_decryption_table, };
+static const nec_config majtitl2_config = { majtitl2_decryption_table, };
 static MACHINE_DRIVER_START( majtitl2 )
-	MDRV_IMPORT_FROM(m92)
-	MDRV_CPU_MODIFY("soundcpu")
-	MDRV_CPU_CONFIG(majtitl2_config)
+	MDRV_IMPORT_FROM( m92 )
+	MDRV_CPU_MODIFY( "soundcpu" )
+	MDRV_CPU_CONFIG( majtitl2_config )
 MACHINE_DRIVER_END
 
-static const nec_config hook_config ={ hook_decryption_table, };
+static const nec_config hook_config = { hook_decryption_table, };
 static MACHINE_DRIVER_START( hook )
-	MDRV_IMPORT_FROM(m92)
-	MDRV_CPU_MODIFY("soundcpu")
-	MDRV_CPU_CONFIG(hook_config)
+	MDRV_IMPORT_FROM( m92 )
+	MDRV_CPU_MODIFY( "soundcpu" )
+	MDRV_CPU_CONFIG( hook_config )
 MACHINE_DRIVER_END
 
 static MACHINE_DRIVER_START( ppan )
 	/* basic machine hardware */
-	MDRV_CPU_ADD("maincpu",V33, 18000000 / 2)
-	MDRV_CPU_PROGRAM_MAP(m92_map)
-	MDRV_CPU_IO_MAP(ppan_portmap)
+	MDRV_CPU_ADD( "maincpu", V33, 18000000 / 2)
+	MDRV_CPU_PROGRAM_MAP( m92_map )
+	MDRV_CPU_IO_MAP( ppan_portmap )
 
 	/* no Sound CPU */
-	MDRV_MACHINE_START(m92)
-	MDRV_MACHINE_RESET(m92)
+	MDRV_MACHINE_START( m92 )
+	MDRV_MACHINE_RESET( m92 )
 
 	/* video hardware */
 	MDRV_VIDEO_ATTRIBUTES(VIDEO_BUFFERS_SPRITERAM)
@@ -1010,7 +1011,7 @@ static MACHINE_DRIVER_START( ppan )
 	MDRV_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MDRV_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
 	MDRV_SCREEN_SIZE(512, 256)
-	MDRV_SCREEN_VISIBLE_AREA(80, 511-112, 8, 247) /* 320 x 240 */
+	MDRV_SCREEN_VISIBLE_AREA(80, 511-112, 8, 247)	/* 320 x 240 */
 
 	MDRV_VIDEO_UPDATE(ppan)
 	MDRV_GFXDECODE(m92)
@@ -1020,48 +1021,45 @@ static MACHINE_DRIVER_START( ppan )
 
 	/* sound hardware */
 	MDRV_SPEAKER_STANDARD_MONO("mono")
-	MDRV_OKIM6295_ADD("oki", 1000000, OKIM6295_PIN7_HIGH) // clock frequency & pin 7 not verified
+	MDRV_OKIM6295_ADD("oki", 1000000, OKIM6295_PIN7_HIGH)	/* clock frequency & pin 7 not verified */
 	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.0)
 MACHINE_DRIVER_END
 
-static const nec_config rtypeleo_config ={ rtypeleo_decryption_table, };
+static const nec_config rtypeleo_config = { rtypeleo_decryption_table, };
 static MACHINE_DRIVER_START( rtypeleo )
-	MDRV_IMPORT_FROM(m92)
-	MDRV_CPU_MODIFY("soundcpu")
-	MDRV_CPU_CONFIG(rtypeleo_config)
+	MDRV_IMPORT_FROM( m92 )
+	MDRV_CPU_MODIFY( "soundcpu" )
+	MDRV_CPU_CONFIG( rtypeleo_config )
 MACHINE_DRIVER_END
 
-
-static const nec_config inthunt_config ={ inthunt_decryption_table, };
+static const nec_config inthunt_config = { inthunt_decryption_table, };
 static MACHINE_DRIVER_START( inthunt )
-	MDRV_IMPORT_FROM(m92)
-	MDRV_CPU_MODIFY("soundcpu")
-	MDRV_CPU_CONFIG(inthunt_config)
+	MDRV_IMPORT_FROM( m92 )
+	MDRV_CPU_MODIFY( "soundcpu" )
+	MDRV_CPU_CONFIG( inthunt_config )
 MACHINE_DRIVER_END
 
-
-static const nec_config nbbatman_config ={ leagueman_decryption_table, };
+static const nec_config nbbatman_config = { leagueman_decryption_table, };
 static MACHINE_DRIVER_START( nbbatman )
-	MDRV_IMPORT_FROM(m92)
-	MDRV_CPU_MODIFY("soundcpu")
-	MDRV_CPU_CONFIG(nbbatman_config)
+	MDRV_IMPORT_FROM( m92 )
+	MDRV_CPU_MODIFY( "soundcpu" )
+	MDRV_CPU_CONFIG( nbbatman_config )
 MACHINE_DRIVER_END
 
-
-static const nec_config psoldier_config ={ psoldier_decryption_table, };
+static const nec_config psoldier_config = { psoldier_decryption_table, };
 static MACHINE_DRIVER_START( psoldier )
-	MDRV_IMPORT_FROM(m92)
-	MDRV_CPU_MODIFY("soundcpu")
-	MDRV_CPU_CONFIG(psoldier_config)
+	MDRV_IMPORT_FROM( m92 )
+	MDRV_CPU_MODIFY( "soundcpu" )
+	MDRV_CPU_CONFIG( psoldier_config )
 	/* video hardware */
-	MDRV_GFXDECODE(2)
+	MDRV_GFXDECODE( psoldier )
 MACHINE_DRIVER_END
 
-static const nec_config gunforc2_config ={ lethalth_decryption_table, };
+static const nec_config gunforc2_config = { lethalth_decryption_table, };
 static MACHINE_DRIVER_START( gunforc2 )
-	MDRV_IMPORT_FROM(m92)
-	MDRV_CPU_MODIFY("soundcpu")
-	MDRV_CPU_CONFIG(gunforc2_config)
+	MDRV_IMPORT_FROM( m92 )
+	MDRV_CPU_MODIFY( "soundcpu" )
+	MDRV_CPU_CONFIG( gunforc2_config )
 MACHINE_DRIVER_END
 
 
@@ -2029,7 +2027,7 @@ ROM_START( geostorm )
 ROM_END
 
 
-/*  additional  */
+/*    additional   */
 #include "m92_add.c"
 
 
@@ -2060,44 +2058,33 @@ static void init_m92(running_machine *machine, int hasbanks)
 	setvector_callback(machine, NULL, VECTOR_INIT);
 }
 
-static DRIVER_INIT( bmaster )
+static DRIVER_INIT( m92_most )
 {
 	init_m92(machine, 1);
 }
 
-static DRIVER_INIT( gunforce )
-{
-	init_m92(machine, 1);
-}
-
-static DRIVER_INIT( hook )
-{
-	init_m92(machine, 1);
-}
-
-static DRIVER_INIT( mysticri )
-{
-	init_m92(machine, 1);
-}
-
-static DRIVER_INIT( uccops )
-{
-	init_m92(machine, 1);
-}
-
-static DRIVER_INIT( rtypeleo )
+static DRIVER_INIT( m92_rtype )
 {
 	init_m92(machine, 1);
 	m92_irq_vectorbase = 0x20;
 }
 
-static DRIVER_INIT( rtypelej )
+static DRIVER_INIT( m92_gunforc2 )
+{
+	UINT8 *RAM = memory_region(machine, "maincpu");
+	init_m92(machine, 1);
+	memcpy(RAM + 0x80000, RAM + 0x100000, 0x20000);
+}
+
+static DRIVER_INIT( m92_ssoldier )
 {
 	init_m92(machine, 1);
 	m92_irq_vectorbase = 0x20;
+	/* main CPU expects an answer even before writing the first command */
+	sound_status = 0x80;
 }
 
-static DRIVER_INIT( majtitl2 )
+static DRIVER_INIT( m92_majtitl2 )
 {
 	init_m92(machine, 1);
 
@@ -2107,17 +2094,7 @@ static DRIVER_INIT( majtitl2 )
 	m92_game_kludge = 2;
 }
 
-static DRIVER_INIT( kaiteids )
-{
-	init_m92(machine, 1);
-}
-
-static DRIVER_INIT( inthunt )
-{
-	init_m92(machine, 1);
-}
-
-static DRIVER_INIT( lethalth )
+static DRIVER_INIT( m92_lethalth )
 {
 	init_m92(machine, 0);
 	m92_irq_vectorbase = 0x20;
@@ -2126,113 +2103,52 @@ static DRIVER_INIT( lethalth )
 	memory_nop_write(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_IO), 0x20, 0x21, 0, 0);
 }
 
-static DRIVER_INIT( nbbatman )
-{
-	UINT8 *RAM = memory_region(machine, "maincpu");
-
-	init_m92(machine, 1);
-
-	memcpy(RAM + 0x80000, RAM + 0x100000, 0x20000);
-}
-
-static DRIVER_INIT( ssoldier )
-{
-	init_m92(machine, 1);
-	m92_irq_vectorbase = 0x20;
-	/* main CPU expects an answer even before writing the first command */
-	sound_status = 0x80;
-}
-
-static DRIVER_INIT( psoldier )
-{
-	init_m92(machine, 1);
-	m92_irq_vectorbase = 0x20;
-	/* main CPU expects an answer even before writing the first command */
-	sound_status = 0x80;
-}
-
-static DRIVER_INIT( gunforc2 )
-{
-	UINT8 *RAM = memory_region(machine, "maincpu");
-	init_m92(machine, 1);
-	memcpy(RAM + 0x80000, RAM + 0x100000, 0x20000);
-}
-
-#if 0
-static void init_ppan(running_machine *machine)
-{
-	UINT8 *RAM = memory_region(machine, "maincpu");
-//	m92_state *state = (m92_state *)machine->driver_data;
-
-	if (hasbanks)
-	{
-		memcpy(RAM + 0xffff0, RAM + 0x7fff0, 0x10);	/* Start vector */
-		bankaddress = 0xa0000;				/* Initial bank */
-		set_m92_bank(machine);
-
-		/* Mirror used by In The Hunt for protection */
-		memcpy(RAM + 0xc0000, RAM + 0x00000, 0x10000);
-		memory_set_bankptr(machine, "bank2", &RAM[0xc0000]);
-	}
-
-	RAM = memory_region(machine, "soundcpu");
-
-	if (RAM)
-		memcpy(RAM + 0xffff0, RAM + 0x1fff0, 0x10);	/* Sound cpu Start vector */
-
-	m92_game_kludge = 0;
-	m92_irq_vectorbase = 0x80;
-	m92_sprite_buffer_busy = 1;
-
-	setvector_callback(machine, NULL, VECTOR_INIT);
-}
-#endif
 
 /***************************************************************************/
 
-GAME( 1991,  gunforce,   0,	      gunforce,	   gunforce,	gunforce,   ROT0,   "Irem",         "Gunforce - Battle Fire Engulfed Terror Island (World)", 0 )
-GAME( 1991,  gunforcej,  gunforce,    gunforce,    gunforce, 	gunforce,   ROT0,   "Irem",         "Gunforce - Battle Fire Engulfed Terror Island (Japan)", 0 )
-GAME( 1991,  gunforceu,  gunforce,    gunforce,    gunforce,	gunforce,   ROT0,   "Irem America", "Gunforce - Battle Fire Engulfed Terror Island (US)", 0 )
+GAME( 1991,  gunforce,   0,	      gunforce,	   gunforce,	m92_most,	ROT0,   "Irem",         "Gunforce - Battle Fire Engulfed Terror Island (World)", 0 )
+GAME( 1991,  gunforcej,  gunforce,    gunforce,    gunforce, 	m92_most,   	ROT0,   "Irem",         "Gunforce - Battle Fire Engulfed Terror Island (Japan)", 0 )
+GAME( 1991,  gunforceu,  gunforce,    gunforce,    gunforce,	m92_most,   	ROT0,   "Irem America", "Gunforce - Battle Fire Engulfed Terror Island (US)", 0 )
 //
-GAME( 1991,  bmaster,    0,           bmaster,     bmaster,  	bmaster,    ROT0,   "Irem",         "Blade Master (World)", 0 )
-GAME( 1991,  crossbld,   bmaster,     bmaster,     bmaster,  	bmaster,    ROT0,   "Irem",         "Cross Blades! (Japan)", 0 )
+GAME( 1991,  bmaster,    0,           bmaster,     bmaster,  	m92_most,    	ROT0,   "Irem",         "Blade Master (World)", 0 )
+GAME( 1991,  crossbld,   bmaster,     bmaster,     bmaster,  	m92_most,    	ROT0,   "Irem",         "Cross Blades! (Japan)", 0 )
 //
-GAME( 1991,  lethalth,   0,           lethalth,    lethalth, 	lethalth,   ROT270, "Irem",         "Lethal Thunder (World)", 0 )
-GAME( 1991,  thndblst,   lethalth,    lethalth,    lethalth, 	lethalth,   ROT270, "Irem",         "Thunder Blaster (Japan)", 0 )
+GAME( 1991,  lethalth,   0,           lethalth,    lethalth, 	m92_lethalth,   ROT270, "Irem",         "Lethal Thunder (World)", 0 )
+GAME( 1991,  thndblst,   lethalth,    lethalth,    lethalth, 	m92_lethalth,   ROT270, "Irem",         "Thunder Blaster (Japan)", 0 )
 //
-GAME( 1992,  uccops,     0,           uccops,      uccops,   	uccops,     ROT0,   "Irem",         "Undercover Cops (World)", 0 )
-GAME( 1992,  uccopsu,    uccops,      uccops,      uccops,   	uccops,     ROT0,   "Irem",         "Undercover Cops (US)", 0 )
-GAME( 1992,  uccopsar,   uccops,      uccops,      uccops,   	uccops,     ROT0,   "Irem",         "Undercover Cops (Alpha Renewal Version)", 0 )
-GAME( 1992,  uccopsj,    uccops,      uccops,      uccops,   	uccops,     ROT0,   "Irem",         "Undercover Cops (Japan)", 0 )
+GAME( 1992,  uccops,     0,           uccops,      uccops,   	m92_most,     	ROT0,   "Irem",         "Undercover Cops (World)", 0 )
+GAME( 1992,  uccopsu,    uccops,      uccops,      uccops,   	m92_most,     	ROT0,   "Irem",         "Undercover Cops (US)", 0 )
+GAME( 1992,  uccopsar,   uccops,      uccops,      uccops,   	m92_most,     	ROT0,   "Irem",         "Undercover Cops (Alpha Renewal Version)", 0 )
+GAME( 1992,  uccopsj,    uccops,      uccops,      uccops,   	m92_most,     	ROT0,   "Irem",         "Undercover Cops (Japan)", 0 )
 //
-GAME( 1992,  mysticri,   0,           mysticri,    mysticri, 	mysticri,   ROT0,   "Irem",         "Mystic Riders (World)", 0 )
-GAME( 1992,  gunhohki,   mysticri,    mysticri,    mysticri, 	mysticri,   ROT0,   "Irem",         "Gun Hohki (Japan)", 0 )
-GAME( 1992,  mysticrib,  mysticri,    mysticri,    mysticri, 	mysticri,   ROT0,   "Irem",         "Mystic Riders (bootleg?)", GAME_NO_SOUND )
+GAME( 1992,  mysticri,   0,           mysticri,    mysticri, 	m92_most,   	ROT0,   "Irem",         "Mystic Riders (World)", 0 )
+GAME( 1992,  gunhohki,   mysticri,    mysticri,    mysticri, 	m92_most,   	ROT0,   "Irem",         "Gun Hohki (Japan)", 0 )
+GAME( 1992,  mysticrib,  mysticri,    mysticri,    mysticri, 	m92_most,   	ROT0,   "Irem",         "Mystic Riders (bootleg?)", GAME_NO_SOUND )
 //
-GAME( 1992,  majtitl2,   0,           majtitl2,    majtitl2, 	majtitl2,   ROT0,   "Irem",         "Major Title 2 (World)", 0 )
-GAME( 1992,  majtitl2j,  majtitl2,    majtitl2,    majtitl2, 	majtitl2,   ROT0,   "Irem",         "Major Title 2 (Japan)", 0 )
-GAME( 1992,  skingame,   majtitl2,    majtitl2,    majtitl2, 	majtitl2,   ROT0,   "Irem America", "The Irem Skins Game (US set 1)", 0 )
-GAME( 1992,  skingame2,  majtitl2,    majtitl2,    majtitl2, 	majtitl2,   ROT0,   "Irem America", "The Irem Skins Game (US set 2)", 0 )
+GAME( 1992,  majtitl2,   0,           majtitl2,    majtitl2, 	m92_majtitl2,   ROT0,   "Irem",         "Major Title 2 (World)", 0 )
+GAME( 1992,  majtitl2j,  majtitl2,    majtitl2,    majtitl2, 	m92_majtitl2,   ROT0,   "Irem",         "Major Title 2 (Japan)", 0 )
+GAME( 1992,  skingame,   majtitl2,    majtitl2,    majtitl2, 	m92_majtitl2,   ROT0,   "Irem America", "The Irem Skins Game (US set 1)", 0 )
+GAME( 1992,  skingame2,  majtitl2,    majtitl2,    majtitl2, 	m92_majtitl2,   ROT0,   "Irem America", "The Irem Skins Game (US set 2)", 0 )
 //
-GAME( 1992,  hook,       0,           hook,        hook,     	hook,       ROT0,   "Irem",         "Hook (World)", 0 )
-GAME( 1992,  hooku,      hook,        hook,        hook,     	hook,       ROT0,   "Irem America", "Hook (US)", 0 )
-GAME( 1992,  hookj,      hook,        hook,        hook,     	hook,       ROT0,   "Irem",         "Hook (Japan)", 0 )
-GAME( 1992,  ppan,       hook,        ppan,        hook,     	hook,       ROT0,   "bootleg",      "Peter Pan (bootleg of Hook)", GAME_IMPERFECT_GRAPHICS ) // PCB marked 'Peter Pan', no title screen, made in Italy?
+GAME( 1992,  hook,       0,           hook,        hook,     	m92_most,       ROT0,   "Irem",         "Hook (World)", 0 )
+GAME( 1992,  hooku,      hook,        hook,        hook,     	m92_most,       ROT0,   "Irem America", "Hook (US)", 0 )
+GAME( 1992,  hookj,      hook,        hook,        hook,     	m92_most,       ROT0,   "Irem",         "Hook (Japan)", 0 )
+GAME( 1992,  ppan,       hook,        ppan,        hook,     	m92_most,       ROT0,   "bootleg",      "Peter Pan (bootleg of Hook)", GAME_IMPERFECT_GRAPHICS ) // PCB marked 'Peter Pan', no title screen, made in Italy?
 //
-GAME( 1992,  rtypeleo,   0,           rtypeleo,    rtypeleo, 	rtypeleo,   ROT0,   "Irem",         "R-Type Leo (World)", 0 )
-GAME( 1992,  rtypeleoj,  rtypeleo,    rtypeleo,    rtypeleo, 	rtypelej,   ROT0,   "Irem",         "R-Type Leo (Japan)", 0 )
+GAME( 1992,  rtypeleo,   0,           rtypeleo,    rtypeleo, 	m92_rtype,   	ROT0,   "Irem",         "R-Type Leo (World)", 0 )
+GAME( 1992,  rtypeleoj,  rtypeleo,    rtypeleo,    rtypeleo, 	m92_rtype,   	ROT0,   "Irem",         "R-Type Leo (Japan)", 0 )
 //
-GAME( 1993,  inthunt,    0,           inthunt,     inthunt,  	inthunt,    ROT0,   "Irem",         "In The Hunt (World)", 0 )
-GAME( 1993,  inthuntu,   inthunt,     inthunt,     inthunt,  	inthunt,    ROT0,   "Irem America", "In The Hunt (US)", 0 )
-GAME( 1993,  kaiteids,   inthunt,     inthunt,     inthunt,  	kaiteids,   ROT0,   "Irem",         "Kaitei Daisensou (Japan)", 0 )
+GAME( 1993,  inthunt,    0,           inthunt,     inthunt,  	m92_most,    	ROT0,   "Irem",         "In The Hunt (World)", 0 )
+GAME( 1993,  inthuntu,   inthunt,     inthunt,     inthunt,  	m92_most,    	ROT0,   "Irem America", "In The Hunt (US)", 0 )
+GAME( 1993,  kaiteids,   inthunt,     inthunt,     inthunt,  	m92_most,   	ROT0,   "Irem",         "Kaitei Daisensou (Japan)", 0 )
 //
-GAME( 1993,  nbbatman,   0,           nbbatman,    nbbatman, 	nbbatman,   ROT0,   "Irem America", "Ninja Baseball Batman (US)", GAME_IMPERFECT_GRAPHICS )
-GAME( 1993,  leaguemn,   nbbatman,    nbbatman,    nbbatman, 	nbbatman,   ROT0,   "Irem",         "Yakyuu Kakutou League-Man (Japan)", GAME_IMPERFECT_GRAPHICS )
+GAME( 1993,  nbbatman,   0,           nbbatman,    nbbatman, 	m92_gunforc2,   ROT0,   "Irem America", "Ninja Baseball Batman (US)", GAME_IMPERFECT_GRAPHICS )
+GAME( 1993,  leaguemn,   nbbatman,    nbbatman,    nbbatman, 	m92_gunforc2,   ROT0,   "Irem",         "Yakyuu Kakutou League-Man (Japan)", GAME_IMPERFECT_GRAPHICS )
 //
-GAME( 1993,  ssoldier,   0,           psoldier,    psoldier, 	ssoldier,   ROT0,   "Irem America", "Superior Soldiers (US)", 0 )
-GAME( 1993,  psoldier,   ssoldier,    psoldier,    psoldier, 	psoldier,   ROT0,   "Irem",         "Perfect Soldiers (Japan)", 0 )
+GAME( 1993,  ssoldier,   0,           psoldier,    psoldier, 	m92_ssoldier,   ROT0,   "Irem America", "Superior Soldiers (US)", 0 )
+GAME( 1993,  psoldier,   ssoldier,    psoldier,    psoldier, 	m92_ssoldier,   ROT0,   "Irem",         "Perfect Soldiers (Japan)", 0 )
 //
-GAME( 1994,  gunforc2,   0,           gunforc2,    gunforc2, 	gunforc2,   ROT0,   "Irem",         "Gunforce 2 (US)", 0 )
-GAME( 1994,  geostorm,   gunforc2,    gunforc2,    gunforc2, 	gunforc2,   ROT0,   "Irem",         "Geostorm (Japan)", 0 )
+GAME( 1994,  gunforc2,   0,           gunforc2,    gunforc2, 	m92_gunforc2,   ROT0,   "Irem",         "Gunforce 2 (US)", 0 )
+GAME( 1994,  geostorm,   gunforc2,    gunforc2,    gunforc2, 	m92_gunforc2,   ROT0,   "Irem",         "Geostorm (Japan)", 0 )
 
 /*    year,  archives,  parent,  MACHINE_DRIVER,  INPUT_PORT,  DRIVER_INIT,  flip,  producer name,  title,  information */
