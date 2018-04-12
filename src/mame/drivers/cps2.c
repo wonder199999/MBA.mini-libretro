@@ -7782,8 +7782,8 @@ ROM_START( xmvsfb )
 	ROM_LOAD16_WORD_SWAP( "xvs.12m",   0x200000, 0x200000, CRC(7b11e460) SHA1(a581c84acaaf0ce056841c15a6f36889e88be68d) )
 ROM_END
 
-/*  additional  */
-#include "cps2_add.c"
+/*   additional   */
+#include "cps2_ext.c"
 
 /*************************************
  *

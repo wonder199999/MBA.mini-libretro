@@ -2027,8 +2027,8 @@ ROM_START( geostorm )
 ROM_END
 
 
-/*    additional   */
-#include "m92_add.c"
+/*   additional   */
+#include "m92_ext.c"
 
 
 static void init_m92(running_machine *machine, int hasbanks)

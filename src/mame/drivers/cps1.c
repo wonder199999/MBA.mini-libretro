@@ -9452,13 +9452,8 @@ ROM_START( rockmanj )
 ROM_END
 
 
-/* ********** */
-/* additional */
-/* ********** */
-#include "cps1_add.c"
-/* ********** */
-/* additional */
-/* ********** */
+/*   additional   */
+#include "cps1_ext.c"
 
 
 #ifndef MESS
