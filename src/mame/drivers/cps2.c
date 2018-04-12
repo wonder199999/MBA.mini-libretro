@@ -601,6 +601,7 @@ Stephh's inputs notes (based on some tests on the "parent" set) :
 
 #include "includes/cps1.h"	/* External CPS1 definitions */
 
+static void gigaman2_gfx_reorder(running_machine *machine, int gfx_len, UINT16 *gfxrom);
 
 /*************************************
  *

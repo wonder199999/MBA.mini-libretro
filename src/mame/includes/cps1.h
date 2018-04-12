@@ -203,6 +203,4 @@ void dino_decode(running_machine *machine);
 void punisher_decode(running_machine *machine);
 void slammast_decode(running_machine *machine);
 
-static void gigaman2_gfx_reorder( running_machine *machine, int gfx_len, UINT16 *gfxrom );
-
 #endif
