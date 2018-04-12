@@ -1,5 +1,5 @@
 
-ROM_START( majtitl2a )
+ROM_START( majtitl2a )		/* Major Title 2 (World, set 1, alt sound CPU) */
 	ROM_REGION( 0x180000, "maincpu", 0 )
 	ROM_LOAD16_BYTE( "mt2-h0-.5m", 0x000001, 0x40000, NO_DUMP )
 	ROM_LOAD16_BYTE( "mt2-l0-.5f", 0x000000, 0x40000, NO_DUMP )
@@ -36,7 +36,7 @@ ROM_START( majtitl2a )
 	ROM_LOAD( "pal16l8-m92-b-7h.ic47", 0x0800, 0x0104, NO_DUMP ) /* PAL is read protected */
 ROM_END
 
-ROM_START( majtitl2b )
+ROM_START( majtitl2b )		/* Major Title 2 (World, set 2) */
 	ROM_REGION( 0x180000, "maincpu", 0 )
 	ROM_LOAD16_BYTE( "mt2-h0-e.ic34", 0x000001, 0x40000, NO_DUMP )
 	ROM_LOAD16_BYTE( "mt2-l0-e.ic31", 0x000000, 0x40000, NO_DUMP )
