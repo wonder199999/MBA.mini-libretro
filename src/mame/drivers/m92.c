@@ -2125,7 +2125,7 @@ GAME( 1992,  mysticri,   0,           mysticri,    mysticri, 	m92_most,   	ROT0,
 GAME( 1992,  gunhohki,   mysticri,    mysticri,    mysticri, 	m92_most,   	ROT0,   "Irem",         "Gun Hohki (Japan)", 0 )
 GAME( 1992,  mysticrib,  mysticri,    mysticri,    mysticri, 	m92_most,   	ROT0,   "Irem",         "Mystic Riders (bootleg?)", 0 )
 //
-GAME( 1992,  majtitl2,   0,           majtitl2,    majtitl2, 	m92_majtitl2,   ROT0,   "Irem",         "Major Title 2 (World)", 0 )
+GAME( 1992,  majtitl2,   0,           majtitl2,    majtitl2, 	m92_majtitl2,   ROT0,   "Irem",         "Major Title 2 (World, set 1)", 0 )
 GAME( 1992,  majtitl2j,  majtitl2,    majtitl2,    majtitl2, 	m92_majtitl2,   ROT0,   "Irem",         "Major Title 2 (Japan)", 0 )
 GAME( 1992,  skingame,   majtitl2,    majtitl2,    majtitl2, 	m92_majtitl2,   ROT0,   "Irem America", "The Irem Skins Game (US set 1)", 0 )
 GAME( 1992,  skingame2,  majtitl2,    majtitl2,    majtitl2, 	m92_majtitl2,   ROT0,   "Irem America", "The Irem Skins Game (US set 2)", 0 )
@@ -2151,4 +2151,6 @@ GAME( 1993,  psoldier,   ssoldier,    psoldier,    psoldier, 	m92_ssoldier,   RO
 GAME( 1994,  gunforc2,   0,           gunforc2,    gunforc2, 	m92_gunforc2,   ROT0,   "Irem",         "Gunforce 2 (US)", 0 )
 GAME( 1994,  geostorm,   gunforc2,    gunforc2,    gunforc2, 	m92_gunforc2,   ROT0,   "Irem",         "Geostorm (Japan)", 0 )
 
+/* New added */
 /*    year,  archives,  parent,  MACHINE_DRIVER,  INPUT_PORT,  DRIVER_INIT,  flip,  producer name,  title,  information */
+GAME( 1992,  majtitl2a,  majtitl2,    mysticri,    majtitl2, 	m92_majtitl2,   ROT0,   "Irem",         "Major Title 2 (World, set 1, alt sound CPU)", 0 )

@@ -54,7 +54,7 @@ const game_driver *const drivers[] =
 	DRIVER( mysticri )	/* (c) 1992 Irem (World) */
 	DRIVER( mysticrib )	/* bootleg? */
 	DRIVER( gunhohki )	/* (c) 1992 Irem (Japan) */
-	DRIVER( majtitl2 )	/* (c) 1992 Irem (World) */
+	DRIVER( majtitl2 )	/* (c) 1992 Irem (World, set 1) */
 	DRIVER( majtitl2j )	/* (c) 1992 Irem (Japan) */
 	DRIVER( skingame )	/* (c) 1992 Irem America (US) */
 	DRIVER( skingame2 )	/* (c) 1992 Irem America (US) */
@@ -75,6 +75,7 @@ const game_driver *const drivers[] =
 	DRIVER( geostorm )	/* (c) 1994 Irem (Japan) */
 
 	/* new added */
+	DRIVER( majtitl2a )	/* (c) 1992 Irem (World, set 1, alt sound CPU) */
 
 
 	/* ************************* */
