@@ -158,7 +158,7 @@ kt_table ktable[] = {
 			(core_stricmp(machine->gamedrv->name, "fatfury2a") == 0) || (core_stricmp(machine->gamedrv->name, "fatfury3a") == 0) || \
 			(core_stricmp(machine->gamedrv->name, "alpham2p") == 0) || (core_stricmp(machine->gamedrv->name, "bangbedp") == 0) || \
 			(core_stricmp(machine->gamedrv->name, "burningfp") == 0) || (core_stricmp(machine->gamedrv->name, "jockeygpa") == 0) || \
-			(core_stricmp(machine->gamedrv->name, "garouh") == 0) 
+			(core_stricmp(machine->gamedrv->name, "garouh") == 0) || (core_stricmp(machine->gamedrv->name, "ironclado") == 0) 
 
 
 static void initInput(running_machine *machine)
