@@ -152,12 +152,14 @@ kt_table ktable[] = {
 
 /* Neo Geo */
 #define NEOGEO_LAYOUT	(core_stricmp(machine->gamedrv->parent, "neogeo") == 0) || (core_stricmp(machine->gamedrv->name, "3countba") == 0) || \
-			(core_stricmp(machine->gamedrv->name, "ms5pcb") == 0) || (core_stricmp(machine->gamedrv->parent, "ms5pcb") == 0) || \
-			(core_stricmp(machine->gamedrv->name, "svcpcb") == 0) || (core_stricmp(machine->gamedrv->parent, "svcpcb") == 0) || \
-			(core_stricmp(machine->gamedrv->name, "kf2k3pcb") == 0) || (core_stricmp(machine->gamedrv->parent, "kf2k3pcb") == 0) || \
+			(core_stricmp(machine->gamedrv->parent, "ms5pcb") == 0) || (core_stricmp(machine->gamedrv->name, "ms5pcb") == 0) || \
+			(core_stricmp(machine->gamedrv->parent, "svcpcb") == 0) || (core_stricmp(machine->gamedrv->name, "svcpcb") == 0) || \
+			(core_stricmp(machine->gamedrv->parent, "kf2k3pcb") == 0) || (core_stricmp(machine->gamedrv->name, "kf2k3pcb") == 0) || \
 			(core_stricmp(machine->gamedrv->name, "fatfury2a") == 0) || (core_stricmp(machine->gamedrv->name, "fatfury3a") == 0) || \
 			(core_stricmp(machine->gamedrv->name, "alpham2p") == 0) || (core_stricmp(machine->gamedrv->name, "bangbedp") == 0) || \
-			(core_stricmp(machine->gamedrv->name, "burningfp") == 0) || (core_stricmp(machine->gamedrv->name, "jockeygpa") == 0) 
+			(core_stricmp(machine->gamedrv->name, "burningfp") == 0) || (core_stricmp(machine->gamedrv->name, "jockeygpa") == 0) || \
+			(core_stricmp(machine->gamedrv->name, "garouh") == 0) 
+
 
 static void initInput(running_machine *machine)
 {

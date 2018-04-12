@@ -832,6 +832,7 @@ const game_driver *const drivers[] =
 	DRIVER( bangbedp )	/* Bang Bead (prototype) */
 	DRIVER( burningfp )	/* Burning Fight (prototype) */
 	DRIVER( jockeygpa )	/* Jockey Grand Prix (set 2) */
+	DRIVER( garouh )	/* Garou - Mark of the Wolves (NGM-2530 ~ NGH-2530) */
 
 
 #endif	/* DRIVER_RECURSIVE */

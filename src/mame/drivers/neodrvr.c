@@ -8695,3 +8695,4 @@ GAME( 2000,	b2b,		neogeo,		neogeo,		neogeo,		neogeo,    ROT0,   "Visco", "Bang B
 GAME( 2000,	bangbedp,	bangbead,	neogeo,		neogeo,		neogeo,    ROT0,   "Visco", "Bang Bead (prototype)", GAME_SUPPORTS_SAVE )
 GAME( 1991,	burningfp,	burningf,	neogeo,		neogeo,		neogeo,    ROT0,   "SNK", "Burning Fight (prototype)", GAME_SUPPORTS_SAVE )
 GAME( 2001,	jockeygpa,	jockeygp,	neogeo,		jockeygp,	jockeygp,  ROT0,   "Sun Amusement / BrezzaSoft", "Jockey Grand Prix (set 2)", GAME_SUPPORTS_SAVE )
+GAME( 1999,	garouh,		garou,		neogeo,		neogeo,		garouo,	   ROT0,   "SNK", "Garou - Mark of the Wolves (NGM-2530) (NGH-2530)" , GAME_SUPPORTS_SAVE ) /* Encrypted Code & GFX */
