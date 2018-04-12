@@ -76,6 +76,7 @@ const game_driver *const drivers[] =
 
 	/* new added */
 	DRIVER( majtitl2a )	/* (c) 1992 Irem (World, set 1, alt sound CPU) */
+	DRIVER( majtitl2b )	/* (c) 1992 Irem (World, set 2) */
 
 
 	/* ************************* */
