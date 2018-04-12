@@ -833,6 +833,7 @@ const game_driver *const drivers[] =
 	DRIVER( burningfp )	/* Burning Fight (prototype) */
 	DRIVER( jockeygpa )	/* Jockey Grand Prix (set 2) */
 	DRIVER( garouh )	/* Garou - Mark of the Wolves (NGM-2530 ~ NGH-2530) */
+	DRIVER( ironclad )	/* Choutetsu Brikin'ger - Iron clad (prototype) */
 
 
 #endif	/* DRIVER_RECURSIVE */
