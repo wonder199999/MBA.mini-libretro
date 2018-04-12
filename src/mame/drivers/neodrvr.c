@@ -8666,7 +8666,7 @@ GAME( 2002, matrim,    neogeo,   neogeo,   neogeo,   matrim,   ROT0, "Noise Fact
 GAME( 2002, matrimbl,  matrim,   neogeo,   neogeo,   matrimbl, ROT0, "bootleg", "Matrimelee / Shin Gouketsuji Ichizoku Toukon (bootleg)", GAME_SUPPORTS_SAVE )
 
 /* BrezzaSoft */
-GAME( 2001, jockeygp,  neogeo,   neogeo,   jockeygp, jockeygp, ROT0, "Sun Amusement / BrezzaSoft", "Jockey Grand Prix", GAME_SUPPORTS_SAVE )
+GAME( 2001, jockeygp,  neogeo,   neogeo,   jockeygp, jockeygp, ROT0, "Sun Amusement / BrezzaSoft", "Jockey Grand Prix (set 1)", GAME_SUPPORTS_SAVE )
 GAME( 2001, vliner,    neogeo,   neogeo,   vliner,   vliner,   ROT0, "Dyna / BrezzaSoft", "V-Liner (set 1)", GAME_SUPPORTS_SAVE )
 GAME( 2001, vlinero,   vliner,   neogeo,   vliner,   vliner,   ROT0, "Dyna / BrezzaSoft", "V-Liner (set 2)", GAME_SUPPORTS_SAVE )
 
@@ -8694,3 +8694,4 @@ GAME( 1991,	alpham2p,	alpham2,	neogeo,		neogeo,		neogeo,    ROT0,   "SNK", "Alph
 GAME( 2000,	b2b,		neogeo,		neogeo,		neogeo,		neogeo,    ROT0,   "Visco", "Bang Bang Busters (2010 NCI release)", GAME_SUPPORTS_SAVE )
 GAME( 2000,	bangbedp,	bangbead,	neogeo,		neogeo,		neogeo,    ROT0,   "Visco", "Bang Bead (prototype)", GAME_SUPPORTS_SAVE )
 GAME( 1991,	burningfp,	burningf,	neogeo,		neogeo,		neogeo,    ROT0,   "SNK", "Burning Fight (prototype)", GAME_SUPPORTS_SAVE )
+GAME( 2001,	jockeygpa,	jockeygp,	neogeo,		jockeygp,	jockeygp,  ROT0,   "Sun Amusement / BrezzaSoft", "Jockey Grand Prix (set 2)", GAME_SUPPORTS_SAVE )

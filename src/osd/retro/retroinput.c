@@ -1,5 +1,6 @@
 
 #define PLAYER_PRESS(button)	input_state_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_##button)
+#define MAX_JOYPADS	4
 
 static INT32 iptdev_get_state(void *device_internal, void *item_internal)
 {
@@ -156,7 +157,7 @@ kt_table ktable[] = {
 			(core_stricmp(machine->gamedrv->name, "kf2k3pcb") == 0) || (core_stricmp(machine->gamedrv->parent, "kf2k3pcb") == 0) || \
 			(core_stricmp(machine->gamedrv->name, "fatfury2a") == 0) || (core_stricmp(machine->gamedrv->name, "fatfury3a") == 0) || \
 			(core_stricmp(machine->gamedrv->name, "alpham2p") == 0) || (core_stricmp(machine->gamedrv->name, "bangbedp") == 0) || \
-			(core_stricmp(machine->gamedrv->name, "burningfp") == 0) 
+			(core_stricmp(machine->gamedrv->name, "burningfp") == 0) || (core_stricmp(machine->gamedrv->name, "jockeygpa") == 0) 
 
 static void initInput(running_machine *machine)
 {
@@ -342,7 +343,7 @@ static inline void retro_poll_mame_input(void)
 	pad_state[0][KEY_TAB] = input_state_cb(0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_L2);
 	pad_state[0][KEY_F2]  = input_state_cb(0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_L3);
 
-	for (i = 0; i < 4; i++)
+	for (i = 0; i < MAX_JOYPADS; i++)
 	{
    		pad_state[i][KEY_JOYSTICK_U] = input_state_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_UP);
    		pad_state[i][KEY_JOYSTICK_D] = input_state_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_DOWN);

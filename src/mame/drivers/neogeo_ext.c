@@ -271,3 +271,31 @@ ROM_START( burningfp )		/* Burning Fight (prototype) */
 	ROM_LOAD32_BYTE( "018_c7_d568.c17", 0x200001, 0x80000, NO_DUMP )
 	ROM_LOAD32_BYTE( "018_c8_d256.c18", 0x200003, 0x80000, NO_DUMP )
 ROM_END
+
+ROM_START( jockeygpa )		/* Jockey Grand Prix (set 2) */
+	ROM_REGION( 0x200000, "maincpu", 0 )
+	ROM_LOAD16_WORD_SWAP( "008-epr_a.p1", 0x000000, 0x100000, NO_DUMP )
+	/* P on eprom, correct chip label unknown */
+	ROM_FILL( 0x100000, 0x100000, 0xff )
+
+	ROM_Y_ZOOM
+
+	/* The Encrypted Boards do not have an s1 rom, data for it comes from the Cx ROMs */
+	ROM_REGION( 0x20000, "fixed", 0 )
+	ROM_FILL( 0x000000, 0x20000, 0 )
+	ROM_REGION( 0x20000, "fixedbios", 0 )
+	ROM_LOAD( "sfix.sfix", 0x000000, 0x20000, CRC(c2ea0cfd) SHA1(fd4a618cdcdbf849374f0a50dd8efe9dbab706c3) )
+
+	/* Encrypted */
+	NEO_BIOS_AUDIO_ENCRYPTED_512K( "008-mg1.bin", CRC(d163c690) SHA1(1dfd04d20c5985037f07cd01000d0b04f3a8f4f4) )
+
+	ROM_REGION( 0x0200000, "ymsnd", 0 )
+	ROM_LOAD( "008-v1.bin", 0x000000, 0x200000, CRC(443eadba) SHA1(3def3c22f0e276bc4c2fc7ff70ce473c08b0d2df) )
+
+	NO_DELTAT_REGION
+
+	/* Encrypted */
+	ROM_REGION( 0x1000000, "sprites", 0 )
+	ROM_LOAD16_BYTE( "008-c1.bin", 0x0000000, 0x800000, CRC(a9acbf18) SHA1(d55122c70cbe78c2679598dc07863e1d1d1a31df) ) /* Plane 0,1 */
+	ROM_LOAD16_BYTE( "008-c2.bin", 0x0000001, 0x800000, CRC(6289eef9) SHA1(a2ede77bb2468a2e1486d74745a22a5451026039) ) /* Plane 2,3 */
+ROM_END

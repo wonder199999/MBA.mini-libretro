@@ -831,6 +831,7 @@ const game_driver *const drivers[] =
 	DRIVER( b2b )		/* Bang Bang Busters (NCI release) */
 	DRIVER( bangbedp )	/* Bang Bead (prototype) */
 	DRIVER( burningfp )	/* Burning Fight (prototype) */
+	DRIVER( jockeygpa )	/* Jockey Grand Prix (set 2) */
 
 
 #endif	/* DRIVER_RECURSIVE */
