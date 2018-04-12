@@ -835,6 +835,7 @@ const game_driver *const drivers[] =
 	DRIVER( garouh )	/* Garou - Mark of the Wolves (NGM-2530 ~ NGH-2530) */
 	DRIVER( ironclad )	/* Choutetsu Brikin'ger - Iron clad (prototype) */
 	DRIVER( ironclado )	/* bootleg, Choutetsu Brikin'ger - Iron clad (prototype) */
+	DRIVER( fr2ch )		/* Idol Mahjong - final romance 2 (bootleg of NGCD) */
 
 
 #endif	/* DRIVER_RECURSIVE */

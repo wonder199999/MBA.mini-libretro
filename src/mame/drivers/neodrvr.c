@@ -8698,3 +8698,4 @@ GAME( 2001,	jockeygpa,	jockeygp,	neogeo,		jockeygp,	jockeygp,  ROT0,   "Sun Amus
 GAME( 1999,	garouh,		garou,		neogeo,		neogeo,		garouo,	   ROT0,   "SNK", "Garou - Mark of the Wolves (NGM-2530) (NGH-2530)" , GAME_SUPPORTS_SAVE ) /* Encrypted Code & GFX */
 GAME( 1996,	ironclad,	neogeo,		neogeo,		neogeo,		neogeo,	   ROT0,   "Saurus", "Choutetsu Brikin'ger - Iron clad (prototype)" , GAME_SUPPORTS_SAVE )
 GAME( 1996,	ironclado,	ironclad,	neogeo,		neogeo,		neogeo,	   ROT0,   "bootleg", "Choutetsu Brikin'ger - Iron clad (prototype) (bootleg)" , GAME_SUPPORTS_SAVE )
+GAME( 1995,	fr2ch,		neogeo,		neogeo,		neogeo,		neogeo,	   ROT0,   "bootleg", "Idol Mahjong - final romance 2 (NGCD Conversion) (bootleg)" , GAME_SUPPORTS_SAVE )

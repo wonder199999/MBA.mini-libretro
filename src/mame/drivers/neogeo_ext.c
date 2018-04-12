@@ -369,3 +369,21 @@ ROM_START( ironclado )		/* bootleg, Choutetsu Brikin'ger - Iron clad (prototype)
 	ROM_LOAD16_BYTE( "proto_220-c3.c3", 0x800000, 0x400000, NO_DUMP )
 	ROM_LOAD16_BYTE( "proto_220-c4.c4", 0x800001, 0x400000, NO_DUMP )
 ROM_END
+
+ROM_START( fr2ch )	/* Idol Mahjong - final romance 2 (bootleg of NGCD) */
+	ROM_REGION( 0x100000, "maincpu", 0 )
+	ROM_LOAD16_WORD_SWAP( "098-p1ch.bin", 0x000000, 0x080000, NO_DUMP )
+
+	NEO_SFIX_128K( "098-s1ch.bin", NO_DUMP )
+
+	NEO_BIOS_AUDIO_128K( "098-m1ch.bin", NO_DUMP )
+
+	ROM_REGION( 0x100000, "ymsnd", 0 )
+	ROM_LOAD( "098-v1ch.bin", 0x000000, 0x100000, NO_DUMP )
+
+	NO_DELTAT_REGION
+
+	ROM_REGION( 0x800000, "sprites", 0 )
+	ROM_LOAD16_BYTE( "098-c1ch.bin", 0x000000, 0x400000, NO_DUMP )
+	ROM_LOAD16_BYTE( "098-c2ch.bin", 0x000001, 0x400000, NO_DUMP )
+ROM_END
