@@ -313,8 +313,9 @@ else ifneq (,$(findstring armv,$(platform)))
    fpic = -fPIC
    LDFLAGS += -Wl,--fix-cortex-a8 $(SHARED)
    LIBS += -lstdc++ -lpthread
-   CCOMFLAGS += -fsigned-char -marm -ffast-math -mfloat-abi=hard
+   CCOMFLAGS += -marm -ffast-math -mfloat-abi=hard
    ARM_ENABLED = 1
+   ALIGNED = 1
 
 
 else ifeq ($(platform), wincross)
@@ -326,7 +327,7 @@ else ifeq ($(platform), wincross)
    CC_AS ?= gcc
    SHARED := -shared -static-libgcc -static-libstdc++ -s -Wl,--version-script=src/osd/retro/link.T
    CCOMFLAGS +=-D__WIN32__ -D__WIN32_LIBRETRO__
-ifeq ($(VRENDER),opengl) 
+ifeq ($(VRENDER),opengl)
    LIBS += -lopengl32
 endif
    LDFLAGS += $(SHARED)
