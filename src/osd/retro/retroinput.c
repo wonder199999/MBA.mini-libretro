@@ -158,8 +158,8 @@ kt_table ktable[] = {
 			(core_stricmp(machine->gamedrv->name, "fatfury2a") == 0) || (core_stricmp(machine->gamedrv->name, "fatfury3a") == 0) || \
 			(core_stricmp(machine->gamedrv->name, "alpham2p") == 0) || (core_stricmp(machine->gamedrv->name, "bangbedp") == 0) || \
 			(core_stricmp(machine->gamedrv->name, "burningfp") == 0) || (core_stricmp(machine->gamedrv->name, "jockeygpa") == 0) || \
-			(core_stricmp(machine->gamedrv->name, "garouh") == 0) || (core_stricmp(machine->gamedrv->name, "ironclado") == 0) 
-
+			(core_stricmp(machine->gamedrv->name, "garouh") == 0) || (core_stricmp(machine->gamedrv->name, "ironclado") == 0) || \
+			(core_stricmp(machine->gamedrv->name, "kof2000ps2") == 0) 
 
 static void initInput(running_machine *machine)
 {
@@ -179,7 +179,7 @@ static void initInput(running_machine *machine)
    	for (i = 0; i < RETROK_LAST; i++)
       		retrokbd_state[i] = retrokbd_state2[i] = 0;
 
-	for (i = 0; i < 4; i++)
+	for (i = 0; i < MAX_JOYPADS; i++)
 	{
 		pad_state[i][KEY_F11] = pad_state[i][KEY_TAB] = pad_state[i][KEY_F2] =
 		pad_state[i][KEY_START] = pad_state[i][KEY_COIN] = pad_state[i][KEY_BUTTON_1] =
@@ -252,7 +252,7 @@ static void initInput(running_machine *machine)
 
 		macro_enable = false;
    	}
-   	else      	/* Neo Geo */
+	else      		/* Neo Geo */
    	if (NEOGEO_LAYOUT)
    	{
       		input_device_item_add(P1_device, "P1 B1", &pad_state[0][KEY_BUTTON_1], ITEM_ID_LALT, 	 iptdev_get_state);
@@ -265,7 +265,7 @@ static void initInput(running_machine *machine)
       		input_device_item_add(P2_device, "P2 B3", &pad_state[1][KEY_BUTTON_3], ITEM_ID_W, iptdev_get_state);
       		input_device_item_add(P2_device, "P2 B4", &pad_state[1][KEY_BUTTON_4], ITEM_ID_Q, iptdev_get_state);
 	}
-   	else	    	/* Capcom Eco Fighters */
+   	else	    		/* Capcom Eco Fighters */
    	if (ECOFGT_LAYOUT)
    	{
       		input_device_item_add(P1_device, "P1 B1", &pad_state[0][KEY_BUTTON_5], ITEM_ID_LCONTROL, iptdev_get_state);
@@ -278,7 +278,7 @@ static void initInput(running_machine *machine)
 
 		macro_enable = false;
    	}
-   	else	    	/* Capcom Dynasty Wars */
+   	else			/* Capcom Dynasty Wars */
    	if (DYNWAR_LAYOUT)
 	{
       		input_device_item_add(P1_device, "P1 B1", &pad_state[0][KEY_BUTTON_2], ITEM_ID_LCONTROL, iptdev_get_state);
@@ -291,7 +291,7 @@ static void initInput(running_machine *machine)
 
 		macro_enable = false;
 	}
-   	else      /* Default config */
+   	else			/* Default config */
    	{
       		input_device_item_add(P1_device, "P1 B1", &pad_state[0][KEY_BUTTON_1], ITEM_ID_LCONTROL, iptdev_get_state);
       		input_device_item_add(P1_device, "P1 B2", &pad_state[0][KEY_BUTTON_2], ITEM_ID_LALT, 	 iptdev_get_state);

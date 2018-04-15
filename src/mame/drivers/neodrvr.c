@@ -7797,6 +7797,15 @@ static DRIVER_INIT( kof2000n )
 	kof2000_neogeo_gfx_decrypt(machine, 0x00);
 }
 
+static DRIVER_INIT( kof2kps2 )
+{
+	neogeo_state *state = (neogeo_state *)machine->driver_data;
+	DRIVER_INIT_CALL(neogeo);
+	state->fixed_layer_bank_type = 2;
+	neogeo_cmc50_m1_decrypt(machine);
+	neogeo_sfix_decrypt(machine);
+}
+
 static DRIVER_INIT( kof2001 )
 {
 	neogeo_state *state = (neogeo_state *)machine->driver_data;
@@ -8695,7 +8704,8 @@ GAME( 2000,	b2b,		neogeo,		neogeo,		neogeo,		neogeo,    ROT0,   "Visco", "Bang B
 GAME( 2000,	bangbedp,	bangbead,	neogeo,		neogeo,		neogeo,    ROT0,   "Visco", "Bang Bead (prototype)", GAME_SUPPORTS_SAVE )
 GAME( 1991,	burningfp,	burningf,	neogeo,		neogeo,		neogeo,    ROT0,   "SNK", "Burning Fight (prototype)", GAME_SUPPORTS_SAVE )
 GAME( 2001,	jockeygpa,	jockeygp,	neogeo,		jockeygp,	jockeygp,  ROT0,   "Sun Amusement / BrezzaSoft", "Jockey Grand Prix (set 2)", GAME_SUPPORTS_SAVE )
-GAME( 1999,	garouh,		garou,		neogeo,		neogeo,		garouo,	   ROT0,   "SNK", "Garou - Mark of the Wolves (NGM-2530) (NGH-2530)" , GAME_SUPPORTS_SAVE ) /* Encrypted Code & GFX */
+GAME( 1999,	garouh,		garou,		neogeo,		neogeo,		garouo,	   ROT0,   "SNK", "Garou - Mark of the Wolves (NGM-2530) (NGH-2530)" , GAME_SUPPORTS_SAVE )
 GAME( 1996,	ironclad,	neogeo,		neogeo,		neogeo,		neogeo,	   ROT0,   "Saurus", "Choutetsu Brikin'ger - Iron clad (prototype)" , GAME_SUPPORTS_SAVE )
 GAME( 1996,	ironclado,	ironclad,	neogeo,		neogeo,		neogeo,	   ROT0,   "bootleg", "Choutetsu Brikin'ger - Iron clad (prototype) (bootleg)" , GAME_SUPPORTS_SAVE )
 GAME( 1995,	fr2ch,		neogeo,		neogeo,		neogeo,		neogeo,	   ROT0,   "bootleg", "Idol Mahjong - final romance 2 (NGCD Conversion) (bootleg)" , GAME_SUPPORTS_SAVE )
+GAME( 2000,	kof2000ps2,	kof2000,	neogeo,		neogeo,		kof2kps2,  ROT0,   "bootleg (EGHT)", "The King of Fighters 2000 (Playstation 2 ver.) (EGHT hack, hack only enable in AES mode)" , GAME_SUPPORTS_SAVE )

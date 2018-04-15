@@ -836,6 +836,7 @@ const game_driver *const drivers[] =
 	DRIVER( ironclad )	/* Choutetsu Brikin'ger - Iron clad (prototype) */
 	DRIVER( ironclado )	/* bootleg, Choutetsu Brikin'ger - Iron clad (prototype) */
 	DRIVER( fr2ch )		/* Idol Mahjong - final romance 2 (bootleg of NGCD) */
+	DRIVER( kof2000ps2 )	/* The King of Fighters 2000 (Playstation 2 ver.) */
 
 
 #endif	/* DRIVER_RECURSIVE */
