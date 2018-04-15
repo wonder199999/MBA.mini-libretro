@@ -128,11 +128,11 @@ static UINT8 pad_state[4][KEY_TOTAL];
 static UINT16 retrokbd_state[RETROK_LAST];
 static UINT16 retrokbd_state2[RETROK_LAST];
 
-unsigned int allow_select_newgame = 0;
-int vertical, orient;
-int RLOOP = 1;
-int SHIFTON = -1;
 bool verify_rom_hash = false;
+INT32 vertical, orient;
+INT32 RLOOP = 1;
+INT32 SHIFTON = -1;
+UINT32 allow_select_newgame = 0;
 
 char RPATH[512];
 char retro_content_dir[1024];
@@ -144,22 +144,22 @@ static bool set_par = false;
 static bool retro_load_ok = false;
 static bool keyboard_input = true;
 static bool macro_enable = true;
-static int rtwi = 320, rthe = 240, topw = 320;		/* DEFAULT TEXW/TEXH/PITCH */
-static int ui_ipt_pushchar = -1;
-static int set_frame_skip;
-static unsigned int tate;
-static unsigned int screenRot;
-static unsigned int pauseg = 0;
-static unsigned int mame_reset = 0;
-static unsigned int FirstTimeUpdate = 1;
-static unsigned int turbo_enable;
-static unsigned int turbo_delay;
-static unsigned int turbo_state;
-static unsigned int macro_state;
-static unsigned int sample_rate = 48000;
-static double refresh_rate = 60.0;
-static unsigned adjust_opt[7] = {0/*Enable/Disable*/, 0/*Limit*/, 0/*GetRefreshRate*/, 0/*Brightness*/, 0/*Contrast*/, 0/*Gamma*/, 0/*Overclock*/};
+static INT32 rtwi = 320, rthe = 240, topw = 320;	/* DEFAULT TEXW/TEXH/PITCH */
+static INT32 ui_ipt_pushchar = -1;
+static INT32 set_frame_skip;
+static UINT32 tate;
+static UINT32 screenRot;
+static UINT32 pauseg = 0;
+static UINT32 mame_reset = 0;
+static UINT32 FirstTimeUpdate = 1;
+static UINT32 turbo_enable;
+static UINT32 turbo_delay;
+static UINT32 turbo_state;
+static UINT32 macro_state;
+static UINT32 sample_rate = 48000;
+static UINT32 adjust_opt[7] = {0/*Enable/Disable*/, 0/*Limit*/, 0/*GetRefreshRate*/, 0/*Brightness*/, 0/*Contrast*/, 0/*Gamma*/, 0/*Overclock*/};
 static float arroffset[4] = {0/*For brightness*/, 0/*For contrast*/, 0/*For gamma*/, 1.0/*For overclock*/};
+static double refresh_rate = 60.0;
 
 static void extract_basename(char *buf, const char *path, size_t size)
 {
