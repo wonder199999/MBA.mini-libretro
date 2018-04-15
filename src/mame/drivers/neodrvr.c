@@ -7797,15 +7797,6 @@ static DRIVER_INIT( kof2000n )
 	kof2000_neogeo_gfx_decrypt(machine, 0x00);
 }
 
-static DRIVER_INIT( kof2kps2 )
-{
-	neogeo_state *state = (neogeo_state *)machine->driver_data;
-	DRIVER_INIT_CALL(neogeo);
-	state->fixed_layer_bank_type = 2;
-	neogeo_cmc50_m1_decrypt(machine);
-	neogeo_sfix_decrypt(machine);
-}
-
 static DRIVER_INIT( kof2001 )
 {
 	neogeo_state *state = (neogeo_state *)machine->driver_data;
@@ -8269,9 +8260,6 @@ static DRIVER_INIT( jockeygp )
 
 	/* install some extra RAM */
 	memory_install_ram(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x200000, 0x201fff, 0, 0, NULL);
-
-//  memory_install_read_port(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x280000, 0x280001, 0, 0, "IN5");
-//  memory_install_read_port(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x2c0000, 0x2c0001, 0, 0, "IN6");
 }
 
 static DRIVER_INIT( vliner )
@@ -8304,6 +8292,21 @@ static DRIVER_INIT( lans2004 )
 	DRIVER_INIT_CALL(neogeo);
 }
 
+static DRIVER_INIT( kof2kps2 )
+{
+	neogeo_state *state = (neogeo_state *)machine->driver_data;
+	DRIVER_INIT_CALL(neogeo);
+	state->fixed_layer_bank_type = 2;
+	neogeo_cmc50_m1_decrypt(machine);
+	neogeo_sfix_decrypt(machine);
+}
+
+static DRIVER_INIT( kf2k1pls )
+{
+	DRIVER_INIT_CALL(neogeo);
+	cmc50_neogeo_gfx_decrypt(machine, 0x1e);
+	neogeo_cmc50_m1_decrypt(machine);
+}
 
 /****************************************************************************/
 
@@ -8709,3 +8712,4 @@ GAME( 1996,	ironclad,	neogeo,		neogeo,		neogeo,		neogeo,	   ROT0,   "Saurus", "C
 GAME( 1996,	ironclado,	ironclad,	neogeo,		neogeo,		neogeo,	   ROT0,   "bootleg", "Choutetsu Brikin'ger - Iron clad (prototype) (bootleg)" , GAME_SUPPORTS_SAVE )
 GAME( 1995,	fr2ch,		neogeo,		neogeo,		neogeo,		neogeo,	   ROT0,   "bootleg", "Idol Mahjong - final romance 2 (NGCD Conversion) (bootleg)" , GAME_SUPPORTS_SAVE )
 GAME( 2000,	kof2000ps2,	kof2000,	neogeo,		neogeo,		kof2kps2,  ROT0,   "bootleg (EGHT)", "The King of Fighters 2000 (Playstation 2 ver.) (EGHT hack, hack only enable in AES mode)" , GAME_SUPPORTS_SAVE )
+GAME( 2001,	kf2k1pls,	neogeo,		neogeo,		neogeo,		kf2k1pls,  ROT0,   "bootleg", "The King of Fighters 2001 Plus (bootleg set 1)" , GAME_SUPPORTS_SAVE )
