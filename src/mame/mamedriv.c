@@ -838,6 +838,7 @@ const game_driver *const drivers[] =
 	DRIVER( fr2ch )		/* Idol Mahjong - final romance 2 (bootleg of NGCD) */
 	DRIVER( kof2000ps2 )	/* The King of Fighters 2000 (Playstation 2 ver.) */
 	DRIVER( kf2k1pls )	/* The King of Fighters 2001 Plus (bootleg) */
+	DRIVER( kf2k1pa )	/* The King of Fighters 2001 Plus (bootleg) */
 
 
 #endif	/* DRIVER_RECURSIVE */
