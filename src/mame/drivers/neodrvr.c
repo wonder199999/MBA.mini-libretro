@@ -8166,8 +8166,8 @@ static DRIVER_INIT( kf2k3pcb )
 	neogeo_cmc50_m1_decrypt(machine);
 
 	/*  extra little swap on the m1 - this must be performed AFTER the m1 decrypt
-       	    or the m1 checksum (used to generate the key) for decrypting the m1 is
-       	    incorrect */
+	    or the m1 checksum (used to generate the key) for decrypting the m1 is
+	    incorrect */
 	{
 		int i;
 		UINT8* rom = memory_region(machine, "audiocpu");
@@ -8320,6 +8320,29 @@ static DRIVER_INIT( kf2k1pa )
 
 	cmc50_neogeo_gfx_decrypt(machine, 0x1e);
 	neogeo_cmc50_m1_decrypt(machine);
+}
+
+static DRIVER_INIT( cthd2k3a )
+{
+	DRIVER_INIT_CALL(neogeo);
+
+	const int nBank[] = {
+		0x06, 0x02, 0x04, 0x05, 0x01, 0x03, 0x00, 0x07,
+		0x27, 0x0E, 0x1C, 0x15, 0x1B, 0x17, 0x0A, 0x0F,
+		0x16, 0x14, 0x23, 0x0B, 0x22, 0x26, 0x08, 0x24,
+		0x21, 0x13, 0x1A, 0x0C, 0x19, 0x1D, 0x25, 0x10,
+		0x09, 0x20, 0x18, 0x1F, 0x1E, 0x12, 0x0D, 0x11 };
+
+	INT32 i, size = memory_region_length( machine, "maincpu" );
+	UINT8 *src = memory_region( machine, "maincpu" );
+	UINT8 *dst = auto_alloc_array( machine, UINT8,  size );
+
+	for (i = 0; i < 0x500000 / 0x20000; i++)
+		memcpy (dst + i * 0x20000, src + nBank[i] * 0x20000, 0x20000);
+
+	memcpy (src, dst, 0x500000);
+
+	decrypt_cthd2003(machine);
 }
 
 /****************************************************************************/
@@ -8728,3 +8751,4 @@ GAME( 1995,	fr2ch,		neogeo,		neogeo,		neogeo,		neogeo,	   ROT0,   "bootleg", "Id
 GAME( 2000,	kof2000ps2,	kof2000,	neogeo,		neogeo,		kof2kps2,  ROT0,   "bootleg (EGHT)", "The King of Fighters 2000 (Playstation 2 ver.) (EGHT hack, hack only enable in AES mode)" , GAME_SUPPORTS_SAVE )
 GAME( 2001,	kf2k1pls,	neogeo,		neogeo,		neogeo,		kf2k1pls,  ROT0,   "bootleg", "The King of Fighters 2001 Plus (bootleg set 1)" , GAME_SUPPORTS_SAVE )
 GAME( 2001,	kf2k1pa,	neogeo,		neogeo,		neogeo,		kf2k1pa,   ROT0,   "bootleg", "The King of Fighters 2001 Plus (bootleg set 2)" , GAME_SUPPORTS_SAVE )
+GAME( 2003,	cthd2k3a,	neogeo,		neogeo,		neogeo,		cthd2k3a,  ROT0,   "bootleg", "Crouching Tiger Hidden Dragon 2003 (The King of Fighters 2001 bootleg) (alternate set)", GAME_SUPPORTS_SAVE )

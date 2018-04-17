@@ -1,5 +1,5 @@
 
-ROM_START( kof97hfa ) /* kof97, hacked by FlanagAnagency */
+ROM_START( kof97hfa )		/* kof97, hacked by FlanagAnagency */
 	ROM_REGION( 0x500000, "maincpu", 0 )
 	ROM_LOAD16_WORD_SWAP( "232-p1.p1", 0x000000, 0x100000, NO_DUMP )
 	ROM_LOAD16_WORD_SWAP( "232-p2.sp2", 0x100000, 0x400000, NO_DUMP )
@@ -24,7 +24,7 @@ ROM_START( kof97hfa ) /* kof97, hacked by FlanagAnagency */
 	ROM_LOAD16_BYTE( "232-c6.c6", 0x2000001, 0x400000, NO_DUMP )
 ROM_END
 
-ROM_START( ss2hfa ) /* samsho2, hacked by FlanagAnagency */
+ROM_START( ss2hfa )		/* samsho2, hacked by FlanagAnagency */
 	ROM_REGION( 0x200000, "maincpu", 0 )
 	ROM_LOAD16_WORD_SWAP( "063-p1.p1", 0x100000, 0x100000, NO_DUMP )
 	ROM_CONTINUE( 0x000000, 0x100000 )
@@ -52,7 +52,7 @@ ROM_START( ss2hfa ) /* samsho2, hacked by FlanagAnagency */
 	ROM_LOAD16_BYTE( "063-c8.c8", 0xc00001, 0x200000, NO_DUMP )
 ROM_END
 
-ROM_START( sokhfa ) /* ragnagrd, hacked by FlanagAnagency */
+ROM_START( sokhfa )		/* ragnagrd, hacked by FlanagAnagency */
 	ROM_REGION( 0x200000, "maincpu", 0 )
 	ROM_LOAD16_WORD_SWAP( "218-p1.p1", 0x100000, 0x100000, NO_DUMP )
 	ROM_CONTINUE( 0x000000, 0x100000 )
@@ -221,7 +221,7 @@ ROM_START( b2b )		/* Bang Bang Busters (2010 NCI release) */
 	ROM_LOAD16_BYTE( "071.c2", 0x000001, 0x200000, NO_DUMP )
 ROM_END
 
-ROM_START( bangbedp ) /* Bang Bead (prototype) */
+ROM_START( bangbedp )		/* Bang Bead (prototype) */
 	ROM_REGION( 0x200000, "maincpu", 0 )
 	ROM_LOAD16_WORD_SWAP( "259-p1.bin", 0x100000, 0x100000, NO_DUMP )
 	ROM_CONTINUE( 0x000000, 0x100000 )
@@ -427,7 +427,6 @@ ROM_START( kf2k1pls )		/* The King of Fighters 2001 Plus (bootleg set 1) */
 	ROM_LOAD16_WORD_SWAP( "262-pg2.bin", 0x100000, 0x400000, NO_DUMP )
 
 	NEO_SFIX_128K( "2k1-s1p.bin", NO_DUMP )
-
 	NEO_BIOS_AUDIO_ENCRYPTED_256K( "265-262-m1.bin", NO_DUMP )
 
 	ROM_REGION( 0x1000000, "ymsnd", 0 )
@@ -455,7 +454,6 @@ ROM_START( kf2k1pa )		/* The King of Fighters 2001 Plus (bootleg set 2) */
 	ROM_LOAD16_WORD_SWAP( "262-pg2.bin", 0x100000, 0x400000, NO_DUMP )
 
 	NEO_SFIX_128K( "2k1-s1a.bin", NO_DUMP )
-
 	NEO_BIOS_AUDIO_ENCRYPTED_256K( "265-262-m1.bin", NO_DUMP )
 
 	ROM_REGION( 0x1000000, "ymsnd", 0 )
@@ -475,4 +473,31 @@ ROM_START( kf2k1pa )		/* The King of Fighters 2001 Plus (bootleg set 2) */
 	ROM_LOAD16_BYTE( "262-c6-08-e0.bin", 0x2000001, 0x800000, NO_DUMP )
 	ROM_LOAD16_BYTE( "262-c7-08-e0.bin", 0x3000000, 0x800000, NO_DUMP )
 	ROM_LOAD16_BYTE( "262-c8-08-e0.bin", 0x3000001, 0x800000, NO_DUMP )
+ROM_END
+
+ROM_START( cthd2k3a )		/* Crouching Tiger Hidden Dragon 2003 (alternate set) (Protected hack/bootleg of kof2001, Phenixsoft) */
+	ROM_REGION( 0x500000, "maincpu", 0 )
+	ROM_LOAD16_WORD_SWAP( "5003-p1a.bin", 0x000000, 0x100000, NO_DUMP )
+	ROM_LOAD16_WORD_SWAP( "5003-p2a.bin", 0x100000, 0x400000, NO_DUMP )
+
+	NEO_SFIX_128K( "5003-s1a.bin", NO_DUMP )
+	NEO_BIOS_AUDIO_128K( "5003-m1a.bin", NO_DUMP )
+
+	ROM_REGION( 0x1000000, "ymsnd", 0 )
+	ROM_LOAD( "262-v1-08-e0.bin", 0x000000, 0x400000, NO_DUMP )
+	ROM_LOAD( "5003-v2a.bin",     0x400000, 0x400000, NO_DUMP )
+	ROM_LOAD( "262-v3-08-e0.bin", 0x800000, 0x400000, NO_DUMP )
+	ROM_LOAD( "262-v4-08-e0.bin", 0xc00000, 0x400000, NO_DUMP )
+
+	NO_DELTAT_REGION
+
+	ROM_REGION( 0x4000000, "sprites", 0 )
+	ROM_LOAD16_BYTE( "5003-c1a.bin", 0x0000000, 0x800000, NO_DUMP )
+	ROM_LOAD16_BYTE( "5003-c2a.bin", 0x0000001, 0x800000, NO_DUMP )
+	ROM_LOAD16_BYTE( "5003-c3.bin",  0x1000000, 0x800000, NO_DUMP )
+	ROM_LOAD16_BYTE( "5003-c4.bin",  0x1000001, 0x800000, NO_DUMP )
+	ROM_LOAD16_BYTE( "5003-c5.bin",  0x2000000, 0x800000, NO_DUMP )
+	ROM_LOAD16_BYTE( "5003-c6.bin",  0x2000001, 0x800000, NO_DUMP )
+	ROM_LOAD16_BYTE( "5003-c7a.bin", 0x3000000, 0x800000, NO_DUMP )
+	ROM_LOAD16_BYTE( "5003-c8a.bin", 0x3000001, 0x800000, NO_DUMP )
 ROM_END
