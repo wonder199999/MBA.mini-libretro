@@ -8029,7 +8029,7 @@ static DRIVER_INIT( mslug5 )
 
 static TIMER_CALLBACK( ms5pcb_bios_timer_callback )
 {
-	int harddip3 = input_port_read(machine, "HARDDIP") & 1;
+	INT32 harddip3 = input_port_read(machine, "HARDDIP") & 0x01;
 	memory_set_bankptr(machine, NEOGEO_BANK_BIOS, memory_region(machine, "mainbios") + 0x20000 + harddip3 * 0x20000);
 }
 
@@ -8066,7 +8066,7 @@ static DRIVER_INIT( ms5plus )
 
 static TIMER_CALLBACK( svcpcb_bios_timer_callback )
 {
-	int harddip3 = input_port_read(machine, "HARDDIP") & 1;
+	INT32 harddip3 = input_port_read(machine, "HARDDIP") & 0x01;
 	memory_set_bankptr(machine, NEOGEO_BANK_BIOS, memory_region(machine, "mainbios") + 0x20000 + harddip3 * 0x20000);
 }
 
@@ -8169,11 +8169,12 @@ static DRIVER_INIT( kf2k3pcb )
 	    or the m1 checksum (used to generate the key) for decrypting the m1 is
 	    incorrect */
 	{
-		int i;
+		INT32 i;
 		UINT8* rom = memory_region(machine, "audiocpu");
+
 		for (i = 0; i < 0x90000; i++)
 		{
-			rom[i] = BITSWAP8(rom[i], 5, 6, 1, 4, 3, 0, 7, 2);
+			rom[i] = BITSWAP8( rom[i], 5, 6, 1, 4, 3, 0, 7, 2 );
 		}
 
 	}
@@ -8315,10 +8316,10 @@ static DRIVER_INIT( kf2k1pa )
 	DRIVER_INIT_CALL(neogeo);
 
 	UINT8 *rom = memory_region(machine, "fixed");
-	int i, rom_len = memory_region_length(machine, "fixed");
+	INT32 i, rom_len = memory_region_length(machine, "fixed");
 
 	for (i = 0; i < rom_len; i++)
-		rom[i] = BITSWAP8(rom[i], 3, 2, 4, 5, 1, 6, 0, 7);
+		rom[i] = BITSWAP8( rom[i], 3, 2, 4, 5, 1, 6, 0, 7 );
 
 	cmc50_neogeo_gfx_decrypt(machine, 0x1e);
 	neogeo_cmc50_m1_decrypt(machine);
@@ -8364,6 +8365,27 @@ static DRIVER_INIT( kf2k2ps2 )
 
 	neo_pcm2_swap(machine, 0);
 	neogeo_cmc50_m1_decrypt(machine);
+}
+
+static DRIVER_INIT( kf2k4pls )
+{
+	DRIVER_INIT_CALL(neogeo);
+
+	UINT8 *src = memory_region( machine, "maincpu" );
+	UINT8 *dst = auto_alloc_array( machine, UINT8, 0x200000 );
+
+	memcpy(dst, src, 0x100000);
+	memcpy(dst + 0x100000, src + 0x500000, 0x100000);
+	memcpy(src + 0x000000, dst + 0x1A0000, 0x020000);
+	memcpy(src + 0x020000, dst + 0x080000, 0x020000);
+	memcpy(src + 0x040000, dst + 0x140000, 0x020000);
+	memcpy(src + 0x060000, dst + 0x000000, 0x020000);
+	memcpy(src + 0x080000, dst + 0x180000, 0x020000);
+	memcpy(src + 0x0A0000, dst + 0x0A0000, 0x020000);
+	memcpy(src + 0x0C0000, dst + 0x100000, 0x020000);
+	memcpy(src + 0x0E0000, dst + 0x040000, 0x020000);
+
+	neogeo_bootleg_sx_decrypt(machine, 1);
 }
 
 
@@ -8777,3 +8799,4 @@ GAME( 2003,	cthd2k3a,	neogeo,		neogeo,		neogeo,		cthd2k3a,  ROT0,   "bootleg", "
 GAME( 2002,	kf2k2plb,	neogeo,		neogeo,		neogeo,		kf2k2pls,  ROT0,   "bootleg", "The King of Fighters 2002 Plus (bootleg set 3)" , GAME_SUPPORTS_SAVE )
 GAME( 2002,	kf2k2plc,	neogeo,		neogeo,		neogeo,		kf2k2plc,  ROT0,   "bootleg", "The King of Fighters 2002 Super (bootleg set 4)" , GAME_SUPPORTS_SAVE )
 GAME( 2007,	kf2k2ps2,	neogeo,		neogeo,		neogeo,		kf2k2ps2,  ROT0,   "bootleg (EGHT)", "The King of Fighters 2002 (Playstation 2 ver. 0.4) (EGHT hack, hack only enable in AES mode)" , GAME_SUPPORTS_SAVE )
+GAME( 2004,	kf2k4pls,	neogeo,		neogeo,		neogeo,		kf2k4pls,  ROT0,   "bootleg", "The King of Fighters Special Edition 2004 Plus (bootleg of kof2002)" , GAME_SUPPORTS_SAVE )

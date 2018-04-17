@@ -843,6 +843,7 @@ const game_driver *const drivers[] =
 	DRIVER( kf2k2plb )	/* The King of Fighters 2002 Plus (bootleg of kof2002) */
 	DRIVER( kf2k2plc )	/* The King of Fighters 2002 Super (bootleg of kof2002) */
 	DRIVER( kf2k2ps2 )	/* The King of Fighters 2002 (Playstation 2 ver.) */
+	DRIVER( kf2k4pls )	/* The King of Fighters Special Edition 2004 Plus (bootleg of kof2002) */
 
 
 #endif	/* DRIVER_RECURSIVE */

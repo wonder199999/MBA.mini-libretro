@@ -5,7 +5,6 @@ ROM_START( kof97hfa )		/* kof97, hacked by FlanagAnagency */
 	ROM_LOAD16_WORD_SWAP( "232-p2.sp2", 0x100000, 0x400000, NO_DUMP )
 
 	NEO_SFIX_128K( "232-s1.s1", NO_DUMP )
-
 	NEO_BIOS_AUDIO_128K( "232-m1.m1", NO_DUMP )
 
 	ROM_REGION( 0xc00000, "ymsnd", 0 )
@@ -30,7 +29,6 @@ ROM_START( ss2hfa )		/* samsho2, hacked by FlanagAnagency */
 	ROM_CONTINUE( 0x000000, 0x100000 )
 
 	NEO_SFIX_128K( "063-s1.s1", NO_DUMP )
-
 	NEO_BIOS_AUDIO_128K( "063-m1.m1", NO_DUMP )
 
 	ROM_REGION( 0x700000, "ymsnd", 0 )
@@ -58,7 +56,6 @@ ROM_START( sokhfa )		/* ragnagrd, hacked by FlanagAnagency */
 	ROM_CONTINUE( 0x000000, 0x100000 )
 
 	NEO_SFIX_128K( "218-s1.s1", NO_DUMP )
-
 	NEO_BIOS_AUDIO_128K( "218-m1.m1", NO_DUMP )
 
 	ROM_REGION( 0x800000, "ymsnd", 0 )
@@ -84,7 +81,6 @@ ROM_START( crswd2bl )		/* Crossed Sword 2, bootleg of NGCD version */
 	ROM_CONTINUE( 0x000000, 0x100000 )
 
 	NEO_SFIX_128K( "054-s1.s1", NO_DUMP )
-
 	NEO_BIOS_AUDIO_128K( "054-m1.m1", NO_DUMP )
 
 	ROM_REGION( 0x200000, "ymsnd", 0 )
@@ -103,7 +99,6 @@ ROM_START( 3countba )		/* 3 Count Bout / Fire Suplex (NGM-043) */
 	ROM_LOAD16_WORD_SWAP( "043-epr.ep2", 0x80000, 0x80000, NO_DUMP )
 
 	NEO_SFIX_128K( "043-s1.bin", NO_DUMP )
-
 	NEO_BIOS_AUDIO_128K( "043-m1.bin", NO_DUMP )
 
 	ROM_REGION( 0x400000, "ymsnd", 0 )
@@ -129,7 +124,6 @@ ROM_START( fatfury2a )		/* Fatal Fury 2 (NGM-047) */
 	ROM_LOAD16_WORD_SWAP( "047-epr.ep2", 0x80000, 0x80000, NO_DUMP )
 
 	NEO_SFIX_128K( "047-s1.bin", NO_DUMP )
-
 	NEO_BIOS_AUDIO_128K( "047-m1.bin", NO_DUMP )
 
 	ROM_REGION( 0x400000, "ymsnd", 0 )
@@ -155,7 +149,6 @@ ROM_START( fatfury3a )		/* Fatal Fury 3 (NGM-069) */
 	ROM_LOAD16_WORD_SWAP( "069-sp2.bin", 0x100000, 0x200000, NO_DUMP )
 
 	NEO_SFIX_128K( "069-s1.bin", NO_DUMP )
-
 	NEO_BIOS_AUDIO_128K( "069-m1.bin", NO_DUMP )
 
 	ROM_REGION( 0xa00000, "ymsnd", 0 )
@@ -180,7 +173,6 @@ ROM_START( alpham2p )		/* ASO II - Last Guardian / Alpha Mission II (prototype) 
 	ROM_LOAD16_BYTE( "007_p2_1813.p2", 0x000000, 0x080000, NO_DUMP )
 
 	NEO_SFIX_128K( "007_s1_36f1.s1", NO_DUMP )
-
 	NEO_BIOS_AUDIO_128K( "007_m1_9384.m1", NO_DUMP )
 
 	ROM_REGION( 0x200000, "ymsnd", 0 )
@@ -208,7 +200,6 @@ ROM_START( b2b )		/* Bang Bang Busters (2010 NCI release) */
 	ROM_LOAD16_WORD_SWAP( "071.p1", 0x00000, 0x80000, NO_DUMP )
 
 	NEO_SFIX_128K( "071.s1", NO_DUMP )
-
 	NEO_BIOS_AUDIO_128K( "071.m1", NO_DUMP )
 
 	ROM_REGION( 0x100000, "ymsnd", 0 )
@@ -227,7 +218,6 @@ ROM_START( bangbedp )		/* Bang Bead (prototype) */
 	ROM_CONTINUE( 0x000000, 0x100000 )
 
 	NEO_SFIX_128K( "259-s1p.bin", NO_DUMP )
-
 	NEO_BIOS_AUDIO_128K( "259-m1.bin", NO_DUMP )
 
 	ROM_REGION( 0x500000, "ymsnd", 0 )
@@ -250,7 +240,6 @@ ROM_START( burningfp )		/* Burning Fight (prototype) */
 	ROM_LOAD16_BYTE( "018_p2_e335.p2", 0x000000, 0x080000, NO_DUMP )
 
 	NEO_SFIX_128K( "018_s1_9899.s1", NO_DUMP )
-
 	NEO_BIOS_AUDIO_128K( "018_m1_4586.m1", NO_DUMP )
 
 	ROM_REGION( 0x200000, "ymsnd", 0 )
@@ -577,4 +566,33 @@ ROM_START( kf2k2ps2 )		/* The King of Fighters 2002 (Playstation 2 ver. 0.4, EGH
 	ROM_LOAD16_BYTE( "265ps2-c8.bin",	 0x3000001, 0x800000, NO_DUMP )
 	ROM_LOAD16_BYTE( "265ps2-c9.bin",	 0x4000000, 0x800000, NO_DUMP )
 	ROM_LOAD16_BYTE( "265ps2-c10.bin",	 0x4000001, 0x800000, NO_DUMP )
+ROM_END
+
+ROM_START( kf2k4pls )		/* The King of Fighters Special Edition 2004 Plus (bootleg of kof2002) */
+	ROM_REGION( 0x600000, "maincpu", 0 )
+	ROM_LOAD16_WORD_SWAP( "k2k4s-p1p.bin",  0x000000, 0x100000, NO_DUMP )
+	ROM_CONTINUE(				0x500000, 0x100000 )
+	ROM_LOAD16_WORD_SWAP( "k2k4s-p1.bin",   0x400000, 0x100000, NO_DUMP )
+	ROM_CONTINUE(				0x300000, 0x100000 )
+	ROM_CONTINUE(				0x200000, 0x100000 )
+	ROM_CONTINUE(				0x100000, 0x100000 )
+
+	NEO_SFIX_128K( "k2k4s-s1p.bin", NO_DUMP )
+	NEO_BIOS_AUDIO_128K( "k2k4s-m1.bin", NO_DUMP )
+
+	ROM_REGION( 0x1000000, "ymsnd", 0 )
+	ROM_LOAD( "k2k4s-v2.bin", 0x000000, 0x800000, NO_DUMP )
+	ROM_LOAD( "k2k4s-v1.bin", 0x800000, 0x800000, NO_DUMP )
+
+	NO_DELTAT_REGION
+
+	ROM_REGION( 0x4000000, "sprites", 0 )
+	ROM_LOAD16_BYTE( "k2k4s-c4.bin", 0x0000000, 0x800000, NO_DUMP )
+	ROM_LOAD16_BYTE( "k2k4s-c8.bin", 0x0000001, 0x800000, NO_DUMP )
+	ROM_LOAD16_BYTE( "k2k4s-c3.bin", 0x1000000, 0x800000, NO_DUMP )
+	ROM_LOAD16_BYTE( "k2k4s-c7.bin", 0x1000001, 0x800000, NO_DUMP )
+	ROM_LOAD16_BYTE( "k2k4s-c2.bin", 0x2000000, 0x800000, NO_DUMP )
+	ROM_LOAD16_BYTE( "k2k4s-c6.bin", 0x2000001, 0x800000, NO_DUMP )
+	ROM_LOAD16_BYTE( "k2k4s-c1.bin", 0x3000000, 0x800000, NO_DUMP )
+	ROM_LOAD16_BYTE( "k2k4s-c5.bin", 0x3000001, 0x800000, NO_DUMP )
 ROM_END
