@@ -8730,7 +8730,7 @@ GAME( 1998, 98best44,  0,        neogeo,   neogeo,   neogeo,   ROT0, "SNK", "'98
 /* 	new added support		*/
 /* ==================================== */
 /*
-GAME( year,	archives name,	parent name,	MACHINE_DRIVER_START,	INPUT_PORTS,	DRIVER_INIT,	flip,	producer name,	info, support )
+GAME( year,	archives name,	parent name,	MACHINE_DRIVER_START,	INPUT_PORTS,	DRIVER_INIT,	flip,	producer name,	title information,	status )
 */
 GAME( 1996,	sokhfa,    	neogeo,   	neogeo,   	neogeo,   	neogeo,	   ROT0,   "Saurus", "Ragnagard / Shin-Oh-Ken (Simplified operation version by FlanagAnagency)", GAME_SUPPORTS_SAVE )
 GAME( 1996,	crswd2bl,    	neogeo,   	neogeo,   	neogeo,   	neogeo,	   ROT0,   "bootleg (Razoola)", "Crossed Swords 2 (bootleg of CD version)", GAME_SUPPORTS_SAVE )
@@ -8752,3 +8752,4 @@ GAME( 2000,	kof2000ps2,	kof2000,	neogeo,		neogeo,		kof2kps2,  ROT0,   "bootleg (
 GAME( 2001,	kf2k1pls,	neogeo,		neogeo,		neogeo,		kf2k1pls,  ROT0,   "bootleg", "The King of Fighters 2001 Plus (bootleg set 1)" , GAME_SUPPORTS_SAVE )
 GAME( 2001,	kf2k1pa,	neogeo,		neogeo,		neogeo,		kf2k1pa,   ROT0,   "bootleg", "The King of Fighters 2001 Plus (bootleg set 2)" , GAME_SUPPORTS_SAVE )
 GAME( 2003,	cthd2k3a,	neogeo,		neogeo,		neogeo,		cthd2k3a,  ROT0,   "bootleg", "Crouching Tiger Hidden Dragon 2003 (The King of Fighters 2001 bootleg) (alternate set)", GAME_SUPPORTS_SAVE )
+GAME( 2002,	kf2k2plb,	neogeo,		neogeo,		neogeo,		kf2k2pls,  ROT0,   "bootleg", "The King of Fighters 2002 Plus (bootleg set 3)" , GAME_SUPPORTS_SAVE )
