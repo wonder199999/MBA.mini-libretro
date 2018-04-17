@@ -8345,6 +8345,17 @@ static DRIVER_INIT( cthd2k3a )
 	decrypt_cthd2003(machine);
 }
 
+static DRIVER_INIT( kf2k2plc )
+{
+	DRIVER_INIT_CALL(neogeo);
+
+	kof2002_decrypt_68k(machine);
+	neo_pcm2_swap(machine, 0);
+	neogeo_cmc50_m1_decrypt(machine);
+	neogeo_bootleg_sx_decrypt(machine, 2);
+	cmc50_neogeo_gfx_decrypt(machine, 0xec);
+}
+
 /****************************************************************************/
 
 /*    YEAR  NAME       PARENT    MACHINE   INPUT     INIT      MONITOR  */
@@ -8753,3 +8764,4 @@ GAME( 2001,	kf2k1pls,	neogeo,		neogeo,		neogeo,		kf2k1pls,  ROT0,   "bootleg", "
 GAME( 2001,	kf2k1pa,	neogeo,		neogeo,		neogeo,		kf2k1pa,   ROT0,   "bootleg", "The King of Fighters 2001 Plus (bootleg set 2)" , GAME_SUPPORTS_SAVE )
 GAME( 2003,	cthd2k3a,	neogeo,		neogeo,		neogeo,		cthd2k3a,  ROT0,   "bootleg", "Crouching Tiger Hidden Dragon 2003 (The King of Fighters 2001 bootleg) (alternate set)", GAME_SUPPORTS_SAVE )
 GAME( 2002,	kf2k2plb,	neogeo,		neogeo,		neogeo,		kf2k2pls,  ROT0,   "bootleg", "The King of Fighters 2002 Plus (bootleg set 3)" , GAME_SUPPORTS_SAVE )
+GAME( 2002,	kf2k2plc,	neogeo,		neogeo,		neogeo,		kf2k2plc,  ROT0,   "bootleg", "The King of Fighters 2002 Super (bootleg set 4)" , GAME_SUPPORTS_SAVE )
