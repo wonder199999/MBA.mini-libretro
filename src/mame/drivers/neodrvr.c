@@ -8296,6 +8296,7 @@ static DRIVER_INIT( kof2kps2 )
 {
 	neogeo_state *state = (neogeo_state *)machine->driver_data;
 	DRIVER_INIT_CALL(neogeo);
+
 	state->fixed_layer_bank_type = 2;
 	neogeo_cmc50_m1_decrypt(machine);
 	neogeo_sfix_decrypt(machine);
@@ -8304,6 +8305,7 @@ static DRIVER_INIT( kof2kps2 )
 static DRIVER_INIT( kf2k1pls )
 {
 	DRIVER_INIT_CALL(neogeo);
+
 	cmc50_neogeo_gfx_decrypt(machine, 0x1e);
 	neogeo_cmc50_m1_decrypt(machine);
 }
@@ -8355,6 +8357,15 @@ static DRIVER_INIT( kf2k2plc )
 	neogeo_bootleg_sx_decrypt(machine, 2);
 	cmc50_neogeo_gfx_decrypt(machine, 0xec);
 }
+
+static DRIVER_INIT( kf2k2ps2 )
+{
+	DRIVER_INIT_CALL(neogeo);
+
+	neo_pcm2_swap(machine, 0);
+	neogeo_cmc50_m1_decrypt(machine);
+}
+
 
 /****************************************************************************/
 
@@ -8741,7 +8752,7 @@ GAME( 1998, 98best44,  0,        neogeo,   neogeo,   neogeo,   ROT0, "SNK", "'98
 /* 	new added support		*/
 /* ==================================== */
 /*
-GAME( year,	archives name,	parent name,	MACHINE_DRIVER_START,	INPUT_PORTS,	DRIVER_INIT,	flip,	producer name,	title information,	status )
+GAME( year,   archives name,   parent name,  MACHINE_DRIVER_START,  INPUT_PORTS,  DRIVER_INIT,	flip,	producer name,	title information,	status )
 */
 GAME( 1996,	sokhfa,    	neogeo,   	neogeo,   	neogeo,   	neogeo,	   ROT0,   "Saurus", "Ragnagard / Shin-Oh-Ken (Simplified operation version by FlanagAnagency)", GAME_SUPPORTS_SAVE )
 GAME( 1996,	crswd2bl,    	neogeo,   	neogeo,   	neogeo,   	neogeo,	   ROT0,   "bootleg (Razoola)", "Crossed Swords 2 (bootleg of CD version)", GAME_SUPPORTS_SAVE )
@@ -8759,9 +8770,10 @@ GAME( 1999,	garouh,		garou,		neogeo,		neogeo,		garouo,	   ROT0,   "SNK", "Garou 
 GAME( 1996,	ironclad,	neogeo,		neogeo,		neogeo,		neogeo,	   ROT0,   "Saurus", "Choutetsu Brikin'ger - Iron clad (prototype)" , GAME_SUPPORTS_SAVE )
 GAME( 1996,	ironclado,	ironclad,	neogeo,		neogeo,		neogeo,	   ROT0,   "bootleg", "Choutetsu Brikin'ger - Iron clad (prototype) (bootleg)" , GAME_SUPPORTS_SAVE )
 GAME( 1995,	fr2ch,		neogeo,		neogeo,		neogeo,		neogeo,	   ROT0,   "bootleg", "Idol Mahjong - final romance 2 (NGCD Conversion) (bootleg)" , GAME_SUPPORTS_SAVE )
-GAME( 2000,	kof2000ps2,	kof2000,	neogeo,		neogeo,		kof2kps2,  ROT0,   "bootleg (EGHT)", "The King of Fighters 2000 (Playstation 2 ver.) (EGHT hack, hack only enable in AES mode)" , GAME_SUPPORTS_SAVE )
+GAME( 2000,	kof2000ps2,	kof2000,	neogeo,		neogeo,		kof2kps2,  ROT0,   "bootleg (EGHT)", "The King of Fighters 2000 (Playstation 2 version) (EGHT hack, hack only enable in AES mode)" , GAME_SUPPORTS_SAVE )
 GAME( 2001,	kf2k1pls,	neogeo,		neogeo,		neogeo,		kf2k1pls,  ROT0,   "bootleg", "The King of Fighters 2001 Plus (bootleg set 1)" , GAME_SUPPORTS_SAVE )
 GAME( 2001,	kf2k1pa,	neogeo,		neogeo,		neogeo,		kf2k1pa,   ROT0,   "bootleg", "The King of Fighters 2001 Plus (bootleg set 2)" , GAME_SUPPORTS_SAVE )
 GAME( 2003,	cthd2k3a,	neogeo,		neogeo,		neogeo,		cthd2k3a,  ROT0,   "bootleg", "Crouching Tiger Hidden Dragon 2003 (The King of Fighters 2001 bootleg) (alternate set)", GAME_SUPPORTS_SAVE )
 GAME( 2002,	kf2k2plb,	neogeo,		neogeo,		neogeo,		kf2k2pls,  ROT0,   "bootleg", "The King of Fighters 2002 Plus (bootleg set 3)" , GAME_SUPPORTS_SAVE )
 GAME( 2002,	kf2k2plc,	neogeo,		neogeo,		neogeo,		kf2k2plc,  ROT0,   "bootleg", "The King of Fighters 2002 Super (bootleg set 4)" , GAME_SUPPORTS_SAVE )
+GAME( 2007,	kf2k2ps2,	neogeo,		neogeo,		neogeo,		kf2k2ps2,  ROT0,   "bootleg (EGHT)", "The King of Fighters 2002 (Playstation 2 ver. 0.4) (EGHT hack, hack only enable in AES mode)" , GAME_SUPPORTS_SAVE )

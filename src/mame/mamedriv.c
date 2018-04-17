@@ -842,6 +842,7 @@ const game_driver *const drivers[] =
 	DRIVER( cthd2k3a )	/* Crouching Tiger Hidden Dragon 2003 (bootleg of The King of Fighters 2001) (alternate set) */
 	DRIVER( kf2k2plb )	/* The King of Fighters 2002 Plus (bootleg of kof2002) */
 	DRIVER( kf2k2plc )	/* The King of Fighters 2002 Super (bootleg of kof2002) */
+	DRIVER( kf2k2ps2 )	/* The King of Fighters 2002 (Playstation 2 ver.) */
 
 
 #endif	/* DRIVER_RECURSIVE */
