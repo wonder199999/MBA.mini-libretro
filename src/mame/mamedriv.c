@@ -847,6 +847,7 @@ const game_driver *const drivers[] =
 	DRIVER( kof95a )	/* The king of Fighters' 95 (NGM-084) (alternate board) */
 	DRIVER( kof96a )	/* The king of Fighters' 96 (NGM-214) (alternate board) */
 	DRIVER( kof96ae )	/* The King of Fighters' 96 Anniversary Edition (bootleg of kof96) */
+	DRIVER( kof96ae20 )	/* The King of Fighters' 96 Anniversary Edition 2.0 (bootleg of kof96) */
 
 
 #endif	/* DRIVER_RECURSIVE */
