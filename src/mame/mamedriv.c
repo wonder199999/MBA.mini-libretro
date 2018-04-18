@@ -849,6 +849,7 @@ const game_driver *const drivers[] =
 	DRIVER( kof96ae )	/* The King of Fighters' 96 Anniversary Edition (bootleg of kof96) */
 	DRIVER( kof96ae20 )	/* The King of Fighters' 96 Anniversary Edition 2.0 (bootleg of kof96) */
 	DRIVER( kof96cn )	/* The King of Fighters' 96 Chinese Edition v1.0 (bootleg of kof96) */
+	DRIVER( kof96ep )	/* The King of Fighters' 96 (bootleg of kof96) */
 
 
 #endif	/* DRIVER_RECURSIVE */

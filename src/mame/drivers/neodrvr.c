@@ -8388,6 +8388,23 @@ static DRIVER_INIT( kf2k4pls )
 	neogeo_bootleg_sx_decrypt(machine, 1);
 }
 
+static DRIVER_INIT( kof96ep )
+{
+	DRIVER_INIT_CALL(neogeo);
+
+	UINT8 *src = memory_region( machine, "maincpu" );
+	INT32 i, j;
+
+	for (i = 0; i < 0x080000; i++)
+	{
+		j = i+ 0x300000;
+
+		if (src[j] - src[i] == 8)
+			src[j] = src[i];
+	}
+	memcpy ( src, src + 0x300000, 0x080000 );
+}
+
 
 /****************************************************************************/
 
@@ -8805,3 +8822,4 @@ GAME( 1996,	kof96a,		kof96,   	neogeo,   	neogeo,   	neogeo,    ROT0,   "SNK", "
 GAME( 2007,	kof96ae,	neogeo,   	neogeo,   	neogeo,   	neogeo,    ROT0,   "bootleg (EGHT)", "The King of Fighters' 96 Anniversary Edition (EGHT hack, bootleg of kof96)", GAME_SUPPORTS_SAVE )
 GAME( 2009,	kof96ae20,	kof96,   	neogeo,   	neogeo,   	neogeo,    ROT0,   "bootleg (EGHT)", "The King of Fighters' 96 Anniversary Edition 2.0 (EGHT hack, bootleg of kof96)", GAME_SUPPORTS_SAVE )
 GAME( 200?,	kof96cn,	neogeo,   	neogeo,   	neogeo,   	neogeo,    ROT0,   "bootleg", "The King of Fighters' 96 Chinese Edition ver 1.0 (bootleg of kof96)", GAME_SUPPORTS_SAVE )
+GAME( 1996,	kof96ep,	neogeo,   	neogeo,   	neogeo,   	kof96ep,   ROT0,   "bootleg", "The King of Fighters' 96 (bootleg of kof96)", GAME_SUPPORTS_SAVE )
