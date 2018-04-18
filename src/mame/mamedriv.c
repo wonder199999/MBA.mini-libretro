@@ -837,14 +837,15 @@ const game_driver *const drivers[] =
 	DRIVER( ironclado )	/* bootleg, Choutetsu Brikin'ger - Iron clad (prototype) */
 	DRIVER( fr2ch )		/* Idol Mahjong - final romance 2 (bootleg of NGCD) */
 	DRIVER( kof2000ps2 )	/* The King of Fighters 2000 (Playstation 2 ver.) */
-	DRIVER( kf2k1pls )	/* The King of Fighters 2001 Plus (bootleg) */
-	DRIVER( kf2k1pa )	/* The King of Fighters 2001 Plus (bootleg) */
+	DRIVER( kf2k1pls )	/* The King of Fighters 2001 Plus (bootleg set 1) */
+	DRIVER( kf2k1pa )	/* The King of Fighters 2001 Plus (bootleg set 2) */
 	DRIVER( cthd2k3a )	/* Crouching Tiger Hidden Dragon 2003 (bootleg of The King of Fighters 2001) (alternate set) */
 	DRIVER( kf2k2plb )	/* The King of Fighters 2002 Plus (bootleg of kof2002) */
 	DRIVER( kf2k2plc )	/* The King of Fighters 2002 Super (bootleg of kof2002) */
 	DRIVER( kf2k2ps2 )	/* The King of Fighters 2002 (Playstation 2 ver.) */
 	DRIVER( kf2k4pls )	/* The King of Fighters Special Edition 2004 Plus (bootleg of kof2002) */
 	DRIVER( kof95a )	/* The king of Fighters' 95 (NGM-084) (alternate board) */
+	DRIVER( kof96a )	/* The king of Fighters' 96 (NGM-214) (alternate board) */
 
 
 #endif	/* DRIVER_RECURSIVE */
