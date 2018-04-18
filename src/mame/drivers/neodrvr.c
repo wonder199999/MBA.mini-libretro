@@ -8802,3 +8802,4 @@ GAME( 2007,	kf2k2ps2,	neogeo,		neogeo,		neogeo,		kf2k2ps2,  ROT0,   "bootleg (EG
 GAME( 2004,	kf2k4pls,	neogeo,		neogeo,		neogeo,		kf2k4pls,  ROT0,   "bootleg", "The King of Fighters Special Edition 2004 Plus (bootleg of kof2002)" , GAME_SUPPORTS_SAVE )
 GAME( 1995,	kof95a,		kof95,   	neogeo,   	neogeo,   	neogeo,    ROT0,   "SNK", "The King of Fighters '95 (NGM-084) (alternate board)", GAME_SUPPORTS_SAVE )
 GAME( 1996,	kof96a,		kof96,   	neogeo,   	neogeo,   	neogeo,    ROT0,   "SNK", "The King of Fighters '96 (NGM-214) (alternate board)", GAME_SUPPORTS_SAVE )
+GAME( 2007,	kof96ae,	neogeo,   	neogeo,   	neogeo,   	neogeo,    ROT0,   "bootleg (EGHT)", "The King of Fighters '96 Anniversary Edition (EGHT hack, bootleg of kof96)", GAME_SUPPORTS_SAVE )

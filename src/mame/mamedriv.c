@@ -846,6 +846,7 @@ const game_driver *const drivers[] =
 	DRIVER( kf2k4pls )	/* The King of Fighters Special Edition 2004 Plus (bootleg of kof2002) */
 	DRIVER( kof95a )	/* The king of Fighters' 95 (NGM-084) (alternate board) */
 	DRIVER( kof96a )	/* The king of Fighters' 96 (NGM-214) (alternate board) */
+	DRIVER( kof96ae )	/* The King of Fighters' 96 Anniversary Edition (bootleg of kof96) */
 
 
 #endif	/* DRIVER_RECURSIVE */
