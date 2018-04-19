@@ -8829,3 +8829,4 @@ GAME( 2009,	kof96ae20,	kof96,   	neogeo,   	neogeo,   	neogeo,    ROT0,   "bootl
 GAME( 200?,	kof96cn,	neogeo,   	neogeo,   	neogeo,   	neogeo,    ROT0,   "bootleg", "The King of Fighters' 96 Chinese Edition ver 1.0 (bootleg of kof96)", GAME_SUPPORTS_SAVE )
 GAME( 1996,	kof96ep,	neogeo,   	neogeo,   	neogeo,   	kof96ep,   ROT0,   "bootleg", "The King of Fighters' 96 (bootleg of kof96)", GAME_SUPPORTS_SAVE )
 GAME( 1997,	kof97k,		kof97,		neogeo,		neogeo,		neogeo,    ROT0,   "SNK", "The King of Fighters '97 (Korean release)", GAME_SUPPORTS_SAVE )
+GAME( 2007,	kof97cn,	neogeo,		neogeo,		neogeo,		neogeo,    ROT0,   "bootleg (EGHT)", "The King of Fighters '97 10th Annivesary Chinese Edition (EGHT hack, bootleg of kof97)", GAME_SUPPORTS_SAVE )
