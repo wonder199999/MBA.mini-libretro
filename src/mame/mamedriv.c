@@ -852,6 +852,7 @@ const game_driver *const drivers[] =
 	DRIVER( kof96ep )	/* The King of Fighters' 96 (bootleg of kof96) */
 	DRIVER( kof97k )	/* The King of Fighters' 97 (Korean release) */
 	DRIVER( kof97cn )	/* The King of Fighters' 97 10th Anniversary Chinese Edition (bootleg of kof97) */
+	DRIVER( kof97oro )	/* The King of Fighters' 97 Oroshi Plus 2003 (bootleg of kof97) */
 
 
 #endif	/* DRIVER_RECURSIVE */

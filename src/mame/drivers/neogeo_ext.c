@@ -819,3 +819,30 @@ ROM_START( kof97cn )		/* The King of Fighters' 97 (10th Anniversary Chinese Edit
 	ROM_LOAD16_BYTE( "232-c5.bin",   0x2000000, 0x400000, NO_DUMP )
 	ROM_LOAD16_BYTE( "232-c6.bin",   0x2000001, 0x400000, NO_DUMP )
 ROM_END
+
+ROM_START( kof97oro )		/* The King of Fighters' 97 Oroshi Plus 2003 (bootleg set 2) */
+	ROM_REGION( 0x500000, "maincpu", 0 )
+	ROM_LOAD16_WORD_SWAP( "orochi-p1.bin",  0x0000000, 0x100000, NO_DUMP )
+	ROM_LOAD16_WORD_SWAP( "orochi-p21.bin", 0x0200000, 0x100000, NO_DUMP )
+	ROM_CONTINUE( 0x100000, 0x100000 )
+	ROM_LOAD16_WORD_SWAP( "orochi-p29.bin", 0x0400000, 0x100000, NO_DUMP )
+	ROM_CONTINUE( 0x300000, 0x100000 )
+
+	NEO_SFIX_128K( "orochi-s1.bin", NO_DUMP )
+	NEO_BIOS_AUDIO_128K( "orochi-m1.bin", NO_DUMP )
+
+	ROM_REGION( 0xc00000, "ymsnd", 0 )
+	ROM_LOAD( "orochi-v1.bin", 0x000000, 0x0400000, NO_DUMP )
+	ROM_LOAD( "orochi-v2.bin", 0x400000, 0x0400000, NO_DUMP )
+	ROM_LOAD( "orochi-v3.bin", 0x800000, 0x0400000, NO_DUMP )
+
+	NO_DELTAT_REGION
+
+	ROM_REGION( 0x2800000, "sprites", 0 )
+	ROM_LOAD16_BYTE( "orochi-c1.bin",  0x0000000, 0x1000000, NO_DUMP )
+	ROM_LOAD16_BYTE( "orochi-c2.bin",  0x0000001, 0x1000000, NO_DUMP )
+	ROM_LOAD16_BYTE( "orochi-c51.bin", 0x2000000, 0x0200000, NO_DUMP )
+	ROM_LOAD16_BYTE( "orochi-c61.bin", 0x2000001, 0x0200000, NO_DUMP )
+	ROM_LOAD16_BYTE( "orochi-c52.bin", 0x2400000, 0x0200000, NO_DUMP )
+	ROM_LOAD16_BYTE( "orochi-c62.bin", 0x2400001, 0x0200000, NO_DUMP )
+ROM_END

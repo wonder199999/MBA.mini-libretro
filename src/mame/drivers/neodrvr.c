@@ -8402,7 +8402,7 @@ static DRIVER_INIT( kof96ep )
 
 	for (i = 0; i < 0x080000; i++)
 	{
-		j = i+ 0x300000;
+		j = i + 0x300000;
 
 		if (src[j] - src[i] == 8)
 			src[j] = src[i];
@@ -8410,6 +8410,24 @@ static DRIVER_INIT( kof96ep )
 	memcpy ( src, src + 0x300000, 0x080000 );
 }
 
+static DRIVER_INIT( kof97oro )
+{
+	DRIVER_INIT_CALL(neogeo);
+
+	UINT16 *tmp = auto_alloc_array( machine, UINT16,  0x500000 );
+	UINT16 *src = (UINT16 *)memory_region( machine, "maincpu" );
+	INT32 i;
+
+	for (i = 0; i < 0x500000 / 2; i++)
+		tmp[i] = src[i ^ 0x07ffef];
+
+	memcpy ( src, tmp, 0x500000 );
+
+	neogeo_bootleg_sx_decrypt(machine, 1);
+	neogeo_bootleg_cx_decrypt(machine);
+
+	auto_free( machine, tmp );
+}
 
 /****************************************************************************/
 
@@ -8830,3 +8848,4 @@ GAME( 200?,	kof96cn,	neogeo,   	neogeo,   	neogeo,   	neogeo,    ROT0,   "bootle
 GAME( 1996,	kof96ep,	neogeo,   	neogeo,   	neogeo,   	kof96ep,   ROT0,   "bootleg", "The King of Fighters' 96 (bootleg of kof96)", GAME_SUPPORTS_SAVE )
 GAME( 1997,	kof97k,		kof97,		neogeo,		neogeo,		neogeo,    ROT0,   "SNK", "The King of Fighters '97 (Korean release)", GAME_SUPPORTS_SAVE )
 GAME( 2007,	kof97cn,	neogeo,		neogeo,		neogeo,		neogeo,    ROT0,   "bootleg (EGHT)", "The King of Fighters '97 10th Annivesary Chinese Edition (EGHT hack, bootleg of kof97)", GAME_SUPPORTS_SAVE )
+GAME( 1997,	kof97oro,	neogeo,		neogeo,		neogeo,		kof97oro,  ROT0,   "bootleg", "The King of Fighters '97 Oroshi Plus 2003 (bootleg set 2)", GAME_SUPPORTS_SAVE )
