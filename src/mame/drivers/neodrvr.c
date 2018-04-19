@@ -8339,7 +8339,7 @@ static DRIVER_INIT( cthd2k3a )
 
 	INT32 i, size = memory_region_length( machine, "maincpu" );
 	UINT8 *src = memory_region( machine, "maincpu" );
-	UINT8 *dst = auto_alloc_array( machine, UINT8,  size );
+	UINT8 *dst = auto_alloc_array( machine, UINT8, size );
 
 	for (i = 0; i < 0x500000 / 0x20000; i++)
 		memcpy (dst + i * 0x20000, src + nBank[i] * 0x20000, 0x20000);
@@ -8435,14 +8435,12 @@ static DRIVER_INIT( kof97pla )
 
 	neogeo_bootleg_sx_decrypt(machine, 1);
 
+	const int dPatch[6] = { 0x6c, 0xd1, 0x3a, 0x01, 0x6c, 0x91 };
 	UINT8 *src = memory_region( machine, "maincpu" );
+	INT32 i;
 
-	src[0x1394a] = 0x6c;
-	src[0x1394b] = 0xd1;
-	src[0x1394c] = 0x3a;
-	src[0x1394d] = 0x01;
-	src[0x1394e] = 0x6c;
-	src[0x1394f] = 0x91;
+	for (i = 0; i < 0x06; i++)
+		src[0x1394a + i] = dPatch[i];
 }
 
 
@@ -8867,3 +8865,4 @@ GAME( 1997,	kof97k,		kof97,		neogeo,		neogeo,		neogeo,    ROT0,   "SNK", "The Ki
 GAME( 2007,	kof97cn,	neogeo,		neogeo,		neogeo,		neogeo,    ROT0,   "bootleg (EGHT)", "The King of Fighters '97 10th Annivesary Chinese Edition (EGHT hack, bootleg of kof97)", GAME_SUPPORTS_SAVE )
 GAME( 1997,	kof97oro,	neogeo,		neogeo,		neogeo,		kof97oro,  ROT0,   "bootleg", "The King of Fighters '97 Oroshi Plus 2003 (bootleg set 2)", GAME_SUPPORTS_SAVE )
 GAME( 2003,	kof97pla,	neogeo,		neogeo,		neogeo,		kof97pla,  ROT0,   "bootleg", "The King of Fighters '97 Oroshi Plus 2003 (bootleg set 1)", GAME_SUPPORTS_SAVE )
+GAME( 2007,	kof97xt,	neogeo,		neogeo,		neogeo,		neogeo,    ROT0,   "bootleg", "The King of Fighters '97 - Final Battle (bootleg of kof97, hack)", GAME_SUPPORTS_SAVE )
