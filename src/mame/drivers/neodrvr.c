@@ -8866,3 +8866,4 @@ GAME( 2007,	kof97cn,	neogeo,		neogeo,		neogeo,		neogeo,    ROT0,   "bootleg (EGH
 GAME( 1997,	kof97oro,	neogeo,		neogeo,		neogeo,		kof97oro,  ROT0,   "bootleg", "The King of Fighters '97 Oroshi Plus 2003 (bootleg set 2)", GAME_SUPPORTS_SAVE )
 GAME( 2003,	kof97pla,	neogeo,		neogeo,		neogeo,		kof97pla,  ROT0,   "bootleg", "The King of Fighters '97 Oroshi Plus 2003 (bootleg set 1)", GAME_SUPPORTS_SAVE )
 GAME( 2007,	kof97xt,	neogeo,		neogeo,		neogeo,		neogeo,    ROT0,   "bootleg", "The King of Fighters '97 - Final Battle (bootleg of kof97, hack)", GAME_SUPPORTS_SAVE )
+GAME( 1998,	kof98a,		kof98,		neogeo,		neogeo,		kof98,     ROT0,   "SNK", "The King of Fighters '98 - The Slugfest / King of Fighters '98 - dream match never ends (NGM-2420, alternate board)", GAME_SUPPORTS_SAVE )
