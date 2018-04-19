@@ -8293,6 +8293,7 @@ static DRIVER_INIT( lans2004 )
 	DRIVER_INIT_CALL(neogeo);
 }
 
+/* added */
 static DRIVER_INIT( kof2kps2 )
 {
 	neogeo_state *state = (neogeo_state *)machine->driver_data;
@@ -8346,6 +8347,8 @@ static DRIVER_INIT( cthd2k3a )
 	memcpy (src, dst, 0x500000);
 
 	decrypt_cthd2003(machine);
+
+	auto_free( machine, dst );
 }
 
 static DRIVER_INIT( kf2k2plc )
@@ -8386,6 +8389,8 @@ static DRIVER_INIT( kf2k4pls )
 	memcpy(src + 0x0E0000, dst + 0x040000, 0x020000);
 
 	neogeo_bootleg_sx_decrypt(machine, 1);
+
+	auto_free( machine, dst );
 }
 
 static DRIVER_INIT( kof96ep )
@@ -8823,3 +8828,4 @@ GAME( 2007,	kof96ae,	neogeo,   	neogeo,   	neogeo,   	neogeo,    ROT0,   "bootle
 GAME( 2009,	kof96ae20,	kof96,   	neogeo,   	neogeo,   	neogeo,    ROT0,   "bootleg (EGHT)", "The King of Fighters' 96 Anniversary Edition 2.0 (EGHT hack, bootleg of kof96)", GAME_SUPPORTS_SAVE )
 GAME( 200?,	kof96cn,	neogeo,   	neogeo,   	neogeo,   	neogeo,    ROT0,   "bootleg", "The King of Fighters' 96 Chinese Edition ver 1.0 (bootleg of kof96)", GAME_SUPPORTS_SAVE )
 GAME( 1996,	kof96ep,	neogeo,   	neogeo,   	neogeo,   	kof96ep,   ROT0,   "bootleg", "The King of Fighters' 96 (bootleg of kof96)", GAME_SUPPORTS_SAVE )
+GAME( 1997,	kof97k,		kof97,		neogeo,		neogeo,		neogeo,    ROT0,   "SNK", "The King of Fighters '97 (Korean release)", GAME_SUPPORTS_SAVE )

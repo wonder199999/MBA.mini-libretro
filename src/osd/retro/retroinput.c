@@ -160,7 +160,9 @@ kt_table ktable[] = {
 			(core_stricmp(machine->gamedrv->name, "burningfp") == 0) || (core_stricmp(machine->gamedrv->name, "jockeygpa") == 0) || \
 			(core_stricmp(machine->gamedrv->name, "garouh") == 0) || (core_stricmp(machine->gamedrv->name, "ironclado") == 0) || \
 			(core_stricmp(machine->gamedrv->name, "kof2000ps2") == 0) || (core_stricmp(machine->gamedrv->name, "kof95a") == 0) || \
-			(core_stricmp(machine->gamedrv->name, "kof96a") == 0) || (core_stricmp(machine->gamedrv->name, "kof96ae20") == 0)
+			(core_stricmp(machine->gamedrv->name, "kof96a") == 0) || (core_stricmp(machine->gamedrv->name, "kof96ae20") == 0) || \
+			(core_stricmp(machine->gamedrv->name, "kof97k") == 0) 
+
 
 static void initInput(running_machine *machine)
 {
