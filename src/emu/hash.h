@@ -16,6 +16,7 @@
 
 #define HASH_INFO_NO_DUMP	0
 #define HASH_INFO_BAD_DUMP	1
+#define HASH_INFO_VERIFY_OFF	2
 
 #define HASH_CRC    (1 << 0)
 #define HASH_SHA1   (1 << 1)

@@ -257,11 +257,11 @@ struct rom_entry
 
 /* ----- hash macros ----- */
 #define CRC(x)										"c:" #x "#"
-#define SHA1(x)										"s:" #x "#"
-#define MD5(x)										"m:" #x "#"
-#define NO_DUMP										"$ND$"
-#define BAD_DUMP									"$BD$"
-
+#define SHA1(x)								"s:" #x "#"
+#define MD5(x)						"m:" #x "#"
+#define NO_DUMP					"$ND$"
+#define BAD_DUMP			"$BD$"
+#define VERIFY_OFF		"$VO$"
 
 
 /***************************************************************************

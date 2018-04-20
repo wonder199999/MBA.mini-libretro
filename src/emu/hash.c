@@ -127,20 +127,20 @@
 #define ASSERT(x)
 
 #ifndef TRUE
-#define TRUE    1
+	#define TRUE    1
 #endif
 
 #ifndef FALSE
-#define FALSE   0
+	#define FALSE   0
 #endif
 
 struct _hash_function_desc
 {
-	const char* name;           // human-readable name
-	char code;                  // single-char code used within the hash string
-	unsigned int size;          // checksum size in bytes
+	const char *name;           /* human-readable name */
+	char code;                  /* single-char code used within the hash string */
+	unsigned int size;          /* checksum size in bytes */
 
-	// Functions used to calculate the hash of a memory block
+	/* Functions used to calculate the hash of a memory block */
 	void (*calculate_begin)(void);
 	void (*calculate_buffer)(const void* mem, unsigned long len);
 	void (*calculate_end)(UINT8* bin_chksum);
@@ -162,32 +162,18 @@ static void h_md5_end(UINT8* chksum);
 
 static const hash_function_desc hash_descs[HASH_NUM_FUNCTIONS] =
 {
-	{
-		"crc", 'c', 4,
-		h_crc_begin,
-		h_crc_buffer,
-		h_crc_end
-	},
+	{ "crc", 'c', 4, h_crc_begin, h_crc_buffer, h_crc_end },
 
-	{
-		"sha1", 's', 20,
-		h_sha1_begin,
-		h_sha1_buffer,
-		h_sha1_end
-	},
+	{ "sha1", 's', 20, h_sha1_begin, h_sha1_buffer, h_sha1_end },
 
-	{
-		"md5", 'm', 16,
-		h_md5_begin,
-		h_md5_buffer,
-		h_md5_end
-	},
+	{ "md5", 'm', 16, h_md5_begin, h_md5_buffer, h_md5_end },
 };
 
 static const char *const info_strings[] =
 {
-	"$ND$",       // No dump
-	"$BD$"        // Bad dump
+	"$ND$",		/* No dump */
+	"$BD$",		/* Bad dump */
+	"$VO$"		/* Verify OFF */
 };
 
 static const char binToStr[] = "0123456789abcdef";
@@ -249,17 +235,17 @@ static int hash_data_add_binary_checksum(char* d, unsigned int function, const U
 	*d++ = desc->code;
 	*d++ = ':';
 
-	for (i=0;i<desc->size;i++)
+	for (i = 0; i<desc->size; i++)
 	{
 		UINT8 c = *checksum++;
 
-		*d++ = binToStr[(c >> 4) & 0xF];
-		*d++ = binToStr[(c >> 0) & 0xF];
+		*d++ = binToStr[(c >> 4) & 0x0F];
+		*d++ = binToStr[(c >> 0) & 0x0F];
 	}
 
 	*d++ = '#';
 
-	// Return the number of written bytes
+	/* Return the number of written bytes */
 	return (d - start);
 }
 
@@ -268,10 +254,10 @@ static int hash_compare_checksum(const char* chk1, const char* chk2, int length)
 {
 	char c1, c2;
 
-	// The printable format is twice as longer
+	/* The printable format is twice as longer */
 	length *= 2;
 
-	// This is basically a case-insensitive string compare
+	/* This is basically a case-insensitive string compare */
 	while (length--)
 	{
 		c1 = *chk1++;
@@ -287,19 +273,18 @@ static int hash_compare_checksum(const char* chk1, const char* chk2, int length)
 }
 
 
-// Compare two hashdata
+/* Compare two hashdata */
 int hash_data_is_equal(const char* d1, const char* d2, unsigned int functions)
 {
 	int i;
 	char incomplete = 0;
 	char ok = 0;
 
-	// If no function is specified, it means we need to check for all
-	//  of them
+	/* If no function is specified, it means we need to check for all of them */
 	if (!functions)
 		functions = ~functions;
 
-	for (i=1; i != (1<<HASH_NUM_FUNCTIONS); i<<=1)
+	for (i = 1; i != (1 << HASH_NUM_FUNCTIONS); i <<= 1)
 		if (functions & i)
 		{
 			int offs1, offs2;
@@ -317,8 +302,7 @@ int hash_data_is_equal(const char* d1, const char* d2, unsigned int functions)
 
 				ok = 1;
 			}
-			// If the function was contained only in one, remember that our comparison
-			//  is incomplete
+			/* If the function was contained only in one, remember that our comparison is incomplete */
 			else if (offs1 || offs2)
 			{
 				incomplete = 1;
@@ -611,7 +595,7 @@ int hash_verify_string(const char *hash)
 	{
 		if (*hash == '$')
 		{
-			if (memcmp(hash, NO_DUMP, 4) && memcmp(hash, BAD_DUMP, 4))
+			if ( memcmp(hash, NO_DUMP, 4) && memcmp(hash, BAD_DUMP, 4) && memcmp(hash, VERIFY_OFF, 4) )
 				return FALSE;
 			hash += 4;
 		}
