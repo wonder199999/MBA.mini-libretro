@@ -7686,7 +7686,7 @@ INPUT_PORTS_END
 
 /****************************************************************************/
 
-	/* Game specific inits */
+/* Game specific inits */
 
 static DRIVER_INIT( fatfury2 )
 {
@@ -7926,8 +7926,8 @@ static DRIVER_INIT( kof2002b )
 	kof2002_decrypt_68k(machine);
 	neo_pcm2_swap(machine, 0);
 	neogeo_cmc50_m1_decrypt(machine);
-	kof2002b_gfx_decrypt(machine, memory_region(machine, "sprites"),0x4000000);
-	kof2002b_gfx_decrypt(machine, memory_region(machine, "fixed"),0x20000);
+	kof2002b_gfx_decrypt(machine, memory_region(machine, "sprites"), 0x4000000);
+	kof2002b_gfx_decrypt(machine, memory_region(machine, "fixed"), 0x20000);
 }
 
 static DRIVER_INIT( kf2k2pls )
@@ -8173,10 +8173,7 @@ static DRIVER_INIT( kf2k3pcb )
 		UINT8* rom = memory_region(machine, "audiocpu");
 
 		for (i = 0; i < 0x90000; i++)
-		{
 			rom[i] = BITSWAP8( rom[i], 5, 6, 1, 4, 3, 0, 7, 2 );
-		}
-
 	}
 
 	kof2000_neogeo_gfx_decrypt(machine, 0x9d);
@@ -8867,3 +8864,4 @@ GAME( 1997,	kof97oro,	neogeo,		neogeo,		neogeo,		kof97oro,  ROT0,   "bootleg", "
 GAME( 2003,	kof97pla,	neogeo,		neogeo,		neogeo,		kof97pla,  ROT0,   "bootleg", "The King of Fighters '97 Oroshi Plus 2003 (bootleg set 1)", GAME_SUPPORTS_SAVE )
 GAME( 2007,	kof97xt,	neogeo,		neogeo,		neogeo,		neogeo,    ROT0,   "bootleg", "The King of Fighters '97 - Final Battle (bootleg of kof97, hack)", GAME_SUPPORTS_SAVE )
 GAME( 1998,	kof98a,		kof98,		neogeo,		neogeo,		kof98,     ROT0,   "SNK", "The King of Fighters '98 - The Slugfest / King of Fighters '98 - dream match never ends (NGM-2420, alternate board)", GAME_SUPPORTS_SAVE )
+GAME( 2007,	kof98ae,	neogeo,		neogeo,		neogeo,		neogeo,    ROT0,   "bootleg (EGHT)", "King of Fighters' 98 Anniversary Edition (EGHT hack, bootleg of kof98)", GAME_NOT_WORKING | GAME_SUPPORTS_SAVE ) /* TODO: Fixed it ??? */
