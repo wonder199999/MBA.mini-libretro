@@ -13,6 +13,21 @@ NATIVE := 0
 ALIGNED = 0
 MDEBUG = 0
 
+# ----------------------------------------------------
+# Set the BIOS used by NEOGEO
+# NEOGEO_BIOS = 1 - Use Universe BIOS ver. 1.x ,
+# NEOGEO_BIOS = 2 - use Universe BIOS ver. 2.x , (default) (compatible with mame 0.139 romset)
+# NEOGEO_BIOS = 3 - use Universe BIOS ver. 3.x , (compatible with fbalpha 02.97.38 romset)
+# NEOGEO_BIOS = 4 - use MVS Europe ver. 2 ,
+# NEOGEO_BIOS = 5 - use MVS Asia/Europe ver. 3 ,
+# NEOGEO_BIOS = 6 - use MVS US ver. 2? ,
+# NEOGEO_BIOS = 7 - use MVS Japan ver. 3 ,
+# NEOGEO_BIOS = 8 - use MVS Japan (J3) ,
+# NEOGEO_BIOS = 9 - use NEO-MVH MV1C ,
+# NEOGEO_BIOS = 0 - use Custom Japanese Hotel BIOS .
+# ----------------------------------------------------
+NEOGEO_BIOS = 2
+
 UNAME = $(shell uname -a)
 ifeq ($(platform),)
    platform = unix
@@ -640,6 +655,28 @@ $(EMULATOR): $(OBJECTS)
 
 ifeq ($(ARM_ENABLED), 1)
    CFLAGS += -DARM_ENABLED
+endif
+
+ifeq ($(NEOGEO_BIOS), 1)
+   CFLAGS += -DUSE_UNIBIOS1
+else ifeq ($(NEOGEO_BIOS), 2)
+   CFLAGS += -DUSE_UNIBIOS2
+else ifeq ($(NEOGEO_BIOS), 3)
+   CFLAGS += -DUSE_UNIBIOS3
+else ifeq ($(NEOGEO_BIOS), 4)
+   CFLAGS += -DUSE_MVS_EURO
+else ifeq ($(NEOGEO_BIOS), 5)
+   CFLAGS += -DUSE_MVS_ASIA
+else ifeq ($(NEOGEO_BIOS), 6)
+   CFLAGS += -DUSE_MVS_US
+else ifeq ($(NEOGEO_BIOS), 7)
+   CFLAGS += -DUSE_MVS_JAP
+else ifeq ($(NEOGEO_BIOS), 8)
+   CFLAGS += -DUSE_MVS_J3
+else ifeq ($(NEOGEO_BIOS), 9)
+   CFLAGS += -DUSE_MVS_MV1C
+else
+   CFLAGS += -DUSE_MVS_HOTEL
 endif
 
 $(OBJ)/%.o: $(CORE_DIR)/src/%.c | $(OSPREBUILD)
