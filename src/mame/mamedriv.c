@@ -857,6 +857,7 @@ const game_driver *const drivers[] =
 	DRIVER( kof97xt )	/* The King of Fighters' 97 - Final Battle (bootleg, hack) */
 	DRIVER( kof98a )	/* The King of Fighters' 98 (NGM-2420, alternate board) */
 	DRIVER( kof98ae )	/* (NOT_WORKING) The King of Fighters' 98 Anniversary Edition, EGHT hack  !!Note: It's very unstable. the graphics are flawed. these are said to be related to MAME's M68K CPU drivers. */
+	DRIVER( kof99h )	/* The King of Fighters' 99 (NGH-2510) */
 
 
 #endif	/* DRIVER_RECURSIVE */

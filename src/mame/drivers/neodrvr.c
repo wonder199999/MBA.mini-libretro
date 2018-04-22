@@ -529,7 +529,7 @@
     Neo Geo game PCB infos by Johnboy
 
 
-/* ************************************************************************** */
+*********************************************************************************************** */
 
 	/* Official sets */
 
@@ -8660,3 +8660,4 @@ GAME( 2003,	kof97pla,	neogeo,		neogeo,		neogeo,		kof97pla,  ROT0,   "bootleg", "
 GAME( 2007,	kof97xt,	neogeo,		neogeo,		neogeo,		neogeo,    ROT0,   "bootleg", "The King of Fighters '97 - Final Battle (bootleg of kof97, hack)", GAME_SUPPORTS_SAVE )
 GAME( 1998,	kof98a,		kof98,		neogeo,		neogeo,		kof98,     ROT0,   "SNK", "The King of Fighters '98 - The Slugfest / King of Fighters '98 - dream match never ends (NGM-2420, alternate board)", GAME_SUPPORTS_SAVE )
 GAME( 2007,	kof98ae,	neogeo,		neogeo,		neogeo,		neogeo,    ROT0,   "bootleg (EGHT)", "King of Fighters' 98 Anniversary Edition (EGHT hack, bootleg of kof98)", GAME_NOT_WORKING | GAME_SUPPORTS_SAVE ) /* TODO: Fixed it ??? */
+GAME( 1999,	kof99h,		kof99,		neogeo,		neogeo,		kof99,	   ROT0,   "SNK", "The King of Fighters '99 - Millennium Battle (NGH-2510)" , GAME_SUPPORTS_SAVE ) /* Encrypted Code & GFX, crashes going into attract demo */
