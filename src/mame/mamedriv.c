@@ -859,6 +859,7 @@ const game_driver *const drivers[] =
 	DRIVER( kof98ae )	/* (NOT_WORKING) The King of Fighters' 98 Anniversary Edition, EGHT hack  !!Note: It's very unstable. the graphics are flawed. these are said to be related to MAME's M68K CPU drivers. */
 	DRIVER( kof99h )	/* The King of Fighters' 99 (NGH-2510) */
 	DRIVER( kof99ae )	/* The King of Fighters' 99 15th Anniversary Edition, bootleg */
+	DRIVER( kogplus )	/* King of Giadiator (bootleg of kof97) */
 
 
 #endif	/* DRIVER_RECURSIVE */
