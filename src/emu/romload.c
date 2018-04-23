@@ -528,7 +528,7 @@ static void verify_length_and_hash(rom_load_data *romdata, const char *name, UIN
 	/* Bypass file verify CRC */
 	if (hash_data_has_info(hash, HASH_INFO_VERIFY_OFF))
 	{
-		romdata->errorstring.catprintf("%s: from other romsets, so bypass CRC verify. \n", name);
+		romdata->errorstring.catprintf("%s come from other romsets, so bypass CRC verify.\n", name);
 		romdata->warnings++;
 	}
 	/* If there is no good dump known, write it */

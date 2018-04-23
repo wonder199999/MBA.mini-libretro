@@ -8664,3 +8664,4 @@ GAME( 1997,	kogplus,	kof97,		neogeo,		kog,		kog,	   ROT0,   "bootleg", "King of 
 GAME( 1992,	kotm2p,		kotm2,		neogeo,		neogeo,		neogeo,	   ROT0,   "SNK", "King of the Monsters 2 - The Next Thing (prototype)", GAME_SUPPORTS_SAVE )
 GAME( 1992,	lresortp,	lresort,	neogeo,		neogeo,		neogeo,	   ROT0,   "SNK", "Last Resort (prototype)", GAME_SUPPORTS_SAVE )
 GAME( 2015,	mslug2t,	mslug2,		neogeo,		neogeo,		neogeo,	   ROT0,   "hack (trap15) ", "Metal Slug 2 turbo (NGM-9410) (hack)", GAME_SUPPORTS_SAVE )
+GAME( 1991,	sengokuh,	sengoku,	neogeo,		neogeo,		neogeo,	   ROT0,   "SNK", "Sengoku / Sengoku Denshou (NGH-017, US)", GAME_SUPPORTS_SAVE )

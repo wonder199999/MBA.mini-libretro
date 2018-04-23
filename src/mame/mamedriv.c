@@ -864,6 +864,7 @@ const game_driver *const drivers[] =
 	DRIVER( lresortp )	/* Last Resort (prototype) */
 	DRIVER( mslug2t )	/* Metal Slug 2 turbo (hack) */
 	DRIVER( roboarma )	/* Robo Army (NGM-032 ~ NGH-032) */
+	DRIVER( sengokuh )	/* Sengoku (US) (NGH-017) */
 
 
 #endif	/* DRIVER_RECURSIVE */
