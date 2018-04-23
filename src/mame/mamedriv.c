@@ -861,6 +861,7 @@ const game_driver *const drivers[] =
 	DRIVER( kof99ae )	/* The King of Fighters' 99 15th Anniversary Edition, bootleg */
 	DRIVER( kogplus )	/* King of Giadiator (bootleg of kof97) */
 	DRIVER( kotm2p )	/* King of the Monsters 2 - The Next Thing (prototype) */
+	DRIVER( lresortp )	/* Last Resort (prototype) */
 
 
 #endif	/* DRIVER_RECURSIVE */

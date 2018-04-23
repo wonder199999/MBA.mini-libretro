@@ -8664,3 +8664,4 @@ GAME( 1999,	kof99h,		kof99,		neogeo,		neogeo,		kof99,	   ROT0,   "SNK", "The Kin
 GAME( 2015,	kof99ae,	neogeo,		neogeo,		neogeo,		neogeo,	   ROT0,   "bootleg", "The King of Fighters '99 15th Anniversary Edition (bootleg, yashional hack)" , GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )
 GAME( 1997,	kogplus,	kof97,		neogeo,		kog,		kog,	   ROT0,   "bootleg", "King of Gladiator Plus (The King of Fighters '97 bootleg)", GAME_NOT_WORKING | GAME_SUPPORTS_SAVE )
 GAME( 1992,	kotm2p,		kotm2,		neogeo,		neogeo,		neogeo,	   ROT0,   "SNK", "King of the Monsters 2 - The Next Thing (prototype)", GAME_SUPPORTS_SAVE )
+GAME( 1992,	lresortp,	lresort,	neogeo,		neogeo,		neogeo,	   ROT0,   "SNK", "Last Resort (prototype)", GAME_SUPPORTS_SAVE )
