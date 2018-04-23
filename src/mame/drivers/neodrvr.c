@@ -1496,11 +1496,11 @@ ROM_START( roboarmy )
 	ROM_LOAD16_BYTE( "032-c4.bin", 0x200001, 0x080000, CRC(462571de) SHA1(5c3d610d492f91564423873b3b434dcda700373f) ) /* Plane 2,3 */
 ROM_END
 
-	/* Disabled for now, this looks like an emulation hack. Can someone confirm this set is real? */
-#if 0
+	/* Found on legitimate Robo Army MVS and AES Carts. Debug code button which check control a sound test has been patched out because in a multislot situation that code could have been enabled
+	that would stop roboarmy from working, sending it into an infinite loop ; correct chip label unknown */
 ROM_START( roboarma )
 	ROM_REGION( 0x100000, "maincpu", 0 )
-	ROM_LOAD16_WORD_SWAP( "032-p1h.bin", 0x000000, 0x080000, CRC(27c773cb) SHA1(597ca73f142b1129cc7780540bb9cfacd47bc6ce) )
+	ROM_LOAD16_WORD_SWAP( "032-epr.p1", 0x000000, 0x080000, CRC(27c773cb) SHA1(597ca73f142b1129cc7780540bb9cfacd47bc6ce) )
 
 	NEO_SFIX_128K( "032-s1.bin", CRC(ac0daa1b) SHA1(93bae4697dc403fce19422752a514326ccf66a91) )
 
@@ -1519,7 +1519,6 @@ ROM_START( roboarma )
 	ROM_LOAD16_BYTE( "032-c3.bin", 0x200000, 0x080000, CRC(40adfccd) SHA1(b11f866dd70ba0ed9123424508355cb948b19bdc) ) /* Plane 0,1 */
 	ROM_LOAD16_BYTE( "032-c4.bin", 0x200001, 0x080000, CRC(462571de) SHA1(5c3d610d492f91564423873b3b434dcda700373f) ) /* Plane 2,3 */
 ROM_END
-#endif
 
 ROM_START( fatfury1 )
 	ROM_REGION( 0x100000, "maincpu", 0 )
@@ -8297,8 +8296,7 @@ GAME( 1991, socbrawlh, socbrawl, neogeo,   neogeo,   neogeo,   ROT0, "SNK", "Soc
 GAME( 1991, fatfury1,  neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "SNK", "Fatal Fury - King of Fighters / Garou Densetsu - shukumei no tatakai", GAME_SUPPORTS_SAVE )
 //
 GAME( 1991, roboarmy,  neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "SNK", "Robo Army", GAME_SUPPORTS_SAVE )
-
-/* GAME( 1991, roboarma,  roboarmy, neogeo,   neogeo,   neogeo,   ROT0, "SNK", "Robo Army (set 2)", GAME_SUPPORTS_SAVE ) */
+GAME( 1991, roboarma,  roboarmy, neogeo,   neogeo,   neogeo,   ROT0, "SNK", "Robo Army (NGM-032 ~ NGH-032)", GAME_SUPPORTS_SAVE )
 
 GAME( 1992, fbfrenzy,  neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "SNK", "Football Frenzy", GAME_SUPPORTS_SAVE )
 //

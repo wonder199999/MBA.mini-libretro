@@ -863,6 +863,7 @@ const game_driver *const drivers[] =
 	DRIVER( kotm2p )	/* King of the Monsters 2 - The Next Thing (prototype) */
 	DRIVER( lresortp )	/* Last Resort (prototype) */
 	DRIVER( mslug2t )	/* Metal Slug 2 turbo (hack) */
+	DRIVER( roboarma )	/* Robo Army (NGM-032 ~ NGH-032) */
 
 
 #endif	/* DRIVER_RECURSIVE */
