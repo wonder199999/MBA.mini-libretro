@@ -8661,3 +8661,4 @@ GAME( 2007,	kof97xt,	neogeo,		neogeo,		neogeo,		neogeo,    ROT0,   "bootleg", "T
 GAME( 1998,	kof98a,		kof98,		neogeo,		neogeo,		kof98,     ROT0,   "SNK", "The King of Fighters '98 - The Slugfest / King of Fighters '98 - dream match never ends (NGM-2420, alternate board)", GAME_SUPPORTS_SAVE )
 GAME( 2007,	kof98ae,	neogeo,		neogeo,		neogeo,		neogeo,    ROT0,   "bootleg (EGHT)", "King of Fighters' 98 Anniversary Edition (EGHT hack, bootleg of kof98)", GAME_NOT_WORKING | GAME_SUPPORTS_SAVE ) /* TODO: Fixed it ??? */
 GAME( 1999,	kof99h,		kof99,		neogeo,		neogeo,		kof99,	   ROT0,   "SNK", "The King of Fighters '99 - Millennium Battle (NGH-2510)" , GAME_SUPPORTS_SAVE ) /* Encrypted Code & GFX, crashes going into attract demo */
+GAME( 2015,	kof99ae,	neogeo,		neogeo,		neogeo,		neogeo,	   ROT0,   "bootleg", "The King of Fighters '99 15th Anniversary Edition (bootleg, yashional hack)" , GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )
