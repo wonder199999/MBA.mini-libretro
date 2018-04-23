@@ -862,6 +862,7 @@ const game_driver *const drivers[] =
 	DRIVER( kogplus )	/* King of Giadiator (bootleg of kof97) */
 	DRIVER( kotm2p )	/* King of the Monsters 2 - The Next Thing (prototype) */
 	DRIVER( lresortp )	/* Last Resort (prototype) */
+	DRIVER( mslug2t )	/* Metal Slug 2 turbo (hack) */
 
 
 #endif	/* DRIVER_RECURSIVE */

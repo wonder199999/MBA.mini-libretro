@@ -8665,3 +8665,4 @@ GAME( 2015,	kof99ae,	neogeo,		neogeo,		neogeo,		neogeo,	   ROT0,   "bootleg", "T
 GAME( 1997,	kogplus,	kof97,		neogeo,		kog,		kog,	   ROT0,   "bootleg", "King of Gladiator Plus (The King of Fighters '97 bootleg)", GAME_NOT_WORKING | GAME_SUPPORTS_SAVE )
 GAME( 1992,	kotm2p,		kotm2,		neogeo,		neogeo,		neogeo,	   ROT0,   "SNK", "King of the Monsters 2 - The Next Thing (prototype)", GAME_SUPPORTS_SAVE )
 GAME( 1992,	lresortp,	lresort,	neogeo,		neogeo,		neogeo,	   ROT0,   "SNK", "Last Resort (prototype)", GAME_SUPPORTS_SAVE )
+GAME( 2015,	mslug2t,	mslug2,		neogeo,		neogeo,		neogeo,	   ROT0,   "hack (trap15) ", "Metal Slug 2 turbo (NGM-9410) (hack)", GAME_SUPPORTS_SAVE )
