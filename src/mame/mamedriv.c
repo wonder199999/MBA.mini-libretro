@@ -866,6 +866,7 @@ const game_driver *const drivers[] =
 	DRIVER( roboarma )	/* Robo Army (NGM-032 ~ NGH-032) */
 	DRIVER( sengokuh )	/* Sengoku (US) (NGH-017) */
 	DRIVER( samshoa )	/* Samurai Shodown / Samurai Spirits (NGM-045, alternate board) */
+	DRIVER( samsho2k2 )	/* Saulabi Spirits / Jin Saulabi Tu Hon (Korean release of Samsho2) */
 
 
 #endif	/* DRIVER_RECURSIVE */
