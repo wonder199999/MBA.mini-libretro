@@ -35,9 +35,9 @@
 
 
 
-//**************************************************************************
+/**************************************************************************/
 //  COMPILER-SPECIFIC NASTINESS
-//**************************************************************************
+/**************************************************************************/
 
 // Suppress warnings about redefining the macro 'PPC' on LinuxPPC.
 #undef PPC
@@ -47,9 +47,9 @@
 
 
 
-//**************************************************************************
+/**************************************************************************/
 //  FUNDAMENTAL TYPES
-//**************************************************************************
+/**************************************************************************/
 
 // genf is a generic function pointer; cast function pointers to this instead of void *
 typedef void genf(void);
@@ -72,9 +72,9 @@ class running_machine;
 
 
 
-//**************************************************************************
+/**************************************************************************/
 //  USEFUL COMPOSITE TYPES
-//**************************************************************************
+/**************************************************************************/
 
 // generic_ptr is a union of pointers to various sizes
 union generic_ptr
@@ -134,9 +134,9 @@ union PAIR64
 
 
 
-//**************************************************************************
+/**************************************************************************/
 //  COMMON CONSTANTS
-//**************************************************************************
+/**************************************************************************/
 
 // constants for expression endianness
 enum endianness_t
@@ -173,9 +173,9 @@ const endianness_t ENDIANNESS_NATIVE = ENDIANNESS_LITTLE;
 
 
 
-//**************************************************************************
+/**************************************************************************/
 //  COMMON MACROS
-//**************************************************************************
+/**************************************************************************/
 
 // macro for defining a copy constructor and assignment operator to prevent copying
 #define DISABLE_COPYING(_Type) \
@@ -197,11 +197,11 @@ inline void operator--(_Type &value, int) { value = (_Type)((int)value - 1); }
 #undef assert_always
 
 #ifdef MAME_DEBUG
-#define assert(x)				do { if (!(x)) throw emu_fatalerror("assert: %s:%d: %s", __FILE__, __LINE__, #x); } while (0)
-#define assert_always(x, msg)	do { if (!(x)) throw emu_fatalerror("Fatal error: %s\nCaused by assert: %s:%d: %s", msg, __FILE__, __LINE__, #x); } while (0)
+#define assert(x)				do { if (!(x)) fprintf(stderr, "assert: %s:%d: %s", __FILE__, __LINE__, #x); } while (0)
+#define assert_always(x, msg)	do { if (!(x)) fprintf(stderr, "Fatal error: %s\nCaused by assert: %s:%d: %s", msg, __FILE__, __LINE__, #x); } while (0)
 #else
 #define assert(x)				do { } while (0)
-#define assert_always(x, msg)	do { if (!(x)) throw emu_fatalerror("Fatal error: %s (%s:%d)", msg, __FILE__, __LINE__); } while (0)
+#define assert_always(x, msg)	do { if (!(x)) throw fprintf(stderr, "Fatal error: %s (%s:%d)", msg, __FILE__, __LINE__); } while (0)
 #endif
 
 
@@ -264,9 +264,9 @@ inline void operator--(_Type &value, int) { value = (_Type)((int)value - 1); }
 
 
 
-//**************************************************************************
+/**************************************************************************/
 //  EXCEPTION CLASSES
-//**************************************************************************
+/**************************************************************************/
 
 // emu_exception is the base class for all emu-related exceptions
 class emu_exception : public std::exception { };
@@ -310,9 +310,9 @@ private:
 
 
 
-//**************************************************************************
+/**************************************************************************/
 //  CASTING TEMPLATES
-//**************************************************************************
+/**************************************************************************/
 
 // template function for casting from a base class to a derived class that is checked
 // in debug builds and fast in release builds
@@ -345,9 +345,9 @@ inline _Dest crosscast(_Source *src)
 
 
 
-//**************************************************************************
+/**************************************************************************/
 //  COMMON TEMPLATES
-//**************************************************************************
+/**************************************************************************/
 
 template<class T>
 class tagged_list
@@ -472,9 +472,9 @@ public:
 
 
 
-//**************************************************************************
+/**************************************************************************/
 //  FUNCTION PROTOTYPES
-//**************************************************************************
+/**************************************************************************/
 
 DECL_NORETURN void fatalerror(const char *format, ...) ATTR_PRINTF(1,2) ATTR_NORETURN;
 DECL_NORETURN void fatalerror_exitcode(running_machine *machine, int exitcode, const char *format, ...) ATTR_PRINTF(3,4) ATTR_NORETURN;
@@ -497,9 +497,9 @@ inline void fatalerror_exitcode(running_machine *machine, int exitcode, const ch
 
 
 
-//**************************************************************************
+/**************************************************************************/
 //  INLINE FUNCTIONS
-//**************************************************************************
+/**************************************************************************/
 
 // population count
 inline int popcount(UINT32 val)
