@@ -165,7 +165,8 @@ kt_table ktable[] = {
 			(core_stricmp(machine->gamedrv->name, "kof99h") == 0) || (core_stricmp(machine->gamedrv->name, "kotm2p") == 0) || \
 			(core_stricmp(machine->gamedrv->name, "lresortp") == 0) || (core_stricmp(machine->gamedrv->name, "mslug2t") == 0) || \
 			(core_stricmp(machine->gamedrv->name, "roboarma") == 0) || (core_stricmp(machine->gamedrv->name, "sengokuh") == 0) || \
-			(core_stricmp(machine->gamedrv->name, "samshoa") == 0) || (core_stricmp(machine->gamedrv->name, "samsho2k2") == 0) 
+			(core_stricmp(machine->gamedrv->name, "samshoa") == 0) || (core_stricmp(machine->gamedrv->name, "samsho2k2") == 0) || \
+			(core_stricmp(machine->gamedrv->name, "wh2ja") == 0) 
 
 
 static void initInput(running_machine *machine)

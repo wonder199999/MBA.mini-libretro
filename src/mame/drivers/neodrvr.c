@@ -8667,3 +8667,4 @@ GAME( 2015,	mslug2t,	mslug2,		neogeo,		neogeo,		neogeo,	   ROT0,   "hack (trap15
 GAME( 1991,	sengokuh,	sengoku,	neogeo,		neogeo,		neogeo,	   ROT0,   "SNK", "Sengoku / Sengoku Denshou (NGH-017, US)", GAME_SUPPORTS_SAVE )
 GAME( 1993,	samshoa,	samsho,		neogeo,		neogeo,		neogeo,    ROT0,   "SNK", "Samurai Shodown / Samurai Spirits (NGM-045, alternate board)", GAME_SUPPORTS_SAVE )
 GAME( 1994,	samsho2k2,	samsho2,	neogeo,		neogeo,		neogeo,	   ROT0,   "SNK", "Saulabi Spirits / Jin Saulabi Tu Hon (Korean release of Samurai Shodown II, set 2)", GAME_SUPPORTS_SAVE )
+GAME( 1994,	wh2ja,		wh2j,		neogeo,		neogeo,		neogeo,	   ROT0,   "ADK / SNK", "World Heroes 2 Jet (ADM-007)", GAME_SUPPORTS_SAVE )
