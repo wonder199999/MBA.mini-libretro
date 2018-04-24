@@ -865,6 +865,7 @@ const game_driver *const drivers[] =
 	DRIVER( mslug2t )	/* Metal Slug 2 turbo (hack) */
 	DRIVER( roboarma )	/* Robo Army (NGM-032 ~ NGH-032) */
 	DRIVER( sengokuh )	/* Sengoku (US) (NGH-017) */
+	DRIVER( samshoa )	/* Samurai Shodown / Samurai Spirits (NGM-045, alternate board) */
 
 
 #endif	/* DRIVER_RECURSIVE */

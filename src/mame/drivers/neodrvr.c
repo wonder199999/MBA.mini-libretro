@@ -8665,3 +8665,4 @@ GAME( 1992,	kotm2p,		kotm2,		neogeo,		neogeo,		neogeo,	   ROT0,   "SNK", "King o
 GAME( 1992,	lresortp,	lresort,	neogeo,		neogeo,		neogeo,	   ROT0,   "SNK", "Last Resort (prototype)", GAME_SUPPORTS_SAVE )
 GAME( 2015,	mslug2t,	mslug2,		neogeo,		neogeo,		neogeo,	   ROT0,   "hack (trap15) ", "Metal Slug 2 turbo (NGM-9410) (hack)", GAME_SUPPORTS_SAVE )
 GAME( 1991,	sengokuh,	sengoku,	neogeo,		neogeo,		neogeo,	   ROT0,   "SNK", "Sengoku / Sengoku Denshou (NGH-017, US)", GAME_SUPPORTS_SAVE )
+GAME( 1993,	samshoa,	samsho,		neogeo,		neogeo,		neogeo,    ROT0,   "SNK", "Samurai Shodown / Samurai Spirits (NGM-045, alternate board)", GAME_SUPPORTS_SAVE )
