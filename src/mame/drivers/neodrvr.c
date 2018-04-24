@@ -592,7 +592,6 @@
 
 */
 
-
 /* dummy entry for the dummy bios driver */
 ROM_START( neogeo )
 	NEOGEO_BIOS
@@ -618,6 +617,7 @@ ROM_START( neogeo )
 
 	ROM_REGION( 0x100000, "sprites", ROMREGION_ERASEFF )
 ROM_END
+
 
 ROM_START( nam1975 ) /* MVS AND AES VERSION */
 	ROM_REGION( 0x100000, "maincpu", 0 )
@@ -8668,3 +8668,4 @@ GAME( 1991,	sengokuh,	sengoku,	neogeo,		neogeo,		neogeo,	   ROT0,   "SNK", "Seng
 GAME( 1993,	samshoa,	samsho,		neogeo,		neogeo,		neogeo,    ROT0,   "SNK", "Samurai Shodown / Samurai Spirits (NGM-045, alternate board)", GAME_SUPPORTS_SAVE )
 GAME( 1994,	samsho2k2,	samsho2,	neogeo,		neogeo,		neogeo,	   ROT0,   "SNK", "Saulabi Spirits / Jin Saulabi Tu Hon (Korean release of Samurai Shodown II, set 2)", GAME_SUPPORTS_SAVE )
 GAME( 1994,	wh2ja,		wh2j,		neogeo,		neogeo,		neogeo,	   ROT0,   "ADK / SNK", "World Heroes 2 Jet (ADM-007)", GAME_SUPPORTS_SAVE )
+GAME( 2001,	sengoku3s,	sengoku3,	neogeo,		neogeo,		neogeo,	   ROT0,   "hack (FCHT)", "Sengoku 3 / Sengoku Densho 2001 (Evolution 1.0, hack)" , GAME_SUPPORTS_SAVE )

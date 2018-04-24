@@ -868,6 +868,7 @@ const game_driver *const drivers[] =
 	DRIVER( samshoa )	/* Samurai Shodown / Samurai Spirits (NGM-045, alternate board) */
 	DRIVER( samsho2k2 )	/* Saulabi Spirits / Jin Saulabi Tu Hon (Korean release of Samsho2) */
 	DRIVER( wh2ja )		/* World Heroes 2 Jet (ADM-007) */
+	DRIVER( sengoku3s )	/* Sengoku 3 / Sengoku Densho 2001 , FCHT hack */
 
 
 #endif	/* DRIVER_RECURSIVE */
