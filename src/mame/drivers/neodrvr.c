@@ -8669,3 +8669,4 @@ GAME( 1993,	samshoa,	samsho,		neogeo,		neogeo,		neogeo,    ROT0,   "SNK", "Samur
 GAME( 1994,	samsho2k2,	samsho2,	neogeo,		neogeo,		neogeo,	   ROT0,   "SNK", "Saulabi Spirits / Jin Saulabi Tu Hon (Korean release of Samurai Shodown II, set 2)", GAME_SUPPORTS_SAVE )
 GAME( 1994,	wh2ja,		wh2j,		neogeo,		neogeo,		neogeo,	   ROT0,   "ADK / SNK", "World Heroes 2 Jet (ADM-007)", GAME_SUPPORTS_SAVE )
 GAME( 2001,	sengoku3s,	sengoku3,	neogeo,		neogeo,		neogeo,	   ROT0,   "hack (FCHT)", "Sengoku 3 / Sengoku Densho 2001 (Evolution 1.0, hack)" , GAME_SUPPORTS_SAVE )
+GAME( 2007,	lhcdb,		neogeo,		neogeo,		neogeo,		neogeo,	   ROT0,   "NG:Dev.Team", "Last Hope (bootleg of NGCD version)" , GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )

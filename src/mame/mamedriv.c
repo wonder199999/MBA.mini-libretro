@@ -869,6 +869,7 @@ const game_driver *const drivers[] =
 	DRIVER( samsho2k2 )	/* Saulabi Spirits / Jin Saulabi Tu Hon (Korean release of Samsho2) */
 	DRIVER( wh2ja )		/* World Heroes 2 Jet (ADM-007) */
 	DRIVER( sengoku3s )	/* Sengoku 3 / Sengoku Densho 2001 , FCHT hack */
+	DRIVER( lhcdb )		/* Last Hope (bootleg of CD version) */
 
 
 #endif	/* DRIVER_RECURSIVE */
