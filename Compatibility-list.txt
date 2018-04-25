@@ -192,6 +192,20 @@ Support the following :  (Parent roms with the "*" && based by mame0.139 romset)
 / *  Capcom System 2 * /
 / ******************** /
 
+*1944: The Loop Master (USA 000620)					- /* Archives name: 1944 ,   Parent set: Itself ,  Rom set: 0.139 , Note: */
+	1944: The Loop Master (Japan 000620)				- /* Archives name: 1944j ,  Parent set: 1944 ,    Rom set: 0.139 , Note: */
+	1944: The Loop Master (USA 000620 Phoenix Edition, bootleg)	- /* Archives name: 1944d ,  Parent set: 1944 ,    Rom set: 0.139 , Note: */
+
+*19XX: The War Against Destiny (USA 951207)					- /* Archives name: 19 ,  Parent set: 1944 ,    Rom set: 0.139 , Note: */
+	19XX: The War Against Destiny (Asia 951207)				- /* Archives name: 1944d ,  Parent set: 1944 ,    Rom set: 0.139 , Note: */
+	19XX: The War Against Destiny (Brazil 951218)				- /* Archives name: 1944d ,  Parent set: 1944 ,    Rom set: 0.139 , Note: */
+	19XX: The War Against Destiny (Hispanic 951218)				- /* Archives name: 1944d ,  Parent set: 1944 ,    Rom set: 0.139 , Note: */
+	19XX: The War Against Destiny (Japan 951207)				- /* Archives name: 1944d ,  Parent set: 1944 ,    Rom set: 0.139 , Note: */
+	19XX: The War Against Destiny (Japan 951225)				- /* Archives name: 1944d ,  Parent set: 1944 ,    Rom set: 0.139 , Note: */
+	19XX: The War Against Destiny (USA 951207 Phoenix Edition, bootleg)	- /* Archives name: 1944d ,  Parent set: 1944 ,    Rom set: 0.139 , Note: */
+
+
+
 ringdesta
 ringdesth
 sfaud
@@ -215,7 +229,7 @@ vhunt2d
 vsav2d
 
 / ******************** /
-/ *  IREM M92 Board  * /
+/ *	IREM M92     * /
 / ******************** /
 
 
