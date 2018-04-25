@@ -873,6 +873,7 @@ const game_driver *const drivers[] =
 	DRIVER( unkneo )	/* unkneo (Dragon's Heaven), development board */
 	DRIVER( totcarib )	/* Treasure of the Caribbean */
 	DRIVER( samsho5x )	/* Samurai Shodown V / Samurai Spirits Zero (XBOX version, hack) */
+	DRIVER( mslug5b )	/* Metal Slug 5 (bootleg) */
 
 
 #endif	/* DRIVER_RECURSIVE */

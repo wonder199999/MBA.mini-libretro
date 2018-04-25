@@ -8234,6 +8234,19 @@ static DRIVER_INIT( kof97pla )
 		src[0x1394a + i] = dPatch[i];
 }
 
+static DRIVER_INIT( mslug5b )
+{
+	neogeo_state *state = (neogeo_state *)machine->driver_data;
+	state->fixed_layer_bank_type = 1;
+
+	neo_pcm2_swap(machine, 2);
+	neogeo_cmc50_m1_decrypt(machine);
+	kof2000_neogeo_gfx_decrypt(machine, 0x19);
+
+	DRIVER_INIT_CALL(neogeo);
+	install_pvc_protection(machine);
+}
+
 
 /****************************************************************************/
 
@@ -8673,3 +8686,4 @@ GAME( 2007,	lhcdb,		neogeo,		neogeo,		neogeo,		neogeo,	   ROT0,   "NG:Dev.Team",
 GAME( 1996,	unkneo,		neogeo,		neogeo,		neogeo,		neogeo,	   ROT0,   "Face", "Dragon's Heaven (development board)", GAME_NOT_WORKING | GAME_NO_SOUND | GAME_SUPPORTS_SAVE )
 GAME( 2011,	totcarib,	neogeo,		neogeo,		neogeo,		neogeo,	   ROT0,   "Face / N.C.I - Le Cortex", "Treasure of the Caribbean", GAME_SUPPORTS_SAVE )
 GAME( 2003,	samsho5x,	neogeo,		neogeo,		neogeo,		neogeo,	   ROT0,   "hack", "Samurai Shodown V / Samurai Spirits Zero (XBOX version, hack)", GAME_SUPPORTS_SAVE )
+GAME( 2003,	mslug5b,	neogeo,		neogeo,		neogeo,		mslug5b,   ROT0,   "bootleg", "Metal Slug 5 (bootleg)", GAME_SUPPORTS_SAVE )
