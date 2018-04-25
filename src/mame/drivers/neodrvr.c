@@ -5937,7 +5937,6 @@ ROM_END
 
 	/* Jamma PCB sets */
 
-
 /*
     The following Jamma PCB boards are known:
 
@@ -5955,11 +5954,14 @@ ROM_END
 */
 
 
-/* complete redump required */
+/*	The program roms is missing from the original files, resulting in the failure to run.
+	Replace it with the same name archives in FBA 02.97.38 romsets (mame 0.173). 
+	Now, it works.
+*/
 ROM_START( ms5pcb ) /* Encrypted Set */
 	ROM_REGION( 0x800000, "maincpu", 0 )
-	ROM_LOAD32_WORD_SWAP( "268-p1r.bin", 0x000000, 0x400000, NO_DUMP )
-	ROM_LOAD32_WORD_SWAP( "268-p2r.bin", 0x000002, 0x400000, NO_DUMP )
+	ROM_LOAD32_WORD_SWAP( "268-p1r.p1", 0x000000, 0x400000, CRC(d0466792) SHA1(880819933d997fab398f91061e9dbccb959ae8a1) )
+	ROM_LOAD32_WORD_SWAP( "268-p2r.p2", 0x000002, 0x400000, CRC(fbf6b61e) SHA1(9ec743d5988b5e3183f37f8edf45c72a8c0c893e) )
 
 	ROM_REGION( 0x20000, "fixed", 0 )
 	ROM_FILL( 0x000000, 0x20000, 0 )
@@ -5972,7 +5974,7 @@ ROM_START( ms5pcb ) /* Encrypted Set */
 
 	/* Encrypted */
 	ROM_REGION( 0x80000, "audiocrypt", 0 )
-	ROM_LOAD( "268-m1.bin", 0x00000, 0x80000, CRC(4a5a6e0e) SHA1(df0f660f2465e1db7be5adfcaf5e88ad61a74a42) )
+	ROM_LOAD( "268-m1.m1", 0x00000, 0x80000, CRC(4a5a6e0e) SHA1(df0f660f2465e1db7be5adfcaf5e88ad61a74a42) )
 	ROM_REGION( 0x90000, "audiocpu", ROMREGION_ERASEFF )
 
 	/* Encrypted */
@@ -5981,16 +5983,16 @@ ROM_START( ms5pcb ) /* Encrypted Set */
 
 	ROM_REGION( 0x1000000, "ymsnd", 0 )
 	/* Encrypted */
-	ROM_LOAD( "268-v1.bin", 0x000000, 0x1000000, CRC(8458afe5) SHA1(62b4c6e7db763e9ff2697bbcdb43dc5a56b48c68) )
+	ROM_LOAD( "268-v1.v1", 0x000000, 0x1000000, CRC(8458afe5) SHA1(62b4c6e7db763e9ff2697bbcdb43dc5a56b48c68) )
 
 	NO_DELTAT_REGION
 
 	ROM_REGION( 0x4000000, "sprites", 0 )
 	/* Encrypted */
-	ROM_LOAD32_WORD( "268-c1.bin", 0x0000000, 0x1000000, CRC(802042e8) SHA1(ff028b65f60f0b51b255a380cc47ec19fdc0c0cf) ) /* Plane 0,1 */
-	ROM_LOAD32_WORD( "268-c2.bin", 0x0000002, 0x1000000, CRC(3b89fb9f) SHA1(cbc0729aae961f683b105ec3e1cda58b3f985abc) ) /* Plane 2,3 */
-	ROM_LOAD32_WORD( "268-c3.bin", 0x2000000, 0x1000000, CRC(0f3f59e3) SHA1(8cc751dc7d4e94864a9ce3346f23b8f011082fcc) ) /* Plane 0,1 */
-	ROM_LOAD32_WORD( "268-c4.bin", 0x2000002, 0x1000000, CRC(3ad8435a) SHA1(b333c8993c9b4c4ea59450ad0a3560e0b28056bc) ) /* Plane 2,3 */
+	ROM_LOAD32_WORD( "268-c1.c1", 0x0000000, 0x1000000, CRC(802042e8) SHA1(ff028b65f60f0b51b255a380cc47ec19fdc0c0cf) ) /* Plane 0,1 */
+	ROM_LOAD32_WORD( "268-c2.c2", 0x0000002, 0x1000000, CRC(3b89fb9f) SHA1(cbc0729aae961f683b105ec3e1cda58b3f985abc) ) /* Plane 2,3 */
+	ROM_LOAD32_WORD( "268-c3.c3", 0x2000000, 0x1000000, CRC(0f3f59e3) SHA1(8cc751dc7d4e94864a9ce3346f23b8f011082fcc) ) /* Plane 0,1 */
+	ROM_LOAD32_WORD( "268-c4.c4", 0x2000002, 0x1000000, CRC(3ad8435a) SHA1(b333c8993c9b4c4ea59450ad0a3560e0b28056bc) ) /* Plane 2,3 */
 ROM_END
 
 ROM_START( svcpcb ) /* Encrypted Set, JAMMA PCB */
@@ -8450,7 +8452,7 @@ GAME( 2004, kof2k4se,  kof2002,  neogeo,   neogeo,   kof2k4se, ROT0, "bootleg", 
 GAME( 2003, mslug5,    neogeo,   neogeo,   neogeo,   mslug5,   ROT0, "SNK Playmore", "Metal Slug 5", GAME_SUPPORTS_SAVE )
 GAME( 2003, mslug5h,   mslug5,   neogeo,   neogeo,   mslug5,   ROT0, "SNK Playmore", "Metal Slug 5 (AES Cart)", GAME_SUPPORTS_SAVE ) /* Also found in later MVS carts */
 //
-GAME( 2003, ms5pcb,    0,        neogeo,   ms5pcb,   ms5pcb,   ROT0, "SNK Playmore", "Metal Slug 5 (JAMMA PCB)", GAME_NOT_WORKING | GAME_SUPPORTS_SAVE )
+GAME( 2003, ms5pcb,    0,        neogeo,   ms5pcb,   ms5pcb,   ROT0, "SNK Playmore", "Metal Slug 5 (JAMMA PCB)", GAME_SUPPORTS_SAVE )
 GAME( 2003, ms5plus,   mslug5,   neogeo,   neogeo,   ms5plus,  ROT0, "bootleg", "Metal Slug 5 Plus (bootleg)", GAME_SUPPORTS_SAVE )
 //
 GAME( 2003, svcpcb,    0,        neogeo,   svcpcb,   svcpcb,   ROT0, "SNK Playmore", "SNK vs. Capcom - SVC Chaos (JAMMA PCB, set 1)", GAME_SUPPORTS_SAVE ) // not a clone of neogeo because it's NOT a neogeo cart.
