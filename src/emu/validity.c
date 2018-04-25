@@ -548,12 +548,17 @@ static bool validate_roms(int drivnum, const machine_config *config, region_arra
 
 				/* make sure it's all lowercase */
 				for (s = last_name; *s; s++)
+				{
 					if (tolower((UINT8)*s) != *s)
 					{
-						mame_printf_error("%s: %s has upper case ROM name %s\n", driver->source_file, driver->name, last_name);
-						error = true;
-						break;
+						if ( !(!strcmp(last_name, "EP1.bin") || !strcmp(last_name, "EP2.bin")) )	/* for Dragon's Heaven (unkneo) */
+						{
+							mame_printf_error("%s: %s has upper case ROM name %s\n", driver->source_file, driver->name, last_name);
+							error = true;
+							break;
+						}
 					}
+				}
 
 				/* make sure the hash is valid */
 				hash = ROM_GETHASHDATA(romp);

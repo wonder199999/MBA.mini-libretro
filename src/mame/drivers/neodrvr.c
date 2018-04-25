@@ -8658,7 +8658,7 @@ GAME( 2003,	kof97pla,	neogeo,		neogeo,		neogeo,		kof97pla,  ROT0,   "bootleg", "
 GAME( 2007,	kof97xt,	neogeo,		neogeo,		neogeo,		neogeo,    ROT0,   "bootleg", "The King of Fighters '97 - Final Battle (bootleg of kof97, hack)", GAME_SUPPORTS_SAVE )
 GAME( 1998,	kof98a,		kof98,		neogeo,		neogeo,		kof98,     ROT0,   "SNK", "The King of Fighters '98 - The Slugfest / King of Fighters '98 - dream match never ends (NGM-2420, alternate board)", GAME_SUPPORTS_SAVE )
 GAME( 2007,	kof98ae,	neogeo,		neogeo,		neogeo,		neogeo,    ROT0,   "bootleg (EGHT)", "King of Fighters' 98 Anniversary Edition (EGHT hack, bootleg of kof98)", GAME_NOT_WORKING | GAME_SUPPORTS_SAVE ) /* TODO: Fixed it ??? */
-GAME( 1999,	kof99h,		kof99,		neogeo,		neogeo,		kof99,	   ROT0,   "SNK", "The King of Fighters '99 - Millennium Battle (NGH-2510)" , GAME_SUPPORTS_SAVE ) /* Encrypted Code & GFX, crashes going into attract demo */
+GAME( 1999,	kof99h,		kof99,		neogeo,		neogeo,		kof99,	   ROT0,   "SNK", "The King of Fighters '99 - Millennium Battle (NGH-2510)" , GAME_SUPPORTS_SAVE )
 GAME( 2015,	kof99ae,	neogeo,		neogeo,		neogeo,		neogeo,	   ROT0,   "bootleg", "The King of Fighters '99 15th Anniversary Edition (bootleg, yashional hack)" , GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )
 GAME( 1997,	kogplus,	kof97,		neogeo,		kog,		kog,	   ROT0,   "bootleg", "King of Gladiator Plus (The King of Fighters '97 bootleg)", GAME_NOT_WORKING | GAME_SUPPORTS_SAVE )
 GAME( 1992,	kotm2p,		kotm2,		neogeo,		neogeo,		neogeo,	   ROT0,   "SNK", "King of the Monsters 2 - The Next Thing (prototype)", GAME_SUPPORTS_SAVE )
@@ -8669,4 +8669,5 @@ GAME( 1993,	samshoa,	samsho,		neogeo,		neogeo,		neogeo,    ROT0,   "SNK", "Samur
 GAME( 1994,	samsho2k2,	samsho2,	neogeo,		neogeo,		neogeo,	   ROT0,   "SNK", "Saulabi Spirits / Jin Saulabi Tu Hon (Korean release of Samurai Shodown II, set 2)", GAME_SUPPORTS_SAVE )
 GAME( 1994,	wh2ja,		wh2j,		neogeo,		neogeo,		neogeo,	   ROT0,   "ADK / SNK", "World Heroes 2 Jet (ADM-007)", GAME_SUPPORTS_SAVE )
 GAME( 2001,	sengoku3s,	sengoku3,	neogeo,		neogeo,		neogeo,	   ROT0,   "hack (FCHT)", "Sengoku 3 / Sengoku Densho 2001 (Evolution 1.0, hack)" , GAME_SUPPORTS_SAVE )
-GAME( 2007,	lhcdb,		neogeo,		neogeo,		neogeo,		neogeo,	   ROT0,   "NG:Dev.Team", "Last Hope (bootleg of NGCD version)" , GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )
+GAME( 2007,	lhcdb,		neogeo,		neogeo,		neogeo,		neogeo,	   ROT0,   "NG:Dev.Team", "Last Hope (bootleg of NGCD version, no coin support)" , GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )
+GAME( 1996,	unkneo,		neogeo,		neogeo,		neogeo,		neogeo,	   ROT0,   "Face", "Dragon's Heaven (development board)", GAME_NOT_WORKING | GAME_NO_SOUND | GAME_SUPPORTS_SAVE )
