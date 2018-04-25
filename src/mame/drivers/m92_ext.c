@@ -10,13 +10,13 @@ ROM_START( majtitl2a )		/* Major Title 2 (World, set 1, alt sound CPU) */
 	ROM_LOAD16_BYTE( "mt2sh0-a",  0x000001, 0x10000, VERIFY_OFF )
 	ROM_LOAD16_BYTE( "mt2sl0-a",  0x000000, 0x10000, VERIFY_OFF )
 
-	ROM_REGION( 0x100000, "gfx1", 0 )		/* Tiles */
+	ROM_REGION( 0x100000, "gfx1", 0 )
 	ROM_LOAD( "c0", 0x000000, 0x40000, CRC(7e61e4b5) SHA1(d0164862937bd506e701777c51dea1ddb3e2eda4) )
 	ROM_LOAD( "c1", 0x040000, 0x40000, CRC(0a667564) SHA1(d122e0619ae5cc0202f30270933784c954eb1e5d) )
 	ROM_LOAD( "c2", 0x080000, 0x40000, CRC(5eb44312) SHA1(75b584b63d4f4f2236a679235461f11004aa317f) )
 	ROM_LOAD( "c3", 0x0c0000, 0x40000, CRC(f2866294) SHA1(75e0071bf6282c93034dc7e73466af0f51046d01) )
 
-	ROM_REGION( 0x400000, "gfx2", 0 ) 		/* Sprites */
+	ROM_REGION( 0x400000, "gfx2", 0 )
 	ROM_LOAD( "k30", 0x000000, 0x100000, CRC(8c9a2678) SHA1(e8ed119c16ddd59af9e83d243e7be25974f7cbf8) )
 	ROM_LOAD( "k31", 0x100000, 0x100000, CRC(5455df78) SHA1(9e49bde1d5a310ff611932c3429601fbddf3a7b1) )
 	ROM_LOAD( "k32", 0x200000, 0x100000, CRC(3a258c41) SHA1(1d93fcd01728929848b782870f80a8cd0af44796) )
@@ -25,15 +25,15 @@ ROM_START( majtitl2a )		/* Major Title 2 (World, set 1, alt sound CPU) */
 	ROM_REGION( 0x80000, "irem", 0 )
 	ROM_LOAD( "da", 0x000000, 0x80000, CRC(713b9e9f) SHA1(91384d67d4ba9c7d926fbecb077293c661b8ec83) )
 
-	ROM_REGION( 0x4000, "user1", 0 )		/* EEPROM */
+	ROM_REGION( 0x4000, "user1", 0 )
 	ROM_LOAD( "mt2eep",  0x000000, 0x800, CRC(208af971) SHA1(69384cac24b7af35a031f9b60e035131a8b10cb2) )
 
 	ROM_REGION( 0x0c00, "plds", 0 )
-	ROM_LOAD( "pal16l8-m92-a-3m.ic11", 0x0000, 0x0104, NO_DUMP ) /* PAL is read protected */
-	ROM_LOAD( "pal16l8-m92-a-7j.ic41", 0x0200, 0x0104, NO_DUMP ) /* PAL is read protected */
-	ROM_LOAD( "pal16l8-m92-a-9j.ic51", 0x0400, 0x0104, NO_DUMP ) /* PAL is read protected */
-	ROM_LOAD( "pal16l8-m92-b-2l.ic7",  0x0600, 0x0104, NO_DUMP ) /* PAL is read protected */
-	ROM_LOAD( "pal16l8-m92-b-7h.ic47", 0x0800, 0x0104, NO_DUMP ) /* PAL is read protected */
+	ROM_LOAD( "pal16l8-m92-a-3m.ic11", 0x0000, 0x0104, NO_DUMP )
+	ROM_LOAD( "pal16l8-m92-a-7j.ic41", 0x0200, 0x0104, NO_DUMP )
+	ROM_LOAD( "pal16l8-m92-a-9j.ic51", 0x0400, 0x0104, NO_DUMP )
+	ROM_LOAD( "pal16l8-m92-b-2l.ic7",  0x0600, 0x0104, NO_DUMP )
+	ROM_LOAD( "pal16l8-m92-b-7h.ic47", 0x0800, 0x0104, NO_DUMP )
 ROM_END
 
 ROM_START( majtitl2b )		/* Major Title 2 (World, set 2) */
@@ -47,13 +47,13 @@ ROM_START( majtitl2b )		/* Major Title 2 (World, set 2) */
 	ROM_LOAD16_BYTE( "mt2sh0",  0x000001, 0x10000, CRC(1ecbea43) SHA1(8d66ef419f75569f2c83a89c3985742b8a47914f) )
 	ROM_LOAD16_BYTE( "mt2sl0",  0x000000, 0x10000, CRC(8fd5b531) SHA1(92cae3f6dac7f89b559063de3be2f38587536b65) )
 
-	ROM_REGION( 0x100000, "gfx1", 0 )		/* Tiles */
+	ROM_REGION( 0x100000, "gfx1", 0 )
 	ROM_LOAD( "c0", 0x000000, 0x40000, CRC(7e61e4b5) SHA1(d0164862937bd506e701777c51dea1ddb3e2eda4) )
 	ROM_LOAD( "c1", 0x040000, 0x40000, CRC(0a667564) SHA1(d122e0619ae5cc0202f30270933784c954eb1e5d) )
 	ROM_LOAD( "c2", 0x080000, 0x40000, CRC(5eb44312) SHA1(75b584b63d4f4f2236a679235461f11004aa317f) )
 	ROM_LOAD( "c3", 0x0c0000, 0x40000, CRC(f2866294) SHA1(75e0071bf6282c93034dc7e73466af0f51046d01) )
 
-	ROM_REGION( 0x400000, "gfx2", 0 )		/* Sprites */
+	ROM_REGION( 0x400000, "gfx2", 0 )
 	ROM_LOAD( "k30", 0x000000, 0x100000, CRC(8c9a2678) SHA1(e8ed119c16ddd59af9e83d243e7be25974f7cbf8) )
 	ROM_LOAD( "k31", 0x100000, 0x100000, CRC(5455df78) SHA1(9e49bde1d5a310ff611932c3429601fbddf3a7b1) )
 	ROM_LOAD( "k32", 0x200000, 0x100000, CRC(3a258c41) SHA1(1d93fcd01728929848b782870f80a8cd0af44796) )
@@ -62,13 +62,13 @@ ROM_START( majtitl2b )		/* Major Title 2 (World, set 2) */
 	ROM_REGION( 0x80000, "irem", 0 )
 	ROM_LOAD( "da", 0x000000, 0x80000, CRC(713b9e9f) SHA1(91384d67d4ba9c7d926fbecb077293c661b8ec83) )
 
-	ROM_REGION( 0x4000, "user1", 0 )		/* EEPROM */
+	ROM_REGION( 0x4000, "user1", 0 )
 	ROM_LOAD( "mt2eep",  0x000000, 0x800, CRC(208af971) SHA1(69384cac24b7af35a031f9b60e035131a8b10cb2) )
 
 	ROM_REGION( 0x0c00, "plds", 0 )
-	ROM_LOAD( "pal16l8-m92-a-3m.ic11", 0x0000, 0x0104, NO_DUMP ) /* PAL is read protected */
-	ROM_LOAD( "pal16l8-m92-a-7j.ic41", 0x0200, 0x0104, NO_DUMP ) /* PAL is read protected */
-	ROM_LOAD( "pal16l8-m92-a-9j.ic51", 0x0400, 0x0104, NO_DUMP ) /* PAL is read protected */
-	ROM_LOAD( "pal16l8-m92-b-2l.ic7",  0x0600, 0x0104, NO_DUMP ) /* PAL is read protected */
-	ROM_LOAD( "pal16l8-m92-b-7h.ic47", 0x0800, 0x0104, NO_DUMP ) /* PAL is read protected */
+	ROM_LOAD( "pal16l8-m92-a-3m.ic11", 0x0000, 0x0104, NO_DUMP )
+	ROM_LOAD( "pal16l8-m92-a-7j.ic41", 0x0200, 0x0104, NO_DUMP )
+	ROM_LOAD( "pal16l8-m92-a-9j.ic51", 0x0400, 0x0104, NO_DUMP )
+	ROM_LOAD( "pal16l8-m92-b-2l.ic7",  0x0600, 0x0104, NO_DUMP )
+	ROM_LOAD( "pal16l8-m92-b-7h.ic47", 0x0800, 0x0104, NO_DUMP )
 ROM_END

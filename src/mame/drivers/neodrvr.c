@@ -8262,18 +8262,14 @@ GAME( 1990, bstars,    neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "SNK", "Bas
 GAME( 1990, bstarsh,   bstars,   neogeo,   neogeo,   neogeo,   ROT0, "SNK", "Baseball Stars Professional (set 2)", GAME_SUPPORTS_SAVE )
 //
 GAME( 1990, tpgolf,    neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "SNK", "Top Player's Golf", GAME_SUPPORTS_SAVE )
-//
 GAME( 1990, mahretsu,  neogeo,   neogeo,   mjneogeo, neogeo,   ROT0, "SNK", "Mahjong Kyo Retsuden", GAME_SUPPORTS_SAVE )
 //
 GAME( 1990, ridhero,   neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "SNK", "Riding Hero (set 1)", GAME_SUPPORTS_SAVE )
 GAME( 1990, ridheroh,  ridhero,  neogeo,   neogeo,   neogeo,   ROT0, "SNK", "Riding Hero (set 2)", GAME_SUPPORTS_SAVE )
 //
 GAME( 1991, alpham2,   neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "SNK", "Alpha Mission II / ASO II - Last Guardian", GAME_SUPPORTS_SAVE )
-//
 GAME( 1990, cyberlip,  neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "SNK", "Cyber-Lip", GAME_SUPPORTS_SAVE )
-//
 GAME( 1990, superspy,  neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "SNK", "The Super Spy", GAME_SUPPORTS_SAVE )
-//
 GAME( 1992, mutnat,    neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "SNK", "Mutation Nation", GAME_SUPPORTS_SAVE )
 //
 GAME( 1991, kotm,      neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "SNK", "King of the Monsters (set 1)", GAME_SUPPORTS_SAVE )
@@ -8296,9 +8292,7 @@ GAME( 1991, quizdais,  neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "SNK", "Qui
 GAME( 1991, quizdaisk, quizdais, neogeo,   neogeo,   neogeo,   ROT0, "SNK", "Quiz Daisousa Sen - The Last Count Down (Korean release)", GAME_SUPPORTS_SAVE )
 //
 GAME( 1992, lresort,   neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "SNK", "Last Resort", GAME_SUPPORTS_SAVE )
-//
 GAME( 1991, eightman,  neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "SNK / Pallas", "Eight Man", GAME_SUPPORTS_SAVE )
-//
 GAME( 1991, legendos,  neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "SNK", "Legend of Success Joe / Ashitano Joe Densetsu", GAME_SUPPORTS_SAVE )
 //
 GAME( 1991, 2020bb,    neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "SNK / Pallas", "2020 Super Baseball (set 1)", GAME_SUPPORTS_SAVE )
@@ -8314,17 +8308,11 @@ GAME( 1991, roboarmy,  neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "SNK", "Rob
 GAME( 1991, roboarma,  roboarmy, neogeo,   neogeo,   neogeo,   ROT0, "SNK", "Robo Army (NGM-032 ~ NGH-032)", GAME_SUPPORTS_SAVE )
 
 GAME( 1992, fbfrenzy,  neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "SNK", "Football Frenzy", GAME_SUPPORTS_SAVE )
-//
 GAME( 1992, kotm2,     neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "SNK", "King of the Monsters 2 - The Next Thing", GAME_SUPPORTS_SAVE )
-//
 GAME( 1993, sengoku2,  neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "SNK", "Sengoku 2 / Sengoku Denshou 2", GAME_SUPPORTS_SAVE )
-//
 GAME( 1992, bstars2,   neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "SNK", "Baseball Stars 2", GAME_SUPPORTS_SAVE )
-//
 GAME( 1992, quizdai2,  neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "SNK", "Quiz Meitantei Neo & Geo - Quiz Daisousa Sen part 2", GAME_SUPPORTS_SAVE )
-//
 GAME( 1993, 3countb,   neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "SNK", "3 Count Bout / Fire Suplex", GAME_SUPPORTS_SAVE )
-//
 GAME( 1992, aof,       neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "SNK", "Art of Fighting / Ryuuko no Ken", GAME_SUPPORTS_SAVE )
 //
 GAME( 1993, samsho,    neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "SNK", "Samurai Shodown / Samurai Spirits (set 1)", GAME_SUPPORTS_SAVE )
@@ -8334,9 +8322,7 @@ GAME( 1994, tophuntr,  neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "SNK", "Top
 GAME( 1994, tophuntrh, tophuntr, neogeo,   neogeo,   neogeo,   ROT0, "SNK", "Top Hunter - Roddy & Cathy (set 2)", GAME_SUPPORTS_SAVE )
 //
 GAME( 1992, fatfury2,  neogeo,   neogeo,   neogeo,   fatfury2, ROT0, "SNK", "Fatal Fury 2 / Garou Densetsu 2 - arata-naru tatakai", GAME_SUPPORTS_SAVE )
-//
 GAME( 1992, ssideki,   neogeo,   neogeo,   neogeo,   fatfury2, ROT0, "SNK", "Super Sidekicks / Tokuten Ou", GAME_SUPPORTS_SAVE )
-//
 GAME( 1994, kof94,     neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "SNK", "The King of Fighters '94", GAME_SUPPORTS_SAVE )
 //
 GAME( 1994, aof2,      neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "SNK", "Art of Fighting 2 / Ryuuko no Ken 2 (set 1)", GAME_SUPPORTS_SAVE )
@@ -8346,14 +8332,12 @@ GAME( 1993, fatfursp,  neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "SNK", "Fat
 GAME( 1993, fatfursa,  fatfursp, neogeo,   neogeo,   neogeo,   ROT0, "SNK", "Fatal Fury Special / Garou Densetsu Special (set 2)", GAME_SUPPORTS_SAVE )
 //
 GAME( 1995, savagere,  neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "SNK", "Savage Reign / Fu'un Mokushiroku - kakutou sousei", GAME_SUPPORTS_SAVE )
-//
 GAME( 1994, ssideki2,  neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "SNK", "Super Sidekicks 2 - The World Championship / Tokuten Ou 2 - real fight football", GAME_SUPPORTS_SAVE )
 //
 GAME( 1994, samsho2,   neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "SNK", "Samurai Shodown II / Shin Samurai Spirits - Haohmaru jigokuhen", GAME_SUPPORTS_SAVE )
 GAME( 1994, samsho2k,  samsho2,  neogeo,   neogeo,   neogeo,   ROT0, "SNK", "Saulabi Spirits / Jin Saulabi Tu Hon (Korean release of Samurai Shodown II)", GAME_SUPPORTS_SAVE ) // official or hack?
 //
 GAME( 1995, fatfury3,  neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "SNK", "Fatal Fury 3 - Road to the Final Victory / Garou Densetsu 3 - haruka-naru tatakai", GAME_SUPPORTS_SAVE )
-//
 GAME( 1995, ssideki3,  neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "SNK", "Super Sidekicks 3 - The Next Glory / Tokuten Ou 3 - eikoue no michi", GAME_SUPPORTS_SAVE )
 //
 GAME( 1995, kof95,     neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "SNK", "The King of Fighters '95 (set 1)", GAME_SUPPORTS_SAVE )
@@ -8373,7 +8357,6 @@ GAME( 1996, kof96,     neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "SNK", "The
 GAME( 1996, kof96h,    kof96,    neogeo,   neogeo,   neogeo,   ROT0, "SNK", "The King of Fighters '96 (set 2)", GAME_SUPPORTS_SAVE )
 //
 GAME( 1996, ssideki4,  neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "SNK", "The Ultimate 11 - The SNK Football Championship / Tokuten Ou - Honoo no Libero", GAME_SUPPORTS_SAVE )
-//
 GAME( 1996, kizuna,    neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "SNK", "Kizuna Encounter - Super Tag Battle / Fu'un Super Tag Battle", GAME_SUPPORTS_SAVE )
 //
 GAME( 1996, samsho4,   neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "SNK", "Samurai Shodown IV - Amakusa's Revenge / Samurai Spirits - Amakusa Kourin", GAME_SUPPORTS_SAVE )
@@ -8405,9 +8388,7 @@ GAME( 1998, kof98ka,   kof98,    neogeo,   neogeo,   kof98,    ROT0, "SNK", "The
 GAME( 1998, kof98h,    kof98,    neogeo,   neogeo,   neogeo,   ROT0, "SNK", "The King of Fighters '98 - The Slugfest / King of Fighters '98 - dream match never ends (AES cart)", GAME_SUPPORTS_SAVE )
 //
 GAME( 1998, lastbld2,  neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "SNK", "The Last Blade 2 / Bakumatsu Roman - Dai Ni Maku Gekka no Kenshi", GAME_SUPPORTS_SAVE )
-//
 GAME( 1998, neocup98,  neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "SNK", "Neo-Geo Cup '98 - The Road to the Victory", GAME_SUPPORTS_SAVE )
-//
 GAME( 1999, mslugx,    neogeo,   neogeo,   neogeo,   mslugx,   ROT0, "SNK", "Metal Slug X - Super Vehicle-001", GAME_SUPPORTS_SAVE )
 //
 GAME( 1999, kof99,     neogeo,   neogeo,   neogeo,   kof99,    ROT0, "SNK", "The King of Fighters '99 - Millennium Battle (set 1)" , GAME_SUPPORTS_SAVE ) /* Encrypted Code & GFX */
@@ -8429,7 +8410,6 @@ GAME( 2000, kof2000,   neogeo,   neogeo,   neogeo,   kof2000,  ROT0, "SNK", "The
 GAME( 2000, kof2000n,  kof2000,  neogeo,   neogeo,   kof2000n, ROT0, "SNK", "The King of Fighters 2000 (not encrypted)" , GAME_SUPPORTS_SAVE ) /* Encrypted GFX */
 //
 GAME( 2001, zupapa,    neogeo,   neogeo,   neogeo,   zupapa,   ROT0, "SNK", "Zupapa!" , GAME_SUPPORTS_SAVE )	/* Encrypted GFX */
-//
 GAME( 2001, sengoku3,  neogeo,   neogeo,   neogeo,   sengoku3, ROT0, "Noise Factory / SNK", "Sengoku 3 / Sengoku Densho 2001" , GAME_SUPPORTS_SAVE )	/* Encrypted GFX */
 //
 GAME( 2001, kof2001,   neogeo,   neogeo,   neogeo,   kof2001,  ROT0, "Eolith / SNK", "The King of Fighters 2001 (set 1)" , GAME_SUPPORTS_SAVE ) /* Encrypted GFX */
@@ -8486,18 +8466,23 @@ GAME( 2004, samsh5spn, samsh5sp, neogeo,   neogeo,   samsh5sp, ROT0, "Yuki Enter
 /* Alpha Denshi Co. / ADK (changed name in 1993) */
 GAME( 1990, maglord,   neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "Alpha Denshi Co.", "Magician Lord (set 1)", GAME_SUPPORTS_SAVE )
 GAME( 1990, maglordh,  maglord,  neogeo,   neogeo,   neogeo,   ROT0, "Alpha Denshi Co.", "Magician Lord (set 2)", GAME_SUPPORTS_SAVE )
+//
 GAME( 1990, ncombat,   neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "Alpha Denshi Co.", "Ninja Combat (set 1)", GAME_SUPPORTS_SAVE )
 GAME( 1990, ncombath,  ncombat,  neogeo,   neogeo,   neogeo,   ROT0, "Alpha Denshi Co.", "Ninja Combat (set 2)", GAME_SUPPORTS_SAVE )
+//
 GAME( 1990, bjourney,  neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "Alpha Denshi Co.", "Blue's Journey / Raguy", GAME_SUPPORTS_SAVE )
 GAME( 1991, crsword,   neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "Alpha Denshi Co.", "Crossed Swords", GAME_SUPPORTS_SAVE )
 GAME( 1991, trally,    neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "Alpha Denshi Co.", "Thrash Rally", GAME_SUPPORTS_SAVE )
 GAME( 1992, ncommand,  neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "Alpha Denshi Co.", "Ninja Commando", GAME_SUPPORTS_SAVE )
+//
 GAME( 1992, wh1,       neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "Alpha Denshi Co.", "World Heroes (set 1)", GAME_SUPPORTS_SAVE )
 GAME( 1992, wh1h,      wh1,      neogeo,   neogeo,   neogeo,   ROT0, "Alpha Denshi Co.", "World Heroes (set 2)", GAME_SUPPORTS_SAVE )
 GAME( 1992, wh1ha,     wh1,      neogeo,   neogeo,   neogeo,   ROT0, "Alpha Denshi Co.", "World Heroes (set 3)", GAME_SUPPORTS_SAVE )
+//
 GAME( 1993, wh2,       neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "ADK",              "World Heroes 2", GAME_SUPPORTS_SAVE )
 GAME( 1994, wh2j,      neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "ADK / SNK",        "World Heroes 2 Jet (set 1)", GAME_SUPPORTS_SAVE )
 GAME( 1994, wh2jh,     wh2j,     neogeo,   neogeo,   neogeo,   ROT0, "ADK / SNK",        "World Heroes 2 Jet (set 2)", GAME_SUPPORTS_SAVE )
+//
 GAME( 1994, aodk,      neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "ADK / SNK",        "Aggressors of Dark Kombat / Tsuukai GANGAN Koushinkyoku", GAME_SUPPORTS_SAVE )
 GAME( 1995, whp,       neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "ADK / SNK",        "World Heroes Perfect", GAME_SUPPORTS_SAVE )
 GAME( 1995, mosyougi,  neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "ADK / SNK",        "Syougi No Tatsujin - Master of Syougi", GAME_SUPPORTS_SAVE )
@@ -8552,12 +8537,15 @@ GAME( 1999, s1945p,    neogeo,   neogeo,   neogeo,   s1945p,   ROT0, "Psikyo", "
 /* Saurus */
 GAME( 1995, quizkof,   neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "Saurus", "Quiz King of Fighters", GAME_SUPPORTS_SAVE )
 GAME( 1995, quizkofk,  quizkof,  neogeo,   neogeo,   neogeo,   ROT0, "Saurus", "Quiz King of Fighters (Korean release)", GAME_SUPPORTS_SAVE )
+//
 GAME( 1995, stakwin,   neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "Saurus", "Stakes Winner / Stakes Winner - GI kinzen seihae no michi", GAME_SUPPORTS_SAVE )
 GAME( 1996, ragnagrd,  neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "Saurus", "Ragnagard / Shin-Oh-Ken", GAME_SUPPORTS_SAVE )
 GAME( 1996, pgoal,     neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "Saurus", "Pleasure Goal / Futsal - 5 on 5 Mini Soccer", GAME_SUPPORTS_SAVE )
 GAME( 1996, stakwin2,  neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "Saurus", "Stakes Winner 2", GAME_SUPPORTS_SAVE )
+//
 GAME( 1997, shocktro,  neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "Saurus", "Shock Troopers (set 1)", GAME_SUPPORTS_SAVE )
 GAME( 1997, shocktra,  shocktro, neogeo,   neogeo,   neogeo,   ROT0, "Saurus", "Shock Troopers (set 2)", GAME_SUPPORTS_SAVE )
+//
 GAME( 1998, shocktr2,  neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "Saurus", "Shock Troopers - 2nd Squad", GAME_SUPPORTS_SAVE )
 GAME( 1998, lans2004,  shocktr2, neogeo,   neogeo,   lans2004, ROT0, "bootleg", "Lansquenet 2004 (Shock Troopers - 2nd Squad bootleg)", GAME_SUPPORTS_SAVE )
 
@@ -8568,6 +8556,7 @@ GAME( 1996, wakuwak7,  neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "Sunsoft", 
 /* Taito */
 GAME( 1994, pbobblen,  neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "Taito", "Puzzle Bobble / Bust-A-Move (Neo-Geo) (set 1)", GAME_SUPPORTS_SAVE )
 GAME( 1994, pbobblenb, pbobblen, neogeo,   neogeo,   neogeo,   ROT0, "bootleg", "Puzzle Bobble / Bust-A-Move (Neo-Geo) (bootleg)", GAME_SUPPORTS_SAVE )
+//
 GAME( 1999, pbobbl2n,  neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "Taito (SNK license)", "Puzzle Bobble 2 / Bust-A-Move Again (Neo-Geo)", GAME_SUPPORTS_SAVE )
 GAME( 2003, pnyaa,     neogeo,   neogeo,   neogeo,   pnyaa,    ROT0, "Aiky / Taito", "Pochi and Nyaa", GAME_SUPPORTS_SAVE )
 
@@ -8595,11 +8584,13 @@ GAME( 1997, popbounc,  neogeo,   neogeo,   popbounc, neogeo,   ROT0, "Video Syst
 /* Visco */
 GAME( 1992, androdun,  neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "Visco", "Andro Dunos", GAME_SUPPORTS_SAVE )
 GAME( 1995, puzzledp,  neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "Taito (Visco license)", "Puzzle De Pon!", GAME_SUPPORTS_SAVE )
+GAME( 1997, puzzldpr,  puzzledp, neogeo,   neogeo,   neogeo,   ROT0, "Taito (Visco license)", "Puzzle De Pon! R!", GAME_SUPPORTS_SAVE )
+//
 GAME( 1996, neomrdo,   neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "Visco", "Neo Mr. Do!", GAME_SUPPORTS_SAVE )
 GAME( 1995, goalx3,    neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "Visco", "Goal! Goal! Goal!", GAME_SUPPORTS_SAVE )
 GAME( 1996, neodrift,  neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "Visco", "Neo Drift Out - New Technology", GAME_SUPPORTS_SAVE )
+//
 GAME( 1996, breakers,  neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "Visco", "Breakers", GAME_SUPPORTS_SAVE )
-GAME( 1997, puzzldpr,  puzzledp, neogeo,   neogeo,   neogeo,   ROT0, "Taito (Visco license)", "Puzzle De Pon! R!", GAME_SUPPORTS_SAVE )
 GAME( 1998, breakrev,  neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "Visco", "Breakers Revenge", GAME_SUPPORTS_SAVE )
 GAME( 1998, flipshot,  neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "Visco", "Battle Flip Shot", GAME_SUPPORTS_SAVE )
 GAME( 1999, ctomaday,  neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "Visco", "Captain Tomaday", GAME_SUPPORTS_SAVE )

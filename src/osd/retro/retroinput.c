@@ -126,50 +126,67 @@ kt_table ktable[] = {
 #define DYNWAR_LAYOUT	(core_stricmp(machine->gamedrv->name, "dynwar") == 0) || (core_stricmp(machine->gamedrv->parent, "dynwar") == 0)
 
 /* 6-buttons fighting games */
-#define VS6B_LAYOUT	(core_stricmp(machine->gamedrv->name, "sf2") == 0) || (core_stricmp(machine->gamedrv->parent, "sf2") == 0) || \
-			(core_stricmp(machine->gamedrv->name, "sf2ce") == 0) || (core_stricmp(machine->gamedrv->parent, "sf2ce") == 0) || \
-         		(core_stricmp(machine->gamedrv->name, "sf2hf") == 0) || (core_stricmp(machine->gamedrv->parent, "sf2hf") == 0) || \
-			(core_stricmp(machine->gamedrv->name, "sfzch") == 0) || (core_stricmp(machine->gamedrv->parent, "sfzch") == 0) || \
-         		(core_stricmp(machine->gamedrv->name, "ssf2") == 0) || (core_stricmp(machine->gamedrv->parent, "ssf2") == 0) ||	\
-			(core_stricmp(machine->gamedrv->name, "ssf2t") == 0) || (core_stricmp(machine->gamedrv->parent, "ssf2t") == 0) || \
-			(core_stricmp(machine->gamedrv->name, "sfa") == 0) || (core_stricmp(machine->gamedrv->parent, "sfa") == 0) || \
-			(core_stricmp(machine->gamedrv->name, "sfa2") == 0) || (core_stricmp(machine->gamedrv->parent, "sfa2") == 0) || \
-			(core_stricmp(machine->gamedrv->name, "sfz2al") == 0) || (core_stricmp(machine->gamedrv->parent, "sfz2al") == 0) || \
-         		(core_stricmp(machine->gamedrv->name, "sfa3") == 0) || (core_stricmp(machine->gamedrv->parent, "sfa3") == 0) || \
-			(core_stricmp(machine->gamedrv->name, "hsf2") == 0) ||(core_stricmp(machine->gamedrv->parent, "hsf2") == 0) || \
-			(core_stricmp(machine->gamedrv->name, "dstlk") == 0) || (core_stricmp(machine->gamedrv->parent, "dstlk") == 0) || \
-         		(core_stricmp(machine->gamedrv->name, "vsav") == 0) || (core_stricmp(machine->gamedrv->parent, "vsav") == 0) || \
-			(core_stricmp(machine->gamedrv->name, "vsav2") == 0) || (core_stricmp(machine->gamedrv->parent, "vsav2") == 0) || \
-			(core_stricmp(machine->gamedrv->name, "vhunt2") == 0) || (core_stricmp(machine->gamedrv->parent, "vhunt2") == 0) || \
-			(core_stricmp(machine->gamedrv->name, "msh") == 0) || (core_stricmp(machine->gamedrv->parent, "msh") == 0) || \
-         		(core_stricmp(machine->gamedrv->name, "mshvsf") == 0) || (core_stricmp(machine->gamedrv->parent, "mshvsf") == 0) || \
-			(core_stricmp(machine->gamedrv->name, "mvsc") == 0) || (core_stricmp(machine->gamedrv->parent, "mvsc") == 0) || \
-			(core_stricmp(machine->gamedrv->name, "xmcota") == 0) || (core_stricmp(machine->gamedrv->parent, "xmcota") == 0) || \
-			(core_stricmp(machine->gamedrv->name, "xmvsf") == 0) || (core_stricmp(machine->gamedrv->parent, "xmvsf") == 0) || \
+#define VS6B_LAYOUT	(core_stricmp(machine->gamedrv->name, "sf2") == 0) || (core_stricmp(machine->gamedrv->parent, "sf2") == 0) ||		\
+			(core_stricmp(machine->gamedrv->name, "sf2ce") == 0) || (core_stricmp(machine->gamedrv->parent, "sf2ce") == 0) || 	\
+         		(core_stricmp(machine->gamedrv->name, "sf2hf") == 0) || (core_stricmp(machine->gamedrv->parent, "sf2hf") == 0) || 	\
+			(core_stricmp(machine->gamedrv->name, "sfzch") == 0) || (core_stricmp(machine->gamedrv->parent, "sfzch") == 0) || 	\
+         		(core_stricmp(machine->gamedrv->name, "ssf2") == 0) || (core_stricmp(machine->gamedrv->parent, "ssf2") == 0) ||		\
+			(core_stricmp(machine->gamedrv->name, "ssf2t") == 0) || (core_stricmp(machine->gamedrv->parent, "ssf2t") == 0) || 	\
+			(core_stricmp(machine->gamedrv->name, "sfa") == 0) || (core_stricmp(machine->gamedrv->parent, "sfa") == 0) || 		\
+			(core_stricmp(machine->gamedrv->name, "sfa2") == 0) || (core_stricmp(machine->gamedrv->parent, "sfa2") == 0) || 	\
+			(core_stricmp(machine->gamedrv->name, "sfz2al") == 0) || (core_stricmp(machine->gamedrv->parent, "sfz2al") == 0) || 	\
+         		(core_stricmp(machine->gamedrv->name, "sfa3") == 0) || (core_stricmp(machine->gamedrv->parent, "sfa3") == 0) || 	\
+			(core_stricmp(machine->gamedrv->name, "hsf2") == 0) || (core_stricmp(machine->gamedrv->parent, "hsf2") == 0) || 	\
+			(core_stricmp(machine->gamedrv->name, "dstlk") == 0) || (core_stricmp(machine->gamedrv->parent, "dstlk") == 0) || 	\
+         		(core_stricmp(machine->gamedrv->name, "vsav") == 0) || (core_stricmp(machine->gamedrv->parent, "vsav") == 0) || 	\
+			(core_stricmp(machine->gamedrv->name, "vsav2") == 0) || (core_stricmp(machine->gamedrv->parent, "vsav2") == 0) || 	\
+			(core_stricmp(machine->gamedrv->name, "vhunt2") == 0) || (core_stricmp(machine->gamedrv->parent, "vhunt2") == 0) || 	\
+			(core_stricmp(machine->gamedrv->name, "msh") == 0) || (core_stricmp(machine->gamedrv->parent, "msh") == 0) || 		\
+         		(core_stricmp(machine->gamedrv->name, "mshvsf") == 0) || (core_stricmp(machine->gamedrv->parent, "mshvsf") == 0) || 	\
+			(core_stricmp(machine->gamedrv->name, "mvsc") == 0) || (core_stricmp(machine->gamedrv->parent, "mvsc") == 0) || 	\
+			(core_stricmp(machine->gamedrv->name, "xmcota") == 0) || (core_stricmp(machine->gamedrv->parent, "xmcota") == 0) || 	\
+			(core_stricmp(machine->gamedrv->name, "xmvsf") == 0) || (core_stricmp(machine->gamedrv->parent, "xmvsf") == 0) || 	\
 			(core_stricmp(machine->gamedrv->name, "ringdest") == 0) || (core_stricmp(machine->gamedrv->parent, "ringdest") == 0) || \
 			(core_stricmp(machine->gamedrv->name, "nwarr") == 0) || (core_stricmp(machine->gamedrv->parent, "nwarr") == 0) || /* Before is the Capcom games */ \
 			(core_stricmp(machine->gamedrv->name, "ssoldier") == 0) || (core_stricmp(machine->gamedrv->parent, "ssoldier") == 0) 
 
 /* Neo Geo */
-#define NEOGEO_LAYOUT	(core_stricmp(machine->gamedrv->parent, "neogeo") == 0) || (core_stricmp(machine->gamedrv->name, "3countba") == 0) || \
-			(core_stricmp(machine->gamedrv->parent, "ms5pcb") == 0) || (core_stricmp(machine->gamedrv->name, "ms5pcb") == 0) || \
-			(core_stricmp(machine->gamedrv->parent, "svcpcb") == 0) || (core_stricmp(machine->gamedrv->name, "svcpcb") == 0) || \
-			(core_stricmp(machine->gamedrv->parent, "kf2k3pcb") == 0) || (core_stricmp(machine->gamedrv->name, "kf2k3pcb") == 0) || \
-			(core_stricmp(machine->gamedrv->name, "fatfury2a") == 0) || (core_stricmp(machine->gamedrv->name, "fatfury3a") == 0) || \
-			(core_stricmp(machine->gamedrv->name, "alpham2p") == 0) || (core_stricmp(machine->gamedrv->name, "bangbedp") == 0) || \
-			(core_stricmp(machine->gamedrv->name, "burningfp") == 0) || (core_stricmp(machine->gamedrv->name, "jockeygpa") == 0) || \
-			(core_stricmp(machine->gamedrv->name, "garouh") == 0) || (core_stricmp(machine->gamedrv->name, "ironclado") == 0) || \
-			(core_stricmp(machine->gamedrv->name, "kof2000ps2") == 0) || (core_stricmp(machine->gamedrv->name, "kof95a") == 0) || \
-			(core_stricmp(machine->gamedrv->name, "kof96a") == 0) || (core_stricmp(machine->gamedrv->name, "kof96ae20") == 0) || \
-			(core_stricmp(machine->gamedrv->name, "kof97k") == 0) || (core_stricmp(machine->gamedrv->name, "kof98a") == 0) || \
-			(core_stricmp(machine->gamedrv->name, "kof99h") == 0) || (core_stricmp(machine->gamedrv->name, "kotm2p") == 0) || \
-			(core_stricmp(machine->gamedrv->name, "lresortp") == 0) || (core_stricmp(machine->gamedrv->name, "mslug2t") == 0) || \
-			(core_stricmp(machine->gamedrv->name, "roboarma") == 0) || (core_stricmp(machine->gamedrv->name, "sengokuh") == 0) || \
-			(core_stricmp(machine->gamedrv->name, "samshoa") == 0) || (core_stricmp(machine->gamedrv->name, "samsho2k2") == 0) || \
-			(core_stricmp(machine->gamedrv->name, "wh2ja") == 0) || (core_stricmp(machine->gamedrv->name, "sengoku3s") == 0) 
+#define NEOGEO_LAYOUT	(core_stricmp(machine->gamedrv->parent, "neogeo") == 0)	|| (core_stricmp(machine->gamedrv->parent, "bstars") == 0) ||	\
+			(core_stricmp(machine->gamedrv->parent, "mslug2") == 0) || (core_stricmp(machine->gamedrv->parent, "mslug3") == 0) || 	\
+			(core_stricmp(machine->gamedrv->parent, "mslug4") == 0) || (core_stricmp(machine->gamedrv->parent, "mslug5") == 0) || 	 \
+			(core_stricmp(machine->gamedrv->parent, "kof94") == 0) || (core_stricmp(machine->gamedrv->parent, "kof95") == 0) || 	  \
+			(core_stricmp(machine->gamedrv->parent, "kof96") == 0) || (core_stricmp(machine->gamedrv->parent, "kof97") == 0) || 	   \
+			(core_stricmp(machine->gamedrv->parent, "kof98") == 0) || (core_stricmp(machine->gamedrv->parent, "kof99") == 0) || 	    \
+			(core_stricmp(machine->gamedrv->parent, "kof2000") == 0) || (core_stricmp(machine->gamedrv->parent, "kof2001") == 0) ||    \
+			(core_stricmp(machine->gamedrv->parent, "kof2002") == 0) || (core_stricmp(machine->gamedrv->parent, "kof2003") == 0) ||   \
+			(core_stricmp(machine->gamedrv->parent, "samsho") == 0) || (core_stricmp(machine->gamedrv->parent, "samsho2") == 0) || 	 \
+			(core_stricmp(machine->gamedrv->parent, "samsho3") == 0) || (core_stricmp(machine->gamedrv->parent, "samsho4") == 0) || \
+			(core_stricmp(machine->gamedrv->parent, "samsho5") == 0) || (core_stricmp(machine->gamedrv->parent, "samsh5sp") == 0) || \
+			(core_stricmp(machine->gamedrv->parent, "fatfursp") == 0) || (core_stricmp(machine->gamedrv->parent, "garou") == 0) || 	  \
+			(core_stricmp(machine->gamedrv->parent, "fatfury2") == 0) || (core_stricmp(machine->gamedrv->parent, "fatfury3") == 0) ||  \
+			(core_stricmp(machine->gamedrv->parent, "rbff1") == 0) || (core_stricmp(machine->gamedrv->parent, "rbff2") == 0) || 	    \
+			(core_stricmp(machine->gamedrv->parent, "rbffspec") == 0) || (core_stricmp(machine->gamedrv->parent, "3countb") == 0) ||     \
+			(core_stricmp(machine->gamedrv->parent, "aof2") == 0) || (core_stricmp(machine->gamedrv->parent, "aof3") == 0) || 	    \
+			(core_stricmp(machine->gamedrv->parent, "kotm") == 0) || (core_stricmp(machine->gamedrv->parent, "kotm2") == 0) || 	   \
+			(core_stricmp(machine->gamedrv->parent, "sengoku") == 0) || (core_stricmp(machine->gamedrv->parent, "sengoku3") == 0) ||  \
+			(core_stricmp(machine->gamedrv->parent, "svc") == 0) || (core_stricmp(machine->gamedrv->parent, "svcpcb") == 0) || 	 \
+			(core_stricmp(machine->gamedrv->parent, "wh1") == 0) || (core_stricmp(machine->gamedrv->parent, "wh2j") == 0) || 	\
+			(core_stricmp(machine->gamedrv->parent, "shocktro") == 0) || (core_stricmp(machine->gamedrv->parent, "shocktr2") == 0) || \
+			(core_stricmp(machine->gamedrv->parent, "ridhero") == 0) || (core_stricmp(machine->gamedrv->parent, "nitd") == 0) || 	    \
+			(core_stricmp(machine->gamedrv->parent, "maglord") == 0) || (core_stricmp(machine->gamedrv->parent, "burningf") == 0) ||     \
+			(core_stricmp(machine->gamedrv->parent, "gpilots") == 0) || (core_stricmp(machine->gamedrv->parent, "quizdais") == 0) ||      \
+			(core_stricmp(machine->gamedrv->parent, "2020bb") == 0) || (core_stricmp(machine->gamedrv->parent, "socbrawl") == 0) ||      \
+			(core_stricmp(machine->gamedrv->parent, "roboarmy") == 0) || (core_stricmp(machine->gamedrv->parent, "lastblad") == 0) ||   \
+			(core_stricmp(machine->gamedrv->parent, "tophuntr") == 0) || (core_stricmp(machine->gamedrv->parent, "vliner") == 0) ||    \
+			(core_stricmp(machine->gamedrv->parent, "ncombat") == 0) || (core_stricmp(machine->gamedrv->parent, "quizkof") == 0) ||   \
+			(core_stricmp(machine->gamedrv->parent, "fightfev") == 0) || (core_stricmp(machine->gamedrv->parent, "pbobblen") == 0) || \
+			(core_stricmp(machine->gamedrv->parent, "matrim") == 0) || (core_stricmp(machine->gamedrv->parent, "puzzledp") == 0) ||   \
+			(core_stricmp(machine->gamedrv->parent, "alpham2") == 0) || (core_stricmp(machine->gamedrv->parent, "bangbead") == 0) ||  \
+			(core_stricmp(machine->gamedrv->parent, "jockeygp") == 0) || (core_stricmp(machine->gamedrv->parent, "ironclad") == 0) || \
+			(core_stricmp(machine->gamedrv->parent, "lresort") == 0) 
 
 
-static void initInput(running_machine *machine)
+static void initInput( running_machine *machine )
 {
 	UINT32 i;
 
@@ -327,7 +344,7 @@ static void initInput(running_machine *machine)
 #undef ECOFGT_LAYOUT
 #undef DYNWAR_LAYOUT
 
-static inline void retro_poll_mame_input(void)
+static inline void retro_poll_mame_input( void )
 {
 	input_poll_cb();
 
