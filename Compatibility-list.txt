@@ -1,45 +1,50 @@
-Support the following :  (Parent roms with the "*" && based by mame0.139 romset)
+/* --------------------------------------------------------------------------------------- */
+/*  Parent roms with the "*" ;  "N" = archives name ;  "P" = parent rom ;  "S" = romsets ; */
+/* 		The "S : 0.139" represents use of MAME 0.139 romsets		  	   */
+/* 		The "S : FBA38" represents use of FBAlpha 02.97.38 romsets	  	   */
+/* --------------------------------------------------------------------------------------- */
+Support the following : 
 
 / ******************** /
 / *  Capcom System 1 * /
 / ******************** /
 
-*1941:Counter Attack(World)		 - /* Archives name: 1941 ,  Parent set: Itself , Verify CRC: Yes , Rom set: 0.139 , Remark: */
-	1941:Counter Attack(Japan)	 - /* Archives name: 1941j , Parent set: 1941 ,   Verify CRC: Yes , Rom set: 0.139 , Remark: */
+*1941:Counter Attack(World)	    - N: 1941,  P: Itself, S: 0.139
+	1941:Counter Attack(Japan)  - N: 1941j, P: 1941 ,  S: 0.139
 
-*Adventure Quiz Capcom World 2(Japan 920611) - /* Archives name: cworld2j , Parent set: Itself , Verify CRC: Yes , Rom set: 0.139 , Remark: */
+*Adventure Quiz Capcom World 2(Japan 920611) - N: cworld2j, P: Itself, S: 0.139
 
-*Cadillacs and Dinosaurs(World 930201)				  - /* Archives name: dino ,     Parent set: Itself , Verify CRC: Yes , Rom set: 0.139 , Remark: */
-	Cadillacs and Dinosaurs(bootleg with PIC16c57, set1)	  - /* Archives name: dinopic ,  Parent set: dino ,   Verify CRC: Yes , Rom set: 0.139 , Remark: Not Working */
-	Cadillacs and Dinosaurs(bootleg with PIC16c57, set2)	  - /* Archives name: dinopic2 , Parent set: dino ,   Verify CRC: Yes , Rom set: 0.139 , Remark: Not Working */
-	Cadillacs and Dinosaurs(USA 930201)			  - /* Archives name: dinou , 	 Parent set: dino ,   Verify CRC: Yes , Rom set: 0.139 , Remark: */
-	Cadillacs Kyouryuu Shin Seiki(Japan 930201)		  - /* Archives name: dinoj , 	 Parent set: dino ,   Verify CRC: Yes , Rom set: 0.139 , Remark: */
-	Dinosaur Hunter(Chinese bootleg Cadillacs and Dinosaurs)  - /* Archives name: dinohunt , Parent set: dino ,   Verify CRC: Yes , Rom set: 0.139 , Remark: Not Working */
+*Cadillacs and Dinosaurs(World 930201)	 			  - N: dino, 	 P: Itself, S: 0.139
+	Cadillacs and Dinosaurs(bootleg with PIC16c57, set1) 	  - N: dinopic,  P: dino,   S: 0.139
+	Cadillacs and Dinosaurs(bootleg with PIC16c57, set2) 	  - N: dinopic2, P: dino,   S: 0.139, Note: Not Working
+	Cadillacs and Dinosaurs(USA 930201) 			  - N: dinou, 	 P: dino,   S: 0.139
+	Cadillacs Kyouryuu Shin Seiki(Japan 930201) 		  - N: dinoj, 	 P: dino,   S: 0.139
+	Dinosaur Hunter(Chinese bootleg Cadillacs and Dinosaurs)  - N: dinohunt, P: dino,   S: 0.139, Note: Not Working
+	
+*Captain Commando(World 911202)		 - N: captcomm,    P: Itself,   S: 0.139 
+	Captain Commando(bootleg)	 - N: captcommb,   P: captcomm, S: 0.139 , Note: Not Working
+	Captain Commando(Japan 910928)	 - N: captcommjr1, P: captcomm, S: 0.139 
+	Captain Commando(Japan 911202)	 - N: captcommj,   P: captcomm, S: 0.139
+	Captain Commando(USA 910928)	 - N: captcommu,   P: captcomm, S: 0.139
+	Captain Commando(World 911104)	 - N: captcommr1,  P: captcomm, S: 0.139
 
-*Captain Commando(World 911202)		 - /* Archives name: captcomm ,    Parent set: Itself ,   Verify CRC: Yes , Rom set: 0.139 , Remark: */
-	Captain Commando(bootleg)	 - /* Archives name: captcommb ,   Parent set: captcomm , Verify CRC: Yes , Rom set: 0.139 , Remark: Not Working */
-	Captain Commando(Japan 910928)	 - /* Archives name: captcommjr1 , Parent set: captcomm , Verify CRC: Yes , Rom set: 0.139 , Remark: */
-	Captain Commando(Japan 911202)	 - /* Archives name: captcommj ,   Parent set: captcomm , Verify CRC: Yes , Rom set: 0.139 , Remark: */
-	Captain Commando(USA 910928)	 - /* Archives name: captcommu ,   Parent set: captcomm , Verify CRC: Yes , Rom set: 0.139 , Remark: */
-	Captain Commando(World 911104)	 - /* Archives name: captcommr1 ,  Parent set: captcomm , Verify CRC: Yes , Rom set: 0.139 , Remark: */
+*Carrier Air Wing(World 901012)		 - N: cawing,   P: Itself, S: 0.139
+	Carrier Air Wing(USA 901012)	 - N: cawingu,  P: cawing, S: 0.139
+	Carrier Air Wing(World 901009)	 - N: cawingr1, P: cawing, S: 0.139
+	U.S Navy(Japan 901012)		 - N: cawingj,  P: cawing, S: 0.139
 
-*Carrier Air Wing(World 901012)		 - /* Archives name: cawing ,   Parent set: Itself , Verify CRC: Yes , Rom set: 0.139 , Remark: */
-	Carrier Air Wing(USA 901012)	 - /* Archives name: cawingu ,  Parent set: cawing , Verify CRC: Yes , Rom set: 0.139 , Remark: */
-	Carrier Air Wing(World 901009)	 - /* Archives name: cawingr1 , Parent set: cawing , Verify CRC: Yes , Rom set: 0.139 , Remark: */
-	U.S Navy(Japan 901012)		 - /* Archives name: cawingj ,  Parent set: cawing , Verify CRC: Yes , Rom set: 0.139 , Remark: */
+*Dynasty Wars(USA, set1)	 	- N: dynwar,  P: Itself, S: 0.139
+	Dynasty Wars(USA, set2)	 	- N: dynwaru, P: dynwar, S: 0.139
+	Tenchi wo Kurau(Japan)	 	- N: dynwarj, P: dynwar, S: 0.139
 
-*Dynasty Wars(USA, set1)	 	- /* Archives name: dynwar ,  Parent set: Itself , Verify CRC: Yes , Rom set: 0.139 , Remark: */
-	Dynasty Wars(USA, set2)	 	- /* Archives name: dynwaru , Parent set: dynwar , Verify CRC: Yes , Rom set: 0.139 , Remark: */
-	Tenchi wo Kurau(Japan)	 	- /* Archives name: dynwarj , Parent set: dynwar , Verify CRC: Yes , Rom set: 0.139 , Remark: */
-
-*Final Fight(World)					- /* Archives name: ffight ,   Parent set: Itself , Verify CRC: Yes , Rom set: 0.139 , Remark: */
-	Final Fight(Japan 900112)			- /* Archives name: ffightj1 , Parent set: ffight , Verify CRC: Yes , Rom set: 0.139 , Remark: */
-	Final Fight(Japan 900305)			- /* Archives name: ffightj2 , Parent set: ffight , Verify CRC: Yes , Rom set: 0.139 , Remark: */
-	Final Fight(Japan)				- /* Archives name: ffightj ,  Parent set: ffight , Verify CRC: Yes , Rom set: 0.139 , Remark: */
-	Final Fight(USA 900112)		 		- /* Archives name: ffightua , Parent set: ffight , Verify CRC: Yes , Rom set: 0.139 , Remark: */
-	Final Fight(USA 900613)				- /* Archives name: ffightub , Parent set: ffight , Verify CRC: Yes , Rom set: 0.139 , Remark: */
-	Final Fight(USA)				- /* Archives name: ffightu ,  Parent set: ffight , Verify CRC: Yes , Rom set: 0.139 , Remark: */
-	Street Smart / Final Fight(Japan, hack)         - /* Archives name: ffightjh , Parent set: ffight , Verify CRC: Yes , Rom set: 0.139 , Remark: */
+*Final Fight(World)				- N: ffight,   P: Itself, S: 0.139
+	Final Fight(Japan 900112)		- N: ffightj1, P: ffight, S: 0.139
+	Final Fight(Japan 900305)		- N: ffightj2, P: ffight, S: 0.139
+	Final Fight(Japan)			- N: ffightj,  P: ffight, S: 0.139
+	Final Fight(USA 900112)		 	- N: ffightua, P: ffight, S: 0.139
+	Final Fight(USA 900613)			- N: ffightub, P: ffight, S: 0.139
+	Final Fight(USA)			- N: ffightu,  P: ffight, S: 0.139
+	Street Smart / Final Fight(Japan, hack) - N: ffightjh, P: ffight, S: 0.139
 
 *Forgotten Worlds(World)			- /* Archives name: forgottn ,   Parent set: Itself ,   Verify CRC: Yes , Rom set: 0.139 , Remark: */
 	Forgotten Worlds(USA, 88618B B-Board)	- /* Archives name: forgottnu ,  Parent set: forgottn , Verify CRC: Yes , Rom set: 0.139 , Remark: */
