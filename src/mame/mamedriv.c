@@ -872,6 +872,7 @@ const game_driver *const drivers[] =
 	DRIVER( lhcdb )		/* Last Hope (bootleg of CD version) */
 	DRIVER( unkneo )	/* unkneo (Dragon's Heaven), development board */
 	DRIVER( totcarib )	/* Treasure of the Caribbean */
+	DRIVER( samsho5x )	/* Samurai Shodown V / Samurai Spirits Zero (XBOX version, hack) */
 
 
 #endif	/* DRIVER_RECURSIVE */

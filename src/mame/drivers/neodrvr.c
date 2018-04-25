@@ -8672,3 +8672,4 @@ GAME( 2001,	sengoku3s,	sengoku3,	neogeo,		neogeo,		neogeo,	   ROT0,   "hack (FCH
 GAME( 2007,	lhcdb,		neogeo,		neogeo,		neogeo,		neogeo,	   ROT0,   "NG:Dev.Team", "Last Hope (bootleg of NGCD version, no coin support)" , GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )
 GAME( 1996,	unkneo,		neogeo,		neogeo,		neogeo,		neogeo,	   ROT0,   "Face", "Dragon's Heaven (development board)", GAME_NOT_WORKING | GAME_NO_SOUND | GAME_SUPPORTS_SAVE )
 GAME( 2011,	totcarib,	neogeo,		neogeo,		neogeo,		neogeo,	   ROT0,   "Face / N.C.I - Le Cortex", "Treasure of the Caribbean", GAME_SUPPORTS_SAVE )
+GAME( 2003,	samsho5x,	neogeo,		neogeo,		neogeo,		neogeo,	   ROT0,   "hack", "Samurai Shodown V / Samurai Spirits Zero (XBOX version, hack)", GAME_SUPPORTS_SAVE )
