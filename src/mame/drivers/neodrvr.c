@@ -8676,7 +8676,7 @@ GAME( 1994,	samsho2k2,	samsho2,	neogeo,		neogeo,		neogeo,	   ROT0,   "SNK", "Sau
 GAME( 1994,	wh2ja,		wh2j,		neogeo,		neogeo,		neogeo,	   ROT0,   "ADK / SNK", "World Heroes 2 Jet (ADM-007)", GAME_SUPPORTS_SAVE )
 GAME( 2001,	sengoku3s,	sengoku3,	neogeo,		neogeo,		neogeo,	   ROT0,   "hack (FCHT)", "Sengoku 3 / Sengoku Densho 2001 (Evolution 1.0, hack)" , GAME_SUPPORTS_SAVE )
 GAME( 2007,	lhcdb,		neogeo,		neogeo,		neogeo,		neogeo,	   ROT0,   "NG:Dev.Team", "Last Hope (bootleg of NGCD version, no coin support)" , GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )
-GAME( 1996,	unkneo,		neogeo,		neogeo,		neogeo,		neogeo,	   ROT0,   "Face", "Dragon's Heaven (development board)", GAME_NOT_WORKING | GAME_NO_SOUND | GAME_SUPPORTS_SAVE )
+GAME( 1996,	unkneo,		neogeo,		neogeo,		neogeo,		neogeo,	   ROT0,   "Face", "Dragon's Heaven (development board)", GAME_IS_SKELETON | GAME_SUPPORTS_SAVE )
 GAME( 2011,	totcarib,	neogeo,		neogeo,		neogeo,		neogeo,	   ROT0,   "Face / N.C.I - Le Cortex", "Treasure of the Caribbean", GAME_SUPPORTS_SAVE )
 GAME( 2003,	samsho5x,	neogeo,		neogeo,		neogeo,		neogeo,	   ROT0,   "hack", "Samurai Shodown V / Samurai Spirits Zero (XBOX version, hack)", GAME_SUPPORTS_SAVE )
 GAME( 2003,	mslug5b,	neogeo,		neogeo,		neogeo,		mslug5b,   ROT0,   "bootleg", "Metal Slug 5 (bootleg)", GAME_SUPPORTS_SAVE )

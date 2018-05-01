@@ -9122,10 +9122,11 @@ GAME( 1997, sgemfd,   sgemf,    dead_cps2, cps2_2p3b, cps2,    ROT0,   "bootleg"
 GAME( 2000, mmatrixd, mmatrix,  dead_cps2, cps2_2p1b, cps2,    ROT0,   "bootleg", "Mars Matrix: Hyper Solid Shooting (Japan 000412 Phoenix Edition) (bootleg)", GAME_SUPPORTS_SAVE )
 GAME( 2000, dimahoud, dimahoo,  dead_cps2, cps2_2p3b, cps2,    ROT270, "bootleg", "Dimahoo (USA 000121 Phoenix Edition) (bootleg)", GAME_SUPPORTS_SAVE )
 
-
-/* Added games */
+/* ==================================== */
+/* 	new added support		*/
+/* ==================================== */
 /*
-GAME( year, archives,   parent,   MACHINE_DRIVER, INPUT_PORT, DRIVER_INIT, flip,  producer, 	title, 		information )
+GAME( year,   archives name,   parent name,  MACHINE_DRIVER_START,  INPUT_PORTS,  DRIVER_INIT,	flip,	producer name,	title information,	status )
 */
 GAME( 1995,   sfaud,       sfa,      dead_cps2,   cps2_2p6b,   cps2,     ROT0,   "bootleg", "Street Fighter Alpha: Warriors' Dreams (USA 950727 Phoenix Edition) (bootleg)", GAME_SUPPORTS_SAVE )
 GAME( 1996,   sfz2jd,      sfa2,     dead_cps2,   cps2_2p6b,   cps2,     ROT0,   "bootleg", "Street Fighter Zero 2 (Japan 960227 Phoenix Edition) (bootleg)", GAME_SUPPORTS_SAVE )
@@ -9149,7 +9150,7 @@ GAME( 2000,   1944ad,      1944,     dead_cps2,   cps2_2p2b,   cps2,     ROT0,  
 GAME( 2004,   hsf2da,      hsf2,     dead_cps2,	  cps2_2p6b,   cps2,     ROT0,   "bootleg", "Hyper Street Fighter 2: The Anniversary Edition (Asia 040202 Phoenix Edition alt) (bootleg)", GAME_SUPPORTS_SAVE )
 GAME( 1996,   gigaman2,	   megaman2, gigaman2,    cps2_2p3b,   gigaman2, ROT0,   "bootleg", "Giga Man 2: The Power Fighters (bootleg of Mega Man 2: The Power Fighters)", GAME_IMPERFECT_GRAPHICS | GAME_NO_SOUND | GAME_SUPPORTS_SAVE )
 
-
+/* need decrypted key */
 GAME( 1994,   ringdesta,   ringdest,	cps2,       cps2_2p6b,   cps2,      ROT0,   "Capcom", "Ring of Destruction: Slammasters II (Asia 940831)", GAME_SUPPORTS_SAVE )
 GAME( 1994,   ringdesth,   ringdest,	cps2,       cps2_2p6b,   cps2,      ROT0,   "Capcom", "Ring of Destruction: Slammasters II (Hispanic 940902)", GAME_SUPPORTS_SAVE )
 GAME( 1998,   sfa3us,      sfa3,	cps2,       cps2_2p6b,   cps2,      ROT0,   "Capcom", "Street Fighter Alpha 3 (USA 980616 SAMPLE Version)", GAME_SUPPORTS_SAVE )

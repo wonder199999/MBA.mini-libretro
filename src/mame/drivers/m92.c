@@ -2151,7 +2151,12 @@ GAME( 1993,  psoldier,   ssoldier,    psoldier,    psoldier, 	m92_ssoldier,   RO
 GAME( 1994,  gunforc2,   0,           gunforc2,    gunforc2, 	m92_gunforc2,   ROT0,   "Irem",         "Gunforce 2 (US)", 0 )
 GAME( 1994,  geostorm,   gunforc2,    gunforc2,    gunforc2, 	m92_gunforc2,   ROT0,   "Irem",         "Geostorm (Japan)", 0 )
 
-/* New added */
-/*    year,  archives,  parent,  MACHINE_DRIVER,  INPUT_PORT,  DRIVER_INIT,  flip,  producer name,  title,  information */
-GAME( 1992,  majtitl2a,  majtitl2,    mysticri,    majtitl2, 	m92_majtitl2,   ROT0,   "Irem",         "Major Title 2 (World, set 1, alt sound CPU)", 0 )
-GAME( 1992,  majtitl2b,  majtitl2,    majtitl2,    majtitl2, 	m92_majtitl2,   ROT0,   "Irem",         "Major Title 2 (World, set 2)", 0 )
+
+/* ==================================== */
+/* 	new added support		*/
+/* ==================================== */
+/*
+GAME( year,   archives name,   parent name,  MACHINE_DRIVER_START,  INPUT_PORTS,  DRIVER_INIT,	flip,	producer name,	title information,	status )
+*/
+GAME( 1992,	majtitl2a,	majtitl2,	mysticri,	majtitl2,	m92_majtitl2,   ROT0,   "Irem",		"Major Title 2 (World, set 1, alt sound CPU)", 0 )
+GAME( 1992,	majtitl2b,	majtitl2,	majtitl2,	majtitl2,	m92_majtitl2,   ROT0,   "Irem",		"Major Title 2 (World, set 2)", 0 )

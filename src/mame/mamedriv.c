@@ -39,7 +39,6 @@ const game_driver *const drivers[] =
 	/* *************** */
 	/*  Part 1 - M92   */
 	/* *************** */
-
 	DRIVER( gunforce )	/* (c) 1991 Irem (World) */
 	DRIVER( gunforceu )	/* (c) 1991 Irem America (US) */
 	DRIVER( gunforcej )	/* (c) 1991 Irem (Japan) */
@@ -82,7 +81,6 @@ const game_driver *const drivers[] =
 	/* ************************* */
 	/*  Part 2 - Capcom System 1 */
 	/* ************************* */
-
 	DRIVER( forgottn )	/* 07/1988 (c) 1988 (World) */
 	DRIVER( forgottnu )	/* 07/1988 (c) 1988 (US) */
 	DRIVER( forgottnua )	/* 07/1988 (c) 1988 (US) */
@@ -161,7 +159,6 @@ const game_driver *const drivers[] =
 	DRIVER( knights )	/* 27/11/1991 (c) 1991 (World) */
 	DRIVER( knightsu )	/* 27/11/1991 (c) 1991 (US)    */
 	DRIVER( knightsj )	/* 27/11/1991 (c) 1991 (Japan) */
-	DRIVER( knightsb )	/* bootleg */
 	DRIVER( sf2ce )		/* 13/03/1992 (c) 1992 (World) */
 	DRIVER( sf2ceua )	/* 13/03/1992 (c) 1992 (US)    */
 	DRIVER( sf2ceub )	/* 13/05/1992 (c) 1992 (US)    */
@@ -184,7 +181,6 @@ const game_driver *const drivers[] =
 	DRIVER( sf2m7 )		/* hack */
 	DRIVER( sf2yyc )	/* hack */
 	DRIVER( sf2koryu )	/* hack */
-	DRIVER( sf2mdt )	/* bootleg */
 	DRIVER( varth )		/* 14/07/1992 (c) 1992 (World) */
 	DRIVER( varthr1 )	/* 12/06/1992 (c) 1992 (World) */
 	DRIVER( varthu )	/* 12/06/1992 (c) 1992 (US) */
@@ -228,6 +224,8 @@ const game_driver *const drivers[] =
 
 	DRIVER( fcrash )	/* bootleg of Final Fight */
 	DRIVER( kodb )		/* bootleg */
+	DRIVER( sf2mdt )	/* bootleg */
+	DRIVER( knightsb )	/* bootleg */
 
 	/* new added */
 	DRIVER( sfzch )		/* 20/10/1995 (c) CPS Changer version - Street Fighter Zero */
@@ -241,7 +239,6 @@ const game_driver *const drivers[] =
 	/* ************************* */
 	/*  Part 3 - Capcom System 2 */
 	/* ************************* */
-
 	DRIVER( ssf2 )		/* 11/09/1993 (c) 1993 (World) */
 	DRIVER( ssf2u )		/* 11/09/1993 (c) 1993 (US) */
 	DRIVER( ssf2a )		/* 05/10/1993 (c) 1993 (Asia) */
@@ -514,7 +511,6 @@ const game_driver *const drivers[] =
 	DRIVER( mmancp2ur1 )	/* 26/09/1995 (c) Mega Man: The Power Battle, USA, SAMPLE Version */
 	DRIVER( vhuntjr1s )	/* 07/03/1995 (c) Vampire Hunter: Darkstalkers's Revenge, Japan stop version */
 
-
 	/* New added Phoenix bootlegs */
 	DRIVER( sfaud )		/* Phoenix Edition, Street Fighter Alpha: Warrior's Dream, USA */
 	DRIVER( sfz2jd )	/* Phoenix Edition, Street Fighter Zero 2, Japan */
@@ -541,7 +537,6 @@ const game_driver *const drivers[] =
 	/* ***************** */
 	/*  Part 4 - Neo Geo */
 	/* ***************** */
-
 	DRIVER( neogeo )
 	DRIVER( nam1975 )	/* 0001 (c) 1990 SNK */
 	DRIVER( bstars )	/* 0002 (c) 1990 SNK */

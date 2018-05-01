@@ -5,8 +5,8 @@ struct gfx_range
 {
 	/* start and end are as passed by the game (shift adjusted to be all
 	   in the same scale a 8x8 tiles): they don't necessarily match the
-	   position in ROM.
-	*/
+	   position in ROM.	*/
+
 	int type;
 	int start;
 	int end;
@@ -15,13 +15,12 @@ struct gfx_range
 
 struct CPS1config
 {
-	const char *name;             /* game driver name */
+	const char *name;	/* game driver name */
 
 	/* Some games interrogate a couple of registers on bootup. */
-	/* These are CPS1 board B self test checks. They wander from game to */
-	/* game. */
-	int cpsb_addr;        /* CPS board B test register address */
-	int cpsb_value;       /* CPS board B test register expected value */
+	/* These are CPS1 board B self test checks. They wander from game to game. */
+	int cpsb_addr;		/* CPS board B test register address */
+	int cpsb_value;		/* CPS board B test register expected value */
 
 	/* some games use as a protection check the ability to do 16-bit multiplies */
 	/* with a 32-bit result, by writing the factors to two ports and reading the */
@@ -66,107 +65,118 @@ public:
 	cps_state(running_machine &machine) { }
 
 	/* memory pointers */
-	// cps1
-	UINT16 *     gfxram;
-	UINT16 *     cps_a_regs;
-	UINT16 *     cps_b_regs;
-	UINT16 *     scroll1;
-	UINT16 *     scroll2;
-	UINT16 *     scroll3;
-	UINT16 *     obj;
-	UINT16 *     other;
-	UINT16 *     buffered_obj;
-	UINT8  *     qsound_sharedram1;
-	UINT8  *     qsound_sharedram2;
-	size_t       gfxram_size;
-	// cps2
-	UINT16 *     objram1;
-	UINT16 *     objram2;
-	UINT16 *     output;
-	UINT16 *     cps2_buffered_obj;
-	size_t       output_size;
-	// game-specific
-	UINT16 *     gigaman2_dummyqsound_ram;
+	/* in the cps1 */
+	UINT16		*gfxram;
+	UINT16		*cps_a_regs;
+	UINT16		*cps_b_regs;
+	UINT16		*scroll1;
+	UINT16		*scroll2;
+	UINT16		*scroll3;
+	UINT16		*obj;
+	UINT16		*other;
+	UINT16		*buffered_obj;
+	UINT8		*qsound_sharedram1;
+	UINT8		*qsound_sharedram2;
+
+	/* in the cps2 */
+	UINT16		*objram1;
+	UINT16 		*objram2;
+	UINT16 		*output;
+	UINT16 		*cps2_buffered_obj;
+
+	size_t		gfxram_size;
+	size_t		output_size;
+
+	/* game-specific */
+	UINT16 		*gigaman2_dummyqsound_ram;
 
 	/* video-related */
-	tilemap_t      *bg_tilemap[3];
-	int          scanline1;
-	int          scanline2;
-	int          scancalls;
-	int          scancount;
+	tilemap_t	*bg_tilemap[3];
+	int		scanline1;
+	int		scanline2;
+	int		scancalls;
+	int		scancount;
 
-	int          scroll1x, scroll1y;
-	int          scroll2x, scroll2y;
-	int          scroll3x, scroll3y;
+	int		scroll1x, scroll1y;
+	int		scroll2x, scroll2y;
+	int		scroll3x, scroll3y;
 
-	int          stars_enabled[2];				/* Layer enabled [Y/N] */
-	int          stars1x, stars1y, stars2x, stars2y;
-	int          last_sprite_offset;			/* Offset of the last sprite */
-	int          cps2_last_sprite_offset;			/* Offset of the last sprite */
-	int          pri_ctrl;					/* Sprite layer priorities */
-	int          objram_bank;
+	int		stars_enabled[2];			/* Layer enabled [Y/N] */
+	int		stars1x, stars1y, stars2x, stars2y;
+	int		last_sprite_offset;			/* Offset of the last sprite */
+	int		cps2_last_sprite_offset;		/* Offset of the last sprite */
+	int		pri_ctrl;				/* Sprite layer priorities */
+	int		objram_bank;
 
 	/* misc */
-	int          dial[2];		// forgottn
-	int          readpaddle;	// pzloop2
-	int          cps2networkpresent;
+	int		dial[2];				/* forgottn */
+	int		readpaddle;				/* pzloop2 */
+	int		cps2networkpresent;
 
 	/* fcrash sound hw */
-	int          sample_buffer1, sample_buffer2;
-	int          sample_select1, sample_select2;
+	int		sample_buffer1, sample_buffer2;
+	int		sample_select1, sample_select2;
 
 	/* video config (never changed after VIDEO_START) */
-	const struct CPS1config *game_config;
-	int          scroll_size;
-	int          obj_size;
-	int          cps2_obj_size;
-	int          other_size;
-	int          palette_align;
-	int          palette_size;
-	int          stars_rom_size;
-	UINT8        empty_tile8x8[8*8];
-	UINT8        empty_tile[32*32/2];
-	int          cps_version;
+	const struct	CPS1config *game_config;
+	int		scroll_size;
+	int		obj_size;
+	int		cps2_obj_size;
+	int		other_size;
+	int		palette_align;
+	int		palette_size;
+	int		stars_rom_size;
+	int		cps_version;
+	UINT8		empty_tile8x8[8 * 8];
+	UINT8		empty_tile[32 * 32 / 2];
+
+	/* fcrash(bootleg) video config */
+	UINT8		layer_enable_reg;
+	UINT8		layer_mask_reg[4];
+	INT32		layer_scroll1x_offset;
+	INT32		layer_scroll2x_offset;
+	INT32		layer_scroll3x_offset;
+	INT32		sprite_base;
+	INT32		sprite_list_end_marker;
+	INT32		sprite_x_offset;
+	UINT16		*bootleg_sprite_ram;
+	UINT16		*bootleg_work_ram;
 
 	/* devices */
-	running_device *maincpu;
-	running_device *audiocpu;
-	running_device *msm_1;	// fcrash
-	running_device *msm_2;	// fcrash
+	running_device	*maincpu;
+	running_device	*audiocpu;
+	running_device	*msm_1;		/* fcrash */
+	running_device	*msm_2;		/* fcrash */
 };
 
 /*----------- defined in drivers/cps1.c -----------*/
-
 ADDRESS_MAP_EXTERN( qsound_sub_map, 8 );
-
-READ16_HANDLER( qsound_sharedram1_r );
-WRITE16_HANDLER( qsound_sharedram1_w );
-
-READ16_HANDLER( cps1_dsw_r );
-WRITE16_HANDLER( cps1_coinctrl_w );
 INTERRUPT_GEN( cps1_interrupt );
-
 GFXDECODE_EXTERN( cps1 );
 
+READ16_HANDLER( qsound_sharedram1_r );
+READ16_HANDLER( cps1_dsw_r );
+WRITE16_HANDLER( qsound_sharedram1_w );
+WRITE16_HANDLER( cps1_coinctrl_w );
 
 /*----------- defined in video/cps1.c -----------*/
-
+READ16_HANDLER( cps1_cps_b_r );
 WRITE16_HANDLER( cps1_cps_a_w );
 WRITE16_HANDLER( cps1_cps_b_w );
-READ16_HANDLER( cps1_cps_b_r );
 WRITE16_HANDLER( cps1_gfxram_w );
 
 DRIVER_INIT( cps1 );
 DRIVER_INIT( cps2_video );
 
-WRITE16_HANDLER( cps2_objram_bank_w );
 READ16_HANDLER( cps2_objram1_r );
 READ16_HANDLER( cps2_objram2_r );
+WRITE16_HANDLER( cps2_objram_bank_w );
 WRITE16_HANDLER( cps2_objram1_w );
 WRITE16_HANDLER( cps2_objram2_w );
 
 VIDEO_START( cps1 );
 VIDEO_START( cps2 );
+
 VIDEO_UPDATE( cps1 );
 VIDEO_EOF( cps1 );
 
@@ -174,18 +184,20 @@ void cps1_get_video_base(running_machine *machine);
 void cps2_set_sprite_priorities(running_machine *machine);
 void cps2_objram_latch(running_machine *machine);
 
-
 /*************************************
  *  Encryption
  *************************************/
-
 /*----------- defined in machine/cps2crpt.c -----------*/
-
 DRIVER_INIT( cps2crpt );
 
+/*----------- defined in drivers/cps1.c -----------*/
+INPUT_PORTS_EXTERN( cps1_3b );
+INPUT_PORTS_EXTERN( cps1_2b );
+INPUT_PORTS_EXTERN( cps1_3players );
+INPUT_PORTS_EXTERN( cps1_4players );
+INPUT_PORTS_EXTERN( knights );
 
 /*----------- defined in machine/kabuki.c -----------*/
-
 void mgakuen2_decode(running_machine *machine);
 void pang_decode(running_machine *machine);
 void cworld_decode(running_machine *machine);
