@@ -4,9 +4,8 @@
 struct gfx_range
 {
 	/* start and end are as passed by the game (shift adjusted to be all
-	   in the same scale a 8x8 tiles): they don't necessarily match the
-	   position in ROM.	*/
-
+	 in the same scale a 8x8 tiles): they don't necessarily match the
+	 position in ROM.	*/
 	int type;
 	int start;
 	int end;
@@ -56,12 +55,10 @@ struct CPS1config
 	int bootleg_kludge;
 };
 
-
 class cps_state
 {
 public:
 	static void *alloc(running_machine &machine) { return auto_alloc_clear(&machine, cps_state(machine)); }
-
 	cps_state(running_machine &machine) { }
 
 	/* memory pointers */
@@ -83,7 +80,6 @@ public:
 	UINT16 		*objram2;
 	UINT16 		*output;
 	UINT16 		*cps2_buffered_obj;
-
 	size_t		gfxram_size;
 	size_t		output_size;
 
@@ -96,13 +92,17 @@ public:
 	int		scanline2;
 	int		scancalls;
 	int		scancount;
-
-	int		scroll1x, scroll1y;
-	int		scroll2x, scroll2y;
-	int		scroll3x, scroll3y;
-
+	int		scroll1x;
+	int		scroll1y;
+	int		scroll2x;
+	int		scroll2y;
+	int		scroll3x;
+	int		scroll3y;
 	int		stars_enabled[2];			/* Layer enabled [Y/N] */
-	int		stars1x, stars1y, stars2x, stars2y;
+	int		stars1x;
+	int		stars1y;
+	int		stars2x;
+	int		stars2y;
 	int		last_sprite_offset;			/* Offset of the last sprite */
 	int		cps2_last_sprite_offset;		/* Offset of the last sprite */
 	int		pri_ctrl;				/* Sprite layer priorities */
@@ -114,8 +114,10 @@ public:
 	int		cps2networkpresent;
 
 	/* fcrash sound hw */
-	int		sample_buffer1, sample_buffer2;
-	int		sample_select1, sample_select2;
+	int		sample_buffer1;
+	int		sample_buffer2;
+	int		sample_select1;
+	int		sample_select2;
 
 	/* video config (never changed after VIDEO_START) */
 	const struct	CPS1config *game_config;
@@ -156,18 +158,20 @@ GFXDECODE_EXTERN( cps1 );
 
 READ16_HANDLER( qsound_sharedram1_r );
 READ16_HANDLER( cps1_dsw_r );
+READ16_HANDLER( cps1_hack_dsw_r );
 WRITE16_HANDLER( qsound_sharedram1_w );
 WRITE16_HANDLER( cps1_coinctrl_w );
+WRITE16_HANDLER( cps1_soundlatch_w );
+
+void cps1_irq_handler_mus(running_device *device, int irq);
 
 /*----------- defined in video/cps1.c -----------*/
 READ16_HANDLER( cps1_cps_b_r );
 WRITE16_HANDLER( cps1_cps_a_w );
 WRITE16_HANDLER( cps1_cps_b_w );
 WRITE16_HANDLER( cps1_gfxram_w );
-
 DRIVER_INIT( cps1 );
 DRIVER_INIT( cps2_video );
-
 READ16_HANDLER( cps2_objram1_r );
 READ16_HANDLER( cps2_objram2_r );
 WRITE16_HANDLER( cps2_objram_bank_w );
@@ -185,8 +189,8 @@ void cps2_set_sprite_priorities(running_machine *machine);
 void cps2_objram_latch(running_machine *machine);
 
 /*************************************
- *  Encryption
- *************************************/
+*	Encryption
+**************************************/
 /*----------- defined in machine/cps2crpt.c -----------*/
 DRIVER_INIT( cps2crpt );
 
@@ -209,7 +213,6 @@ void marukin_decode(running_machine *machine);
 void qtono1_decode(running_machine *machine);
 void qsangoku_decode(running_machine *machine);
 void block_decode(running_machine *machine);
-
 void wof_decode(running_machine *machine);
 void dino_decode(running_machine *machine);
 void punisher_decode(running_machine *machine);

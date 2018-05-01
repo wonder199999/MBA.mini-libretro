@@ -59,13 +59,13 @@ None of this is hooked up currently due to issues with row scroll on the scroll2
 #include "cpu/m68000/m68000.h"
 #include "sound/2203intf.h"
 #include "sound/msm5205.h"
+#include "sound/okim6295.h"
 #include "sound/2151intf.h"
 
 #include "includes/cps1.h"
 
 //#include "cpu/pic16c5x/pic16c5x.h"
 //#include "machine/eeprom.h"
-//#include "sound/okim6295.h"
 //#include "sound/qsound.h"
 
 #define CODE_SIZE 0x400000
@@ -73,13 +73,6 @@ None of this is hooked up currently due to issues with row scroll on the scroll2
 
 
 /* -------------- Functions ---------------- */
-static READ16_HANDLER( cps1_hack_dsw_r )
-{
-	static const char *const dswname[] = { "IN0", "DSWA", "DSWB", "DSWC" };
-	int in = input_port_read(space->machine, dswname[offset]);
-	return (in << 8) | in;
-}
-
 static WRITE16_HANDLER( fcrash_soundlatch_w )
 {
 	cps_state *state = (cps_state *)space->machine->driver_data;
@@ -166,30 +159,13 @@ static WRITE8_HANDLER( fcrash_msm5205_1_data_w )
 	state->sample_buffer2 = data;
 }
 
-static const msm5205_interface msm5205_interface1 =
-{
-	m5205_int1,		/* interrupt function */
-	MSM5205_S96_4B		/* 4KHz 4-bit	*/
-};
-
-static const msm5205_interface msm5205_interface2 =
-{
-	m5205_int2,		/* interrupt function */
-	MSM5205_S96_4B		/* 4KHz 4-bit	*/
-};
-
-static void cps1_irq_handler_mus(running_device *device, int irq)
-{
-	cps_state *state = (cps_state *)device->machine->driver_data;
-	cpu_set_input_line(state->audiocpu, 0, irq ? ASSERT_LINE : CLEAR_LINE);
-}
-
+static const msm5205_interface msm5205_interface1 = { m5205_int1, MSM5205_S96_4B };
+static const msm5205_interface msm5205_interface2 = { m5205_int2, MSM5205_S96_4B };
 static const ym2151_interface ym2151_config = { cps1_irq_handler_mus };
 
 static WRITE16_HANDLER( sf2mdta_layer_w )
 {
 	cps_state *state = (cps_state *)space->machine->driver_data;
-
 	switch (offset)
 	{
 		case 0x06: state->cps_a_regs[0x0c / 2] = data + 0xffbe;	break;		  /* scroll 1x */
@@ -265,6 +241,17 @@ static WRITE16_HANDLER( knightsb_layer_w )
 	}
 }
 
+static WRITE16_HANDLER( kodb_layer_w )
+{
+	cps_state *state = (cps_state *)space->machine->driver_data;
+
+	switch (offset)
+	{
+		case 0x06: state->cps_b_regs[state->layer_enable_reg / 2] = data; break;
+		case 0x10: state->cps_b_regs[state->layer_mask_reg[1] / 2] = data; break;
+		case 0x11: state->cps_b_regs[state->layer_mask_reg[2] / 2] = data;
+	}
+}
 
 /* ---  RENDER HANDLER  --- */
 static void bootleg_update_transmasks( running_machine *machine )
@@ -338,8 +325,7 @@ static void bootleg_render_high_layer( running_machine *machine, bitmap_t *bitma
 {
 	cps_state *state = (cps_state *)machine->driver_data;
 
-//	bitmap_t *dummy_bitmap = NULL;
-
+	/* bitmap_t *dummy_bitmap = NULL; */
 	switch (layer)
 	{
 		case 0:
@@ -394,12 +380,12 @@ static VIDEO_UPDATE( bootleg_updatescreen )
 
 	if (videocontrol & 0x01)	/* linescroll enable */
 	{
+		UINT32 i;
 		INT32 scrly = -state->scroll2y;
-		INT32 otheroffs, i;
 		tilemap_set_scroll_rows(state->bg_tilemap[1], 1024);
-		otheroffs = state->cps_a_regs[CPS1_ROWSCROLL_OFFS];
+		INT32 otheroffs = state->cps_a_regs[CPS1_ROWSCROLL_OFFS];
 
-		for (i = 0; i < 256; i++)
+		for (i = 0; i < 256; )
 		{
 			tilemap_set_scrollx(state->bg_tilemap[1], (i - scrly) & 0x03ff, state->scroll2x + state->other[(i + otheroffs) & 0x03ff]); i++;
 			tilemap_set_scrollx(state->bg_tilemap[1], (i - scrly) & 0x03ff, state->scroll2x + state->other[(i + otheroffs) & 0x03ff]); i++;
@@ -445,86 +431,6 @@ static VIDEO_UPDATE( bootleg_updatescreen )
 	return 0;
 }
 
-// doesn't have the scroll offsets like fcrash
-static VIDEO_UPDATE( kodb )
-{
-	cps_state *state = (cps_state *)screen->machine->driver_data;
-	int layercontrol, l0, l1, l2, l3;
-	int videocontrol = state->cps_a_regs[0x22 / 2];
-
-	flip_screen_set(screen->machine, videocontrol & 0x8000);
-
-	layercontrol = state->cps_b_regs[0x20 / 2];
-
-	/* Get video memory base registers */
-	cps1_get_video_base(screen->machine);
-
-	/* Build palette */
-	bootleg_build_palette(screen->machine);
-
-	bootleg_update_transmasks(screen->machine);
-
-	tilemap_set_scrollx(state->bg_tilemap[0], 0, state->scroll1x);
-	tilemap_set_scrolly(state->bg_tilemap[0], 0, state->scroll1y);
-
-	if (videocontrol & 0x01)	/* linescroll enable */
-	{
-		int scrly= -state->scroll2y;
-		int i;
-		int otheroffs;
-
-		tilemap_set_scroll_rows(state->bg_tilemap[1], 1024);
-
-		otheroffs = state->cps_a_regs[CPS1_ROWSCROLL_OFFS];
-
-		for (i = 0; i < 256; i++)
-			tilemap_set_scrollx(state->bg_tilemap[1], (i - scrly) & 0x3ff, state->scroll2x + state->other[(i + otheroffs) & 0x3ff]);
-	}
-	else
-	{
-		tilemap_set_scroll_rows(state->bg_tilemap[1], 1);
-		tilemap_set_scrollx(state->bg_tilemap[1], 0, state->scroll2x);
-	}
-
-	tilemap_set_scrolly(state->bg_tilemap[1], 0, state->scroll2y);
-	tilemap_set_scrollx(state->bg_tilemap[2], 0, state->scroll3x);
-	tilemap_set_scrolly(state->bg_tilemap[2], 0, state->scroll3y);
-
-
-	/* turn all tilemaps on regardless of settings in get_video_base() */
-	/* write a custom get_video_base for this bootleg hardware? */
-	tilemap_set_enable(state->bg_tilemap[0], 1);
-	tilemap_set_enable(state->bg_tilemap[1], 1);
-	tilemap_set_enable(state->bg_tilemap[2], 1);
-
-	/* Blank screen */
-	bitmap_fill(bitmap, cliprect, 0xbff);
-
-	bitmap_fill(screen->machine->priority_bitmap, cliprect, 0);
-	l0 = (layercontrol >> 0x06) & 03;
-	l1 = (layercontrol >> 0x08) & 03;
-	l2 = (layercontrol >> 0x0a) & 03;
-	l3 = (layercontrol >> 0x0c) & 03;
-
-	bootleg_render_layer(screen->machine, bitmap, cliprect, l0, 0);
-
-	if (l1 == 0)
-		bootleg_render_high_layer(screen->machine, bitmap, cliprect, l0);
-
-	bootleg_render_layer(screen->machine, bitmap, cliprect, l1, 0);
-
-	if (l2 == 0)
-		bootleg_render_high_layer(screen->machine, bitmap, cliprect, l1);
-
-	bootleg_render_layer(screen->machine, bitmap, cliprect, l2, 0);
-
-	if (l3 == 0)
-		bootleg_render_high_layer(screen->machine, bitmap, cliprect, l2);
-
-	bootleg_render_layer(screen->machine, bitmap, cliprect, l3, 0);
-
-	return 0;
-}
 
 /* --- MEMADDRESS MAP --- */
 static ADDRESS_MAP_START( knightsb_map, ADDRESS_SPACE_PROGRAM, 16 )
@@ -572,23 +478,6 @@ static ADDRESS_MAP_START( sf2mdt_map, ADDRESS_SPACE_PROGRAM, 16 )
 	AM_RANGE(0xff0000, 0xffffff) AM_RAM
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( kodb_map, ADDRESS_SPACE_PROGRAM, 16 )
-	AM_RANGE(0x000000, 0x3fffff) AM_ROM
-	AM_RANGE(0x800000, 0x800007) AM_READ_PORT("IN1")			/* Player input ports */
-	/* forgottn, willow, cawing, nemo, varth read from 800010. Probably debug input leftover from development */
-	AM_RANGE(0x800018, 0x80001f) AM_READ(cps1_dsw_r)			/* System input ports / Dip Switches */
-	AM_RANGE(0x800020, 0x800021) AM_READNOP						/* ? Used by Rockman ? not mapped according to PAL */
-	AM_RANGE(0x800030, 0x800037) AM_WRITE(cps1_coinctrl_w)
-	/* Forgotten Worlds has dial controls on B-board mapped at 800040-80005f. See DRIVER_INIT */
-	AM_RANGE(0x800100, 0x80013f) AM_WRITE(cps1_cps_a_w) AM_BASE_MEMBER(cps_state, cps_a_regs)	/* CPS-A custom */
-	AM_RANGE(0x800140, 0x80017f) AM_READWRITE(cps1_cps_b_r, cps1_cps_b_w) AM_BASE_MEMBER(cps_state, cps_b_regs)	/* CPS-B custom */
-//  AM_RANGE(0x800180, 0x800187) AM_WRITE(cps1_soundlatch_w)    /* Sound command */
-//  AM_RANGE(0x800188, 0x80018f) AM_WRITE(cps1_soundlatch2_w)   /* Sound timer fade */
-	AM_RANGE(0x8001c0, 0x8001ff) AM_READWRITE(cps1_cps_b_r, cps1_cps_b_w)	/* mirror (SF2 revision "E" US 910228) */
-	AM_RANGE(0x900000, 0x92ffff) AM_RAM_WRITE(cps1_gfxram_w) AM_BASE_SIZE_MEMBER(cps_state, gfxram, gfxram_size)	/* SF2CE executes code from here */
-	AM_RANGE(0xff0000, 0xffffff) AM_RAM
-ADDRESS_MAP_END
-
 /* SOUND MAP */
 static ADDRESS_MAP_START( sound_map, ADDRESS_SPACE_PROGRAM, 8 )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM
@@ -623,6 +512,15 @@ static ADDRESS_MAP_START( knightsb_z80map, ADDRESS_SPACE_PROGRAM, 8 )
 	AM_RANGE(0xe000, 0xe000) AM_WRITE(knightsb_snd_bankswitch_w)
 	AM_RANGE(0xe400, 0xe400) AM_WRITE(fcrash_msm5205_0_data_w)
 	AM_RANGE(0xe800, 0xe800) AM_WRITE(fcrash_msm5205_1_data_w)
+ADDRESS_MAP_END
+
+static ADDRESS_MAP_START( kodb_z80map, ADDRESS_SPACE_PROGRAM, 8 )
+	AM_RANGE(0x0000, 0x7fff) AM_ROM
+	AM_RANGE(0x8000, 0xbfff) AM_ROMBANK("bank1")
+	AM_RANGE(0xd000, 0xd7ff) AM_RAM
+	AM_RANGE(0xe000, 0xe001) AM_DEVREADWRITE("2151", ym2151_r, ym2151_w)
+	AM_RANGE(0xe400, 0xe400) AM_DEVREADWRITE("oki", okim6295_r, okim6295_w)
+	AM_RANGE(0xe800, 0xe800) AM_READ(soundlatch_r)
 ADDRESS_MAP_END
 
 
@@ -764,15 +662,11 @@ static INPUT_PORTS_START( sf2hack )		/* for sf2/sf2ce hackrom */
 INPUT_PORTS_END
 
 static INPUT_PORTS_START( fcrash )
-	PORT_START("IN0")
-	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_COIN1 )
-	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_COIN2 )
-	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_SERVICE1 )
-	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_UNKNOWN )
-	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_START1 )
-	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_START2 )
-	PORT_SERVICE( 0x40, IP_ACTIVE_LOW )
-	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_INCLUDE( cps1_3b )
+
+	PORT_MODIFY("IN1")
+	PORT_BIT( 0x0040, IP_ACTIVE_LOW, IPT_BUTTON3 ) PORT_PLAYER(1) PORT_NAME ("P1 Button 3 (Cheat)")
+	PORT_BIT( 0x4000, IP_ACTIVE_LOW, IPT_BUTTON3 ) PORT_PLAYER(2) PORT_NAME ("P2 Button 3 (Cheat)")
 
 	PORT_START("DSWA")
 	CPS1_COINAGE_1
@@ -783,19 +677,19 @@ static INPUT_PORTS_START( fcrash )
 
 	PORT_START("DSWB")
 	PORT_DIPNAME( 0x07, 0x04, "Difficulty Level 1" )
-	PORT_DIPSETTING(    0x07, DEF_STR( Easiest ) )		// "01"
-	PORT_DIPSETTING(    0x06, DEF_STR( Easier ) )		// "02"
-	PORT_DIPSETTING(    0x05, DEF_STR( Easy ) )		// "03"
-	PORT_DIPSETTING(    0x04, DEF_STR( Normal ) )		// "04"
-	PORT_DIPSETTING(    0x03, DEF_STR( Medium ) )		// "05"
-	PORT_DIPSETTING(    0x02, DEF_STR( Hard ) )		// "06"
-	PORT_DIPSETTING(    0x01, DEF_STR( Harder ) )		// "07"
-	PORT_DIPSETTING(    0x00, DEF_STR( Hardest ) )		// "08"
+	PORT_DIPSETTING(    0x07, DEF_STR( Easiest ) )
+	PORT_DIPSETTING(    0x06, DEF_STR( Easier ) )
+	PORT_DIPSETTING(    0x05, DEF_STR( Easy ) )
+	PORT_DIPSETTING(    0x04, DEF_STR( Normal ) )
+	PORT_DIPSETTING(    0x03, DEF_STR( Medium ) )
+	PORT_DIPSETTING(    0x02, DEF_STR( Hard ) )
+	PORT_DIPSETTING(    0x01, DEF_STR( Harder ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( Hardest ) )
 	PORT_DIPNAME( 0x18, 0x10, "Difficulty Level 2" )
-	PORT_DIPSETTING(    0x18, DEF_STR( Easy ) )		// "01"
-	PORT_DIPSETTING(    0x10, DEF_STR( Normal ) )		// "02"
-	PORT_DIPSETTING(    0x08, DEF_STR( Hard ) )		// "03"
-	PORT_DIPSETTING(    0x00, DEF_STR( Hardest ) )		// "04"
+	PORT_DIPSETTING(    0x18, DEF_STR( Easy ) )
+	PORT_DIPSETTING(    0x10, DEF_STR( Normal ) )
+	PORT_DIPSETTING(    0x08, DEF_STR( Hard ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( Hardest ) )
 	PORT_DIPNAME( 0x60, 0x60, DEF_STR( Bonus_Life ) )
 	PORT_DIPSETTING(    0x60, "100k" )
 	PORT_DIPSETTING(    0x40, "200k" )
@@ -827,44 +721,20 @@ static INPUT_PORTS_START( fcrash )
 	PORT_DIPNAME( 0x80, 0x80, "Game Mode")
 	PORT_DIPSETTING(    0x80, "Game" )
 	PORT_DIPSETTING(    0x00, DEF_STR( Test ) )
-
-	PORT_START("IN1")
-	PORT_BIT( 0x0001, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT ) PORT_8WAY PORT_PLAYER(1)
-	PORT_BIT( 0x0002, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT ) PORT_8WAY PORT_PLAYER(1)
-	PORT_BIT( 0x0004, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN ) PORT_8WAY PORT_PLAYER(1)
-	PORT_BIT( 0x0008, IP_ACTIVE_LOW, IPT_JOYSTICK_UP ) PORT_8WAY PORT_PLAYER(1)
-	PORT_BIT( 0x0010, IP_ACTIVE_LOW, IPT_BUTTON1 ) PORT_PLAYER(1)
-	PORT_BIT( 0x0020, IP_ACTIVE_LOW, IPT_BUTTON2 ) PORT_PLAYER(1)
-	PORT_BIT( 0x0040, IP_ACTIVE_LOW, IPT_BUTTON3 ) PORT_PLAYER(1) PORT_NAME ("P1 Button 3 (Cheat)")
-	PORT_BIT( 0x0080, IP_ACTIVE_LOW, IPT_UNKNOWN )
-	PORT_BIT( 0x0100, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT ) PORT_8WAY PORT_PLAYER(2)
-	PORT_BIT( 0x0200, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT ) PORT_8WAY PORT_PLAYER(2)
-	PORT_BIT( 0x0400, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN ) PORT_8WAY PORT_PLAYER(2)
-	PORT_BIT( 0x0800, IP_ACTIVE_LOW, IPT_JOYSTICK_UP ) PORT_8WAY PORT_PLAYER(2)
-	PORT_BIT( 0x1000, IP_ACTIVE_LOW, IPT_BUTTON1 ) PORT_PLAYER(2)
-	PORT_BIT( 0x2000, IP_ACTIVE_LOW, IPT_BUTTON2 ) PORT_PLAYER(2)
-	PORT_BIT( 0x4000, IP_ACTIVE_LOW, IPT_BUTTON3 ) PORT_PLAYER(2) PORT_NAME ("P2 Button 3 (Cheat)")
-	PORT_BIT( 0x8000, IP_ACTIVE_LOW, IPT_UNKNOWN )
 INPUT_PORTS_END
 
-
 static INPUT_PORTS_START( kodb )
-	PORT_START("IN0")
-	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_COIN1 )
-	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_COIN2 )
-	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_SERVICE1 )
-	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_UNKNOWN )
-	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_START1 )
-	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_START2 )
+	PORT_INCLUDE( cps1_3players )
+
+	PORT_MODIFY("IN0")
 	PORT_SERVICE_NO_TOGGLE( 0x40, IP_ACTIVE_LOW )
-	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
 	PORT_START("DSWA")
 	CPS1_COINAGE_2( "SW(A)" )
-	PORT_DIPNAME( 0x08, 0x08, "Coin Slots" )						PORT_DIPLOCATION("SW(A):4")
+	PORT_DIPNAME( 0x08, 0x08, "Coin Slots" )	PORT_DIPLOCATION("SW(A):4")
 	PORT_DIPSETTING(    0x00, "1" )
 	PORT_DIPSETTING(    0x08, "3" )
-	PORT_DIPNAME( 0x10, 0x10, "Play Mode" )							PORT_DIPLOCATION("SW(A):5")
+	PORT_DIPNAME( 0x10, 0x10, "Play Mode" )		PORT_DIPLOCATION("SW(A):5")
 	PORT_DIPSETTING(    0x00, "2 Players" )
 	PORT_DIPSETTING(    0x10, "3 Players" )
 	PORT_DIPUNUSED_DIPLOC( 0x20, 0x20, "SW(A):6" )
@@ -875,7 +745,7 @@ static INPUT_PORTS_START( kodb )
 
 	PORT_START("DSWB")
 	CPS1_DIFFICULTY_1( "SW(B)" )
-	PORT_DIPNAME( 0x38, 0x38, DEF_STR( Lives ) )					PORT_DIPLOCATION("SW(B):4,5,6")
+	PORT_DIPNAME( 0x38, 0x38, DEF_STR( Lives ) )	PORT_DIPLOCATION("SW(B):4,5,6")
 	PORT_DIPSETTING(    0x30, "1" )
 	PORT_DIPSETTING(    0x38, "2" )
 	PORT_DIPSETTING(    0x28, "3" )
@@ -884,7 +754,7 @@ static INPUT_PORTS_START( kodb )
 	PORT_DIPSETTING(    0x10, "6" )
 	PORT_DIPSETTING(    0x08, "7" )
 	PORT_DIPSETTING(    0x00, "8" )
-	PORT_DIPNAME( 0xc0, 0xc0, DEF_STR( Bonus_Life ) )				PORT_DIPLOCATION("SW(B):7,8")
+	PORT_DIPNAME( 0xc0, 0xc0, DEF_STR( Bonus_Life ) )	PORT_DIPLOCATION("SW(B):7,8")
 	PORT_DIPSETTING(    0x80, "80k and every 400k" )
 	PORT_DIPSETTING(    0xc0, "100k and every 450k" )
 	PORT_DIPSETTING(    0x40, "160k and every 450k" )
@@ -893,53 +763,26 @@ static INPUT_PORTS_START( kodb )
 	PORT_START("DSWC")
 	PORT_DIPUNUSED_DIPLOC( 0x01, 0x01, "SW(C):1" )
 	PORT_DIPUNUSED_DIPLOC( 0x02, 0x02, "SW(C):2" )
-	PORT_DIPNAME( 0x04, 0x04, DEF_STR( Free_Play ) )				PORT_DIPLOCATION("SW(C):3")
+	PORT_DIPNAME( 0x04, 0x04, DEF_STR( Free_Play ) )	PORT_DIPLOCATION("SW(C):3")
 	PORT_DIPSETTING(    0x04, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_DIPNAME( 0x08, 0x08, "Freeze" )							PORT_DIPLOCATION("SW(C):4")
+	PORT_DIPNAME( 0x08, 0x08, "Freeze" )		PORT_DIPLOCATION("SW(C):4")
 	PORT_DIPSETTING(    0x08, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_DIPNAME( 0x10, 0x10, DEF_STR( Flip_Screen ) )				PORT_DIPLOCATION("SW(C):5")
+	PORT_DIPNAME( 0x10, 0x10, DEF_STR( Flip_Screen ) )	PORT_DIPLOCATION("SW(C):5")
 	PORT_DIPSETTING(    0x10, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_DIPNAME( 0x20, 0x00, DEF_STR( Demo_Sounds ) )				PORT_DIPLOCATION("SW(C):6")
+	PORT_DIPNAME( 0x20, 0x00, DEF_STR( Demo_Sounds ) )	PORT_DIPLOCATION("SW(C):6")
 	PORT_DIPSETTING(    0x20, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_DIPNAME( 0x40, 0x00, DEF_STR( Allow_Continue ) )			PORT_DIPLOCATION("SW(C):7")
+	PORT_DIPNAME( 0x40, 0x00, DEF_STR( Allow_Continue ) )	PORT_DIPLOCATION("SW(C):7")
 	PORT_DIPSETTING(    0x40, DEF_STR( No ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( Yes ) )
-	PORT_DIPNAME( 0x80, 0x80, "Game Mode")							PORT_DIPLOCATION("SW(C):8")
+	PORT_DIPNAME( 0x80, 0x80, "Game Mode")		PORT_DIPLOCATION("SW(C):8")
 	PORT_DIPSETTING(    0x80, "Game" )
 	PORT_DIPSETTING(    0x00, DEF_STR( Test ) )
-
-	PORT_START("IN1")
-	PORT_BIT( 0x0001, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT ) PORT_8WAY PORT_PLAYER(1)
-	PORT_BIT( 0x0002, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT ) PORT_8WAY PORT_PLAYER(1)
-	PORT_BIT( 0x0004, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN ) PORT_8WAY PORT_PLAYER(1)
-	PORT_BIT( 0x0008, IP_ACTIVE_LOW, IPT_JOYSTICK_UP ) PORT_8WAY PORT_PLAYER(1)
-	PORT_BIT( 0x0010, IP_ACTIVE_LOW, IPT_BUTTON1 ) PORT_PLAYER(1)
-	PORT_BIT( 0x0020, IP_ACTIVE_LOW, IPT_BUTTON2 ) PORT_PLAYER(1)
-	PORT_BIT( 0x0040, IP_ACTIVE_LOW, IPT_UNKNOWN )
-	PORT_BIT( 0x0080, IP_ACTIVE_LOW, IPT_UNKNOWN )
-	PORT_BIT( 0x0100, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT ) PORT_8WAY PORT_PLAYER(2)
-	PORT_BIT( 0x0200, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT ) PORT_8WAY PORT_PLAYER(2)
-	PORT_BIT( 0x0400, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN ) PORT_8WAY PORT_PLAYER(2)
-	PORT_BIT( 0x0800, IP_ACTIVE_LOW, IPT_JOYSTICK_UP ) PORT_8WAY PORT_PLAYER(2)
-	PORT_BIT( 0x1000, IP_ACTIVE_LOW, IPT_BUTTON1 ) PORT_PLAYER(2)
-	PORT_BIT( 0x2000, IP_ACTIVE_LOW, IPT_BUTTON2 ) PORT_PLAYER(2)
-	PORT_BIT( 0x4000, IP_ACTIVE_LOW, IPT_UNKNOWN )
-	PORT_BIT( 0x8000, IP_ACTIVE_LOW, IPT_UNKNOWN )
-
-	PORT_START("IN2")
-	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT ) PORT_8WAY PORT_PLAYER(3)
-	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT ) PORT_8WAY PORT_PLAYER(3)
-	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN ) PORT_8WAY PORT_PLAYER(3)
-	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_UP ) PORT_8WAY PORT_PLAYER(3)
-	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_BUTTON1 ) PORT_PLAYER(3)
-	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_BUTTON2 ) PORT_PLAYER(3)
-	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_COIN3 )
-	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_START3 )
 INPUT_PORTS_END
+
 
 /* --- MACHINE DRIVER --- */
 static MACHINE_START( fcrash )
@@ -973,6 +816,16 @@ static MACHINE_START( fcrash )
 	state_save_register_global(machine, state->sample_select2);
 }
 
+static MACHINE_RESET( fcrash )
+{
+	cps_state *state = (cps_state *)machine->driver_data;
+
+	state->sample_buffer1 = 0;
+	state->sample_buffer2 = 0;
+	state->sample_select1 = 0;
+	state->sample_select2 = 0;
+}
+
 static MACHINE_START( sf2mdt )
 {
 	cps_state *state = (cps_state *)machine->driver_data;
@@ -1004,24 +857,6 @@ static MACHINE_START( sf2mdt )
 	state_save_register_global(machine, state->sample_select2);
 }
 
-static MACHINE_START( kodb )
-{
-	cps_state *state = (cps_state *)machine->driver_data;
-
-	state->maincpu = machine->device("maincpu");
-	state->audiocpu = machine->device("audiocpu");
-}
-
-static MACHINE_RESET( fcrash )
-{
-	cps_state *state = (cps_state *)machine->driver_data;
-
-	state->sample_buffer1 = 0;
-	state->sample_buffer2 = 0;
-	state->sample_select1 = 0;
-	state->sample_select2 = 0;
-}
-
 static MACHINE_START( knightsb )
 {
 	cps_state *state = (cps_state *)machine->driver_data;
@@ -1048,6 +883,27 @@ static MACHINE_START( knightsb )
 	state->sprite_x_offset = 0x00;
 }
 
+static MACHINE_START( kodb )
+{
+	cps_state *state = (cps_state *)machine->driver_data;
+
+	state->maincpu = machine->device("maincpu");
+	state->audiocpu = machine->device("audiocpu");
+
+	state->layer_enable_reg = 0x20;
+	state->layer_mask_reg[0] = 0x2e;
+	state->layer_mask_reg[1] = 0x2c;
+	state->layer_mask_reg[2] = 0x2a;
+	state->layer_mask_reg[3] = 0x28;
+	state->layer_scroll1x_offset = 0x00;
+	state->layer_scroll2x_offset = 0x00;
+	state->layer_scroll3x_offset = 0x00;
+	state->sprite_base = 0x1000;
+	state->sprite_list_end_marker = 0xffff;
+	state->sprite_x_offset = 0x00;
+}
+
+
 static MACHINE_DRIVER_START( fcrash )
 	/* driver data */
 	MDRV_DRIVER_DATA(cps_state)
@@ -1071,47 +927,39 @@ static MACHINE_DRIVER_START( fcrash )
 	MDRV_VIDEO_UPDATE(bootleg_updatescreen)
 	MDRV_VIDEO_EOF(cps1)
 	MDRV_GFXDECODE(cps1)
-	MDRV_PALETTE_LENGTH(4096)
-
+	MDRV_PALETTE_LENGTH(0xc00)
 	MDRV_VIDEO_START(cps1)
 
 	// sound hardware
 	MDRV_SPEAKER_STANDARD_MONO("mono")
-
 	MDRV_SOUND_ADD("ym1", YM2203, 24000000 / 6)	/* ? */
 	MDRV_SOUND_ROUTE(0, "mono", 0.10)
 	MDRV_SOUND_ROUTE(1, "mono", 0.10)
 	MDRV_SOUND_ROUTE(2, "mono", 0.10)
 	MDRV_SOUND_ROUTE(3, "mono", 1.0)
-
 	MDRV_SOUND_ADD("ym2", YM2203, 24000000 / 6)	/* ? */
 	MDRV_SOUND_ROUTE(0, "mono", 0.10)
 	MDRV_SOUND_ROUTE(1, "mono", 0.10)
 	MDRV_SOUND_ROUTE(2, "mono", 0.10)
 	MDRV_SOUND_ROUTE(3, "mono", 1.0)
-
 	MDRV_SOUND_ADD("msm1", MSM5205, 24000000 / 64)	/* ? */
 	MDRV_SOUND_CONFIG(msm5205_interface1)
 	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.25)
-
 	MDRV_SOUND_ADD("msm2", MSM5205, 24000000 / 64)	/* ? */
 	MDRV_SOUND_CONFIG(msm5205_interface2)
 	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.25)
 MACHINE_DRIVER_END
 
 static MACHINE_DRIVER_START( kodb )
-
 	/* driver data */
 	MDRV_DRIVER_DATA(cps_state)
 
 	/* basic machine hardware */
 	MDRV_CPU_ADD("maincpu", M68000, 10000000)
-	MDRV_CPU_PROGRAM_MAP(kodb_map)
+	MDRV_CPU_PROGRAM_MAP(fcrash_map)
 	MDRV_CPU_VBLANK_INT("screen", cps1_interrupt)
-
-//  MDRV_CPU_ADD("soundcpu", Z80, 3579545)
-//  MDRV_CPU_PROGRAM_MAP(sub_map)
-
+	MDRV_CPU_ADD("audiocpu", Z80, 3579545)
+	MDRV_CPU_PROGRAM_MAP(kodb_z80map)
 	MDRV_MACHINE_START(kodb)
 
 	/* video hardware */
@@ -1121,26 +969,21 @@ static MACHINE_DRIVER_START( kodb )
 	MDRV_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
 	MDRV_SCREEN_SIZE(64*8, 32*8)
 	MDRV_SCREEN_VISIBLE_AREA(8*8, (64-8)*8-1, 2*8, 30*8-1 )
-
+	MDRV_VIDEO_UPDATE(bootleg_updatescreen)
+	MDRV_VIDEO_EOF(cps1)
 	MDRV_GFXDECODE(cps1)
 	MDRV_PALETTE_LENGTH(0xc00)
-
 	MDRV_VIDEO_START(cps1)
-	MDRV_VIDEO_EOF(cps1)
-	MDRV_VIDEO_UPDATE(kodb)
 
 	/* sound hardware */
-//  MDRV_SPEAKER_STANDARD_MONO("mono")
-
-//  MDRV_SOUND_ADD("2151", YM2151, 3579545)
-//  MDRV_SOUND_CONFIG(ym2151_config)
-//  MDRV_SOUND_ROUTE(0, "mono", 0.35)
-//  MDRV_SOUND_ROUTE(1, "mono", 0.35)
-
-//  MDRV_OKIM6295_ADD("oki", 1000000, OKIM6295_PIN7_HIGH) // pin 7 can be changed by the game code, see f006 on z80
-//  MDRV_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.30)
+	MDRV_SPEAKER_STANDARD_MONO("mono")
+	MDRV_SOUND_ADD("2151", YM2151, 3579545)
+	MDRV_SOUND_CONFIG(ym2151_config)
+	MDRV_SOUND_ROUTE(0, "mono", 0.35)
+	MDRV_SOUND_ROUTE(1, "mono", 0.35)
+	MDRV_OKIM6295_ADD("oki", XTAL_16MHz / 4 / 4, OKIM6295_PIN7_HIGH)
+	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.30)
 MACHINE_DRIVER_END
-
 
 static MACHINE_DRIVER_START( sf2mdt )
 	MDRV_DRIVER_DATA(cps_state)
@@ -1169,16 +1012,12 @@ static MACHINE_DRIVER_START( sf2mdt )
 
 	/* sound hardware */
 	MDRV_SPEAKER_STANDARD_MONO("mono")
-
 	MDRV_SOUND_ADD("2151", YM2151, 3579545)
-//	MDRV_SOUND_CONFIG(ym2151_config)
 	MDRV_SOUND_ROUTE(0, "mono", 0.35)
 	MDRV_SOUND_ROUTE(1, "mono", 0.35)
-
 	MDRV_SOUND_ADD("msm1", MSM5205, 24000000/64)
 	MDRV_SOUND_CONFIG(msm5205_interface1)
 	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.25)
-
 	MDRV_SOUND_ADD("msm2", MSM5205, 24000000/64)
 	MDRV_SOUND_CONFIG(msm5205_interface2)
 	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.25)
@@ -1205,24 +1044,19 @@ static MACHINE_DRIVER_START( knightsb )
 	MDRV_SCREEN_VISIBLE_AREA( 8*8, (64-8)*8-1, 2*8, 30*8-1 )
 	MDRV_VIDEO_UPDATE(bootleg_updatescreen)
 	MDRV_VIDEO_EOF(cps1)
-
 	MDRV_GFXDECODE(cps1)
 	MDRV_PALETTE_LENGTH(0xc00)
 	MDRV_VIDEO_START(cps1)
 
 	/* sound hardware */
 	MDRV_SPEAKER_STANDARD_MONO("mono")
-
 	MDRV_SOUND_ADD("2151", YM2151, 29821000 / 8)
 	MDRV_SOUND_CONFIG(ym2151_config)
 	MDRV_SOUND_ROUTE(0, "mono", 0.35)
 	MDRV_SOUND_ROUTE(1, "mono", 0.35)
-
-	/* has 2x MSM5205 instead of OKI6295 */
 	MDRV_SOUND_ADD("msm1", MSM5205, 24000000 / 64)	/* ? */
 	MDRV_SOUND_CONFIG(msm5205_interface1)
 	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.25)
-
 	MDRV_SOUND_ADD("msm2", MSM5205, 24000000 / 64)	/* ? */
 	MDRV_SOUND_CONFIG(msm5205_interface2)
 	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.25)
@@ -1248,7 +1082,21 @@ static DRIVER_INIT( sf2mdt )
 	DRIVER_INIT_CALL(sf2mdta);
 }
 
-static DRIVER_INIT ( knightsb )
+static DRIVER_INIT( kodb )
+{
+	cps_state *state = (cps_state *)machine->driver_data;
+
+	memory_install_read_port(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x800000, 0x800007, 0, 0, "IN1");
+	memory_install_read16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x800018, 0x80001f, 0, 0, cps1_dsw_r);
+	memory_install_write16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x800180, 0x800187, 0, 0, cps1_soundlatch_w);
+	memory_install_write16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x980000, 0x98002f, 0, 0, kodb_layer_w);
+	state->bootleg_sprite_ram = (UINT16 *)memory_install_ram(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x900000, 0x903fff, 0, 0, NULL);
+	memory_install_ram(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x904000, 0x907fff, 0, 0, state->bootleg_sprite_ram);
+
+	DRIVER_INIT_CALL(cps1);
+}
+
+static DRIVER_INIT( knightsb )
 {
 	cps_state *state = (cps_state *)machine->driver_data;
 
@@ -1256,8 +1104,6 @@ static DRIVER_INIT ( knightsb )
 
 	DRIVER_INIT_CALL(cps1);
 }
-
-
 
 
 /* --- LOAD ROM --- */
@@ -1376,7 +1222,7 @@ ROM_END
 /*
 GAME( year,   archives name,   parent name,  MACHINE_DRIVER_START,  INPUT_PORTS,  DRIVER_INIT,	flip,	producer name,	title information,	status )
 */
-GAME( 1990,	fcrash,		ffight,     fcrash,	fcrash,    cps1,     ROT0,   "bootleg (Playmark)",  "Final Crash (bootleg of Final Fight)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )
-GAME( 1991,	kodb,		kod,	    kodb,	kodb,	   cps1,     ROT0,   "bootleg (Playmark)",  "The King of Dragons (bootleg)", GAME_NOT_WORKING | GAME_NO_SOUND | GAME_SUPPORTS_SAVE )
+GAME( 1990,	fcrash,		ffight,     fcrash,	fcrash,    cps1,     ROT0,   "bootleg (Playmark)",  "Final Crash (bootleg of Final Fight)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE ) /* old sprites show on next screen. Patch used. */
+GAME( 1991,	kodb,		kod,	    kodb,	kodb,	   kodb,     ROT0,   "bootleg (Playmark)",  "The King of Dragons (bootleg)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE ) /* old sprites show on next screen. Patch used. */
 GAME( 1991,	knightsb,	knights,    knightsb,   knights,   knightsb, ROT0,   "bootleg",		    "Knights of the Round (bootleg)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )
 GAME( 1992,	sf2mdt,		sf2ce,	    sf2mdt,     sf2hack,   sf2mdt,   ROT0,   "bootleg",		    "Street Fighter II': Magic Delta Turbo (bootleg)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )

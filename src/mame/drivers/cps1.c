@@ -251,7 +251,7 @@ READ16_HANDLER( cps1_dsw_r )
 	return (in << 8) | 0xff;
 }
 
-static READ16_HANDLER( cps1_hack_dsw_r )
+READ16_HANDLER( cps1_hack_dsw_r )
 {
 	static const char *const dswname[] = { "IN0", "DSWA", "DSWB", "DSWC" };
 	int in = input_port_read(space->machine, dswname[offset]);
@@ -282,7 +282,6 @@ static WRITE16_HANDLER( forgottn_dial_1_reset_w )
 	state->dial[1] = input_port_read(space->machine, "DIAL1");
 }
 
-
 static WRITE8_HANDLER( cps1_snd_bankswitch_w )
 {
 	memory_set_bank(space->machine, "bank1", data & 0x01);
@@ -293,7 +292,7 @@ static WRITE8_DEVICE_HANDLER( cps1_oki_pin7_w )
 	downcast<okim6295_device *>(device)->set_pin7(data & 1);
 }
 
-static WRITE16_HANDLER( cps1_soundlatch_w )
+WRITE16_HANDLER( cps1_soundlatch_w )
 {
 	if (ACCESSING_BITS_0_7)
 		soundlatch_w(space, 0, data & 0xff);
@@ -735,15 +734,6 @@ INPUT_PORTS_START( cps1_2b )
 	PORT_BIT( 0x4000, IP_ACTIVE_LOW, IPT_UNKNOWN )	/* no button 3 */
 INPUT_PORTS_END
 
-/* CPS1 games with 2 players and 1 button each */
-static INPUT_PORTS_START( cps1_1b )
-	PORT_INCLUDE( cps1_2b )
-
-	PORT_MODIFY("IN1")
-	PORT_BIT( 0x0020, IP_ACTIVE_LOW, IPT_UNKNOWN )	/* no button 2 */
-	PORT_BIT( 0x2000, IP_ACTIVE_LOW, IPT_UNKNOWN )	/* no button 2 */
-INPUT_PORTS_END
-
 /* CPS1 games with 3 players and 2 buttons each */
 INPUT_PORTS_START( cps1_3players )
 	PORT_INCLUDE( cps1_2b )
@@ -772,6 +762,15 @@ INPUT_PORTS_START( cps1_4players )
 	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_BUTTON2 ) PORT_PLAYER(4)
 	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_COIN4 )
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_START4 )
+INPUT_PORTS_END
+
+/* CPS1 games with 2 players and 1 button each */
+static INPUT_PORTS_START( cps1_1b )
+	PORT_INCLUDE( cps1_2b )
+
+	PORT_MODIFY("IN1")
+	PORT_BIT( 0x0020, IP_ACTIVE_LOW, IPT_UNKNOWN )	/* no button 2 */
+	PORT_BIT( 0x2000, IP_ACTIVE_LOW, IPT_UNKNOWN )	/* no button 2 */
 INPUT_PORTS_END
 
 /* CPS1 quiz games */
@@ -2913,16 +2912,13 @@ GFXDECODE_START( cps1 )
 GFXDECODE_END
 
 
-static void cps1_irq_handler_mus(running_device *device, int irq)
+void cps1_irq_handler_mus(running_device *device, int irq)
 {
 	cps_state *state = (cps_state *)device->machine->driver_data;
 	cpu_set_input_line(state->audiocpu, 0, irq ? ASSERT_LINE : CLEAR_LINE);
 }
 
-static const ym2151_interface ym2151_config =
-{
-	cps1_irq_handler_mus
-};
+static const ym2151_interface ym2151_config = { cps1_irq_handler_mus };
 
 
 
