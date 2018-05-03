@@ -243,21 +243,7 @@ Stephh's log (2006.09.20) :
 
 #include "includes/cps1.h"       /* External CPS1 definitions */
 
-
-READ16_HANDLER( cps1_dsw_r )
-{
-	static const char *const dswname[] = { "IN0", "DSWA", "DSWB", "DSWC" };
-	int in = input_port_read(space->machine, dswname[offset]);
-	return (in << 8) | 0xff;
-}
-
-READ16_HANDLER( cps1_hack_dsw_r )
-{
-	static const char *const dswname[] = { "IN0", "DSWA", "DSWB", "DSWC" };
-	int in = input_port_read(space->machine, dswname[offset]);
-	return (in << 8) | in;
-}
-
+/* ---------------------------------------------------------- */
 static READ16_HANDLER( forgottn_dial_0_r )
 {
 	cps_state *state = (cps_state *)space->machine->driver_data;
@@ -282,12 +268,50 @@ static WRITE16_HANDLER( forgottn_dial_1_reset_w )
 	state->dial[1] = input_port_read(space->machine, "DIAL1");
 }
 
-static WRITE8_HANDLER( cps1_snd_bankswitch_w )
+READ16_HANDLER( cps1_in0_r )
+{
+	int in0 = input_port_read(space->machine, "IN0");
+	return (in0 << 8) | in0;
+}
+
+READ16_HANDLER( cps1_in1_r )
+{
+	int in1 = input_port_read(space->machine, "IN1");
+	return (in1 << 8) | in1;
+}
+
+READ16_HANDLER( cps1_in2_r )
+{
+	int in2 = input_port_read(space->machine, "IN2");
+	return (in2 << 8) | in2;
+}
+
+READ16_HANDLER( cps1_in3_r )
+{
+	int in3 = input_port_read(space->machine, "IN3");
+	return (in3 << 8) | in3;
+}
+
+READ16_HANDLER( cps1_dsw_r )
+{
+	static const char *const dswname[] = { "IN0", "DSWA", "DSWB", "DSWC" };
+	int in = input_port_read(space->machine, dswname[offset]);
+	return (in << 8) | 0xff;
+}
+
+READ16_HANDLER( cps1_hack_dsw_r )
+{
+	static const char *const dswname[] = { "IN0", "DSWA", "DSWB", "DSWC" };
+	int in = input_port_read(space->machine, dswname[offset]);
+	return (in << 8) | in;
+}
+
+WRITE8_HANDLER( cps1_snd_bankswitch_w )
 {
 	memory_set_bank(space->machine, "bank1", data & 0x01);
 }
 
-static WRITE8_DEVICE_HANDLER( cps1_oki_pin7_w )
+WRITE8_DEVICE_HANDLER( cps1_oki_pin7_w )
 {
 	downcast<okim6295_device *>(device)->set_pin7(data & 1);
 }
@@ -298,7 +322,7 @@ WRITE16_HANDLER( cps1_soundlatch_w )
 		soundlatch_w(space, 0, data & 0xff);
 }
 
-static WRITE16_HANDLER( cps1_soundlatch2_w )
+WRITE16_HANDLER( cps1_soundlatch2_w )
 {
 	if (ACCESSING_BITS_0_7)
 		soundlatch2_w(space, 0, data & 0xff);
@@ -312,7 +336,6 @@ WRITE16_HANDLER( cps1_coinctrl_w )
 		coin_counter_w(space->machine, 1, data & 0x0200);
 		coin_lockout_w(space->machine, 0, ~data & 0x0400);
 		coin_lockout_w(space->machine, 1, ~data & 0x0800);
-
 		/* bit 15 = CPS-A custom reset? */
 	}
 }
@@ -341,7 +364,6 @@ INTERRUPT_GEN( cps1_interrupt )
 *  =======
 *
 ********************************************************************/
-
 
 static INTERRUPT_GEN( cps1_qsound_interrupt )
 {
@@ -1701,7 +1723,7 @@ static INPUT_PORTS_START( nemo )
 	PORT_DIPSETTING(    0x00, DEF_STR( Test ) )				// To enable the "debug" features
 INPUT_PORTS_END
 
-static INPUT_PORTS_START( sf2 )
+INPUT_PORTS_START( sf2 )
 	PORT_INCLUDE( cps1_3b )
 
 	PORT_MODIFY("IN0")
@@ -7152,35 +7174,6 @@ ROM_START( sf2dkot2 )
 	ROM_LOAD( "s92_19.bin",    0x20000, 0x20000, CRC(beade53f) SHA1(277c397dc12752719ec6b47d2224750bd1c07f79) )
 ROM_END
 
-ROM_START( sf2m1 )
-	ROM_REGION( CODE_SIZE, "maincpu", 0 )      /* 68000 code */
-	ROM_LOAD16_BYTE( "222e",              0x000000, 0x80000, CRC(1e20d0a3) SHA1(5e05b52fd938aff5190bca7e178705d7236aef66) )
-	ROM_LOAD16_BYTE( "196e",              0x000001, 0x80000, CRC(88cc38a3) SHA1(6049962f943bd37748a9531cc3254e8b59326eac) )
-	ROM_LOAD16_WORD_SWAP( "s92_21a.bin",  0x100000, 0x80000, CRC(925a7877) SHA1(1960dca35f0ca6f2b399a9fccfbc0132ac6425d1) )
-
-	ROM_REGION( 0x600000, "gfx", 0 )
-	ROMX_LOAD( "s92_01.bin",   0x000000, 0x80000, CRC(03b0d852) SHA1(f370f25c96ad2b94f8c53d6b7139100285a25bef) , ROM_GROUPWORD | ROM_SKIP(6) )
-	ROMX_LOAD( "s92_02.bin",   0x000002, 0x80000, CRC(840289ec) SHA1(2fb42a242f60ba7e74009b5a90eb26e035ba1e82) , ROM_GROUPWORD | ROM_SKIP(6) )
-	ROMX_LOAD( "s92_03.bin",   0x000004, 0x80000, CRC(cdb5f027) SHA1(4c7d944fef200fdfcaf57758b901b5511188ed2e) , ROM_GROUPWORD | ROM_SKIP(6) )
-	ROMX_LOAD( "s92_04.bin",   0x000006, 0x80000, CRC(e2799472) SHA1(27d3796429338d82a8de246a0ea06dd487a87768) , ROM_GROUPWORD | ROM_SKIP(6) )
-	ROMX_LOAD( "s92_05.bin",   0x200000, 0x80000, CRC(ba8a2761) SHA1(4b696d66c51611e43522bed752654314e76d33b6) , ROM_GROUPWORD | ROM_SKIP(6) )
-	ROMX_LOAD( "s92_06.bin",   0x200002, 0x80000, CRC(e584bfb5) SHA1(ebdf1f5e2638eed3a65dda82b1ed9151a355f4c9) , ROM_GROUPWORD | ROM_SKIP(6) )
-	ROMX_LOAD( "s92_07.bin",   0x200004, 0x80000, CRC(21e3f87d) SHA1(4a4961bb68c3a1ce15f9d393d9c03ecb2466cc29) , ROM_GROUPWORD | ROM_SKIP(6) )
-	ROMX_LOAD( "s92_08.bin",   0x200006, 0x80000, CRC(befc47df) SHA1(520390420da3a0271ba90b0a933e65143265e5cf) , ROM_GROUPWORD | ROM_SKIP(6) )
-	ROMX_LOAD( "s92_10.bin",   0x400000, 0x80000, CRC(960687d5) SHA1(2868c31121b1c7564e9767b9a19cdbf655c7ed1d) , ROM_GROUPWORD | ROM_SKIP(6) )
-	ROMX_LOAD( "s92_11.bin",   0x400002, 0x80000, CRC(978ecd18) SHA1(648a59706b93c84b4206a968ecbdc3e834c476f6) , ROM_GROUPWORD | ROM_SKIP(6) )
-	ROMX_LOAD( "s92_12.bin",   0x400004, 0x80000, CRC(d6ec9a0a) SHA1(ed6143f8737013b6ef1684e37c05e037e7a80dae) , ROM_GROUPWORD | ROM_SKIP(6) )
-	ROMX_LOAD( "s92_13.bin",   0x400006, 0x80000, CRC(ed2c67f6) SHA1(0083c0ffaf6fe7659ff0cf822be4346cd6e61329) , ROM_GROUPWORD | ROM_SKIP(6) )
-
-	ROM_REGION( 0x18000, "audiocpu", 0 ) /* 64k for the audio CPU (+banks) */
-	ROM_LOAD( "s92_09.bin",    0x00000, 0x08000, CRC(08f6b60e) SHA1(8258fcaca4ac419312531eec67079b97f471179c) )
-	ROM_CONTINUE(              0x10000, 0x08000 )
-
-	ROM_REGION( 0x40000, "oki", 0 )	/* Samples */
-	ROM_LOAD( "s92_18.bin",    0x00000, 0x20000, CRC(7f162009) SHA1(346bf42992b4c36c593e21901e22c87ae4a7d86d) )
-	ROM_LOAD( "s92_19.bin",    0x20000, 0x20000, CRC(beade53f) SHA1(277c397dc12752719ec6b47d2224750bd1c07f79) )
-ROM_END
-
 ROM_START( sf2m2 )
 	ROM_REGION( CODE_SIZE, "maincpu", 0 )      /* 68000 code */
 	ROM_LOAD16_BYTE( "ch222esp",          0x000000, 0x80000, CRC(9e6d058a) SHA1(8c9adca7b65dc929c325c0a62304d24dc0902c08) )
@@ -9420,7 +9413,6 @@ GAME( 1992, sf2v004,    sf2ce,    cps1_12MHz, sf2,        cps1,     ROT0,   "boo
 GAME( 1992, sf2acc,     sf2ce,    cps1_12MHz, sf2,        cps1,     ROT0,   "bootleg", "Street Fighter II': Champion Edition (Accelerator!, bootleg)", GAME_SUPPORTS_SAVE )			// 920313 - based on World version
 GAME( 1992, sf2accp2,   sf2ce,    cps1_12MHz, sf2,        cps1,     ROT0,   "bootleg", "Street Fighter II': Champion Edition (Accelerator Pt.II, bootleg)", GAME_SUPPORTS_SAVE )		// 920313 - based on World version
 GAME( 1992, sf2dkot2,   sf2ce,    cps1_12MHz, sf2,        cps1,     ROT0,   "bootleg", "Street Fighter II': Champion Edition (Double K.O. Turbo II, bootleg)", GAME_SUPPORTS_SAVE )	// 902140 !!! - based on USA version
-GAME( 1992, sf2m1,      sf2ce,    cps1_12MHz, sf2,        cps1,     ROT0,   "bootleg", "Street Fighter II': Champion Edition (M1, bootleg)", GAME_NOT_WORKING | GAME_SUPPORTS_SAVE )
 GAME( 1992, sf2m2,      sf2ce,    cps1_12MHz, sf2m2,      sf2hack,  ROT0,   "bootleg", "Street Fighter II': Champion Edition (M2, bootleg)", GAME_SUPPORTS_SAVE )				// 920313 - based on World version
 GAME( 1992, sf2m3,      sf2ce,    cps1_12MHz, sf2,        cps1,     ROT0,   "bootleg", "Street Fighter II': Champion Edition (M3, bootleg)", GAME_NOT_WORKING | GAME_SUPPORTS_SAVE )
 GAME( 1992, sf2m4,      sf2ce,    cps1_12MHz, sf2m4,      sf2hack,  ROT0,   "bootleg", "Street Fighter II': Champion Edition (M4, bootleg)", GAME_SUPPORTS_SAVE )				// 920322 - based on Japan version

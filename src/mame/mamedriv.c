@@ -172,9 +172,7 @@ const game_driver *const drivers[] =
 	DRIVER( sf2acc )	/* hack */
 	DRIVER( sf2accp2 )	/* hack */
 	DRIVER( sf2dkot2 )	/* hack */
-	DRIVER( sf2m1 )		/* hack */
 	DRIVER( sf2m2 )		/* hack */
-	DRIVER( sf2m3 )		/* hack */
 	DRIVER( sf2m4 )		/* hack */
 	DRIVER( sf2m5 )		/* hack */
 	DRIVER( sf2m6 )		/* hack */
@@ -226,6 +224,8 @@ const game_driver *const drivers[] =
 	DRIVER( kodb )		/* bootleg */
 	DRIVER( sf2mdt )	/* bootleg */
 	DRIVER( knightsb )	/* bootleg */
+	DRIVER( sf2m1 )		/* hack */
+	DRIVER( sf2m3 )		/* hack */
 
 	/* new added */
 	DRIVER( sfzch )		/* 20/10/1995 (c) CPS Changer version - Street Fighter Zero */

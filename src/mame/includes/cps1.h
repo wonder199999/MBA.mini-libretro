@@ -1,6 +1,17 @@
 #ifndef _CPS1_H_
 #define _CPS1_H_
 
+#define CPS_PIXEL_CLOCK		(XTAL_16MHz / 2)
+#define CPS_HTOTAL		(512)
+#define CPS_HBEND		(64)
+#define CPS_HBSTART		(448)
+#define CPS_VTOTAL		(262)
+#define CPS_VBEND		(16)
+#define CPS_VBSTART		(240)
+
+#define CODE_SIZE 0x400000
+#define CPS1_ROWSCROLL_OFFS	(0x20 / 2)    /* base of row scroll offsets in other RAM */
+
 struct gfx_range
 {
 	/* start and end are as passed by the game (shift adjusted to be all
@@ -151,32 +162,43 @@ public:
 	running_device	*msm_2;		/* fcrash */
 };
 
+/* ------------------------------------------------*/
+
+READ16_HANDLER( cps1_in0_r );
+READ16_HANDLER( cps1_in1_r );
+READ16_HANDLER( cps1_in2_r );
+READ16_HANDLER( cps1_in3_r );
+
 /*----------- defined in drivers/cps1.c -----------*/
 ADDRESS_MAP_EXTERN( qsound_sub_map, 8 );
 INTERRUPT_GEN( cps1_interrupt );
 GFXDECODE_EXTERN( cps1 );
 
+WRITE8_DEVICE_HANDLER( cps1_oki_pin7_w );
+WRITE8_HANDLER( cps1_snd_bankswitch_w );
 READ16_HANDLER( qsound_sharedram1_r );
 READ16_HANDLER( cps1_dsw_r );
 READ16_HANDLER( cps1_hack_dsw_r );
 WRITE16_HANDLER( qsound_sharedram1_w );
 WRITE16_HANDLER( cps1_coinctrl_w );
 WRITE16_HANDLER( cps1_soundlatch_w );
+WRITE16_HANDLER( cps1_soundlatch2_w );
 
 void cps1_irq_handler_mus(running_device *device, int irq);
 
 /*----------- defined in video/cps1.c -----------*/
 READ16_HANDLER( cps1_cps_b_r );
+READ16_HANDLER( cps2_objram1_r );
+READ16_HANDLER( cps2_objram2_r );
 WRITE16_HANDLER( cps1_cps_a_w );
 WRITE16_HANDLER( cps1_cps_b_w );
 WRITE16_HANDLER( cps1_gfxram_w );
-DRIVER_INIT( cps1 );
-DRIVER_INIT( cps2_video );
-READ16_HANDLER( cps2_objram1_r );
-READ16_HANDLER( cps2_objram2_r );
 WRITE16_HANDLER( cps2_objram_bank_w );
 WRITE16_HANDLER( cps2_objram1_w );
 WRITE16_HANDLER( cps2_objram2_w );
+
+DRIVER_INIT( cps1 );
+DRIVER_INIT( cps2_video );
 
 VIDEO_START( cps1 );
 VIDEO_START( cps2 );
@@ -194,12 +216,15 @@ void cps2_objram_latch(running_machine *machine);
 /*----------- defined in machine/cps2crpt.c -----------*/
 DRIVER_INIT( cps2crpt );
 
+
 /*----------- defined in drivers/cps1.c -----------*/
 INPUT_PORTS_EXTERN( cps1_3b );
 INPUT_PORTS_EXTERN( cps1_2b );
 INPUT_PORTS_EXTERN( cps1_3players );
 INPUT_PORTS_EXTERN( cps1_4players );
 INPUT_PORTS_EXTERN( knights );
+INPUT_PORTS_EXTERN( sf2 );
+
 
 /*----------- defined in machine/kabuki.c -----------*/
 void mgakuen2_decode(running_machine *machine);
@@ -217,5 +242,8 @@ void wof_decode(running_machine *machine);
 void dino_decode(running_machine *machine);
 void punisher_decode(running_machine *machine);
 void slammast_decode(running_machine *machine);
+
+
+/* ----------------------------------------------------*/
 
 #endif

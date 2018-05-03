@@ -68,28 +68,23 @@ None of this is hooked up currently due to issues with row scroll on the scroll2
 //#include "machine/eeprom.h"
 //#include "sound/qsound.h"
 
-#define CODE_SIZE 0x400000
-#define CPS1_ROWSCROLL_OFFS	(0x20 / 2)    /* base of row scroll offsets in other RAM */
-
 
 /* -------------- Functions ---------------- */
 static WRITE16_HANDLER( fcrash_soundlatch_w )
 {
-	cps_state *state = (cps_state *)space->machine->driver_data;
-
 	if (ACCESSING_BITS_0_7)
 	{
+		cps_state *state = (cps_state *)space->machine->driver_data;
 		soundlatch_w(space, 0, data & 0xff);
 		cpu_set_input_line(state->audiocpu, 0, HOLD_LINE);
 	}
 }
 
-static WRITE16_HANDLER( sf2mdt_soundlatch_w )
+static WRITE16_HANDLER( sf2mdt_soundlatch_w )	/* The function will also be used for 'cawingbl' */
 {
-	cps_state *state = (cps_state *)space->machine->driver_data;
-
 	if (ACCESSING_BITS_8_15)
 	{
+		cps_state *state = (cps_state *)space->machine->driver_data;
 		soundlatch_w(space, 0, data >> 8);
 		cpu_set_input_line(state->audiocpu, 0, HOLD_LINE);
 		/* cpuexec_boost_interleave( space->machine, attotime_zero, ATTOTIME_IN_USEC(50) ); */
@@ -99,41 +94,33 @@ static WRITE16_HANDLER( sf2mdt_soundlatch_w )
 static WRITE8_HANDLER( fcrash_snd_bankswitch_w )
 {
 	cps_state *state = (cps_state *)space->machine->driver_data;
-
 	sound_set_output_gain(state->msm_1, 0, (data & 0x08) ? 0.0 : 1.0);
 	sound_set_output_gain(state->msm_2, 0, (data & 0x10) ? 0.0 : 1.0);
-
 	memory_set_bank(space->machine, "bank1", data & 0x07);
 }
 
 static WRITE8_HANDLER( sf2mdt_snd_bankswitch_w )
 {
 	cps_state *state = (cps_state *)space->machine->driver_data;
-
 	sound_set_output_gain(state->msm_1, 0, (data & 0x20) ? 0.0 : 1.0);
 	sound_set_output_gain(state->msm_2, 0, (data & 0x10) ? 0.0 : 1.0);
-
 	memory_set_bank(space->machine, "bank1", data & 0x07);
 }
 
 static WRITE8_HANDLER( knightsb_snd_bankswitch_w )
 {
 	cps_state *state = (cps_state *)space->machine->driver_data;
-
 	sound_set_output_gain(state->msm_1, 0, (data & 0x20) ? 0.0 : 1.0);
 	sound_set_output_gain(state->msm_2, 0, (data & 0x10) ? 0.0 : 1.0);
-
 	memory_set_bank(space->machine, "bank1", data & 0x0f);
 }
 
 static void m5205_int1( running_device *device )
 {
 	cps_state *state = (cps_state *)device->machine->driver_data;
-
 	msm5205_data_w(device, state->sample_buffer1 & 0x0f);
-	state->sample_buffer1 >>= 4;
-	state->sample_select1 ^= 1;
-
+	state->sample_buffer1 >>= 0x04;
+	state->sample_select1 ^= 0x01;
 	if (state->sample_select1 == 0)
 		cpu_set_input_line(state->audiocpu, INPUT_LINE_NMI, PULSE_LINE);
 }
@@ -141,10 +128,9 @@ static void m5205_int1( running_device *device )
 static void m5205_int2( running_device *device )
 {
 	cps_state *state = (cps_state *)device->machine->driver_data;
-
 	msm5205_data_w(device, state->sample_buffer2 & 0x0f);
-	state->sample_buffer2 >>= 4;
-	state->sample_select2 ^= 1;
+	state->sample_buffer2 >>= 0x04;
+	state->sample_select2 ^= 0x01;
 }
 
 static WRITE8_HANDLER( fcrash_msm5205_0_data_w )
@@ -163,6 +149,49 @@ static const msm5205_interface msm5205_interface1 = { m5205_int1, MSM5205_S96_4B
 static const msm5205_interface msm5205_interface2 = { m5205_int2, MSM5205_S96_4B };
 static const ym2151_interface ym2151_config = { cps1_irq_handler_mus };
 
+/* The function will also be used for 'cawingbl' */
+static WRITE16_HANDLER( kodb_layer_w )
+{
+	cps_state *state = (cps_state *)space->machine->driver_data;
+	switch (offset)
+	{
+		case 0x06: state->cps_b_regs[state->layer_enable_reg / 2] = data; break;
+		case 0x10: state->cps_b_regs[state->layer_mask_reg[1] / 2] = data; break;
+		case 0x11: state->cps_b_regs[state->layer_mask_reg[2] / 2] = data;
+	}
+}
+
+static WRITE16_HANDLER( knightsb_layer_w )
+{
+	cps_state *state = (cps_state *)space->machine->driver_data;
+	switch (offset)
+	{
+		case 0x00: state->cps_a_regs[0x0e / 2] = data; break;
+		case 0x01: state->cps_a_regs[0x0c / 2] = data; break;
+		case 0x02: { state->cps_a_regs[0x12 / 2] = data; state->cps_a_regs[CPS1_ROWSCROLL_OFFS] = data; break; }
+		case 0x03: state->cps_a_regs[0x10 / 2] = data; break;
+		case 0x04: state->cps_a_regs[0x16 / 2] = data; break;
+		case 0x05: state->cps_a_regs[0x14 / 2] = data; break;
+		case 0x06:
+		{
+			switch (data)
+			{
+				case 0x0000:
+				case 0x001f:
+				case 0x00ff: data = 0x12f2; break;
+				case 0x2000: data = 0x06f2; break;
+				case 0xa000: data = 0x24d0; break;
+				default: printf ("Unknown control word = %X\n", data); data = 0x12c0;
+			}
+			state->cps_b_regs[state->layer_enable_reg / 2] = data;
+		break;
+		}
+		case 0x10: state->cps_b_regs[state->layer_mask_reg[1] / 2] = data; break;
+		case 0x11: state->cps_b_regs[state->layer_mask_reg[2] / 2] = data; break;
+		case 0x12: state->cps_b_regs[state->layer_mask_reg[3] / 2] = data;
+	}
+}
+
 static WRITE16_HANDLER( sf2mdta_layer_w )
 {
 	cps_state *state = (cps_state *)space->machine->driver_data;
@@ -171,10 +200,7 @@ static WRITE16_HANDLER( sf2mdta_layer_w )
 		case 0x06: state->cps_a_regs[0x0c / 2] = data + 0xffbe;	break;		  /* scroll 1x */
 		case 0x07: state->cps_a_regs[0x0e / 2] = data; break;			  /* scroll 1y */
 		case 0x08: state->cps_a_regs[0x14 / 2] = data + 0xffce;	break;		  /* scroll 3x */
-		case 0x09: {
-			state->cps_a_regs[0x12 / 2] = data;				  /* scroll 2y */
-			state->cps_a_regs[CPS1_ROWSCROLL_OFFS] = data;			  /* row scroll start */
-			break; }
+		case 0x09: { state->cps_a_regs[0x12 / 2] = data; state->cps_a_regs[CPS1_ROWSCROLL_OFFS] = data; break; } /* scroll 2y */ /* row scroll start */
 		case 0x0a: state->cps_a_regs[0x10 / 2] = data + 0xffce;	break;		  /* scroll 2x */
 		case 0x0b: state->cps_a_regs[0x16 / 2] = data;	break;			  /* scroll 3y */
 		case 0x26: state->cps_b_regs[state->layer_enable_reg / 2] = data; break;
@@ -190,26 +216,21 @@ static WRITE16_HANDLER( sf2mdt_layer_w )
 		case 0x07: state->cps_a_regs[0x16 / 2] = data; break;			/* scroll 3y */
 		case 0x08: state->cps_a_regs[0x10 / 2] = data + 0xffce;	break;		/* scroll 2x */
 		case 0x09: state->cps_a_regs[0x0c / 2] = data + 0xffca;	break;		/* scroll 1x */
-		case 0x0a: {
-			state->cps_a_regs[0x12 / 2] = data;				/* scroll 2y */
-			state->cps_a_regs[CPS1_ROWSCROLL_OFFS] = data;			/* row scroll start */
-			break; }
+		case 0x0a: { state->cps_a_regs[0x12 / 2] = data; state->cps_a_regs[CPS1_ROWSCROLL_OFFS] = data; break; } /* scroll 2y */ /* row scroll start */
 		case 0x0b: state->cps_a_regs[0x0e / 2] = data; break;			/* scroll 1y */
 		case 0x26: state->cps_b_regs[state->layer_enable_reg / 2] = data;
 	}
 }
 
-static WRITE16_HANDLER( knightsb_layer_w )
+
+static WRITE16_HANDLER( sf2m1_layer_w )
 {
 	cps_state *state = (cps_state *)space->machine->driver_data;
 	switch (offset)
 	{
 		case 0x00: state->cps_a_regs[0x0e / 2] = data; break;
 		case 0x01: state->cps_a_regs[0x0c / 2] = data; break;
-		case 0x02: {
-			state->cps_a_regs[0x12 / 2] = data;
-			state->cps_a_regs[CPS1_ROWSCROLL_OFFS] = data;
-			break; }
+		case 0x02: { state->cps_a_regs[0x12 / 2] = data; state->cps_a_regs[CPS1_ROWSCROLL_OFFS] = data; break; }
 		case 0x03: state->cps_a_regs[0x10 / 2] = data; break;
 		case 0x04: state->cps_a_regs[0x16 / 2] = data; break;
 		case 0x05: state->cps_a_regs[0x14 / 2] = data; break;
@@ -217,39 +238,19 @@ static WRITE16_HANDLER( knightsb_layer_w )
 		{
 			switch (data)
 			{
-				case 0x0000:
-				case 0x001f:
-				case 0x00ff:
-					data = 0x12f2;
-				break;
-				case 0x2000:
-					data = 0x06f2;
-				break;
-				case 0xa000:
-					data = 0x24d0;
-				break;
-				default:
-					printf ("Unknown control word = %X\n",data);
-					data = 0x12c0;
+				case 0: data = 0x078e; break;
+				case 1: data = 0x12c0; break;
+				case 2: data = 0x06ce; break;
+				case 3: data = 0x09ce; break;
+				case 4: data = 0x12ce; break;
+				case 5: data = 0x0b4e; break;
 			}
-			state->cps_b_regs[state->layer_enable_reg / 2] = data;
-			break;
 		}
-		case 0x10: state->cps_b_regs[state->layer_mask_reg[1] / 2] = data; break;
-		case 0x11: state->cps_b_regs[state->layer_mask_reg[2] / 2] = data; break;
-		case 0x12: state->cps_b_regs[state->layer_mask_reg[3] / 2] = data;
-	}
-}
-
-static WRITE16_HANDLER( kodb_layer_w )
-{
-	cps_state *state = (cps_state *)space->machine->driver_data;
-
-	switch (offset)
-	{
-		case 0x06: state->cps_b_regs[state->layer_enable_reg / 2] = data; break;
-		case 0x10: state->cps_b_regs[state->layer_mask_reg[1] / 2] = data; break;
-		case 0x11: state->cps_b_regs[state->layer_mask_reg[2] / 2] = data;
+		case 0xb3: state->cps_b_regs[state->layer_enable_reg / 2] = data; break;
+		case 0x0b:
+		case 0x1b: state->cps_a_regs[0x06 / 2] = data; break;
+//		default: logerror("%s: Unknown layer cmd %X %X\n", cpuexec_describe_context(machine), offset << 1, data);
+		default: logerror(" Unknown layer cmd\n");
 	}
 }
 
@@ -279,15 +280,16 @@ static void bootleg_render_sprites( running_machine *machine, bitmap_t *bitmap, 
 	UINT16 *sprite_ram = state->gfxram;
 	UINT16 tileno, color, xpos, ypos, flipx, flipy;
 
-	if (state->bootleg_sprite_ram)			/* if we have separate sprite ram, use it */
+	if (state->bootleg_sprite_ram)				/* if we have separate sprite ram, use it */
 		sprite_ram = state->bootleg_sprite_ram;
 
-	for ( pos = 0x1ffc - base; pos >= 0; pos -= 4)	/* get end of sprite list marker */
-		if (sprite_ram[base + pos - 1] == state->sprite_list_end_marker) last_sprite_offset = pos;
+	for ( pos = 0x1ffc - base; pos >= 0x0000; pos -= 4)	/* get end of sprite list marker */
+		if (sprite_ram[base + pos - 1] == state->sprite_list_end_marker)
+			last_sprite_offset = pos;
 
 	if ( ((base + last_sprite_offset) < 0x2000) || (!state->bootleg_sprite_ram) )	/* if we are using bootleg sprite ram, the index must be less than 0x2000 */
 	{
-		for (pos = last_sprite_offset; pos >= 0; pos -= 4)
+		for (pos = last_sprite_offset; pos >= 0x0000; pos -= 4)
 		{
 			tileno = sprite_ram[base + pos];
 			if (tileno >= num_sprites) continue;
@@ -307,34 +309,25 @@ static void bootleg_render_sprites( running_machine *machine, bitmap_t *bitmap, 
 static void bootleg_render_layer( running_machine *machine, bitmap_t *bitmap, const rectangle *cliprect, int layer, int primask )
 {
 	cps_state *state = (cps_state *)machine->driver_data;
-
 	switch (layer)
 	{
-		case 0:
-			bootleg_render_sprites(machine, bitmap, cliprect);
-		break;
+		case 0: bootleg_render_sprites(machine, bitmap, cliprect); break;
 		case 1:
 		case 2:
-		case 3:
-			tilemap_draw(bitmap, cliprect, state->bg_tilemap[layer - 1], TILEMAP_DRAW_LAYER1, primask);
-		break;
+		case 3: tilemap_draw(bitmap, cliprect, state->bg_tilemap[layer - 1], TILEMAP_DRAW_LAYER1, primask); break;
 	}
 }
 
 static void bootleg_render_high_layer( running_machine *machine, bitmap_t *bitmap, const rectangle *cliprect, int layer )
 {
 	cps_state *state = (cps_state *)machine->driver_data;
-
 	/* bitmap_t *dummy_bitmap = NULL; */
 	switch (layer)
 	{
-		case 0:
-		break;
+		case 0: break;
 		case 1:
 		case 2:
-		case 3:
-			tilemap_draw(/*dummy_bitmap*/NULL, cliprect, state->bg_tilemap[layer - 1], TILEMAP_DRAW_LAYER0, 1);
-		break;
+		case 3: tilemap_draw(/*dummy_bitmap*/NULL, cliprect, state->bg_tilemap[layer - 1], TILEMAP_DRAW_LAYER0, 1); break;
 	}
 }
 
@@ -342,8 +335,8 @@ static void bootleg_build_palette( running_machine *machine )
 {
 	cps_state *state = (cps_state *)machine->driver_data;
 
-	INT32 offset, palettebase = (state->cps_a_regs[0x0a / 2] << 8) & 0x1ffff;	/* all the bootlegs seem to write the palette offset as usual */
-
+	INT32 palettebase = (state->cps_a_regs[0x0a / 2] << 8) & 0x1ffff;	/* all the bootlegs seem to write the palette offset as usual */
+	UINT32 offset;
 	for (offset = 0; offset < 32 * 6 * 16; offset++)
 	{
 		INT32 palette = state->gfxram[palettebase / 2 + offset];
@@ -380,10 +373,10 @@ static VIDEO_UPDATE( bootleg_updatescreen )
 
 	if (videocontrol & 0x01)	/* linescroll enable */
 	{
-		UINT32 i;
 		INT32 scrly = -state->scroll2y;
 		tilemap_set_scroll_rows(state->bg_tilemap[1], 1024);
 		INT32 otheroffs = state->cps_a_regs[CPS1_ROWSCROLL_OFFS];
+		UINT32 i;
 
 		for (i = 0; i < 256; )
 		{
@@ -418,14 +411,14 @@ static VIDEO_UPDATE( bootleg_updatescreen )
 	INT32 l3 = (layercontrol >> 0x0c) & 0x03;
 
 	bootleg_render_layer(screen->machine, bitmap, cliprect, l0, 0);
-
 	if (l1 == 0) bootleg_render_high_layer(screen->machine, bitmap, cliprect, l0);
+
 	bootleg_render_layer(screen->machine, bitmap, cliprect, l1, 0);
-
 	if (l2 == 0) bootleg_render_high_layer(screen->machine, bitmap, cliprect, l1);
-	bootleg_render_layer(screen->machine, bitmap, cliprect, l2, 0);
 
+	bootleg_render_layer(screen->machine, bitmap, cliprect, l2, 0);
 	if (l3 == 0) bootleg_render_high_layer(screen->machine, bitmap, cliprect, l2);
+
 	bootleg_render_layer(screen->machine, bitmap, cliprect, l3, 0);
 
 	return 0;
@@ -478,6 +471,23 @@ static ADDRESS_MAP_START( sf2mdt_map, ADDRESS_SPACE_PROGRAM, 16 )
 	AM_RANGE(0xff0000, 0xffffff) AM_RAM
 ADDRESS_MAP_END
 
+static ADDRESS_MAP_START( sf2m1_map, ADDRESS_SPACE_PROGRAM, 16 )
+	AM_RANGE(0x000000, 0x3fffff) AM_ROM
+	AM_RANGE(0x800000, 0x800007) AM_READ_PORT("IN1")
+//	AM_RANGE(0x800006, 0x800007) AM_WRITE(cps1_soundlatch_w)
+	AM_RANGE(0x800012, 0x800013) AM_READ(cps1_in2_r)
+	AM_RANGE(0x800018, 0x80001f) AM_READ(cps1_dsw_r)
+	AM_RANGE(0x800100, 0x80013f) AM_WRITE(cps1_cps_a_w) AM_BASE_MEMBER(cps_state, cps_a_regs)
+	AM_RANGE(0x800140, 0x80017f) AM_READWRITE(cps1_cps_b_r, cps1_cps_b_w) AM_BASE_MEMBER(cps_state, cps_b_regs)
+	AM_RANGE(0x800180, 0x800181) AM_WRITENOP
+//	AM_RANGE(0x800188, 0x80018f) AM_WRITE(cps1_soundlatch2_w)
+	AM_RANGE(0x880000, 0x880001) AM_WRITENOP
+	AM_RANGE(0x900000, 0x93ffff) AM_RAM_WRITE(cps1_gfxram_w) AM_BASE_SIZE_MEMBER(cps_state, gfxram, gfxram_size)
+	AM_RANGE(0x980000, 0x9801ff) AM_WRITE(sf2m1_layer_w)
+	AM_RANGE(0x990000, 0x990001) AM_WRITENOP
+	AM_RANGE(0xff0000, 0xffffff) AM_RAM
+ADDRESS_MAP_END
+
 /* SOUND MAP */
 static ADDRESS_MAP_START( sound_map, ADDRESS_SPACE_PROGRAM, 8 )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM
@@ -491,7 +501,7 @@ static ADDRESS_MAP_START( sound_map, ADDRESS_SPACE_PROGRAM, 8 )
 	AM_RANGE(0xec00, 0xec00) AM_WRITE(fcrash_msm5205_1_data_w)
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( sf2mdt_z80map, ADDRESS_SPACE_PROGRAM, 8 )
+static ADDRESS_MAP_START( sf2mdt_soundmap, ADDRESS_SPACE_PROGRAM, 8 )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM
 	AM_RANGE(0x8000, 0xbfff) AM_ROMBANK("bank1")
 	AM_RANGE(0xd000, 0xd7ff) AM_RAM
@@ -502,7 +512,7 @@ static ADDRESS_MAP_START( sf2mdt_z80map, ADDRESS_SPACE_PROGRAM, 8 )
 	AM_RANGE(0xe800, 0xe800) AM_WRITE(fcrash_msm5205_1_data_w)
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( knightsb_z80map, ADDRESS_SPACE_PROGRAM, 8 )
+static ADDRESS_MAP_START( knightsb_soundmap, ADDRESS_SPACE_PROGRAM, 8 )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM
 	AM_RANGE(0x8000, 0xbfff) AM_ROMBANK("bank1")
 	AM_RANGE(0xcffe, 0xcfff) AM_WRITENOP
@@ -514,7 +524,7 @@ static ADDRESS_MAP_START( knightsb_z80map, ADDRESS_SPACE_PROGRAM, 8 )
 	AM_RANGE(0xe800, 0xe800) AM_WRITE(fcrash_msm5205_1_data_w)
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( kodb_z80map, ADDRESS_SPACE_PROGRAM, 8 )
+static ADDRESS_MAP_START( kodb_soundmap, ADDRESS_SPACE_PROGRAM, 8 )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM
 	AM_RANGE(0x8000, 0xbfff) AM_ROMBANK("bank1")
 	AM_RANGE(0xd000, 0xd7ff) AM_RAM
@@ -523,6 +533,17 @@ static ADDRESS_MAP_START( kodb_z80map, ADDRESS_SPACE_PROGRAM, 8 )
 	AM_RANGE(0xe800, 0xe800) AM_READ(soundlatch_r)
 ADDRESS_MAP_END
 
+static ADDRESS_MAP_START( sf2m1_soundmap, ADDRESS_SPACE_PROGRAM, 8 )	/* The define will also be used for 'sgyxz' */
+	AM_RANGE(0x0000, 0x7fff) AM_ROM
+	AM_RANGE(0x8000, 0xbfff) AM_ROMBANK("bank1")
+	AM_RANGE(0xd000, 0xd7ff) AM_RAM
+	AM_RANGE(0xf000, 0xf001) AM_DEVREADWRITE("2151", ym2151_r, ym2151_w)
+	AM_RANGE(0xf002, 0xf002) AM_DEVREADWRITE("oki", okim6295_r, okim6295_w)
+	AM_RANGE(0xf004, 0xf004) AM_WRITE(cps1_snd_bankswitch_w)
+	AM_RANGE(0xf006, 0xf006) AM_WRITE(cps1_oki_pin7_w)
+	AM_RANGE(0xf008, 0xf008) AM_READ(soundlatch_r)
+	AM_RANGE(0xf00a, 0xf00a) AM_READ(soundlatch2_r)
+ADDRESS_MAP_END
 
 /* --- INPUT PORTS --- */
 #define CPS1_COINAGE_1 \
@@ -785,6 +806,16 @@ INPUT_PORTS_END
 
 
 /* --- MACHINE DRIVER --- */
+static MACHINE_RESET( fcrash )
+{
+	cps_state *state = (cps_state *)machine->driver_data;
+
+	state->sample_buffer1 = 0;
+	state->sample_buffer2 = 0;
+	state->sample_select1 = 0;
+	state->sample_select2 = 0;
+}
+
 static MACHINE_START( fcrash )
 {
 	cps_state *state = (cps_state *)machine->driver_data;
@@ -795,7 +826,6 @@ static MACHINE_START( fcrash )
 	state->msm_2 = machine->device("msm2");
 
 	UINT8 *src = memory_region(machine, "audiocpu");
-
 	memory_configure_bank(machine, "bank1", 0, 8, &src[0x10000], 0x4000);
 
 	state->layer_enable_reg = 0x20;
@@ -816,16 +846,6 @@ static MACHINE_START( fcrash )
 	state_save_register_global(machine, state->sample_select2);
 }
 
-static MACHINE_RESET( fcrash )
-{
-	cps_state *state = (cps_state *)machine->driver_data;
-
-	state->sample_buffer1 = 0;
-	state->sample_buffer2 = 0;
-	state->sample_select1 = 0;
-	state->sample_select2 = 0;
-}
-
 static MACHINE_START( sf2mdt )
 {
 	cps_state *state = (cps_state *)machine->driver_data;
@@ -836,7 +856,6 @@ static MACHINE_START( sf2mdt )
 	state->msm_2 = machine->device("msm2");
 
 	UINT8 *src = memory_region(machine, "audiocpu");
-
 	memory_configure_bank(machine, "bank1", 0, 8, &src[0x10000], 0x4000);
 
 	state->layer_enable_reg = 0x26;
@@ -867,10 +886,32 @@ static MACHINE_START( knightsb )
 	state->msm_2 = machine->device("msm2");
 
 	UINT8 *src = memory_region(machine, "audiocpu");
-
 	memory_configure_bank(machine, "bank1", 0, 16, &src[0x10000], 0x4000);
 
 	state->layer_enable_reg = 0x30;
+	state->layer_mask_reg[0] = 0x28;
+	state->layer_mask_reg[1] = 0x2a;
+	state->layer_mask_reg[2] = 0x2c;
+	state->layer_mask_reg[3] = 0x2e;
+	state->layer_scroll1x_offset = 0x3e;
+	state->layer_scroll2x_offset = 0x3c;
+	state->layer_scroll3x_offset = 0x40;
+	state->sprite_base = 0x1000;
+	state->sprite_list_end_marker = 0x8000;
+	state->sprite_x_offset = 0x00;
+}
+
+static MACHINE_START( sf2m1 )
+{
+	cps_state *state = (cps_state *)machine->driver_data;
+
+	state->maincpu = machine->device("maincpu");
+	state->audiocpu = machine->device("audiocpu");
+
+//	UINT8 *src = memory_region(machine, "audiocpu");
+//	memory_configure_bank(machine, "bank1", 0, 8, &src[0x10000], 0x4000);
+
+	state->layer_enable_reg = 0x26;
 	state->layer_mask_reg[0] = 0x28;
 	state->layer_mask_reg[1] = 0x2a;
 	state->layer_mask_reg[2] = 0x2c;
@@ -903,13 +944,13 @@ static MACHINE_START( kodb )
 	state->sprite_x_offset = 0x00;
 }
 
-
+/* *********************************************** FCRASH */
 static MACHINE_DRIVER_START( fcrash )
 	/* driver data */
 	MDRV_DRIVER_DATA(cps_state)
 
 	/* basic machine hardware */
-	MDRV_CPU_ADD("maincpu", M68000, 10000000)
+	MDRV_CPU_ADD("maincpu", M68000, XTAL_10MHz )
 	MDRV_CPU_PROGRAM_MAP(fcrash_map)
 	MDRV_CPU_VBLANK_INT("screen", cps1_interrupt)
 	MDRV_CPU_ADD("audiocpu", Z80, 24000000 / 6)	 /* ? */
@@ -950,16 +991,17 @@ static MACHINE_DRIVER_START( fcrash )
 	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.25)
 MACHINE_DRIVER_END
 
+/* ********************************************* KODB */
 static MACHINE_DRIVER_START( kodb )
 	/* driver data */
 	MDRV_DRIVER_DATA(cps_state)
 
 	/* basic machine hardware */
-	MDRV_CPU_ADD("maincpu", M68000, 10000000)
+	MDRV_CPU_ADD("maincpu", M68000, XTAL_10MHz )
 	MDRV_CPU_PROGRAM_MAP(fcrash_map)
 	MDRV_CPU_VBLANK_INT("screen", cps1_interrupt)
 	MDRV_CPU_ADD("audiocpu", Z80, 3579545)
-	MDRV_CPU_PROGRAM_MAP(kodb_z80map)
+	MDRV_CPU_PROGRAM_MAP(kodb_soundmap)
 	MDRV_MACHINE_START(kodb)
 
 	/* video hardware */
@@ -985,15 +1027,16 @@ static MACHINE_DRIVER_START( kodb )
 	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.30)
 MACHINE_DRIVER_END
 
+/* ******************************************** SF2MDT */
 static MACHINE_DRIVER_START( sf2mdt )
 	MDRV_DRIVER_DATA(cps_state)
 
 	/* basic machine hardware */
-	MDRV_CPU_ADD("maincpu", M68000, 12000000)
+	MDRV_CPU_ADD("maincpu", M68000, XTAL_12MHz )
 	MDRV_CPU_PROGRAM_MAP(sf2mdt_map)
 	MDRV_CPU_VBLANK_INT("screen", irq4_line_hold)
 	MDRV_CPU_ADD("audiocpu", Z80, 3579545)
-	MDRV_CPU_PROGRAM_MAP(sf2mdt_z80map)
+	MDRV_CPU_PROGRAM_MAP(sf2mdt_soundmap)
 	MDRV_MACHINE_START(sf2mdt)
 	MDRV_MACHINE_RESET(fcrash)
 
@@ -1023,16 +1066,17 @@ static MACHINE_DRIVER_START( sf2mdt )
 	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.25)
 MACHINE_DRIVER_END
 
+/* ******************************************* KNIGHTSB */
 static MACHINE_DRIVER_START( knightsb )
 	/* driver data */
 	MDRV_DRIVER_DATA(cps_state)
 
 	/* basic machine hardware */
-	MDRV_CPU_ADD("maincpu", M68000, 12000000)
+	MDRV_CPU_ADD("maincpu", M68000, XTAL_10MHz )
 	MDRV_CPU_PROGRAM_MAP(knightsb_map)
 	MDRV_CPU_VBLANK_INT("screen", cps1_interrupt)
 	MDRV_CPU_ADD("audiocpu", Z80, 29821000 / 8)
-	MDRV_CPU_PROGRAM_MAP(knightsb_z80map)
+	MDRV_CPU_PROGRAM_MAP(knightsb_soundmap)
 	MDRV_MACHINE_START(knightsb)
 
 	/* video hardware */
@@ -1060,6 +1104,39 @@ static MACHINE_DRIVER_START( knightsb )
 	MDRV_SOUND_ADD("msm2", MSM5205, 24000000 / 64)	/* ? */
 	MDRV_SOUND_CONFIG(msm5205_interface2)
 	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.25)
+MACHINE_DRIVER_END
+
+/* *********************************************** SF2M1 */
+static MACHINE_DRIVER_START( sf2m1 )
+	/* driver data */
+	MDRV_DRIVER_DATA(cps_state)
+
+	/* basic machine hardware */
+	MDRV_CPU_ADD("maincpu", M68000, XTAL_12MHz )
+	MDRV_CPU_PROGRAM_MAP(sf2m1_map)
+	MDRV_CPU_VBLANK_INT("screen", cps1_interrupt)
+//	MDRV_CPU_ADD("audiocpu", Z80, 3579545)
+//	MDRV_CPU_PROGRAM_MAP(sf2m1_soundmap)
+	MDRV_MACHINE_START(sf2m1)
+
+	/* video hardware */
+	MDRV_SCREEN_ADD("screen", RASTER)
+	MDRV_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
+	MDRV_SCREEN_RAW_PARAMS(CPS_PIXEL_CLOCK, CPS_HTOTAL, CPS_HBEND, CPS_HBSTART, CPS_VTOTAL, CPS_VBEND, CPS_VBSTART)
+	MDRV_VIDEO_UPDATE(bootleg_updatescreen)
+	MDRV_VIDEO_EOF(cps1)
+	MDRV_GFXDECODE(cps1)
+	MDRV_PALETTE_LENGTH(0xc00)
+	MDRV_VIDEO_START(cps1)
+
+	/* sound hardware */
+//	MDRV_SPEAKER_STANDARD_MONO("mono")
+//	MDRV_SOUND_ADD("2151", YM2151, 3579545)
+//	MDRV_SOUND_CONFIG(ym2151_config)
+//	MDRV_SOUND_ROUTE(0, "mono", 0.35)
+//	MDRV_SOUND_ROUTE(1, "mono", 0.35)
+//	MDRV_OKIM6295_ADD("oki", XTAL_16MHz / 4 / 4, OKIM6295_PIN7_HIGH)
+//	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.30)
 MACHINE_DRIVER_END
 
 
@@ -1099,10 +1176,25 @@ static DRIVER_INIT( kodb )
 static DRIVER_INIT( knightsb )
 {
 	cps_state *state = (cps_state *)machine->driver_data;
-
 	state->bootleg_sprite_ram = (UINT16 *)memory_install_ram(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x990000, 0x993fff, 0, 0, NULL);
 
 	DRIVER_INIT_CALL(cps1);
+}
+
+static DRIVER_INIT( dinopic )
+{
+	cps_state *state = (cps_state *)machine->driver_data;
+	state->bootleg_sprite_ram = (UINT16 *)memory_install_ram(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x990000, 0x993fff, 0, 0, NULL);
+
+	DRIVER_INIT_CALL(cps1);
+}
+
+static DRIVER_INIT( sf2m1 )
+{
+	UINT16 *src = (UINT16 *)memory_region( machine, "maincpu" );
+	src[0x064e / 2] = 0x6046;
+
+	DRIVER_INIT_CALL(dinopic);
 }
 
 
@@ -1218,11 +1310,40 @@ ROM_START( knightsb )
 	ROM_RELOAD(             0x10000, 0x40000 )
 ROM_END
 
+ROM_START( sf2m1 )
+	ROM_REGION( CODE_SIZE, "maincpu", 0 )      /* 68000 code */
+	ROM_LOAD16_BYTE( "222e",              0x000000, 0x80000, CRC(1e20d0a3) SHA1(5e05b52fd938aff5190bca7e178705d7236aef66) )
+	ROM_LOAD16_BYTE( "196e",              0x000001, 0x80000, CRC(88cc38a3) SHA1(6049962f943bd37748a9531cc3254e8b59326eac) )
+	ROM_LOAD16_WORD_SWAP( "s92_21a.bin",  0x100000, 0x80000, CRC(925a7877) SHA1(1960dca35f0ca6f2b399a9fccfbc0132ac6425d1) )
+
+	ROM_REGION( 0x600000, "gfx", 0 )
+	ROMX_LOAD( "s92_01.bin",   0x000000, 0x80000, CRC(03b0d852) SHA1(f370f25c96ad2b94f8c53d6b7139100285a25bef) , ROM_GROUPWORD | ROM_SKIP(6) )
+	ROMX_LOAD( "s92_02.bin",   0x000002, 0x80000, CRC(840289ec) SHA1(2fb42a242f60ba7e74009b5a90eb26e035ba1e82) , ROM_GROUPWORD | ROM_SKIP(6) )
+	ROMX_LOAD( "s92_03.bin",   0x000004, 0x80000, CRC(cdb5f027) SHA1(4c7d944fef200fdfcaf57758b901b5511188ed2e) , ROM_GROUPWORD | ROM_SKIP(6) )
+	ROMX_LOAD( "s92_04.bin",   0x000006, 0x80000, CRC(e2799472) SHA1(27d3796429338d82a8de246a0ea06dd487a87768) , ROM_GROUPWORD | ROM_SKIP(6) )
+	ROMX_LOAD( "s92_05.bin",   0x200000, 0x80000, CRC(ba8a2761) SHA1(4b696d66c51611e43522bed752654314e76d33b6) , ROM_GROUPWORD | ROM_SKIP(6) )
+	ROMX_LOAD( "s92_06.bin",   0x200002, 0x80000, CRC(e584bfb5) SHA1(ebdf1f5e2638eed3a65dda82b1ed9151a355f4c9) , ROM_GROUPWORD | ROM_SKIP(6) )
+	ROMX_LOAD( "s92_07.bin",   0x200004, 0x80000, CRC(21e3f87d) SHA1(4a4961bb68c3a1ce15f9d393d9c03ecb2466cc29) , ROM_GROUPWORD | ROM_SKIP(6) )
+	ROMX_LOAD( "s92_08.bin",   0x200006, 0x80000, CRC(befc47df) SHA1(520390420da3a0271ba90b0a933e65143265e5cf) , ROM_GROUPWORD | ROM_SKIP(6) )
+	ROMX_LOAD( "s92_10.bin",   0x400000, 0x80000, CRC(960687d5) SHA1(2868c31121b1c7564e9767b9a19cdbf655c7ed1d) , ROM_GROUPWORD | ROM_SKIP(6) )
+	ROMX_LOAD( "s92_11.bin",   0x400002, 0x80000, CRC(978ecd18) SHA1(648a59706b93c84b4206a968ecbdc3e834c476f6) , ROM_GROUPWORD | ROM_SKIP(6) )
+	ROMX_LOAD( "s92_12.bin",   0x400004, 0x80000, CRC(d6ec9a0a) SHA1(ed6143f8737013b6ef1684e37c05e037e7a80dae) , ROM_GROUPWORD | ROM_SKIP(6) )
+	ROMX_LOAD( "s92_13.bin",   0x400006, 0x80000, CRC(ed2c67f6) SHA1(0083c0ffaf6fe7659ff0cf822be4346cd6e61329) , ROM_GROUPWORD | ROM_SKIP(6) )
+
+	ROM_REGION( 0x18000, "audiocpu", 0 ) /* 64k for the audio CPU (+banks) */
+	ROM_LOAD( "s92_09.bin",    0x00000, 0x08000, CRC(08f6b60e) SHA1(8258fcaca4ac419312531eec67079b97f471179c) )
+	ROM_CONTINUE(              0x10000, 0x08000 )
+
+	ROM_REGION( 0x40000, "oki", 0 )	/* Samples */
+	ROM_LOAD( "s92_18.bin",    0x00000, 0x20000, CRC(7f162009) SHA1(346bf42992b4c36c593e21901e22c87ae4a7d86d) )
+	ROM_LOAD( "s92_19.bin",    0x20000, 0x20000, CRC(beade53f) SHA1(277c397dc12752719ec6b47d2224750bd1c07f79) )
+ROM_END
 
 /*
-GAME( year,   archives name,   parent name,  MACHINE_DRIVER_START,  INPUT_PORTS,  DRIVER_INIT,	flip,	producer name,	title information,	status )
+GAME( year, archives name,  parent name, MACHINE_DRIVER_START, INPUT_PORTS, DRIVER_INIT,   flip,   producer name,   title information,	status )
 */
 GAME( 1990,	fcrash,		ffight,     fcrash,	fcrash,    cps1,     ROT0,   "bootleg (Playmark)",  "Final Crash (bootleg of Final Fight)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE ) /* old sprites show on next screen. Patch used. */
 GAME( 1991,	kodb,		kod,	    kodb,	kodb,	   kodb,     ROT0,   "bootleg (Playmark)",  "The King of Dragons (bootleg)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE ) /* old sprites show on next screen. Patch used. */
-GAME( 1991,	knightsb,	knights,    knightsb,   knights,   knightsb, ROT0,   "bootleg",		    "Knights of the Round (bootleg)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )
+GAME( 1991,	knightsb,	knights,    knightsb,   knights,   knightsb, ROT0,   "bootleg",		    "Knights of the Round (bootleg)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE ) /* sprites are entangled with the front layer. */
 GAME( 1992,	sf2mdt,		sf2ce,	    sf2mdt,     sf2hack,   sf2mdt,   ROT0,   "bootleg",		    "Street Fighter II': Magic Delta Turbo (bootleg)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )
+GAME( 1992,	sf2m1,		sf2ce,	    sf2m1,	sf2,	   sf2m1,    ROT0,   "bootleg",		    "Street Fighter II': Champion Edition (M1, bootleg)", GAME_IMPERFECT_GRAPHICS | GAME_NO_SOUND | GAME_SUPPORTS_SAVE )
