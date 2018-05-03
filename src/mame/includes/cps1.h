@@ -9,7 +9,7 @@
 #define CPS_VBEND		(16)
 #define CPS_VBSTART		(240)
 
-#define CODE_SIZE 0x400000
+#define CODE_SIZE		0x400000
 #define CPS1_ROWSCROLL_OFFS	(0x20 / 2)    /* base of row scroll offsets in other RAM */
 
 struct gfx_range

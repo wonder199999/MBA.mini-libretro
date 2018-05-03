@@ -590,7 +590,6 @@ Stephh's inputs notes (based on some tests on the "parent" set) :
     It has to be enabled in the game settings as it is OFF by default.
 
 ***************************************************************************/
-
 #include "emu.h"
 #include "cpu/z80/z80.h"
 #include "deprecat.h"
@@ -601,7 +600,6 @@ Stephh's inputs notes (based on some tests on the "parent" set) :
 
 #include "includes/cps1.h"	/* External CPS1 definitions */
 
-static void gigaman2_gfx_reorder(running_machine *machine, int gfx_len, UINT16 *gfxrom);
 
 /*************************************
  *
@@ -616,6 +614,7 @@ static void gigaman2_gfx_reorder(running_machine *machine, int gfx_len, UINT16 *
 #undef  CODE_SIZE
 #define CODE_SIZE   0x0400000
 
+static void gigaman2_gfx_reorder(running_machine *machine, int gfx_len, UINT16 *gfxrom);
 
 /*************************************
  *
@@ -1192,31 +1191,26 @@ static MACHINE_START( cps2 )
 
 
 static MACHINE_DRIVER_START( cps2 )
-
 	/* driver data */
 	MDRV_DRIVER_DATA(cps_state)
 
 	/* basic machine hardware */
 	MDRV_CPU_ADD("maincpu", M68000, XTAL_16MHz)
 	MDRV_CPU_PROGRAM_MAP(cps2_map)
-	MDRV_CPU_VBLANK_INT_HACK(cps2_interrupt,259)	// 262  /* ??? interrupts per frame */
-
+	MDRV_CPU_VBLANK_INT_HACK(cps2_interrupt, 259)	// 262  /* ??? interrupts per frame */
 	MDRV_CPU_ADD("audiocpu", Z80, 8000000)
 	MDRV_CPU_PROGRAM_MAP(qsound_sub_map)
 	MDRV_CPU_PERIODIC_INT(irq0_line_hold, 251)	/* 251 is good (see 'mercy mercy mercy'section of sgemf attract mode for accurate sound sync */
-
 	MDRV_MACHINE_START(cps2)
 
 	MDRV_EEPROM_ADD("eeprom", cps2_eeprom_interface)
 
 	/* video hardware */
 	MDRV_VIDEO_ATTRIBUTES(VIDEO_UPDATE_BEFORE_VBLANK)
-
 	MDRV_SCREEN_ADD("screen", RASTER)
 	MDRV_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
 	MDRV_SCREEN_RAW_PARAMS(XTAL_8MHz, 518, 64, 448, 259, 16, 240)
-/*
-	Measured clocks:
+/*	Measured clocks:
          V = 59.6376Hz
          H = 15.4445kHz
          H/V = 258.973 ~ 259 lines
@@ -1224,18 +1218,16 @@ static MACHINE_DRIVER_START( cps2 )
 	Possible video clocks:
          60MHz / 15.4445kHz = 3884.878 / 8 = 485.610 -> unlikely
           8MHz / 15.4445kHz =  517.983 ~ 518 -> likely
-         16MHz -> same as 8 but with a /2 divider; also a possibility
-*/
+         16MHz -> same as 8 but with a /2 divider; also a possibility */
+
 	MDRV_GFXDECODE(cps2)
 	MDRV_PALETTE_LENGTH(0xc00)
-
 	MDRV_VIDEO_START(cps2)
 	MDRV_VIDEO_EOF(cps1)
 	MDRV_VIDEO_UPDATE(cps1)
 
 	/* sound hardware */
 	MDRV_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
-
 	MDRV_SOUND_ADD("qsound", QSOUND, QSOUND_CLOCK)
 	MDRV_SOUND_ROUTE(0, "lspeaker", 1.0)
 	MDRV_SOUND_ROUTE(1, "rspeaker", 1.0)
@@ -1253,9 +1245,7 @@ static MACHINE_DRIVER_START( gigaman2 )
 	MDRV_IMPORT_FROM(cps2)
 
 	MDRV_DEVICE_REMOVE("audiocpu")
-
 	MDRV_DEVICE_REMOVE("qsound")
-
 	MDRV_OKIM6295_ADD("oki", XTAL_32MHz/32, OKIM6295_PIN7_HIGH) // clock frequency & pin 7 not verified
 	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "lspeaker", 0.47)
 	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "rspeaker", 0.47)

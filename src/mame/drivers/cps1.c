@@ -348,7 +348,7 @@ static WRITE16_HANDLER( cpsq_coinctrl2_w )
 		coin_lockout_w(space->machine, 2, ~data & 0x02);
 		coin_counter_w(space->machine, 3, data & 0x04);
 		coin_lockout_w(space->machine, 3, ~data & 0x08);
-    }
+	}
 }
 
 INTERRUPT_GEN( cps1_interrupt )
@@ -391,10 +391,11 @@ READ16_HANDLER( qsound_sharedram1_r )
 
 WRITE16_HANDLER( qsound_sharedram1_w )
 {
-	cps_state *state = (cps_state *)space->machine->driver_data;
-
 	if (ACCESSING_BITS_0_7)
+	{
+		cps_state *state = (cps_state *)space->machine->driver_data;
 		state->qsound_sharedram1[offset] = data;
+	}
 }
 
 static READ16_HANDLER( qsound_sharedram2_r )
@@ -405,22 +406,22 @@ static READ16_HANDLER( qsound_sharedram2_r )
 
 static WRITE16_HANDLER( qsound_sharedram2_w )
 {
-	cps_state *state = (cps_state *)space->machine->driver_data;
-
 	if (ACCESSING_BITS_0_7)
+	{
+		cps_state *state = (cps_state *)space->machine->driver_data;
 		state->qsound_sharedram2[offset] = data;
+	}
 }
 
 static WRITE8_HANDLER( qsound_banksw_w )
 {
-	/* Z80 bank register for music note data. It's odd that it isn't encrypted though. */
-	int bank = data & 0x0f;
+	int bank = data & 0x0f;		/* Z80 bank register for music note data. It's odd that it isn't encrypted though. */
+
 	if ((0x10000 + (bank * 0x4000)) >= memory_region_length(space->machine, "audiocpu"))
 	{
 		logerror("WARNING: Q sound bank overflow (%02x)\n", data);
 		bank = 0;
 	}
-
 	memory_set_bank(space->machine, "bank1", bank);
 }
 
@@ -454,7 +455,6 @@ static const eeprom_interface pang3_eeprom_interface =
 	"0111"		/* erase command */
 };
 #endif
-
 
 /*
 PAL PRG1 (16P8B @ 12H):
@@ -2974,60 +2974,52 @@ static MACHINE_START( qsound )
 }
 
 static MACHINE_DRIVER_START( cps1_10MHz )
-
 	/* driver data */
 	MDRV_DRIVER_DATA(cps_state)
 
 	/* basic machine hardware */
-	MDRV_CPU_ADD("maincpu", M68000, XTAL_10MHz )	/* verified on pcb */
+	MDRV_CPU_ADD("maincpu", M68000, XTAL_10MHz )				/* verified on pcb */
 	MDRV_CPU_PROGRAM_MAP(main_map)
 	MDRV_CPU_VBLANK_INT("screen", cps1_interrupt)
-
-	MDRV_CPU_ADD("audiocpu", Z80, XTAL_3_579545MHz)  /* verified on pcb */
+	MDRV_CPU_ADD("audiocpu", Z80, XTAL_3_579545MHz)				/* verified on pcb */
 	MDRV_CPU_PROGRAM_MAP(sub_map)
-
 	MDRV_MACHINE_START(cps1)
 
 	/* video hardware */
 	MDRV_SCREEN_ADD("screen", RASTER)
-	MDRV_SCREEN_REFRESH_RATE(59.637405)		/* verified on one of the input gates of the 74ls08@4J on GNG romboard 88620-b-2 */
+	MDRV_SCREEN_REFRESH_RATE(59.637405)					/* verified on one of the input gates of the 74ls08@4J on GNG romboard 88620-b-2 */
 	MDRV_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MDRV_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
-	MDRV_SCREEN_SIZE(64 * 8, 32 * 8)
-	MDRV_SCREEN_VISIBLE_AREA(8 * 8, (64 - 8) * 8 - 1, 2 * 8, 30 * 8 - 1 )
-
+	MDRV_SCREEN_SIZE(64*8, 32*8)
+	MDRV_SCREEN_VISIBLE_AREA(8*8, (64-8)*8-1, 2*8, 30*8-1 )
+	MDRV_VIDEO_UPDATE(cps1)
+	MDRV_VIDEO_EOF(cps1)
 	MDRV_GFXDECODE(cps1)
 	MDRV_PALETTE_LENGTH(0xc00)
-
 	MDRV_VIDEO_START(cps1)
-	MDRV_VIDEO_EOF(cps1)
-	MDRV_VIDEO_UPDATE(cps1)
 
 	/* sound hardware */
 	MDRV_SPEAKER_STANDARD_MONO("mono")
-
-	MDRV_SOUND_ADD("2151", YM2151, XTAL_3_579545MHz)  /* verified on pcb */
+	MDRV_SOUND_ADD("2151", YM2151, XTAL_3_579545MHz)			/* verified on pcb */
 	MDRV_SOUND_CONFIG(ym2151_config)
 	MDRV_SOUND_ROUTE(0, "mono", 0.35)
 	MDRV_SOUND_ROUTE(1, "mono", 0.35)
 
 	/* CPS PPU is fed by a 16mhz clock,pin 117 outputs a 4mhz clock which is divided by 4 using 2 74ls74 */
-	MDRV_OKIM6295_ADD("oki", XTAL_16MHz / 4 / 4, OKIM6295_PIN7_HIGH) // pin 7 can be changed by the game code, see f006 on z80
+	MDRV_OKIM6295_ADD("oki", XTAL_16MHz / 4 / 4, OKIM6295_PIN7_HIGH)	/* pin 7 can be changed by the game code, see f006 on z80 */
 	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.30)
 MACHINE_DRIVER_END
 
 #ifndef MESS
 static MACHINE_DRIVER_START( cps1_12MHz )
-
 	/* basic machine hardware */
 	MDRV_IMPORT_FROM(cps1_10MHz)
 
 	MDRV_CPU_MODIFY("maincpu")
-	MDRV_CPU_CLOCK( XTAL_12MHz )	/* verified on pcb */
+	MDRV_CPU_CLOCK( XTAL_12MHz )				/* verified on pcb */
 MACHINE_DRIVER_END
 
 static MACHINE_DRIVER_START( pang3 )
-
 	/* basic machine hardware */
 	MDRV_IMPORT_FROM(cps1_12MHz)
 
@@ -3035,18 +3027,15 @@ static MACHINE_DRIVER_START( pang3 )
 MACHINE_DRIVER_END
 
 static MACHINE_DRIVER_START( qsound )
-
 	/* basic machine hardware */
 	MDRV_IMPORT_FROM(cps1_12MHz)
 
 	MDRV_CPU_REPLACE("maincpu", M68000, XTAL_12MHz )	/* verified on pcb */
 	MDRV_CPU_PROGRAM_MAP(qsound_main_map)
-	MDRV_CPU_VBLANK_INT("screen", cps1_qsound_interrupt)  /* ??? interrupts per frame */
-
-	MDRV_CPU_REPLACE("audiocpu", Z80, XTAL_8MHz)  /* verified on pcb */
+	MDRV_CPU_VBLANK_INT("screen", cps1_qsound_interrupt)	/* ??? interrupts per frame */
+	MDRV_CPU_REPLACE("audiocpu", Z80, XTAL_8MHz)		/* verified on pcb */
 	MDRV_CPU_PROGRAM_MAP(qsound_sub_map)
-	MDRV_CPU_PERIODIC_INT(irq0_line_hold, 250)	/* ?? */
-
+	MDRV_CPU_PERIODIC_INT(irq0_line_hold, 250)		/* ?? */
 	MDRV_MACHINE_START(qsound)
 
 	MDRV_EEPROM_ADD("eeprom", qsound_eeprom_interface)
@@ -3066,7 +3055,6 @@ MACHINE_DRIVER_END
 /* bootlegs with PIC */
 
 static MACHINE_DRIVER_START( cpspicb )
-
 	/* driver data */
 	MDRV_DRIVER_DATA(cps_state)
 
@@ -3085,8 +3073,8 @@ static MACHINE_DRIVER_START( cpspicb )
 	MDRV_SCREEN_REFRESH_RATE(60)
 	MDRV_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MDRV_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
-	MDRV_SCREEN_SIZE(64 * 8, 32 * 8)
-	MDRV_SCREEN_VISIBLE_AREA(8 * 8, (64 - 8) * 8 - 1, 2 * 8, 30 * 8 - 1 )
+	MDRV_SCREEN_SIZE(64*8, 32*8)
+	MDRV_SCREEN_VISIBLE_AREA(8*8, (64-8)*8-1, 2*8, 30*8-1 )
 
 	MDRV_GFXDECODE(cps1)
 	MDRV_PALETTE_LENGTH(0xc00)
@@ -3103,7 +3091,6 @@ static MACHINE_DRIVER_START( cpspicb )
 MACHINE_DRIVER_END
 
 static MACHINE_DRIVER_START( wofhfb )
-
 	/* basic machine hardware */
 	MDRV_IMPORT_FROM(cps1_12MHz)
 
@@ -3118,8 +3105,6 @@ MACHINE_DRIVER_END
   Game driver(s)
 
 ***************************************************************************/
-
-#define CODE_SIZE 0x400000
 
 /* B-Board 88621B-2 */
 /*
@@ -9296,8 +9281,8 @@ static DRIVER_INIT( pang3 )
 static DRIVER_INIT( dinohunt )
 {
 	// is this shared with the new sound hw?
-	UINT8* ram = (UINT8*)memory_install_ram(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0xf18000, 0xf19fff, 0, 0, 0);
-	memset(ram,0xff,0x2000);
+	UINT8 *ram = (UINT8 *)memory_install_ram(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0xf18000, 0xf19fff, 0, 0, 0);
+	memset(ram, 0xff, 0x2000);
 	DRIVER_INIT_CALL(cps1);
 }
 

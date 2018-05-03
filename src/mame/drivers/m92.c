@@ -256,7 +256,6 @@ static TIMER_CALLBACK( m92_scanline_interrupt )
 		machine->primary_screen->update_partial(scanline);
 		cputag_set_input_line_and_vector(machine, "maincpu", 0, HOLD_LINE, M92_IRQ_2);
 	}
-
 	/* VBLANK interrupt */
 	else
 	if (scanline == machine->primary_screen->visible_area().max_y + 1)
@@ -264,7 +263,6 @@ static TIMER_CALLBACK( m92_scanline_interrupt )
 		machine->primary_screen->update_partial(scanline);
 		cputag_set_input_line_and_vector(machine, "maincpu", 0, HOLD_LINE, M92_IRQ_0);
 	}
-
 	/* adjust for next scanline */
 	if (++scanline >= machine->primary_screen->height())
 		scanline = 0;
