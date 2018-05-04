@@ -387,46 +387,24 @@ static inline void retro_poll_mame_input( void )
 
 		switch (turbo_enable)
    		{
-      			case 0:
-         		break;
-      			case 1:
-         			if (PLAYER_PRESS(A))  pad_state[i][KEY_BUTTON_1] = turbo_state < turbo_delay ? FALSE : TRUE;
-         		break;
-      			case 2:
-				if (PLAYER_PRESS(B))  pad_state[i][KEY_BUTTON_2] = turbo_state < turbo_delay ? FALSE : TRUE;
-         		break;
-      			case 3:
-         			if (PLAYER_PRESS(R2)) pad_state[i][KEY_BUTTON_1] = turbo_state < turbo_delay ? FALSE : TRUE;
-         		break;
-      			case 4:
-         			if (PLAYER_PRESS(R2)) pad_state[i][KEY_BUTTON_2] = turbo_state < turbo_delay ? FALSE : TRUE;
-         		break;
+      			case 0: break;
+      			case 1: if (PLAYER_PRESS(A))  pad_state[i][KEY_BUTTON_1] = turbo_state < turbo_delay ? FALSE : TRUE; break;
+      			case 2: if (PLAYER_PRESS(B))  pad_state[i][KEY_BUTTON_2] = turbo_state < turbo_delay ? FALSE : TRUE; break;
+      			case 3: if (PLAYER_PRESS(R2)) pad_state[i][KEY_BUTTON_1] = turbo_state < turbo_delay ? FALSE : TRUE; break;
+      			case 4: if (PLAYER_PRESS(R2)) pad_state[i][KEY_BUTTON_2] = turbo_state < turbo_delay ? FALSE : TRUE; break;
    		}
 
 		switch (macro_state)
 		{
-			case 0:
-			break;
-			case 1:
-				if (PLAYER_PRESS(L)) pad_state[i][KEY_BUTTON_1] = pad_state[i][KEY_BUTTON_2] = TRUE;
-			break;
-			case 2:
-				if (PLAYER_PRESS(R)) pad_state[i][KEY_BUTTON_1] = pad_state[i][KEY_BUTTON_2] = TRUE;
-			break;
-			case 3:
-				if (PLAYER_PRESS(L)) pad_state[i][KEY_BUTTON_3] = pad_state[i][KEY_BUTTON_4] = TRUE;
-			break;
-			case 4:
-				if (PLAYER_PRESS(R)) pad_state[i][KEY_BUTTON_3] = pad_state[i][KEY_BUTTON_4] = TRUE;
-			break;
-			case 5:
-				if (PLAYER_PRESS(L)) pad_state[i][KEY_BUTTON_1] = pad_state[i][KEY_BUTTON_2] = TRUE;
-				if (PLAYER_PRESS(R)) pad_state[i][KEY_BUTTON_3] = pad_state[i][KEY_BUTTON_4] = TRUE;
-			break;
-			case 6:
-				if (PLAYER_PRESS(L)) pad_state[i][KEY_BUTTON_3] = pad_state[i][KEY_BUTTON_4] = TRUE;
-				if (PLAYER_PRESS(R)) pad_state[i][KEY_BUTTON_1] = pad_state[i][KEY_BUTTON_2] = TRUE;
-			break;
+			case 0: break;
+			case 1: if (PLAYER_PRESS(L)) pad_state[i][KEY_BUTTON_1] = pad_state[i][KEY_BUTTON_2] = TRUE; break;
+			case 2: if (PLAYER_PRESS(R)) pad_state[i][KEY_BUTTON_1] = pad_state[i][KEY_BUTTON_2] = TRUE; break;
+			case 3: if (PLAYER_PRESS(L)) pad_state[i][KEY_BUTTON_3] = pad_state[i][KEY_BUTTON_4] = TRUE; break;
+			case 4: if (PLAYER_PRESS(R)) pad_state[i][KEY_BUTTON_3] = pad_state[i][KEY_BUTTON_4] = TRUE; break;
+			case 5: if (PLAYER_PRESS(L)) pad_state[i][KEY_BUTTON_1] = pad_state[i][KEY_BUTTON_2] = TRUE;
+				if (PLAYER_PRESS(R)) pad_state[i][KEY_BUTTON_3] = pad_state[i][KEY_BUTTON_4] = TRUE; break;
+			case 6: if (PLAYER_PRESS(L)) pad_state[i][KEY_BUTTON_3] = pad_state[i][KEY_BUTTON_4] = TRUE;
+				if (PLAYER_PRESS(R)) pad_state[i][KEY_BUTTON_1] = pad_state[i][KEY_BUTTON_2] = TRUE; break;
 		}
 	}
 }

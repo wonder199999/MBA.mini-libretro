@@ -149,8 +149,7 @@ static const msm5205_interface msm5205_interface1 = { m5205_int1, MSM5205_S96_4B
 static const msm5205_interface msm5205_interface2 = { m5205_int2, MSM5205_S96_4B };
 static const ym2151_interface ym2151_config = { cps1_irq_handler_mus };
 
-/* The function will also be used for 'cawingbl' */
-static WRITE16_HANDLER( kodb_layer_w )
+static WRITE16_HANDLER( kodb_layer_w )		/* The function will also be used for 'cawingbl' */
 {
 	cps_state *state = (cps_state *)space->machine->driver_data;
 	switch (offset)
@@ -222,7 +221,6 @@ static WRITE16_HANDLER( sf2mdt_layer_w )
 	}
 }
 
-
 static WRITE16_HANDLER( sf2m1_layer_w )
 {
 	cps_state *state = (cps_state *)space->machine->driver_data;
@@ -246,10 +244,9 @@ static WRITE16_HANDLER( sf2m1_layer_w )
 				case 5: data = 0x0b4e; break;
 			}
 		}
-		case 0xb3: state->cps_b_regs[state->layer_enable_reg / 2] = data; break;
 		case 0x0b:
 		case 0x1b: state->cps_a_regs[0x06 / 2] = data; break;
-//		default: logerror("%s: Unknown layer cmd %X %X\n", cpuexec_describe_context(machine), offset << 1, data);
+		case 0xb3: state->cps_b_regs[state->layer_enable_reg / 2] = data; break;
 		default: logerror(" Unknown layer cmd\n");
 	}
 }
@@ -459,7 +456,7 @@ ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( sf2mdt_map, ADDRESS_SPACE_PROGRAM, 16 )
 	AM_RANGE(0x000000, 0x3fffff) AM_ROM
-	AM_RANGE(0x708100, 0x7081ff) AM_WRITE(sf2mdta_layer_w)
+	AM_RANGE(0x708100, 0x7081ff) AM_WRITE(sf2mdt_layer_w)
 	AM_RANGE(0x70c000, 0x70c001) AM_READ_PORT("IN1")
 	AM_RANGE(0x70c008, 0x70c009) AM_READ_PORT("IN2")
 	AM_RANGE(0x70c018, 0x70c01f) AM_READ(cps1_hack_dsw_r)
@@ -1115,7 +1112,7 @@ static MACHINE_DRIVER_START( sf2m1 )
 	MDRV_CPU_ADD("maincpu", M68000, XTAL_12MHz )
 	MDRV_CPU_PROGRAM_MAP(sf2m1_map)
 	MDRV_CPU_VBLANK_INT("screen", cps1_interrupt)
-//	MDRV_CPU_ADD("audiocpu", Z80, 3579545)
+//	MDRV_CPU_ADD("audiocpu", Z80, XTAL_3_579545)
 //	MDRV_CPU_PROGRAM_MAP(sf2m1_soundmap)
 	MDRV_MACHINE_START(sf2m1)
 
@@ -1131,11 +1128,11 @@ static MACHINE_DRIVER_START( sf2m1 )
 
 	/* sound hardware */
 //	MDRV_SPEAKER_STANDARD_MONO("mono")
-//	MDRV_SOUND_ADD("2151", YM2151, 3579545)
+//	MDRV_SOUND_ADD("2151", YM2151, XTAL_3_579545)
 //	MDRV_SOUND_CONFIG(ym2151_config)
 //	MDRV_SOUND_ROUTE(0, "mono", 0.35)
 //	MDRV_SOUND_ROUTE(1, "mono", 0.35)
-//	MDRV_OKIM6295_ADD("oki", XTAL_16MHz / 4 / 4, OKIM6295_PIN7_HIGH)
+//	MDRV_OKIM6295_ADD("oki", XTAL_16MHz/4/4, OKIM6295_PIN7_HIGH)
 //	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.30)
 MACHINE_DRIVER_END
 
@@ -1311,7 +1308,7 @@ ROM_START( knightsb )
 ROM_END
 
 ROM_START( sf2m1 )
-	ROM_REGION( CODE_SIZE, "maincpu", 0 )      /* 68000 code */
+	ROM_REGION( CODE_SIZE, "maincpu", 0 )		/* 68000 code */
 	ROM_LOAD16_BYTE( "222e",              0x000000, 0x80000, CRC(1e20d0a3) SHA1(5e05b52fd938aff5190bca7e178705d7236aef66) )
 	ROM_LOAD16_BYTE( "196e",              0x000001, 0x80000, CRC(88cc38a3) SHA1(6049962f943bd37748a9531cc3254e8b59326eac) )
 	ROM_LOAD16_WORD_SWAP( "s92_21a.bin",  0x100000, 0x80000, CRC(925a7877) SHA1(1960dca35f0ca6f2b399a9fccfbc0132ac6425d1) )
@@ -1330,20 +1327,21 @@ ROM_START( sf2m1 )
 	ROMX_LOAD( "s92_12.bin",   0x400004, 0x80000, CRC(d6ec9a0a) SHA1(ed6143f8737013b6ef1684e37c05e037e7a80dae) , ROM_GROUPWORD | ROM_SKIP(6) )
 	ROMX_LOAD( "s92_13.bin",   0x400006, 0x80000, CRC(ed2c67f6) SHA1(0083c0ffaf6fe7659ff0cf822be4346cd6e61329) , ROM_GROUPWORD | ROM_SKIP(6) )
 
-	ROM_REGION( 0x18000, "audiocpu", 0 ) /* 64k for the audio CPU (+banks) */
+	ROM_REGION( 0x18000, "audiocpu", 0 )		/* 64k for the audio CPU (+banks) */
 	ROM_LOAD( "s92_09.bin",    0x00000, 0x08000, CRC(08f6b60e) SHA1(8258fcaca4ac419312531eec67079b97f471179c) )
 	ROM_CONTINUE(              0x10000, 0x08000 )
 
-	ROM_REGION( 0x40000, "oki", 0 )	/* Samples */
+	ROM_REGION( 0x40000, "oki", 0 )			/* Samples */
 	ROM_LOAD( "s92_18.bin",    0x00000, 0x20000, CRC(7f162009) SHA1(346bf42992b4c36c593e21901e22c87ae4a7d86d) )
 	ROM_LOAD( "s92_19.bin",    0x20000, 0x20000, CRC(beade53f) SHA1(277c397dc12752719ec6b47d2224750bd1c07f79) )
 ROM_END
 
+
 /*
 GAME( year, archives name,  parent name, MACHINE_DRIVER_START, INPUT_PORTS, DRIVER_INIT,   flip,   producer name,   title information,	status )
 */
-GAME( 1990,	fcrash,		ffight,     fcrash,	fcrash,    cps1,     ROT0,   "bootleg (Playmark)",  "Final Crash (bootleg of Final Fight)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE ) /* old sprites show on next screen. Patch used. */
-GAME( 1991,	kodb,		kod,	    kodb,	kodb,	   kodb,     ROT0,   "bootleg (Playmark)",  "The King of Dragons (bootleg)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE ) /* old sprites show on next screen. Patch used. */
-GAME( 1991,	knightsb,	knights,    knightsb,   knights,   knightsb, ROT0,   "bootleg",		    "Knights of the Round (bootleg)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE ) /* sprites are entangled with the front layer. */
-GAME( 1992,	sf2mdt,		sf2ce,	    sf2mdt,     sf2hack,   sf2mdt,   ROT0,   "bootleg",		    "Street Fighter II': Magic Delta Turbo (bootleg)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )
-GAME( 1992,	sf2m1,		sf2ce,	    sf2m1,	sf2,	   sf2m1,    ROT0,   "bootleg",		    "Street Fighter II': Champion Edition (M1, bootleg)", GAME_IMPERFECT_GRAPHICS | GAME_NO_SOUND | GAME_SUPPORTS_SAVE )
+GAME( 1990,   fcrash,	  ffight,	fcrash,		fcrash,		cps1,	  ROT0,   "bootleg (Playmark)", "Final Crash (bootleg of Final Fight)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE ) /* old sprites show on next screen. Patch used. */
+GAME( 1991,   kodb,	  kod,		kodb,		kodb,		kodb,     ROT0,   "bootleg (Playmark)", "The King of Dragons (bootleg)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE ) /* old sprites show on next screen. Patch used. */
+GAME( 1991,   knightsb,	  knights,	knightsb,	knights,	knightsb, ROT0,   "bootleg",		"Knights of the Round (bootleg)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE ) /* sprites are entangled with the front layer. */
+GAME( 1992,   sf2mdt,	  sf2ce,	sf2mdt,		sf2hack,	sf2mdt,   ROT0,   "bootleg",		"Street Fighter II': Magic Delta Turbo (bootleg)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )
+GAME( 1992,   sf2m1,	  sf2ce,	sf2m1,		sf2,		sf2m1,    ROT0,   "bootleg",		"Street Fighter II': Champion Edition (M1, bootleg)", GAME_IMPERFECT_GRAPHICS | GAME_NO_SOUND | GAME_SUPPORTS_SAVE )

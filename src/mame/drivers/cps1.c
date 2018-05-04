@@ -243,6 +243,12 @@ Stephh's log (2006.09.20) :
 
 #include "includes/cps1.h"       /* External CPS1 definitions */
 
+/* -------------------  Custom function  -------------------- */
+static WRITE16_HANDLER( sf2m3_layer_w )
+{
+	cps1_cps_b_w(space, 0x0a, data, 0xffff);
+}
+
 /* ---------------------------------------------------------- */
 static READ16_HANDLER( forgottn_dial_0_r )
 {
@@ -340,7 +346,7 @@ WRITE16_HANDLER( cps1_coinctrl_w )
 	}
 }
 
-static WRITE16_HANDLER( cpsq_coinctrl2_w )
+WRITE16_HANDLER( cpsq_coinctrl2_w )
 {
 	if (ACCESSING_BITS_0_7)
 	{
@@ -365,12 +371,12 @@ INTERRUPT_GEN( cps1_interrupt )
 *
 ********************************************************************/
 
-static INTERRUPT_GEN( cps1_qsound_interrupt )
+INTERRUPT_GEN( cps1_qsound_interrupt )
 {
 	cpu_set_input_line(device, 2, HOLD_LINE);
 }
 
-static READ16_HANDLER( qsound_rom_r )
+READ16_HANDLER( qsound_rom_r )
 {
 	UINT8 *rom = memory_region(space->machine, "user1");
 
@@ -398,13 +404,13 @@ WRITE16_HANDLER( qsound_sharedram1_w )
 	}
 }
 
-static READ16_HANDLER( qsound_sharedram2_r )
+READ16_HANDLER( qsound_sharedram2_r )
 {
 	cps_state *state = (cps_state *)space->machine->driver_data;
 	return state->qsound_sharedram2[offset] | 0xff00;
 }
 
-static WRITE16_HANDLER( qsound_sharedram2_w )
+WRITE16_HANDLER( qsound_sharedram2_w )
 {
 	if (ACCESSING_BITS_0_7)
 	{
@@ -413,7 +419,7 @@ static WRITE16_HANDLER( qsound_sharedram2_w )
 	}
 }
 
-static WRITE8_HANDLER( qsound_banksw_w )
+WRITE8_HANDLER( qsound_banksw_w )
 {
 	int bank = data & 0x0f;		/* Z80 bank register for music note data. It's odd that it isn't encrypted though. */
 
@@ -424,7 +430,6 @@ static WRITE8_HANDLER( qsound_banksw_w )
 	}
 	memory_set_bank(space->machine, "bank1", bank);
 }
-
 
 /********************************************************************
 *
@@ -573,6 +578,23 @@ static ADDRESS_MAP_START( main_map, ADDRESS_SPACE_PROGRAM, 16 )
 	AM_RANGE(0x800180, 0x800187) AM_WRITE(cps1_soundlatch_w)							/* Sound command */
 	AM_RANGE(0x800188, 0x80018f) AM_WRITE(cps1_soundlatch2_w)							/* Sound timer fade */
 	AM_RANGE(0x900000, 0x92ffff) AM_RAM_WRITE(cps1_gfxram_w) AM_BASE_SIZE_MEMBER(cps_state, gfxram, gfxram_size)	/* SF2CE executes code from here */
+	AM_RANGE(0xff0000, 0xffffff) AM_RAM
+ADDRESS_MAP_END
+
+/* --------------- Custom ADDRESS_MAP ----------------- */
+static ADDRESS_MAP_START( sf2m3_map, ADDRESS_SPACE_PROGRAM, 16 )
+	AM_RANGE(0x000000, 0x3fffff) AM_ROM
+	AM_RANGE(0x800010, 0x800011) AM_READ_PORT("IN1")
+	AM_RANGE(0x800028, 0x80002f) AM_READ(cps1_hack_dsw_r)
+	AM_RANGE(0x800030, 0x800037) AM_WRITE(cps1_coinctrl_w)
+	AM_RANGE(0x800100, 0x80013f) AM_WRITE(cps1_cps_a_w)			AM_BASE_MEMBER(cps_state, cps_a_regs)
+	AM_RANGE(0x800140, 0x80017f) AM_READWRITE(cps1_cps_b_r, cps1_cps_b_w)	AM_BASE_MEMBER(cps_state, cps_b_regs)
+	AM_RANGE(0x800186, 0x800187) AM_READ(cps1_in2_r)
+	AM_RANGE(0x800190, 0x800197) AM_WRITE(cps1_soundlatch_w)
+	AM_RANGE(0x800198, 0x80019f) AM_WRITE(cps1_soundlatch2_w)
+	AM_RANGE(0x8001a0, 0x8001c3) AM_WRITE(cps1_cps_a_w)
+	AM_RANGE(0x8001c4, 0x8001c5) AM_WRITE(sf2m3_layer_w)
+	AM_RANGE(0x900000, 0x92ffff) AM_RAM_WRITE(cps1_gfxram_w)	AM_BASE_SIZE_MEMBER(cps_state, gfxram, gfxram_size)
 	AM_RANGE(0xff0000, 0xffffff) AM_RAM
 ADDRESS_MAP_END
 
@@ -3010,7 +3032,6 @@ static MACHINE_DRIVER_START( cps1_10MHz )
 	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.30)
 MACHINE_DRIVER_END
 
-#ifndef MESS
 static MACHINE_DRIVER_START( cps1_12MHz )
 	/* basic machine hardware */
 	MDRV_IMPORT_FROM(cps1_10MHz)
@@ -3097,7 +3118,15 @@ static MACHINE_DRIVER_START( wofhfb )
 	MDRV_EEPROM_ADD("eeprom", qsound_eeprom_interface)
 MACHINE_DRIVER_END
 
-#endif
+
+static MACHINE_DRIVER_START( sf2m3 )
+	/* basic machine hardware */
+	MDRV_IMPORT_FROM(cps1_12MHz)
+
+	MDRV_CPU_MODIFY("maincpu")
+	MDRV_CPU_PROGRAM_MAP(sf2m3_map)
+MACHINE_DRIVER_END
+
 
 
 /***************************************************************************
@@ -7188,35 +7217,6 @@ ROM_START( sf2m2 )
 	ROM_LOAD( "s92_19.bin",    0x20000, 0x20000, CRC(beade53f) SHA1(277c397dc12752719ec6b47d2224750bd1c07f79) )
 ROM_END
 
-ROM_START( sf2m3 )
-	ROM_REGION( CODE_SIZE, "maincpu", 0 )      /* 68000 code */
-	ROM_LOAD16_BYTE( "u222chp",           0x000000, 0x80000, CRC(db567b66) SHA1(315bfbf2786ef67a95afb87de836ab348523dbbe) )
-	ROM_LOAD16_BYTE( "u196chp",           0x000001, 0x80000, CRC(95ea597e) SHA1(5eb82feaa1de5611a96888e4670744bbb7d90393) )
-	ROM_LOAD16_WORD_SWAP( "s92_21a.bin",  0x100000, 0x80000, CRC(925a7877) SHA1(1960dca35f0ca6f2b399a9fccfbc0132ac6425d1) )
-
-	ROM_REGION( 0x600000, "gfx", 0 )
-	ROMX_LOAD( "s92_01.bin",   0x000000, 0x80000, CRC(03b0d852) SHA1(f370f25c96ad2b94f8c53d6b7139100285a25bef) , ROM_GROUPWORD | ROM_SKIP(6) )
-	ROMX_LOAD( "s92_02.bin",   0x000002, 0x80000, CRC(840289ec) SHA1(2fb42a242f60ba7e74009b5a90eb26e035ba1e82) , ROM_GROUPWORD | ROM_SKIP(6) )
-	ROMX_LOAD( "s92_03.bin",   0x000004, 0x80000, CRC(cdb5f027) SHA1(4c7d944fef200fdfcaf57758b901b5511188ed2e) , ROM_GROUPWORD | ROM_SKIP(6) )
-	ROMX_LOAD( "s92_04.bin",   0x000006, 0x80000, CRC(e2799472) SHA1(27d3796429338d82a8de246a0ea06dd487a87768) , ROM_GROUPWORD | ROM_SKIP(6) )
-	ROMX_LOAD( "s92_05.bin",   0x200000, 0x80000, CRC(ba8a2761) SHA1(4b696d66c51611e43522bed752654314e76d33b6) , ROM_GROUPWORD | ROM_SKIP(6) )
-	ROMX_LOAD( "s92_06.bin",   0x200002, 0x80000, CRC(e584bfb5) SHA1(ebdf1f5e2638eed3a65dda82b1ed9151a355f4c9) , ROM_GROUPWORD | ROM_SKIP(6) )
-	ROMX_LOAD( "s92_07.bin",   0x200004, 0x80000, CRC(21e3f87d) SHA1(4a4961bb68c3a1ce15f9d393d9c03ecb2466cc29) , ROM_GROUPWORD | ROM_SKIP(6) )
-	ROMX_LOAD( "s92_08.bin",   0x200006, 0x80000, CRC(befc47df) SHA1(520390420da3a0271ba90b0a933e65143265e5cf) , ROM_GROUPWORD | ROM_SKIP(6) )
-	ROMX_LOAD( "s92_10.bin",   0x400000, 0x80000, CRC(960687d5) SHA1(2868c31121b1c7564e9767b9a19cdbf655c7ed1d) , ROM_GROUPWORD | ROM_SKIP(6) )
-	ROMX_LOAD( "s92_11.bin",   0x400002, 0x80000, CRC(978ecd18) SHA1(648a59706b93c84b4206a968ecbdc3e834c476f6) , ROM_GROUPWORD | ROM_SKIP(6) )
-	ROMX_LOAD( "s92_12.bin",   0x400004, 0x80000, CRC(d6ec9a0a) SHA1(ed6143f8737013b6ef1684e37c05e037e7a80dae) , ROM_GROUPWORD | ROM_SKIP(6) )
-	ROMX_LOAD( "s92_13.bin",   0x400006, 0x80000, CRC(ed2c67f6) SHA1(0083c0ffaf6fe7659ff0cf822be4346cd6e61329) , ROM_GROUPWORD | ROM_SKIP(6) )
-
-	ROM_REGION( 0x18000, "audiocpu", 0 ) /* 64k for the audio CPU (+banks) */
-	ROM_LOAD( "s92_09.bin",    0x00000, 0x08000, CRC(08f6b60e) SHA1(8258fcaca4ac419312531eec67079b97f471179c) )
-	ROM_CONTINUE(              0x10000, 0x08000 )
-
-	ROM_REGION( 0x40000, "oki", 0 )	/* Samples */
-	ROM_LOAD( "s92_18.bin",    0x00000, 0x20000, CRC(7f162009) SHA1(346bf42992b4c36c593e21901e22c87ae4a7d86d) )
-	ROM_LOAD( "s92_19.bin",    0x20000, 0x20000, CRC(beade53f) SHA1(277c397dc12752719ec6b47d2224750bd1c07f79) )
-ROM_END
-
 ROM_START( sf2m4 )
 	ROM_REGION( CODE_SIZE, "maincpu", 0 )      /* 68000 code */
 	ROM_LOAD16_BYTE( "u222ne",            0x000000, 0x80000, CRC(7133489e) SHA1(036ef100c64c6e912c911340b32eea0da0b6f6d9) )
@@ -9399,7 +9399,6 @@ GAME( 1992, sf2acc,     sf2ce,    cps1_12MHz, sf2,        cps1,     ROT0,   "boo
 GAME( 1992, sf2accp2,   sf2ce,    cps1_12MHz, sf2,        cps1,     ROT0,   "bootleg", "Street Fighter II': Champion Edition (Accelerator Pt.II, bootleg)", GAME_SUPPORTS_SAVE )		// 920313 - based on World version
 GAME( 1992, sf2dkot2,   sf2ce,    cps1_12MHz, sf2,        cps1,     ROT0,   "bootleg", "Street Fighter II': Champion Edition (Double K.O. Turbo II, bootleg)", GAME_SUPPORTS_SAVE )	// 902140 !!! - based on USA version
 GAME( 1992, sf2m2,      sf2ce,    cps1_12MHz, sf2m2,      sf2hack,  ROT0,   "bootleg", "Street Fighter II': Champion Edition (M2, bootleg)", GAME_SUPPORTS_SAVE )				// 920313 - based on World version
-GAME( 1992, sf2m3,      sf2ce,    cps1_12MHz, sf2,        cps1,     ROT0,   "bootleg", "Street Fighter II': Champion Edition (M3, bootleg)", GAME_NOT_WORKING | GAME_SUPPORTS_SAVE )
 GAME( 1992, sf2m4,      sf2ce,    cps1_12MHz, sf2m4,      sf2hack,  ROT0,   "bootleg", "Street Fighter II': Champion Edition (M4, bootleg)", GAME_SUPPORTS_SAVE )				// 920322 - based on Japan version
 GAME( 1992, sf2m5,      sf2ce,    cps1_12MHz, sf2hack,    sf2hack,  ROT0,   "bootleg", "Street Fighter II': Champion Edition (M5, bootleg)", GAME_SUPPORTS_SAVE )				// 920313 - based on World version
 GAME( 1992, sf2m6,      sf2ce,    cps1_12MHz, sf2hack,    sf2hack,  ROT0,   "bootleg", "Street Fighter II': Champion Edition (M6, bootleg)", GAME_SUPPORTS_SAVE )				// 811102 !!! - based on World version
@@ -9473,3 +9472,4 @@ GAME( 1995, wofch,	0,	 qsound,      	wofch,	  wof,      ROT0,   "Capcom",	"CPS C
 GAME( 1999, wofhfh,     0,       wofhfb,     	wofhfb,   cps1,     ROT0,   "bootleg",	"Huo Feng Huang , Chinese bootleg", GAME_SUPPORTS_SAVE )
 GAME( 2010, wofchdx,	wofch,	 qsound,      	wofch,	  wof,      ROT0,   "Capcom",	"CPS Changer - Sangokushi III Gaiden: Kakou-On's Revenge DX (hack)", GAME_SUPPORTS_SAVE )
 GAME( 1995, wofches,	wofch,	 qsound,      	wofch,	  wof,      ROT0,   "Capcom",	"CPS Changer - Tenchi Wo Kurau II (Blue title, enabled the skill-enhanced mode)", GAME_SUPPORTS_SAVE )
+GAME( 1992, sf2m3,	sf2ce,	 sf2m3,		sf2,	  cps1,     ROT0,   "bootleg",	"Street Fighter II': Champion Edition (M3, bootleg)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )

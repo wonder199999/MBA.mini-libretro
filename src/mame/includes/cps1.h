@@ -162,27 +162,31 @@ public:
 	running_device	*msm_2;		/* fcrash */
 };
 
-/* ------------------------------------------------*/
-
-READ16_HANDLER( cps1_in0_r );
-READ16_HANDLER( cps1_in1_r );
-READ16_HANDLER( cps1_in2_r );
-READ16_HANDLER( cps1_in3_r );
 
 /*----------- defined in drivers/cps1.c -----------*/
 ADDRESS_MAP_EXTERN( qsound_sub_map, 8 );
 INTERRUPT_GEN( cps1_interrupt );
+INTERRUPT_GEN( cps1_qsound_interrupt );
 GFXDECODE_EXTERN( cps1 );
 
 WRITE8_DEVICE_HANDLER( cps1_oki_pin7_w );
+WRITE8_HANDLER( qsound_banksw_w );
 WRITE8_HANDLER( cps1_snd_bankswitch_w );
-READ16_HANDLER( qsound_sharedram1_r );
 READ16_HANDLER( cps1_dsw_r );
 READ16_HANDLER( cps1_hack_dsw_r );
+READ16_HANDLER( qsound_rom_r );
+READ16_HANDLER( qsound_sharedram2_r );
+READ16_HANDLER( qsound_sharedram1_r );
+READ16_HANDLER( cps1_in0_r );
+READ16_HANDLER( cps1_in1_r );
+READ16_HANDLER( cps1_in2_r );
+READ16_HANDLER( cps1_in3_r );
 WRITE16_HANDLER( qsound_sharedram1_w );
 WRITE16_HANDLER( cps1_coinctrl_w );
 WRITE16_HANDLER( cps1_soundlatch_w );
 WRITE16_HANDLER( cps1_soundlatch2_w );
+WRITE16_HANDLER( cpsq_coinctrl2_w );
+WRITE16_HANDLER( qsound_sharedram2_w );
 
 void cps1_irq_handler_mus(running_device *device, int irq);
 

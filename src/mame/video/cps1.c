@@ -363,7 +363,6 @@ The games seem to use them to mark platforms, kill zones and no-go areas.
 #define CPS_B_17     	0x08, 0x0407, __not_applicable__, 0x14, {0x12, 0x10, 0x0e, 0x0c}, 0x0a, {0x08, 0x10, 0x02, 0x00, 0x00}
 #define CPS_B_18     	0x10, 0x0408, __not_applicable__, 0x1c, {0x1a, 0x18, 0x16, 0x14}, 0x12, {0x10, 0x08, 0x02, 0x00, 0x00}
 
-#define CPS_B_21_DEF	0x32,     -1, 0x00, 0x02, 0x04, 0x06, 0x08,   -1,   -1, 0x26, {0x28, 0x2a, 0x2c, 0x2e}, 0x30, {0x02, 0x04, 0x08, 0x30, 0x30}	// pang3 sets layer enable to 0x26 on startup
 #define CPS_B_21_BT1	0x32, 0x0800, 0x0e, 0x0c, 0x0a, 0x08, 0x06, 0x04, 0x02, 0x28, {0x26, 0x24, 0x22, 0x20}, 0x30, {0x20, 0x04, 0x08, 0x12, 0x12}
 #define CPS_B_21_BT2	  -1,     -1, 0x1e, 0x1c, 0x1a, 0x18,   -1, 0x0c, 0x0a, 0x20, {0x2e, 0x2c, 0x2a, 0x28}, 0x30, {0x30, 0x08, 0x30, 0x00, 0x00}
 #define CPS_B_21_BT3  	  -1,     -1, 0x06, 0x04, 0x02, 0x00, 0x0e, 0x0c, 0x0a, 0x20, {0x2e, 0x2c, 0x2a, 0x28}, 0x30, {0x20, 0x12, 0x12, 0x00, 0x00}
@@ -371,12 +370,17 @@ The games seem to use them to mark platforms, kill zones and no-go areas.
 #define CPS_B_21_BT5 	0x32,     -1, 0x0e, 0x0c, 0x0a, 0x08, 0x1e, 0x1c, 0x1a, 0x20, {0x2e, 0x2c, 0x2a, 0x28}, 0x30, {0x20, 0x04, 0x02, 0x00, 0x00}
 #define CPS_B_21_BT6  	  -1,     -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1, 0x20, {0x2e, 0x2c, 0x2a, 0x28}, 0x30, {0x20, 0x14, 0x14, 0x00, 0x00}
 #define CPS_B_21_BT7  	  -1,     -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1, 0x2c, {  -1,   -1,   -1,   -1},	0x12, {0x14, 0x02, 0x14, 0x00, 0x00}
+
 #define CPS_B_21_QS1  	  -1,     -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1, 0x22, {0x24, 0x26, 0x28, 0x2a}, 0x2c, {0x10, 0x08, 0x04, 0x00, 0x00}
 #define CPS_B_21_QS2  	  -1,     -1,   -1,   -1,   -1,   -1,   -1, 0x2e, 0x20,	0x0a, {0x0c, 0x0e, 0x00, 0x02}, 0x04, {0x16, 0x16, 0x16, 0x00, 0x00}
 #define CPS_B_21_QS3 	0x0e, 0x0c00,   -1,   -1,   -1,   -1, 0x2c,   -1,   -1,	0x12, {0x14, 0x16, 0x08, 0x0a}, 0x0c, {0x04, 0x02, 0x20, 0x00, 0x00}
 #define CPS_B_21_QS4 	0x2e, 0x0c01,   -1,   -1,   -1,   -1, 0x1c, 0x1e, 0x08,	0x16, {0x00, 0x02, 0x28, 0x2a}, 0x2c, {0x04, 0x08, 0x10, 0x00, 0x00}
 #define CPS_B_21_QS5 	0x1e, 0x0c02,   -1,   -1,   -1,   -1, 0x0c,   -1,   -1,	0x2a, {0x2c, 0x2e, 0x30, 0x32}, 0x1c, {0x04, 0x08, 0x10, 0x00, 0x00}
+
+#define CPS_B_21_DEF	0x32,     -1, 0x00, 0x02, 0x04, 0x06, 0x08,   -1,   -1, 0x26, {0x28, 0x2a, 0x2c, 0x2e}, 0x30, {0x02, 0x04, 0x08, 0x30, 0x30}	// pang3 sets layer enable to 0x26 on startup
+
 #define HACK_B_1      	  -1,     -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,	0x14, {0x12, 0x10, 0x0e, 0x0c}, 0x0a, {0x0e, 0x0e, 0x0e, 0x30, 0x30}
+#define HACK_H_3      	  -1,     -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,	0x04, {0x12, 0x10, 0x0e, 0x0c}, 0x0a, {0x02, 0xc4, 0x18, 0x00, 0x00}
 
 /*
 CPS_B_21_DEF is CPS-B-21 at default settings (no battery)
@@ -1297,7 +1301,7 @@ static const struct CPS1config cps1_config_table[]=
 	{"sf2dkot2",   CPS_B_21_DEF, mapper_S9263B, 0x36 },
 	{"sf2m1",      CPS_B_21_DEF, mapper_S9263B, 0x36 },
 	{"sf2m2",      CPS_B_21_DEF, mapper_S9263B, 0x36, 0, 0, 1 },
-	{"sf2m3",      CPS_B_21_DEF, mapper_S9263B, 0x36 },
+	{"sf2m3",      HACK_B_1,     mapper_S9263B, 0x00, 0, 0, 2 },
 	{"sf2m4",      HACK_B_1,     mapper_S9263B, 0x36, 0, 0, 1 },
 	{"sf2m5",      CPS_B_21_DEF, mapper_S9263B, 0x36, 0, 0, 1 },
 	{"sf2m6",      CPS_B_21_DEF, mapper_S9263B, 0x36, 0, 0, 1 },
@@ -1484,14 +1488,13 @@ INLINE UINT16 *cps1_base( running_machine *machine, int offset, int boundary )
 	cps_state *state = (cps_state *)machine->driver_data;
 	int base = state->cps_a_regs[offset] * 256;
 
-	/*
-    The scroll RAM must start on a 0x4000 boundary.
-    Some games do not do this.
-    For example:
-       Captain commando     - continue screen will not display
-       Muscle bomber games  - will animate garbage during gameplay
-    Mask out the irrelevant bits.
-    */
+/*
+	The scroll RAM must start on a 0x4000 boundary.
+    	Some games do not do this.
+    	For example:
+       		Captain commando     - continue screen will not display
+       		Muscle bomber games  - will animate garbage during gameplay
+		Mask out the irrelevant bits. */
 	base &= ~(boundary - 1);
 	return &state->gfxram[(base & 0x3ffff) / 2];
 }
@@ -1503,14 +1506,13 @@ WRITE16_HANDLER( cps1_cps_a_w )
 	cps_state *state = (cps_state *)space->machine->driver_data;
 	data = COMBINE_DATA(&state->cps_a_regs[offset]);
 
-	/*
-    The main CPU writes the palette to gfxram, and the CPS-B custom copies it
-    to the real palette RAM, which is separated from gfxram.
-    This is done ONLY after the palette base register is written to. It is not
-    known what the exact timing should be, how long it should take and when it
-    should happen. We are assuming that the copy happens immediately, since it
-    fixes glitches in the ghouls intro, but it might happen at next vblank.
-    */
+/*
+	The main CPU writes the palette to gfxram, and the CPS-B custom copies it
+    	to the real palette RAM, which is separated from gfxram.
+    	This is done ONLY after the palette base register is written to. It is not
+    	known what the exact timing should be, how long it should take and when it
+    	should happen. We are assuming that the copy happens immediately, since it
+    	fixes glitches in the ghouls intro, but it might happen at next vblank.	    */
 	if (offset == CPS1_PALETTE_BASE)
 		cps1_build_palette(space->machine, cps1_base(space->machine, CPS1_PALETTE_BASE, state->palette_align));
 
