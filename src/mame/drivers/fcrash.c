@@ -241,8 +241,9 @@ static WRITE16_HANDLER( sf2m1_layer_w )
 				case 2: data = 0x06ce; break;
 				case 3: data = 0x09ce; break;
 				case 4: data = 0x12ce; break;
-				case 5: data = 0x0b4e; break;
+				case 5: data = 0x0b4e;
 			}
+			state->cps_b_regs[state->layer_enable_reg / 2] = data; break;
 		}
 		case 0x0b:
 		case 0x1b: state->cps_a_regs[0x06 / 2] = data; break;
