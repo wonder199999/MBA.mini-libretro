@@ -349,19 +349,19 @@ The games seem to use them to mark platforms, kill zones and no-go areas.
 #define __not_applicable__	-1, -1, -1, -1, -1, -1, -1
 
 /*                     	CPSB ID    multiply protection      unknown      ctrl     priority masks   palctrl    layer enable masks  */
-#define CPS_B_01	  -1, 0x0000, __not_applicable__, 0x26, {0x28, 0x2a, 0x2c, 0x2e}, 0x30, {0x02, 0x04, 0x08, 0x30, 0x30}
-#define CPS_B_02     	0x20, 0x0002, __not_applicable__, 0x2c, {0x2a, 0x28, 0x26, 0x24}, 0x22, {0x02, 0x04, 0x08, 0x00, 0x00}
-#define CPS_B_03      	  -1, 0x0000, __not_applicable__, 0x30, {0x2e, 0x2c, 0x2a, 0x28}, 0x26, {0x20, 0x10, 0x08, 0x00, 0x00}
-#define CPS_B_04     	0x20, 0x0004, __not_applicable__, 0x2e, {0x26, 0x30, 0x28, 0x32}, 0x2a, {0x02, 0x04, 0x08, 0x00, 0x00}
-#define CPS_B_05     	0x20, 0x0005, __not_applicable__, 0x28, {0x2a, 0x2c, 0x2e, 0x30}, 0x32, {0x02, 0x08, 0x20, 0x14, 0x14}
-#define CPS_B_11     	0x32, 0x0401, __not_applicable__, 0x26, {0x28, 0x2a, 0x2c, 0x2e}, 0x30, {0x08, 0x10, 0x20, 0x00, 0x00}
-#define CPS_B_12     	0x20, 0x0402, __not_applicable__, 0x2c, {0x2a, 0x28, 0x26, 0x24}, 0x22, {0x02, 0x04, 0x08, 0x00, 0x00}
-#define CPS_B_13     	0x2e, 0x0403, __not_applicable__, 0x22, {0x24, 0x26, 0x28, 0x2a}, 0x2c, {0x20, 0x02, 0x04, 0x00, 0x00}
-#define CPS_B_14     	0x1e, 0x0404, __not_applicable__, 0x12, {0x14, 0x16, 0x18, 0x1a}, 0x1c, {0x08, 0x20, 0x10, 0x00, 0x00}
-#define CPS_B_15     	0x0e, 0x0405, __not_applicable__, 0x02, {0x04, 0x06, 0x08, 0x0a}, 0x0c, {0x04, 0x02, 0x20, 0x00, 0x00}
-#define CPS_B_16     	0x00, 0x0406, __not_applicable__, 0x0c, {0x0a, 0x08, 0x06, 0x04}, 0x02, {0x10, 0x0a, 0x0a, 0x00, 0x00}
-#define CPS_B_17     	0x08, 0x0407, __not_applicable__, 0x14, {0x12, 0x10, 0x0e, 0x0c}, 0x0a, {0x08, 0x10, 0x02, 0x00, 0x00}
-#define CPS_B_18     	0x10, 0x0408, __not_applicable__, 0x1c, {0x1a, 0x18, 0x16, 0x14}, 0x12, {0x10, 0x08, 0x02, 0x00, 0x00}
+#define CPS_B_01	  -1, 0x0000,		__not_applicable__, 		0x26, {0x28, 0x2a, 0x2c, 0x2e}, 0x30, {0x02, 0x04, 0x08, 0x30, 0x30}
+#define CPS_B_02     	0x20, 0x0002,		__not_applicable__, 		0x2c, {0x2a, 0x28, 0x26, 0x24}, 0x22, {0x02, 0x04, 0x08, 0x00, 0x00}
+#define CPS_B_03      	  -1, 0x0000,		__not_applicable__, 		0x30, {0x2e, 0x2c, 0x2a, 0x28}, 0x26, {0x20, 0x10, 0x08, 0x00, 0x00}
+#define CPS_B_04     	0x20, 0x0004,		__not_applicable__, 		0x2e, {0x26, 0x30, 0x28, 0x32}, 0x2a, {0x02, 0x04, 0x08, 0x00, 0x00}
+#define CPS_B_05     	0x20, 0x0005,		__not_applicable__, 		0x28, {0x2a, 0x2c, 0x2e, 0x30}, 0x32, {0x02, 0x08, 0x20, 0x14, 0x14}
+#define CPS_B_11     	0x32, 0x0401,		__not_applicable__, 		0x26, {0x28, 0x2a, 0x2c, 0x2e}, 0x30, {0x08, 0x10, 0x20, 0x00, 0x00}
+#define CPS_B_12     	0x20, 0x0402,		__not_applicable__, 		0x2c, {0x2a, 0x28, 0x26, 0x24}, 0x22, {0x02, 0x04, 0x08, 0x00, 0x00}
+#define CPS_B_13     	0x2e, 0x0403,		__not_applicable__, 		0x22, {0x24, 0x26, 0x28, 0x2a}, 0x2c, {0x20, 0x02, 0x04, 0x00, 0x00}
+#define CPS_B_14     	0x1e, 0x0404,		__not_applicable__,		0x12, {0x14, 0x16, 0x18, 0x1a}, 0x1c, {0x08, 0x20, 0x10, 0x00, 0x00}
+#define CPS_B_15     	0x0e, 0x0405,		__not_applicable__, 		0x02, {0x04, 0x06, 0x08, 0x0a}, 0x0c, {0x04, 0x02, 0x20, 0x00, 0x00}
+#define CPS_B_16     	0x00, 0x0406,		__not_applicable__, 		0x0c, {0x0a, 0x08, 0x06, 0x04}, 0x02, {0x10, 0x0a, 0x0a, 0x00, 0x00}
+#define CPS_B_17     	0x08, 0x0407,		__not_applicable__, 		0x14, {0x12, 0x10, 0x0e, 0x0c}, 0x0a, {0x08, 0x14, 0x02, 0x00, 0x00}
+#define CPS_B_18     	0x10, 0x0408,		__not_applicable__, 		0x1c, {0x1a, 0x18, 0x16, 0x14}, 0x12, {0x10, 0x08, 0x02, 0x00, 0x00}
 
 #define CPS_B_21_BT1	0x32, 0x0800, 0x0e, 0x0c, 0x0a, 0x08, 0x06, 0x04, 0x02, 0x28, {0x26, 0x24, 0x22, 0x20}, 0x30, {0x20, 0x04, 0x08, 0x12, 0x12}
 #define CPS_B_21_BT2	  -1,     -1, 0x1e, 0x1c, 0x1a, 0x18,   -1, 0x0c, 0x0a, 0x20, {0x2e, 0x2c, 0x2a, 0x28}, 0x30, {0x30, 0x08, 0x30, 0x00, 0x00}
@@ -370,17 +370,14 @@ The games seem to use them to mark platforms, kill zones and no-go areas.
 #define CPS_B_21_BT5 	0x32,     -1, 0x0e, 0x0c, 0x0a, 0x08, 0x1e, 0x1c, 0x1a, 0x20, {0x2e, 0x2c, 0x2a, 0x28}, 0x30, {0x20, 0x04, 0x02, 0x00, 0x00}
 #define CPS_B_21_BT6  	  -1,     -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1, 0x20, {0x2e, 0x2c, 0x2a, 0x28}, 0x30, {0x20, 0x14, 0x14, 0x00, 0x00}
 #define CPS_B_21_BT7  	  -1,     -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1, 0x2c, {  -1,   -1,   -1,   -1},	0x12, {0x14, 0x02, 0x14, 0x00, 0x00}
-
+#define CPS_B_21_DEF	0x32,     -1, 0x00, 0x02, 0x04, 0x06, 0x08,   -1,   -1, 0x26, {0x28, 0x2a, 0x2c, 0x2e}, 0x30, {0x02, 0x04, 0x08, 0x30, 0x30}	// pang3 sets layer enable to 0x26 on startup
 #define CPS_B_21_QS1  	  -1,     -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1, 0x22, {0x24, 0x26, 0x28, 0x2a}, 0x2c, {0x10, 0x08, 0x04, 0x00, 0x00}
 #define CPS_B_21_QS2  	  -1,     -1,   -1,   -1,   -1,   -1,   -1, 0x2e, 0x20,	0x0a, {0x0c, 0x0e, 0x00, 0x02}, 0x04, {0x16, 0x16, 0x16, 0x00, 0x00}
 #define CPS_B_21_QS3 	0x0e, 0x0c00,   -1,   -1,   -1,   -1, 0x2c,   -1,   -1,	0x12, {0x14, 0x16, 0x08, 0x0a}, 0x0c, {0x04, 0x02, 0x20, 0x00, 0x00}
 #define CPS_B_21_QS4 	0x2e, 0x0c01,   -1,   -1,   -1,   -1, 0x1c, 0x1e, 0x08,	0x16, {0x00, 0x02, 0x28, 0x2a}, 0x2c, {0x04, 0x08, 0x10, 0x00, 0x00}
 #define CPS_B_21_QS5 	0x1e, 0x0c02,   -1,   -1,   -1,   -1, 0x0c,   -1,   -1,	0x2a, {0x2c, 0x2e, 0x30, 0x32}, 0x1c, {0x04, 0x08, 0x10, 0x00, 0x00}
 
-#define CPS_B_21_DEF	0x32,     -1, 0x00, 0x02, 0x04, 0x06, 0x08,   -1,   -1, 0x26, {0x28, 0x2a, 0x2c, 0x2e}, 0x30, {0x02, 0x04, 0x08, 0x30, 0x30}	// pang3 sets layer enable to 0x26 on startup
-
 #define HACK_B_1      	  -1,     -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,	0x14, {0x12, 0x10, 0x0e, 0x0c}, 0x0a, {0x0e, 0x0e, 0x0e, 0x30, 0x30}
-#define HACK_H_3      	  -1,     -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,	0x04, {0x12, 0x10, 0x0e, 0x0c}, 0x0a, {0x02, 0xc4, 0x18, 0x00, 0x00}
 
 /*
 CPS_B_21_DEF is CPS-B-21 at default settings (no battery)
@@ -1237,7 +1234,7 @@ static const struct CPS1config cps1_config_table[]=
 	{"knights",    CPS_B_21_BT4, mapper_KR63B,  0x36, 0, 0x34 },
 	{"knightsu",   CPS_B_21_BT4, mapper_KR63B,  0x36, 0, 0x34 },
 	{"knightsj",   CPS_B_21_BT4, mapper_KR63B,  0x36, 0, 0x34 },	// PAL could be different if B-Board is 90629B
-	{"knightsb",   CPS_B_21_BT4, mapper_KR63B,  0x36, 0, 0x34 },	// wrong, knightsb bootleg doesn't use the KR63B PAL
+/*	{"knightsb",   CPS_B_21_BT4, mapper_KR63B,  0x36, 0, 0x34 }, */	// wrong, knightsb bootleg doesn't use the KR63B PAL
 
 	{"msword",     CPS_B_13,     mapper_MS24B },
 	{"mswordr1",   CPS_B_13,     mapper_MS24B },
@@ -1374,10 +1371,8 @@ static const struct CPS1config cps1_config_table[]=
 };
 
 
-
 /* Offset of each palette entry */
 #define cps1_palette_entries (32 * 6)  /* Number colour schemes in palette */
-
 
 /* CPS-A registers */
 #define CPS1_OBJ_BASE           (0x00 / 2)    /* Base address of objects */
@@ -1398,7 +1393,6 @@ static const struct CPS1config cps1_config_table[]=
 #define CPS1_STARS2_SCROLLY     (0x1e / 2)    /* Stars 2 Y */
 #define CPS1_ROWSCROLL_OFFS     (0x20 / 2)    /* base of row scroll offsets in other RAM */
 #define CPS1_VIDEOCONTROL       (0x22 / 2)    /* flip screen, rowscroll enable */
-
 
 /* CPS1 VIDEO RENDERER */
 #define CPS2_OBJ_BASE	0x00	/* Unknown (not base address of objects). Could be bass address of bank used when object swap bit set? */
@@ -2236,22 +2230,22 @@ static void cps1_render_sprites( running_machine *machine, bitmap_t *bitmap, con
 {
 	cps_state *state = (cps_state *)machine->driver_data;
 
-#define DRAWSPRITE( CODE, COLOR, FLIPX, FLIPY, SX, SY )	\
-{							\
-	if (flip_screen_get(machine))			\
-		pdrawgfx_transpen(bitmap, 		\
-				cliprect, machine->gfx[2], \
-				CODE,			\
-				COLOR,			\
-				!(FLIPX), !(FLIPY),	\
-				511 - 16 - (SX), 255 - 16 - (SY), machine->priority_bitmap, 0x02, 15); \
-	else						\
-		pdrawgfx_transpen(bitmap,		\
-				cliprect, machine->gfx[2], \
-				CODE,			\
-				COLOR,			\
-				FLIPX, FLIPY,		\
-				SX, SY,				  machine->priority_bitmap, 0x02, 15); \
+#define DRAWSPRITE( CODE, COLOR, FLIPX, FLIPY, SX, SY )							\
+{													\
+	if (flip_screen_get(machine))									\
+		pdrawgfx_transpen(bitmap, 								\
+				cliprect, machine->gfx[2], 						\
+				CODE,									\
+				COLOR,									\
+				!(FLIPX), !(FLIPY),							\
+				511 - 16 - (SX), 255 - 16 - (SY), machine->priority_bitmap, 0x02, 15);  \
+	else												\
+		pdrawgfx_transpen(bitmap,								\
+				cliprect, machine->gfx[2], 						\
+				CODE,									\
+				COLOR,									\
+				FLIPX, FLIPY,								\
+				SX, SY,				  machine->priority_bitmap, 0x02, 15);  \
 }
 	UINT16 *base = state->buffered_obj;
 	INT32 i, baseadd;
@@ -2272,9 +2266,6 @@ static void cps1_render_sprites( running_machine *machine, bitmap_t *bitmap, con
 		int code = *(base + 2);
 		int colour = *(base + 3);
 		int col = colour & 0x1f;
-
-//      x -= 0x20;
-//      y += 0x20;
 
 		code = gfxrom_bank_mapper(machine, GFXTYPE_SPRITES, code);
 
@@ -2298,15 +2289,10 @@ static void cps1_render_sprites( running_machine *machine, bitmap_t *bitmap, con
 						{
 							for (nxs = 0; nxs < nx; nxs++)
 							{
-								sx = (x + nxs * 16) & 0x1ff;
-								sy = (y + nys * 16) & 0x1ff;
-
-								DRAWSPRITE(
-//                                      code + (nx - 1) - nxs + 0x10 * (ny - 1 - nys),
-										(code & ~0xf) + ((code + (nx - 1) - nxs) & 0xf) + 0x10 * (ny - 1 - nys),
-										(col & 0x1f),
-										1,1,
-										sx,sy);
+								sx = (x + nxs * 16) & 0x01ff;
+								sy = (y + nys * 16) & 0x01ff;
+								DRAWSPRITE( (code & ~0x0f) + ((code + (nx - 1) - nxs) & 0x0f) + 0x10 * (ny - 1 - nys),
+									    (col & 0x1f), 0x01, 0x01, sx, sy );
 							}
 						}
 					}
@@ -2316,15 +2302,10 @@ static void cps1_render_sprites( running_machine *machine, bitmap_t *bitmap, con
 						{
 							for (nxs = 0; nxs < nx; nxs++)
 							{
-								sx = (x + nxs * 16) & 0x1ff;
-								sy = (y + nys * 16) & 0x1ff;
-
-								DRAWSPRITE(
-//                                      code + nxs + 0x10 * (ny - 1 - nys),
-										(code & ~0xf) + ((code + nxs) & 0xf) + 0x10 * (ny - 1 - nys),
-										(col & 0x1f),
-										0,1,
-										sx,sy);
+								sx = (x + nxs * 16) & 0x01ff;
+								sy = (y + nys * 16) & 0x01ff;
+								DRAWSPRITE( (code & ~0x0f) + ((code + nxs) & 0x0f) + 0x10 * (ny - 1 - nys),
+									    (col & 0x1f), 0x00, 0x01, sx, sy );
 							}
 						}
 					}
@@ -2339,13 +2320,8 @@ static void cps1_render_sprites( running_machine *machine, bitmap_t *bitmap, con
 							{
 								sx = (x + nxs * 16) & 0x1ff;
 								sy = (y + nys * 16) & 0x1ff;
-
-								DRAWSPRITE(
-//                                      code + (nx - 1) - nxs + 0x10 * nys,
-										(code & ~0xf) + ((code + (nx - 1) - nxs) & 0xf) + 0x10 * nys,
-										(col & 0x1f),
-										1,0,
-										sx,sy);
+								DRAWSPRITE( (code & ~0x0f) + ((code + (nx - 1) - nxs) & 0x0f) + 0x10 * nys,
+									    (col & 0x1f), 0x01, 0x00, sx, sy);
 							}
 						}
 					}
@@ -2357,13 +2333,8 @@ static void cps1_render_sprites( running_machine *machine, bitmap_t *bitmap, con
 							{
 								sx = (x + nxs * 16) & 0x1ff;
 								sy = (y + nys * 16) & 0x1ff;
-
-								DRAWSPRITE(
-//                                      code + nxs + 0x10 * nys,
-										(code & ~0xf) + ((code + nxs) & 0xf) + 0x10 * nys,	// fix 00406: qadj: When playing as the ninja, there is one broekn frame in his animation loop when walking.
-										(col & 0x1f),
-										0,0,
-										sx,sy);
+								DRAWSPRITE( (code & ~0x0f) + ((code + nxs) & 0x0f) + 0x10 * nys, /* fix 00406: qadj: When playing as the ninja, there is one broekn frame in his animation loop when walking. */
+									    (col & 0x1f), 0x00, 0x00, sx, sy);
 							}
 						}
 					}
@@ -2372,11 +2343,7 @@ static void cps1_render_sprites( running_machine *machine, bitmap_t *bitmap, con
 			else
 			{
 				/* Simple case... 1 sprite */
-						DRAWSPRITE(
-						code,
-						(col & 0x1f),
-						colour&0x20,colour&0x40,
-						x & 0x1ff,y & 0x1ff);
+				DRAWSPRITE( code, (col & 0x1f), colour & 0x20, colour & 0x40, x & 0x01ff, y & 0x01ff );
 			}
 		}
 		base += baseadd;
@@ -2439,8 +2406,6 @@ static UINT16 *cps2_objbase( running_machine *machine )
 	if (state->objram_bank & 0x01)
 		baseptr ^= 0x0080;
 
-//popmessage("%04x %d", cps2_port(machine, CPS2_OBJ_BASE), state->objram_bank & 1);
-
 	if (baseptr == 0x7000)
 		return state->objram1;
 	else //if (baseptr == 0x7080)
@@ -2470,22 +2435,22 @@ static void cps2_render_sprites( running_machine *machine, bitmap_t *bitmap, con
 {
 	cps_state *state = (cps_state *)machine->driver_data;
 
-#define DRAWSPRITE(CODE, COLOR, FLIPX, FLIPY, SX, SY) \
-{							\
-	if (flip_screen_get(machine))			\
-		pdrawgfx_transpen(bitmap,		\
-				cliprect, machine->gfx[2], \
-				CODE,			\
-				COLOR,			\
-				!(FLIPX), !(FLIPY),	\
-				511 - 16 - (SX), 255 - 16 - (SY),		machine->priority_bitmap,primasks[priority], 15); \
-	else						\
-		pdrawgfx_transpen(bitmap,		\
-				cliprect,machine->gfx[2], \
-				CODE,			\
-				COLOR,			\
-				FLIPX, FLIPY,		\
-				SX, SY,						machine->priority_bitmap,primasks[priority], 15); \
+#define DRAWSPRITE(CODE, COLOR, FLIPX, FLIPY, SX, SY)									\
+{															\
+	if (flip_screen_get(machine))											\
+		pdrawgfx_transpen(bitmap,										\
+				cliprect, machine->gfx[2],								\
+				CODE,											\
+				COLOR,											\
+				!(FLIPX), !(FLIPY),									\
+				511 - 16 - (SX), 255 - 16 - (SY), machine->priority_bitmap, primasks[priority], 15);	\
+	else														\
+		pdrawgfx_transpen(bitmap,										\
+				cliprect, machine->gfx[2],								\
+				CODE,											\
+				COLOR,											\
+				FLIPX, FLIPY,										\
+				SX, SY,				  machine->priority_bitmap, primasks[priority], 15);	\
 }
 
 	UINT16 *base = state->cps2_buffered_obj;
@@ -2532,13 +2497,10 @@ static void cps2_render_sprites( running_machine *machine, bitmap_t *bitmap, con
 					{
 						for (nxs = 0; nxs < nx; nxs++)
 						{
-							sx = (x + nxs * 16 + xoffs) & 0x3ff;
-							sy = (y + nys * 16 + yoffs) & 0x3ff;
-							DRAWSPRITE(
-									code + (nx - 1) - nxs + 0x10 * (ny - 1 - nys),
-									(col & 0x1f),
-									1,1,
-									sx,sy);
+							sx = (x + nxs * 16 + xoffs) & 0x03ff;
+							sy = (y + nys * 16 + yoffs) & 0x03ff;
+							DRAWSPRITE( code + (nx - 1) - nxs + 0x10 * (ny - 1 - nys),
+								   (col & 0x1f), 0x01, 0x01, sx, sy);
 						}
 					}
 				}
@@ -2548,14 +2510,10 @@ static void cps2_render_sprites( running_machine *machine, bitmap_t *bitmap, con
 					{
 						for (nxs = 0; nxs < nx; nxs++)
 						{
-							sx = (x + nxs * 16 + xoffs) & 0x3ff;
-							sy = (y + nys * 16 + yoffs) & 0x3ff;
-
-							DRAWSPRITE(
-									code + nxs + 0x10 * (ny - 1 - nys),
-									(col & 0x1f),
-									0,1,
-									sx,sy);
+							sx = (x + nxs * 16 + xoffs) & 0x03ff;
+							sy = (y + nys * 16 + yoffs) & 0x03ff;
+							DRAWSPRITE( code + nxs + 0x10 * (ny - 1 - nys),
+								   (col & 0x1f), 0x00, 0x01, sx, sy);
 						}
 					}
 				}
@@ -2568,14 +2526,10 @@ static void cps2_render_sprites( running_machine *machine, bitmap_t *bitmap, con
 					{
 						for (nxs = 0; nxs < nx; nxs++)
 						{
-							sx = (x + nxs * 16 + xoffs) & 0x3ff;
-							sy = (y + nys * 16 + yoffs) & 0x3ff;
-
-							DRAWSPRITE(
-									code + (nx - 1) - nxs + 0x10 * nys,
-									(col & 0x1f),
-									1,0,
-									sx,sy);
+							sx = (x + nxs * 16 + xoffs) & 0x03ff;
+							sy = (y + nys * 16 + yoffs) & 0x03ff;
+							DRAWSPRITE( code + (nx - 1) - nxs + 0x10 * nys,
+								   (col & 0x1f), 0x01, 0x00, sx, sy);
 						}
 					}
 				}
@@ -2588,12 +2542,8 @@ static void cps2_render_sprites( running_machine *machine, bitmap_t *bitmap, con
 							sx = (x + nxs * 16 + xoffs) & 0x3ff;
 							sy = (y + nys * 16 + yoffs) & 0x3ff;
 
-							DRAWSPRITE(
-//                                      code + nxs + 0x10 * nys,
-									(code & ~0xf) + ((code + nxs) & 0xf) + 0x10 * nys,	//  pgear fix
-									(col & 0x1f),
-									0,0,
-									sx,sy);
+							DRAWSPRITE( (code & ~0x0f) + ((code + nxs) & 0x0f) + 0x10 * nys,	/* pgear fix */
+								    (col & 0x1f), 0x00, 0x00, sx, sy);
 						}
 					}
 				}
@@ -2602,11 +2552,7 @@ static void cps2_render_sprites( running_machine *machine, bitmap_t *bitmap, con
 		else
 		{
 			/* Simple case... 1 sprite */
-			DRAWSPRITE(
-					code,
-					(col & 0x1f),
-					colour&0x20,colour&0x40,
-					(x+xoffs) & 0x3ff,(y+yoffs) & 0x3ff);
+			DRAWSPRITE( code, (col & 0x1f), colour & 0x20, colour & 0x40, (x + xoffs) & 0x03ff, (y + yoffs) & 0x03ff);
 		}
 	}
 }
@@ -2772,7 +2718,7 @@ VIDEO_UPDATE( cps1 )
 	{
 /*		CPS1 games use pen 0xbff as background color; this is used in 3wonders,
 		mtwins (explosion during attract), mercs (intermission). */
-		bitmap_fill(bitmap, cliprect, 0xbff);
+		bitmap_fill(bitmap, cliprect, 0x0bff);
 	}
 	else
 	{

@@ -1,4 +1,4 @@
-/***************************************************************************
+/* **************************************************************************
 
 Driver by Paul Leaman (paul@vortexcomputing.demon.co.uk)
 
@@ -589,7 +589,8 @@ Stephh's inputs notes (based on some tests on the "parent" set) :
   - BUTTON3 acts like a rapid fire (keep button pressed).
     It has to be enabled in the game settings as it is OFF by default.
 
-***************************************************************************/
+************************************************************************** */
+
 #include "emu.h"
 #include "cpu/z80/z80.h"
 #include "deprecat.h"
@@ -607,14 +608,15 @@ Stephh's inputs notes (based on some tests on the "parent" set) :
  *
  *************************************/
 
+static void gigaman2_gfx_reorder(running_machine *machine, int gfx_len, UINT16 *gfxrom);
+
 /* Maximum size of Q Sound Z80 region */
-#define QSOUND_SIZE 0x50000
+#define QSOUND_SIZE	0x50000
 
 /* Maximum 680000 code size */
 #undef  CODE_SIZE
-#define CODE_SIZE   0x0400000
+#define CODE_SIZE	0x0400000
 
-static void gigaman2_gfx_reorder(running_machine *machine, int gfx_len, UINT16 *gfxrom);
 
 /*************************************
  *
@@ -625,9 +627,8 @@ static void gigaman2_gfx_reorder(running_machine *machine, int gfx_len, UINT16 *
 static INTERRUPT_GEN( cps2_interrupt )
 {
 	cps_state *state = (cps_state *)device->machine->driver_data;
-
 	/* 2 is vblank, 4 is some sort of scanline interrupt, 6 is both at the same time. */
-	if (state->scancount >= 258)
+	if (state->scancount > 258 - 1)
 	{
 		state->scancount = -1;
 		state->scancalls = 0;
@@ -635,13 +636,13 @@ static INTERRUPT_GEN( cps2_interrupt )
 	state->scancount++;
 
 	if (state->cps_b_regs[0x10 / 2] & 0x8000)
-		state->cps_b_regs[0x10 / 2] &= 0x1ff;
+		state->cps_b_regs[0x10 / 2] &= 0x01ff;
 
 	if (state->cps_b_regs[0x12 / 2] & 0x8000)
-		state->cps_b_regs[0x12 / 2] &= 0x1ff;
+		state->cps_b_regs[0x12 / 2] &= 0x01ff;
 
 	/* raster effects */
-	if (state->scanline1 == state->scancount || (state->scanline1 < state->scancount && !state->scancalls))
+	if ( (!state->scancalls && state->scanline1 < state->scancount) || state->scanline1 == state->scancount )
 	{
 		state->cps_b_regs[0x10 / 2] = 0;
 		cpu_set_input_line(device, 4, HOLD_LINE);
@@ -649,9 +650,8 @@ static INTERRUPT_GEN( cps2_interrupt )
 		device->machine->primary_screen->update_partial(16 - 10 + state->scancount);	/* visarea.min_y - [first visible line?] + scancount */
 		state->scancalls++;
 	}
-
 	/* raster effects */
-	if(state->scanline2 == state->scancount || (state->scanline2 < state->scancount && !state->scancalls))
+	if ( (!state->scancalls && state->scanline2 < state->scancount) || state->scanline2 == state->scancount )
 	{
 		state->cps_b_regs[0x12 / 2] = 0;
 		cpu_set_input_line(device, 4, HOLD_LINE);
@@ -659,14 +659,14 @@ static INTERRUPT_GEN( cps2_interrupt )
 		device->machine->primary_screen->update_partial(16 - 10 + state->scancount);	/* visarea.min_y - [first visible line?] + scancount */
 		state->scancalls++;
 	}
-
-	if (state->scancount == 240)  /* VBlank */
+	/* VBlank */
+	if (state->scancount == 240)
 	{
 		state->cps_b_regs[0x10 / 2] = state->scanline1;
 		state->cps_b_regs[0x12 / 2] = state->scanline2;
 		cpu_set_input_line(device, 2, HOLD_LINE);
 
-		if(state->scancalls)
+		if (state->scancalls)
 		{
 			cps2_set_sprite_priorities(device->machine);
 			device->machine->primary_screen->update_partial(256);
@@ -764,10 +764,7 @@ static READ16_HANDLER( cps2_qsound_volume_r )
 	/* Network adapter (ssf2tb) present when bit 15 = 0 */
 	/* Only game known to use both these so far is SSF2TB */
 
-	if (state->cps2networkpresent)
-		return 0x2021;
-	else
-		return 0xe021;
+	return state->cps2networkpresent ? 0x2021 : 0xe021;
 }
 
 
@@ -856,7 +853,7 @@ static ADDRESS_MAP_START( dead_cps2_map, ADDRESS_SPACE_PROGRAM, 16 )
 	AM_RANGE(0x8040e0, 0x8040e1) AM_WRITE(cps2_objram_bank_w)									/* bit 0 = Object ram bank swap */
 	AM_RANGE(0x804100, 0x80413f) AM_WRITE(cps1_cps_a_w) AM_BASE_MEMBER(cps_state, cps_a_regs)					/* CPS-A custom */
 	AM_RANGE(0x804140, 0x80417f) AM_READWRITE(cps1_cps_b_r, cps1_cps_b_w)           						/* CPS-B custom */
-	AM_RANGE(0x900000, 0x92ffff) AM_RAM_WRITE(cps1_gfxram_w) AM_BASE_SIZE_MEMBER(cps_state, gfxram, gfxram_size)	/* Video RAM */
+	AM_RANGE(0x900000, 0x92ffff) AM_RAM_WRITE(cps1_gfxram_w) AM_BASE_SIZE_MEMBER(cps_state, gfxram, gfxram_size)			/* Video RAM */
 	AM_RANGE(0xff0000, 0xffffef) AM_RAM												/* RAM */
 	AM_RANGE(0xfffff0, 0xfffffb) AM_RAM AM_BASE_SIZE_MEMBER(cps_state, output, output_size)						/* CPS2 output */
 ADDRESS_MAP_END
@@ -1211,14 +1208,14 @@ static MACHINE_DRIVER_START( cps2 )
 	MDRV_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
 	MDRV_SCREEN_RAW_PARAMS(XTAL_8MHz, 518, 64, 448, 259, 16, 240)
 /*	Measured clocks:
-         V = 59.6376Hz
-         H = 15.4445kHz
-         H/V = 258.973 ~ 259 lines
+		V = 59.6376Hz
+		H = 15.4445kHz
+		H/V = 258.973 ~ 259 lines
 
 	Possible video clocks:
-         60MHz / 15.4445kHz = 3884.878 / 8 = 485.610 -> unlikely
-          8MHz / 15.4445kHz =  517.983 ~ 518 -> likely
-         16MHz -> same as 8 but with a /2 divider; also a possibility */
+		60MHz / 15.4445kHz = 3884.878 / 8 = 485.610 -> unlikely
+		8MHz / 15.4445kHz =  517.983 ~ 518 -> likely
+		16MHz -> same as 8 but with a /2 divider; also a possibility	*/
 
 	MDRV_GFXDECODE(cps2)
 	MDRV_PALETTE_LENGTH(0xc00)
@@ -1246,7 +1243,7 @@ static MACHINE_DRIVER_START( gigaman2 )
 
 	MDRV_DEVICE_REMOVE("audiocpu")
 	MDRV_DEVICE_REMOVE("qsound")
-	MDRV_OKIM6295_ADD("oki", XTAL_32MHz/32, OKIM6295_PIN7_HIGH) // clock frequency & pin 7 not verified
+	MDRV_OKIM6295_ADD("oki", XTAL_32MHz/32, OKIM6295_PIN7_HIGH)	/* clock frequency & pin 7 not verified */
 	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "lspeaker", 0.47)
 	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "rspeaker", 0.47)
 MACHINE_DRIVER_END
@@ -7794,7 +7791,6 @@ static DRIVER_INIT( cps2 )
 
 	state->scancount = 0;
 	state->cps2networkpresent = 0;
-
 	machine->device("maincpu")->set_clock_scale(0.7375f); /* RAM access waitstates etc. aren't emulated - slow the CPU to compensate */
 }
 
@@ -7805,12 +7801,10 @@ static DRIVER_INIT( ssf2tb )
 	DRIVER_INIT_CALL(cps2);
 
 	state->cps2networkpresent = 0;
-
 	/* we don't emulate the network board, so don't say it's present for now,
-	   otherwise the game will attempt to boot in tournament mode and fail */
+	   otherwise the game will attempt to boot in tournament mode and fail	*/
 
 	/* state->cps2networkpresent = 1; */
-
 }
 
 static DRIVER_INIT ( pzloop2 )
@@ -7820,9 +7814,7 @@ static DRIVER_INIT ( pzloop2 )
 	DRIVER_INIT_CALL(cps2);
 
 	state->readpaddle = 0;
-
 	state_save_register_global(machine, state->readpaddle);
-
 	memory_install_read16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x804000, 0x804001, 0, 0, joy_or_paddle_r);
 }
 
@@ -7856,7 +7848,7 @@ static DRIVER_INIT( gigaman2 )
 	state->gigaman2_dummyqsound_ram = auto_alloc_array(machine, UINT16, 0x20000 / 2);
 	state_save_register_global_pointer(machine, state->gigaman2_dummyqsound_ram, 0x20000 / 2);
 
-	memory_install_readwrite16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x618000, 0x619fff, 0, 0, gigaman2_dummyqsound_r, gigaman2_dummyqsound_w); // no qsound..
+	memory_install_readwrite16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x618000, 0x619fff, 0, 0, gigaman2_dummyqsound_r, gigaman2_dummyqsound_w);	/* no qsound.. */
 	memory_set_decrypted_region(space, 0x000000, (length) - 1, &rom[length / 4]);
 	m68k_set_encrypted_opcode_range(machine->device("maincpu"), 0, length);
 }
