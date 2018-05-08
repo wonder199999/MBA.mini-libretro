@@ -312,6 +312,13 @@ READ16_HANDLER( cps1_hack_dsw_r )
 	return (in << 8) | in;
 }
 
+READ16_HANDLER( wof_hack_dsw_r )
+{
+	static const char *const dswname[] = { "DSWA", "DSWB", "DSWC" };
+	int in = input_port_read(space->machine, dswname[offset]);
+	return (in << 8) | in;
+}
+
 WRITE8_HANDLER( cps1_snd_bankswitch_w )
 {
 	memory_set_bank(space->machine, "bank1", data & 0x01);

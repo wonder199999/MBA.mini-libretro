@@ -173,6 +173,7 @@ WRITE8_DEVICE_HANDLER( cps1_oki_pin7_w );
 WRITE8_HANDLER( qsound_banksw_w );
 WRITE8_HANDLER( cps1_snd_bankswitch_w );
 READ16_HANDLER( cps1_dsw_r );
+READ16_HANDLER( wof_hack_dsw_r );
 READ16_HANDLER( cps1_hack_dsw_r );
 READ16_HANDLER( qsound_rom_r );
 READ16_HANDLER( qsound_sharedram2_r );

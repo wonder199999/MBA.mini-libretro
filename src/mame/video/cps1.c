@@ -363,6 +363,7 @@ The games seem to use them to mark platforms, kill zones and no-go areas.
 #define CPS_B_17     	0x08, 0x0407,		__not_applicable__, 		0x14, {0x12, 0x10, 0x0e, 0x0c}, 0x0a, {0x08, 0x14, 0x02, 0x00, 0x00}
 #define CPS_B_18     	0x10, 0x0408,		__not_applicable__, 		0x1c, {0x1a, 0x18, 0x16, 0x14}, 0x12, {0x10, 0x08, 0x02, 0x00, 0x00}
 
+#define CPS_B_21_DEF	0x32,     -1, 0x00, 0x02, 0x04, 0x06, 0x08,   -1,   -1, 0x26, {0x28, 0x2a, 0x2c, 0x2e}, 0x30, {0x02, 0x04, 0x08, 0x30, 0x30}	/* pang3 sets layer enable to 0x26 on startup */
 #define CPS_B_21_BT1	0x32, 0x0800, 0x0e, 0x0c, 0x0a, 0x08, 0x06, 0x04, 0x02, 0x28, {0x26, 0x24, 0x22, 0x20}, 0x30, {0x20, 0x04, 0x08, 0x12, 0x12}
 #define CPS_B_21_BT2	  -1,     -1, 0x1e, 0x1c, 0x1a, 0x18,   -1, 0x0c, 0x0a, 0x20, {0x2e, 0x2c, 0x2a, 0x28}, 0x30, {0x30, 0x08, 0x30, 0x00, 0x00}
 #define CPS_B_21_BT3  	  -1,     -1, 0x06, 0x04, 0x02, 0x00, 0x0e, 0x0c, 0x0a, 0x20, {0x2e, 0x2c, 0x2a, 0x28}, 0x30, {0x20, 0x12, 0x12, 0x00, 0x00}
@@ -370,7 +371,6 @@ The games seem to use them to mark platforms, kill zones and no-go areas.
 #define CPS_B_21_BT5 	0x32,     -1, 0x0e, 0x0c, 0x0a, 0x08, 0x1e, 0x1c, 0x1a, 0x20, {0x2e, 0x2c, 0x2a, 0x28}, 0x30, {0x20, 0x04, 0x02, 0x00, 0x00}
 #define CPS_B_21_BT6  	  -1,     -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1, 0x20, {0x2e, 0x2c, 0x2a, 0x28}, 0x30, {0x20, 0x14, 0x14, 0x00, 0x00}
 #define CPS_B_21_BT7  	  -1,     -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1, 0x2c, {  -1,   -1,   -1,   -1},	0x12, {0x14, 0x02, 0x14, 0x00, 0x00}
-#define CPS_B_21_DEF	0x32,     -1, 0x00, 0x02, 0x04, 0x06, 0x08,   -1,   -1, 0x26, {0x28, 0x2a, 0x2c, 0x2e}, 0x30, {0x02, 0x04, 0x08, 0x30, 0x30}	// pang3 sets layer enable to 0x26 on startup
 #define CPS_B_21_QS1  	  -1,     -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1, 0x22, {0x24, 0x26, 0x28, 0x2a}, 0x2c, {0x10, 0x08, 0x04, 0x00, 0x00}
 #define CPS_B_21_QS2  	  -1,     -1,   -1,   -1,   -1,   -1,   -1, 0x2e, 0x20,	0x0a, {0x0c, 0x0e, 0x00, 0x02}, 0x04, {0x16, 0x16, 0x16, 0x00, 0x00}
 #define CPS_B_21_QS3 	0x0e, 0x0c00,   -1,   -1,   -1,   -1, 0x2c,   -1,   -1,	0x12, {0x14, 0x16, 0x08, 0x0a}, 0x0c, {0x04, 0x02, 0x20, 0x00, 0x00}
@@ -378,6 +378,7 @@ The games seem to use them to mark platforms, kill zones and no-go areas.
 #define CPS_B_21_QS5 	0x1e, 0x0c02,   -1,   -1,   -1,   -1, 0x0c,   -1,   -1,	0x2a, {0x2c, 0x2e, 0x30, 0x32}, 0x1c, {0x04, 0x08, 0x10, 0x00, 0x00}
 
 #define HACK_B_1      	  -1,     -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,	0x14, {0x12, 0x10, 0x0e, 0x0c}, 0x0a, {0x0e, 0x0e, 0x0e, 0x30, 0x30}
+#define HACK_B_2	  -1,	  -1,	-1,   -1,   -1,   -1,   -1,   -1,   -1, 0x30, {0x2e, 0x2c, 0x2a, 0x28}, 0x26, {0x02, 0x04, 0x08, 0x00, 0x00}
 
 /*
 CPS_B_21_DEF is CPS-B-21 at default settings (no battery)
@@ -1448,7 +1449,6 @@ static MACHINE_RESET( cps )
 		UINT16 *rom = (UINT16 *)memory_region(machine, "maincpu");
 		rom[0xe5332 / 2] = 0x6014;
 	}
-
 #if 0
 	if (strcmp(gamename, "sf2accp2") == 0)
 	{
@@ -1484,7 +1484,7 @@ INLINE UINT16 *cps1_base( running_machine *machine, int offset, int boundary )
 		Mask out the irrelevant bits. */
 
 	base &= ~(boundary - 1);
-	return &state->gfxram[(base & 0x3ffff) / 2];
+	return &state->gfxram[(base & 0x03ffff) / 2];
 }
 
 
@@ -1543,12 +1543,9 @@ READ16_HANDLER( cps1_cps_b_r )
 
 	if (state->cps_version == 2)
 	{
-		if (offset == 0x10/2)
-		{
-			// UNKNOWN--only mmatrix appears to read this, and I'm not sure if the result is actuallyused
+		if (offset == 0x10 / 2)		/* UNKNOWN--only mmatrix appears to read this, and I'm not sure if the result is actuallyused */
 			return state->cps_b_regs[0x10 / 2];
-		}
-		if (offset == 0x12/2)
+		if (offset == 0x12 / 2)
 			return state->cps_b_regs[0x12 / 2];
 	}
 #ifdef MAME_DEBUG
@@ -1566,43 +1563,39 @@ WRITE16_HANDLER( cps1_cps_b_w )
 	if (state->cps_version == 2)
 	{
 		/* To mark scanlines for raster effects */
-		if (offset == 0x0e/2)
+		if (offset == 0x0e / 2)		/* UNKNOWN */
+			return;
+		if (offset == 0x10 / 2)
 		{
-			// UNKNOWN
+			state->scanline1 = (data & 0x01ff);
 			return;
 		}
-		if (offset == 0x10/2)
+		if (offset == 0x12 / 2)
 		{
-			state->scanline1 = (data & 0x1ff);
-			return;
-		}
-		if (offset == 0x12/2)
-		{
-			state->scanline2 = (data & 0x1ff);
+			state->scanline2 = (data & 0x01ff);
 			return;
 		}
 	}
 
-	// additional outputs on C-board
+	/* additional outputs on C-board */
 	if (offset == state->game_config->out2_addr / 2)
 	{
 		if (ACCESSING_BITS_0_7)
 		{
-			if (state->game_config->cpsb_value == 0x0402)	// Mercs (CN2 connector)
+			if (state->game_config->cpsb_value == 0x0402)	/* Mercs (CN2 connector) */
 			{
 				coin_lockout_w(space->machine, 2, ~data & 0x01);
 				set_led_status(space->machine, 0, data & 0x02);
 				set_led_status(space->machine, 1, data & 0x04);
 				set_led_status(space->machine, 2, data & 0x08);
 			}
-			else	// kod, captcomm, knights
+			else	/* kod, captcomm, knights */
 			{
 				coin_lockout_w(space->machine, 2, ~data & 0x02);
 				coin_lockout_w(space->machine, 3, ~data & 0x08);
 			}
 		}
 	}
-
 #ifdef MAME_DEBUG
 	if (offset != state->game_config->cpsb_addr / 2 &&	// only varth writes here
 			offset != state->game_config->mult_factor1 / 2 &&
@@ -1690,8 +1683,8 @@ static void unshuffle( UINT64 *buf, int len )
 static void cps2_gfx_decode( running_machine *machine )
 {
 	const int banksize = 0x200000;
-	int size = memory_region_length(machine, "gfx");
-	int i;
+	INT32 size = memory_region_length(machine, "gfx");
+	UINT32 i;
 
 	for (i = 0; i < size; i += banksize)
 		unshuffle((UINT64 *)(memory_region(machine, "gfx") + i), banksize / 8);
@@ -1779,6 +1772,26 @@ void cps1_get_video_base( running_machine *machine )
 			scroll2xoff = 0x04;
 			scroll3xoff = 0x08;
 		break;
+		case 0x0e:
+			scroll1xoff = 0xffba;
+			scroll2xoff = 0xffc0;
+			scroll3xoff = 0xffba;
+		break;
+		case 0x0f:
+			scroll1xoff = 0xffc0;
+			scroll2xoff = 0xffc0;
+			scroll3xoff = 0xffc0;
+		break;
+		case 0x88:
+			scroll1xoff = 0x04;
+			scroll2xoff = 0x06;
+			scroll3xoff = 0x0a;
+			state->cps_a_regs[0x30 / 2] = 0x3f;
+			state->cps_a_regs[0x22 / 2] = 0x3e;
+			state->cps_a_regs[0x04 / 2] = 0x90c0;
+			state->cps_a_regs[0x06 / 2] = 0x9100;
+			state->cps_a_regs[0x0a / 2] = 0x9140;
+		break;
 		default:
 			scroll1xoff = 0x00;
 			scroll2xoff = 0x00;
@@ -1843,7 +1856,7 @@ void cps1_get_video_base( running_machine *machine )
 WRITE16_HANDLER( cps1_gfxram_w )
 {
 	cps_state *state = (cps_state *)space->machine->driver_data;
-	int page = (offset >> 7) & 0x3c0;
+	int page = (offset >> 7) & 0x03c0;
 	COMBINE_DATA(&state->gfxram[offset]);
 
 	if (page == (state->cps_a_regs[CPS1_SCROLL1_BASE] & 0x3c0))
@@ -2759,19 +2772,7 @@ VIDEO_UPDATE( cps1 )
 		INT32 l1pri = (state->pri_ctrl >> 4 * l1) & 0x0f;
 		INT32 l2pri = (state->pri_ctrl >> 4 * l2) & 0x0f;
 		INT32 l3pri = (state->pri_ctrl >> 4 * l3) & 0x0f;
-#if 0
-		if ((cps2_port(screen->machine, CPS2_OBJ_BASE) != 0x7080 && cps2_port(screen->machine, CPS2_OBJ_BASE) != 0x7000) ||
-			cps2_port(screen->machine, CPS2_OBJ_UK1) != 0x807d ||
-			(cps2_port(screen->machine, CPS2_OBJ_UK2) != 0x0000 && cps2_port(screen->machine, CPS2_OBJ_UK2) != 0x1101 &&
-			cps2_port(screen->machine, CPS2_OBJ_UK2) != 0x0001))
-			popmessage("base %04x uk1 %04x uk2 %04x",
-			cps2_port(screen->machine, CPS2_OBJ_BASE),
-			cps2_port(screen->machine, CPS2_OBJ_UK1),
-			cps2_port(screen->machine, CPS2_OBJ_UK2));
 
-		if (0 && input_code_pressed(screen->machine, KEYCODE_Z))
-			popmessage("order: %d (%d) %d (%d) %d (%d) %d (%d)",l0,l0pri,l1,l1pri,l2,l2pri,l3,l3pri);
-#endif
 		/* take out the CPS1 sprites layer */
 		if (l0 == 0) { l0 = l1; l1 = 0; l0pri = l1pri; }
 		if (l1 == 0) { l1 = l2; l2 = 0; l1pri = l2pri; }
@@ -2813,7 +2814,7 @@ VIDEO_UPDATE( cps1 )
 VIDEO_EOF( cps1 )
 {
 	cps_state *state = (cps_state *)machine->driver_data;
-	cps1_get_video_base(machine);	/* Get video memory base registers */
+	cps1_get_video_base(machine);		/* Get video memory base registers */
 
 	if (state->cps_version == 1)
 		memcpy(state->buffered_obj, state->obj, state->obj_size);	/* CPS1 sprites have to be delayed one frame */
