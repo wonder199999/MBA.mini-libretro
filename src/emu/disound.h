@@ -49,7 +49,7 @@
 
 //**************************************************************************
 //  CONSTANTS
-//**************************************************************************
+//**************************************************************************/
 
 const int MAX_OUTPUTS		= 4095;			// maximum number of outputs a sound chip can support
 const int ALL_OUTPUTS		= MAX_OUTPUTS;	// special value indicating all outputs for the current chip
@@ -58,7 +58,7 @@ const int ALL_OUTPUTS		= MAX_OUTPUTS;	// special value indicating all outputs fo
 
 //**************************************************************************
 //  INTERFACE CONFIGURATION MACROS
-//**************************************************************************
+//**************************************************************************/
 
 #define MDRV_SOUND_ADD(_tag, _type, _clock) \
 	MDRV_DEVICE_ADD(_tag, SOUND_##_type, _clock) \
@@ -89,7 +89,7 @@ const int ALL_OUTPUTS		= MAX_OUTPUTS;	// special value indicating all outputs fo
 
 //**************************************************************************
 //  TYPE DEFINITIONS
-//**************************************************************************
+//**************************************************************************/
 
 class sound_stream;
 

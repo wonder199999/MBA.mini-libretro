@@ -46,7 +46,7 @@
 
 //**************************************************************************
 //  CONSTANTS
-//**************************************************************************
+//**************************************************************************/
 
 #define DEVINFO_IMAGE_CREATE_OPTMAX   32
 
@@ -176,7 +176,7 @@ enum
 
 //**************************************************************************
 //  MACROS
-//**************************************************************************
+//**************************************************************************/
 
 // macro for declaring the configuration and device classes of a legacy device
 #define _DECLARE_LEGACY_DEVICE(name, basename, configclass, deviceclass, baseconfigclass, basedeviceclass)		\
@@ -273,7 +273,7 @@ const device_type name = configclass::static_alloc_device_config
 
 //**************************************************************************
 //  DEVICE_CONFIGURATION_MACROS
-//**************************************************************************
+//**************************************************************************/
 
 // inline device configurations that require 32 bits of storage in the token
 #define MDRV_DEVICE_CONFIG_DATA32_EXPLICIT(_size, _offset, _val) \
@@ -370,7 +370,7 @@ const device_type name = configclass::static_alloc_device_config
 
 //**************************************************************************
 //  TYPE DEFINITIONS
-//**************************************************************************
+//**************************************************************************/
 
 union deviceinfo;
 
