@@ -992,6 +992,7 @@ static const struct gfx_range mapper_VA22B_table[] =
 	{ 0 }
 };
 
+
 #define mapper_VA63B	{ 0x8000, 0, 0, 0 }, mapper_VA63B_table
 static const struct gfx_range mapper_VA63B_table[] =
 {
@@ -1162,7 +1163,6 @@ static const struct gfx_range mapper_sfzch_table[] =
 };
 
 
-
 /*
   I don't know if CPS2 ROM boards use PALs as well; since all games seem to be
   well behaved, I'll just assume that there is no strong checking of gfx type.
@@ -1180,7 +1180,7 @@ static const struct gfx_range mapper_cps2_table[] =
 
 static const struct CPS1config cps1_config_table[]=
 {
-	/* name        CPSB          gfx mapper   in2  in3  out2   kludge */
+	/* name        CPSB          gfx mapper	    in2   in3  out2  kludge */
 	{"1941",       CPS_B_05,     mapper_YI24B },
 	{"1941j",      CPS_B_05,     mapper_YI24B },	// PAL used could be YI22B
 

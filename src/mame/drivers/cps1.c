@@ -243,13 +243,19 @@ Stephh's log (2006.09.20) :
 
 #include "includes/cps1.h"       /* External CPS1 definitions */
 
-/* -------------------  Custom function  -------------------- */
+/* -------------------  Game-specific function  -------------------- */
 static WRITE16_HANDLER( sf2m3_layer_w )
 {
 	cps1_cps_b_w(space, 0x0a, data, 0xffff);
 }
 
 /* ---------------------------------------------------------- */
+void cps1_irq_handler_mus(running_device *device, int irq)
+{
+	cps_state *state = (cps_state *)device->machine->driver_data;
+	cpu_set_input_line(state->audiocpu, 0, irq ? ASSERT_LINE : CLEAR_LINE);
+}
+
 static READ16_HANDLER( forgottn_dial_0_r )
 {
 	cps_state *state = (cps_state *)space->machine->driver_data;
@@ -326,13 +332,15 @@ WRITE8_HANDLER( cps1_snd_bankswitch_w )
 
 WRITE8_DEVICE_HANDLER( cps1_oki_pin7_w )
 {
-	downcast<okim6295_device *>(device)->set_pin7(data & 1);
+	downcast<okim6295_device *>(device)->set_pin7(data & 0x01);
 }
 
 WRITE16_HANDLER( cps1_soundlatch_w )
 {
 	if (ACCESSING_BITS_0_7)
 		soundlatch_w(space, 0, data & 0xff);
+	else
+		soundlatch_w(space, 0, data >> 0x08);
 }
 
 WRITE16_HANDLER( cps1_soundlatch2_w )
@@ -447,6 +455,7 @@ WRITE8_HANDLER( qsound_banksw_w )
 *   0xf1c006
 *
 ********************************************************************/
+static const ym2151_interface ym2151_config = { cps1_irq_handler_mus };
 
 #ifndef MESS
 static const eeprom_interface qsound_eeprom_interface =
@@ -776,7 +785,7 @@ INPUT_PORTS_START( cps1_3b )
 	PORT_BIT( 0x8000, IP_ACTIVE_LOW, IPT_UNKNOWN )
 INPUT_PORTS_END
 
-/* CPS1 games with 2 players and 2 buttons each */
+	/* CPS1 games with 2 players and 2 buttons each */
 INPUT_PORTS_START( cps1_2b )
 	PORT_INCLUDE( cps1_3b )
 
@@ -785,7 +794,7 @@ INPUT_PORTS_START( cps1_2b )
 	PORT_BIT( 0x4000, IP_ACTIVE_LOW, IPT_UNKNOWN )	/* no button 3 */
 INPUT_PORTS_END
 
-/* CPS1 games with 3 players and 2 buttons each */
+	/* CPS1 games with 3 players and 2 buttons each */
 INPUT_PORTS_START( cps1_3players )
 	PORT_INCLUDE( cps1_2b )
 
@@ -800,7 +809,7 @@ INPUT_PORTS_START( cps1_3players )
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_START3 )
 INPUT_PORTS_END
 
-/* CPS1 games with 4 players and 2 buttons each */
+	/* CPS1 games with 4 players and 2 buttons each */
 INPUT_PORTS_START( cps1_4players )
 	PORT_INCLUDE( cps1_3players )
 
@@ -815,7 +824,7 @@ INPUT_PORTS_START( cps1_4players )
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_START4 )
 INPUT_PORTS_END
 
-/* CPS1 games with 2 players and 1 button each */
+	/* CPS1 games with 2 players and 1 button each */
 static INPUT_PORTS_START( cps1_1b )
 	PORT_INCLUDE( cps1_2b )
 
@@ -824,7 +833,7 @@ static INPUT_PORTS_START( cps1_1b )
 	PORT_BIT( 0x2000, IP_ACTIVE_LOW, IPT_UNKNOWN )	/* no button 2 */
 INPUT_PORTS_END
 
-/* CPS1 quiz games */
+	/* CPS1 quiz games */
 static INPUT_PORTS_START( cps1_quiz )
 	PORT_INCLUDE( cps1_3b )
 
@@ -929,7 +938,7 @@ static INPUT_PORTS_START( ghouls )
 	PORT_DIPSETTING(    0x00, DEF_STR( Cocktail ) )		/* for 2-player cocktail cabinet */
 INPUT_PORTS_END
 
-/* Same as 'ghouls' but additional "Freeze" Dip Switch, different "Lives" Dip Switch, and LOTS of "debug" features (read the notes to know how to activate them) */
+	/* Same as 'ghouls' but additional "Freeze" Dip Switch, different "Lives" Dip Switch, and LOTS of "debug" features (read the notes to know how to activate them) */
 static INPUT_PORTS_START( ghoulsu )
 	PORT_INCLUDE( ghouls )
 
@@ -1036,7 +1045,7 @@ static INPUT_PORTS_START( ghoulsu )
 	PORT_DIPSETTING(    0x00, DEF_STR( Cocktail ) )		/* for 2-player cocktail cabinet */
 INPUT_PORTS_END
 
-/* Same as 'ghouls' but additional "Freeze" Dip Switch */
+	/* Same as 'ghouls' but additional "Freeze" Dip Switch */
 static INPUT_PORTS_START( daimakai )
 	PORT_INCLUDE(ghouls)
 
@@ -1046,7 +1055,7 @@ static INPUT_PORTS_START( daimakai )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 INPUT_PORTS_END
 
-/* "Debug" features to be implemented */
+	/* "Debug" features to be implemented */
 static INPUT_PORTS_START( strider )
 	PORT_INCLUDE( cps1_3b )
 
@@ -1102,8 +1111,8 @@ static INPUT_PORTS_START( strider )
 	PORT_DIPSETTING(    0x00, DEF_STR( Test ) )		/* To enable the "debug" features */
 INPUT_PORTS_END
 
-/* Same as 'strider' but additional "2 Coins to Start, 1 to Continue" Dip Switch */
-/* "Debug" features to be implemented */
+	/* Same as 'strider' but additional "2 Coins to Start, 1 to Continue" Dip Switch */
+	/* "Debug" features to be implemented */
 static INPUT_PORTS_START( stridrua )
 	PORT_INCLUDE( strider )
 
@@ -1158,7 +1167,7 @@ static INPUT_PORTS_START( dynwar )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 INPUT_PORTS_END
 
-/* Read the notes to know how to activate the "debug" features */
+	/* Read the notes to know how to activate the "debug" features */
 static INPUT_PORTS_START( willow )
 	PORT_INCLUDE( cps1_3b )
 
@@ -1305,7 +1314,7 @@ static INPUT_PORTS_START( willow )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 INPUT_PORTS_END
 
-/* To enable extra choices in the "test mode", you must press "Coin 1" ('5') AND "Service Mode" ('F2') */
+	/* To enable extra choices in the "test mode", you must press "Coin 1" ('5') AND "Service Mode" ('F2') */
 static INPUT_PORTS_START( unsquad )
 	PORT_INCLUDE( cps1_3b )
 
@@ -1353,8 +1362,8 @@ static INPUT_PORTS_START( unsquad )
 	PORT_DIPSETTING(    0x00, DEF_STR( Test ) )
 INPUT_PORTS_END
 
-/* To enable other choices in the "test mode", you must press ("P1 Button 1" ('Ctrl')
-   or "P1 Button 2" ('Alt')) when "Service Mode" is ON */
+	/* To enable other choices in the "test mode", you must press ("P1 Button 1" ('Ctrl')
+	   or "P1 Button 2" ('Alt')) when "Service Mode" is ON */
 static INPUT_PORTS_START( ffight )
 	PORT_INCLUDE( cps1_3b )
 
@@ -1701,7 +1710,7 @@ static INPUT_PORTS_START( cawing )
 	PORT_DIPSETTING(    0x00, DEF_STR( Test ) )
 INPUT_PORTS_END
 
-/* "Debug" features to be implemented */
+	/* "Debug" features to be implemented */
 static INPUT_PORTS_START( nemo )
 	PORT_INCLUDE( cps1_3b )
 
@@ -1806,7 +1815,7 @@ INPUT_PORTS_START( sf2 )
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNKNOWN )
 INPUT_PORTS_END
 
-/* Needs further checking */
+	/* Needs further checking */
 static INPUT_PORTS_START( sf2j )
 	PORT_INCLUDE( sf2 )
 
@@ -1975,7 +1984,7 @@ static INPUT_PORTS_START( kod )
 	PORT_DIPSETTING(    0x00, DEF_STR( Test ) )
 INPUT_PORTS_END
 
-/* Needs further checking same as kod but different "Bonus_life" values */
+	/* Needs further checking same as kod but different "Bonus_life" values */
 static INPUT_PORTS_START( kodj )
 	PORT_INCLUDE( kod )
 
@@ -2170,7 +2179,7 @@ static INPUT_PORTS_START( varth )
 	PORT_DIPSETTING(    0x00, DEF_STR( Test ) )
 INPUT_PORTS_END
 
-/* Needs further checking */
+	/* Needs further checking */
 static INPUT_PORTS_START( cworld2j )
 	PORT_INCLUDE( cps1_quiz )
 
@@ -2233,7 +2242,7 @@ static INPUT_PORTS_START( cworld2j )
 	PORT_BIT( 0xff, IP_ACTIVE_LOW, IPT_UNKNOWN )
 INPUT_PORTS_END
 
-/* Needs further checking */
+	/* Needs further checking */
 static INPUT_PORTS_START( wof )
 	PORT_INCLUDE( cps1_3players )
 
@@ -2265,7 +2274,7 @@ static INPUT_PORTS_START( wof )
 	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_OUTPUT ) PORT_WRITE_LINE_DEVICE("eeprom", eeprom_set_cs_line)
 INPUT_PORTS_END
 
-/* Needs further checking */
+	/* Needs further checking */
 static INPUT_PORTS_START( dinopic )
 	PORT_INCLUDE( cps1_3players )
 
@@ -2395,7 +2404,7 @@ static INPUT_PORTS_START( dinoh )
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_START3 )
 INPUT_PORTS_END
 
-/* Needs further checking */
+	/* Needs further checking */
 static INPUT_PORTS_START( punipic )
 	PORT_INCLUDE( cps1_2b )
 
@@ -2499,7 +2508,7 @@ static INPUT_PORTS_START( punisherbz )
 	PORT_BIT( 0x8000, IP_ACTIVE_LOW, IPT_UNKNOWN )
 INPUT_PORTS_END
 
-/* Needs further checking */
+	/* Needs further checking */
 static INPUT_PORTS_START( slammast )
 	PORT_INCLUDE( cps1_4players )
 
@@ -2533,7 +2542,7 @@ static INPUT_PORTS_START( slammast )
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_OUTPUT ) PORT_WRITE_LINE_DEVICE("eeprom", eeprom_set_cs_line)
 INPUT_PORTS_END
 
-/* Needs further checking */
+	/* Needs further checking */
 static INPUT_PORTS_START( pnickj )
 	PORT_INCLUDE( cps1_3b )
 
@@ -2580,7 +2589,7 @@ static INPUT_PORTS_START( pnickj )
 	PORT_DIPSETTING(    0x00, DEF_STR( Test ) )
 INPUT_PORTS_END
 
-/* Needs further checking */
+	/* Needs further checking */
 static INPUT_PORTS_START( qad )
 	PORT_INCLUDE( cps1_quiz )
 
@@ -2648,7 +2657,7 @@ static INPUT_PORTS_START( qad )
 	PORT_BIT( 0xff, IP_ACTIVE_LOW, IPT_UNKNOWN )
 INPUT_PORTS_END
 
-/* Needs further checking */
+	/* Needs further checking */
 static INPUT_PORTS_START( qadj )
 	PORT_INCLUDE( qad )
 
@@ -2681,7 +2690,7 @@ static INPUT_PORTS_START( qadj )
 	PORT_BIT( 0xff, IP_ACTIVE_LOW, IPT_UNKNOWN )
 INPUT_PORTS_END
 
-/* Needs further checking */
+	/* Needs further checking */
 static INPUT_PORTS_START( qtono2j )
 	PORT_INCLUDE( cps1_quiz )
 
@@ -2743,7 +2752,7 @@ static INPUT_PORTS_START( qtono2j )
 	PORT_BIT( 0xff, IP_ACTIVE_LOW, IPT_UNKNOWN )
 INPUT_PORTS_END
 
-/* Needs further checking */
+	/* Needs further checking */
 static INPUT_PORTS_START( pang3 )
 	PORT_INCLUDE( cps1_3b )
 
@@ -2775,7 +2784,7 @@ static INPUT_PORTS_START( pang3 )
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_OUTPUT ) PORT_WRITE_LINE_DEVICE("eeprom", eeprom_set_cs_line)
 INPUT_PORTS_END
 
-/* Needs further checking */
+	/* Needs further checking */
 static INPUT_PORTS_START( pang3n )
 	PORT_INCLUDE( pang3 )
 
@@ -2792,7 +2801,7 @@ static INPUT_PORTS_START( pang3n )
 	PORT_DIPUNUSED( 0x80, 0x80 )
 INPUT_PORTS_END
 
-/* Needs further checking */
+	/* Needs further checking */
 static INPUT_PORTS_START( megaman )
 	PORT_INCLUDE( cps1_3b )
 
@@ -2865,8 +2874,8 @@ static INPUT_PORTS_START( megaman )
 	PORT_DIPSETTING(    0x00, DEF_STR( Test ) )
 INPUT_PORTS_END
 
-/* Needs further checking */
-/* Same as 'megaman' but no "Voice" Dip Switch */
+	/* Needs further checking */
+	/* Same as 'megaman' but no "Voice" Dip Switch */
 static INPUT_PORTS_START( rockmanj )
 	PORT_INCLUDE(megaman)
 
@@ -3025,16 +3034,6 @@ GFXDECODE_START( cps1 )
 	GFXDECODE_ENTRY( "gfx", 0, cps1_layout16x16, 0, 0x100 )
 	GFXDECODE_ENTRY( "gfx", 0, cps1_layout32x32, 0, 0x100 )
 GFXDECODE_END
-
-
-void cps1_irq_handler_mus(running_device *device, int irq)
-{
-	cps_state *state = (cps_state *)device->machine->driver_data;
-	cpu_set_input_line(state->audiocpu, 0, irq ? ASSERT_LINE : CLEAR_LINE);
-}
-
-static const ym2151_interface ym2151_config = { cps1_irq_handler_mus };
-
 
 
 /********************************************************************
@@ -3197,7 +3196,6 @@ static MACHINE_DRIVER_START( sf2m3 )
 	MDRV_CPU_MODIFY("maincpu")
 	MDRV_CPU_PROGRAM_MAP(sf2m3_map)
 MACHINE_DRIVER_END
-
 
 
 /***************************************************************************
@@ -9342,9 +9340,8 @@ static DRIVER_INIT( pang3 )
 		if ( src & 0x20) dst ^= 0x06;
 		if ( src & 0x40) dst ^= 0x08;
 		if (~src & 0x80) dst ^= 0x88;
-		rom[A/2] = dst;
+		rom[A / 2] = dst;
 	}
-
 	DRIVER_INIT_CALL(pang3n);
 }
 #endif
@@ -9361,11 +9358,10 @@ static DRIVER_INIT( sf2m8 )
 {
 	// unscramble gfx
 	UINT8 *src = memory_region( machine, "gfx" ) + 0x480000;
-	UINT8 *tmp = auto_alloc_array( machine, UINT8,  0x180000 );
-	UINT32 i;
-
+	UINT8 *tmp = auto_alloc_array( machine, UINT8, 0x180000 );
 	memcpy ( tmp, src, 0x180000 );
 
+	UINT32 i;
 	for (i = 0; i < 0x180000; i += 0x08)
 	{
 		src[i + 0x02] = tmp[i + 0x04];
@@ -9373,13 +9369,12 @@ static DRIVER_INIT( sf2m8 )
 		src[i + 0x04] = tmp[i + 0x02];
 		src[i + 0x05] = tmp[i + 0x03];
 	}
-	DRIVER_INIT_CALL(cps1);
-
 	auto_free( machine, tmp );
+
+	DRIVER_INIT_CALL(cps1);
 }
 
 /* ------ DRIVER INIT end ------ */
-
 //
 GAME( 1988, forgottn,   0,        cps1_10MHz, forgottn,   forgottn, ROT0,   "Capcom", "Forgotten Worlds (World)", GAME_SUPPORTS_SAVE )	// (c) Capcom U.S.A. but World "warning"
 GAME( 1988, forgottnua, forgottn, cps1_10MHz, forgottn,   forgottn, ROT0,   "Capcom", "Forgotten Worlds (USA, 88621B B-Board)", GAME_SUPPORTS_SAVE )
@@ -9471,7 +9466,6 @@ GAME( 1991, captcommr1, captcomm, cps1_10MHz, captcomm,   cps1,     ROT0,   "Cap
 GAME( 1991, captcommu,  captcomm, cps1_10MHz, captcomm,   cps1,     ROT0,   "Capcom", "Captain Commando (USA 910928)", GAME_SUPPORTS_SAVE )
 GAME( 1991, captcommj,  captcomm, cps1_10MHz, captcomm,   cps1,     ROT0,   "Capcom", "Captain Commando (Japan 911202)", GAME_SUPPORTS_SAVE )
 GAME( 1991, captcommjr1,captcomm, cps1_10MHz, captcomm,   cps1,     ROT0,   "Capcom", "Captain Commando (Japan 910928)", GAME_SUPPORTS_SAVE )
-GAME( 1991, captcommb,  captcomm, cps1_10MHz, captcomm,   cps1,     ROT0,   "bootleg", "Captain Commando (bootleg)", GAME_NOT_WORKING | GAME_SUPPORTS_SAVE )	// 911014 - based on World version
 //
 GAME( 1991, knights,    0,        cps1_10MHz, knights,    cps1,     ROT0,   "Capcom", "Knights of the Round (World 911127)", GAME_SUPPORTS_SAVE )	// "ETC"
 GAME( 1991, knightsu,   knights,  cps1_10MHz, knights,    cps1,     ROT0,   "Capcom", "Knights of the Round (USA 911127)", GAME_SUPPORTS_SAVE )
@@ -9562,6 +9556,7 @@ GAME( 1992, sf2m3,	sf2ce,	 sf2m3,		sf2,	  cps1,     ROT0,   "bootleg",	"Street F
 GAME( 1992, sf2ceuab3,	sf2ce,	 sf2m3,		sf2,	  sf2m8,    ROT0,   "bootleg",  "Street Fighter II': Champion Edition (In MAME, the game's name is sf2m8a, bootleg)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )  /* 920313 - based on USA version */
 
 /* TODO */
+GAME( 1991, captcommb,  captcomm, cps1_10MHz, captcomm,   cps1,     ROT0,   "bootleg", "Captain Commando (bootleg)", GAME_NOT_WORKING | GAME_SUPPORTS_SAVE )	// 911014 - based on World version
 GAME( 1993, dinopic,    dino,     cpspicb,    dinopic,    dino,     ROT0,   "bootleg", "Cadillacs and Dinosaurs (bootleg with PIC16c57, set 1)", GAME_NOT_WORKING | GAME_SUPPORTS_SAVE )
 GAME( 1993, dinopic2,   dino,     cpspicb,    dinopic,    dino,     ROT0,   "bootleg", "Cadillacs and Dinosaurs (bootleg with PIC16c57, set 2)", GAME_NOT_WORKING | GAME_SUPPORTS_SAVE )
 GAME( 1993, dinohunt,   dino,     wofhfb,     dinoh,      dinohunt, ROT0,   "bootleg", "Dinosaur Hunter (Chinese bootleg of Cadillacs and Dinosaurs)", GAME_NOT_WORKING | GAME_SUPPORTS_SAVE )	// 930223 - based on Asia TW version, the original is still undumped

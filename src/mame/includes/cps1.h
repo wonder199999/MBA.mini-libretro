@@ -164,6 +164,8 @@ public:
 
 
 /*----------- defined in drivers/cps1.c -----------*/
+void cps1_irq_handler_mus(running_device *device, int irq);
+
 ADDRESS_MAP_EXTERN( qsound_sub_map, 8 );
 INTERRUPT_GEN( cps1_interrupt );
 INTERRUPT_GEN( cps1_qsound_interrupt );
@@ -189,9 +191,11 @@ WRITE16_HANDLER( cps1_soundlatch2_w );
 WRITE16_HANDLER( cpsq_coinctrl2_w );
 WRITE16_HANDLER( qsound_sharedram2_w );
 
-void cps1_irq_handler_mus(running_device *device, int irq);
-
 /*----------- defined in video/cps1.c -----------*/
+void cps1_get_video_base(running_machine *machine);
+void cps2_set_sprite_priorities(running_machine *machine);
+void cps2_objram_latch(running_machine *machine);
+
 READ16_HANDLER( cps1_cps_b_r );
 READ16_HANDLER( cps2_objram1_r );
 READ16_HANDLER( cps2_objram2_r );
@@ -211,10 +215,6 @@ VIDEO_START( cps2 );
 VIDEO_UPDATE( cps1 );
 VIDEO_EOF( cps1 );
 
-void cps1_get_video_base(running_machine *machine);
-void cps2_set_sprite_priorities(running_machine *machine);
-void cps2_objram_latch(running_machine *machine);
-
 /*************************************
 *	Encryption
 **************************************/
@@ -229,7 +229,6 @@ INPUT_PORTS_EXTERN( cps1_3players );
 INPUT_PORTS_EXTERN( cps1_4players );
 INPUT_PORTS_EXTERN( knights );
 INPUT_PORTS_EXTERN( sf2 );
-
 
 /*----------- defined in machine/kabuki.c -----------*/
 void mgakuen2_decode(running_machine *machine);
@@ -247,7 +246,6 @@ void wof_decode(running_machine *machine);
 void dino_decode(running_machine *machine);
 void punisher_decode(running_machine *machine);
 void slammast_decode(running_machine *machine);
-
 
 /* ----------------------------------------------------*/
 
