@@ -754,6 +754,8 @@ ADDRESS_MAP_END
 	PORT_DIPSETTING(    0x01, "7" ) \
 	PORT_DIPSETTING(    0x00, "8 (Hardest)" )
 
+/* -------------------------- INPUT_PORT ---------------------------- */
+
 /* CPS1 games with 2 players and 3 buttons each */
 INPUT_PORTS_START( cps1_3b )
 	PORT_START("IN0")
@@ -785,7 +787,7 @@ INPUT_PORTS_START( cps1_3b )
 	PORT_BIT( 0x8000, IP_ACTIVE_LOW, IPT_UNKNOWN )
 INPUT_PORTS_END
 
-	/* CPS1 games with 2 players and 2 buttons each */
+/* CPS1 games with 2 players and 2 buttons each */
 INPUT_PORTS_START( cps1_2b )
 	PORT_INCLUDE( cps1_3b )
 
@@ -794,7 +796,7 @@ INPUT_PORTS_START( cps1_2b )
 	PORT_BIT( 0x4000, IP_ACTIVE_LOW, IPT_UNKNOWN )	/* no button 3 */
 INPUT_PORTS_END
 
-	/* CPS1 games with 3 players and 2 buttons each */
+/* CPS1 games with 3 players and 2 buttons each */
 INPUT_PORTS_START( cps1_3players )
 	PORT_INCLUDE( cps1_2b )
 
@@ -809,7 +811,7 @@ INPUT_PORTS_START( cps1_3players )
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_START3 )
 INPUT_PORTS_END
 
-	/* CPS1 games with 4 players and 2 buttons each */
+/* CPS1 games with 4 players and 2 buttons each */
 INPUT_PORTS_START( cps1_4players )
 	PORT_INCLUDE( cps1_3players )
 
@@ -824,7 +826,7 @@ INPUT_PORTS_START( cps1_4players )
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_START4 )
 INPUT_PORTS_END
 
-	/* CPS1 games with 2 players and 1 button each */
+/* CPS1 games with 2 players and 1 button each */
 static INPUT_PORTS_START( cps1_1b )
 	PORT_INCLUDE( cps1_2b )
 
@@ -833,7 +835,7 @@ static INPUT_PORTS_START( cps1_1b )
 	PORT_BIT( 0x2000, IP_ACTIVE_LOW, IPT_UNKNOWN )	/* no button 2 */
 INPUT_PORTS_END
 
-	/* CPS1 quiz games */
+/* CPS1 quiz games */
 static INPUT_PORTS_START( cps1_quiz )
 	PORT_INCLUDE( cps1_3b )
 
@@ -938,7 +940,7 @@ static INPUT_PORTS_START( ghouls )
 	PORT_DIPSETTING(    0x00, DEF_STR( Cocktail ) )		/* for 2-player cocktail cabinet */
 INPUT_PORTS_END
 
-	/* Same as 'ghouls' but additional "Freeze" Dip Switch, different "Lives" Dip Switch, and LOTS of "debug" features (read the notes to know how to activate them) */
+/* Same as 'ghouls' but additional "Freeze" Dip Switch, different "Lives" Dip Switch, and LOTS of "debug" features (read the notes to know how to activate them) */
 static INPUT_PORTS_START( ghoulsu )
 	PORT_INCLUDE( ghouls )
 
@@ -1055,7 +1057,7 @@ static INPUT_PORTS_START( daimakai )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 INPUT_PORTS_END
 
-	/* "Debug" features to be implemented */
+/* "Debug" features to be implemented */
 static INPUT_PORTS_START( strider )
 	PORT_INCLUDE( cps1_3b )
 
@@ -1167,7 +1169,7 @@ static INPUT_PORTS_START( dynwar )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 INPUT_PORTS_END
 
-	/* Read the notes to know how to activate the "debug" features */
+/* Read the notes to know how to activate the "debug" features */
 static INPUT_PORTS_START( willow )
 	PORT_INCLUDE( cps1_3b )
 
@@ -1314,7 +1316,7 @@ static INPUT_PORTS_START( willow )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 INPUT_PORTS_END
 
-	/* To enable extra choices in the "test mode", you must press "Coin 1" ('5') AND "Service Mode" ('F2') */
+/* To enable extra choices in the "test mode", you must press "Coin 1" ('5') AND "Service Mode" ('F2') */
 static INPUT_PORTS_START( unsquad )
 	PORT_INCLUDE( cps1_3b )
 
@@ -1362,8 +1364,8 @@ static INPUT_PORTS_START( unsquad )
 	PORT_DIPSETTING(    0x00, DEF_STR( Test ) )
 INPUT_PORTS_END
 
-	/* To enable other choices in the "test mode", you must press ("P1 Button 1" ('Ctrl')
-	   or "P1 Button 2" ('Alt')) when "Service Mode" is ON */
+/* To enable other choices in the "test mode", you must press ("P1 Button 1" ('Ctrl')
+   or "P1 Button 2" ('Alt')) when "Service Mode" is ON */
 static INPUT_PORTS_START( ffight )
 	PORT_INCLUDE( cps1_3b )
 
@@ -1710,7 +1712,7 @@ static INPUT_PORTS_START( cawing )
 	PORT_DIPSETTING(    0x00, DEF_STR( Test ) )
 INPUT_PORTS_END
 
-	/* "Debug" features to be implemented */
+/* "Debug" features to be implemented */
 static INPUT_PORTS_START( nemo )
 	PORT_INCLUDE( cps1_3b )
 
@@ -1815,7 +1817,7 @@ INPUT_PORTS_START( sf2 )
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNKNOWN )
 INPUT_PORTS_END
 
-	/* Needs further checking */
+/* Needs further checking */
 static INPUT_PORTS_START( sf2j )
 	PORT_INCLUDE( sf2 )
 
@@ -1984,7 +1986,7 @@ static INPUT_PORTS_START( kod )
 	PORT_DIPSETTING(    0x00, DEF_STR( Test ) )
 INPUT_PORTS_END
 
-	/* Needs further checking same as kod but different "Bonus_life" values */
+/* Needs further checking same as kod but different "Bonus_life" values */
 static INPUT_PORTS_START( kodj )
 	PORT_INCLUDE( kod )
 
@@ -2179,7 +2181,7 @@ static INPUT_PORTS_START( varth )
 	PORT_DIPSETTING(    0x00, DEF_STR( Test ) )
 INPUT_PORTS_END
 
-	/* Needs further checking */
+/* Needs further checking */
 static INPUT_PORTS_START( cworld2j )
 	PORT_INCLUDE( cps1_quiz )
 
@@ -2242,7 +2244,7 @@ static INPUT_PORTS_START( cworld2j )
 	PORT_BIT( 0xff, IP_ACTIVE_LOW, IPT_UNKNOWN )
 INPUT_PORTS_END
 
-	/* Needs further checking */
+/* Needs further checking */
 static INPUT_PORTS_START( wof )
 	PORT_INCLUDE( cps1_3players )
 
@@ -2270,11 +2272,10 @@ static INPUT_PORTS_START( wof )
 	PORT_START( "EEPROMOUT" )
 	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_OUTPUT ) PORT_WRITE_LINE_DEVICE("eeprom", eeprom_write_bit)
 	PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_OUTPUT ) PORT_WRITE_LINE_DEVICE("eeprom", eeprom_set_clock_line)
-/*	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_OUTPUT ) PORT_WRITE_LINE_DEVICE("eeprom", eeprom_set_cs_line) */
 	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_OUTPUT ) PORT_WRITE_LINE_DEVICE("eeprom", eeprom_set_cs_line)
 INPUT_PORTS_END
 
-	/* Needs further checking */
+/* Needs further checking */
 static INPUT_PORTS_START( dinopic )
 	PORT_INCLUDE( cps1_3players )
 
@@ -2404,7 +2405,7 @@ static INPUT_PORTS_START( dinoh )
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_START3 )
 INPUT_PORTS_END
 
-	/* Needs further checking */
+/* Needs further checking */
 static INPUT_PORTS_START( punipic )
 	PORT_INCLUDE( cps1_2b )
 
@@ -2508,7 +2509,7 @@ static INPUT_PORTS_START( punisherbz )
 	PORT_BIT( 0x8000, IP_ACTIVE_LOW, IPT_UNKNOWN )
 INPUT_PORTS_END
 
-	/* Needs further checking */
+/* Needs further checking */
 static INPUT_PORTS_START( slammast )
 	PORT_INCLUDE( cps1_4players )
 
@@ -2542,7 +2543,7 @@ static INPUT_PORTS_START( slammast )
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_OUTPUT ) PORT_WRITE_LINE_DEVICE("eeprom", eeprom_set_cs_line)
 INPUT_PORTS_END
 
-	/* Needs further checking */
+/* Needs further checking */
 static INPUT_PORTS_START( pnickj )
 	PORT_INCLUDE( cps1_3b )
 
@@ -2589,7 +2590,7 @@ static INPUT_PORTS_START( pnickj )
 	PORT_DIPSETTING(    0x00, DEF_STR( Test ) )
 INPUT_PORTS_END
 
-	/* Needs further checking */
+/* Needs further checking */
 static INPUT_PORTS_START( qad )
 	PORT_INCLUDE( cps1_quiz )
 
@@ -2657,7 +2658,7 @@ static INPUT_PORTS_START( qad )
 	PORT_BIT( 0xff, IP_ACTIVE_LOW, IPT_UNKNOWN )
 INPUT_PORTS_END
 
-	/* Needs further checking */
+/* Needs further checking */
 static INPUT_PORTS_START( qadj )
 	PORT_INCLUDE( qad )
 
@@ -2690,7 +2691,7 @@ static INPUT_PORTS_START( qadj )
 	PORT_BIT( 0xff, IP_ACTIVE_LOW, IPT_UNKNOWN )
 INPUT_PORTS_END
 
-	/* Needs further checking */
+/* Needs further checking */
 static INPUT_PORTS_START( qtono2j )
 	PORT_INCLUDE( cps1_quiz )
 
@@ -2752,7 +2753,7 @@ static INPUT_PORTS_START( qtono2j )
 	PORT_BIT( 0xff, IP_ACTIVE_LOW, IPT_UNKNOWN )
 INPUT_PORTS_END
 
-	/* Needs further checking */
+/* Needs further checking */
 static INPUT_PORTS_START( pang3 )
 	PORT_INCLUDE( cps1_3b )
 
@@ -2784,7 +2785,7 @@ static INPUT_PORTS_START( pang3 )
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_OUTPUT ) PORT_WRITE_LINE_DEVICE("eeprom", eeprom_set_cs_line)
 INPUT_PORTS_END
 
-	/* Needs further checking */
+/* Needs further checking */
 static INPUT_PORTS_START( pang3n )
 	PORT_INCLUDE( pang3 )
 
@@ -2801,7 +2802,7 @@ static INPUT_PORTS_START( pang3n )
 	PORT_DIPUNUSED( 0x80, 0x80 )
 INPUT_PORTS_END
 
-	/* Needs further checking */
+/* Needs further checking */
 static INPUT_PORTS_START( megaman )
 	PORT_INCLUDE( cps1_3b )
 
@@ -2874,8 +2875,8 @@ static INPUT_PORTS_START( megaman )
 	PORT_DIPSETTING(    0x00, DEF_STR( Test ) )
 INPUT_PORTS_END
 
-	/* Needs further checking */
-	/* Same as 'megaman' but no "Voice" Dip Switch */
+/* Needs further checking */
+/* Same as 'megaman' but no "Voice" Dip Switch */
 static INPUT_PORTS_START( rockmanj )
 	PORT_INCLUDE(megaman)
 
@@ -2996,12 +2997,27 @@ static INPUT_PORTS_START( wofch )
 	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_OUTPUT ) PORT_WRITE_LINE_DEVICE("eeprom", eeprom_set_cs_line)
 INPUT_PORTS_END
 
+
+static INPUT_PORTS_START( sf2amf )		/* SWB.4, SWB.5 and SWB.6 need to be enabled simultaneously for turbo mode */
+	PORT_INCLUDE( sf2hack )
+
+	PORT_MODIFY("DSWB")
+	PORT_DIPNAME( 0x08, 0x08, "Turbo Mode Switch 1 of 3" )   PORT_DIPLOCATION("SW(B):4")
+	PORT_DIPSETTING(    0x08, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x10, 0x10, "Turbo Mode Switch 2 of 3" )   PORT_DIPLOCATION("SW(B):5")
+	PORT_DIPSETTING(    0x10, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x20, 0x20, "Turbo Mode Switch 3 of 3" )   PORT_DIPLOCATION("SW(B):6")
+	PORT_DIPSETTING(    0x20, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+INPUT_PORTS_END
+
 /*
 	A Final Fight board with mismatched USA and Japan GFX proves that the columns
 	of the 8x8 tilemap alternate between sides of the 16x16 tile resulting
 	in a corrupt WDUD screen. ffightub is now fixed since a genuine pcb surfaced.
 */
-
 static const gfx_layout cps1_layout8x8 =
 {
 	8, 8,
@@ -9357,22 +9373,25 @@ static DRIVER_INIT( dinohunt )
 static DRIVER_INIT( sf2m8 )
 {
 	// unscramble gfx
-	UINT8 *src = memory_region( machine, "gfx" ) + 0x480000;
-	UINT8 *tmp = auto_alloc_array( machine, UINT8, 0x180000 );
-	memcpy ( tmp, src, 0x180000 );
+	UINT8 *gfx_rom = memory_region( machine, "gfx" );
+	UINT8 *ur2_rom = memory_region( machine, "user2" );
 
-	UINT32 i;
-	for (i = 0; i < 0x180000; i += 0x08)
+	INT32 i = 0x480000, j = 0;
+
+	for (j = 0x20000; j < 0x80000; j += 2)
 	{
-		src[i + 0x02] = tmp[i + 0x04];
-		src[i + 0x03] = tmp[i + 0x05];
-		src[i + 0x04] = tmp[i + 0x02];
-		src[i + 0x05] = tmp[i + 0x03];
+		gfx_rom[i++] = ur2_rom[j];
+		gfx_rom[i++] = ur2_rom[j | 0x100000];
+		gfx_rom[i++] = ur2_rom[j | 0x000001];
+		gfx_rom[i++] = ur2_rom[j | 0x100001];
+		gfx_rom[i++] = ur2_rom[j | 0x080000];
+		gfx_rom[i++] = ur2_rom[j | 0x180000];
+		gfx_rom[i++] = ur2_rom[j | 0x080001];
+		gfx_rom[i++] = ur2_rom[j | 0x180001];
 	}
-	auto_free( machine, tmp );
-
 	DRIVER_INIT_CALL(cps1);
 }
+
 
 /* ------ DRIVER INIT end ------ */
 //
@@ -9382,9 +9401,9 @@ GAME( 1988, forgottnu,  forgottn, cps1_10MHz, forgottn,   forgottn, ROT0,   "Cap
 GAME( 1988, lostwrld,   forgottn, cps1_10MHz, forgottn,   forgottn, ROT0,   "Capcom", "Lost Worlds (Japan)", GAME_SUPPORTS_SAVE )
 GAME( 1988, lostwrldo,  forgottn, cps1_10MHz, forgottn,   forgottn, ROT0,   "Capcom", "Lost Worlds (Japan Old Ver.)", GAME_SUPPORTS_SAVE )
 //
-GAME( 1988, ghouls,     0,        cps1_10MHz, ghouls,     cps1,     ROT0,   "Capcom", "Ghouls'n Ghosts (World)", GAME_SUPPORTS_SAVE )	// "EXPORT" // Wed.26.10.1988 in the ROMs
-GAME( 1988, ghoulsu,    ghouls,   cps1_10MHz, ghoulsu,    cps1,     ROT0,   "Capcom", "Ghouls'n Ghosts (USA)", GAME_SUPPORTS_SAVE )	// "EXPORT" // Wed.26.10.1988 in the ROMs
-GAME( 1988, daimakai,   ghouls,   cps1_10MHz, daimakai,   cps1,     ROT0,   "Capcom", "Daimakaimura (Japan)", GAME_SUPPORTS_SAVE )			// Wed.26.10.1988 in the ROMs
+GAME( 1988, ghouls,     0,        cps1_10MHz, ghouls,     cps1,     ROT0,   "Capcom", "Ghouls'n Ghosts (World)", GAME_SUPPORTS_SAVE )		// "EXPORT" // Wed.26.10.1988 in the ROMs
+GAME( 1988, ghoulsu,    ghouls,   cps1_10MHz, ghoulsu,    cps1,     ROT0,   "Capcom", "Ghouls'n Ghosts (USA)", GAME_SUPPORTS_SAVE )		// "EXPORT" // Wed.26.10.1988 in the ROMs
+GAME( 1988, daimakai,   ghouls,   cps1_10MHz, daimakai,   cps1,     ROT0,   "Capcom", "Daimakaimura (Japan)", GAME_SUPPORTS_SAVE )		// Wed.26.10.1988 in the ROMs
 GAME( 1988, daimakair,  ghouls,   cps1_10MHz, daimakai,   cps1,     ROT0,   "Capcom", "Daimakaimura (Japan Resale Ver.)", GAME_SUPPORTS_SAVE )	// Wed.26.10.1988 in the ROMs
 //
 GAME( 1989, strider,    0,        cps1_10MHz, strider,    cps1,     ROT0,   "Capcom", "Strider (USA, set 1)", GAME_SUPPORTS_SAVE )
@@ -9553,7 +9572,8 @@ GAME( 1999, wofhfh,     0,       wofhfb,     	wofhfb,   cps1,     ROT0,   "bootl
 GAME( 2010, wofchdx,	wofch,	 qsound,      	wofch,	  wof,      ROT0,   "Capcom",	"CPS Changer - Sangokushi III Gaiden: Kakou-On's Revenge DX (hack)", GAME_SUPPORTS_SAVE )
 GAME( 1995, wofches,	wofch,	 qsound,      	wofch,	  wof,      ROT0,   "Capcom",	"CPS Changer - Tenchi Wo Kurau II (Blue title, enabled the skill-enhanced mode)", GAME_SUPPORTS_SAVE )
 GAME( 1992, sf2m3,	sf2ce,	 sf2m3,		sf2,	  cps1,     ROT0,   "bootleg",	"Street Fighter II': Champion Edition (M3, bootleg)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )
-GAME( 1992, sf2ceuab3,	sf2ce,	 sf2m3,		sf2,	  sf2m8,    ROT0,   "bootleg",  "Street Fighter II': Champion Edition (In MAME, the game's name is sf2m8a, bootleg)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )  /* 920313 - based on USA version */
+GAME( 1992, sf2ceuab3,	sf2ce,	 sf2m3,		sf2,	  sf2m8,    ROT0,   "bootleg",  "Street Fighter II': Champion Edition (In MAME, the game's name is sf2m8a, bootleg)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )
+GAME( 1992, sf2amf,	sf2ce,	 cps1_12MHz,	sf2amf,	  sf2hack,  ROT0,   "bootleg",  "Street Fighter II': Champion Edition (Alpha Magic-F, bootleg)", GAME_NOT_WORKING | GAME_SUPPORTS_SAVE )
 
 /* TODO */
 GAME( 1991, captcommb,  captcomm, cps1_10MHz, captcomm,   cps1,     ROT0,   "bootleg", "Captain Commando (bootleg)", GAME_NOT_WORKING | GAME_SUPPORTS_SAVE )	// 911014 - based on World version

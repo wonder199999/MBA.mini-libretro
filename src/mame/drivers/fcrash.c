@@ -192,35 +192,6 @@ static WRITE16_HANDLER( knightsb_layer_w )
 	}
 }
 
-static WRITE16_HANDLER( sf2mdta_layer_w )
-{
-	cps_state *state = (cps_state *)space->machine->driver_data;
-	switch (offset)
-	{
-		case 0x06: state->cps_a_regs[0x0c / 2] = data + 0xffbe;	break;
-		case 0x07: state->cps_a_regs[0x0e / 2] = data; break;
-		case 0x08: state->cps_a_regs[0x14 / 2] = data + 0xffce;	break;
-		case 0x09: state->cps_a_regs[0x12 / 2] = state->cps_a_regs[CPS1_ROWSCROLL_OFFS] = data; break;
-		case 0x0a: state->cps_a_regs[0x10 / 2] = data + 0xffce;	break;
-		case 0x0b: state->cps_a_regs[0x16 / 2] = data;	break;
-		case 0x26: state->cps_b_regs[state->layer_enable_reg / 2] = data;
-	}
-}
-
-static WRITE16_HANDLER( sf2mdt_layer_w )
-{
-	cps_state *state = (cps_state *)space->machine->driver_data;
-	switch (offset)
-	{
-		case 0x06: state->cps_a_regs[0x14 / 2] = data + 0xffce; break;		/* scroll 3x */
-		case 0x07: state->cps_a_regs[0x16 / 2] = data; break;			/* scroll 3y */
-		case 0x08: state->cps_a_regs[0x10 / 2] = data + 0xffce;	break;		/* scroll 2x */
-		case 0x09: state->cps_a_regs[0x0c / 2] = data + 0xffca;	break;		/* scroll 1x */
-		case 0x0a: state->cps_a_regs[0x12 / 2] = state->cps_a_regs[CPS1_ROWSCROLL_OFFS] = data; break;	/* scroll 2y */ /* row scroll start */
-		case 0x0b: state->cps_a_regs[0x0e / 2] = data; break;			/* scroll 1y */
-		case 0x26: state->cps_b_regs[state->layer_enable_reg / 2] = data;
-	}
-}
 
 static WRITE16_HANDLER( sf2m1_layer_w )
 {
@@ -252,6 +223,37 @@ static WRITE16_HANDLER( sf2m1_layer_w )
 		default: logerror(" Unknown layer cmd\n");
 	}
 }
+
+static WRITE16_HANDLER( sf2mdta_layer_w )
+{
+	cps_state *state = (cps_state *)space->machine->driver_data;
+	switch (offset)
+	{
+		case 0x06: state->cps_a_regs[0x0c / 2] = data + 0xffbe;	break;
+		case 0x07: state->cps_a_regs[0x0e / 2] = data; break;
+		case 0x08: state->cps_a_regs[0x14 / 2] = data + 0xffce;	break;
+		case 0x09: state->cps_a_regs[0x12 / 2] = state->cps_a_regs[CPS1_ROWSCROLL_OFFS] = data; break;
+		case 0x0a: state->cps_a_regs[0x10 / 2] = data + 0xffce;	break;
+		case 0x0b: state->cps_a_regs[0x16 / 2] = data;	break;
+		case 0x26: state->cps_b_regs[state->layer_enable_reg / 2] = data;
+	}
+}
+
+static WRITE16_HANDLER( sf2mdt_layer_w )
+{
+	cps_state *state = (cps_state *)space->machine->driver_data;
+	switch (offset)
+	{
+		case 0x06: state->cps_a_regs[0x14 / 2] = data + 0xffce; break;		/* scroll 3x */
+		case 0x07: state->cps_a_regs[0x16 / 2] = data; break;			/* scroll 3y */
+		case 0x08: state->cps_a_regs[0x10 / 2] = data + 0xffce;	break;		/* scroll 2x */
+		case 0x09: state->cps_a_regs[0x0c / 2] = data + 0xffca;	break;		/* scroll 1x */
+		case 0x0a: state->cps_a_regs[0x12 / 2] = state->cps_a_regs[CPS1_ROWSCROLL_OFFS] = data; break;	/* scroll 2y */ /* row scroll start */
+		case 0x0b: state->cps_a_regs[0x0e / 2] = data; break;			/* scroll 1y */
+		case 0x26: state->cps_b_regs[state->layer_enable_reg / 2] = data;
+	}
+}
+
 
 /* ---  RENDER HANDLER  --- */
 static void bootleg_update_transmasks( running_machine *machine )
@@ -1289,15 +1291,6 @@ static DRIVER_INIT( sf2m1 )
 	DRIVER_INIT_CALL(dinopic);
 }
 
-/*
-static DRIVER_INIT( sgyxz )
-{
-	UINT8 *src = (UINT8 *)memory_region( machine, "maincpu" );
-	src[0x72a6] = 0x00;
-
-	DRIVER_INIT_CALL(cps1);
-}
-*/
 
 /* --- LOAD ROM --- */
 ROM_START( fcrash )

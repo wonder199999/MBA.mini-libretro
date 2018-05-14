@@ -378,7 +378,7 @@ The games seem to use them to mark platforms, kill zones and no-go areas.
 #define CPS_B_21_QS5 	0x1e, 0x0c02,   -1,   -1,   -1,   -1, 0x0c,   -1,   -1,	0x2a, {0x2c, 0x2e, 0x30, 0x32}, 0x1c, {0x04, 0x08, 0x10, 0x00, 0x00}
 
 #define HACK_B_1      	  -1,     -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,	0x14, {0x12, 0x10, 0x0e, 0x0c}, 0x0a, {0x0e, 0x0e, 0x0e, 0x30, 0x30}
-#define HACK_B_2	  -1,	  -1,	-1,   -1,   -1,   -1,   -1,   -1,   -1, 0x30, {0x2e, 0x2c, 0x2a, 0x28}, 0x26, {0x02, 0x04, 0x08, 0x00, 0x00}
+
 
 /*
 CPS_B_21_DEF is CPS-B-21 at default settings (no battery)
@@ -1308,6 +1308,8 @@ static const struct CPS1config cps1_config_table[]=
 	{"sf2koryu",   CPS_B_21_DEF, mapper_S9263B, 0x36, 0, 0, 1 },
 	{"sf2mdt",     CPS_B_21_DEF, mapper_S9263B, 0x36, 0, 0, 1 },
 	{"sf2ceuab3",  HACK_B_1,     mapper_S9263B, 0x00, 0, 0, 2 },
+	{"sf2amf",     CPS_B_21_DEF, mapper_S9263B, 0x36, 0, 0, 1 },
+
 
 	{"sf2hf",      CPS_B_21_DEF, mapper_S9263B, 0x36 },
 	{"sf2hfu",     CPS_B_21_DEF, mapper_S9263B, 0x36 },
@@ -1369,7 +1371,7 @@ static const struct CPS1config cps1_config_table[]=
 	{"cps2",       CPS_B_21_DEF, mapper_cps2 },
 
 
-	{0}		/* End of table */
+	{ 0, 0, 0 }		/* End of table */
 };
 
 
@@ -1648,7 +1650,7 @@ static void cps1_gfx_decode( running_machine *machine )
 
 			dwval |= n << (j * 4);
 		}
-		cps1_gfx[4 * i    ] = dwval >>  0;
+		cps1_gfx[4 * i + 0] = dwval >>  0;
 		cps1_gfx[4 * i + 1] = dwval >>  8;
 		cps1_gfx[4 * i + 2] = dwval >> 16;
 		cps1_gfx[4 * i + 3] = dwval >> 24;
@@ -1767,11 +1769,11 @@ void cps1_get_video_base( running_machine *machine )
 			scroll2xoff = -0x0b;
 			scroll3xoff = -0x0c;
 		break;
-		case 0x05:
+/*		case 0x05:
 			scroll1xoff = 0x02;
 			scroll2xoff = 0x04;
 			scroll3xoff = 0x08;
-		break;
+		break;	*/
 		case 0x0e:
 			scroll1xoff = 0xffba;
 			scroll2xoff = 0xffc0;
