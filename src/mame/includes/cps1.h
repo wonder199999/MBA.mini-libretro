@@ -83,6 +83,7 @@ public:
 	UINT16		*obj;
 	UINT16		*other;
 	UINT16		*buffered_obj;
+	UINT16		*mainram;
 	UINT8		*qsound_sharedram1;
 	UINT8		*qsound_sharedram2;
 
@@ -146,12 +147,13 @@ public:
 	/* fcrash(bootleg) video config */
 	UINT8		layer_enable_reg;
 	UINT8		layer_mask_reg[4];
+	INT32		sprite_base;
+	INT32		sprite_x_offset;
+	INT32		sprite_list_end_marker;
 	INT32		layer_scroll1x_offset;
 	INT32		layer_scroll2x_offset;
 	INT32		layer_scroll3x_offset;
-	INT32		sprite_base;
-	INT32		sprite_list_end_marker;
-	INT32		sprite_x_offset;
+
 	UINT16		*bootleg_sprite_ram;
 	UINT16		*bootleg_work_ram;
 
@@ -167,8 +169,10 @@ public:
 void cps1_irq_handler_mus(running_device *device, int irq);
 
 ADDRESS_MAP_EXTERN( qsound_sub_map, 8 );
+
 INTERRUPT_GEN( cps1_interrupt );
 INTERRUPT_GEN( cps1_qsound_interrupt );
+
 GFXDECODE_EXTERN( cps1 );
 
 WRITE8_DEVICE_HANDLER( cps1_oki_pin7_w );
@@ -221,7 +225,6 @@ VIDEO_EOF( cps1 );
 /*----------- defined in machine/cps2crpt.c -----------*/
 DRIVER_INIT( cps2crpt );
 
-
 /*----------- defined in drivers/cps1.c -----------*/
 INPUT_PORTS_EXTERN( cps1_3b );
 INPUT_PORTS_EXTERN( cps1_2b );
@@ -229,6 +232,7 @@ INPUT_PORTS_EXTERN( cps1_3players );
 INPUT_PORTS_EXTERN( cps1_4players );
 INPUT_PORTS_EXTERN( knights );
 INPUT_PORTS_EXTERN( sf2 );
+INPUT_PORTS_EXTERN( punisher );
 
 /*----------- defined in machine/kabuki.c -----------*/
 void mgakuen2_decode(running_machine *machine);

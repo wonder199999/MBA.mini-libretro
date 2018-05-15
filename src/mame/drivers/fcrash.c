@@ -162,6 +162,36 @@ static WRITE16_HANDLER( kodb_layer_w )		/* The function will also be used for 'c
 	}
 }
 
+
+static WRITE16_HANDLER( punipic_layer_w )
+{
+	cps_state *state = (cps_state *)space->machine->driver_data;
+	switch (offset)
+	{
+		case 0x00: state->cps_a_regs[0x0e / 2] = data; break;
+		case 0x01: state->cps_a_regs[0x0c / 2] = data; break;
+		case 0x02: state->cps_a_regs[0x12 / 2] = state->cps_a_regs[CPS1_ROWSCROLL_OFFS] = data; break;
+		case 0x03: state->cps_a_regs[0x10 / 2] = data + 0xffc0; break;
+		case 0x04: state->cps_a_regs[0x16 / 2] = data; break;
+		case 0x05: state->cps_a_regs[0x14 / 2] = data; break;
+		case 0x06:
+		{
+			switch (data)
+			{
+				case 0x14:
+				case 0x54: state->cps_a_regs[0x04 / 2] = 0x9100; break;
+				case 0x24:
+				case 0x64: state->cps_a_regs[0x04 / 2] = 0x90c0; break;
+				case 0x3c:
+				case 0x7c: state->cps_a_regs[0x04 / 2] = 0x9180; break;
+			}
+			state->cps_a_regs[0x08 / 2] = state->mainram[0xdb90 / 2]; break;
+		}
+		case 0x07: break;
+		default: printf ("Unknown layer cmd %X %X\n", offset << 1, data);
+	}
+}
+
 static WRITE16_HANDLER( knightsb_layer_w )
 {
 	cps_state *state = (cps_state *)space->machine->driver_data;
@@ -191,7 +221,6 @@ static WRITE16_HANDLER( knightsb_layer_w )
 		case 0x12: state->cps_b_regs[state->layer_mask_reg[3] / 2] = data;
 	}
 }
-
 
 static WRITE16_HANDLER( sf2m1_layer_w )
 {
@@ -502,6 +531,24 @@ static ADDRESS_MAP_START( sf2m1_map, ADDRESS_SPACE_PROGRAM, 16 )
 	AM_RANGE(0x980000, 0x9801ff) AM_WRITE(sf2m1_layer_w)
 	AM_RANGE(0x990000, 0x990001) AM_WRITENOP
 	AM_RANGE(0xff0000, 0xffffff) AM_RAM
+ADDRESS_MAP_END
+
+static ADDRESS_MAP_START( punipic_map, ADDRESS_SPACE_PROGRAM, 16 )
+	AM_RANGE(0x000000, 0x3fffff) AM_ROM
+	AM_RANGE(0x800000, 0x800007) AM_READ_PORT("IN1")
+	AM_RANGE(0x800006, 0x800007) AM_WRITE(cps1_soundlatch_w)
+	AM_RANGE(0x800018, 0x80001f) AM_READ(cps1_dsw_r)
+	AM_RANGE(0x800030, 0x800037) AM_WRITE(cps1_coinctrl_w)
+	AM_RANGE(0x800100, 0x80013f) AM_WRITE(cps1_cps_a_w) AM_BASE_MEMBER(cps_state, cps_a_regs)
+	AM_RANGE(0x800140, 0x80017f) AM_READWRITE(cps1_cps_b_r, cps1_cps_b_w) AM_BASE_MEMBER(cps_state, cps_b_regs)
+	AM_RANGE(0x880000, 0x880001) AM_WRITENOP
+	AM_RANGE(0x900000, 0x92ffff) AM_RAM_WRITE(cps1_gfxram_w) AM_BASE_SIZE_MEMBER(cps_state, gfxram, gfxram_size)
+	AM_RANGE(0x980000, 0x98000f) AM_WRITE(punipic_layer_w)
+	AM_RANGE(0x990000, 0x990001) AM_WRITENOP
+	AM_RANGE(0x991000, 0x991017) AM_WRITENOP
+	AM_RANGE(0xf18000, 0xf19fff) AM_RAM
+	AM_RANGE(0xf1c006, 0xf1c007) AM_READ_PORT("EEPROMIN") AM_WRITE_PORT("EEPROMOUT")
+	AM_RANGE(0xff0000, 0xffffff) AM_RAM AM_BASE_MEMBER(cps_state, mainram)
 ADDRESS_MAP_END
 
 /* SOUND MAP */
@@ -1006,6 +1053,23 @@ static MACHINE_START( sgyxz )
 	memory_configure_bank(machine, "bank1", 0, 2, memory_region(machine, "audiocpu") + 0x10000, 0x4000);
 }
 
+static MACHINE_START( punipic )
+{
+	cps_state *state = (cps_state *)machine->driver_data;
+
+	state->layer_enable_reg = 0x12;
+	state->layer_mask_reg[0] = 0x14;
+	state->layer_mask_reg[1] = 0x16;
+	state->layer_mask_reg[2] = 0x08;
+	state->layer_mask_reg[3] = 0x0a;
+	state->layer_scroll1x_offset = 0x46;
+	state->layer_scroll3x_offset = 0x46;
+	state->sprite_base = 0x00;
+	state->sprite_list_end_marker = 0x8000;
+	state->sprite_x_offset = 0x00;
+}
+
+
 /* *********************************************** FCRASH */
 static MACHINE_DRIVER_START( fcrash )
 	MDRV_DRIVER_DATA(cps_state)
@@ -1233,6 +1297,38 @@ static MACHINE_DRIVER_START( sgyxz )
 	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.30)
 MACHINE_DRIVER_END
 
+/* *********************************************** PUNIPIC, PUNIPIC2, PUNIPIC3 */
+static MACHINE_DRIVER_START( punipic )
+	MDRV_DRIVER_DATA(cps_state)
+
+	/* basic machine hardware */
+	MDRV_CPU_ADD("maincpu", M68000, XTAL_12MHz )
+	MDRV_CPU_PROGRAM_MAP(punipic_map)
+	MDRV_CPU_VBLANK_INT("screen", cps1_interrupt)
+//	MDRV_CPU_ADD("audiocpu", PIC16C57, XTAL_12MHz)
+	MDRV_MACHINE_START(punipic)
+
+	MDRV_EEPROM_ADD("eeprom", bootleg_eeprom_interface)
+
+	/* video hardware */
+	MDRV_SCREEN_ADD("screen", RASTER)
+	MDRV_SCREEN_REFRESH_RATE(60)
+	MDRV_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
+	MDRV_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
+	MDRV_SCREEN_SIZE(64*8, 32*8)
+	MDRV_SCREEN_VISIBLE_AREA(8*8, (64-8)*8-1, 2*8, 30*8-1 )
+	MDRV_VIDEO_UPDATE(bootleg_updatescreen)
+	MDRV_VIDEO_EOF(cps1)
+	MDRV_GFXDECODE(cps1)
+	MDRV_PALETTE_LENGTH(0xc00)
+	MDRV_VIDEO_START(cps1)
+
+	/* sound hardware */
+	MDRV_SPEAKER_STANDARD_MONO("mono")
+	MDRV_OKIM6295_ADD("oki", XTAL_16MHz/4/4, OKIM6295_PIN7_HIGH)
+	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.30)
+MACHINE_DRIVER_END
+
 
 /* --- DRIVER INIT --- */
 static DRIVER_INIT( sf2mdta )
@@ -1287,6 +1383,28 @@ static DRIVER_INIT( sf2m1 )
 {
 	UINT16 *src = (UINT16 *)memory_region( machine, "maincpu" );
 	src[0x064e / 2] = 0x6046;
+
+	DRIVER_INIT_CALL(dinopic);
+}
+
+static DRIVER_INIT( punipic )
+{
+	UINT16 *src = (UINT16 *)memory_region( machine, "maincpu" );
+	src[0x05a8 / 2] = 0x4e71;
+	src[0x4df0 / 2] = 0x33ed;
+	src[0x4df2 / 2] = 0xdb2e;
+	src[0x4df4 / 2] = 0x0080;
+	src[0x4df6 / 2] = 0x0152;
+	src[0x4df8 / 2] = 0x4e75;
+
+	DRIVER_INIT_CALL(dinopic);
+}
+
+static DRIVER_INIT( punipic3 )
+{
+	UINT16 *src = (UINT16 *)memory_region( machine, "maincpu" );
+	src[0x05a6 / 2] = 0x4e71;
+	src[0x05a8 / 2] = 0x4e71;
 
 	DRIVER_INIT_CALL(dinopic);
 }
@@ -1465,6 +1583,86 @@ ROM_START( sgyxz )
 	ROM_LOAD( "sgyxz_snd1.bin", 0x00000, 0x40000,  CRC(c15ac0f2) SHA1(8d9e5519d9820e4ac4f70555088c80e64d052c9d) )
 ROM_END
 
+ROM_START( punipic )
+	ROM_REGION( CODE_SIZE, "maincpu", 0 )		/* 68000 code */
+	ROM_LOAD16_BYTE( "cpu5.bin",       0x000000, 0x80000, CRC(c3151563) SHA1(61d3a20c25fea8a94ae6e473a87c21968867cba0) )
+	ROM_LOAD16_BYTE( "cpu3.bin",       0x000001, 0x80000, CRC(8c2593ac) SHA1(4261bc72b96c3a5690df35c5d8b71524765693d9) )
+	ROM_LOAD16_BYTE( "cpu4.bin",       0x100000, 0x80000, CRC(665a5485) SHA1(c07920d110ca9c35f6cbff94a6a889c17300f994) )
+	ROM_LOAD16_BYTE( "cpu2.bin",       0x100001, 0x80000, CRC(d7b13f39) SHA1(eb7cd92b44fdef3b72672b0be6786c526421b627) )
+
+	ROM_REGION( 0x400000, "gfx", 0 )
+	ROMX_LOAD( "gfx9.bin",    0x000000, 0x40000, CRC(9b9a887a) SHA1(8805b36fc18837bd7c64c751b435d72b763b2235), ROM_SKIP(7) )
+	ROM_CONTINUE(             0x000004, 0x40000)
+	ROMX_LOAD( "gfx8.bin",    0x000001, 0x40000, CRC(2b94287a) SHA1(815d88e66f537e17550fc0483616f02f7126bfb1), ROM_SKIP(7) )
+	ROM_CONTINUE(             0x000005, 0x40000)
+	ROMX_LOAD( "gfx7.bin",    0x000002, 0x40000, CRC(e9bd74f5) SHA1(8ed7098c69d1c70093c99956bf82e532bd6fc7ac), ROM_SKIP(7) )
+	ROM_CONTINUE(             0x000006, 0x40000)
+	ROMX_LOAD( "gfx6.bin",    0x000003, 0x40000, CRC(a5e1c8a4) SHA1(3596265a45cf6bbf16c623f0fce7cdc65f9338ad), ROM_SKIP(7) )
+	ROM_CONTINUE(             0x000007, 0x40000)
+	ROMX_LOAD( "gfx13.bin",   0x200000, 0x40000, CRC(6d75a193) SHA1(6c5a89517926d7ba4a925a3df800d4bdb8a6938d), ROM_SKIP(7) )
+	ROM_CONTINUE(             0x200004, 0x40000)
+	ROMX_LOAD( "gfx12.bin",   0x200001, 0x40000, CRC(a3c205c1) SHA1(6317cc49434dbbb9a249ddd4b50bd791803b3ebe), ROM_SKIP(7) )
+	ROM_CONTINUE(             0x200005, 0x40000)
+	ROMX_LOAD( "gfx11.bin",   0x200002, 0x40000, CRC(22f2ec92) SHA1(9186bfc5db71dc5b099c9a985e8fdd5710772d1c), ROM_SKIP(7) )
+	ROM_CONTINUE(             0x200006, 0x40000)
+	ROMX_LOAD( "gfx10.bin",   0x200003, 0x40000, CRC(763974c9) SHA1(f9b93c7cf0cb8c212fc21c57c85459b7d2e4e2fd), ROM_SKIP(7) )
+	ROM_CONTINUE(             0x200007, 0x40000)
+
+	ROM_REGION( 0x28000, "audiocpu", 0 )		/* PIC16c57 - protected */
+	ROM_LOAD( "pic16c57", 0x00000, 0x04000, NO_DUMP )
+	ROM_REGION( 0x200000, "oki", 0 )		/* OKI6295 */
+	ROM_LOAD( "sound.bin",      0x000000, 0x80000, CRC(aeec9dc6) SHA1(56fd62e8db8aa96cdd242d8c705849a413567780) )
+ROM_END
+
+ROM_START( punipic2 )
+	ROM_REGION( CODE_SIZE, "maincpu", 0 )		/* 68000 code */
+	ROM_LOAD16_BYTE( "prg4.bin",       0x000000, 0x80000, CRC(c3151563) SHA1(61d3a20c25fea8a94ae6e473a87c21968867cba0) )
+	ROM_LOAD16_BYTE( "prg3.bin",       0x000001, 0x80000, CRC(8c2593ac) SHA1(4261bc72b96c3a5690df35c5d8b71524765693d9) )
+	ROM_LOAD16_BYTE( "prg2.bin",       0x100000, 0x80000, CRC(665a5485) SHA1(c07920d110ca9c35f6cbff94a6a889c17300f994) )
+	ROM_LOAD16_BYTE( "prg1.bin",       0x100001, 0x80000, CRC(d7b13f39) SHA1(eb7cd92b44fdef3b72672b0be6786c526421b627) )
+
+	ROM_REGION( 0x400000, "gfx", 0 )
+	ROMX_LOAD( "pu11256.bin",   0x000000, 0x80000, CRC(6581faea) SHA1(2b0e96998002a1df96c7869ec965257d2ecfb531), ROM_GROUPWORD | ROM_SKIP(6) )
+	ROM_CONTINUE(               0x200000, 0x80000 )
+	ROM_CONTINUE(               0x000004, 0x80000 )
+	ROM_CONTINUE(               0x200004, 0x80000 )
+	ROMX_LOAD( "pu13478.bin",   0x000002, 0x80000, CRC(61613de4) SHA1(8f8c46ce907be2b4c4715ad88bfd1456818bdd2c), ROM_GROUPWORD | ROM_SKIP(6) )
+	ROM_CONTINUE(               0x200002, 0x80000 )
+	ROM_CONTINUE(               0x000006, 0x80000 )
+	ROM_CONTINUE(               0x200006, 0x80000 )
+
+	ROM_REGION( 0x28000, "audiocpu", 0 )		/* PIC16c57 - protected */
+	ROM_LOAD( "pic16c57", 0x00000, 0x04000, NO_DUMP )
+	ROM_REGION( 0x200000, "oki", 0 )		/* OKI6295 */
+	ROM_LOAD( "sound.bin",      0x000000, 0x80000, CRC(aeec9dc6) SHA1(56fd62e8db8aa96cdd242d8c705849a413567780) )
+
+	ROM_REGION( 0x200000, "user1", 0 )		/* other */
+	ROM_LOAD( "93c46.bin",      0x0000, 0x0080, CRC(36ab4e7d) SHA1(60bea43051d86d9aefcbb7a390cf0c7d8b905a4b) )
+ROM_END
+
+ROM_START( punipic3 )
+	ROM_REGION( CODE_SIZE, "maincpu", 0 )		/* 68000 code */
+	ROM_LOAD16_BYTE( "psb5b.rom",       0x000000, 0x80000, CRC(58f42c05) SHA1(e243928f0bbecdf2a8d07cf4a6fdea4440e46c01) )
+	ROM_LOAD16_BYTE( "psb3b.rom",       0x000001, 0x80000, CRC(90113db4) SHA1(4decc203ae3ee4abcb2e017f11cd20eae2abf3f3) )
+	ROM_LOAD16_BYTE( "psb4a.rom",       0x100000, 0x80000, CRC(665a5485) SHA1(c07920d110ca9c35f6cbff94a6a889c17300f994) )
+	ROM_LOAD16_BYTE( "psb2a.rom",       0x100001, 0x80000, CRC(d7b13f39) SHA1(eb7cd92b44fdef3b72672b0be6786c526421b627) )
+
+	ROM_REGION( 0x400000, "gfx", 0 )
+	ROMX_LOAD( "psb-a.rom",     0x000000, 0x80000, CRC(57f0f5e3) SHA1(130b6e92181994bbe874261e0895db65d4f3d5d1), ROM_GROUPWORD | ROM_SKIP(6) )
+	ROM_CONTINUE(               0x000004, 0x80000 )
+	ROM_CONTINUE(               0x200000, 0x80000 )
+	ROM_CONTINUE(               0x200004, 0x80000 )
+	ROMX_LOAD( "psb-b.rom",     0x000002, 0x80000, CRC(d9eb867e) SHA1(9b6eaa4a780da5c9cf09658fcab3a1a6f632c2f4), ROM_GROUPWORD | ROM_SKIP(6) )
+	ROM_CONTINUE(               0x000006, 0x80000 )
+	ROM_CONTINUE(               0x200002, 0x80000 )
+	ROM_CONTINUE(               0x200006, 0x80000 )
+
+	ROM_REGION( 0x28000, "audiocpu", ROMREGION_ERASE00 )
+	/* ROM_LOAD( "pic16c57", 0x00000, 0x4000, NO_DUMP ) */
+	ROM_REGION( 0x200000, "oki", ROMREGION_ERASE00 )
+	/* ROM_LOAD( "sound.bin",      0x000000, 0x80000, CRC(aeec9dc6) SHA1(56fd62e8db8aa96cdd242d8c705849a413567780) ) */
+ROM_END
+
 
 /*
 GAME( year, archives name,  parent name, MACHINE_DRIVER_START, INPUT_PORTS, DRIVER_INIT,   flip,   producer name,   title information,	status )
@@ -1474,7 +1672,11 @@ GAME( 1990,   fcrash,	  ffight,	fcrash,		fcrash,		cps1,	  ROT0,   "bootleg (Play
 /* kodb - old sprites show on next screen. Patch used. */
 GAME( 1991,   kodb,	  kod,		kodb,		kodb,		kodb,     ROT0,   "bootleg (Playmark)", "The King of Dragons (bootleg)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )
 /* knightsb - sprites are entangled with the front layer. */
-GAME( 1991,   knightsb,	  knights,	knightsb,	knights,	knightsb, ROT0,   "bootleg",		"Knights of the Round (bootleg)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )
-GAME( 1992,   sf2mdt,	  sf2ce,	sf2mdt,		sf2hack,	sf2mdt,   ROT0,   "bootleg",		"Street Fighter II': Magic Delta Turbo (bootleg)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )
-GAME( 1992,   sf2m1,	  sf2ce,	sf2m1,		sf2,		sf2m1,    ROT0,   "bootleg",		"Street Fighter II': Champion Edition (M1, bootleg)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )
+GAME( 1991,   knightsb,	  knights,	knightsb,	knights,	knightsb, ROT0,   "bootleg", "Knights of the Round (bootleg)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )
+GAME( 1992,   sf2mdt,	  sf2ce,	sf2mdt,		sf2hack,	sf2mdt,   ROT0,   "bootleg", "Street Fighter II': Magic Delta Turbo (bootleg)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )
+GAME( 1992,   sf2m1,	  sf2ce,	sf2m1,		sf2,		sf2m1,    ROT0,   "bootleg", "Street Fighter II': Champion Edition (M1, bootleg)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )
 GAME( 1999,   sgyxz,	  wof,		sgyxz,		sgyxz,		cps1,     ROT0,   "bootleg (All-In Electronic)", "SanGuo YingXiongZhuan (Chinese bootleg of Sangokushi II, set 3)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )
+
+GAME( 1993,   punipic,    punisher,	punipic,	punisher,	punipic,  ROT0,   "bootleg",  "The Punisher (bootleg with PIC16c57, set 1)", GAME_NO_SOUND | GAME_SUPPORTS_SAVE )
+GAME( 1993,   punipic2,   punisher,	punipic,	punisher,	punipic,  ROT0,   "bootleg",  "The Punisher (bootleg with PIC16c57, set 2)", GAME_NO_SOUND | GAME_SUPPORTS_SAVE )
+GAME( 1993,   punipic3,   punisher,	punipic,	punisher,	punipic3, ROT0,   "bootleg",  "The Punisher (bootleg with PIC16c57, set 3)", GAME_IMPERFECT_GRAPHICS | GAME_NO_SOUND | GAME_SUPPORTS_SAVE )

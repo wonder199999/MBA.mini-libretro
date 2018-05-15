@@ -852,7 +852,6 @@ static INPUT_PORTS_START( cps1_quiz )
 	PORT_BIT( 0x8000, IP_ACTIVE_LOW, IPT_BUTTON4 ) PORT_PLAYER(2)
 INPUT_PORTS_END
 
-
 static INPUT_PORTS_START( forgottn )
 	PORT_INCLUDE( cps1_1b )
 
@@ -2405,17 +2404,16 @@ static INPUT_PORTS_START( dinoh )
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_START3 )
 INPUT_PORTS_END
 
-/* Needs further checking */
-static INPUT_PORTS_START( punipic )
+INPUT_PORTS_START( punisher )
 	PORT_INCLUDE( cps1_2b )
 
 	PORT_MODIFY("IN0")
 	PORT_SERVICE_NO_TOGGLE( 0x40, IP_ACTIVE_LOW )
 
-	PORT_START("DSWA")		/* (not used, EEPROM) */
+	PORT_START("DSWA")
 	PORT_BIT( 0xff, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
-	PORT_START("DSWB")		/* (not used, EEPROM) */
+	PORT_START("DSWB")
 	PORT_BIT( 0xff, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
 	PORT_START("DSWC")
@@ -2429,10 +2427,6 @@ static INPUT_PORTS_START( punipic )
 
 	PORT_START("IN3")		/* Player 4 - not used */
 	PORT_BIT( 0xff, IP_ACTIVE_LOW, IPT_UNUSED )
-INPUT_PORTS_END
-
-static INPUT_PORTS_START( punisher )
-	PORT_INCLUDE( punipic )
 
 	PORT_START( "EEPROMIN" )
 	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_READ_LINE_DEVICE("eeprom", eeprom_read_bit)
@@ -2442,7 +2436,6 @@ static INPUT_PORTS_START( punisher )
 	PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_OUTPUT ) PORT_WRITE_LINE_DEVICE("eeprom", eeprom_set_clock_line)
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_OUTPUT ) PORT_WRITE_LINE_DEVICE("eeprom", eeprom_set_cs_line)
 INPUT_PORTS_END
-
 
 static INPUT_PORTS_START( punisherbz )
 	PORT_INCLUDE( punisher )
@@ -2933,7 +2926,6 @@ static INPUT_PORTS_START( wofhfb )
 INPUT_PORTS_END
 
 static INPUT_PORTS_START( sfzch )
-	/* "IN0" */
 	PORT_START("IN0")
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_BUTTON5 ) PORT_PLAYER(1)
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_BUTTON5 ) PORT_PLAYER(2)
@@ -2959,7 +2951,6 @@ static INPUT_PORTS_START( sfzch )
 	PORT_DIPSETTING(    0xff, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 
-	/* Player 1 */
 	PORT_START("IN1")
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT ) PORT_8WAY PORT_PLAYER(1)
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT ) PORT_8WAY  PORT_PLAYER(1)
@@ -2969,7 +2960,6 @@ static INPUT_PORTS_START( sfzch )
 	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_BUTTON2 )  PORT_PLAYER(1)
 	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_BUTTON3 )  PORT_PLAYER(1)
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_BUTTON4 )  PORT_PLAYER(1)
-	/* Player 2 */
 	PORT_BIT( 0x0100, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT ) PORT_8WAY	PORT_PLAYER(2)
 	PORT_BIT( 0x0200, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT ) PORT_8WAY  PORT_PLAYER(2)
 	PORT_BIT( 0x0400, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN ) PORT_8WAY  PORT_PLAYER(2)
@@ -2978,9 +2968,10 @@ static INPUT_PORTS_START( sfzch )
 	PORT_BIT( 0x2000, IP_ACTIVE_LOW, IPT_BUTTON2 )	PORT_PLAYER(2)
 	PORT_BIT( 0x4000, IP_ACTIVE_LOW, IPT_BUTTON3 )	PORT_PLAYER(2)
 	PORT_BIT( 0x8000, IP_ACTIVE_LOW, IPT_BUTTON4 )	PORT_PLAYER(2)
-	/* Player 3 - not used */
+
 	PORT_START("IN2")
 	PORT_BIT( 0xff, IP_ACTIVE_LOW, IPT_UNUSED )
+
 	PORT_START("IN3")
 	PORT_BIT( 0xff, IP_ACTIVE_LOW, IPT_UNUSED )
 INPUT_PORTS_END
@@ -3174,6 +3165,8 @@ static MACHINE_DRIVER_START( cpspicb )
 	MDRV_DEVICE_DISABLE() /* no valid dumps .. */
 
 	MDRV_MACHINE_START(common)
+
+	MDRV_EEPROM_ADD("eeprom", qsound_eeprom_interface)
 
 	/* video hardware */
 	MDRV_SCREEN_ADD("screen", RASTER)
@@ -8509,137 +8502,6 @@ ROM_START( punisherj )
 	ROM_LOAD( "ioc1.ic1",     0x0000, 0x0117, CRC(0d182081) SHA1(475b3d417785da4bc512cce2b274bb00d4cc6792) )
 ROM_END
 
-/* bootleg with pic, like dinopic / dinopic2 */
-ROM_START( punipic )
-	ROM_REGION( CODE_SIZE, "maincpu", 0 )      /* 68000 code */
-	ROM_LOAD16_BYTE( "cpu5.bin",       0x000000, 0x80000, CRC(c3151563) SHA1(61d3a20c25fea8a94ae6e473a87c21968867cba0) )
-	ROM_LOAD16_BYTE( "cpu3.bin",       0x000001, 0x80000, CRC(8c2593ac) SHA1(4261bc72b96c3a5690df35c5d8b71524765693d9) )
-	ROM_LOAD16_BYTE( "cpu4.bin",       0x100000, 0x80000, CRC(665a5485) SHA1(c07920d110ca9c35f6cbff94a6a889c17300f994) )
-	ROM_LOAD16_BYTE( "cpu2.bin",       0x100001, 0x80000, CRC(d7b13f39) SHA1(eb7cd92b44fdef3b72672b0be6786c526421b627) )
-
-	ROM_REGION( 0x400000, "gfx", 0 )
-	ROMX_LOAD( "gfx9.bin",    0x000000, 0x40000, CRC(9b9a887a) SHA1(8805b36fc18837bd7c64c751b435d72b763b2235), ROM_SKIP(7) )
-	ROM_CONTINUE(             0x000004, 0x40000)
-	ROMX_LOAD( "gfx8.bin",    0x000001, 0x40000, CRC(2b94287a) SHA1(815d88e66f537e17550fc0483616f02f7126bfb1), ROM_SKIP(7) )
-	ROM_CONTINUE(             0x000005, 0x40000)
-	ROMX_LOAD( "gfx7.bin",    0x000002, 0x40000, CRC(e9bd74f5) SHA1(8ed7098c69d1c70093c99956bf82e532bd6fc7ac), ROM_SKIP(7) )
-	ROM_CONTINUE(             0x000006, 0x40000)
-	ROMX_LOAD( "gfx6.bin",    0x000003, 0x40000, CRC(a5e1c8a4) SHA1(3596265a45cf6bbf16c623f0fce7cdc65f9338ad), ROM_SKIP(7) )
-	ROM_CONTINUE(             0x000007, 0x40000)
-	ROMX_LOAD( "gfx13.bin",   0x200000, 0x40000, CRC(6d75a193) SHA1(6c5a89517926d7ba4a925a3df800d4bdb8a6938d), ROM_SKIP(7) )
-	ROM_CONTINUE(             0x200004, 0x40000)
-	ROMX_LOAD( "gfx12.bin",   0x200001, 0x40000, CRC(a3c205c1) SHA1(6317cc49434dbbb9a249ddd4b50bd791803b3ebe), ROM_SKIP(7) )
-	ROM_CONTINUE(             0x200005, 0x40000)
-	ROMX_LOAD( "gfx11.bin",   0x200002, 0x40000, CRC(22f2ec92) SHA1(9186bfc5db71dc5b099c9a985e8fdd5710772d1c), ROM_SKIP(7) )
-	ROM_CONTINUE(             0x200006, 0x40000)
-	ROMX_LOAD( "gfx10.bin",   0x200003, 0x40000, CRC(763974c9) SHA1(f9b93c7cf0cb8c212fc21c57c85459b7d2e4e2fd), ROM_SKIP(7) )
-	ROM_CONTINUE(             0x200007, 0x40000)
-
-	ROM_REGION( 0x28000, "audiocpu", 0 ) /* PIC16c57 - protected */
-	ROM_LOAD( "pic16c57", 0x00000, 0x4000, NO_DUMP )
-
-	ROM_REGION( 0x200000, "oki", 0 ) /* OKI6295 */
-	ROM_LOAD( "sound.bin",      0x000000, 0x80000, CRC(aeec9dc6) SHA1(56fd62e8db8aa96cdd242d8c705849a413567780) )
-ROM_END
-
-/* alt bootleg with PIC, same program roms as above, bigger GFX roms
-
-Punisher
-1993, Capcom
-
-This is a bootleg version running on a single PCB.
-
-PCB Layout
-----------
-
-|-----------------------------------------|
-|    93C46  SOUND   30MHz  PAL            |
-|    M6295  PIC16C57                      |
-|           6116     PAL   6116           |
-|           6116           6116  ACTEL    |
-|                          6116  A1020B   |
-|J                         6116           |
-|A   TEST                  6116           |
-|M                         6116           |
-|M                                        |
-|A                                        |
-|    62256  62256        62256  PU13478   |
-|     PRG1   PRG2                         |
-|     PRG3   PRG4        62256  PU11256   |
-|                                      PAL|
-|       68000      24MHz        PAL   PAL |
-|-----------------------------------------|
-
-Notes:
-      Measured clocks
-      ---------------
-      68000 clock: 12.000MHz (24 / 2)
-      M6295 clock: 937.5kHz  (30 / 32), sample rate = 30000000 / 32 / 132
-      16C57 clock: 3.75MHz   (30 / 8)   NOTE! 4096 bytes internal ROM is protected and can't be read out.
-      VSYNC      : 60Hz
-
-      ROMs
-      ----
-      PRG*  - 4M  MASK ROM (read as 27C040)
-      SOUND - 4M  MASK ROM (read as 27C040)
-      PU*   - 16M MASK ROM (read as 27C160)
-
-*/
-
-ROM_START( punipic2 )
-	ROM_REGION( CODE_SIZE, "maincpu", 0 )      /* 68000 code */
-	ROM_LOAD16_BYTE( "prg4.bin",       0x000000, 0x80000, CRC(c3151563) SHA1(61d3a20c25fea8a94ae6e473a87c21968867cba0) )
-	ROM_LOAD16_BYTE( "prg3.bin",       0x000001, 0x80000, CRC(8c2593ac) SHA1(4261bc72b96c3a5690df35c5d8b71524765693d9) )
-	ROM_LOAD16_BYTE( "prg2.bin",       0x100000, 0x80000, CRC(665a5485) SHA1(c07920d110ca9c35f6cbff94a6a889c17300f994) )
-	ROM_LOAD16_BYTE( "prg1.bin",       0x100001, 0x80000, CRC(d7b13f39) SHA1(eb7cd92b44fdef3b72672b0be6786c526421b627) )
-
-	ROM_REGION( 0x400000, "gfx", 0 )
-	ROMX_LOAD( "pu11256.bin",   0x000000, 0x80000, CRC(6581faea) SHA1(2b0e96998002a1df96c7869ec965257d2ecfb531), ROM_GROUPWORD | ROM_SKIP(6) )
-	ROM_CONTINUE(               0x200000, 0x80000 )
-	ROM_CONTINUE(               0x000004, 0x80000 )
-	ROM_CONTINUE(               0x200004, 0x80000 )
-	ROMX_LOAD( "pu13478.bin",   0x000002, 0x80000, CRC(61613de4) SHA1(8f8c46ce907be2b4c4715ad88bfd1456818bdd2c), ROM_GROUPWORD | ROM_SKIP(6) )
-	ROM_CONTINUE(               0x200002, 0x80000 )
-	ROM_CONTINUE(               0x000006, 0x80000 )
-	ROM_CONTINUE(               0x200006, 0x80000 )
-
-	ROM_REGION( 0x28000, "audiocpu", 0 ) /* PIC16c57 - protected */
-	ROM_LOAD( "pic16c57", 0x00000, 0x4000, NO_DUMP )
-
-	ROM_REGION( 0x200000, "oki", 0 ) /* OKI6295 */
-	ROM_LOAD( "sound.bin",      0x000000, 0x80000, CRC(aeec9dc6) SHA1(56fd62e8db8aa96cdd242d8c705849a413567780) )
-
-	ROM_REGION( 0x200000, "user1", 0 ) /* other */
-	ROM_LOAD( "93c46.bin",      0x00, 0x80, CRC(36ab4e7d) SHA1(60bea43051d86d9aefcbb7a390cf0c7d8b905a4b) )
-ROM_END
-
-/* the readme doesn't actually state this has a PIC, and there's no sound rom
-   so it might be different */
-
-ROM_START( punipic3 )
-	ROM_REGION( CODE_SIZE, "maincpu", 0 )      /* 68000 code */
-	ROM_LOAD16_BYTE( "psb5b.rom",       0x000000, 0x80000, CRC(58f42c05) SHA1(e243928f0bbecdf2a8d07cf4a6fdea4440e46c01) )
-	ROM_LOAD16_BYTE( "psb3b.rom",       0x000001, 0x80000, CRC(90113db4) SHA1(4decc203ae3ee4abcb2e017f11cd20eae2abf3f3) )
-	ROM_LOAD16_BYTE( "psb4a.rom",       0x100000, 0x80000, CRC(665a5485) SHA1(c07920d110ca9c35f6cbff94a6a889c17300f994) )
-	ROM_LOAD16_BYTE( "psb2a.rom",       0x100001, 0x80000, CRC(d7b13f39) SHA1(eb7cd92b44fdef3b72672b0be6786c526421b627) )
-
-	ROM_REGION( 0x400000, "gfx", 0 )
-	ROMX_LOAD( "psb-a.rom",     0x000000, 0x80000, CRC(57f0f5e3) SHA1(130b6e92181994bbe874261e0895db65d4f3d5d1), ROM_GROUPWORD | ROM_SKIP(6) )
-	ROM_CONTINUE(               0x000004, 0x80000 )
-	ROM_CONTINUE(               0x200000, 0x80000 )
-	ROM_CONTINUE(               0x200004, 0x80000 )
-	ROMX_LOAD( "psb-b.rom",     0x000002, 0x80000, CRC(d9eb867e) SHA1(9b6eaa4a780da5c9cf09658fcab3a1a6f632c2f4), ROM_GROUPWORD | ROM_SKIP(6) )
-	ROM_CONTINUE(               0x000006, 0x80000 )
-	ROM_CONTINUE(               0x200002, 0x80000 )
-	ROM_CONTINUE(               0x200006, 0x80000 )
-
-	ROM_REGION( 0x28000, "audiocpu", ROMREGION_ERASE00 ) /* PIC16c57 (maybe, not listed in readme) */
-	//ROM_LOAD( "pic16c57", 0x00000, 0x4000, NO_DUMP )
-
-	ROM_REGION( 0x200000, "oki", ROMREGION_ERASE00 ) /* OKI6295 */
-	//ROM_LOAD( "sound.bin",      0x000000, 0x80000, CRC(aeec9dc6) SHA1(56fd62e8db8aa96cdd242d8c705849a413567780) )
-ROM_END
-
 /* Chinese bootleg board */
 ROM_START( punisherbz )
 	ROM_REGION( CODE_SIZE, "maincpu", 0 )      /* 68000 code */
@@ -9580,6 +9442,3 @@ GAME( 1991, captcommb,  captcomm, cps1_10MHz, captcomm,   cps1,     ROT0,   "boo
 GAME( 1993, dinopic,    dino,     cpspicb,    dinopic,    dino,     ROT0,   "bootleg", "Cadillacs and Dinosaurs (bootleg with PIC16c57, set 1)", GAME_NOT_WORKING | GAME_SUPPORTS_SAVE )
 GAME( 1993, dinopic2,   dino,     cpspicb,    dinopic,    dino,     ROT0,   "bootleg", "Cadillacs and Dinosaurs (bootleg with PIC16c57, set 2)", GAME_NOT_WORKING | GAME_SUPPORTS_SAVE )
 GAME( 1993, dinohunt,   dino,     wofhfb,     dinoh,      dinohunt, ROT0,   "bootleg", "Dinosaur Hunter (Chinese bootleg of Cadillacs and Dinosaurs)", GAME_NOT_WORKING | GAME_SUPPORTS_SAVE )	// 930223 - based on Asia TW version, the original is still undumped
-GAME( 1993, punipic,    punisher, cpspicb,    punipic,    punisher, ROT0,   "bootleg", "The Punisher (bootleg with PIC16c57, set 1)", GAME_NOT_WORKING | GAME_SUPPORTS_SAVE )
-GAME( 1993, punipic2,   punisher, cpspicb,    punipic,    punisher, ROT0,   "bootleg", "The Punisher (bootleg with PIC16c57, set 2)", GAME_NOT_WORKING | GAME_SUPPORTS_SAVE )
-GAME( 1993, punipic3,   punisher, cpspicb,    punipic,    punisher, ROT0,   "bootleg", "The Punisher (bootleg with PIC16c57, set 3)", GAME_NOT_WORKING | GAME_SUPPORTS_SAVE )
