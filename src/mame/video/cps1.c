@@ -1299,7 +1299,6 @@ static const struct CPS1config cps1_config_table[]=
 	{"sf2dkot2",   CPS_B_21_DEF, mapper_S9263B, 0x36 },
 	{"sf2m1",      CPS_B_21_DEF, mapper_S9263B, 0x36 },
 	{"sf2m2",      CPS_B_21_DEF, mapper_S9263B, 0x36, 0, 0, 1 },
-	{"sf2m3",      HACK_B_1,     mapper_S9263B, 0x00, 0, 0, 2 },
 	{"sf2m4",      HACK_B_1,     mapper_S9263B, 0x36, 0, 0, 1 },
 	{"sf2m5",      CPS_B_21_DEF, mapper_S9263B, 0x36, 0, 0, 1 },
 	{"sf2m6",      CPS_B_21_DEF, mapper_S9263B, 0x36, 0, 0, 1 },
@@ -1307,6 +1306,7 @@ static const struct CPS1config cps1_config_table[]=
 	{"sf2yyc",     CPS_B_21_DEF, mapper_S9263B, 0x36, 0, 0, 1 },
 	{"sf2koryu",   CPS_B_21_DEF, mapper_S9263B, 0x36, 0, 0, 1 },
 	{"sf2mdt",     CPS_B_21_DEF, mapper_S9263B, 0x36, 0, 0, 1 },
+	{"sf2m3",      HACK_B_1,     mapper_S9263B, 0x00, 0, 0, 2 },
 	{"sf2ceuab3",  HACK_B_1,     mapper_S9263B, 0x00, 0, 0, 2 },
 	{"sf2amf",     CPS_B_21_DEF, mapper_S9263B, 0x36, 0, 0, 1 },
 
@@ -2267,7 +2267,7 @@ static void cps1_render_sprites( running_machine *machine, bitmap_t *bitmap, con
 	INT32 i, baseadd;
 
 	/* some sf2 hacks draw the sprites in reverse order */
-	if (state->game_config->bootleg_kludge == 1)
+	if ( (state->game_config->bootleg_kludge == 1) || (state->game_config->bootleg_kludge == 2) )
 	{
 		base += state->last_sprite_offset;
 		baseadd = -4;

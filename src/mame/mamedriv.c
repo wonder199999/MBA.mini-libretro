@@ -201,9 +201,6 @@ const game_driver *const drivers[] =
 	DRIVER( punisher )	/* 22/04/1993 (c) 1993 (World) (CPS1 + QSound) */
 	DRIVER( punisheru )	/* 22/04/1993 (c) 1993 (US)    (CPS1 + QSound) */
 	DRIVER( punisherj )	/* 22/04/1993 (c) 1993 (Japan) (CPS1 + QSound) */
-	DRIVER( punipic )	/* bootleg */
-	DRIVER( punipic2 )	/* bootleg */
-	DRIVER( punipic3 )	/* bootleg */
 	DRIVER( punisherbz )	/* bootleg */
 	DRIVER( slammast )	/* 13/07/1993 (c) 1993 (World) (CPS1 + QSound) */
 	DRIVER( slammastu )	/* 13/07/1993 (c) 1993 (US)    (CPS1 + QSound) */
@@ -226,6 +223,9 @@ const game_driver *const drivers[] =
 	DRIVER( knightsb )	/* bootleg */
 	DRIVER( sf2m1 )		/* hack */
 	DRIVER( sf2m3 )		/* hack */
+	DRIVER( punipic )	/* bootleg */
+	DRIVER( punipic2 )	/* bootleg */
+	DRIVER( punipic3 )	/* bootleg */
 
 	/* new added */
 	DRIVER( sfzch )		/* 20/10/1995 (c) CPS Changer version - Street Fighter Zero */
