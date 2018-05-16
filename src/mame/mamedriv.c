@@ -195,8 +195,6 @@ const game_driver *const drivers[] =
 	DRIVER( dino )		/* 01/02/1993 (c) 1993 (World) (CPS1 + QSound) */
 	DRIVER( dinou )		/* 01/02/1993 (c) 1993 (US)    (CPS1 + QSound) */
 	DRIVER( dinoj )		/* 01/02/1993 (c) 1993 (Japan) (CPS1 + QSound) */
-	DRIVER( dinopic )	/* bootleg */
-	DRIVER( dinopic2 )	/* bootleg */
 	DRIVER( dinohunt )	/* bootleg */
 	DRIVER( punisher )	/* 22/04/1993 (c) 1993 (World) (CPS1 + QSound) */
 	DRIVER( punisheru )	/* 22/04/1993 (c) 1993 (US)    (CPS1 + QSound) */
@@ -226,6 +224,8 @@ const game_driver *const drivers[] =
 	DRIVER( punipic )	/* bootleg */
 	DRIVER( punipic2 )	/* bootleg */
 	DRIVER( punipic3 )	/* bootleg */
+	DRIVER( dinopic )	/* bootleg */
+	DRIVER( dinopic2 )	/* bootleg */
 
 	/* new added */
 	DRIVER( sfzch )		/* 20/10/1995 (c) CPS Changer version - Street Fighter Zero */
