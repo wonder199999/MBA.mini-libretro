@@ -236,6 +236,8 @@ const game_driver *const drivers[] =
 	DRIVER( sf2ceuab3 )	/* bootleg of SF2CE, in FBA it's name is sf2ceuab3, in MAME it's name is sf2m8a */
 	DRIVER( sgyxz )		/* bootleg of wof */
 	DRIVER( sf2amf )	/* hackrom, SF2 Alpha Magic-F */
+	DRIVER( cawingbl )	/* bootleg of cawing, with YM2203 x2 + MSM205 x2, set 1 */
+	DRIVER( cawingb2 )	/* bootleg of cawing, with YM2203 x2 + MSM205 x2, set 2 */
 
 
 

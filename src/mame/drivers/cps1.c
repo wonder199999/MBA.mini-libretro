@@ -1046,7 +1046,7 @@ static INPUT_PORTS_START( ghoulsu )
 	PORT_DIPSETTING(    0x00, DEF_STR( Cocktail ) )		/* for 2-player cocktail cabinet */
 INPUT_PORTS_END
 
-	/* Same as 'ghouls' but additional "Freeze" Dip Switch */
+/* Same as 'ghouls' but additional "Freeze" Dip Switch */
 static INPUT_PORTS_START( daimakai )
 	PORT_INCLUDE(ghouls)
 
@@ -1112,8 +1112,8 @@ static INPUT_PORTS_START( strider )
 	PORT_DIPSETTING(    0x00, DEF_STR( Test ) )		/* To enable the "debug" features */
 INPUT_PORTS_END
 
-	/* Same as 'strider' but additional "2 Coins to Start, 1 to Continue" Dip Switch */
-	/* "Debug" features to be implemented */
+/* Same as 'strider' but additional "2 Coins to Start, 1 to Continue" Dip Switch */
+/* "Debug" features to be implemented */
 static INPUT_PORTS_START( stridrua )
 	PORT_INCLUDE( strider )
 
@@ -1656,7 +1656,7 @@ static INPUT_PORTS_START( msword )
 	PORT_DIPSETTING(    0x00, DEF_STR( Test ) )
 INPUT_PORTS_END
 
-static INPUT_PORTS_START( cawing )
+INPUT_PORTS_START( cawing )
 	PORT_INCLUDE( cps1_3b )
 
 	PORT_MODIFY("IN0")
@@ -1997,7 +1997,6 @@ static INPUT_PORTS_START( kodj )
 	PORT_DIPSETTING(    0x00, DEF_STR( None ) )
 INPUT_PORTS_END
 
-
 static INPUT_PORTS_START( captcomm )
 	PORT_INCLUDE( cps1_4players )
 
@@ -2308,7 +2307,6 @@ static INPUT_PORTS_START( dino )
 	PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_OUTPUT ) PORT_WRITE_LINE_DEVICE("eeprom", eeprom_set_clock_line)
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_OUTPUT ) PORT_WRITE_LINE_DEVICE("eeprom", eeprom_set_cs_line)
 INPUT_PORTS_END
-
 
 static INPUT_PORTS_START( dinoh )
 	PORT_INCLUDE( dino )
@@ -9433,9 +9431,9 @@ GAME( 1995, wofch,	0,	 qsound,      	wofch,	  wof,      ROT0,   "Capcom",	"CPS C
 GAME( 1999, wofhfh,     0,       wofhfb,     	wofhfb,   cps1,     ROT0,   "bootleg",	"Huo Feng Huang , Chinese bootleg", GAME_SUPPORTS_SAVE )
 GAME( 2010, wofchdx,	wofch,	 qsound,      	wofch,	  wof,      ROT0,   "Capcom",	"CPS Changer - Sangokushi III Gaiden: Kakou-On's Revenge DX (hack)", GAME_SUPPORTS_SAVE )
 GAME( 1995, wofches,	wofch,	 qsound,      	wofch,	  wof,      ROT0,   "Capcom",	"CPS Changer - Tenchi Wo Kurau II (Blue title, enabled the skill-enhanced mode)", GAME_SUPPORTS_SAVE )
-GAME( 1992, sf2m3,	sf2ce,	 sf2m3,		sf2,	  cps1,     ROT0,   "bootleg",	"Street Fighter II': Champion Edition (M3, bootleg)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )
-GAME( 1992, sf2ceuab3,	sf2ce,	 sf2m3,		sf2,	  sf2m8,    ROT0,   "bootleg",  "Street Fighter II': Champion Edition (In MAME, the game's name is sf2m8a, bootleg)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )
-GAME( 1992, sf2amf,	sf2ce,	 cps1_12MHz,	sf2amf,	  sf2hack,  ROT0,   "bootleg",  "Street Fighter II': Champion Edition (Alpha Magic-F, bootleg)", GAME_NOT_WORKING | GAME_SUPPORTS_SAVE )
+GAME( 1992, sf2m3,	sf2ce,	 sf2m3,		sf2,	  cps1,     ROT0,   "bootleg",	"Street Fighter II': Champion Edition (M3, bootleg)", GAME_SUPPORTS_SAVE )
+GAME( 1992, sf2ceuab3,	sf2ce,	 sf2m3,		sf2,	  sf2m8,    ROT0,   "bootleg",  "Street Fighter II': Champion Edition (In MAME, the game's name is sf2m8a, bootleg)", GAME_SUPPORTS_SAVE )
+GAME( 1992, sf2amf,	sf2ce,	 cps1_12MHz,	sf2amf,	  sf2hack,  ROT0,   "bootleg",  "Street Fighter II': Champion Edition (Alpha Magic-F, bootleg)", GAME_SUPPORTS_SAVE )
 
 /* TODO */
 GAME( 1991, captcommb,  captcomm, cps1_10MHz, captcomm,   cps1,     ROT0,   "bootleg", "Captain Commando (bootleg)", GAME_NOT_WORKING | GAME_SUPPORTS_SAVE )	// 911014 - based on World version

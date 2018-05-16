@@ -233,6 +233,7 @@ INPUT_PORTS_EXTERN( cps1_4players );
 INPUT_PORTS_EXTERN( knights );
 INPUT_PORTS_EXTERN( sf2 );
 INPUT_PORTS_EXTERN( punisher );
+INPUT_PORTS_EXTERN( cawing );
 
 /*----------- defined in machine/kabuki.c -----------*/
 void mgakuen2_decode(running_machine *machine);
