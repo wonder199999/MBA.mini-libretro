@@ -217,7 +217,8 @@ const game_driver *const drivers[] =
 
 	DRIVER( fcrash )	/* bootleg of Final Fight */
 	DRIVER( kodb )		/* bootleg */
-	DRIVER( sf2mdt )	/* bootleg */
+	DRIVER( sf2mdt )	/* bootleg of SF2CE, set 1 */
+	DRIVER( sf2mdta )	/* bootleg of SF2CE, set 2 */
 	DRIVER( knightsb )	/* bootleg */
 	DRIVER( sf2m1 )		/* hack */
 	DRIVER( sf2m3 )		/* hack */
