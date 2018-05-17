@@ -1365,7 +1365,7 @@ INPUT_PORTS_END
 
 /* To enable other choices in the "test mode", you must press ("P1 Button 1" ('Ctrl')
    or "P1 Button 2" ('Alt')) when "Service Mode" is ON */
-static INPUT_PORTS_START( ffight )
+INPUT_PORTS_START( ffight )
 	PORT_INCLUDE( cps1_3b )
 
 	PORT_MODIFY("IN1")
@@ -1925,7 +1925,7 @@ static INPUT_PORTS_START( 3wonders )
 	PORT_DIPSETTING(    0x00, DEF_STR( Test ) )
 INPUT_PORTS_END
 
-static INPUT_PORTS_START( kod )
+INPUT_PORTS_START( kod )
 	PORT_INCLUDE( cps1_3players )
 
 	PORT_MODIFY("IN0")

@@ -718,7 +718,7 @@ ADDRESS_MAP_END
 	PORT_DIPSETTING(    0x00, "8 (Hardest)" )
 
 
-static INPUT_PORTS_START( sf2hack )		/* for sf2/sf2ce hackrom */
+static INPUT_PORTS_START( sf2mdt )		/* for sf2/sf2ce hackrom */
 	PORT_INCLUDE( cps1_3b )
 
 	PORT_MODIFY("IN0")
@@ -780,7 +780,9 @@ static INPUT_PORTS_START( sf2hack )		/* for sf2/sf2ce hackrom */
 	PORT_DIPSETTING(    0x00, DEF_STR( Test ) )
 INPUT_PORTS_END
 
+/*
 static INPUT_PORTS_START( fcrash )
+	PORT_INCLUDE( ffight )
 	PORT_INCLUDE( cps1_3b )
 
 	PORT_MODIFY("IN1")
@@ -901,6 +903,7 @@ static INPUT_PORTS_START( kodb )
 	PORT_DIPSETTING(    0x80, "Game" )
 	PORT_DIPSETTING(    0x00, DEF_STR( Test ) )
 INPUT_PORTS_END
+*/
 
 static INPUT_PORTS_START( sgyxz )
 	PORT_INCLUDE( cps1_3players )
@@ -1913,14 +1916,15 @@ ROM_END
 /*
 GAME( year, archives name,  parent name, MACHINE_DRIVER_START, INPUT_PORTS, DRIVER_INIT,   flip,   producer name,   title information,	status )
 */
+
 /* fcrash - old sprites show on next screen. Patch used. */
-GAME( 1990,   fcrash,	  ffight,	fcrash,		fcrash,		cps1,	  ROT0,   "bootleg (Playmark)", "Final Crash (bootleg of Final Fight)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )
+GAME( 1990,   fcrash,	  ffight,	fcrash,		ffight,		cps1,	  ROT0,   "bootleg (Playmark)", "Final Crash (bootleg of Final Fight)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )
 /* kodb - old sprites show on next screen. Patch used. */
-GAME( 1991,   kodb,	  kod,		kodb,		kodb,		kodb,     ROT0,   "bootleg (Playmark)", "The King of Dragons (bootleg)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )
+GAME( 1991,   kodb,	  kod,		kodb,		kod,		kodb,     ROT0,   "bootleg (Playmark)", "The King of Dragons (bootleg)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )
 /* knightsb - sprites are entangled with the front layer. */
 GAME( 1991,   knightsb,	  knights,	knightsb,	knights,	knightsb, ROT0,   "bootleg", "Knights of the Round (bootleg)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )
 /* sf2mdt - problem with scrolls */
-GAME( 1992,   sf2mdt,	  sf2ce,	sf2mdt,		sf2hack,	sf2mdt,   ROT0,   "bootleg", "Street Fighter II': Magic Delta Turbo (bootleg)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )
+GAME( 1992,   sf2mdt,	  sf2ce,	sf2mdt,		sf2mdt,		sf2mdt,   ROT0,   "bootleg", "Street Fighter II': Magic Delta Turbo (bootleg)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE )
 /* sf2m1 - crowd is missing. Plane's tail comes off a bit. Patch used. */
 GAME( 1992,   sf2m1,	  sf2ce,	sf2m1,		sf2,		sf2m1,    ROT0,   "bootleg", "Street Fighter II': Champion Edition (M1, bootleg)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )
 /* sgyxz - garbage left behind. A priority problem can be seen in 3rd demo where the fighters walk through the crowd instead of behind. */
