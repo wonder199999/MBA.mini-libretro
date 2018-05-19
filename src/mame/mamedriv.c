@@ -155,7 +155,6 @@ const game_driver *const drivers[] =
 	DRIVER( captcommu )	/* 28/ 9/1991 (c) 1991 (US)    */
 	DRIVER( captcommj )	/* 02/12/1991 (c) 1991 (Japan) */
 	DRIVER( captcommjr1 )	/* 28/ 9/1991 (c) 1991 (Japan) */
-	DRIVER( captcommb )	/* bootleg */
 	DRIVER( knights )	/* 27/11/1991 (c) 1991 (World) */
 	DRIVER( knightsu )	/* 27/11/1991 (c) 1991 (US)    */
 	DRIVER( knightsj )	/* 27/11/1991 (c) 1991 (Japan) */
@@ -227,6 +226,7 @@ const game_driver *const drivers[] =
 	DRIVER( punipic3 )	/* bootleg */
 	DRIVER( dinopic )	/* bootleg */
 	DRIVER( dinopic2 )	/* bootleg */
+	DRIVER( captcommb )	/* bootleg */
 
 	/* new added */
 	DRIVER( sfzch )		/* 20/10/1995 (c) CPS Changer version - Street Fighter Zero */

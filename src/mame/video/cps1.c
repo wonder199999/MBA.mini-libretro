@@ -1196,7 +1196,7 @@ static const struct CPS1config cps1_config_table[]=
 	{"captcommu",  CPS_B_21_BT3, mapper_CC63B,  0x36, 0x38, 0x34 },
 	{"captcommj",  CPS_B_21_BT3, mapper_CC63B,  0x36, 0x38, 0x34 },
 	{"captcommjr1",CPS_B_21_BT3, mapper_CC63B,  0x36, 0x38, 0x34 },
-	{"captcommb",  CPS_B_21_BT3, mapper_CC63B,  0x36, 0x38, 0x34 },
+	{"captcommb",  CPS_B_21_BT3, mapper_CC63B,  0x36, 0x38, 0x34, 3 },
 
 	{"cawing",     CPS_B_16,     mapper_CA24B },
 	{"cawingr1",   CPS_B_16,     mapper_CA24B },
@@ -1911,7 +1911,7 @@ static int gfxrom_bank_mapper( running_machine *machine, int type, int code )
 	}
 
 #ifdef MAME_DEBUG
-//  popmessage("tile %02x/%04x out of range", type, code >> shift);
+	/*  popmessage("tile %02x/%04x out of range", type, code >> shift); */
 #endif
 
 	return -1;
@@ -2228,18 +2228,34 @@ static void cps1_find_last_sprite( running_machine *machine )		/* Find the offse
 {
 	cps_state *state = (cps_state *)machine->driver_data;
 
-	INT32 offset = 0;
-	while (offset < state->obj_size / 2)				/* Locate the end of table marker */
+	INT32 offset, size = state->obj_size / 2;
+
+	if (state->game_config->bootleg_kludge == 3)
 	{
-		INT32 colour = state->buffered_obj[offset + 3];
-		if ((colour & 0xff00) == 0xff00)
+		/* Locate the end of table marker */
+		for (offset = 0; offset < size; offset += 4)
 		{
-			state->last_sprite_offset = offset - 4;		/* Marker found. This is the last sprite. */
-			return;
+			if ( state->buffered_obj[offset + 1] >= 0x8000 )
+			{
+				/* Marker found. This is the last sprite. */
+				state->last_sprite_offset = offset - 4;
+				return;
+			}
 		}
-		offset += 4;
 	}
-	state->last_sprite_offset = state->obj_size / 2 - 4;		/* Sprites must use full sprite RAM */
+	else
+	{
+		for (offset = 0; offset < size; offset += 4)
+		{
+			if ( (state->buffered_obj[offset + 3] & 0xff00) == 0xff00 )
+			{
+				state->last_sprite_offset = offset - 4;
+				return;
+			}
+		}
+	}
+	/* Sprites must use full sprite RAM */
+	state->last_sprite_offset = size - 4;
 }
 
 
@@ -2265,16 +2281,17 @@ static void cps1_render_sprites( running_machine *machine, bitmap_t *bitmap, con
 				SX, SY,				  machine->priority_bitmap, 0x02, 15);  \
 }
 	UINT16 *base = state->buffered_obj;
-	INT32 i, baseadd;
+	INT32 i, baseadd = 4;
 
 	/* some sf2 hacks draw the sprites in reverse order */
-	if ( (state->game_config->bootleg_kludge == 1) || (state->game_config->bootleg_kludge == 2) )
+	if (state->game_config->bootleg_kludge)
 	{
-		base += state->last_sprite_offset;
-		baseadd = -4;
+		if (state->game_config->bootleg_kludge < 4)
+		{
+			base += state->last_sprite_offset;
+			baseadd = -4;
+		}
 	}
-	else
-		baseadd = 4;
 
 	for (i = state->last_sprite_offset; i >= 0; i -= 4)
 	{
@@ -2425,7 +2442,7 @@ static UINT16 *cps2_objbase( running_machine *machine )
 
 	if (baseptr == 0x7000)
 		return state->objram1;
-	else //if (baseptr == 0x7080)
+	else
 		return state->objram2;
 }
 
@@ -2435,17 +2452,16 @@ static void cps2_find_last_sprite( running_machine *machine )		/* Find the offse
 	cps_state *state = (cps_state *)machine->driver_data;
 	UINT16 *base = state->cps2_buffered_obj;
 
-	INT32 offset = 0;
-	while (offset < state->cps2_obj_size / 2)			/* Locate the end of table marker */
+	INT32 offset, size = state->cps2_obj_size / 2;
+	for (offset = 0; offset < size; offset += 4)			/* Locate the end of table marker */
 	{
 		if (base[offset + 1] >= 0x8000 || base[offset + 3] >= 0xff00)
 		{
 			state->cps2_last_sprite_offset = offset - 4;	/* Marker found. This is the last sprite. */
 			return;
 		}
-		offset += 4;
 	}
-	state->cps2_last_sprite_offset = state->cps2_obj_size / 2 - 4;	/* Sprites must use full sprite RAM */
+	state->cps2_last_sprite_offset = size - 4;			/* Sprites must use full sprite RAM */
 }
 
 static void cps2_render_sprites( running_machine *machine, bitmap_t *bitmap, const rectangle *cliprect, int *primasks )
@@ -2585,7 +2601,7 @@ static void cps1_render_stars( screen_device *screen, bitmap_t *bitmap, const re
 	if (!stars_rom && (state->stars_enabled[0] || state->stars_enabled[1]))
 	{
 #ifdef MAME_DEBUG
-//      popmessage("stars enabled but no stars ROM");
+/*      popmessage("stars enabled but no stars ROM"); */
 #endif
 		return;
 	}
