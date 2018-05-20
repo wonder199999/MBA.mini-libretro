@@ -23,10 +23,10 @@ Support the following :
 	Cadillacs and Dinosaurs(bootleg with PIC16c57, set2) 	  - N: dinopic2,  P: dino,    S: 0.139, Note: No Sound / The original rom contains a bad-dump gfx file, resulting in graphics problems, use FBA's rom can solve the problem.
 	Cadillacs and Dinosaurs(USA 930201) 			  - N: dinou, 	  P: dino,    S: 0.139
 	Cadillacs Kyouryuu Shin Seiki(Japan 930201) 		  - N: dinoj, 	  P: dino,    S: 0.139
-	Dinosaur Hunter(Chinese bootleg Cadillacs and Dinosaurs)  - N: dinohunt,  P: dino,    S: 0.139, Note: Not Working
+	Dinosaur Hunter(Chinese bootleg Cadillacs and Dinosaurs)  - N: dinohunt,  P: dino,    S: 0.139
 
 *Captain Commando(World 911202)		 	- N: captcomm,     P: Itself,    S: 0.139 
-	Captain Commando(bootleg)	 	- N: captcommb,    P: captcomm,  S: 0.139 , Note: Not Working
+	Captain Commando(bootleg)	 	- N: captcommb,    P: captcomm,  S: 0.139
 	Captain Commando(Japan 910928)	 	- N: captcommjr1,  P: captcomm,  S: 0.139 
 	Captain Commando(Japan 911202)	 	- N: captcommj,    P: captcomm,  S: 0.139
 	Captain Commando(USA 910928)	 	- N: captcommu,    P: captcomm,  S: 0.139
