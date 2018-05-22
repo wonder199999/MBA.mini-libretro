@@ -1,7 +1,7 @@
 #ifndef _CPS1_H_
 #define _CPS1_H_
 
-/* -------------- MACRO -------------- */
+/* -------------- MACROS -------------- */
 #define CPS_PIXEL_CLOCK		(XTAL_16MHz / 2)
 #define CPS_HTOTAL		(512)
 #define CPS_HBEND		(64)

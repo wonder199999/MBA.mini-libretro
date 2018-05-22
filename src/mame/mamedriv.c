@@ -229,7 +229,7 @@ const game_driver *const drivers[] =
 	DRIVER( captcommb )	/* bootleg */
 
 	/* new added */
-	DRIVER( sfzch )		/* 20/10/1995 (c) CPS Changer version - Street Fighter Zero */
+	DRIVER( sfzch )		/* 20/10/1995 (c) CPS Changer version - Street Fighter Zero(Japan) */
 	DRIVER( wofch )		/* 31/10/1992 (c) CPS Changer version - Tenchi Wo Kurau II */
 	DRIVER( wofches )	/* hackrom, based by wofch */
 	DRIVER( wofchdx )	/* hackrom, bootleg, CPS Changer version -Sangokushi III Gaiden: Kakou-On's Revenge DX, based by wofch */
@@ -240,6 +240,7 @@ const game_driver *const drivers[] =
 	DRIVER( cawingbl )	/* bootleg of cawing, with YM2203 x2 + MSM205 x2, set 1 */
 	DRIVER( cawingb2 )	/* bootleg of cawing, with YM2203 x2 + MSM205 x2, set 2 */
 	DRIVER( slampic )	/* bootleg */
+	DRIVER( sfach )		/* 27/07/1995 (c) CPS Changer version - Street Fighter Alpha: Warriors' Dreams(USA) */
 
 
 	/* ************************* */

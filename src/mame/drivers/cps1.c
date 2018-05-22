@@ -9205,3 +9205,4 @@ GAME( 1992, sf2ceuab3,	sf2ce,	  sf2m3,	sf2,	   sf2m8,      ROT0,   "bootleg", "S
 GAME( 1992, sf2amf,	sf2ce,	  cps1_12MHz,	sf2amf,	   sf2hack,    ROT0,   "bootleg", "Street Fighter II': Champion Edition (Alpha Magic-F, bootleg)", GAME_SUPPORTS_SAVE )
 GAME( 1991, captcommb,  captcomm, cps1_10MHz,	captcomm,  cps1,       ROT0,   "bootleg", "Captain Commando (bootleg)", GAME_SUPPORTS_SAVE )	/* 911014 - based on World version */
 GAME( 1993, dinohunt,   dino,     wofhfb,	dinoh,	   dinohunt,   ROT0,   "bootleg", "Dinosaur Hunter (Chinese bootleg of Cadillacs and Dinosaurs)", GAME_SUPPORTS_SAVE )	/* 930223 - based on Asia TW version, the original is still undumped */
+GAME( 1995, sfach,	sfzch,	  cps1_12MHz,	sfzch,	   cps1,       ROT0,   "Capcom",  "Street Fighter Alpha: Warriors' Dreams (CPS Changer, Publicity USA 950727)", 0 )
