@@ -1,6 +1,7 @@
 #ifndef _CPS1_H_
 #define _CPS1_H_
 
+/* -------------- MACRO -------------- */
 #define CPS_PIXEL_CLOCK		(XTAL_16MHz / 2)
 #define CPS_HTOTAL		(512)
 #define CPS_HBEND		(64)
@@ -11,6 +12,80 @@
 
 #define CODE_SIZE		0x400000
 #define CPS1_ROWSCROLL_OFFS	(0x20 / 2)    /* base of row scroll offsets in other RAM */
+
+#define CPS1_COINAGE_1(diploc) \
+	PORT_DIPNAME( 0x07, 0x07, DEF_STR( Coin_A ) ) PORT_DIPLOCATION(diploc ":1,2,3") \
+	PORT_DIPSETTING(    0x00, DEF_STR( 4C_1C ) ) \
+	PORT_DIPSETTING(    0x01, DEF_STR( 3C_1C ) ) \
+	PORT_DIPSETTING(    0x02, DEF_STR( 2C_1C ) ) \
+	PORT_DIPSETTING(    0x07, DEF_STR( 1C_1C ) ) \
+	PORT_DIPSETTING(    0x06, DEF_STR( 1C_2C ) ) \
+	PORT_DIPSETTING(    0x05, DEF_STR( 1C_3C ) ) \
+	PORT_DIPSETTING(    0x04, DEF_STR( 1C_4C ) ) \
+	PORT_DIPSETTING(    0x03, DEF_STR( 1C_6C ) ) \
+	PORT_DIPNAME( 0x38, 0x38, DEF_STR( Coin_B ) ) PORT_DIPLOCATION(diploc ":4,5,6") \
+	PORT_DIPSETTING(    0x00, DEF_STR( 4C_1C ) ) \
+	PORT_DIPSETTING(    0x08, DEF_STR( 3C_1C ) ) \
+	PORT_DIPSETTING(    0x10, DEF_STR( 2C_1C ) ) \
+	PORT_DIPSETTING(    0x38, DEF_STR( 1C_1C ) ) \
+	PORT_DIPSETTING(    0x30, DEF_STR( 1C_2C ) ) \
+	PORT_DIPSETTING(    0x28, DEF_STR( 1C_3C ) ) \
+	PORT_DIPSETTING(    0x20, DEF_STR( 1C_4C ) ) \
+	PORT_DIPSETTING(    0x18, DEF_STR( 1C_6C ) )
+
+#define CPS1_COINAGE_2(diploc) \
+	PORT_DIPNAME( 0x07, 0x07, DEF_STR( Coinage ) ) PORT_DIPLOCATION(diploc ":1,2,3") \
+	PORT_DIPSETTING(    0x00, DEF_STR( 4C_1C ) ) \
+	PORT_DIPSETTING(    0x01, DEF_STR( 3C_1C ) ) \
+	PORT_DIPSETTING(    0x02, DEF_STR( 2C_1C ) ) \
+	PORT_DIPSETTING(    0x07, DEF_STR( 1C_1C ) ) \
+	PORT_DIPSETTING(    0x06, DEF_STR( 1C_2C ) ) \
+	PORT_DIPSETTING(    0x05, DEF_STR( 1C_3C ) ) \
+	PORT_DIPSETTING(    0x04, DEF_STR( 1C_4C ) ) \
+	PORT_DIPSETTING(    0x03, DEF_STR( 1C_6C ) )
+
+#define CPS1_COINAGE_3(diploc) \
+	PORT_DIPNAME( 0x07, 0x07, DEF_STR( Coin_A ) ) PORT_DIPLOCATION(diploc ":1,2,3") \
+	PORT_DIPSETTING(    0x01, DEF_STR( 4C_1C ) ) \
+	PORT_DIPSETTING(    0x02, DEF_STR( 3C_1C ) ) \
+	PORT_DIPSETTING(    0x03, DEF_STR( 2C_1C ) ) \
+	PORT_DIPSETTING(    0x00, "2 Coins/1 Credit (1 to continue)" ) \
+	PORT_DIPSETTING(    0x07, DEF_STR( 1C_1C ) ) \
+	PORT_DIPSETTING(    0x06, DEF_STR( 1C_2C ) ) \
+	PORT_DIPSETTING(    0x05, DEF_STR( 1C_3C ) ) \
+	PORT_DIPSETTING(    0x04, DEF_STR( 1C_4C ) ) \
+	PORT_DIPNAME( 0x38, 0x38, DEF_STR( Coin_B ) ) PORT_DIPLOCATION(diploc ":4,5,6") \
+	PORT_DIPSETTING(    0x08, DEF_STR( 4C_1C ) ) \
+	PORT_DIPSETTING(    0x10, DEF_STR( 3C_1C ) ) \
+	PORT_DIPSETTING(    0x18, DEF_STR( 2C_1C ) ) \
+	PORT_DIPSETTING(    0x00, "2 Coins/1 Credit (1 to continue)" ) \
+	PORT_DIPSETTING(    0x38, DEF_STR( 1C_1C ) ) \
+	PORT_DIPSETTING(    0x30, DEF_STR( 1C_2C ) ) \
+	PORT_DIPSETTING(    0x28, DEF_STR( 1C_3C ) ) \
+	PORT_DIPSETTING(    0x20, DEF_STR( 1C_4C ) )
+
+#define CPS1_DIFFICULTY_1(diploc) \
+	PORT_DIPNAME( 0x07, 0x04, DEF_STR( Difficulty ) ) PORT_DIPLOCATION(diploc ":1,2,3") \
+	PORT_DIPSETTING(    0x07, "1 (Easiest)" ) \
+	PORT_DIPSETTING(    0x06, "2" ) \
+	PORT_DIPSETTING(    0x05, "3" ) \
+	PORT_DIPSETTING(    0x04, "4 (Normal)" ) \
+	PORT_DIPSETTING(    0x03, "5" ) \
+	PORT_DIPSETTING(    0x02, "6" ) \
+	PORT_DIPSETTING(    0x01, "7" ) \
+	PORT_DIPSETTING(    0x00, "8 (Hardest)" )
+
+#define CPS1_DIFFICULTY_2(diploc) \
+	PORT_DIPNAME( 0x07, 0x07, DEF_STR( Difficulty ) ) PORT_DIPLOCATION(diploc ":1,2,3") \
+	PORT_DIPSETTING(    0x04, "1 (Easiest)" ) \
+	PORT_DIPSETTING(    0x05, "2" ) \
+	PORT_DIPSETTING(    0x06, "3" ) \
+	PORT_DIPSETTING(    0x07, "4 (Normal)" ) \
+	PORT_DIPSETTING(    0x03, "5" ) \
+	PORT_DIPSETTING(    0x02, "6" ) \
+	PORT_DIPSETTING(    0x01, "7" ) \
+	PORT_DIPSETTING(    0x00, "8 (Hardest)" )
+
 
 struct gfx_range
 {
@@ -237,6 +312,7 @@ INPUT_PORTS_EXTERN( cawing );
 INPUT_PORTS_EXTERN( dino );
 INPUT_PORTS_EXTERN( ffight );
 INPUT_PORTS_EXTERN( kod );
+INPUT_PORTS_EXTERN( slammast );
 
 /*----------- defined in machine/kabuki.c -----------*/
 void mgakuen2_decode(running_machine *machine);

@@ -178,6 +178,21 @@ static WRITE16_HANDLER( dinopic_layer2_w )
 	state->cps_a_regs[0x06 / 2] = data;
 }
 
+static WRITE16_HANDLER( slampic_layer_w )
+{
+	cps_state *state = (cps_state *)space->machine->driver_data;
+	switch (offset)
+	{
+		case 0x00:
+		case 0x01:
+		case 0x02:
+		case 0x03:
+		case 0x04:
+		case 0x05: dinopic_layer_w(space, offset, data, 0xffff); break;
+		case 0x06: state->cps_a_regs[0x04 / 2] = data << 4; break;
+	}
+}
+
 static WRITE16_HANDLER( punipic_layer_w )
 {
 	cps_state *state = (cps_state *)space->machine->driver_data;
@@ -469,7 +484,7 @@ static VIDEO_UPDATE( bootleg_updatescreen )
 	return 0;
 }
 
-/* --- MEMADDRESS MAP --- */
+/* --------------------- CPU PROGRAM_MAP --------------------- */
 static ADDRESS_MAP_START( knightsb_map, ADDRESS_SPACE_PROGRAM, 16 )
 	AM_RANGE(0x000000, 0x3fffff) AM_ROM
 	AM_RANGE(0x800000, 0x800001) AM_READ_PORT("IN1")
@@ -585,7 +600,28 @@ static ADDRESS_MAP_START( dinopic_map, ADDRESS_SPACE_PROGRAM, 16 )
 	AM_RANGE(0xff0000, 0xffffff) AM_RAM
 ADDRESS_MAP_END
 
-/* SOUND MAP */
+static ADDRESS_MAP_START( slampic_map, ADDRESS_SPACE_PROGRAM, 16 )
+	AM_RANGE(0x000000, 0x3fffff) AM_ROM
+	AM_RANGE(0x800006, 0x800007) AM_WRITENOP
+	AM_RANGE(0x800000, 0x800007) AM_READ_PORT("IN1")
+	AM_RANGE(0x800018, 0x80001f) AM_READ(cps1_dsw_r)
+	AM_RANGE(0x800030, 0x800037) AM_WRITE(cps1_coinctrl_w)
+	AM_RANGE(0x800100, 0x80013f) AM_WRITE(cps1_cps_a_w) AM_BASE_MEMBER(cps_state, cps_a_regs)
+	AM_RANGE(0x800140, 0x80017f) AM_READWRITE(cps1_cps_b_r, cps1_cps_b_w) AM_BASE_MEMBER(cps_state, cps_b_regs)
+	AM_RANGE(0x880000, 0x880001) AM_WRITENOP
+	AM_RANGE(0x900000, 0x92ffff) AM_RAM_WRITE(cps1_gfxram_w) AM_BASE_SIZE_MEMBER(cps_state, gfxram, gfxram_size)
+	AM_RANGE(0x980000, 0x98000d) AM_WRITE(slampic_layer_w)
+	AM_RANGE(0xf00000, 0xf0ffff) AM_READ(qsound_rom_r)
+	AM_RANGE(0xf18000, 0xf19fff) AM_RAM
+	AM_RANGE(0xf1c000, 0xf1c001) AM_READ_PORT("IN2")
+	AM_RANGE(0xf1c004, 0xf1c005) AM_WRITE(cpsq_coinctrl2_w)
+	AM_RANGE(0xf1c006, 0xf1c007) AM_READ_PORT("EEPROMIN") AM_WRITE_PORT("EEPROMOUT")
+	AM_RANGE(0xf1f000, 0xf1ffff) AM_NOP
+	AM_RANGE(0xff0000, 0xffffff) AM_RAM
+ADDRESS_MAP_END
+
+
+/* --------------------- SUB PROGRAM_MAP --------------------- */
 static ADDRESS_MAP_START( fcrash_soundmap, ADDRESS_SPACE_PROGRAM, 8 )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM
 	AM_RANGE(0x8000, 0xbfff) AM_ROMBANK("bank1")
@@ -644,79 +680,6 @@ ADDRESS_MAP_END
 
 
 /* --- INPUT PORTS --- */
-#define CPS1_COINAGE_1 \
-	PORT_DIPNAME( 0x07, 0x07, DEF_STR( Coin_A ) ) \
-	PORT_DIPSETTING(    0x00, DEF_STR( 4C_1C ) ) \
-	PORT_DIPSETTING(    0x01, DEF_STR( 3C_1C ) ) \
-	PORT_DIPSETTING(    0x02, DEF_STR( 2C_1C ) ) \
-	PORT_DIPSETTING(    0x07, DEF_STR( 1C_1C ) ) \
-	PORT_DIPSETTING(    0x06, DEF_STR( 1C_2C ) ) \
-	PORT_DIPSETTING(    0x05, DEF_STR( 1C_3C ) ) \
-	PORT_DIPSETTING(    0x04, DEF_STR( 1C_4C ) ) \
-	PORT_DIPSETTING(    0x03, DEF_STR( 1C_6C ) ) \
-	PORT_DIPNAME( 0x38, 0x38, DEF_STR( Coin_B ) ) \
-	PORT_DIPSETTING(    0x00, DEF_STR( 4C_1C ) ) \
-	PORT_DIPSETTING(    0x08, DEF_STR( 3C_1C ) ) \
-	PORT_DIPSETTING(    0x10, DEF_STR( 2C_1C ) ) \
-	PORT_DIPSETTING(    0x38, DEF_STR( 1C_1C ) ) \
-	PORT_DIPSETTING(    0x30, DEF_STR( 1C_2C ) ) \
-	PORT_DIPSETTING(    0x28, DEF_STR( 1C_3C ) ) \
-	PORT_DIPSETTING(    0x20, DEF_STR( 1C_4C ) ) \
-	PORT_DIPSETTING(    0x18, DEF_STR( 1C_6C ) )
-
-#define CPS1_COINAGE_2(diploc) \
-	PORT_DIPNAME( 0x07, 0x07, DEF_STR( Coinage ) ) PORT_DIPLOCATION(diploc ":1,2,3") \
-	PORT_DIPSETTING(    0x00, DEF_STR( 4C_1C ) ) \
-	PORT_DIPSETTING(    0x01, DEF_STR( 3C_1C ) ) \
-	PORT_DIPSETTING(    0x02, DEF_STR( 2C_1C ) ) \
-	PORT_DIPSETTING(    0x07, DEF_STR( 1C_1C ) ) \
-	PORT_DIPSETTING(    0x06, DEF_STR( 1C_2C ) ) \
-	PORT_DIPSETTING(    0x05, DEF_STR( 1C_3C ) ) \
-	PORT_DIPSETTING(    0x04, DEF_STR( 1C_4C ) ) \
-	PORT_DIPSETTING(    0x03, DEF_STR( 1C_6C ) )
-
-#define CPS1_COINAGE_3(diploc) \
-	PORT_DIPNAME( 0x07, 0x07, DEF_STR( Coin_A ) ) PORT_DIPLOCATION(diploc ":1,2,3") \
-	PORT_DIPSETTING(    0x01, DEF_STR( 4C_1C ) ) \
-	PORT_DIPSETTING(    0x02, DEF_STR( 3C_1C ) ) \
-	PORT_DIPSETTING(    0x03, DEF_STR( 2C_1C ) ) \
-	PORT_DIPSETTING(    0x00, "2 Coins/1 Credit (1 to continue)" ) \
-	PORT_DIPSETTING(    0x07, DEF_STR( 1C_1C ) ) \
-	PORT_DIPSETTING(    0x06, DEF_STR( 1C_2C ) ) \
-	PORT_DIPSETTING(    0x05, DEF_STR( 1C_3C ) ) \
-	PORT_DIPSETTING(    0x04, DEF_STR( 1C_4C ) ) \
-	PORT_DIPNAME( 0x38, 0x38, DEF_STR( Coin_B ) ) PORT_DIPLOCATION(diploc ":4,5,6") \
-	PORT_DIPSETTING(    0x08, DEF_STR( 4C_1C ) ) \
-	PORT_DIPSETTING(    0x10, DEF_STR( 3C_1C ) ) \
-	PORT_DIPSETTING(    0x18, DEF_STR( 2C_1C ) ) \
-	PORT_DIPSETTING(    0x00, "2 Coins/1 Credit (1 to continue)" ) \
-	PORT_DIPSETTING(    0x38, DEF_STR( 1C_1C ) ) \
-	PORT_DIPSETTING(    0x30, DEF_STR( 1C_2C ) ) \
-	PORT_DIPSETTING(    0x28, DEF_STR( 1C_3C ) ) \
-	PORT_DIPSETTING(    0x20, DEF_STR( 1C_4C ) )
-
-#define CPS1_DIFFICULTY_1(diploc) \
-	PORT_DIPNAME( 0x07, 0x04, DEF_STR( Difficulty ) ) PORT_DIPLOCATION(diploc ":1,2,3") \
-	PORT_DIPSETTING(    0x07, "1 (Easiest)" ) \
-	PORT_DIPSETTING(    0x06, "2" ) \
-	PORT_DIPSETTING(    0x05, "3" ) \
-	PORT_DIPSETTING(    0x04, "4 (Normal)" ) \
-	PORT_DIPSETTING(    0x03, "5" ) \
-	PORT_DIPSETTING(    0x02, "6" ) \
-	PORT_DIPSETTING(    0x01, "7" ) \
-	PORT_DIPSETTING(    0x00, "8 (Hardest)" )
-
-#define CPS1_DIFFICULTY_2(diploc) \
-	PORT_DIPNAME( 0x07, 0x07, DEF_STR( Difficulty ) ) PORT_DIPLOCATION(diploc ":1,2,3") \
-	PORT_DIPSETTING(    0x04, "1 (Easiest)" ) \
-	PORT_DIPSETTING(    0x05, "2" ) \
-	PORT_DIPSETTING(    0x06, "3" ) \
-	PORT_DIPSETTING(    0x07, "4 (Normal)" ) \
-	PORT_DIPSETTING(    0x03, "5" ) \
-	PORT_DIPSETTING(    0x02, "6" ) \
-	PORT_DIPSETTING(    0x01, "7" ) \
-	PORT_DIPSETTING(    0x00, "8 (Hardest)" )
-
 
 static INPUT_PORTS_START( sf2mdt )		/* for sf2/sf2ce hackrom */
 	PORT_INCLUDE( cps1_3b )
@@ -743,7 +706,7 @@ static INPUT_PORTS_START( sf2mdt )		/* for sf2/sf2ce hackrom */
 	PORT_BIT( 0x0080, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
 	PORT_START("DSWA")
-	CPS1_COINAGE_1
+	CPS1_COINAGE_1("SW(A)")
 	PORT_DIPNAME( 0x40, 0x40, "2 Coins to Start, 1 to Continue" ) PORT_DIPLOCATION( "SW(A):7" )
 	PORT_DIPSETTING(    0x40, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
@@ -816,7 +779,7 @@ static INPUT_PORTS_START( cawingbl )
 	PORT_INCLUDE( cawing )
 
 	PORT_MODIFY("DSWA")
-	CPS1_COINAGE_1
+	CPS1_COINAGE_1("SW(A)")
 	PORT_DIPUNUSED( 0x80, IP_ACTIVE_LOW )		/* This switch is not documented */
 INPUT_PORTS_END
 
@@ -1014,6 +977,23 @@ static MACHINE_START( dinopic )
 	state->layer_mask_reg[1] = 0x0e;
 	state->layer_mask_reg[2] = 0x00;
 	state->layer_mask_reg[3] = 0x02;
+	state->layer_scroll1x_offset = 0x40;
+	state->layer_scroll2x_offset = 0x40;
+	state->layer_scroll3x_offset = 0x40;
+	state->sprite_base = 0x1000;
+	state->sprite_list_end_marker = 0x8000;
+	state->sprite_x_offset = 0x00;
+}
+
+static MACHINE_START( slampic )
+{
+	cps_state *state = (cps_state *)machine->driver_data;
+
+	state->layer_enable_reg = 0x16;
+	state->layer_mask_reg[0] = 0x00;
+	state->layer_mask_reg[1] = 0x02;
+	state->layer_mask_reg[2] = 0x28;
+	state->layer_mask_reg[3] = 0x2a;
 	state->layer_scroll1x_offset = 0x40;
 	state->layer_scroll2x_offset = 0x40;
 	state->layer_scroll3x_offset = 0x40;
@@ -1323,6 +1303,39 @@ static MACHINE_DRIVER_START( dinopic )
 	MDRV_OKIM6295_ADD("oki", XTAL_16MHz/4/4, OKIM6295_PIN7_HIGH)
 	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.30)
 MACHINE_DRIVER_END
+
+/* *********************************************** SLAMPIC */
+static MACHINE_DRIVER_START( slampic )
+	MDRV_DRIVER_DATA(cps_state)
+
+	/* basic machine hardware */
+	MDRV_CPU_ADD("maincpu", M68000, XTAL_12MHz )
+	MDRV_CPU_PROGRAM_MAP(slampic_map)
+	MDRV_CPU_VBLANK_INT("screen", cps1_interrupt)
+//	MDRV_CPU_ADD("audiocpu", PIC16C57, XTAL_12MHz)
+	MDRV_MACHINE_START(slampic)
+
+	MDRV_EEPROM_ADD("eeprom", bootleg_eeprom_interface)
+
+	/* video hardware */
+	MDRV_SCREEN_ADD("screen", RASTER)
+	MDRV_SCREEN_REFRESH_RATE(60)
+	MDRV_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
+	MDRV_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
+	MDRV_SCREEN_SIZE(64*8, 32*8)
+	MDRV_SCREEN_VISIBLE_AREA(8*8, (64-8)*8-1, 2*8, 30*8-1 )
+	MDRV_VIDEO_UPDATE(bootleg_updatescreen)
+	MDRV_VIDEO_EOF(cps1)
+	MDRV_GFXDECODE(cps1)
+	MDRV_PALETTE_LENGTH(0xc00)
+	MDRV_VIDEO_START(cps1)
+
+	/* sound hardware */
+	MDRV_SPEAKER_STANDARD_MONO("mono")
+	MDRV_OKIM6295_ADD("oki", XTAL_16MHz/4/4, OKIM6295_PIN7_HIGH)
+	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.30)
+MACHINE_DRIVER_END
+
 
 
 /* --- DRIVER INIT --- */
@@ -1808,6 +1821,49 @@ ROM_START( dinopic2 )
 	ROM_LOAD( "palce16v8h-2.bin",    0x0a00, 0x0117,  CRC(9ae375ba) SHA1(6f227c2a5b1170a41e6419f12d1e1f98edc6f8e5) )
 ROM_END
 
+ROM_START( slampic )
+	ROM_REGION( CODE_SIZE, "maincpu", 0 )		/* 68000 code */
+	ROM_LOAD16_BYTE( "5.bin",      0x000000, 0x80000,  CRC(7dba63cd) SHA1(222e781ffc40c5c23f5789c0682f549f00beeb8d) )
+	ROM_LOAD16_BYTE( "3.bin",      0x000001, 0x80000,  CRC(d86671f3) SHA1(d95fae27b0f4d3688f1c2229c9d3780724a870a8) )
+	ROM_LOAD16_BYTE( "4.bin",      0x100000, 0x80000,  CRC(d14d0e42) SHA1(b60c44193b247dc4856bd36d69cbbe9dcb2d21a7) )
+	ROM_LOAD16_BYTE( "2.bin",      0x100001, 0x80000,  CRC(38063cd8) SHA1(e647433414ff4fdc0b2c4c7036b8995a95289efa) )
+
+	ROM_REGION( 0x600000, "gfx", 0 )
+	ROMX_LOAD( "9.bin",    0x000000, 0x40000, CRC(dc140351) SHA1(0e69e1c8ded85ba26eb8236449d38ead0243ae78), ROM_SKIP(7) )
+	ROM_CONTINUE(          0x000004, 0x40000)
+	ROMX_LOAD( "8.bin",    0x000001, 0x40000, CRC(9ae88035) SHA1(3329e9582ca052940e115e759bb3d96f4a9c87fa), ROM_SKIP(7) )
+	ROM_CONTINUE(          0x000005, 0x40000)
+	ROMX_LOAD( "7.bin",    0x000002, 0x40000, CRC(5321f759) SHA1(7538a6587cf1077921b938070185e0a0ce5ca922), ROM_SKIP(7) )
+	ROM_CONTINUE(          0x000006, 0x40000)
+	ROMX_LOAD( "6.bin",    0x000003, 0x40000, CRC(c8eb5f76) SHA1(a361d2d2dfe71789736666b744ae5f1e4bf7e1b2), ROM_SKIP(7) )
+	ROM_CONTINUE(          0x000007, 0x40000)
+	ROMX_LOAD( "17.bin",   0x200000, 0x40000, CRC(21652214) SHA1(039335251f6553c4f36e2d33e8b43fb5726e833e), ROM_SKIP(7) )
+	ROM_CONTINUE(          0x200004, 0x40000)
+	ROMX_LOAD( "16.bin",   0x200001, 0x40000, CRC(d49d2eb0) SHA1(1af01575340730166975be93bae438e2b0492f98), ROM_SKIP(7) )
+	ROM_CONTINUE(          0x200005, 0x40000)
+	ROMX_LOAD( "15.bin",   0x200002, 0x40000, CRC(0d98bfd6) SHA1(c11fbf555880a933a4cbf6faa517f59f8443304f), ROM_SKIP(7) )
+	ROM_CONTINUE(          0x200006, 0x40000)
+	ROMX_LOAD( "14.bin",   0x200003, 0x40000, CRC(807284f1) SHA1(c747c3eaade31c2633fb0a0682dbea900bf2b092), ROM_SKIP(7) )
+	ROM_CONTINUE(          0x200007, 0x40000)
+	ROMX_LOAD( "13.bin",   0x400000, 0x40000, CRC(293579c5) SHA1(9adafe29664b20834365b339f7ae379cdb9ee138), ROM_SKIP(7) )
+	ROM_CONTINUE(          0x400004, 0x40000)
+	ROMX_LOAD( "12.bin",   0x400001, 0x40000, CRC(c3727ce7) SHA1(c4abc2c59152c59a45f85393e9525505bc2c9e6e), ROM_SKIP(7) )
+	ROM_CONTINUE(          0x400005, 0x40000)
+	ROMX_LOAD( "11.bin",   0x400002, 0x40000, CRC(2919883b) SHA1(44ad979daae673c77b3157d2b352797d4ad0ec24), ROM_SKIP(7) )
+	ROM_CONTINUE(          0x400006, 0x40000)
+	ROMX_LOAD( "10.bin",   0x400003, 0x40000, CRC(f538e620) SHA1(354cd0548b067dfc8782bbe13b0a9c2083dbd290), ROM_SKIP(7) )
+	ROM_CONTINUE(          0x400007, 0x40000)
+
+	ROM_REGION( 0x06000, "audiocpu", 0 )		/* PIC16c57 - protected, dump isn't valid */
+	ROM_LOAD( "pic16c57-xt-p.hex", 0x00000, 0x05a1e, VERIFY_OFF )
+
+	ROM_REGION( 0x80000, "oki", 0 )			/* OKI6295 samples */
+	ROM_LOAD( "18.bin",   0x00000, 0x80000, CRC(73a0c11c) SHA1(a66e1a964313e21c4436200d36c598dcb277cd34) )
+
+	ROM_REGION( 0x20000, "user1", 0 )		/* not in the dump, but needed for protection */
+	ROM_LOAD( "mb_qa.rom",   0x00000, 0x20000, CRC(e21a03c4) SHA1(98c03fd2c9b6bf8a4fc25a4edca87fff7c3c3819) )
+ROM_END
+
 
 /*
 GAME( year, archives name,  parent name, MACHINE_DRIVER_START, INPUT_PORTS, DRIVER_INIT,   flip,   producer name,   title information,	status )
@@ -1821,19 +1877,18 @@ GAME( 1991,   kodb,	  kod,		kodb,		kod,		kodb,     ROT0,   "bootleg (Playmark)",
 GAME( 1991,   knightsb,	  knights,	knightsb,	knights,	knightsb, ROT0,   "bootleg", "Knights of the Round (bootleg)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )
 /* sf2mdt - problem with scrolls */
 GAME( 1992,   sf2mdt,	  sf2ce,	sf2mdt,		sf2mdt,		sf2mdt,   ROT0,   "bootleg", "Street Fighter II': Magic Delta Turbo (bootleg)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE )
-
+/* */
 GAME( 1992,   sf2mdta,	  sf2ce,	sf2mdt,		sf2mdt,		sf2mdta,  ROT0,   "bootleg", "Street Fighter II': Magic Delta Turbo (bootleg, set 2)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE )
-
 /* sf2m1 - crowd is missing. Plane's tail comes off a bit. Patch used. */
 GAME( 1992,   sf2m1,	  sf2ce,	sf2m1,		sf2,		sf2m1,    ROT0,   "bootleg", "Street Fighter II': Champion Edition (M1, bootleg)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )
 /* sgyxz - garbage left behind. A priority problem can be seen in 3rd demo where the fighters walk through the crowd instead of behind. */
 GAME( 1999,   sgyxz,	  wof,		sgyxz,		sgyxz,		cps1,     ROT0,   "bootleg (All-In Electronic)", "SanGuo YingXiongZhuan (Chinese bootleg of Sangokushi II, set 3)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )
 /* punipic - no sound. Problems in Central Park. Patches used. */
-GAME( 1993,   punipic,    punisher,	punipic,	punisher,	punipic,  ROT0,   "bootleg",  "The Punisher (bootleg with PIC16c57, set 1)", GAME_NO_SOUND | GAME_SUPPORTS_SAVE )
+GAME( 1993,   punipic,    punisher,	punipic,	punisher,	punipic,  ROT0,   "bootleg", "The Punisher (bootleg with PIC16c57, set 1)", GAME_NO_SOUND | GAME_SUPPORTS_SAVE )
 /* punipic2 - no sound. Problems in Central Park. Patches used. */
-GAME( 1993,   punipic2,   punisher,	punipic,	punisher,	punipic,  ROT0,   "bootleg",  "The Punisher (bootleg with PIC16c57, set 2)", GAME_NO_SOUND | GAME_SUPPORTS_SAVE )
+GAME( 1993,   punipic2,   punisher,	punipic,	punisher,	punipic,  ROT0,   "bootleg", "The Punisher (bootleg with PIC16c57, set 2)", GAME_NO_SOUND | GAME_SUPPORTS_SAVE )
 /* punipic3 - same as punipic, and doors are missing. */
-GAME( 1993,   punipic3,   punisher,	punipic,	punisher,	punipic3, ROT0,   "bootleg",  "The Punisher (bootleg with PIC16c57, set 3)", GAME_IMPERFECT_GRAPHICS | GAME_NO_SOUND | GAME_SUPPORTS_SAVE )
+GAME( 1993,   punipic3,   punisher,	punipic,	punisher,	punipic3, ROT0,   "bootleg", "The Punisher (bootleg with PIC16c57, set 3)", GAME_IMPERFECT_GRAPHICS | GAME_NO_SOUND | GAME_SUPPORTS_SAVE )
 /* cawingbl - that's ok */
 GAME( 1990,   cawingbl,	  cawing,	cawingbl,	cawingbl,	cawingbl, ROT0,   "bootleg", "Carrier Air Wing (bootleg with 2xYM2203 + 2xMSM205 set 1)", GAME_SUPPORTS_SAVE )
 /* cawingb2 - ok */
@@ -1842,3 +1897,5 @@ GAME( 1990,   cawingb2,	  cawing,	cawingbl,	cawingbl,	cawingbl, ROT0,   "bootleg
 GAME( 1993,   dinopic,	  dino,		dinopic,	dino,		dinopic,  ROT0,   "bootleg", "Cadillacs and Dinosaurs (bootleg with PIC16c57, set 1)", GAME_NO_SOUND | GAME_SUPPORTS_SAVE )
 /* dinopic2 - no sound, one bad gfx rom. Copying 8.bin from dinopic fixes it. */
 GAME( 1993,   dinopic2,	  dino,		dinopic,	dino,		dinopic,  ROT0,   "bootleg", "Cadillacs and Dinosaurs (bootleg with PIC16c57, set 2)", GAME_NOT_WORKING | GAME_SUPPORTS_SAVE )
+/* slampic - no sound. A priority problem between sprites and crowd. */
+GAME( 1993,   slampic,	  slammast,	slampic,	slammast,	dinopic,  ROT0,   "bootleg", "Saturday Night Slam Masters (bootleg with PIC16c57)", GAME_IMPERFECT_GRAPHICS | GAME_NO_SOUND | GAME_SUPPORTS_SAVE )

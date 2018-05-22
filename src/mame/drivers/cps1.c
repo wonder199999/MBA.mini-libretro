@@ -230,17 +230,12 @@ Stephh's log (2006.09.20) :
 
 ***************************************************************************/
 #include "emu.h"
-
 #include "cpu/z80/z80.h"
 #include "cpu/m68000/m68000.h"
-/* #include "cpu/pic16c5x/pic16c5x.h" */
-
 #include "machine/eeprom.h"
-
 #include "sound/2151intf.h"
 #include "sound/okim6295.h"
 #include "sound/qsound.h"
-
 #include "includes/cps1.h"       /* External CPS1 definitions */
 
 /* -------------------  Game-specific function  -------------------- */
@@ -580,7 +575,7 @@ PRG6 = pin13 = ! ( !I8 & !I0 & !I1 &  I2 & !I3 & !I4 )
 All PRGx go to B-board. Provision for up to 4MB of ROM space, which was never used in full.
 */
 
-/* --------------- CPU PROGRAM_MAP ----------------- */
+/* --------------- CPU PROGRAM_MAP --------------- */
 static ADDRESS_MAP_START( main_map, ADDRESS_SPACE_PROGRAM, 16 )
 	AM_RANGE(0x000000, 0x3fffff) AM_ROM
 	AM_RANGE(0x800000, 0x800007) AM_READ_PORT("IN1")								/* Player input ports */
@@ -616,7 +611,7 @@ static ADDRESS_MAP_START( qsound_main_map, ADDRESS_SPACE_PROGRAM, 16 )
 	AM_RANGE(0xff0000, 0xffffff) AM_RAM
 ADDRESS_MAP_END
 
-/* --------------- Game-specific CPU PROGRAM_MAP ----------------- */
+/* --------------- Game-specific CPU PROGRAM_MAP --------------- */
 static ADDRESS_MAP_START( sf2m3_map, ADDRESS_SPACE_PROGRAM, 16 )
 	AM_RANGE(0x000000, 0x3fffff) AM_ROM
 	AM_RANGE(0x800010, 0x800011) AM_READ_PORT("IN1")
@@ -656,7 +651,7 @@ SOUNDA15   = pin13 =   (  I1 )
 /SOUNDCE   = pin12 = ! ( !I0 & (!I1 | ( I1 & !I2)) )
 */
 
-/* --------------- SUB PROGRAM_MAP ----------------- */
+/* --------------- SUB PROGRAM_MAP --------------- */
 static ADDRESS_MAP_START( sub_map, ADDRESS_SPACE_PROGRAM, 8 )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM
 	AM_RANGE(0x8000, 0xbfff) AM_ROMBANK("bank1")
@@ -682,81 +677,6 @@ ADDRESS_MAP_END
 /***********************************************************
              INPUT PORTS, DIPs
 ***********************************************************/
-
-#define CPS1_COINAGE_1(diploc) \
-	PORT_DIPNAME( 0x07, 0x07, DEF_STR( Coin_A ) ) PORT_DIPLOCATION(diploc ":1,2,3") \
-	PORT_DIPSETTING(    0x00, DEF_STR( 4C_1C ) ) \
-	PORT_DIPSETTING(    0x01, DEF_STR( 3C_1C ) ) \
-	PORT_DIPSETTING(    0x02, DEF_STR( 2C_1C ) ) \
-	PORT_DIPSETTING(    0x07, DEF_STR( 1C_1C ) ) \
-	PORT_DIPSETTING(    0x06, DEF_STR( 1C_2C ) ) \
-	PORT_DIPSETTING(    0x05, DEF_STR( 1C_3C ) ) \
-	PORT_DIPSETTING(    0x04, DEF_STR( 1C_4C ) ) \
-	PORT_DIPSETTING(    0x03, DEF_STR( 1C_6C ) ) \
-	PORT_DIPNAME( 0x38, 0x38, DEF_STR( Coin_B ) ) PORT_DIPLOCATION(diploc ":4,5,6") \
-	PORT_DIPSETTING(    0x00, DEF_STR( 4C_1C ) ) \
-	PORT_DIPSETTING(    0x08, DEF_STR( 3C_1C ) ) \
-	PORT_DIPSETTING(    0x10, DEF_STR( 2C_1C ) ) \
-	PORT_DIPSETTING(    0x38, DEF_STR( 1C_1C ) ) \
-	PORT_DIPSETTING(    0x30, DEF_STR( 1C_2C ) ) \
-	PORT_DIPSETTING(    0x28, DEF_STR( 1C_3C ) ) \
-	PORT_DIPSETTING(    0x20, DEF_STR( 1C_4C ) ) \
-	PORT_DIPSETTING(    0x18, DEF_STR( 1C_6C ) )
-
-#define CPS1_COINAGE_2(diploc) \
-	PORT_DIPNAME( 0x07, 0x07, DEF_STR( Coinage ) ) PORT_DIPLOCATION(diploc ":1,2,3") \
-	PORT_DIPSETTING(    0x00, DEF_STR( 4C_1C ) ) \
-	PORT_DIPSETTING(    0x01, DEF_STR( 3C_1C ) ) \
-	PORT_DIPSETTING(    0x02, DEF_STR( 2C_1C ) ) \
-	PORT_DIPSETTING(    0x07, DEF_STR( 1C_1C ) ) \
-	PORT_DIPSETTING(    0x06, DEF_STR( 1C_2C ) ) \
-	PORT_DIPSETTING(    0x05, DEF_STR( 1C_3C ) ) \
-	PORT_DIPSETTING(    0x04, DEF_STR( 1C_4C ) ) \
-	PORT_DIPSETTING(    0x03, DEF_STR( 1C_6C ) )
-
-#define CPS1_COINAGE_3(diploc) \
-	PORT_DIPNAME( 0x07, 0x07, DEF_STR( Coin_A ) ) PORT_DIPLOCATION(diploc ":1,2,3") \
-	PORT_DIPSETTING(    0x01, DEF_STR( 4C_1C ) ) \
-	PORT_DIPSETTING(    0x02, DEF_STR( 3C_1C ) ) \
-	PORT_DIPSETTING(    0x03, DEF_STR( 2C_1C ) ) \
-	PORT_DIPSETTING(    0x00, "2 Coins/1 Credit (1 to continue)" ) \
-	PORT_DIPSETTING(    0x07, DEF_STR( 1C_1C ) ) \
-	PORT_DIPSETTING(    0x06, DEF_STR( 1C_2C ) ) \
-	PORT_DIPSETTING(    0x05, DEF_STR( 1C_3C ) ) \
-	PORT_DIPSETTING(    0x04, DEF_STR( 1C_4C ) ) \
-	PORT_DIPNAME( 0x38, 0x38, DEF_STR( Coin_B ) ) PORT_DIPLOCATION(diploc ":4,5,6") \
-	PORT_DIPSETTING(    0x08, DEF_STR( 4C_1C ) ) \
-	PORT_DIPSETTING(    0x10, DEF_STR( 3C_1C ) ) \
-	PORT_DIPSETTING(    0x18, DEF_STR( 2C_1C ) ) \
-	PORT_DIPSETTING(    0x00, "2 Coins/1 Credit (1 to continue)" ) \
-	PORT_DIPSETTING(    0x38, DEF_STR( 1C_1C ) ) \
-	PORT_DIPSETTING(    0x30, DEF_STR( 1C_2C ) ) \
-	PORT_DIPSETTING(    0x28, DEF_STR( 1C_3C ) ) \
-	PORT_DIPSETTING(    0x20, DEF_STR( 1C_4C ) )
-
-#define CPS1_DIFFICULTY_1(diploc) \
-	PORT_DIPNAME( 0x07, 0x04, DEF_STR( Difficulty ) ) PORT_DIPLOCATION(diploc ":1,2,3") \
-	PORT_DIPSETTING(    0x07, "1 (Easiest)" ) \
-	PORT_DIPSETTING(    0x06, "2" ) \
-	PORT_DIPSETTING(    0x05, "3" ) \
-	PORT_DIPSETTING(    0x04, "4 (Normal)" ) \
-	PORT_DIPSETTING(    0x03, "5" ) \
-	PORT_DIPSETTING(    0x02, "6" ) \
-	PORT_DIPSETTING(    0x01, "7" ) \
-	PORT_DIPSETTING(    0x00, "8 (Hardest)" )
-
-#define CPS1_DIFFICULTY_2(diploc) \
-	PORT_DIPNAME( 0x07, 0x07, DEF_STR( Difficulty ) ) PORT_DIPLOCATION(diploc ":1,2,3") \
-	PORT_DIPSETTING(    0x04, "1 (Easiest)" ) \
-	PORT_DIPSETTING(    0x05, "2" ) \
-	PORT_DIPSETTING(    0x06, "3" ) \
-	PORT_DIPSETTING(    0x07, "4 (Normal)" ) \
-	PORT_DIPSETTING(    0x03, "5" ) \
-	PORT_DIPSETTING(    0x02, "6" ) \
-	PORT_DIPSETTING(    0x01, "7" ) \
-	PORT_DIPSETTING(    0x00, "8 (Hardest)" )
-
-/* -------------------------- INPUT_PORT ---------------------------- */
 
 /* CPS1 games with 2 players and 3 buttons each */
 INPUT_PORTS_START( cps1_3b )
@@ -899,7 +819,6 @@ INPUT_PORTS_END
 static INPUT_PORTS_START( ghouls )
 	PORT_INCLUDE( cps1_2b )
 	/* Service1 doesn't give any credit */
-
 	PORT_START("DSWC")
 	PORT_DIPNAME( 0x03, 0x03, DEF_STR( Lives ) )		PORT_DIPLOCATION("SW(C):1,2")
 	PORT_DIPSETTING(    0x03, "3" )
@@ -2303,7 +2222,7 @@ INPUT_PORTS_START( dino )
 	PORT_START( "EEPROMOUT" )
 	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_OUTPUT ) PORT_WRITE_LINE_DEVICE("eeprom", eeprom_write_bit)
 	PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_OUTPUT ) PORT_WRITE_LINE_DEVICE("eeprom", eeprom_set_clock_line)
-	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_OUTPUT ) PORT_WRITE_LINE_DEVICE("eeprom", eeprom_set_cs_line)
+	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_OUTPUT ) PORT_WRITE_LINE_DEVICE("eeprom", eeprom_set_cs_line)
 INPUT_PORTS_END
 
 static INPUT_PORTS_START( dinoh )
@@ -2369,7 +2288,7 @@ static INPUT_PORTS_START( dinoh )
 	PORT_DIPNAME( 0x80, 0x80, "Game Mode")				PORT_DIPLOCATION("SW(C):8")
 	PORT_DIPSETTING(    0x80, "Game" )
 	PORT_DIPSETTING(    0x00, DEF_STR( Test ) )
-
+/*
 	PORT_MODIFY("IN1")
 	PORT_BIT( 0x0001, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT ) PORT_8WAY PORT_PLAYER(1)
 	PORT_BIT( 0x0002, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT  ) PORT_8WAY PORT_PLAYER(1)
@@ -2388,16 +2307,16 @@ static INPUT_PORTS_START( dinoh )
 	PORT_BIT( 0x4000, IP_ACTIVE_LOW, IPT_BUTTON3 ) PORT_PLAYER(2)
 	PORT_BIT( 0x8000, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
-	PORT_MODIFY("IN2")		/* Player 3 */
+	PORT_MODIFY("IN2")		// Player 3
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT ) PORT_8WAY PORT_PLAYER(3)
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT ) PORT_8WAY PORT_PLAYER(3)
 	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN ) PORT_8WAY PORT_PLAYER(3)
 	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_UP ) PORT_8WAY PORT_PLAYER(3)
 	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_BUTTON1 ) PORT_PLAYER(3)
 	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_BUTTON2 ) PORT_PLAYER(3)
-/*	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_BUTTON3 ) PORT_PLAYER(3) */
+//	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_BUTTON3 ) PORT_PLAYER(3)
 	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_COIN3 )
-	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_START3 )
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_START3 ) */
 INPUT_PORTS_END
 
 INPUT_PORTS_START( punisher )
@@ -2430,7 +2349,7 @@ INPUT_PORTS_START( punisher )
 	PORT_START( "EEPROMOUT" )
 	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_OUTPUT ) PORT_WRITE_LINE_DEVICE("eeprom", eeprom_write_bit)
 	PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_OUTPUT ) PORT_WRITE_LINE_DEVICE("eeprom", eeprom_set_clock_line)
-	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_OUTPUT ) PORT_WRITE_LINE_DEVICE("eeprom", eeprom_set_cs_line)
+	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_OUTPUT ) PORT_WRITE_LINE_DEVICE("eeprom", eeprom_set_cs_line)
 INPUT_PORTS_END
 
 static INPUT_PORTS_START( punisherbz )
@@ -2499,7 +2418,7 @@ static INPUT_PORTS_START( punisherbz )
 INPUT_PORTS_END
 
 /* Needs further checking */
-static INPUT_PORTS_START( slammast )
+INPUT_PORTS_START( slammast )
 	PORT_INCLUDE( cps1_4players )
 
 	PORT_MODIFY("IN0")
@@ -2529,7 +2448,7 @@ static INPUT_PORTS_START( slammast )
 	PORT_START( "EEPROMOUT" )
 	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_OUTPUT ) PORT_WRITE_LINE_DEVICE("eeprom", eeprom_write_bit)
 	PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_OUTPUT ) PORT_WRITE_LINE_DEVICE("eeprom", eeprom_set_clock_line)
-	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_OUTPUT ) PORT_WRITE_LINE_DEVICE("eeprom", eeprom_set_cs_line)
+	PORT_BIT( 0x80, IP_ACTIVE_LOW,  IPT_OUTPUT ) PORT_WRITE_LINE_DEVICE("eeprom", eeprom_set_cs_line)
 INPUT_PORTS_END
 
 /* Needs further checking */
@@ -2771,7 +2690,7 @@ static INPUT_PORTS_START( pang3 )
 	PORT_START( "EEPROMOUT" )
 	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_OUTPUT ) PORT_WRITE_LINE_DEVICE("eeprom", eeprom_write_bit)
 	PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_OUTPUT ) PORT_WRITE_LINE_DEVICE("eeprom", eeprom_set_clock_line)
-	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_OUTPUT ) PORT_WRITE_LINE_DEVICE("eeprom", eeprom_set_cs_line)
+	PORT_BIT( 0x80, IP_ACTIVE_LOW,  IPT_OUTPUT ) PORT_WRITE_LINE_DEVICE("eeprom", eeprom_set_cs_line)
 INPUT_PORTS_END
 
 /* Needs further checking */
@@ -9252,8 +9171,8 @@ GAME( 1993, punisherbz, punisher, wofhfb,     punisherbz, cps1,     ROT0,   "boo
 //
 GAME( 1993, slammast,   0,        qsound,     slammast,   slammast, ROT0,   "Capcom", "Saturday Night Slam Masters (World 930713)", GAME_SUPPORTS_SAVE )	// "ETC"
 GAME( 1993, slammastu,  slammast, qsound,     slammast,   slammast, ROT0,   "Capcom", "Saturday Night Slam Masters (USA 930713)", GAME_SUPPORTS_SAVE )
-//
 GAME( 1993, mbomberj,   slammast, qsound,     slammast,   slammast, ROT0,   "Capcom", "Muscle Bomber: The Body Explosion (Japan 930713)", GAME_SUPPORTS_SAVE )
+//
 GAME( 1993, mbombrd,    0,        qsound,     slammast,   slammast, ROT0,   "Capcom", "Muscle Bomber Duo: Ultimate Team Battle (World 931206)", GAME_SUPPORTS_SAVE )	// "ETC"
 GAME( 1993, mbombrdj,   mbombrd,  qsound,     slammast,   slammast, ROT0,   "Capcom", "Muscle Bomber Duo: Heat Up Warriors (Japan 931206)", GAME_SUPPORTS_SAVE )
 //

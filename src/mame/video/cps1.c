@@ -1257,6 +1257,7 @@ static const struct CPS1config cps1_config_table[]=
 
 	{"slammast",   CPS_B_21_QS4, mapper_MB63B },
 	{"slammastu",  CPS_B_21_QS4, mapper_MB63B },
+	{"slampic",    CPS_B_21_QS4, mapper_MB63B },
 
 	{"nemo",       CPS_B_15,     mapper_NM24B },
 	{"nemoj",      CPS_B_15,     mapper_NM24B },	// wrong, this set uses NM22B, still non dumped

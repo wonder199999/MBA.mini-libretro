@@ -239,7 +239,7 @@ const game_driver *const drivers[] =
 	DRIVER( sf2amf )	/* hackrom, SF2 Alpha Magic-F */
 	DRIVER( cawingbl )	/* bootleg of cawing, with YM2203 x2 + MSM205 x2, set 1 */
 	DRIVER( cawingb2 )	/* bootleg of cawing, with YM2203 x2 + MSM205 x2, set 2 */
-
+	DRIVER( slampic )	/* bootleg */
 
 
 	/* ************************* */
