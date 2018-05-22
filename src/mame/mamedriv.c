@@ -241,6 +241,7 @@ const game_driver *const drivers[] =
 	DRIVER( cawingb2 )	/* bootleg of cawing, with YM2203 x2 + MSM205 x2, set 2 */
 	DRIVER( slampic )	/* bootleg */
 	DRIVER( sfach )		/* 27/07/1995 (c) CPS Changer version - Street Fighter Alpha: Warriors' Dreams(USA) */
+	DRIVER( sfzbch )	/* 27/07/1995 (c) CPS Changer version - Street Fighter Zero (Brazil) */
 
 
 	/* ************************* */
