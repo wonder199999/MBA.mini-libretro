@@ -307,6 +307,28 @@ ROM_START( sf2m3 )
 	ROM_LOAD( "s92_19.bin",    0x20000, 0x20000, CRC(beade53f) SHA1(277c397dc12752719ec6b47d2224750bd1c07f79) )
 ROM_END
 
+static DRIVER_INIT( sf2m8 )
+{
+	// unscramble gfx
+	UINT8 *gfx_rom = memory_region( machine, "gfx" );
+	UINT8 *ur2_rom = memory_region( machine, "user2" );
+
+	INT32 i = 0x480000, j = 0;
+
+	for (j = 0x20000; j < 0x80000; j += 2)
+	{
+		gfx_rom[i++] = ur2_rom[j];
+		gfx_rom[i++] = ur2_rom[j | 0x100000];
+		gfx_rom[i++] = ur2_rom[j | 0x000001];
+		gfx_rom[i++] = ur2_rom[j | 0x100001];
+		gfx_rom[i++] = ur2_rom[j | 0x080000];
+		gfx_rom[i++] = ur2_rom[j | 0x180000];
+		gfx_rom[i++] = ur2_rom[j | 0x080001];
+		gfx_rom[i++] = ur2_rom[j | 0x180001];
+	}
+	DRIVER_INIT_CALL(cps1);
+}
+
 ROM_START( sf2ceuab3 )			/* bootleg of SF2CE, in FBA, it's name is sf2ceuab3; in MAME, it's name is sf2m8a */
 	/* unconfirmed if working on real hardware */
 	/* this board has unsupported pals */
@@ -402,4 +424,53 @@ ROM_START( sf2amf )
 	ROM_REGION( 0x40000, "oki", 0 )			/* Samples */
 	ROM_LOAD( "2.amf", 0x00000, 0x20000, CRC(7f162009) SHA1(346bf42992b4c36c593e21901e22c87ae4a7d86d) )
 	ROM_LOAD( "1.amf", 0x20000, 0x20000, CRC(beade53f) SHA1(277c397dc12752719ec6b47d2224750bd1c07f79) )
+ROM_END
+
+static DRIVER_INIT( ganbare )
+{
+	DRIVER_INIT_CALL(cps1);
+
+	memory_install_readwrite16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0xff0000, 0xffffff, 0, 0, ganbare_ram_r, ganbare_ram_w);
+}
+
+ROM_START( ganbare )
+	ROM_REGION( CODE_SIZE, "maincpu", 0 )		/* 68000 code */
+	ROM_LOAD16_WORD_SWAP( "mrnj_23d.8f", 0x00000, 0x80000, CRC(f929be72) SHA1(d175bdcace469277479ef85bf4e1b9d5a63cffde) )
+
+	ROM_REGION( 0x400000, "gfx", 0 )
+	ROMX_LOAD( "mrnj_01.3a",  0x000000, 0x80000, CRC(3f878020) SHA1(b18faa50d88c76d19db1af73cf4b3095e928f51f) , ROM_GROUPWORD | ROM_SKIP(6) )
+	ROMX_LOAD( "mrnj_02.4a",  0x000002, 0x80000, CRC(3e5624d8) SHA1(502e4897916af1c9e121b096de1369d06f1ffe87) , ROM_GROUPWORD | ROM_SKIP(6) )
+	ROMX_LOAD( "mrnj_03.5a",  0x000004, 0x80000, CRC(d1e61f96) SHA1(5f6dee8adbf83c697416e440fbdd3a84a6e698da) , ROM_GROUPWORD | ROM_SKIP(6) )
+	ROMX_LOAD( "mrnj_04.6a",  0x000006, 0x80000, CRC(d241971b) SHA1(b641740b40a043affbb79ea91ba12f821a259bad) , ROM_GROUPWORD | ROM_SKIP(6) )
+	ROMX_LOAD( "mrnj_05.7a",  0x200000, 0x80000, CRC(c0a14562) SHA1(2fb6cf98fed83ac92c33df9526102a101454e276) , ROM_GROUPWORD | ROM_SKIP(6) )
+	ROMX_LOAD( "mrnj_06.8a",  0x200002, 0x80000, CRC(e6a71dfc) SHA1(67178b020f87fb28ef35292d008ce9b80e02a2db) , ROM_GROUPWORD | ROM_SKIP(6) )
+	ROMX_LOAD( "mrnj_07.9a",  0x200004, 0x80000, CRC(99afb6c7) SHA1(5caead2b71cd54f6b53765f09829cc9e92e1e2d6) , ROM_GROUPWORD | ROM_SKIP(6) )
+	ROMX_LOAD( "mrnj_08.10a", 0x200006, 0x80000, CRC(52882c20) SHA1(5e3fca6da3470aeb78534f01e1575d8c0e067c0e) , ROM_GROUPWORD | ROM_SKIP(6) )
+
+	ROM_REGION( 0x18000, "audiocpu", 0 )		/* 64k for the audio CPU (+banks) */
+	ROM_LOAD( "mrnj_09.12a",  0x00000, 0x08000, CRC(62470d72) SHA1(1de357a20f794defb49ed01af5b95ad00e2aa1d9) )
+	ROM_CONTINUE(             0x10000, 0x08000 )
+
+	ROM_REGION( 0x40000, "oki", 0 )			/* Samples */
+	ROM_LOAD( "mrnj_18.11c",  0x00000, 0x20000, CRC(08e13940) SHA1(5c7dd7ff6a66f100b59cf9244e78f2c8702faca1) )
+	ROM_LOAD( "mrnj_19.12c",  0x20000, 0x20000, CRC(5fa59927) SHA1(f05246cf566c214b008a91816c71e7c03b7cc218) )
+
+	ROM_REGION( 0x8000, "timekeeper", 0)		/* Timekeeper internal RAM was dumped (but game overwrites it - should I keep this here or remove it?) */
+	ROM_LOAD( "m48t35y-70pc1.9n", 0x00000, 0x8000, CRC(96107b4a) SHA1(be9149736030e06c96083dcac73b5be3dbc318ac) )
+
+	ROM_REGION( 0x0200, "aboardplds", 0 )
+	ROM_LOAD( "buf1",         0x0000, 0x0117, CRC(eb122de7) SHA1(b26b5bfe258e3e184f069719f9fd008d6b8f6b9b) )
+	ROM_LOAD( "ioa1",         0x0000, 0x0117, CRC(59c7ee3b) SHA1(fbb887c5b4f5cb8df77cec710eaac2985bc482a6) )
+	ROM_LOAD( "prg1",         0x0000, 0x0117, CRC(f1129744) SHA1(a5300f301c1a08a7da768f0773fa0fe3f683b237) )
+	ROM_LOAD( "rom1",         0x0000, 0x0117, CRC(41dc73b9) SHA1(7d4c9f1693c821fbf84e32dd6ef62ddf14967845) )
+	ROM_LOAD( "sou1",         0x0000, 0x0117, CRC(84f4b2fe) SHA1(dcc9e86cc36316fe42eace02d6df75d08bc8bb6d) )
+
+	ROM_REGION( 0x0200, "bboardplds", 0 )
+	ROM_LOAD( "gbpr2.1a",     0x0000, 0x0117, VERIFY_OFF )
+	ROM_LOAD( "iob1.12d",     0x0000, 0x0117, CRC(3abc0700) SHA1(973043aa46ec6d5d1db20dc9d5937005a0f9f6ae) )
+	ROM_LOAD( "bprg1.11d",    0x0000, 0x0117, CRC(31793da7) SHA1(400fa7ac517421c978c1ee7773c30b9ed0c5d3f3) )
+
+	ROM_REGION( 0x0200, "cboardplds", 0 )
+	ROM_LOAD( "ioc1.ic7",     0x0000, 0x0117, CRC(0d182081) SHA1(475b3d417785da4bc512cce2b274bb00d4cc6792) )
+	ROM_LOAD( "c632.ic1",     0x0000, 0x0117, CRC(0fbd9270) SHA1(d7e737b20c44d41e29ca94be56114b31934dde81) )
 ROM_END

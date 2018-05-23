@@ -246,7 +246,7 @@ void cps1_irq_handler_mus(running_device *device, int irq);
 ADDRESS_MAP_EXTERN( qsound_sub_map, 8 );
 
 INTERRUPT_GEN( cps1_interrupt );
-INTERRUPT_GEN( cps1_qsound_interrupt );
+//INTERRUPT_GEN( cps1_qsound_interrupt );
 
 GFXDECODE_EXTERN( cps1 );
 

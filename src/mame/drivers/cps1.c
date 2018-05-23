@@ -232,16 +232,56 @@ Stephh's log (2006.09.20) :
 #include "emu.h"
 #include "cpu/z80/z80.h"
 #include "cpu/m68000/m68000.h"
+
 #include "machine/eeprom.h"
+#include "machine/timekpr.h"
+
 #include "sound/2151intf.h"
 #include "sound/okim6295.h"
 #include "sound/qsound.h"
+
 #include "includes/cps1.h"       /* External CPS1 definitions */
 
 /* -------------------  Game-specific function  -------------------- */
 static WRITE16_HANDLER( sf2m3_layer_w )
 {
 	cps1_cps_b_w(space, 0x0a, data, 0xffff);
+}
+
+static TIMER_DEVICE_CALLBACK( ganbare_interrupt )
+{
+	if (param == 0)
+	{
+		cps_state *state = (cps_state *)timer.machine->driver_data;
+		cpu_set_input_line(state->maincpu, 4, HOLD_LINE);
+	}
+}
+
+static READ16_HANDLER( ganbare_ram_r )
+{
+	device_t *device = space->machine->device("m48t35");
+	cps_state *state = (cps_state *)space->machine->driver_data;
+
+	UINT16 result = 0xffff;
+
+	if (ACCESSING_BITS_0_7)
+		result = (result & ~0x00ff) | timekeeper_r(device, offset);
+
+	if (ACCESSING_BITS_8_15)
+		result = (result & ~0xff00) | (state->mainram[offset] & 0xff00);
+
+	return result;
+}
+
+static WRITE16_HANDLER( ganbare_ram_w )
+{
+	device_t *device = space->machine->device("m48t35");
+	cps_state *state = (cps_state *)space->machine->driver_data;
+
+	COMBINE_DATA(&state->mainram[offset]);
+
+	if (ACCESSING_BITS_0_7)
+		timekeeper_w(device, offset, data & 0xff);
 }
 
 /* ---------------------------------------------------------- */
@@ -380,11 +420,6 @@ INTERRUPT_GEN( cps1_interrupt )
 *  =======
 *
 ********************************************************************/
-
-INTERRUPT_GEN( cps1_qsound_interrupt )
-{
-	cpu_set_input_line(device, 2, HOLD_LINE);
-}
 
 READ16_HANDLER( qsound_rom_r )
 {
@@ -590,7 +625,7 @@ static ADDRESS_MAP_START( main_map, ADDRESS_SPACE_PROGRAM, 16 )
 	AM_RANGE(0x800180, 0x800187) AM_WRITE(cps1_soundlatch_w)							/* Sound command */
 	AM_RANGE(0x800188, 0x80018f) AM_WRITE(cps1_soundlatch2_w)							/* Sound timer fade */
 	AM_RANGE(0x900000, 0x92ffff) AM_RAM_WRITE(cps1_gfxram_w) AM_BASE_SIZE_MEMBER(cps_state, gfxram, gfxram_size)	/* SF2CE executes code from here */
-	AM_RANGE(0xff0000, 0xffffff) AM_RAM
+	AM_RANGE(0xff0000, 0xffffff) AM_RAM AM_BASE_MEMBER(cps_state, mainram)
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( qsound_main_map, ADDRESS_SPACE_PROGRAM, 16 )
@@ -608,7 +643,7 @@ static ADDRESS_MAP_START( qsound_main_map, ADDRESS_SPACE_PROGRAM, 16 )
 	AM_RANGE(0xf1c004, 0xf1c005) AM_WRITE(cpsq_coinctrl2_w)								/* Coin control2 (later games) */
 	AM_RANGE(0xf1c006, 0xf1c007) AM_READ_PORT("EEPROMIN") AM_WRITE_PORT("EEPROMOUT")
 	AM_RANGE(0xf1e000, 0xf1ffff) AM_READWRITE(qsound_sharedram2_r, qsound_sharedram2_w)  				/* Q RAM */
-	AM_RANGE(0xff0000, 0xffffff) AM_RAM
+	AM_RANGE(0xff0000, 0xffffff) AM_RAM AM_BASE_MEMBER(cps_state, mainram)
 ADDRESS_MAP_END
 
 /* --------------- Game-specific CPU PROGRAM_MAP --------------- */
@@ -993,17 +1028,17 @@ static INPUT_PORTS_START( strider )
 	CPS1_DIFFICULTY_2( "SW(B)" )
 	/* In 'striderj', bit 3 is stored at 0xff8e77 ($e77,A5) via code at 0x000a2a, but this address is never checked again.
 	   In 'strider' and 'stridrjr', this code even doesn't exist ! */
-	PORT_DIPNAME( 0x08, 0x08, DEF_STR( Unused ) )		   PORT_DIPLOCATION("SW(B):4")
-	PORT_DIPSETTING(    0x08, DEF_STR( Off ) )		   /* Manual says this is 2c start/1c continue but it */
-	PORT_DIPSETTING(    0x00, DEF_STR( On ) )		   /* doesn't work (see comment above) */
-	PORT_DIPNAME( 0x30, 0x30, DEF_STR( Bonus_Life ) )	   PORT_DIPLOCATION("SW(B):5,6")
+	PORT_DIPNAME( 0x08, 0x08, DEF_STR( Unused ) )		 PORT_DIPLOCATION("SW(B):4")
+	PORT_DIPSETTING(    0x08, DEF_STR( Off ) )		 /* Manual says this is 2c start/1c continue but it */
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )		 /* doesn't work (see comment above) */
+	PORT_DIPNAME( 0x30, 0x30, DEF_STR( Bonus_Life ) )	 PORT_DIPLOCATION("SW(B):5,6")
 	PORT_DIPSETTING(    0x30, "20K, 40K then every 60K" )
 	PORT_DIPSETTING(    0x20, "30K, 50K then every 70K" )
 	PORT_DIPSETTING(    0x10, "20K & 60K only" )
 	PORT_DIPSETTING(    0x00, "30K & 60K only" )
-	PORT_DIPNAME( 0xc0, 0x80, "Internal Diff. on Life Loss" )  PORT_DIPLOCATION("SW(B):7,8")
-	PORT_DIPSETTING(    0xc0, "-3" )			   /* Check code at 0x00d15a */
-/*  	PORT_DIPSETTING(    0x40, "-1" ) */                        /* These switches are not documented in the manual */
+	PORT_DIPNAME( 0xc0, 0x80, "Internal Diff. on Life Loss" ) PORT_DIPLOCATION("SW(B):7,8")
+	PORT_DIPSETTING(    0xc0, "-3" )			 /* Check code at 0x00d15a */
+/*  	PORT_DIPSETTING(    0x40, "-1" ) */                      /* These switches are not documented in the manual */
 	PORT_DIPSETTING(    0x00, "-1" )
 	PORT_DIPSETTING(    0x80, "Default" )
 
@@ -2903,7 +2938,6 @@ static INPUT_PORTS_START( wofch )
 	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_OUTPUT ) PORT_WRITE_LINE_DEVICE("eeprom", eeprom_set_cs_line)
 INPUT_PORTS_END
 
-
 static INPUT_PORTS_START( sf2amf )		/* SWB.4, SWB.5 and SWB.6 need to be enabled simultaneously for turbo mode */
 	PORT_INCLUDE( sf2hack )
 
@@ -2916,6 +2950,85 @@ static INPUT_PORTS_START( sf2amf )		/* SWB.4, SWB.5 and SWB.6 need to be enabled
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 	PORT_DIPNAME( 0x20, 0x20, "Turbo Mode Switch 3 of 3" )   PORT_DIPLOCATION("SW(B):6")
 	PORT_DIPSETTING(    0x20, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+INPUT_PORTS_END
+
+static INPUT_PORTS_START( ganbare )
+	PORT_INCLUDE( cps1_3players )
+
+	PORT_MODIFY("IN0")
+	PORT_SERVICE_NO_TOGGLE( 0x40, IP_ACTIVE_LOW )
+
+	PORT_MODIFY("IN1")
+	PORT_BIT( 0x0004, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT( 0x0008, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT( 0x0040, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT( 0x0080, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT( 0x0100, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT( 0x0200, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT( 0x0400, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT( 0x0800, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT( 0x1000, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT( 0x2000, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT( 0x4000, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT( 0x8000, IP_ACTIVE_LOW, IPT_UNKNOWN )
+
+	PORT_START("DSWA")
+	PORT_DIPNAME( 0x01, 0x01, "Medal Setup" )	PORT_DIPLOCATION("SW(A):1")
+	PORT_DIPSETTING(    0x01, "1 Medal 1 Credit" )
+	PORT_DIPSETTING(    0x00, "Don't use" )
+	PORT_DIPNAME( 0x02, 0x02, "Coin Setup" )	PORT_DIPLOCATION("SW(A):2")
+	PORT_DIPSETTING(    0x02, "100 Yen" )
+	PORT_DIPSETTING(    0x00, "10 Yen" )
+	PORT_DIPNAME( 0x1c, 0x1c, "Change Setup" )	PORT_DIPLOCATION("SW(A):3,4,5")
+	PORT_DIPSETTING(    0x04, "12" )
+	PORT_DIPSETTING(    0x00, "11" )
+	PORT_DIPSETTING(    0x1c, "10" )
+	PORT_DIPSETTING(    0x18, "8" )
+	PORT_DIPSETTING(    0x14, "7" )
+	PORT_DIPSETTING(    0x10, "6" )
+	PORT_DIPSETTING(    0x0c, "5" )
+	PORT_DIPSETTING(    0x08, "No change" )
+	PORT_DIPNAME( 0x60, 0x60, "10 Yen Setup" )	PORT_DIPLOCATION("SW(A):6,7")
+	PORT_DIPSETTING(    0x20, DEF_STR( 3C_1C ) )
+	PORT_DIPSETTING(    0x40, DEF_STR( 2C_1C ) )
+	PORT_DIPSETTING(    0x60, DEF_STR( 1C_1C ) )
+	PORT_DIPSETTING(    0x00, "Don't use" )
+	PORT_DIPNAME( 0x80, 0x80, "Payout Setup" )	PORT_DIPLOCATION("SW(A):8")
+	PORT_DIPSETTING(    0x80, "Credit Mode" )
+	PORT_DIPSETTING(    0x00, "Payout Mode" )
+
+	PORT_START("DSWB")
+	PORT_DIPNAME( 0x07, 0x07, "Payout Rate Setup" )	PORT_DIPLOCATION("SW(B):1,2,3")
+	PORT_DIPSETTING(    0x01, "90%" )
+	PORT_DIPSETTING(    0x00, "85%" )
+	PORT_DIPSETTING(    0x07, "80%" )
+	PORT_DIPSETTING(    0x06, "75%" )
+	PORT_DIPSETTING(    0x05, "70%" )
+	PORT_DIPSETTING(    0x04, "65%" )
+	PORT_DIPSETTING(    0x03, "60%" )
+	PORT_DIPSETTING(    0x02, "55%" )
+	PORT_DIPUNKNOWN_DIPLOC( 0x08, 0x08, "SW(B):4" )
+	PORT_DIPUNKNOWN_DIPLOC( 0x10, 0x10, "SW(B):5" )
+	PORT_DIPUNKNOWN_DIPLOC( 0x20, 0x20, "SW(B):6" )
+	PORT_DIPUNKNOWN_DIPLOC( 0x40, 0x40, "SW(B):7" )
+	PORT_DIPUNKNOWN_DIPLOC( 0x80, 0x80, "SW(B):8" )
+
+	PORT_START("DSWC")
+	PORT_DIPNAME( 0x03, 0x03, DEF_STR( Demo_Sounds ) )	PORT_DIPLOCATION("SW(C):1,2")
+	PORT_DIPSETTING(    0x03, DEF_STR( On ) )
+	PORT_DIPSETTING(    0x02, "Every second sound" )
+	PORT_DIPSETTING(    0x01, "Every third sound" )
+	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
+	PORT_DIPUNKNOWN_DIPLOC( 0x04, 0x04, "SW(C):3" )
+	PORT_DIPUNKNOWN_DIPLOC( 0x08, 0x08, "SW(C):4" )
+	PORT_DIPUNKNOWN_DIPLOC( 0x10, 0x10, "SW(C):5" )
+	PORT_DIPUNKNOWN_DIPLOC( 0x20, 0x20, "SW(C):6" )
+	PORT_DIPNAME( 0x40, 0x40, "Clear RAM" )		PORT_DIPLOCATION("SW(C):7")
+	PORT_DIPSETTING(    0x40, DEF_STR( No ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( Yes ) )
+	PORT_DIPNAME( 0x80, 0x80, "Tes Mode Display" )	PORT_DIPLOCATION("SW(C):8")
+	PORT_DIPSETTING(    0x80, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 INPUT_PORTS_END
 
@@ -3045,7 +3158,8 @@ static MACHINE_DRIVER_START( qsound )
 
 	MDRV_CPU_REPLACE("maincpu", M68000, XTAL_12MHz )	/* verified on pcb */
 	MDRV_CPU_PROGRAM_MAP(qsound_main_map)
-	MDRV_CPU_VBLANK_INT("screen", cps1_qsound_interrupt)	/* ??? interrupts per frame */
+//	MDRV_CPU_VBLANK_INT("screen", cps1_qsound_interrupt)	/* ??? interrupts per frame */
+	MDRV_CPU_VBLANK_INT("screen", cps1_interrupt)	/* ??? interrupts per frame */
 	MDRV_CPU_REPLACE("audiocpu", Z80, XTAL_8MHz)		/* verified on pcb */
 	MDRV_CPU_PROGRAM_MAP(qsound_sub_map)
 	MDRV_CPU_PERIODIC_INT(irq0_line_hold, 250)		/* ?? */
@@ -3078,6 +3192,16 @@ static MACHINE_DRIVER_START( sf2m3 )
 
 	MDRV_CPU_MODIFY("maincpu")
 	MDRV_CPU_PROGRAM_MAP(sf2m3_map)
+MACHINE_DRIVER_END
+
+static MACHINE_DRIVER_START( ganbare )
+	/* basic machine hardware */
+	MDRV_IMPORT_FROM(cps1_10MHz)
+
+	MDRV_CPU_MODIFY("maincpu")
+	MDRV_TIMER_ADD_SCANLINE("scantimer", ganbare_interrupt, "screen", 0, 1)
+
+	MDRV_M48T35_ADD( "m48t35" )
 MACHINE_DRIVER_END
 
 
@@ -8883,10 +9007,6 @@ ROM_START( rockmanj )
 ROM_END
 
 
-/*   additional   */
-#include "cps1_ext.c"
-
-
 /* ------ DRIVER INIT ------ */
 #ifndef MESS
 static DRIVER_INIT( forgottn )
@@ -8999,27 +9119,8 @@ static DRIVER_INIT( dinohunt )
 	DRIVER_INIT_CALL(cps1);
 }
 
-static DRIVER_INIT( sf2m8 )
-{
-	// unscramble gfx
-	UINT8 *gfx_rom = memory_region( machine, "gfx" );
-	UINT8 *ur2_rom = memory_region( machine, "user2" );
-
-	INT32 i = 0x480000, j = 0;
-
-	for (j = 0x20000; j < 0x80000; j += 2)
-	{
-		gfx_rom[i++] = ur2_rom[j];
-		gfx_rom[i++] = ur2_rom[j | 0x100000];
-		gfx_rom[i++] = ur2_rom[j | 0x000001];
-		gfx_rom[i++] = ur2_rom[j | 0x100001];
-		gfx_rom[i++] = ur2_rom[j | 0x080000];
-		gfx_rom[i++] = ur2_rom[j | 0x180000];
-		gfx_rom[i++] = ur2_rom[j | 0x080001];
-		gfx_rom[i++] = ur2_rom[j | 0x180001];
-	}
-	DRIVER_INIT_CALL(cps1);
-}
+/*   additional   */
+#include "cps1_ext.c"
 
 
 /* ------ DRIVER INIT end ------ */
@@ -9204,6 +9305,7 @@ GAME( 1992, sf2m3,	sf2ce,	  sf2m3,	sf2,	   cps1,       ROT0,   "bootleg", "Stree
 GAME( 1992, sf2ceuab3,	sf2ce,	  sf2m3,	sf2,	   sf2m8,      ROT0,   "bootleg", "Street Fighter II': Champion Edition (In MAME, the game's name is sf2m8a, bootleg)", GAME_SUPPORTS_SAVE )
 GAME( 1992, sf2amf,	sf2ce,	  cps1_12MHz,	sf2amf,	   sf2hack,    ROT0,   "bootleg", "Street Fighter II': Champion Edition (Alpha Magic-F, bootleg)", GAME_SUPPORTS_SAVE )
 GAME( 1991, captcommb,  captcomm, cps1_10MHz,	captcomm,  cps1,       ROT0,   "bootleg", "Captain Commando (bootleg)", GAME_SUPPORTS_SAVE )	/* 911014 - based on World version */
-GAME( 1993, dinohunt,   dino,     wofhfb,	dinoh,	   dinohunt,   ROT0,   "bootleg", "Dinosaur Hunter (Chinese bootleg of Cadillacs and Dinosaurs)", GAME_SUPPORTS_SAVE )	/* 930223 - based on Asia TW version, the original is still undumped */
+GAME( 1993, dinohunt,   dino,     wofhfb,	dinoh,	   dinohunt,   ROT0,   "bootleg", "Dinosaur Hunter (Chinese bootleg of Cadillacs and Dinosaurs)", GAME_SUPPORTS_SAVE )
 GAME( 1995, sfach,	sfzch,	  cps1_12MHz,	sfzch,	   cps1,       ROT0,   "Capcom",  "Street Fighter Alpha: Warriors' Dreams (CPS Changer, Publicity USA 950727)", 0 )
 GAME( 1995, sfzbch,	sfzch,	  cps1_12MHz,	sfzch,	   cps1,       ROT0,   "Capcom",  "Street Fighter Zero (CPS Changer, Brazil 950727)", 0 )
+GAME( 2000, ganbare,	0,	  ganbare,	ganbare,   ganbare,    ROT0,   "Capcom",  "Ganbare! Marine Kun (Japan 2K0411)", GAME_SUPPORTS_SAVE )

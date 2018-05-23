@@ -79,7 +79,6 @@ CPUS += NEC
 CPUS += V30MZ
 CPUS += MCS48
 CPUS += M680X0
-CPUS += PIC16C5X
 
 #-------------------------------------------------
 # specify available sound cores; some of these are
@@ -282,6 +281,7 @@ EMUMACHINEOBJS = \
 	$(EMUMACHINE)/ldvp931.o \
 	$(EMUMACHINE)/pd4990a.o \
 	$(EMUMACHINE)/z80ctc.o \
+	$(EMUMACHINE)/timekpr.o \
 
 EMUVIDEOOBJS = \
 	$(EMUVIDEO)/generic.o \
@@ -334,20 +334,6 @@ endif
 
 $(CPUOBJ)/mcs48/mcs48.o:	$(CPUSRC)/mcs48/mcs48.c \
 							$(CPUSRC)/mcs48/mcs48.h
-
-#-------------------------------------------------
-# Microchip PIC16C5x
-#-------------------------------------------------
-
-ifneq ($(filter PIC16C5X,$(CPUS)),)
-OBJDIRS += $(CPUOBJ)/pic16c5x
-CPUOBJS += $(CPUOBJ)/pic16c5x/pic16c5x.o
-DASMOBJS += $(CPUOBJ)/pic16c5x/16c5xdsm.o
-endif
-
-$(CPUOBJ)/pic16c5x/pic16c5x.o:	$(CPUSRC)/pic16c5x/pic16c5x.c \
-								$(CPUSRC)/pic16c5x/pic16c5x.h
-
 
 #-------------------------------------------------
 # Motorola 68000 series

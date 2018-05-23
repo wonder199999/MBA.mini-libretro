@@ -57,12 +57,14 @@ None of this is hooked up currently due to issues with row scroll on the scroll2
 #include "emu.h"
 #include "cpu/z80/z80.h"
 #include "cpu/m68000/m68000.h"
+
+#include "machine/eeprom.h"
 #include "includes/cps1.h"
+
 #include "sound/2203intf.h"
 #include "sound/msm5205.h"
 #include "sound/2151intf.h"
 #include "sound/okim6295.h"
-#include "machine/eeprom.h"
 
 
 /* -------------- Functions ---------------- */
