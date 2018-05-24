@@ -3158,7 +3158,6 @@ static MACHINE_DRIVER_START( qsound )
 
 	MDRV_CPU_REPLACE("maincpu", M68000, XTAL_12MHz )	/* verified on pcb */
 	MDRV_CPU_PROGRAM_MAP(qsound_main_map)
-//	MDRV_CPU_VBLANK_INT("screen", cps1_qsound_interrupt)	/* ??? interrupts per frame */
 	MDRV_CPU_VBLANK_INT("screen", cps1_interrupt)	/* ??? interrupts per frame */
 	MDRV_CPU_REPLACE("audiocpu", Z80, XTAL_8MHz)		/* verified on pcb */
 	MDRV_CPU_PROGRAM_MAP(qsound_sub_map)
@@ -9296,7 +9295,7 @@ GAME( 1995, pang3j,     pang3,    pang3,      pang3n,     pang3,    ROT0,  "Mitc
 /*
 GAME( year,   archives name,   parent name,  MACHINE_DRIVER_START,  INPUT_PORTS,  DRIVER_INIT,	flip,	producer name,	title information,	status )
 */
-GAME( 1995, sfzch,      0,        cps1_12MHz,	sfzch,	   cps1,       ROT0,   "Capcom",  "CPS Changer - Street Fighter Zero (Japan 951020)", 0 )
+GAME( 1995, sfzch,      0,        cps1_12MHz,	sfzch,	   cps1,       ROT0,   "Capcom",  "CPS Changer - Street Fighter Zero (Japan 951020)", GAME_SUPPORTS_SAVE )
 GAME( 1995, wofch,	0,	  qsound,      	wofch,	   wof,        ROT0,   "Capcom",  "CPS Changer - Tenchi Wo Kurau II (Japan 921031)", GAME_SUPPORTS_SAVE )
 GAME( 1999, wofhfh,     0,        wofhfb,     	wofhfb,    cps1,       ROT0,   "bootleg", "Huo Feng Huang , Chinese bootleg", GAME_SUPPORTS_SAVE )
 GAME( 2010, wofchdx,	wofch,	  qsound,      	wofch,	   wof,        ROT0,   "Capcom",  "CPS Changer - Sangokushi III Gaiden: Kakou-On's Revenge DX (hack)", GAME_SUPPORTS_SAVE )
@@ -9306,6 +9305,6 @@ GAME( 1992, sf2ceuab3,	sf2ce,	  sf2m3,	sf2,	   sf2m8,      ROT0,   "bootleg", "S
 GAME( 1992, sf2amf,	sf2ce,	  cps1_12MHz,	sf2amf,	   sf2hack,    ROT0,   "bootleg", "Street Fighter II': Champion Edition (Alpha Magic-F, bootleg)", GAME_SUPPORTS_SAVE )
 GAME( 1991, captcommb,  captcomm, cps1_10MHz,	captcomm,  cps1,       ROT0,   "bootleg", "Captain Commando (bootleg)", GAME_SUPPORTS_SAVE )	/* 911014 - based on World version */
 GAME( 1993, dinohunt,   dino,     wofhfb,	dinoh,	   dinohunt,   ROT0,   "bootleg", "Dinosaur Hunter (Chinese bootleg of Cadillacs and Dinosaurs)", GAME_SUPPORTS_SAVE )
-GAME( 1995, sfach,	sfzch,	  cps1_12MHz,	sfzch,	   cps1,       ROT0,   "Capcom",  "Street Fighter Alpha: Warriors' Dreams (CPS Changer, Publicity USA 950727)", 0 )
-GAME( 1995, sfzbch,	sfzch,	  cps1_12MHz,	sfzch,	   cps1,       ROT0,   "Capcom",  "Street Fighter Zero (CPS Changer, Brazil 950727)", 0 )
+GAME( 1995, sfach,	sfzch,	  cps1_12MHz,	sfzch,	   cps1,       ROT0,   "Capcom",  "Street Fighter Alpha: Warriors' Dreams (CPS Changer, Publicity USA 950727)", GAME_SUPPORTS_SAVE )
+GAME( 1995, sfzbch,	sfzch,	  cps1_12MHz,	sfzch,	   cps1,       ROT0,   "Capcom",  "Street Fighter Zero (CPS Changer, Brazil 950727)", GAME_SUPPORTS_SAVE )
 GAME( 2000, ganbare,	0,	  ganbare,	ganbare,   ganbare,    ROT0,   "Capcom",  "Ganbare! Marine Kun (Japan 2K0411)", GAME_SUPPORTS_SAVE )

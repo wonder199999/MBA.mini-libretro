@@ -751,8 +751,8 @@ OP( 0xd3, i_rotshft_wcl ) {
 	}
 }
 
-OP( 0xd4, i_aam    ) { UINT32 mult=FETCH; mult=0; cpustate->regs.b[AH] = cpustate->regs.b[AL] / 10; cpustate->regs.b[AL] %= 10; SetSZPF_Word(cpustate->regs.w[AW]); CLK(17); }
-OP( 0xd5, i_aad    ) { UINT32 mult=FETCH; mult=0; cpustate->regs.b[AL] = cpustate->regs.b[AH] * 10 + cpustate->regs.b[AL]; cpustate->regs.b[AH] = 0; SetSZPF_Byte(cpustate->regs.b[AL]); CLK(5); }
+OP( 0xd4, i_aam    ) { /*UINT32 mult=FETCH; mult=0;*/ cpustate->regs.b[AH] = cpustate->regs.b[AL] / 10; cpustate->regs.b[AL] %= 10; SetSZPF_Word(cpustate->regs.w[AW]); CLK(17); }
+OP( 0xd5, i_aad    ) { /*UINT32 mult=FETCH; mult=0;*/ cpustate->regs.b[AL] = cpustate->regs.b[AH] * 10 + cpustate->regs.b[AL]; cpustate->regs.b[AH] = 0; SetSZPF_Byte(cpustate->regs.b[AL]); CLK(5); }
 OP( 0xd6, i_setalc ) { cpustate->regs.b[AL] = (CF)?0xff:0x00; CLK(3); logerror("%06x: Undefined opcode (SETALC)\n",PC(cpustate)); }
 OP( 0xd7, i_trans  ) { UINT32 dest = (cpustate->regs.w[BW]+cpustate->regs.b[AL])&0xffff; cpustate->regs.b[AL] = GetMemB(DS, dest); CLK(5); }
 OP( 0xd8, i_fpo    ) { GetModRM; CLK(1);	logerror("%06x: Unimplemented floating point control %04x\n",PC(cpustate),ModRM); }

@@ -25,7 +25,9 @@ typedef struct
 	UINT8 century;
 	UINT8 *data;
 	UINT8 *default_data;
+
 	running_device *device;
+
 	int size;
 	int offset_control;
 	int offset_seconds;
@@ -100,9 +102,7 @@ static int inc_bcd( UINT8 *data, int mask, int min, int max )
 static void counter_to_ram( UINT8 *data, int offset, int counter )
 {
 	if( offset >= 0 )
-	{
 		data[ offset ] = counter;
-	}
 }
 
 static void counters_to_ram( timekeeper_state *c )
@@ -146,27 +146,20 @@ static TIMER_CALLBACK( timekeeper_tick )
 
 	int carry;
 
-	if( ( c->seconds & SECONDS_ST ) != 0 ||
-		( c->control & CONTROL_W ) != 0 )
-	{
+	if( ( c->seconds & SECONDS_ST ) != 0 || ( c->control & CONTROL_W ) != 0 )
 		return;
-	}
 
 	carry = inc_bcd( &c->seconds, MASK_SECONDS, 0x00, 0x59 );
+
 	if( carry )
-	{
 		carry = inc_bcd( &c->minutes, MASK_MINUTES, 0x00, 0x59 );
-	}
+
 	if( carry )
-	{
 		carry = inc_bcd( &c->hours, MASK_HOURS, 0x00, 0x23 );
-	}
 
 	if( carry )
 	{
-		UINT8 month;
-		UINT8 year;
-		UINT8 maxdays;
+		UINT8 month, year, maxdays;
 		static const UINT8 daysinmonth[] = { 0x31, 0x28, 0x31, 0x30, 0x31, 0x30, 0x31, 0x31, 0x30, 0x31, 0x30, 0x31 };
 
 		inc_bcd( &c->day, MASK_DAY, 0x01, 0x07 );
@@ -174,47 +167,38 @@ static TIMER_CALLBACK( timekeeper_tick )
 		month = from_bcd( c->month );
 		year = from_bcd( c->year );
 
-		if( month == 2 && ( year % 4 ) == 0 )
+		if( month == 2 )
 		{
-			maxdays = 0x29;
+			if (year % 100 == 0)
+				maxdays = (year % 400 == 0) ? 0x29 : 0x28;
+			else
+				maxdays = (year % 4 == 0) ? 0x29 : 0x28;
 		}
 		else if( month >= 1 && month <= 12 )
-		{
 			maxdays = daysinmonth[ month - 1 ];
-		}
 		else
-		{
 			maxdays = 0x31;
-		}
 
 		carry = inc_bcd( &c->date, MASK_DATE, 0x01, maxdays );
 	}
+
 	if( carry )
-	{
 		carry = inc_bcd( &c->month, MASK_MONTH, 0x01, 0x12 );
-	}
+
 	if( carry )
-	{
 		carry = inc_bcd( &c->year, MASK_YEAR, 0x00, 0x99 );
-	}
+
 	if( carry )
 	{
 		carry = inc_bcd( &c->century, MASK_CENTURY, 0x00, 0x99 );
 
-		if( c->device->type() == M48T35 ||
-			c->device->type() == M48T58 )
-		{
+		if( c->device->type() == M48T35 || c->device->type() == M48T58 )
 			if( ( c->day & DAY_CEB ) != 0 )
-			{
 				c->day ^= DAY_CB;
-			}
-		}
 	}
 
 	if( ( c->control & CONTROL_R ) == 0 )
-	{
 		counters_to_ram( c );
-	}
 }
 
 /*-------------------------------------------------
@@ -241,20 +225,15 @@ WRITE8_DEVICE_HANDLER( timekeeper_w )
 
 	if( offset == c->offset_control )
 	{
-		if( ( c->control & CONTROL_W ) != 0 &&
-			( data & CONTROL_W ) == 0 )
-		{
+		if( ( c->control & CONTROL_W ) != 0 && ( data & CONTROL_W ) == 0 )
 			counters_from_ram( c );
-		}
+
 		c->control = data;
 	}
 	else if( offset == c->offset_day )
 	{
-		if( c->device->type() == M48T35 ||
-			c->device->type() == M48T58 )
-		{
+		if( c->device->type() == M48T35 || c->device->type() == M48T58 )
 			c->day = ( c->day & ~DAY_CEB ) | ( data & DAY_CEB );
-		}
 	}
 	else if( offset == c->offset_date && c->device->type() == M48T58 )
 	{
@@ -265,7 +244,6 @@ WRITE8_DEVICE_HANDLER( timekeeper_w )
 		data &= ~FLAGS_BL;
 	}
 
-//  logerror( "%s: timekeeper_write( %s, %04x, %02x )\n", cpuexec_describe_context(machine), c->device->tag, offset, data );
 	c->data[ offset ] = data;
 }
 
@@ -273,7 +251,7 @@ READ8_DEVICE_HANDLER( timekeeper_r )
 {
 	timekeeper_state *c = get_safe_token(device);
 	UINT8 data = c->data[ offset ];
-//  logerror( "%s: timekeeper_read( %s, %04x ) %02x\n", cpuexec_describe_context(machine), c->device->tag, offset, data );
+
 	return data;
 }
 
@@ -290,7 +268,6 @@ static DEVICE_START(timekeeper)
 
 	/* validate some basic stuff */
 	assert(device != NULL);
-//  assert(device->baseconfig().static_config() != NULL);
 	assert(downcast<const legacy_device_config_base &>(device->baseconfig()).inline_config() == NULL);
 	assert(device->machine != NULL);
 	assert(device->machine->config != NULL);
