@@ -119,6 +119,7 @@ Support the following :
 *Saturday Night Slam Masters(World 930713)			- N: slammast,   P: Itself,    S: 0.139
 	Muscle Bomber : The Boby Explosion(Japan 930713)	- N: mbomberj,   P: slammast,  S: 0.139
 	Saturday Night Slam Masters(USA 930713)			- N: slammastu,  P: slammast,  S: 0.139
+	+Saturday Night Slam Masters(bootleg with PIC16c57)	- N: slampic,    P: slammast,  S: FBA02.97.38, Note: Imperfect Graphics & No Sound
 	
 *Street Fighter II': Champion Edition(World 920313)				- N: sf2ce,      P: Itself,  S: 0.139
 	Street Fighter II': Champion Edition(Accelerator Pt.II, Bootleg)	- N: sf2accp2,   P: sf2ce,   S: 0.139
@@ -196,7 +197,9 @@ Support the following :
 	Willow(Japan, English)		- N: willowje,  P: willow,  S: 0.139
 	Willow(Japan, Japanese		- N: willowj,   P: willow,  S: 0.139
 
-+*Street Fighter Zero (CPS Changer)(Japan 951020)		- N: sfzch,  P: Itself,  S: FBA02.97.38
++*Street Fighter Zero (CPS Changer)(Japan 951020)					- N: sfzch,   P: Itself,  S: FBA02.97.38
+	+Street Fighter Alpha: Warrior's Dreams (CPS Changer, Publicity USA 950727)	- N: sfach,   P: sfzch,   S: 0.177
+	+Street Fighter Zero (CPS Changer, Brazil 950727)				- N: sfzbch,  P: sfzch,   S: 0.177
 
 +*Tenchi Wo Kurau II (CPS Changer)(Japan 921031)				- N: wofch,     P: Itself,  S: FBA02.97.38
 	+Sangokushi III Gaiden: Kakou-On's Revenge DX (hack)			- N: wofchdx,   P: wofch,   S: FBA02.97.38
@@ -204,6 +207,7 @@ Support the following :
 
 +*Huo Feng Huang (Chinese bootleg)						- N: wofhfh,    P: Itself,  S: FBA02.97.38
 
++*Ganbare! Marine Kun (Japan 2K0411)	- N: ganbare,  P: Itself,  S: FBA02.97.38
 
 
 / ******************** /

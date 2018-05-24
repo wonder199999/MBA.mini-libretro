@@ -1,25 +1,19 @@
 Mame2010-mini from MAME2010-libretro (https://github.com/libretro/mame2010-libretro)
 After the codes is streamlined , only CPS 1/2,NEOGEO,IREM M92 roms is supported.
 
-Build :
-
-     for now you must build in 2 pass: 
-     one for the native buildtools and second for the target emulator build.
-  
- build for android:
+Build for android:
 
      make -f Makefile "NATIVE=1" buildtools
      make -f Makefile platform=android
      
- build for pc linux/win:
+Build for pc linux/win:
 
-     make -f Makefile buildtools
      make -f Makefile platform= #platform name
   
      (NB: for 64 bits build export PTR64=1 at least on win64)
 
 
- controls are: 
+Controls are: 
 
 	RETRO_DEVICE_ID_JOYPAD_START		[KEY_START]
 	RETRO_DEVICE_ID_JOYPAD_SELECT		[KEY_COIN]
