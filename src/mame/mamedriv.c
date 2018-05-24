@@ -243,6 +243,7 @@ const game_driver *const drivers[] =
 	DRIVER( sfach )		/* 27/07/1995 (c) CPS Changer version - Street Fighter Alpha: Warriors' Dreams(USA) */
 	DRIVER( sfzbch )	/* 27/07/1995 (c) CPS Changer version - Street Fighter Zero (Brazil) */
 	DRIVER( ganbare )	/* 11/04/2000 (c) Ganbare Marin-kun (Marine 2K0411, JPN) */
+	DRIVER( pang3r1 )	/* 11/05/1995 (c) 1995 Mitchell (Euro) */
 
 
 	/* ************************* */

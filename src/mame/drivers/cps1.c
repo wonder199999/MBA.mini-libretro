@@ -409,8 +409,8 @@ WRITE16_HANDLER( cpsq_coinctrl2_w )
 
 INTERRUPT_GEN( cps1_interrupt )
 {
-	/* Strider also has a IRQ4 handler. It is input port related, but the game */
-	/* works without it. It is the *only* CPS1 game to have that. */
+	/* Strider also has a IRQ4 handler. It is input port related, but the game
+	   works without it. It is the *only* CPS1 game to have that. */
 	cpu_set_input_line(device, 2, HOLD_LINE);
 }
 
@@ -487,7 +487,6 @@ WRITE8_HANDLER( qsound_banksw_w )
 ********************************************************************/
 static const ym2151_interface ym2151_config = { cps1_irq_handler_mus };
 
-#ifndef MESS
 static const eeprom_interface qsound_eeprom_interface =
 {
 	 7,		/* address bits */
@@ -505,7 +504,6 @@ static const eeprom_interface pang3_eeprom_interface =
 	"0101",		/* write command */
 	"0111"		/* erase command */
 };
-#endif
 
 /*
 PAL PRG1 (16P8B @ 12H):
@@ -9007,7 +9005,6 @@ ROM_END
 
 
 /* ------ DRIVER INIT ------ */
-#ifndef MESS
 static DRIVER_INIT( forgottn )
 {
 	cps_state *state = (cps_state *)machine->driver_data;
@@ -9079,8 +9076,7 @@ static DRIVER_INIT( slammast )
 
 static DRIVER_INIT( pang3n )
 {
-	/* Pang 3 is the only non-QSound game to have an EEPROM. */
-	/* It is mapped in the CPS-B address range so probably is on the C-board. */
+	/* Pang 3 is the only non-QSound game to have an EEPROM. it is mapped in the CPS-B address range so probably is on the C-board. */
 	memory_install_readwrite_port(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x80017a, 0x80017b, 0, 0, "EEPROMIN", "EEPROMOUT");
 
 	DRIVER_INIT_CALL(cps1);
@@ -9108,7 +9104,6 @@ static DRIVER_INIT( pang3 )
 	}
 	DRIVER_INIT_CALL(pang3n);
 }
-#endif
 
 static DRIVER_INIT( dinohunt )
 {
@@ -9295,16 +9290,17 @@ GAME( 1995, pang3j,     pang3,    pang3,      pang3n,     pang3,    ROT0,  "Mitc
 /*
 GAME( year,   archives name,   parent name,  MACHINE_DRIVER_START,  INPUT_PORTS,  DRIVER_INIT,	flip,	producer name,	title information,	status )
 */
-GAME( 1995, sfzch,      0,        cps1_12MHz,	sfzch,	   cps1,       ROT0,   "Capcom",  "CPS Changer - Street Fighter Zero (Japan 951020)", GAME_SUPPORTS_SAVE )
-GAME( 1995, wofch,	0,	  qsound,      	wofch,	   wof,        ROT0,   "Capcom",  "CPS Changer - Tenchi Wo Kurau II (Japan 921031)", GAME_SUPPORTS_SAVE )
-GAME( 1999, wofhfh,     0,        wofhfb,     	wofhfb,    cps1,       ROT0,   "bootleg", "Huo Feng Huang , Chinese bootleg", GAME_SUPPORTS_SAVE )
-GAME( 2010, wofchdx,	wofch,	  qsound,      	wofch,	   wof,        ROT0,   "Capcom",  "CPS Changer - Sangokushi III Gaiden: Kakou-On's Revenge DX (hack)", GAME_SUPPORTS_SAVE )
-GAME( 1995, wofches,	wofch,	  qsound,      	wofch,	   wof,        ROT0,   "Capcom",  "CPS Changer - Tenchi Wo Kurau II (Blue title, enabled the skill-enhanced mode)", GAME_SUPPORTS_SAVE )
-GAME( 1992, sf2m3,	sf2ce,	  sf2m3,	sf2,	   cps1,       ROT0,   "bootleg", "Street Fighter II': Champion Edition (M3, bootleg)", GAME_SUPPORTS_SAVE )
-GAME( 1992, sf2ceuab3,	sf2ce,	  sf2m3,	sf2,	   sf2m8,      ROT0,   "bootleg", "Street Fighter II': Champion Edition (In MAME, the game's name is sf2m8a, bootleg)", GAME_SUPPORTS_SAVE )
-GAME( 1992, sf2amf,	sf2ce,	  cps1_12MHz,	sf2amf,	   sf2hack,    ROT0,   "bootleg", "Street Fighter II': Champion Edition (Alpha Magic-F, bootleg)", GAME_SUPPORTS_SAVE )
-GAME( 1991, captcommb,  captcomm, cps1_10MHz,	captcomm,  cps1,       ROT0,   "bootleg", "Captain Commando (bootleg)", GAME_SUPPORTS_SAVE )	/* 911014 - based on World version */
-GAME( 1993, dinohunt,   dino,     wofhfb,	dinoh,	   dinohunt,   ROT0,   "bootleg", "Dinosaur Hunter (Chinese bootleg of Cadillacs and Dinosaurs)", GAME_SUPPORTS_SAVE )
-GAME( 1995, sfach,	sfzch,	  cps1_12MHz,	sfzch,	   cps1,       ROT0,   "Capcom",  "Street Fighter Alpha: Warriors' Dreams (CPS Changer, Publicity USA 950727)", GAME_SUPPORTS_SAVE )
-GAME( 1995, sfzbch,	sfzch,	  cps1_12MHz,	sfzch,	   cps1,       ROT0,   "Capcom",  "Street Fighter Zero (CPS Changer, Brazil 950727)", GAME_SUPPORTS_SAVE )
-GAME( 2000, ganbare,	0,	  ganbare,	ganbare,   ganbare,    ROT0,   "Capcom",  "Ganbare! Marine Kun (Japan 2K0411)", GAME_SUPPORTS_SAVE )
+GAME( 1995, sfzch,	0,	  cps1_12MHz,	sfzch,	   cps1,       ROT0,   "Capcom",   "CPS Changer - Street Fighter Zero (Japan 951020)", GAME_SUPPORTS_SAVE )
+GAME( 1995, wofch,	0,	  qsound,	wofch,	   wof,        ROT0,   "Capcom",   "CPS Changer - Tenchi Wo Kurau II (Japan 921031)", GAME_SUPPORTS_SAVE )
+GAME( 1999, wofhfh,	0,	  wofhfb,	wofhfb,	   cps1,       ROT0,   "bootleg",  "Huo Feng Huang , Chinese bootleg", GAME_SUPPORTS_SAVE )
+GAME( 2010, wofchdx,	wofch,	  qsound,	wofch,	   wof,        ROT0,   "Capcom",   "CPS Changer - Sangokushi III Gaiden: Kakou-On's Revenge DX (hack)", GAME_SUPPORTS_SAVE )
+GAME( 1995, wofches,	wofch,	  qsound,	wofch,	   wof,        ROT0,   "Capcom",   "CPS Changer - Tenchi Wo Kurau II (Blue title, enabled the skill-enhanced mode)", GAME_SUPPORTS_SAVE )
+GAME( 1992, sf2m3,	sf2ce,	  sf2m3,	sf2,	   cps1,       ROT0,   "bootleg",  "Street Fighter II': Champion Edition (M3, bootleg)", GAME_SUPPORTS_SAVE )
+GAME( 1992, sf2ceuab3,	sf2ce,	  sf2m3,	sf2,	   sf2m8,      ROT0,   "bootleg",  "Street Fighter II': Champion Edition (In MAME, the game's name is sf2m8a, bootleg)", GAME_SUPPORTS_SAVE )
+GAME( 1992, sf2amf,	sf2ce,	  cps1_12MHz,	sf2amf,	   sf2hack,    ROT0,   "bootleg",  "Street Fighter II': Champion Edition (Alpha Magic-F, bootleg)", GAME_SUPPORTS_SAVE )
+GAME( 1991, captcommb,	captcomm, cps1_10MHz,	captcomm,  cps1,       ROT0,   "bootleg",  "Captain Commando (bootleg)", GAME_SUPPORTS_SAVE )	/* 911014 - based on World version */
+GAME( 1993, dinohunt,	dino,	  wofhfb,	dinoh,	   dinohunt,   ROT0,   "bootleg",  "Dinosaur Hunter (Chinese bootleg of Cadillacs and Dinosaurs)", GAME_SUPPORTS_SAVE )
+GAME( 1995, sfach,	sfzch,	  cps1_12MHz,	sfzch,	   cps1,       ROT0,   "Capcom",   "Street Fighter Alpha: Warriors' Dreams (CPS Changer, Publicity USA 950727)", GAME_SUPPORTS_SAVE )
+GAME( 1995, sfzbch,	sfzch,	  cps1_12MHz,	sfzch,	   cps1,       ROT0,   "Capcom",   "Street Fighter Zero (CPS Changer, Brazil 950727)", GAME_SUPPORTS_SAVE )
+GAME( 2000, ganbare,	0,	  ganbare,	ganbare,   ganbare,    ROT0,   "Capcom",   "Ganbare! Marine Kun (Japan 2K0411)", GAME_SUPPORTS_SAVE )
+GAME( 1995, pang3r1,	pang3,	  pang3,	pang3,	   pang3,      ROT0,   "Mitchell", "Pang! 3 (Euro 950511)", GAME_SUPPORTS_SAVE )
