@@ -52,7 +52,7 @@
 
 //**************************************************************************
 //  CONSTANTS
-//**************************************************************************/
+//*************************************************************************/
 
 const int MAX_GFX_ELEMENTS = 32;
 
@@ -83,13 +83,13 @@ enum machine_notification
 // output channels
 enum output_channel
 {
-    OUTPUT_CHANNEL_ERROR,
-    OUTPUT_CHANNEL_WARNING,
-    OUTPUT_CHANNEL_INFO,
-    OUTPUT_CHANNEL_DEBUG,
-    OUTPUT_CHANNEL_VERBOSE,
-    OUTPUT_CHANNEL_LOG,
-    OUTPUT_CHANNEL_COUNT
+	OUTPUT_CHANNEL_ERROR,
+	OUTPUT_CHANNEL_WARNING,
+	OUTPUT_CHANNEL_INFO,
+	OUTPUT_CHANNEL_DEBUG,
+	OUTPUT_CHANNEL_VERBOSE,
+	OUTPUT_CHANNEL_LOG,
+	OUTPUT_CHANNEL_COUNT
 };
 
 
@@ -98,10 +98,10 @@ const int DEBUG_FLAG_ENABLED		= 0x00000001;		// debugging is enabled
 const int DEBUG_FLAG_CALL_HOOK		= 0x00000002;		// CPU cores must call instruction hook
 const int DEBUG_FLAG_WPR_PROGRAM	= 0x00000010;		// watchpoints are enabled for PROGRAM memory reads
 const int DEBUG_FLAG_WPR_DATA		= 0x00000020;		// watchpoints are enabled for DATA memory reads
-const int DEBUG_FLAG_WPR_IO			= 0x00000040;		// watchpoints are enabled for IO memory reads
+const int DEBUG_FLAG_WPR_IO		= 0x00000040;		// watchpoints are enabled for IO memory reads
 const int DEBUG_FLAG_WPW_PROGRAM	= 0x00000100;		// watchpoints are enabled for PROGRAM memory writes
 const int DEBUG_FLAG_WPW_DATA		= 0x00000200;		// watchpoints are enabled for DATA memory writes
-const int DEBUG_FLAG_WPW_IO			= 0x00000400;		// watchpoints are enabled for IO memory writes
+const int DEBUG_FLAG_WPW_IO		= 0x00000400;		// watchpoints are enabled for IO memory writes
 const int DEBUG_FLAG_OSD_ENABLED	= 0x00001000;		// The OSD debugger is enabled
 
 
@@ -111,14 +111,14 @@ const int DEBUG_FLAG_OSD_ENABLED	= 0x00001000;		// The OSD debugger is enabled
 //**************************************************************************/
 
 // global allocation helpers
-#define auto_alloc(m, t)				pool_alloc(static_cast<running_machine *>(m)->m_respool, t)
+#define auto_alloc(m, t)			pool_alloc(static_cast<running_machine *>(m)->m_respool, t)
 #define auto_alloc_clear(m, t)			pool_alloc_clear(static_cast<running_machine *>(m)->m_respool, t)
 #define auto_alloc_array(m, t, c)		pool_alloc_array(static_cast<running_machine *>(m)->m_respool, t, c)
-#define auto_alloc_array_clear(m, t, c)	pool_alloc_array_clear(static_cast<running_machine *>(m)->m_respool, t, c)
-#define auto_free(m, v)					pool_free(static_cast<running_machine *>(m)->m_respool, v)
+#define auto_alloc_array_clear(m, t, c)		pool_alloc_array_clear(static_cast<running_machine *>(m)->m_respool, t, c)
+#define auto_free(m, v)				pool_free(static_cast<running_machine *>(m)->m_respool, v)
 
-#define auto_bitmap_alloc(m, w, h, f)	auto_alloc(m, bitmap_t(w, h, f))
-#define auto_strdup(m, s)				strcpy(auto_alloc_array(m, char, strlen(s) + 1), s)
+#define auto_bitmap_alloc(m, w, h, f)		auto_alloc(m, bitmap_t(w, h, f))
+#define auto_strdup(m, s)			strcpy(auto_alloc_array(m, char, strlen(s) + 1), s)
 
 
 
@@ -215,19 +215,19 @@ private:
 // this structure holds generic pointers that are commonly used
 struct generic_pointers
 {
-	generic_ptr				nvram;				// generic NVRAM
+	generic_ptr				nvram;			// generic NVRAM
 	UINT32					nvram_size;
-	generic_ptr				videoram;			// videoram
+	generic_ptr				videoram;		// videoram
 	UINT32					videoram_size;
-	generic_ptr				spriteram;			// spriteram
+	generic_ptr				spriteram;		// spriteram
 	UINT32					spriteram_size;
-	generic_ptr				spriteram2;			// secondary spriteram
+	generic_ptr				spriteram2;		// secondary spriteram
 	UINT32					spriteram2_size;
 	generic_ptr				buffered_spriteram;	// buffered spriteram
-	generic_ptr				buffered_spriteram2;// secondary buffered spriteram
-	generic_ptr				paletteram;			// palette RAM
+	generic_ptr				buffered_spriteram2;	// secondary buffered spriteram
+	generic_ptr				paletteram;		// palette RAM
 	generic_ptr				paletteram2;		// secondary palette RAM
-	bitmap_t *				tmpbitmap;			// temporary bitmap
+	bitmap_t *				tmpbitmap;		// temporary bitmap
 };
 
 
@@ -332,7 +332,7 @@ public:
 	// configuration data
 	const machine_config *	config;				// points to the constructed machine_config
 	const machine_config &	m_config;			// points to the constructed machine_config
-	ioport_list				m_portlist;			// points to a list of input port configurations
+	ioport_list				m_portlist;		// points to a list of input port configurations
 
 	// CPU information
 	cpu_device *			firstcpu;			// first CPU (allows for quick iteration via typenext)
@@ -342,18 +342,18 @@ public:
 	const game_driver &		m_game;				// points to the definition of the game machine
 
 	// video-related information
-	gfx_element *			gfx[MAX_GFX_ELEMENTS];// array of pointers to graphic sets (chars, sprites)
-	screen_device *			primary_screen;		// the primary screen device, or NULL if screenless
-	palette_t *				palette;			// global palette object
+	gfx_element			*gfx[MAX_GFX_ELEMENTS];		// array of pointers to graphic sets (chars, sprites)
+	screen_device *			primary_screen;			// the primary screen device, or NULL if screenless
+	palette_t *			palette;			// global palette object
 
 	// palette-related information
-	const pen_t *			pens;				// remapped palette pen numbers
+	const pen_t 			*pens;				// remapped palette pen numbers
 	colortable_t *			colortable;			// global colortable for remapping
 	pen_t *					shadow_table;		// table for looking up a shadowed pen
 	bitmap_t *				priority_bitmap;	// priority bitmap
 
 	// audio-related information
-	int						sample_rate;		// the digital audio sample rate
+	int					sample_rate;		// the digital audio sample rate
 
 	// debugger-related information
 	UINT32					debug_flags;		// the current debug flags
@@ -376,13 +376,13 @@ public:
 	romload_private *		romload_data;		// internal data from romload.c
 	sound_private *			sound_data;			// internal data from sound.c
 	input_private *			input_data;			// internal data from input.c
-	input_port_private *	input_port_data;	// internal data from inptport.c
+	input_port_private *	input_port_data;		// internal data from inptport.c
 	ui_input_private *		ui_input_data;		// internal data from uiinput.c
 	cheat_private *			cheat_data;			// internal data from cheat.c
 	debugcpu_private *		debugcpu_data;		// internal data from debugcpu.c
-	generic_machine_private *generic_machine_data; // internal data from machine/generic.c
-	generic_video_private *	generic_video_data;	// internal data from video/generic.c
-	generic_audio_private *	generic_audio_data;	// internal data from audio/generic.c
+	generic_machine_private 	*generic_machine_data;	// internal data from machine/generic.c
+	generic_video_private *	generic_video_data;		// internal data from video/generic.c
+	generic_audio_private *	generic_audio_data;		// internal data from audio/generic.c
 
 	debug_view_manager *	m_debug_view;		// internal data from debugvw.c
 
@@ -419,7 +419,7 @@ private:
 	logerror_callback_item *m_logerror_list;
 
 	device_scheduler		m_scheduler;		// scheduler object
-	core_options &			m_options;
+	core_options 			&m_options;
 
 	astring					m_context;			// context string
 	astring					m_basename;			// basename used for game-related paths

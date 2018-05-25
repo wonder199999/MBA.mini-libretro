@@ -24,54 +24,54 @@
 
 //**************************************************************************
 //    CONSTANTS
-//**************************************************************************
+//*************************************************************************/
 
 // return values from run_game
 enum
 {
-	MAMERR_NONE				= 0,	/* no error */
+	MAMERR_NONE		= 0,	/* no error */
 	MAMERR_FAILED_VALIDITY	= 1,	/* failed validity checks */
 	MAMERR_MISSING_FILES	= 2,	/* missing files */
-	MAMERR_FATALERROR		= 3,	/* some other fatal error */
-	MAMERR_DEVICE			= 4,	/* device initialization error (MESS-specific) */
-	MAMERR_NO_SUCH_GAME		= 5,	/* game was specified but doesn't exist */
+	MAMERR_FATALERROR	= 3,	/* some other fatal error */
+	MAMERR_DEVICE		= 4,	/* device initialization error (MESS-specific) */
+	MAMERR_NO_SUCH_GAME	= 5,	/* game was specified but doesn't exist */
 	MAMERR_INVALID_CONFIG	= 6,	/* some sort of error in configuration */
 	MAMERR_IDENT_NONROMS	= 7,	/* identified all non-ROM files */
 	MAMERR_IDENT_PARTIAL	= 8,	/* identified some files but not all */
-	MAMERR_IDENT_NONE		= 9		/* identified no files */
+	MAMERR_IDENT_NONE	= 9	/* identified no files */
 };
 
 
 // MESS vs. MAME abstractions
 #ifndef MESS
-#define APPNAME					"MAME"
-#define APPNAME_LOWER			"mame"
-#define CONFIGNAME				"mame"
-#define APPLONGNAME				"M.A.M.E."
-#define CAPGAMENOUN				"GAME"
-#define CAPSTARTGAMENOUN		"Game"
-#define GAMENOUN				"game"
-#define GAMESNOUN				"games"
-#define HISTORYNAME				"History"
-#define COPYRIGHT				"Copyright Nicola Salmoria\nand the MAME team\nhttp://mamedev.org"
+   #define APPNAME			"MAME"
+   #define APPNAME_LOWER		"mame"
+   #define CONFIGNAME			"mame"
+   #define APPLONGNAME			"M.A.M.E."
+   #define CAPGAMENOUN			"GAME"
+   #define CAPSTARTGAMENOUN		"Game"
+   #define GAMENOUN			"game"
+   #define GAMESNOUN			"games"
+   #define HISTORYNAME			"History"
+   #define COPYRIGHT			"Copyright Nicola Salmoria\nand the MAME team\nhttp://mamedev.org"
 #else
-#define APPNAME					"MESS"
-#define APPNAME_LOWER			"mess"
-#define CONFIGNAME				"mess"
-#define APPLONGNAME				"M.E.S.S."
-#define CAPGAMENOUN				"SYSTEM"
-#define CAPSTARTGAMENOUN		"System"
-#define GAMENOUN				"system"
-#define GAMESNOUN				"systems"
-#define HISTORYNAME				"System Info"
-#define COPYRIGHT				"Copyright the MESS team\nhttp://mess.org"
+   #define APPNAME			"MESS"
+   #define APPNAME_LOWER		"mess"
+   #define CONFIGNAME			"mess"
+   #define APPLONGNAME			"M.E.S.S."
+   #define CAPGAMENOUN			"SYSTEM"
+   #define CAPSTARTGAMENOUN		"System"
+   #define GAMENOUN			"system"
+   #define GAMESNOUN			"systems"
+   #define HISTORYNAME			"System Info"
+   #define COPYRIGHT			"Copyright the MESS team\nhttp://mess.org"
 #endif
 
 
 
 //**************************************************************************
 //    TYPE DEFINITIONS
-//**************************************************************************
+//*************************************************************************/
 
 // output channel callback
 typedef void (*output_callback_func)(void *param, const char *format, va_list argptr);
@@ -80,7 +80,7 @@ typedef void (*output_callback_func)(void *param, const char *format, va_list ar
 
 //**************************************************************************
 //  GLOBAL VARIABLES
-//**************************************************************************
+//*************************************************************************/
 
 extern const char mame_disclaimer[];
 

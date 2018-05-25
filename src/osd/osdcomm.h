@@ -36,7 +36,7 @@
     IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
     POSSIBILITY OF SUCH DAMAGE.
 
-***************************************************************************/
+**************************************************************************/
 
 #pragma once
 
@@ -60,39 +60,39 @@
 
 /* Some optimizations/warnings cleanups for GCC */
 #if defined(__GNUC__) && (__GNUC__ >= 3)
-#define ATTR_UNUSED				__attribute__((__unused__))
-#define ATTR_NORETURN			__attribute__((noreturn))
-#define ATTR_PRINTF(x,y)		__attribute__((format(printf, x, y)))
-#define ATTR_MALLOC				__attribute__((malloc))
-#define ATTR_PURE				__attribute__((pure))
-#define ATTR_CONST				__attribute__((const))
-#define ATTR_FORCE_INLINE		__attribute__((always_inline))
-#define ATTR_NONNULL(...)		__attribute__((nonnull(__VA_ARGS__)))
-#define UNEXPECTED(exp)			__builtin_expect(!!(exp), 0)
-#define EXPECTED(exp)			__builtin_expect(!!(exp), 1)
-#define RESTRICT				__restrict__
-#define SETJMP_GNUC_PROTECT()	(void)__builtin_return_address(1)
+	#define ATTR_UNUSED			__attribute__((__unused__))
+	#define ATTR_NORETURN			__attribute__((noreturn))
+	#define ATTR_PRINTF(x,y)		__attribute__((format(printf, x, y)))
+	#define ATTR_MALLOC			__attribute__((malloc))
+	#define ATTR_PURE			__attribute__((pure))
+	#define ATTR_CONST			__attribute__((const))
+	#define ATTR_FORCE_INLINE		__attribute__((always_inline))
+	#define ATTR_NONNULL(...)		__attribute__((nonnull(__VA_ARGS__)))
+	#define UNEXPECTED(exp)			__builtin_expect(!!(exp), 0)
+	#define EXPECTED(exp)			__builtin_expect(!!(exp), 1)
+	#define RESTRICT			__restrict__
+	#define SETJMP_GNUC_PROTECT()		(void)__builtin_return_address(1)
 #else
-#define ATTR_UNUSED
-#define ATTR_NORETURN
-#define ATTR_PRINTF(x,y)
-#define ATTR_MALLOC
-#define ATTR_PURE
-#define ATTR_CONST
-#define ATTR_FORCE_INLINE
-#define ATTR_NONNULL(...)
-#define UNEXPECTED(exp)			(exp)
-#define EXPECTED(exp)			(exp)
-#define RESTRICT
-#define SETJMP_GNUC_PROTECT()	do {} while (0)
+	#define ATTR_UNUSED
+	#define ATTR_NORETURN
+	#define ATTR_PRINTF(x,y)
+	#define ATTR_MALLOC
+	#define ATTR_PURE
+	#define ATTR_CONST
+	#define ATTR_FORCE_INLINE
+	#define ATTR_NONNULL(...)
+	#define UNEXPECTED(exp)			(exp)
+	#define EXPECTED(exp)			(exp)
+	#define RESTRICT
+	#define SETJMP_GNUC_PROTECT()	do {} while (0)
 #endif
 
 
 /* And some MSVC optimizations/warnings */
 #if defined(_MSC_VER) && (_MSC_VER >= 1200)
-#define DECL_NORETURN			__declspec(noreturn)
+	#define DECL_NORETURN			__declspec(noreturn)
 #else
-#define DECL_NORETURN
+	#define DECL_NORETURN
 #endif
 
 
@@ -107,24 +107,24 @@
 #ifndef OSD_TYPES_DEFINED
 
 /* 8-bit values */
-typedef unsigned char						UINT8;
-typedef signed char 						INT8;
+typedef unsigned char			UINT8;
+typedef signed char 			INT8;
 
 /* 16-bit values */
-typedef unsigned short						UINT16;
-typedef signed short						INT16;
+typedef unsigned short			UINT16;
+typedef signed short			INT16;
 
 /* 32-bit values */
 #ifndef _WINDOWS_H
-typedef unsigned int						UINT32;
-typedef signed int							INT32;
+typedef unsigned int			UINT32;
+typedef signed int			INT32;
 #endif
 
 /* 64-bit values */
 #ifndef _WINDOWS_H
 #ifdef _MSC_VER
-typedef signed __int64						INT64;
-typedef unsigned __int64					UINT64;
+typedef signed __int64				INT64;
+typedef unsigned __int64			UINT64;
 #else
 __extension__ typedef unsigned long long	UINT64;
 __extension__ typedef signed long long		INT64;
@@ -141,11 +141,11 @@ __extension__ typedef signed long long		INT64;
 
 /* Ensure that TRUE/FALSE are defined */
 #ifndef TRUE
-#define TRUE    			1
+#define TRUE    	1
 #endif
 
 #ifndef FALSE
-#define FALSE				0
+#define FALSE		0
 #endif
 
 
@@ -156,10 +156,10 @@ __extension__ typedef signed long long		INT64;
 
 /* Standard MIN/MAX macros */
 #ifndef MIN
-#define MIN(x,y)			((x) < (y) ? (x) : (y))
+#define MIN(x,y)		((x) < (y) ? (x) : (y))
 #endif
 #ifndef MAX
-#define MAX(x,y)			((x) > (y) ? (x) : (y))
+#define MAX(x,y)		((x) > (y) ? (x) : (y))
 #endif
 
 
@@ -193,10 +193,14 @@ __extension__ typedef signed long long		INT64;
 
 /* Macros for normalizing data into big or little endian formats */
 #define FLIPENDIAN_INT16(x)	(((((UINT16) (x)) >> 8) | ((x) << 8)) & 0xffff)
+
+
 #define FLIPENDIAN_INT32(x)	((((UINT32) (x)) << 24) | (((UINT32) (x)) >> 24) | \
 	(( ((UINT32) (x)) & 0x0000ff00) << 8) | (( ((UINT32) (x)) & 0x00ff0000) >> 8))
+
+
 #define FLIPENDIAN_INT64(x)	\
-	(												\
+	(			\
 		(((((UINT64) (x)) >> 56) & ((UINT64) 0xFF)) <<  0)	|	\
 		(((((UINT64) (x)) >> 48) & ((UINT64) 0xFF)) <<  8)	|	\
 		(((((UINT64) (x)) >> 40) & ((UINT64) 0xFF)) << 16)	|	\
