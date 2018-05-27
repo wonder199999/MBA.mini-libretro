@@ -1235,7 +1235,7 @@ static const struct CPS1config cps1_config_table[]=
 	{"knights",    CPS_B_21_BT4, mapper_KR63B,  0x36, 0, 0x34 },
 	{"knightsu",   CPS_B_21_BT4, mapper_KR63B,  0x36, 0, 0x34 },
 	{"knightsj",   CPS_B_21_BT4, mapper_KR63B,  0x36, 0, 0x34 },	// PAL could be different if B-Board is 90629B
-/*	{"knightsb",   CPS_B_21_BT4, mapper_KR63B,  0x36, 0, 0x34 }, */	// wrong, knightsb bootleg doesn't use the KR63B PAL
+	{"knightsb",   CPS_B_21_BT4, mapper_KR63B },
 
 	{"msword",     CPS_B_13,     mapper_MS24B },
 	{"mswordr1",   CPS_B_13,     mapper_MS24B },
@@ -1266,6 +1266,9 @@ static const struct CPS1config cps1_config_table[]=
 	{"pang3n",     CPS_B_21_DEF, mapper_pang3 },	/* EEPROM port is among the CPS registers (handled by DRIVER_INIT) */	// should use one of these three CP1B1F,CP1B8K,CP1B9KA still not dumped
 	{"pang3j",     CPS_B_21_DEF, mapper_pang3 },	/* EEPROM port is among the CPS registers (handled by DRIVER_INIT) */	// should use one of these three CP1B1F,CP1B8K,CP1B9KA still not dumped
 	{"pang3r1",    CPS_B_21_DEF, mapper_pang3 },
+	{"pang3b",     CPS_B_21_DEF, mapper_pang3 },
+	{"pang3b2",    CPS_B_04,     mapper_pang3 },
+	{"pang3b3",    CPS_B_04,     mapper_pang3 },
 
 	{"cworld2j",   CPS_B_21_BT6, mapper_Q522B,  0x36, 0, 0x34 },	/* (ports 36, 34 probably leftover input code from another game) */
 
@@ -1312,7 +1315,6 @@ static const struct CPS1config cps1_config_table[]=
 	{"sf2m3",      HACK_B_1,     mapper_S9263B, 0x00, 0, 0, 2 },
 	{"sf2ceuab3",  HACK_B_1,     mapper_S9263B, 0x00, 0, 0, 2 },
 	{"sf2amf",     CPS_B_21_DEF, mapper_S9263B, 0x36, 0, 0, 1 },
-
 
 	{"sf2hf",      CPS_B_21_DEF, mapper_S9263B, 0x36 },
 	{"sf2hfu",     CPS_B_21_DEF, mapper_S9263B, 0x36 },

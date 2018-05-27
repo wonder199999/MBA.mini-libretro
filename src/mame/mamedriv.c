@@ -244,6 +244,9 @@ const game_driver *const drivers[] =
 	DRIVER( sfzbch )	/* 27/07/1995 (c) CPS Changer version - Street Fighter Zero (Brazil) */
 	DRIVER( ganbare )	/* 11/04/2000 (c) Ganbare Marin-kun (Marine 2K0411, JPN) */
 	DRIVER( pang3r1 )	/* 11/05/1995 (c) 1995 Mitchell (Euro) */
+	DRIVER( pang3b )	/* bootleg set 1, based on Euro 950511 */
+	DRIVER( pang3b2 )	/* bootleg set 2, based on Euro 950511 */
+	DRIVER( pang3b3 )	/* bootleg set 3, based on Euro 950601 */
 
 
 	/* ************************* */
