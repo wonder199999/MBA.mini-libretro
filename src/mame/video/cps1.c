@@ -1183,6 +1183,7 @@ static const struct CPS1config cps1_config_table[]=
 	/* name        CPSB          gfx mapper	    in2   in3  out2  kludge */
 	{"1941",       CPS_B_05,     mapper_YI24B },
 	{"1941j",      CPS_B_05,     mapper_YI24B },	// PAL used could be YI22B
+	{"1941u",      CPS_B_05,     mapper_YI24B },
 
 	{"dino",       CPS_B_21_QS2, mapper_CD63B },	/* layer enable never used */
 	{"dinou",      CPS_B_21_QS2, mapper_CD63B },	/* layer enable never used */
