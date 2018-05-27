@@ -9308,3 +9308,4 @@ GAME( 1995, pang3b,	pang3,	  pang3,	pang3n,	   pang3n,     ROT0,   "bootleg",  "
 GAME( 1995, pang3b2,	pang3,	  pang3,	pang3,	   pang3,      ROT0,   "bootleg",  "Pang! 3 (bootleg set 2, Euro 950511)", GAME_SUPPORTS_SAVE )
 GAME( 1995, pang3b3,	pang3,	  pang3,	pang3,	   pang3,      ROT0,   "bootleg",  "Pang! 3 (bootleg set 3, Euro 950601)", GAME_SUPPORTS_SAVE )
 GAME( 1990, 1941u,	1941,	  cps1_10MHz,	1941,	   cps1,       ROT270, "Capcom",   "1941: Counter Attack (USA 900227)", GAME_SUPPORTS_SAVE )
+GAME( 1989, area88r,	unsquad,  cps1_12MHz,	unsquad,   cps1,       ROT0,   "Capcom / Daipro",   "Area 88 (Japan Resale Ver.)", GAME_SUPPORTS_SAVE )

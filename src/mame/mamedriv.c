@@ -248,6 +248,7 @@ const game_driver *const drivers[] =
 	DRIVER( pang3b2 )	/* bootleg set 2, based on Euro 950511 */
 	DRIVER( pang3b3 )	/* bootleg set 3, based on Euro 950601 */
 	DRIVER( 1941u )		/* 27/02/1990 (c) 1990 (USA) */
+	DRIVER( area88r )	/* Area 88 (Japan Resale Ver.) */
 
 
 	/* ************************* */
