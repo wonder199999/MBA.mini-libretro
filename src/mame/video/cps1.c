@@ -380,14 +380,12 @@ The games seem to use them to mark platforms, kill zones and no-go areas.
 #define HACK_B_1      	  -1,     -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,	0x14, {0x12, 0x10, 0x0e, 0x0c}, 0x0a, {0x0e, 0x0e, 0x0e, 0x30, 0x30}
 
 
-/*
-CPS_B_21_DEF is CPS-B-21 at default settings (no battery)
-CPS_B_21_BTx are various battery configurations
-CPS_B_21_QSx are various battery configurations in Q-Sound games
-*/
+/*	CPS_B_21_DEF is CPS-B-21 at default settings (no battery)
+	CPS_B_21_BTx are various battery configurations
+	CPS_B_21_QSx are various battery configurations in Q-Sound games	*/
 
-/* LWCHR and LW621 are equivalent as far as the game is concerned, though the
-   equations are different */
+/*	LWCHR and LW621 are equivalent as far as the game is concerned, though the
+   	equations are different		*/
 
 #define mapper_LWCHR	{ 0x8000, 0x8000, 0, 0 }, mapper_LWCHR_table
 static const struct gfx_range mapper_LWCHR_table[] =
@@ -439,7 +437,6 @@ static const struct gfx_range mapper_LW621_table[] =
 	{ GFXTYPE_SCROLL3, 0x00000, 0x1ffff, 1 },
 	{ 0 }
 };
-
 
 // DM620, DM22A and DAM63B are equivalent as far as the game is concerned, though
 // the equations are quite different
@@ -1162,13 +1159,11 @@ static const struct gfx_range mapper_sfzch_table[] =
 	{ 0 }
 };
 
+/*	I don't know if CPS2 ROM boards use PALs as well; since all games seem to be
+	well behaved, I'll just assume that there is no strong checking of gfx type.
+	(sprites are not listed here because they are addressed linearly by the CPS2
+	sprite code)	*/
 
-/*
-  I don't know if CPS2 ROM boards use PALs as well; since all games seem to be
-  well behaved, I'll just assume that there is no strong checking of gfx type.
-  (sprites are not listed here because they are addressed linearly by the CPS2
-  sprite code)
- */
 #define mapper_cps2	{ 0x20000, 0x20000, 0, 0 }, mapper_cps2_table
 static const struct gfx_range mapper_cps2_table[] =
 {
@@ -1236,7 +1231,6 @@ static const struct CPS1config cps1_config_table[]=
 	{"knights",    CPS_B_21_BT4, mapper_KR63B,  0x36, 0, 0x34 },
 	{"knightsu",   CPS_B_21_BT4, mapper_KR63B,  0x36, 0, 0x34 },
 	{"knightsj",   CPS_B_21_BT4, mapper_KR63B,  0x36, 0, 0x34 },	// PAL could be different if B-Board is 90629B
-	{"knightsb",   CPS_B_21_BT4, mapper_KR63B },
 
 	{"msword",     CPS_B_13,     mapper_MS24B },
 	{"mswordr1",   CPS_B_13,     mapper_MS24B },
@@ -1314,8 +1308,8 @@ static const struct CPS1config cps1_config_table[]=
 	{"sf2mdt",     CPS_B_21_DEF, mapper_S9263B, 0x36, 0, 0, 1 },
 	{"sf2mdta",    CPS_B_21_DEF, mapper_S9263B, 0x36, 0, 0, 1 },
 	{"sf2m3",      HACK_B_1,     mapper_S9263B, 0x00, 0, 0, 2 },
-	{"sf2ceuab3",  HACK_B_1,     mapper_S9263B, 0x00, 0, 0, 2 },
 	{"sf2amf",     CPS_B_21_DEF, mapper_S9263B, 0x36, 0, 0, 1 },
+	{"sf2ceuab3",  HACK_B_1,     mapper_S9263B, 0x00, 0, 0, 2 },
 
 	{"sf2hf",      CPS_B_21_DEF, mapper_S9263B, 0x36 },
 	{"sf2hfu",     CPS_B_21_DEF, mapper_S9263B, 0x36 },
@@ -1347,10 +1341,11 @@ static const struct CPS1config cps1_config_table[]=
 	{"3wondersu",  CPS_B_21_BT1, mapper_RT24B },
 	{"wonder3",    CPS_B_21_BT1, mapper_RT22B },	// equivalent to RT24B
 	{"3wondersh",  CPS_B_02    , mapper_RT24B },	/* Not 100% sure of the CPS B-ID */
+	{"3wondersr1", CPS_B_21_BT1, mapper_RT24B },
 
 	{"unsquad",    CPS_B_11,     mapper_AR24B },
 	{"area88",     CPS_B_11,     mapper_AR22B },	// equivalent to AR24B
-	{"area88r",    CPS_B_21_DEF, mapper_AR22B },    // wrong, this set uses ARA63B, still not dumped
+	{"area88r",    CPS_B_21_DEF, mapper_AR22B },
 
 	{"varth",      CPS_B_04,     mapper_VA63B },	/* CPSB test has been patched out (60=0008) register is also written to, possibly leftover from development */	// wrong, this set uses VA24B, still non dumped
 	{"varthr1",    CPS_B_04,     mapper_VA63B },	/* CPSB test has been patched out (60=0008) register is also written to, possibly leftover from development */	// wrong, this set uses VA24B, still non dumped
@@ -1369,12 +1364,12 @@ static const struct CPS1config cps1_config_table[]=
 
 	/* New added */
 	{"sfzch",      CPS_B_21_DEF, mapper_sfzch },
+	{"sfach",      CPS_B_21_DEF, mapper_sfzch },	/* wrong ??? */
+	{"sfzbch",     CPS_B_21_DEF, mapper_sfzch },	/* wrong ??? */
 	{"wofch",      CPS_B_21_DEF, mapper_TK263B },
 	{"wofchdx",    CPS_B_21_DEF, mapper_TK263B },
 	{"wofhfh",     CPS_B_21_DEF, mapper_TK263B, 0x36 },
 	{"wofches",    CPS_B_21_DEF, mapper_TK263B },
-	{"sfach",      CPS_B_21_DEF, mapper_sfzch },	/* wrong ??? */
-	{"sfzbch",     CPS_B_21_DEF, mapper_sfzch },	/* wrong ??? */
 	{"ganbare",    CPS_B_21_DEF, mapper_sfzch },
 
 
@@ -1610,20 +1605,13 @@ WRITE16_HANDLER( cps1_cps_b_w )
 		}
 	}
 #ifdef MAME_DEBUG
-	if (offset != state->game_config->cpsb_addr / 2 &&	// only varth writes here
-			offset != state->game_config->mult_factor1 / 2 &&
-			offset != state->game_config->mult_factor2 / 2 &&
-			offset != state->game_config->layer_control / 2 &&
-			offset != state->game_config->unknown1 / 2 &&
-			offset != state->game_config->unknown2 / 2 &&
-			offset != state->game_config->unknown3 / 2 &&
-			offset != state->game_config->priority[0] / 2 &&
-			offset != state->game_config->priority[1] / 2 &&
-			offset != state->game_config->priority[2] / 2 &&
-			offset != state->game_config->priority[3] / 2 &&
-			offset != state->game_config->palette_control / 2 &&
-			offset != state->game_config->out2_addr / 2 &&
-			!state->game_config->bootleg_kludge)
+	if ( offset != state->game_config->cpsb_addr / 2 && /* only varth writes here */ offset != state->game_config->mult_factor1 / 2 &&
+			offset != state->game_config->mult_factor2 / 2 && offset != state->game_config->layer_control / 2 &&
+			offset != state->game_config->unknown1 / 2 && offset != state->game_config->unknown2 / 2 &&
+			offset != state->game_config->unknown3 / 2 && offset != state->game_config->priority[0] / 2 &&
+			offset != state->game_config->priority[1] / 2 && offset != state->game_config->priority[2] / 2 &&
+			offset != state->game_config->priority[3] / 2 && offset != state->game_config->palette_control / 2 &&
+			offset != state->game_config->out2_addr / 2 && !state->game_config->bootleg_kludge )
 		popmessage("CPS-B write %04x to port %02x contact MAMEDEV", data, offset * 2);
 #endif
 }
@@ -1719,7 +1707,6 @@ DRIVER_INIT( cps1 )
 	state->pri_ctrl = 0;
 	state->objram_bank = 0;
 }
-
 
 
 DRIVER_INIT( cps2_video )

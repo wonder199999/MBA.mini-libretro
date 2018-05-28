@@ -3112,11 +3112,13 @@ static MACHINE_DRIVER_START( cps1_10MHz )
 
 	/* video hardware */
 	MDRV_SCREEN_ADD("screen", RASTER)
-	MDRV_SCREEN_REFRESH_RATE(59.637405)					/* verified on one of the input gates of the 74ls08@4J on GNG romboard 88620-b-2 */
-	MDRV_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
+//	MDRV_SCREEN_REFRESH_RATE(59.637405)					/* verified on one of the input gates of the 74ls08@4J on GNG romboard 88620-b-2 */
+//	MDRV_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MDRV_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
-	MDRV_SCREEN_SIZE(64*8, 32*8)
-	MDRV_SCREEN_VISIBLE_AREA(8*8, (64-8)*8-1, 2*8, 30*8-1 )
+	MDRV_SCREEN_RAW_PARAMS(CPS_PIXEL_CLOCK, CPS_HTOTAL, CPS_HBEND, CPS_HBSTART, CPS_VTOTAL, CPS_VBEND, CPS_VBSTART)
+//	MDRV_SCREEN_SIZE(64*8, 32*8)
+//	MDRV_SCREEN_VISIBLE_AREA(8*8, (64-8)*8-1, 2*8, 30*8-1 )
+
 	MDRV_VIDEO_UPDATE(cps1)
 	MDRV_VIDEO_EOF(cps1)
 	MDRV_GFXDECODE(cps1)
@@ -9309,3 +9311,4 @@ GAME( 1995, pang3b2,	pang3,	  pang3,	pang3,	   pang3,      ROT0,   "bootleg",  "
 GAME( 1995, pang3b3,	pang3,	  pang3,	pang3,	   pang3,      ROT0,   "bootleg",  "Pang! 3 (bootleg set 3, Euro 950601)", GAME_SUPPORTS_SAVE )
 GAME( 1990, 1941u,	1941,	  cps1_10MHz,	1941,	   cps1,       ROT270, "Capcom",   "1941: Counter Attack (USA 900227)", GAME_SUPPORTS_SAVE )
 GAME( 1989, area88r,	unsquad,  cps1_12MHz,	unsquad,   cps1,       ROT0,   "Capcom / Daipro",   "Area 88 (Japan Resale Ver.)", GAME_SUPPORTS_SAVE )
+GAME( 1991, 3wondersr1,	3wonders, cps1_10MHz,	3wonders,  cps1,       ROT0,   "Capcom", "Three Wonders (World 910513)", GAME_SUPPORTS_SAVE )

@@ -1156,8 +1156,8 @@ static const gfx_layout cps1_layout8x8_2 =
 	64 * 8
 };
 
-static GFXLAYOUT_RAW( layout16x16, 4, 16, 16, 8 * 8, 128 * 8 )
-static GFXLAYOUT_RAW( layout32x32, 4, 32, 32, 16 * 8, 512 * 8 )
+static GFXLAYOUT_RAW( layout16x16, 4, 16, 16, 8*8,  128*8 )
+static GFXLAYOUT_RAW( layout32x32, 4, 32, 32, 16*8, 512*8 )
 
 static GFXDECODE_START( cps2 )
 	GFXDECODE_ENTRY( "gfx", 0, cps1_layout8x8,   0, 0x100 )
@@ -1186,7 +1186,6 @@ static MACHINE_START( cps2 )
 		memory_configure_bank(machine, "bank1", 0, (QSOUND_SIZE - 0x10000) / 0x4000, memory_region(machine, "audiocpu") + 0x10000, 0x4000);
 }
 
-
 static MACHINE_DRIVER_START( cps2 )
 	/* driver data */
 	MDRV_DRIVER_DATA(cps_state)
@@ -1194,34 +1193,27 @@ static MACHINE_DRIVER_START( cps2 )
 	/* basic machine hardware */
 	MDRV_CPU_ADD("maincpu", M68000, XTAL_16MHz)
 	MDRV_CPU_PROGRAM_MAP(cps2_map)
-	MDRV_CPU_VBLANK_INT_HACK(cps2_interrupt, 259)	// 262  /* ??? interrupts per frame */
+//	MDRV_CPU_VBLANK_INT_HACK(cps2_interrupt, 259)	// 262  /* ??? interrupts per frame */
+	MDRV_CPU_VBLANK_INT_HACK(cps2_interrupt, 262)	// 262  /* ??? interrupts per frame */
 	MDRV_CPU_ADD("audiocpu", Z80, 8000000)
 	MDRV_CPU_PROGRAM_MAP(qsound_sub_map)
-	MDRV_CPU_PERIODIC_INT(irq0_line_hold, 251)	/* 251 is good (see 'mercy mercy mercy'section of sgemf attract mode for accurate sound sync */
+//	MDRV_CPU_PERIODIC_INT(irq0_line_hold, 251)	/* 251 is good (see 'mercy mercy mercy'section of sgemf attract mode for accurate sound sync */
+	MDRV_CPU_PERIODIC_INT(irq0_line_hold, 250)	/* 251 is good (see 'mercy mercy mercy'section of sgemf attract mode for accurate sound sync */
 	MDRV_MACHINE_START(cps2)
 
 	MDRV_EEPROM_ADD("eeprom", cps2_eeprom_interface)
 
 	/* video hardware */
-	MDRV_VIDEO_ATTRIBUTES(VIDEO_UPDATE_BEFORE_VBLANK)
 	MDRV_SCREEN_ADD("screen", RASTER)
+	MDRV_VIDEO_ATTRIBUTES(VIDEO_UPDATE_BEFORE_VBLANK)
 	MDRV_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
-	MDRV_SCREEN_RAW_PARAMS(XTAL_8MHz, 518, 64, 448, 259, 16, 240)
-/*	Measured clocks:
-		V = 59.6376Hz
-		H = 15.4445kHz
-		H/V = 258.973 ~ 259 lines
-
-	Possible video clocks:
-		60MHz / 15.4445kHz = 3884.878 / 8 = 485.610 -> unlikely
-		8MHz / 15.4445kHz =  517.983 ~ 518 -> likely
-		16MHz -> same as 8 but with a /2 divider; also a possibility	*/
-
+//	MDRV_SCREEN_RAW_PARAMS(XTAL_8MHz, 518, 64, 448, 259, 16, 240)
+	MDRV_SCREEN_RAW_PARAMS(CPS_PIXEL_CLOCK, CPS_HTOTAL, CPS_HBEND, CPS_HBSTART, CPS_VTOTAL, CPS_VBEND, CPS_VBSTART)
+	MDRV_VIDEO_UPDATE(cps1)
+	MDRV_VIDEO_EOF(cps1)
 	MDRV_GFXDECODE(cps2)
 	MDRV_PALETTE_LENGTH(0xc00)
 	MDRV_VIDEO_START(cps2)
-	MDRV_VIDEO_EOF(cps1)
-	MDRV_VIDEO_UPDATE(cps1)
 
 	/* sound hardware */
 	MDRV_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
@@ -7801,7 +7793,7 @@ static DRIVER_INIT( ssf2tb )
 	DRIVER_INIT_CALL(cps2);
 
 	state->cps2networkpresent = 0;
-	/* we don't emulate the network board, so don't say it's present for now,
+	/* We don't emulate the network board, so don't say it's present for now,
 	   otherwise the game will attempt to boot in tournament mode and fail	*/
 
 	/* state->cps2networkpresent = 1; */
@@ -7838,8 +7830,8 @@ static DRIVER_INIT( gigaman2 )
 
 	UINT16 *rom = (UINT16 *)memory_region(machine, "maincpu");
 	UINT16 *gfxrom = (UINT16 *)memory_region(machine, "gfx");
-	int length = memory_region_length(machine, "maincpu");
-	int gfx_len = memory_region_length(machine, "gfx");
+	INT32 length = memory_region_length(machine, "maincpu");
+	INT32 gfx_len = memory_region_length(machine, "gfx");
 
 	gigaman2_gfx_reorder(machine, gfx_len, gfxrom);
 
@@ -9070,7 +9062,6 @@ ROM_START( mmatrixd )
 	ROM_LOAD16_WORD_SWAP( "mmx.11m",   0x000000, 0x400000, CRC(4180b39f) SHA1(cabb1c358eae1bb6cfed07f5b92e4acd38650667) )
 	ROM_LOAD16_WORD_SWAP( "mmx.12m",   0x400000, 0x400000, CRC(95e22a59) SHA1(b3431d170c0a1a0d826ad0af21300b9180e3f114) )
 ROM_END
-
 
 
 GAME( 1993, ssf2ud,   ssf2,     dead_cps2, cps2_2p6b, cps2,    ROT0,   "bootleg", "Super Street Fighter II: The New Challengers (USA 930911 Phoenix Edition) (bootleg)", GAME_SUPPORTS_SAVE )

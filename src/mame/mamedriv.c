@@ -26,8 +26,8 @@
 
 /* step 2: define the drivers[] array */
 #undef DRIVER
-
 #define DRIVER(NAME)	&GAME_NAME(NAME),
+
 const game_driver *const drivers[] =
 {
 #include "mamedriv.c"
@@ -249,7 +249,7 @@ const game_driver *const drivers[] =
 	DRIVER( pang3b3 )	/* bootleg set 3, based on Euro 950601 */
 	DRIVER( 1941u )		/* 27/02/1990 (c) 1990 (USA) */
 	DRIVER( area88r )	/* Area 88 (Japan Resale Ver.) */
-
+	DRIVER( 3wondersr1 )	/* 13/05/1991 (c) Three Wonders (World) */
 
 	/* ************************* */
 	/*  Part 3 - Capcom System 2 */
