@@ -13,8 +13,9 @@ Support the following :
 / *  Capcom System 1 * /
 / ******************** /
 
-*1941:Counter Attack(World)	    - N: 1941,   P: Itself,  S: 0.139
-	1941:Counter Attack(Japan)  - N: 1941j,  P: 1941,    S: 0.139
+*1941:Counter Attack(World)			- N: 1941,   P: Itself,  S: 0.139
+	1941:Counter Attack(Japan)		- N: 1941j,  P: 1941,    S: 0.139
+	+1941:Counter Attack(USA 900227)	- N: 1941u,  P: 1941,    S: FBA02.97.38
 
 *Adventure Quiz Capcom World 2(Japan 920611) - N: cworld2j,  P: Itself,  S: 0.139
 
@@ -38,7 +39,6 @@ Support the following :
 	U.S Navy(Japan 901012)		 	- N: cawingj,   P: cawing,  S: 0.139
 	+Carrier Air Wing(bootleg with 2xYM2203 + 2xMSM205, set 1)	 - N: cawingbl,  P: cawing,  S: FBA02.97.38
 	+Carrier Air Wing(bootleg with 2xYM2203 + 2xMSM205, set 2)	 - N: cawingb2,  P: cawing,  S: FBA02.97.38
-
 
 *Dynasty Wars(USA, set1)	 	- N: dynwar,   P: Itself,  S: 0.139
 	Dynasty Wars(USA, set2)	 	- N: dynwaru,  P: dynwar,  S: 0.139
@@ -97,9 +97,13 @@ Support the following :
 *Nemo(World 901130)		- N: nemo,   P: Itself,  S: 0.139
 	Nemo(Japan 901120)	- N: nemoj,  P: nemo,    S: 0.139
 
-*Pang! 3(Euro 950601)						- N: pang3,   P: Itself,  S: 0.139
-	Pang! 3(Euro 950511, not encrypted)			- N: pang3n,  P: pang3,   S: 0.139
-	Pang! 3 : Kaitou Tachi no Karei na Gogo(Japan 950511)	- N: pang3j,  P: pang3,   S: 0.139
+*Pang! 3(Euro 950601)						- N: pang3,    P: Itself,  S: 0.139
+	Pang! 3(Euro 950511, not encrypted)			- N: pang3n,   P: pang3,   S: 0.139
+	Pang! 3 : Kaitou Tachi no Karei na Gogo(Japan 950511)	- N: pang3j,   P: pang3,   S: 0.139
+	+Pang! 3 (Euro 950511)					- N: pang3r1,  P: pang3,   S: FBA02.97.38
+	+Pang! 3 (bootleg set 1, Euro 950511)			- N: pang3b,   P: pang3,   S: FBA02.97.38
+	+Pang! 3 (bootleg set 2, Euro 950511)			- N: pang3b2,  P: pang3,   S: FBA02.97.38
+	+Pang! 3 (bootleg set 3, Euro 950601)			- N: pang3b3,  P: pang3,   S: FBA02.97.38
 
 *Pnickies(Japan 940608)		- N: pnickj,  P: Itself,  S: 0.139
 
@@ -178,8 +182,9 @@ Support the following :
 	Three Wonders(USA 910520)	- N: 3wondersu,  P: 3wonders,  S: 0.139
 	Wonders 3(Japan 910520)		- N: wonder3,    P: 3wonders,  S: 0.139
 
-*U.N. Squadron(USA)		- N: unsquad,  P: Itself,   S: 0.139
-	Area 88(Japan)		- N: area88,   P: unsquad,  S: 0.139
+*U.N. Squadron(USA)			- N: unsquad,  P: Itself,   S: 0.139
+	Area 88(Japan)			- N: area88,   P: unsquad,  S: 0.139
+	+Area 88(Japan Resale Ver.)	- N: area88r,  P: unsquad,  S: FBA02.97.38
 
 *Varth: Operation Thunderstorm(World 920714)		- N: varth,    P: Itself,  S: 0.139
 	Varth: Operation Thunderstorm(Japan 920714)	- N: varthj,   P: varth,   S: 0.139
