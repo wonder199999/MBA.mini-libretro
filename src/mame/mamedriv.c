@@ -250,6 +250,8 @@ const game_driver *const drivers[] =
 	DRIVER( 1941u )		/* 27/02/1990 (c) 1990 (USA) */
 	DRIVER( area88r )	/* Area 88 (Japan Resale Ver.) */
 	DRIVER( 3wondersr1 )	/* 13/05/1991 (c) Three Wonders (World) */
+	DRIVER( ffighta )	/* Final Fight (World, set 2) */
+
 
 	/* ************************* */
 	/*  Part 3 - Capcom System 2 */

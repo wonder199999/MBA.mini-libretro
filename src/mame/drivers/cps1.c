@@ -9312,3 +9312,4 @@ GAME( 1995, pang3b3,	pang3,	  pang3,	pang3,	   pang3,      ROT0,   "bootleg",  "
 GAME( 1990, 1941u,	1941,	  cps1_10MHz,	1941,	   cps1,       ROT270, "Capcom",   "1941: Counter Attack (USA 900227)", GAME_SUPPORTS_SAVE )
 GAME( 1989, area88r,	unsquad,  cps1_12MHz,	unsquad,   cps1,       ROT0,   "Capcom / Daipro",   "Area 88 (Japan Resale Ver.)", GAME_SUPPORTS_SAVE )
 GAME( 1991, 3wondersr1,	3wonders, cps1_10MHz,	3wonders,  cps1,       ROT0,   "Capcom", "Three Wonders (World 910513)", GAME_SUPPORTS_SAVE )
+GAME( 1989, ffighta,	ffight,	  cps1_10MHz,	ffight,	   cps1,       ROT0,   "Capcom", "Final Fight (World, set 2)", GAME_SUPPORTS_SAVE )

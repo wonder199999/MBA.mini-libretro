@@ -116,7 +116,7 @@ struct CPS1config
 {
 	const char *name;	/* game driver name */
 
-	/* Some games INT32errogate a couple of registers on bootup. */
+	/* Some games interrogate a couple of registers on bootup. */
 	/* These are CPS1 board B self test checks. They wander from game to game. */
 	INT32 cpsb_addr;		/* CPS board B test register address */
 	INT32 cpsb_value;		/* CPS board B test register expected value */
@@ -124,7 +124,7 @@ struct CPS1config
 	/* some games use as a protection check the ability to do 16-bit multiplies */
 	/* with a 32-bit result, by writing the factors to two ports and reading the */
 	/* result from two other ports. */
-	/* It looks like this feature was INT32roduced with 3wonders (CPSB ID = 08xx) */
+	/* It looks like this feature was introduced with 3wonders (CPSB ID = 08xx) */
 	INT32 mult_factor1;
 	INT32 mult_factor2;
 	INT32 mult_result_lo;
@@ -161,7 +161,7 @@ public:
 	static void *alloc(running_machine &machine) { return auto_alloc_clear(&machine, cps_state(machine)); }
 	cps_state(running_machine &machine) { }
 
-	/* memory poINT32ers */
+	/* memory pointers */
 	/* in the cps1 */
 	UINT16		*gfxram;
 	UINT16		*cps_a_regs;
@@ -230,8 +230,8 @@ public:
 	INT32		palette_size;
 	INT32		stars_rom_size;
 	INT32		cps_version;
-	UINT8		empty_tile8x8[8 * 8];
-	UINT8		empty_tile[32 * 32 / 2];
+	UINT8		empty_tile8x8[64];
+	UINT8		empty_tile[512];
 
 	/* fcrash(bootleg) video config */
 	UINT8		layer_enable_reg;

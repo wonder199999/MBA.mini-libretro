@@ -1176,94 +1176,95 @@ static const struct gfx_range mapper_cps2_table[] =
 static const struct CPS1config cps1_config_table[]=
 {
 	/* name        CPSB          gfx mapper	    in2   in3  out2  kludge */
-	{"1941",       CPS_B_05,     mapper_YI24B },
-	{"1941j",      CPS_B_05,     mapper_YI24B },	// PAL used could be YI22B
-	{"1941u",      CPS_B_05,     mapper_YI24B },
+	{"1941",	CPS_B_05,     mapper_YI24B },
+	{"1941j",	CPS_B_05,     mapper_YI24B },	// PAL used could be YI22B
+	{"1941u",	CPS_B_05,     mapper_YI24B },
 
-	{"dino",       CPS_B_21_QS2, mapper_CD63B },	/* layer enable never used */
-	{"dinou",      CPS_B_21_QS2, mapper_CD63B },	/* layer enable never used */
-	{"dinoj",      CPS_B_21_QS2, mapper_CD63B },	/* layer enable never used */
-	{"dinopic",    CPS_B_21_QS2, mapper_CD63B },	/* layer enable never used */
-	{"dinopic2",   CPS_B_21_QS2, mapper_CD63B },	/* layer enable never used */
-	{"dinohunt",   CPS_B_21_DEF, mapper_CD63B },	/* Chinese bootleg */
+	{"dino",	CPS_B_21_QS2, mapper_CD63B },	/* layer enable never used */
+	{"dinou",	CPS_B_21_QS2, mapper_CD63B },	/* layer enable never used */
+	{"dinoj",	CPS_B_21_QS2, mapper_CD63B },	/* layer enable never used */
+	{"dinopic",	CPS_B_21_QS2, mapper_CD63B },	/* layer enable never used */
+	{"dinopic2",	CPS_B_21_QS2, mapper_CD63B },	/* layer enable never used */
+	{"dinohunt",	CPS_B_21_DEF, mapper_CD63B },	/* Chinese bootleg */
 
-	{"captcomm",   CPS_B_21_BT3, mapper_CC63B,  0x36, 0x38, 0x34 },
-	{"captcommr1", CPS_B_21_BT3, mapper_CC63B,  0x36, 0x38, 0x34 },
-	{"captcommu",  CPS_B_21_BT3, mapper_CC63B,  0x36, 0x38, 0x34 },
-	{"captcommj",  CPS_B_21_BT3, mapper_CC63B,  0x36, 0x38, 0x34 },
-	{"captcommjr1",CPS_B_21_BT3, mapper_CC63B,  0x36, 0x38, 0x34 },
-	{"captcommb",  CPS_B_21_BT3, mapper_CC63B,  0x36, 0x38, 0x34, 3 },
+	{"captcomm",	CPS_B_21_BT3, mapper_CC63B,  0x36, 0x38, 0x34 },
+	{"captcommr1",	CPS_B_21_BT3, mapper_CC63B,  0x36, 0x38, 0x34 },
+	{"captcommu",	CPS_B_21_BT3, mapper_CC63B,  0x36, 0x38, 0x34 },
+	{"captcommj",	CPS_B_21_BT3, mapper_CC63B,  0x36, 0x38, 0x34 },
+	{"captcommjr1",	CPS_B_21_BT3, mapper_CC63B,  0x36, 0x38, 0x34 },
+	{"captcommb",	CPS_B_21_BT3, mapper_CC63B,  0x36, 0x38, 0x34, 3 },
 
-	{"cawing",     CPS_B_16,     mapper_CA24B },
-	{"cawingr1",   CPS_B_16,     mapper_CA24B },
-	{"cawingu",    CPS_B_16,     mapper_CA24B },
-	{"cawingj",    CPS_B_16,     mapper_CA22B },	// equivalent to CA24B
+	{"cawing",	CPS_B_16,     mapper_CA24B },
+	{"cawingr1",	CPS_B_16,     mapper_CA24B },
+	{"cawingu",	CPS_B_16,     mapper_CA24B },
+	{"cawingj",	CPS_B_16,     mapper_CA22B },	// equivalent to CA24B
 
-	{"dynwar",     CPS_B_02,     mapper_TK22B },	// wrong, this set uses TK24B1, dumped but equations still not added
-	{"dynwaru",    CPS_B_02,     mapper_TK22B },
-	{"dynwarj",    CPS_B_02,     mapper_TK22B },
+	{"dynwar",	CPS_B_02,     mapper_TK22B },	// wrong, this set uses TK24B1, dumped but equations still not added
+	{"dynwaru",	CPS_B_02,     mapper_TK22B },
+	{"dynwarj",	CPS_B_02,     mapper_TK22B },
 
-	{"ffight",     CPS_B_04,     mapper_S224B },
-	{"ffightu",    CPS_B_04,     mapper_S224B },
-	{"ffightua",   CPS_B_01,     mapper_S224B },
-	{"ffightub",   CPS_B_05,     mapper_S224B },
-	{"ffightj",    CPS_B_04,     mapper_S224B },	// wrong, this set uses S222B, still non dumped
-	{"ffightj1",   CPS_B_01,     mapper_S224B },	// wrong, this set uses S222B, still non dumped
-	{"ffightj2",   CPS_B_02,     mapper_S224B },	// wrong, this set uses S222B, still non dumped
-	{"ffightjh",   CPS_B_01,     mapper_S224B },	// wrong, ffightjh hack doesn't even use the S222B PAL, since replaced with a GAL.
+	{"ffight",	CPS_B_04,     mapper_S224B },
+	{"ffightu",	CPS_B_04,     mapper_S224B },
+	{"ffightua",	CPS_B_01,     mapper_S224B },
+	{"ffightub",	CPS_B_05,     mapper_S224B },
+	{"ffightj",	CPS_B_04,     mapper_S224B },	// wrong, this set uses S222B, still non dumped
+	{"ffightj1",	CPS_B_01,     mapper_S224B },	// wrong, this set uses S222B, still non dumped
+	{"ffightj2",	CPS_B_02,     mapper_S224B },	// wrong, this set uses S222B, still non dumped
+	{"ffightjh",	CPS_B_01,     mapper_S224B },	// wrong, ffightjh hack doesn't even use the S222B PAL, since replaced with a GAL.
+	{"ffighta",	CPS_B_04,     mapper_S224B },
 
-	{"forgottn",   CPS_B_01,     mapper_LW621 },
-	{"forgottnua", CPS_B_01,     mapper_LW621 },
-	{"forgottnu",  CPS_B_01,     mapper_LWCHR },
-	{"lostwrld",   CPS_B_01,     mapper_LWCHR },
-	{"lostwrldo",  CPS_B_01,     mapper_LWCHR },
+	{"forgottn",	CPS_B_01,     mapper_LW621 },
+	{"forgottnua",	CPS_B_01,     mapper_LW621 },
+	{"forgottnu",	CPS_B_01,     mapper_LWCHR },
+	{"lostwrld",	CPS_B_01,     mapper_LWCHR },
+	{"lostwrldo",	CPS_B_01,     mapper_LWCHR },
 
-	{"ghouls",     CPS_B_01,     mapper_DM620 },
-	{"ghoulsu",    CPS_B_01,     mapper_DM620 },
-	{"daimakai",   CPS_B_01,     mapper_DM22A },	// equivalent to DM620
-	{"daimakair",  CPS_B_21_DEF, mapper_DAM63B },	// equivalent to DM620, also CPS_B_21_DEF is equivalent to CPS_B_01
+	{"ghouls",	CPS_B_01,     mapper_DM620 },
+	{"ghoulsu",	CPS_B_01,     mapper_DM620 },
+	{"daimakai",	CPS_B_01,     mapper_DM22A },	// equivalent to DM620
+	{"daimakair",	CPS_B_21_DEF, mapper_DAM63B },	// equivalent to DM620, also CPS_B_21_DEF is equivalent to CPS_B_01
 
-	{"kod",        CPS_B_21_BT2, mapper_KD29B,  0x36, 0, 0x34 },
-	{"kodu",       CPS_B_21_BT2, mapper_KD29B,  0x36, 0, 0x34 },
-	{"kodj",       CPS_B_21_BT2, mapper_KD29B,  0x36, 0, 0x34 },
-	{"kodb",       CPS_B_21_BT2, mapper_KD29B,  0x36, 0, 0x34 },	/* bootleg, doesn't use multiply protection */
+	{"kod",		CPS_B_21_BT2, mapper_KD29B,  0x36, 0, 0x34 },
+	{"kodu",	CPS_B_21_BT2, mapper_KD29B,  0x36, 0, 0x34 },
+	{"kodj",	CPS_B_21_BT2, mapper_KD29B,  0x36, 0, 0x34 },
+	{"kodb",	CPS_B_21_BT2, mapper_KD29B,  0x36, 0, 0x34 },	/* bootleg, doesn't use multiply protection */
 
-	{"knights",    CPS_B_21_BT4, mapper_KR63B,  0x36, 0, 0x34 },
-	{"knightsu",   CPS_B_21_BT4, mapper_KR63B,  0x36, 0, 0x34 },
-	{"knightsj",   CPS_B_21_BT4, mapper_KR63B,  0x36, 0, 0x34 },	// PAL could be different if B-Board is 90629B
+	{"knights",	CPS_B_21_BT4, mapper_KR63B,  0x36, 0, 0x34 },
+	{"knightsu",	CPS_B_21_BT4, mapper_KR63B,  0x36, 0, 0x34 },
+	{"knightsj",	CPS_B_21_BT4, mapper_KR63B,  0x36, 0, 0x34 },	// PAL could be different if B-Board is 90629B
 
-	{"msword",     CPS_B_13,     mapper_MS24B },
-	{"mswordr1",   CPS_B_13,     mapper_MS24B },
-	{"mswordu",    CPS_B_13,     mapper_MS24B },
-	{"mswordj",    CPS_B_13,     mapper_MS24B },	// wrong, this set uses MS22B, still non dumped
+	{"msword",	CPS_B_13,     mapper_MS24B },
+	{"mswordr1",	CPS_B_13,     mapper_MS24B },
+	{"mswordu",	CPS_B_13,     mapper_MS24B },
+	{"mswordj",	CPS_B_13,     mapper_MS24B },	// wrong, this set uses MS22B, still non dumped
 
-	{"megaman",    CPS_B_21_DEF, mapper_RCM63B },
-	{"rockmanj",   CPS_B_21_DEF, mapper_RCM63B },
+	{"megaman",	CPS_B_21_DEF, mapper_RCM63B },
+	{"rockmanj",	CPS_B_21_DEF, mapper_RCM63B },
 
-	{"mtwins",     CPS_B_14,     mapper_CK24B },
-	{"chikij",     CPS_B_14,     mapper_CK24B },	// PAL used could be CK22B
+	{"mtwins",	CPS_B_14,     mapper_CK24B },
+	{"chikij",	CPS_B_14,     mapper_CK24B },	// PAL used could be CK22B
 
-	{"mercs",      CPS_B_12,     mapper_O224B,  0x36, 0, 0x34 },
-	{"mercsu",     CPS_B_12,     mapper_O224B,  0x36, 0, 0x34 },
-	{"mercsua",    CPS_B_12,     mapper_O224B,  0x36, 0, 0x34 },
-	{"mercsj",     CPS_B_12,     mapper_O224B,  0x36, 0, 0x34 },	// wrong, this set uses O222B, still non dumped
+	{"mercs",	CPS_B_12,     mapper_O224B,  0x36, 0, 0x34 },
+	{"mercsu",	CPS_B_12,     mapper_O224B,  0x36, 0, 0x34 },
+	{"mercsua",	CPS_B_12,     mapper_O224B,  0x36, 0, 0x34 },
+	{"mercsj",	CPS_B_12,     mapper_O224B,  0x36, 0, 0x34 },	// wrong, this set uses O222B, still non dumped
 
-	{"pnickj",     CPS_B_21_DEF, mapper_PKB10B },
+	{"pnickj",	CPS_B_21_DEF, mapper_PKB10B },
 
-	{"slammast",   CPS_B_21_QS4, mapper_MB63B },
-	{"slammastu",  CPS_B_21_QS4, mapper_MB63B },
-	{"slampic",    CPS_B_21_QS4, mapper_MB63B },
+	{"slammast",	CPS_B_21_QS4, mapper_MB63B },
+	{"slammastu",	CPS_B_21_QS4, mapper_MB63B },
+	{"slampic",	CPS_B_21_QS4, mapper_MB63B },
 
-	{"nemo",       CPS_B_15,     mapper_NM24B },
-	{"nemoj",      CPS_B_15,     mapper_NM24B },	// wrong, this set uses NM22B, still non dumped
+	{"nemo",	CPS_B_15,     mapper_NM24B },
+	{"nemoj",	CPS_B_15,     mapper_NM24B },	// wrong, this set uses NM22B, still non dumped
 
-	{"pang3",      CPS_B_21_DEF, mapper_pang3 },	/* EEPROM port is among the CPS registers (handled by DRIVER_INIT) */	// should use one of these three CP1B1F,CP1B8K,CP1B9KA still not dumped
-	{"pang3n",     CPS_B_21_DEF, mapper_pang3 },	/* EEPROM port is among the CPS registers (handled by DRIVER_INIT) */	// should use one of these three CP1B1F,CP1B8K,CP1B9KA still not dumped
-	{"pang3j",     CPS_B_21_DEF, mapper_pang3 },	/* EEPROM port is among the CPS registers (handled by DRIVER_INIT) */	// should use one of these three CP1B1F,CP1B8K,CP1B9KA still not dumped
-	{"pang3r1",    CPS_B_21_DEF, mapper_pang3 },
-	{"pang3b",     CPS_B_21_DEF, mapper_pang3 },
-	{"pang3b2",    CPS_B_04,     mapper_pang3 },
-	{"pang3b3",    CPS_B_04,     mapper_pang3 },
+	{"pang3",	CPS_B_21_DEF, mapper_pang3 },	/* EEPROM port is among the CPS registers (handled by DRIVER_INIT) */	// should use one of these three CP1B1F,CP1B8K,CP1B9KA still not dumped
+	{"pang3n",	CPS_B_21_DEF, mapper_pang3 },	/* EEPROM port is among the CPS registers (handled by DRIVER_INIT) */	// should use one of these three CP1B1F,CP1B8K,CP1B9KA still not dumped
+	{"pang3j",	CPS_B_21_DEF, mapper_pang3 },	/* EEPROM port is among the CPS registers (handled by DRIVER_INIT) */	// should use one of these three CP1B1F,CP1B8K,CP1B9KA still not dumped
+	{"pang3r1",	CPS_B_21_DEF, mapper_pang3 },
+	{"pang3b",	CPS_B_21_DEF, mapper_pang3 },
+	{"pang3b2",	CPS_B_04,     mapper_pang3 },
+	{"pang3b3",	CPS_B_04,     mapper_pang3 },
 
 	{"cworld2j",   CPS_B_21_BT6, mapper_Q522B,  0x36, 0, 0x34 },	/* (ports 36, 34 probably leftover input code from another game) */
 
