@@ -506,7 +506,6 @@ endif
 # add a basic set of warnings
 CCOMFLAGS += \
 	-Wall \
-	-Wcast-align \
 	-Wundef \
 	-Wformat-security \
 	-Wwrite-strings \
