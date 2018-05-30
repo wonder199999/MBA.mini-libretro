@@ -3112,12 +3112,8 @@ static MACHINE_DRIVER_START( cps1_10MHz )
 
 	/* video hardware */
 	MDRV_SCREEN_ADD("screen", RASTER)
-//	MDRV_SCREEN_REFRESH_RATE(59.637405)					/* verified on one of the input gates of the 74ls08@4J on GNG romboard 88620-b-2 */
-//	MDRV_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MDRV_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
 	MDRV_SCREEN_RAW_PARAMS(CPS_PIXEL_CLOCK, CPS_HTOTAL, CPS_HBEND, CPS_HBSTART, CPS_VTOTAL, CPS_VBEND, CPS_VBSTART)
-//	MDRV_SCREEN_SIZE(64*8, 32*8)
-//	MDRV_SCREEN_VISIBLE_AREA(8*8, (64-8)*8-1, 2*8, 30*8-1 )
 
 	MDRV_VIDEO_UPDATE(cps1)
 	MDRV_VIDEO_EOF(cps1)
@@ -4348,10 +4344,10 @@ ROM_END
 /* B-Board 89624B-3 */
 ROM_START( ffightub )
 	ROM_REGION( CODE_SIZE, "maincpu", 0 )      /* 68000 code */
-	ROM_LOAD16_BYTE( "ffu_30.11f",     0x00000, 0x20000, CRC(ed988977) SHA1(c718e989206bd2b68832c8fcb5667397d500ebac) )
-	ROM_LOAD16_BYTE( "ffu_35.11h",     0x00001, 0x20000, CRC(07bf1c21) SHA1(f21a939fd92607c7f54816dedbcb3c5818cf4183) )
-	ROM_LOAD16_BYTE( "ffu_31.12f",     0x40000, 0x20000, CRC(dba5a476) SHA1(2f0176dd050f9630b914f1c1ca5d96215bcf567f) )
-	ROM_LOAD16_BYTE( "ffu_36.12h",     0x40001, 0x20000, CRC(4d89f542) SHA1(0b7d483a2c5759715f99f287cbd8a36165b59de7) )
+	ROM_LOAD16_BYTE( "ffu_30_3.11f",   0x00000, 0x20000, CRC(e619eb30) SHA1(41c2589a1b2cab2d0ded527a89f8e0e39e61efe1) )
+	ROM_LOAD16_BYTE( "ffu_35_3.11h",   0x00001, 0x20000, CRC(bca85263) SHA1(249bc81426ee93cf2efa5594d6813d5dd896cea3) )
+	ROM_LOAD16_BYTE( "ffu_31_3.12f",   0x40000, 0x20000, CRC(59abd207) SHA1(9bc1f4d5dabd02cebce84f56f848694591c0629d) )
+	ROM_LOAD16_BYTE( "ffu_36_3.12h",   0x40001, 0x20000, CRC(df46ece8) SHA1(aa3081918d499f56664d6bb7b7ede2055d00375d) )
 	ROM_LOAD16_WORD_SWAP( "ff-32m.8h", 0x80000, 0x80000, CRC(c747696e) SHA1(d3362dadded31ccb7eaf71ef282d698d18edd722) )
 
 	ROM_REGION( 0x200000, "gfx", 0 )
@@ -4361,7 +4357,7 @@ ROM_START( ffightub )
 	ROMX_LOAD( "ff-3m.5a", 0x000006, 0x80000, CRC(52291cd2) SHA1(df5f3d3aa96a7a33ff22f2a31382942c4c4f1111) , ROM_GROUPWORD | ROM_SKIP(6) )
 
 	ROM_REGION( 0x18000, "audiocpu", 0 ) /* 64k for the audio CPU (+banks) */
-	ROM_LOAD( "ff_23.12b",  0x00000, 0x08000, CRC(b8367eb5) SHA1(ec3db29fdd6200e9a8f4f8073a7e34aef731354f) )	// == ff_09.12b /* label is FF_23, pcb verified */
+	ROM_LOAD( "ff_09.12b",  0x00000, 0x08000, CRC(b8367eb5) SHA1(ec3db29fdd6200e9a8f4f8073a7e34aef731354f) )
 	ROM_CONTINUE(           0x10000, 0x08000 )
 
 	ROM_REGION( 0x40000, "oki", 0 )	/* Samples */
@@ -9151,7 +9147,7 @@ GAME( 1989, area88,     unsquad,  cps1_10MHz, unsquad,    cps1,     ROT0,   "Cap
 GAME( 1989, ffight,     0,        cps1_10MHz, ffight,     cps1,     ROT0,   "Capcom", "Final Fight (World)", GAME_SUPPORTS_SAVE )
 GAME( 1989, ffightu,    ffight,   cps1_10MHz, ffight,     cps1,     ROT0,   "Capcom", "Final Fight (USA)", GAME_SUPPORTS_SAVE )
 GAME( 1989, ffightua,   ffight,   cps1_10MHz, ffight,     cps1,     ROT0,   "Capcom", "Final Fight (USA 900112)", GAME_SUPPORTS_SAVE )
-GAME( 1989, ffightub,   ffight,   cps1_10MHz, ffight,     cps1,     ROT0,   "Capcom", "Final Fight (USA 900613)", GAME_SUPPORTS_SAVE )
+GAME( 1989, ffightub,   ffight,   cps1_10MHz, ffight,     cps1,     ROT0,   "Capcom", "Final Fight (USA 900424)", GAME_SUPPORTS_SAVE )
 GAME( 1989, ffightj,    ffight,   cps1_10MHz, ffight,     cps1,     ROT0,   "Capcom", "Final Fight (Japan)", GAME_SUPPORTS_SAVE )
 GAME( 1989, ffightj1,   ffight,   cps1_10MHz, ffight,     cps1,     ROT0,   "Capcom", "Final Fight (Japan 900112)", GAME_SUPPORTS_SAVE )
 GAME( 1989, ffightj2,   ffight,   cps1_10MHz, ffight,     cps1,     ROT0,   "Capcom", "Final Fight (Japan 900305)", GAME_SUPPORTS_SAVE )
@@ -9314,3 +9310,4 @@ GAME( 1989, area88r,	unsquad,  cps1_12MHz,	unsquad,   cps1,       ROT0,   "Capco
 GAME( 1991, 3wondersr1,	3wonders, cps1_10MHz,	3wonders,  cps1,       ROT0,   "Capcom", "Three Wonders (World 910513)", GAME_SUPPORTS_SAVE )
 GAME( 1989, ffighta,	ffight,	  cps1_10MHz,	ffight,	   cps1,       ROT0,   "Capcom", "Final Fight (World, set 2)", GAME_SUPPORTS_SAVE )
 GAME( 1989, ffightu1,	ffight,	  cps1_10MHz,   ffight,	   cps1,       ROT0,   "Capcom", "Final Fight (USA, set 2)", GAME_SUPPORTS_SAVE )
+GAME( 1989, ffightuc,	ffight,	  cps1_10MHz,	ffight,	   cps1,       ROT0,   "Capcom", "Final Fight (USA 900613)", GAME_SUPPORTS_SAVE )
