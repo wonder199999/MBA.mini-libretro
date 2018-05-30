@@ -13,9 +13,9 @@ Support the following :
 / *  Capcom System 1 * /
 / ******************** /
 
-*1941:Counter Attack(World)			- N: 1941,   P: Itself,  S: 0.139
-	1941:Counter Attack(Japan)		- N: 1941j,  P: 1941,    S: 0.139
-	+1941:Counter Attack(USA 900227)	- N: 1941u,  P: 1941,    S: FBA02.97.38
+*1941: Counter Attack(World)			- N: 1941,   P: Itself,  S: 0.139
+	1941: Counter Attack(Japan)		- N: 1941j,  P: 1941,    S: 0.139
+	+1941: Counter Attack(USA 900227)	- N: 1941u,  P: 1941,    S: FBA02.97.38
 
 *Adventure Quiz Capcom World 2(Japan 920611) - N: cworld2j,  P: Itself,  S: 0.139
 
@@ -33,12 +33,12 @@ Support the following :
 	Captain Commando(USA 910928)	 	- N: captcommu,    P: captcomm,  S: 0.139
 	Captain Commando(World 911104)	 	- N: captcommr1,   P: captcomm,  S: 0.139
 
-*Carrier Air Wing(World 901012)		 	- N: cawing,    P: Itself,  S: 0.139
-	Carrier Air Wing(USA 901012)	 	- N: cawingu,   P: cawing,  S: 0.139
-	Carrier Air Wing(World 901009)	 	- N: cawingr1,  P: cawing,  S: 0.139
-	U.S Navy(Japan 901012)		 	- N: cawingj,   P: cawing,  S: 0.139
-	+Carrier Air Wing(bootleg with 2xYM2203 + 2xMSM205, set 1)	 - N: cawingbl,  P: cawing,  S: FBA02.97.38
-	+Carrier Air Wing(bootleg with 2xYM2203 + 2xMSM205, set 2)	 - N: cawingb2,  P: cawing,  S: FBA02.97.38
+*Carrier Air Wing(World 901012)						- N: cawing,    P: Itself,  S: 0.139
+	Carrier Air Wing(USA 901012)					- N: cawingu,   P: cawing,  S: 0.139
+	Carrier Air Wing(World 901009)					- N: cawingr1,  P: cawing,  S: 0.139
+	U.S Navy(Japan 901012)						- N: cawingj,   P: cawing,  S: 0.139
+	+Carrier Air Wing(bootleg with 2xYM2203 + 2xMSM205, set 1)	- N: cawingbl,  P: cawing,  S: FBA02.97.38
+	+Carrier Air Wing(bootleg with 2xYM2203 + 2xMSM205, set 2)	- N: cawingb2,  P: cawing,  S: FBA02.97.38
 
 *Dynasty Wars(USA, set1)	 	- N: dynwar,   P: Itself,  S: 0.139
 	Dynasty Wars(USA, set2)	 	- N: dynwaru,  P: dynwar,  S: 0.139
@@ -49,10 +49,13 @@ Support the following :
 	Final Fight(Japan 900305)		 - N: ffightj2,  P: ffight,  S: 0.139
 	Final Fight(Japan)			 - N: ffightj,   P: ffight,  S: 0.139
 	Final Fight(USA 900112)		 	 - N: ffightua,  P: ffight,  S: 0.139
-	Final Fight(USA 900613)			 - N: ffightub,  P: ffight,  S: 0.139
+	+Final Fight(USA 900424)		 - N: ffightub,  P: ffight,  S: FBA02.97.38
+	+Final Fight(USA 900613)		 - N: ffightuc,  P: ffight,  S: FBA02.97.38
 	Final Fight(USA)			 - N: ffightu,   P: ffight,  S: 0.139
 	Street Smart / Final Fight(Japan, hack)  - N: ffightjh,  P: ffight,  S: 0.139
 	Final Crash(bootleg of Final Fight)	 - N: fcrash,	 P: ffight,  S: 0.139, Note: Imperfect Graphics
+	+Final Fight(World, set 2)		 - N: ffighta,   P: ffight,  S: FBA02.97.38
+	+Final Fight(USA, set 2)		 - N: ffightu1,  P: ffight,  S: FBA02.97.38
 
 *Forgotten Worlds(World)			- N: forgottn,    P: Itself,    S: 0.139
 	Forgotten Worlds(USA, 88618B B-Board)	- N: forgottnu,   P: forgottn,  S: 0.139
@@ -75,13 +78,13 @@ Support the following :
 	Knight of the Round(USA 911127)		- N: knightsu,  P: knights,  S: 0.139 ,
 	Knight of the Round(bootleg)		- N: knightsb,  P: knights,  S: 0.139 , Note: Imperfect Graphics
 	
-*Magic Sword : Heroic Fantasy(World 900725)		- N: msword,    P: Itself,  S: 0.139
-	Magic Sword : Heroic Fantasy(USA 900725)	- N: mswordu,   P: msword,  S: 0.139
-	Magic Sword : Heroic Fantasy(World 900623)	- N: mswordr1,  P: msword,  S: 0.139
+*Magic Sword: Heroic Fantasy(World 900725)		- N: msword,    P: Itself,  S: 0.139
+	Magic Sword: Heroic Fantasy(USA 900725)		- N: mswordu,   P: msword,  S: 0.139
+	Magic Sword: Heroic Fantasy(World 900623)	- N: mswordr1,  P: msword,  S: 0.139
 	Magic Sword(Japan 900623)			- N: mswordj,   P: msword,  S: 0.139
 
-*Mega Man : The Power Battle(CPS1, Asia 951006)		- N: megaman,   P: Itself,   S: 0.139
-	Rockman : The Power Battle(CPS1, Japan 950923)	- N: rockmanj,  P: megaman,  S: 0.139
+*Mega Man: The Power Battle(CPS1, Asia 951006)		- N: megaman,   P: Itself,   S: 0.139
+	Rockman: The Power Battle(CPS1, Japan 950923)	- N: rockmanj,  P: megaman,  S: 0.139
 
 *Mega Twins(World 900619)		- N: mtwins,  P: Itself,  S: 0.139
 	Chiki Chiki Boys(Japan 900619)	- N: chikij,  P: mtwins,  S: 0.139
@@ -91,15 +94,15 @@ Support the following :
 	Mercs(USA 900608)			- N: mercsua,  P: mercs,   S: 0.139
 	Senjou no Ookami II(Japan 900302)	- N: mercsj,   P: mercs,   S: 0.139
 
-*Muscle Bomber Duo : Ultimate Team Battle(World 931206)		- N: mbombrd,   P: Itself,   S: 0.139
-	Muscle Bomber Duo : Ultimate Team Battle(Japan 931206)	- N: mbombrdj,  P: mbombrd,  S: 0.139
+*Muscle Bomber Duo: Ultimate Team Battle(World 931206)		- N: mbombrd,   P: Itself,   S: 0.139
+	Muscle Bomber Duo: Ultimate Team Battle(Japan 931206)	- N: mbombrdj,  P: mbombrd,  S: 0.139
 
 *Nemo(World 901130)		- N: nemo,   P: Itself,  S: 0.139
 	Nemo(Japan 901120)	- N: nemoj,  P: nemo,    S: 0.139
 
 *Pang! 3(Euro 950601)						- N: pang3,    P: Itself,  S: 0.139
 	Pang! 3(Euro 950511, not encrypted)			- N: pang3n,   P: pang3,   S: 0.139
-	Pang! 3 : Kaitou Tachi no Karei na Gogo(Japan 950511)	- N: pang3j,   P: pang3,   S: 0.139
+	Pang! 3: Kaitou Tachi no Karei na Gogo(Japan 950511)	- N: pang3j,   P: pang3,   S: 0.139
 	+Pang! 3 (Euro 950511)					- N: pang3r1,  P: pang3,   S: FBA02.97.38
 	+Pang! 3 (bootleg set 1, Euro 950511)			- N: pang3b,   P: pang3,   S: FBA02.97.38
 	+Pang! 3 (bootleg set 2, Euro 950511)			- N: pang3b2,  P: pang3,   S: FBA02.97.38
@@ -115,13 +118,13 @@ Support the following :
 	Punisher, The(Japan 930422)				- N: punisherj,   P: punisher,  S: 0.139
 	Punisher, The(USA 930422)				- N: punisheru,   P: punisher,  S: 0.139
 
-*Quiz & Dragons : Capcom Quiz Game(USA 920701)			- N: qad,   P: Itself,  S: 0.139
-	Quiz & Dragons : Capcom Quiz Game(Japan 940921)		- N: qadj,  P: qad,     S: 0.139
+*Quiz & Dragons: Capcom Quiz Game(USA 920701)			- N: qad,   P: Itself,  S: 0.139
+	Quiz & Dragons: Capcom Quiz Game(Japan 940921)		- N: qadj,  P: qad,     S: 0.139
 
-*Quiz Tonosama no Yabou 2 : Zenkoku-ban(Japan 950123)	- N: qtono2j, P: Itself,  S: 0.139
+*Quiz Tonosama no Yabou 2: Zenkoku-ban(Japan 950123)	- N: qtono2j, P: Itself,  S: 0.139
 
 *Saturday Night Slam Masters(World 930713)			- N: slammast,   P: Itself,    S: 0.139
-	Muscle Bomber : The Boby Explosion(Japan 930713)	- N: mbomberj,   P: slammast,  S: 0.139
+	Muscle Bomber: The Boby Explosion(Japan 930713)		- N: mbomberj,   P: slammast,  S: 0.139
 	Saturday Night Slam Masters(USA 930713)			- N: slammastu,  P: slammast,  S: 0.139
 	+Saturday Night Slam Masters(bootleg with PIC16c57)	- N: slampic,    P: slammast,  S: FBA02.97.38, Note: Imperfect Graphics & No Sound
 	
@@ -177,10 +180,11 @@ Support the following :
 	Strider Hiryu(Japan Resale Ver.)	- N: striderjr,  P: strider,  S: 0.139
 	Strider Hiryu(Japan)			- N: striderj,   P: strider,  S: 0.139
 
-*Three Wonders(World 910520)		- N: 3wonders,   P: Itself,    S: 0.139
-	Three Wonders(hack)		- N: 3wondersh,  P: 3wonders,  S: 0.139
-	Three Wonders(USA 910520)	- N: 3wondersu,  P: 3wonders,  S: 0.139
-	Wonders 3(Japan 910520)		- N: wonder3,    P: 3wonders,  S: 0.139
+*Three Wonders(World 910520)		- N: 3wonders,    P: Itself,    S: 0.139
+	Three Wonders(hack)		- N: 3wondersh,   P: 3wonders,  S: 0.139
+	Three Wonders(USA 910520)	- N: 3wondersu,   P: 3wonders,  S: 0.139
+	Wonders 3(Japan 910520)		- N: wonder3,     P: 3wonders,  S: 0.139
+	+Three Wonders(World, 910513)	- N: 3wondersr1,  P: 3wonders,  S: FBA02.97.38
 
 *U.N. Squadron(USA)			- N: unsquad,  P: Itself,   S: 0.139
 	Area 88(Japan)			- N: area88,   P: unsquad,  S: 0.139
