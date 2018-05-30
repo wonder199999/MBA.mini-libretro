@@ -251,6 +251,7 @@ const game_driver *const drivers[] =
 	DRIVER( area88r )	/* Area 88 (Japan Resale Ver.) */
 	DRIVER( 3wondersr1 )	/* 13/05/1991 (c) Three Wonders (World) */
 	DRIVER( ffighta )	/* Final Fight (World, set 2) */
+	DRIVER( ffightu1 )	/* Final Fight (USA, set 2) */
 
 
 	/* ************************* */
