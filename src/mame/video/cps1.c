@@ -1214,6 +1214,7 @@ static const struct CPS1config cps1_config_table[]=
 	{"ffighta",	CPS_B_04,     mapper_S224B },
 	{"ffightu1",	CPS_B_04,     mapper_S224B },
 	{"ffightuc",	CPS_B_05,     mapper_S224B },
+	{"ffightj3",	CPS_B_05,     mapper_S224B },
 
 	{"forgottn",	CPS_B_01,     mapper_LW621 },
 	{"forgottnua",	CPS_B_01,     mapper_LW621 },

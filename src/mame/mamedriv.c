@@ -253,6 +253,7 @@ const game_driver *const drivers[] =
 	DRIVER( ffighta )	/* Final Fight (World, set 2) */
 	DRIVER( ffightu1 )	/* Final Fight (USA, set 2) */
 	DRIVER( ffightuc )	/* 13/06/1990 (c) Final Fight (USA) */
+	DRIVER( ffightj3 )	/* 13/06/1990 (c) Final Fight (Japan) */
 
 
 	/* ************************* */

@@ -9311,3 +9311,4 @@ GAME( 1991, 3wondersr1,	3wonders, cps1_10MHz,	3wonders,  cps1,       ROT0,   "Ca
 GAME( 1989, ffighta,	ffight,	  cps1_10MHz,	ffight,	   cps1,       ROT0,   "Capcom", "Final Fight (World, set 2)", GAME_SUPPORTS_SAVE )
 GAME( 1989, ffightu1,	ffight,	  cps1_10MHz,   ffight,	   cps1,       ROT0,   "Capcom", "Final Fight (USA, set 2)", GAME_SUPPORTS_SAVE )
 GAME( 1989, ffightuc,	ffight,	  cps1_10MHz,	ffight,	   cps1,       ROT0,   "Capcom", "Final Fight (USA 900613)", GAME_SUPPORTS_SAVE )
+GAME( 1989, ffightj3,	ffight,	  cps1_10MHz,	ffight,    cps1,       ROT0,   "Capcom", "Final Fight (Japan 900613)", GAME_SUPPORTS_SAVE )
