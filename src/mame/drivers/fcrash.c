@@ -1362,6 +1362,7 @@ static DRIVER_INIT( sf2mdt )
 static DRIVER_INIT( kodb )
 {
 	cps_state *state = (cps_state *)machine->driver_data;
+	UINT8 *src = (UINT8 *)memory_region( machine, "maincpu" );
 
 	memory_install_read_port(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x800000, 0x800007, 0, 0, "IN1");
 	memory_install_read16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x800018, 0x80001f, 0, 0, cps1_dsw_r);
@@ -1369,6 +1370,8 @@ static DRIVER_INIT( kodb )
 	memory_install_write16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x980000, 0x98002f, 0, 0, kodb_layer_w);
 	state->bootleg_sprite_ram = (UINT16 *)memory_install_ram(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x900000, 0x903fff, 0, 0, NULL);
 	memory_install_ram(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x904000, 0x907fff, 0, 0, state->bootleg_sprite_ram);
+
+	src[0x0953] = 0x07;	/* fixes sprite ram clearing issue. */
 
 	DRIVER_INIT_CALL(cps1);
 }
@@ -1424,6 +1427,14 @@ static DRIVER_INIT( cawingbl )
 	memory_install_read_port(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x882000, 0x882001, 0, 0, "IN1");
 	memory_install_write16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x882006, 0x882007, 0, 0, sf2mdt_soundlatch_w);
 	memory_install_read16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x882008, 0x88200f, 0, 0, cps1_dsw_r);
+
+	DRIVER_INIT_CALL(cps1);
+}
+
+static DRIVER_INIT( fcrash )
+{
+	UINT8 *src = (UINT8 *)memory_region( machine, "maincpu" );
+	src[0x2611] = 0x07;	/* This fixes sprite ram clearing */
 
 	DRIVER_INIT_CALL(cps1);
 }
@@ -1890,10 +1901,10 @@ ROM_END
 GAME( year, archives name,  parent name, MACHINE_DRIVER_START, INPUT_PORTS, DRIVER_INIT,   flip,   producer name,   title information,	status )
 */
 
-/* fcrash - old sprites show on next screen. Patch used. */
-GAME( 1990,   fcrash,	  ffight,	fcrash,		ffight,		cps1,	  ROT0,   "bootleg (Playmark)", "Final Crash (bootleg of Final Fight)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )
-/* kodb - old sprites show on next screen. Patch used. */
-GAME( 1991,   kodb,	  kod,		kodb,		kod,		kodb,     ROT0,   "bootleg (Playmark)", "The King of Dragons (bootleg)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )
+/* fcrash - old sprites show on next screen. (Fixes) */
+GAME( 1990,   fcrash,	  ffight,	fcrash,		ffight,		fcrash,	  ROT0,   "bootleg (Playmark)", "Final Crash (bootleg of Final Fight)", GAME_SUPPORTS_SAVE )
+/* kodb - old sprites show on next screen. (Fixes) */
+GAME( 1991,   kodb,	  kod,		kodb,		kod,		kodb,     ROT0,   "bootleg (Playmark)", "The King of Dragons (bootleg)", GAME_SUPPORTS_SAVE )
 /* knightsb - sprites are entangled with the front layer. */
 GAME( 1991,   knightsb,	  knights,	knightsb,	knights,	knightsb, ROT0,   "bootleg", "Knights of the Round (bootleg)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )
 /* sf2mdt - problem with scrolls */
@@ -1920,5 +1931,5 @@ GAME( 1993,   dinopic,	  dino,		dinopic,	dino,		dinopic,  ROT0,   "bootleg", "Ca
 GAME( 1993,   dinopic2,	  dino,		dinopic,	dino,		dinopic,  ROT0,   "bootleg", "Cadillacs and Dinosaurs (bootleg with PIC16c57, set 2)", GAME_NOT_WORKING | GAME_SUPPORTS_SAVE )
 /* slampic - no sound. A priority problem between sprites and crowd. */
 GAME( 1993,   slampic,	  slammast,	slampic,	slammast,	dinopic,  ROT0,   "bootleg", "Saturday Night Slam Masters (bootleg with PIC16c57)", GAME_IMPERFECT_GRAPHICS | GAME_NO_SOUND | GAME_SUPPORTS_SAVE )
-
-GAME( 1990,   ffightbl,	  ffight,	fcrash,		ffight,		cps1,	  ROT0,   "bootleg", "Final Fight (bootleg)", GAME_SUPPORTS_SAVE )
+/* ffightbl - old sprites show on next screen. (Fixes) */
+GAME( 1990,   ffightbl,	  ffight,	fcrash,		ffight,		fcrash,	  ROT0,   "bootleg", "Final Fight (bootleg)", GAME_SUPPORTS_SAVE )
