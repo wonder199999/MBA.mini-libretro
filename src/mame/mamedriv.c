@@ -255,6 +255,7 @@ const game_driver *const drivers[] =
 	DRIVER( ffightuc )	/* 13/06/1990 (c) Final Fight (USA) */
 	DRIVER( ffightj3 )	/* 13/06/1990 (c) Final Fight (Japan) */
 	DRIVER( ffightu2 )	/* Final Fight (USA, set 3) */
+	DRIVER( ffightbl )	/* Final Fight (bootleg) */
 
 
 	/* ************************* */
