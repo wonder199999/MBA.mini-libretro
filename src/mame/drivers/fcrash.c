@@ -1935,7 +1935,6 @@ ROM_START( ffightbla )
 ROM_END
 
 
-
 /*
 GAME( year, archives name,  parent name, MACHINE_DRIVER_START, INPUT_PORTS, DRIVER_INIT,   flip,   producer name,   title information,	status )
 */
@@ -1974,3 +1973,4 @@ GAME( 1993,   slampic,	  slammast,	slampic,	slammast,	dinopic,  ROT0,   "bootleg
 GAME( 1990,   ffightbl,	  ffight,	fcrash,		ffight,		fcrash,	  ROT0,   "bootleg", "Final Fight (bootleg)", GAME_SUPPORTS_SAVE )
 /* ffightbl - old sprites show on next screen. (Fixes) */
 GAME( 1990,   ffightbla,  ffight,	fcrash,		ffight,		fcrash,	  ROT0,   "bootleg", "Final Fight (bootleg on Final Crash PCB)", GAME_SUPPORTS_SAVE )
+
