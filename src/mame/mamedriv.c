@@ -256,6 +256,8 @@ const game_driver *const drivers[] =
 	DRIVER( ffightj3 )	/* 13/06/1990 (c) Final Fight (Japan) */
 	DRIVER( ffightu2 )	/* Final Fight (USA, set 3) */
 	DRIVER( ffightbl )	/* Final Fight (bootleg) */
+	DRIVER( ffightbla )	/* Final Fight (bootleg on Final Crash PCB) */
+	DRIVER( nemor1 )	/* 09/11/1990 (c) Nemo (World) */
 
 
 	/* ************************* */

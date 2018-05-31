@@ -305,15 +305,16 @@ static WRITE16_HANDLER( sf2mdt_layer_w )
 	cps_state *state = (cps_state *)space->machine->driver_data;
 	switch (offset)
 	{
-		case 0x06: state->cps_a_regs[0x14 / 2] = data + 0xffce; break;		/* scroll 3x */
-		case 0x07: state->cps_a_regs[0x16 / 2] = data; break;			/* scroll 3y */
-		case 0x08: state->cps_a_regs[0x10 / 2] = data + 0xffce;	break;		/* scroll 2x */
-		case 0x09: state->cps_a_regs[0x0c / 2] = data + 0xffca;	break;		/* scroll 1x */
-		case 0x0a: state->cps_a_regs[0x12 / 2] = state->cps_a_regs[CPS1_ROWSCROLL_OFFS] = data; break;	/* scroll 2y */ /* row scroll start */
-		case 0x0b: state->cps_a_regs[0x0e / 2] = data; break;			/* scroll 1y */
+		case 0x06: state->cps_a_regs[0x14 / 2] = data + 0xffce; break;
+		case 0x07: state->cps_a_regs[0x16 / 2] = data; break;
+		case 0x08: state->cps_a_regs[0x10 / 2] = data + 0xffce;	break;
+		case 0x09: state->cps_a_regs[0x0c / 2] = data + 0xffca;	break;
+		case 0x0a: state->cps_a_regs[0x12 / 2] = state->cps_a_regs[CPS1_ROWSCROLL_OFFS] = data; break;
+		case 0x0b: state->cps_a_regs[0x0e / 2] = data; break;
 		case 0x26: state->cps_b_regs[state->layer_enable_reg / 2] = data;
 	}
 }
+
 
 
 /* ---  RENDER HANDLER  --- */
@@ -1109,7 +1110,7 @@ static MACHINE_DRIVER_START( sf2mdt )
 	MDRV_VIDEO_UPDATE(bootleg_updatescreen)
 	MDRV_VIDEO_EOF(cps1)
 	MDRV_GFXDECODE(cps1)
-	MDRV_PALETTE_LENGTH(4096)
+	MDRV_PALETTE_LENGTH(0xc00)
 	MDRV_VIDEO_START(cps1)
 
 	/* sound hardware */
@@ -1896,6 +1897,44 @@ ROM_START( ffightbl )
 	ROM_COPY( "gfx", 0x000000, 0x000000, 0x8000 )	/* stars */
 ROM_END
 
+ROM_START( ffightbla )
+	ROM_REGION( CODE_SIZE, "maincpu", 0 )		/* 68000 code */
+	ROM_LOAD16_BYTE( "9.bin",  0x00000, 0x20000, CRC(c6854c91) SHA1(29f01cc65be5eaa3f86e99eebdd284104623abb0) )
+	ROM_LOAD16_BYTE( "5.bin",  0x00001, 0x20000, CRC(77f7c2b3) SHA1(feea48d9555824a2e5bf5e99ce159edc015f0792) )
+	ROM_LOAD16_BYTE( "8.bin",  0x40000, 0x20000, CRC(1895b3df) SHA1(415a26050c50ed79a7ee5ddd1b8d61593b1ce876) )
+	ROM_LOAD16_BYTE( "4.bin",  0x40001, 0x20000, CRC(bbd411ee) SHA1(85d50ca72ec46d627f9c88ff0809aa30e164821a) )
+	ROM_LOAD16_BYTE( "7.bin",  0x80000, 0x20000, CRC(5b23ebf2) SHA1(8c28c21a72a28ad249170026891c6bb865943f84) )
+	ROM_LOAD16_BYTE( "3.bin",  0x80001, 0x20000, CRC(aba2aebe) SHA1(294109b5929ed63859a55bef16643e3ade7da16f) )
+	ROM_LOAD16_BYTE( "6.bin",  0xc0000, 0x20000, CRC(d4bf37f6) SHA1(f47e1cc9aa3b3019ee57f59715e3a611acf9fe3e) )
+	ROM_LOAD16_BYTE( "2.bin",  0xc0001, 0x20000, CRC(07ac8f43) SHA1(7a41b003c76adaabd3f94929cc163461b70e0ed9) )
+
+	ROM_REGION( 0x30000, "audiocpu", 0 )		/* Audio CPU + Sample Data */
+	ROM_LOAD( "1.bin",   0x00000, 0x20000, CRC(5b276c14) SHA1(73e53c077d4e3c1b919eee28b29e34176ee204f8) )
+	ROM_RELOAD(          0x10000, 0x20000 )
+
+	ROM_REGION( 0x200000, "gfx", 0 )
+	ROMX_LOAD( "18.bin",     0x000000, 0x20000, CRC(f1eee6d9) SHA1(bee95efbff49c582cff1cc6d9bb5ef4ea5c4a074) , ROM_SKIP(3) )
+	ROMX_LOAD( "20.bin",     0x000001, 0x20000, CRC(675f4537) SHA1(acc68822da3aafbb62f76cbffa5f3389fcc91447) , ROM_SKIP(3) )
+	ROMX_LOAD( "22.bin",     0x000002, 0x20000, CRC(db8a32ac) SHA1(b95f73dff291acee239e22e5fd7efe15d0de23be) , ROM_SKIP(3) )
+	ROMX_LOAD( "24.bin",     0x000003, 0x20000, CRC(f4113e57) SHA1(ff1f443c13494a169b9be24abc361d27a6d01c09) , ROM_SKIP(3) )
+	ROMX_LOAD( "10.bin",     0x080000, 0x20000, CRC(d478853e) SHA1(91fcf8eb022ccea66d291bec84ace557181cf861) , ROM_SKIP(3) )
+	ROMX_LOAD( "12.bin",     0x080001, 0x20000, CRC(25055642) SHA1(578cf6a436489cc1f2d1acdb0cba6c1cbee2e21f) , ROM_SKIP(3) )
+	ROMX_LOAD( "14.bin",     0x080002, 0x20000, CRC(b77d0328) SHA1(42eb1ebfda301f2b09f3add5932e8331f4790706) , ROM_SKIP(3) )
+	ROMX_LOAD( "16.bin",     0x080003, 0x20000, CRC(ea111a79) SHA1(1b86aa984d2d6c527e96b61274a82263f34d0d89) , ROM_SKIP(3) )
+	ROMX_LOAD( "ff-19.bin",  0x100000, 0x20000, CRC(7bc03747) SHA1(6964e5c562d6af5b4327ff828f3d0522c34911bc) , ROM_SKIP(3) )
+	ROMX_LOAD( "ff-21.bin",  0x100001, 0x20000, CRC(0c248e2b) SHA1(28731fe25a8eb39c1e0822cf9074a7a32c6b2978) , ROM_SKIP(3) )
+	ROMX_LOAD( "ff-23.bin",  0x100002, 0x20000, CRC(53949d0e) SHA1(1b11134005a47c323917b9892fe44819c36c6ee2) , ROM_SKIP(3) )
+	ROMX_LOAD( "ff-25.bin",  0x100003, 0x20000, CRC(8d34a67d) SHA1(69e9f52efb73952313848a6d54dbdc17a2275c59) , ROM_SKIP(3) )
+	ROMX_LOAD( "11.bin",     0x180000, 0x20000, CRC(d4457a60) SHA1(9e956efafa81a81aca92837df03968f5670ffc15) , ROM_SKIP(3) )
+	ROMX_LOAD( "13.bin",     0x180001, 0x20000, CRC(3b26a37d) SHA1(58d8d0cdef81c938fb1a5595f2d02b228865893b) , ROM_SKIP(3) )
+	ROMX_LOAD( "15.bin",     0x180002, 0x20000, CRC(6d837e09) SHA1(b4a133ab96c35b689ee692bfcc04981791099b6f) , ROM_SKIP(3) )
+	ROMX_LOAD( "17.bin",     0x180003, 0x20000, CRC(c59a4d6c) SHA1(59e49c7d24dd333007de4bb621050011a5392bcc) , ROM_SKIP(3) )
+
+	ROM_REGION( 0x8000, "gfx2", 0 )
+	ROM_COPY( "gfx", 0x000000, 0x000000, 0x8000 )   /* stars */
+ROM_END
+
+
 
 /*
 GAME( year, archives name,  parent name, MACHINE_DRIVER_START, INPUT_PORTS, DRIVER_INIT,   flip,   producer name,   title information,	status )
@@ -1933,3 +1972,5 @@ GAME( 1993,   dinopic2,	  dino,		dinopic,	dino,		dinopic,  ROT0,   "bootleg", "C
 GAME( 1993,   slampic,	  slammast,	slampic,	slammast,	dinopic,  ROT0,   "bootleg", "Saturday Night Slam Masters (bootleg with PIC16c57)", GAME_IMPERFECT_GRAPHICS | GAME_NO_SOUND | GAME_SUPPORTS_SAVE )
 /* ffightbl - old sprites show on next screen. (Fixes) */
 GAME( 1990,   ffightbl,	  ffight,	fcrash,		ffight,		fcrash,	  ROT0,   "bootleg", "Final Fight (bootleg)", GAME_SUPPORTS_SAVE )
+/* ffightbl - old sprites show on next screen. (Fixes) */
+GAME( 1990,   ffightbla,  ffight,	fcrash,		ffight,		fcrash,	  ROT0,   "bootleg", "Final Fight (bootleg on Final Crash PCB)", GAME_SUPPORTS_SAVE )

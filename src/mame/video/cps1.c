@@ -1261,6 +1261,7 @@ static const struct CPS1config cps1_config_table[]=
 
 	{"nemo",	CPS_B_15,     mapper_NM24B },
 	{"nemoj",	CPS_B_15,     mapper_NM24B },	// wrong, this set uses NM22B, still non dumped
+	{"nemor1",	CPS_B_15,     mapper_NM24B },
 
 	{"pang3",	CPS_B_21_DEF, mapper_pang3 },	/* EEPROM port is among the CPS registers (handled by DRIVER_INIT) */	// should use one of these three CP1B1F,CP1B8K,CP1B9KA still not dumped
 	{"pang3n",	CPS_B_21_DEF, mapper_pang3 },	/* EEPROM port is among the CPS registers (handled by DRIVER_INIT) */	// should use one of these three CP1B1F,CP1B8K,CP1B9KA still not dumped
