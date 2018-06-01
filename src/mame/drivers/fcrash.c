@@ -322,8 +322,7 @@ static void bootleg_update_transmasks( running_machine *machine )
 {
 	cps_state *state = (cps_state *)machine->driver_data;
 
-	UINT32 i;
-	for (i = 0; i < 4; i++)
+	for (UINT32 i = 0; i < 4; i++)
 	{
 		INT32 mask = state->layer_mask_reg[i] ? (state->cps_b_regs[state->layer_mask_reg[i] / 2] ^ 0xffff) : 0xffff;
 
@@ -356,11 +355,12 @@ static void bootleg_render_sprites( running_machine *machine, bitmap_t *bitmap, 
 		{
 			tileno = sprite_ram[base + pos];
 			if (tileno >= num_sprites) continue;
-			xpos   = sprite_ram[base + pos + 2] & 0x01ff;
-			ypos   = sprite_ram[base + pos - 1] & 0x01ff;
-			flipx  = sprite_ram[base + pos + 1] & 0x20;
-			flipy  = sprite_ram[base + pos + 1] & 0x40;
-			color  = sprite_ram[base + pos + 1] & 0x1f;
+			INT32 temp = base + pos + 1;
+			xpos   = sprite_ram[temp + 1] & 0x01ff;
+			ypos   = sprite_ram[temp - 2] & 0x01ff;
+			flipx  = sprite_ram[temp + 0] & 0x20;
+			flipy  = sprite_ram[temp + 0] & 0x40;
+			color  = sprite_ram[temp + 0] & 0x1f;
 			ypos   = 256 - 16 - ypos;
 			xpos   += state->sprite_x_offset + 49;
 
@@ -420,7 +420,6 @@ static VIDEO_UPDATE( bootleg_updatescreen )
 {
 	cps_state *state = (cps_state *)screen->machine->driver_data;
 
-	INT32 layercontrol = state->cps_b_regs[state->layer_enable_reg / 2];
 	INT32 videocontrol = state->cps_a_regs[0x22 / 2];
 	flip_screen_set(screen->machine, videocontrol & 0x8000);
 
@@ -439,9 +438,8 @@ static VIDEO_UPDATE( bootleg_updatescreen )
 		INT32 scrly = -state->scroll2y;
 		tilemap_set_scroll_rows(state->bg_tilemap[1], 1024);
 		INT32 otheroffs = state->cps_a_regs[CPS1_ROWSCROLL_OFFS];
-		UINT32 i;
 
-		for (i = 0; i < 256; )
+		for (UINT32 i = 0; i < 256; )
 		{
 			tilemap_set_scrollx(state->bg_tilemap[1], (i - scrly) & 0x03ff, state->scroll2x + state->other[(i + otheroffs) & 0x03ff]); i++;
 			tilemap_set_scrollx(state->bg_tilemap[1], (i - scrly) & 0x03ff, state->scroll2x + state->other[(i + otheroffs) & 0x03ff]); i++;
@@ -468,6 +466,7 @@ static VIDEO_UPDATE( bootleg_updatescreen )
 	bitmap_fill(bitmap, cliprect, 0x0bff);
 	bitmap_fill(screen->machine->priority_bitmap, cliprect, 0);
 
+	INT32 layercontrol = state->cps_b_regs[state->layer_enable_reg / 2];
 	INT32 l0 = (layercontrol >> 0x06) & 0x03;
 	INT32 l1 = (layercontrol >> 0x08) & 0x03;
 	INT32 l2 = (layercontrol >> 0x0a) & 0x03;

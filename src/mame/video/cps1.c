@@ -1463,25 +1463,6 @@ static MACHINE_RESET( cps )
 		UINT16 *rom = (UINT16 *)memory_region(machine, "maincpu");
 		rom[0xe5332 / 2] = 0x6014;
 	}
-#if 0
-	if (strcmp(gamename, "sf2accp2") == 0)
-	{
-		/* Patch out a odd branch which would be incorrectly interpreted
-           by the cpu core as a 32-bit branch. This branch would make the
-           game crash (address error, since it would branch to an odd address)
-           if location 180ca6 (outside ROM space) isn't 0. Protection check? */
-		UINT16 *rom = (UINT16 *)memory_region(machine, "maincpu");
-		rom[0x11756 / 2] = 0x4e71;
-	}
-	else if (strcmp(gamename, "ghouls") == 0)
-	{
-		/* Patch out self-test... it takes forever */
-		UINT16 *rom = (UINT16 *)memory_region(machine, "maincpu");
-		rom[0x61964 / 2] = 0x4ef9;
-		rom[0x61966 / 2] = 0x0000;
-		rom[0x61968 / 2] = 0x0400;
-	}
-#endif
 }
 
 
@@ -1500,7 +1481,6 @@ INLINE UINT16 *cps1_base( running_machine *machine, int offset, int boundary )
 	base &= ~(boundary - 1);
 	return &state->gfxram[(base & 0x03ffff) / 2];
 }
-
 
 
 WRITE16_HANDLER( cps1_cps_a_w )
@@ -1533,8 +1513,7 @@ READ16_HANDLER( cps1_cps_b_r )
 	cps_state *state = (cps_state *)space->machine->driver_data;
 
 	/* Some games interrogate a couple of registers on bootup. */
-	/* These are CPS1 board B self test checks. They wander from game to */
-	/* game. */
+	/* These are CPS1 board B self test checks. They wander from game to game. */
 	if (offset == state->game_config->cpsb_addr / 2)
 		return state->game_config->cpsb_value;
 
@@ -1549,15 +1528,15 @@ READ16_HANDLER( cps1_cps_b_r )
 		return (state->cps_b_regs[state->game_config->mult_factor1 / 2] *
 				state->cps_b_regs[state->game_config->mult_factor2 / 2]) >> 16;
 
-	if (offset == state->game_config->in2_addr / 2)	/* Extra input ports (on C-board) */
+	if (offset == state->game_config->in2_addr / 2)		/* Extra input ports (on C-board) */
 		return input_port_read(space->machine, "IN2");
 
-	if (offset == state->game_config->in3_addr / 2)	/* Player 4 controls (on C-board) ("Captain Commando") */
+	if (offset == state->game_config->in3_addr / 2)		/* Player 4 controls (on C-board) ("Captain Commando") */
 		return input_port_read(space->machine, "IN3");
 
 	if (state->cps_version == 2)
 	{
-		if (offset == 0x10 / 2)		/* UNKNOWN--only mmatrix appears to read this, and I'm not sure if the result is actuallyused */
+		if (offset == 0x10 / 2)				/* UNKNOWN--only mmatrix appears to read this, and I'm not sure if the result is actuallyused */
 			return state->cps_b_regs[0x10 / 2];
 		if (offset == 0x12 / 2)
 			return state->cps_b_regs[0x12 / 2];
@@ -1603,7 +1582,7 @@ WRITE16_HANDLER( cps1_cps_b_w )
 				set_led_status(space->machine, 1, data & 0x04);
 				set_led_status(space->machine, 2, data & 0x08);
 			}
-			else	/* kod, captcomm, knights */
+			else						/* kod, captcomm, knights */
 			{
 				coin_lockout_w(space->machine, 2, ~data & 0x02);
 				coin_lockout_w(space->machine, 3, ~data & 0x08);
@@ -1665,7 +1644,6 @@ static void cps1_gfx_decode( running_machine *machine )
 
 static void unshuffle( UINT64 *buf, int len )
 {
-	int i;
 	UINT64 t;
 
 	if (len == 2)
@@ -1678,7 +1656,7 @@ static void unshuffle( UINT64 *buf, int len )
 	unshuffle(buf, len);
 	unshuffle(buf + len, len);
 
-	for (i = 0; i < len / 2; i++)
+	for (UINT32 i = 0; i < len / 2; i++)
 	{
 		t = buf[len / 2 + i];
 		buf[len / 2 + i] = buf[len + i];
@@ -1691,10 +1669,9 @@ static void cps2_gfx_decode( running_machine *machine )
 {
 	const int banksize = 0x200000;
 	INT32 size = memory_region_length(machine, "gfx");
-	UINT32 i;
 
-	for (i = 0; i < size; i += banksize)
-		unshuffle((UINT64 *)(memory_region(machine, "gfx") + i), banksize / 8);
+	for (UINT32 i = 0; i < size; i += banksize)
+		unshuffle((UINT64 *)(memory_region(machine, "gfx") + i), 0x200000 / 8);
 
 	cps1_gfx_decode(machine);
 }
@@ -1773,11 +1750,6 @@ void cps1_get_video_base( running_machine *machine )
 			scroll2xoff = -0x0b;
 			scroll3xoff = -0x0c;
 		break;
-/*		case 0x05:
-			scroll1xoff = 0x02;
-			scroll2xoff = 0x04;
-			scroll3xoff = 0x08;
-		break;	*/
 		case 0x0e:
 			scroll1xoff = 0xffba;
 			scroll2xoff = 0xffc0;
@@ -1823,8 +1795,8 @@ void cps1_get_video_base( running_machine *machine )
 	videocontrol = state->cps_a_regs[CPS1_VIDEOCONTROL];
 
 	tilemap_set_enable(state->bg_tilemap[0], layercontrol & state->game_config->layer_enable_mask[0]);
-	tilemap_set_enable(state->bg_tilemap[1], (layercontrol & state->game_config->layer_enable_mask[1]) && (videocontrol & 4));
-	tilemap_set_enable(state->bg_tilemap[2], (layercontrol & state->game_config->layer_enable_mask[2]) && (videocontrol & 8));
+	tilemap_set_enable(state->bg_tilemap[1], (layercontrol & state->game_config->layer_enable_mask[1]) && (videocontrol & 0x04));
+	tilemap_set_enable(state->bg_tilemap[2], (layercontrol & state->game_config->layer_enable_mask[2]) && (videocontrol & 0x08));
 
 	state->stars_enabled[0] = layercontrol & state->game_config->layer_enable_mask[3];
 	state->stars_enabled[1] = layercontrol & state->game_config->layer_enable_mask[4];
@@ -1862,6 +1834,7 @@ void cps1_get_video_base( running_machine *machine )
 WRITE16_HANDLER( cps1_gfxram_w )
 {
 	cps_state *state = (cps_state *)space->machine->driver_data;
+
 	int page = (offset >> 7) & 0x03c0;
 	COMBINE_DATA(&state->gfxram[offset]);
 
@@ -1880,6 +1853,7 @@ WRITE16_HANDLER( cps1_gfxram_w )
 static int gfxrom_bank_mapper( running_machine *machine, int type, int code )
 {
 	cps_state *state = (cps_state *)machine->driver_data;
+
 	const struct gfx_range *range = state->game_config->bank_mapper;
 	int shift = 0;
 
@@ -1897,26 +1871,21 @@ static int gfxrom_bank_mapper( running_machine *machine, int type, int code )
 
 	while (range->type)
 	{
-		if (code >= range->start && code <= range->end)
-		{
-			if (range->type & type)
-			{
-				int base = 0;
-				int i;
+		if (code >= range->start)
+			if (code <= range->end)
+				if (range->type & type)
+				{
+					INT32 base = 0;
+					for (INT32 i = 0; i < range->bank; ++i)
+						base += state->game_config->bank_sizes[i];
 
-				for (i = 0; i < range->bank; ++i)
-					base += state->game_config->bank_sizes[i];
-
-				return (base + (code & (state->game_config->bank_sizes[range->bank] - 1))) >> shift;
-			}
-		}
+					return (base + (code & (state->game_config->bank_sizes[range->bank] - 1))) >> shift;
+				}
 		++range;
 	}
-
 #ifdef MAME_DEBUG
 	/*  popmessage("tile %02x/%04x out of range", type, code >> shift); */
 #endif
-
 	return -1;
 }
 
@@ -2008,16 +1977,11 @@ static TILE_GET_INFO( get_tile2_info )
 static void cps1_update_transmasks( running_machine *machine )
 {
 	cps_state *state = (cps_state *)machine->driver_data;
-	UINT32 i;
 
-	for (i = 0; i < 4; i++)
+	for (UINT32 i = 0; i < 4; i++)
 	{
-		INT32 mask;
 		/* Get transparency registers */
-		if ( state->game_config->priority[i] != -1 )
-			mask = state->cps_b_regs[state->game_config->priority[i] / 2] ^ 0xffff;
-		else
-			mask = 0xffff;	/* completely transparent if priority masks not defined (qad) */
+		INT32 mask = ( state->game_config->priority[i] != -1 ) ? state->cps_b_regs[state->game_config->priority[i] / 2] ^ 0xffff : 0xffff;   /* completely transparent if priority masks not defined (qad) */
 
 		tilemap_set_transmask(state->bg_tilemap[0], i, mask, 0x8000);
 		tilemap_set_transmask(state->bg_tilemap[1], i, mask, 0x8000);
@@ -2057,8 +2021,7 @@ static VIDEO_START( cps )
 	/* front masks will change at runtime to handle sprite occluding */
 	cps1_update_transmasks(machine);
 
-	UINT32 i;
-	for (i = 0; i < cps1_palette_entries * 16; i++)
+	for (UINT32 i = 0; i < cps1_palette_entries * 16; i++)
 		palette_set_color( machine, i, MAKE_RGB(0, 0, 0) );
 
 	state->buffered_obj = auto_alloc_array_clear(machine, UINT16, state->obj_size / 2);
@@ -2100,20 +2063,6 @@ static VIDEO_START( cps )
 	state_save_register_global(machine, state->scanline1);
 	state_save_register_global(machine, state->scanline2);
 	state_save_register_global(machine, state->scancalls);
-#if 0
-	/* these do not need to be saved, because they are recovered from cps_a_regs in cps1_postload */
-	state_save_register_global(machine, state->scroll1x);
-	state_save_register_global(machine, state->scroll1y);
-	state_save_register_global(machine, state->scroll2x);
-	state_save_register_global(machine, state->scroll2y);
-	state_save_register_global(machine, state->scroll3x);
-	state_save_register_global(machine, state->scroll3y);
-	state_save_register_global(machine, state->stars1x);
-	state_save_register_global(machine, state->stars1y);
-	state_save_register_global(machine, state->stars2x);
-	state_save_register_global(machine, state->stars2y);
-	state_save_register_global_array(machine, state->stars_enabled);
-#endif
 	state_save_register_global(machine, state->last_sprite_offset);
 	state_save_register_global(machine, state->pri_ctrl);
 	state_save_register_global(machine, state->objram_bank);
@@ -2269,22 +2218,16 @@ static void cps1_render_sprites( running_machine *machine, bitmap_t *bitmap, con
 #define DRAWSPRITE( CODE, COLOR, FLIPX, FLIPY, SX, SY )							\
 {													\
 	if (flip_screen_get(machine))									\
-		pdrawgfx_transpen(bitmap, 								\
-				cliprect, machine->gfx[2], 						\
-				CODE,									\
-				COLOR,									\
-				!(FLIPX), !(FLIPY),							\
+		pdrawgfx_transpen( bitmap, cliprect, machine->gfx[2],					\
+				CODE, COLOR, !(FLIPX), !(FLIPY),					\
 				511 - 16 - (SX), 255 - 16 - (SY), machine->priority_bitmap, 0x02, 15);  \
-	else												\
-		pdrawgfx_transpen(bitmap,								\
-				cliprect, machine->gfx[2], 						\
-				CODE,									\
-				COLOR,									\
-				FLIPX, FLIPY,								\
+	else 												\
+		pdrawgfx_transpen( bitmap, cliprect, machine->gfx[2],					\
+				CODE, COLOR, FLIPX, FLIPY,						\
 				SX, SY,				  machine->priority_bitmap, 0x02, 15);  \
 }
 	UINT16 *base = state->buffered_obj;
-	INT32 i, baseadd = 4;
+	INT32 x, y, code, colour, col, nx, ny, tmp1, tmp2, tmp3, baseadd = 4;
 
 	/* some sf2 hacks draw the sprites in reverse order */
 	if (state->game_config->bootleg_kludge)
@@ -2296,98 +2239,69 @@ static void cps1_render_sprites( running_machine *machine, bitmap_t *bitmap, con
 		}
 	}
 
-	for (i = state->last_sprite_offset; i >= 0; i -= 4)
+	for (INT32 i = state->last_sprite_offset; i >= 0; i -= 4)
 	{
-		int x = *(base + 0);
-		int y = *(base + 1);
-		int code = *(base + 2);
-		int colour = *(base + 3);
-		int col = colour & 0x1f;
-
+		code = *(base + 2);
 		code = gfxrom_bank_mapper(machine, GFXTYPE_SPRITES, code);
 
 		if (code != -1)
 		{
+			x      = *(base + 0);
+			y      = *(base + 1);
+			colour = *(base + 3);
+			col    = colour & 0x1f;
+			tmp2   = col & 0x1f;
+
 			if (colour & 0xff00 )
 			{
 				/* handle blocked sprites */
-				int nx = (colour & 0x0f00) >> 8;
-				int ny = (colour & 0xf000) >> 12;
-				int nxs, nys, sx, sy;
-				nx++;
-				ny++;
+				nx = ((colour & 0x0f00) >> 8) + 1;
+				ny = ((colour & 0xf000) >> 12) + 1;
+				tmp1 = code & ~0x0f;
+				tmp3 = code + nx;
 
 				if (colour & 0x40)
 				{
-					/* Y flip */
-					if (colour & 0x20)
+					if (colour & 0x20)	/* Y flip */
 					{
-						for (nys = 0; nys < ny; nys++)
-						{
-							for (nxs = 0; nxs < nx; nxs++)
-							{
-								sx = (x + nxs * 16) & 0x01ff;
-								sy = (y + nys * 16) & 0x01ff;
-								DRAWSPRITE( (code & ~0x0f) + ((code + (nx - 1) - nxs) & 0x0f) + 0x10 * (ny - 1 - nys),
-									    (col & 0x1f), 0x01, 0x01, sx, sy );
-							}
-						}
+						for (UINT32 nys = 0; nys < ny; nys++)
+							for (UINT32 nxs = 0; nxs < nx; nxs++)
+								DRAWSPRITE( tmp1 + ((tmp3 - nxs - 1) & 0x0f) + 0x10 * (ny - nys - 1),
+									    tmp2, 0x01, 0x01, (x + nxs * 16) & 0x01ff, (y + nys * 16) & 0x01ff);
 					}
 					else
 					{
-						for (nys = 0; nys < ny; nys++)
-						{
-							for (nxs = 0; nxs < nx; nxs++)
-							{
-								sx = (x + nxs * 16) & 0x01ff;
-								sy = (y + nys * 16) & 0x01ff;
-								DRAWSPRITE( (code & ~0x0f) + ((code + nxs) & 0x0f) + 0x10 * (ny - 1 - nys),
-									    (col & 0x1f), 0x00, 0x01, sx, sy );
-							}
-						}
+						for (UINT32 nys = 0; nys < ny; nys++)
+							for (UINT32 nxs = 0; nxs < nx; nxs++)
+								DRAWSPRITE( tmp1 + ((code + nxs) & 0x0f) + 0x10 * (ny - nys - 1),
+									    tmp2, 0x00, 0x01, (x + nxs * 16) & 0x01ff, (y + nys * 16) & 0x01ff);
 					}
 				}
 				else
 				{
 					if (colour & 0x20)
 					{
-						for (nys = 0; nys < ny; nys++)
-						{
-							for (nxs = 0; nxs<nx; nxs++)
-							{
-								sx = (x + nxs * 16) & 0x1ff;
-								sy = (y + nys * 16) & 0x1ff;
-								DRAWSPRITE( (code & ~0x0f) + ((code + (nx - 1) - nxs) & 0x0f) + 0x10 * nys,
-									    (col & 0x1f), 0x01, 0x00, sx, sy);
-							}
-						}
+						for (UINT32 nys = 0; nys < ny; nys++)
+							for (UINT32 nxs = 0; nxs < nx; nxs++)
+								DRAWSPRITE( tmp1 + ((tmp3 - nxs - 1) & 0x0f) + 0x10 * nys,
+									    tmp2, 0x01, 0x00, (x + nxs * 16) & 0x01ff, (y + nys * 16) & 0x01ff);
 					}
 					else
 					{
-						for (nys = 0; nys < ny; nys++)
-						{
-							for (nxs = 0; nxs < nx; nxs++)
-							{
-								sx = (x + nxs * 16) & 0x1ff;
-								sy = (y + nys * 16) & 0x1ff;
-								DRAWSPRITE( (code & ~0x0f) + ((code + nxs) & 0x0f) + 0x10 * nys, /* fix 00406: qadj: When playing as the ninja, there is one broekn frame in his animation loop when walking. */
-									    (col & 0x1f), 0x00, 0x00, sx, sy);
-							}
-						}
+						for (UINT32 nys = 0; nys < ny; nys++)
+							for (UINT32 nxs = 0; nxs < nx; nxs++)
+								DRAWSPRITE( tmp1 + ((code + nxs) & 0x0f) + 0x10 * nys, /* fix 00406: qadj: When playing as the ninja, there is one broekn frame in his animation loop when walking. */
+									    tmp2, 0x00, 0x00, (x + nxs * 16) & 0x01ff, (y + nys * 16) & 0x01ff);
 					}
 				}
 			}
 			else
-			{
-				/* Simple case... 1 sprite */
-				DRAWSPRITE( code, (col & 0x1f), colour & 0x20, colour & 0x40, x & 0x01ff, y & 0x01ff );
-			}
+				DRAWSPRITE( code, tmp2, colour & 0x20, colour & 0x40, x & 0x01ff, y & 0x01ff );	/* Simple case... 1 sprite */
 		}
 		base += baseadd;
 	}
 #undef DRAWSPRITE
 }
-
 
 
 WRITE16_HANDLER( cps2_objram_bank_w )
@@ -2402,6 +2316,7 @@ WRITE16_HANDLER( cps2_objram_bank_w )
 READ16_HANDLER( cps2_objram1_r )
 {
 	cps_state *state = (cps_state *)space->machine->driver_data;
+
 	if (state->objram_bank & 1)
 		return state->objram2[offset];
 	else
@@ -2411,6 +2326,7 @@ READ16_HANDLER( cps2_objram1_r )
 READ16_HANDLER( cps2_objram2_r )
 {
 	cps_state *state = (cps_state *)space->machine->driver_data;
+
 	if (state->objram_bank & 1)
 		return state->objram1[offset];
 	else
@@ -2420,6 +2336,7 @@ READ16_HANDLER( cps2_objram2_r )
 WRITE16_HANDLER( cps2_objram1_w )
 {
 	cps_state *state = (cps_state *)space->machine->driver_data;
+
 	if (state->objram_bank & 1)
 		COMBINE_DATA(&state->objram2[offset]);
 	else
@@ -2429,6 +2346,7 @@ WRITE16_HANDLER( cps2_objram1_w )
 WRITE16_HANDLER( cps2_objram2_w )
 {
 	cps_state *state = (cps_state *)space->machine->driver_data;
+
 	if (state->objram_bank & 1)
 		COMBINE_DATA(&state->objram1[offset]);
 	else
@@ -2454,9 +2372,9 @@ static void cps2_find_last_sprite( running_machine *machine )		/* Find the offse
 {
 	cps_state *state = (cps_state *)machine->driver_data;
 	UINT16 *base = state->cps2_buffered_obj;
+	INT32 size = state->cps2_obj_size / 2;
 
-	INT32 offset, size = state->cps2_obj_size / 2;
-	for (offset = 0; offset < size; offset += 4)			/* Locate the end of table marker */
+	for (UINT32 offset = 0; offset < size; offset += 4)			/* Locate the end of table marker */
 	{
 		if (base[offset + 1] >= 0x8000 || base[offset + 3] >= 0xff00)
 		{
@@ -2474,40 +2392,30 @@ static void cps2_render_sprites( running_machine *machine, bitmap_t *bitmap, con
 #define DRAWSPRITE(CODE, COLOR, FLIPX, FLIPY, SX, SY)									\
 {															\
 	if (flip_screen_get(machine))											\
-		pdrawgfx_transpen(bitmap,										\
-				cliprect, machine->gfx[2],								\
-				CODE,											\
-				COLOR,											\
-				!(FLIPX), !(FLIPY),									\
-				511 - 16 - (SX), 255 - 16 - (SY), machine->priority_bitmap, primasks[priority], 15);	\
+		pdrawgfx_transpen( bitmap, cliprect, machine->gfx[2],							\
+				CODE, COLOR, !(FLIPX), !(FLIPY), 511 - 16 - (SX), 255 - 16 - (SY),			\
+				machine->priority_bitmap, primasks[priority], 15);					\
 	else														\
-		pdrawgfx_transpen(bitmap,										\
-				cliprect, machine->gfx[2],								\
-				CODE,											\
-				COLOR,											\
-				FLIPX, FLIPY,										\
-				SX, SY,				  machine->priority_bitmap, primasks[priority], 15);	\
+		pdrawgfx_transpen( bitmap, cliprect, machine->gfx[2],							\
+				CODE, COLOR, FLIPX, FLIPY, SX, SY,							\
+				machine->priority_bitmap, primasks[priority], 15);					\
 }
-
-	UINT16 *base = state->cps2_buffered_obj;
-	int xoffs = 64 - cps2_port(machine, CPS2_OBJ_XOFFS);
-	int yoffs = 16 - cps2_port(machine, CPS2_OBJ_YOFFS);
-
 #ifdef MAME_DEBUG
-	if (input_code_pressed(machine, KEYCODE_Z) && input_code_pressed(machine, KEYCODE_R))
-	{
-		return;
-	}
+	if (input_code_pressed(machine, KEYCODE_Z) && input_code_pressed(machine, KEYCODE_R)) return;
 #endif
-	INT32 i;
-	for (i = state->cps2_last_sprite_offset; i >= 0; i -= 4)
+	UINT16 *base = state->cps2_buffered_obj;
+	INT32 xoffs = 64 - cps2_port(machine, CPS2_OBJ_XOFFS);
+	INT32 yoffs = 16 - cps2_port(machine, CPS2_OBJ_YOFFS);
+	INT32 x, y, nx, ny, nxs, nys, col, code, colour, priority, tmp1, tmp2, tmp3, tmp4, tmp5;
+
+	for (INT32 i = state->cps2_last_sprite_offset; i >= 0; i -= 4)
 	{
-		int x = base[i + 0];
-		int y = base[i + 1];
-		int priority = (x >> 13) & 0x07;
-		int code = base[i + 2] + ((y & 0x6000) << 3);
-		int colour = base[i + 3];
-		int col = colour & 0x1f;
+		x = base[i + 0];
+		y = base[i + 1];
+		code = base[i + 2] + ((y & 0x6000) << 3);
+		colour = base[i + 3];
+		priority = (x >> 13) & 0x07;
+		col = colour & 0x1f;
 
 		if (colour & 0x80)
 		{
@@ -2515,43 +2423,32 @@ static void cps2_render_sprites( running_machine *machine, bitmap_t *bitmap, con
 			y += cps2_port(machine, CPS2_OBJ_YOFFS);  /* like Marvel vs. Capcom ending credits */
 		}
 
+		tmp1 = col & 0x1f;
+		tmp2 = x + xoffs;
+		tmp3 = y + yoffs;
+
 		if (colour & 0xff00)
 		{
 			/* handle blocked sprites */
-			int nx = (colour & 0x0f00) >> 8;
-			int ny = (colour & 0xf000) >> 12;
-			int nxs, nys, sx, sy;
-			nx++;
-			ny++;
+			nx = ((colour & 0x0f00) >> 8) + 1;
+			ny = ((colour & 0xf000) >> 12) + 1;
+			tmp4 = code + nx;
 
 			if (colour & 0x40)
 			{
-				/* Y flip */
-				if (colour & 0x20)
+				if (colour & 0x20)		/* Y flip */
 				{
 					for (nys = 0; nys < ny; nys++)
-					{
 						for (nxs = 0; nxs < nx; nxs++)
-						{
-							sx = (x + nxs * 16 + xoffs) & 0x03ff;
-							sy = (y + nys * 16 + yoffs) & 0x03ff;
-							DRAWSPRITE( code + (nx - 1) - nxs + 0x10 * (ny - 1 - nys),
-								   (col & 0x1f), 0x01, 0x01, sx, sy);
-						}
-					}
+							DRAWSPRITE( tmp4 - nxs - 1 + 0x10 * (ny - nys - 1), tmp1, 0x01, 0x01,
+									(nxs * 16 + tmp2) & 0x03ff, (nys * 16 + tmp3) & 0x03ff );
 				}
 				else
 				{
 					for (nys = 0; nys < ny; nys++)
-					{
 						for (nxs = 0; nxs < nx; nxs++)
-						{
-							sx = (x + nxs * 16 + xoffs) & 0x03ff;
-							sy = (y + nys * 16 + yoffs) & 0x03ff;
-							DRAWSPRITE( code + nxs + 0x10 * (ny - 1 - nys),
-								   (col & 0x1f), 0x00, 0x01, sx, sy);
-						}
-					}
+							DRAWSPRITE( code + nxs + 0x10 * (ny - nys - 1), tmp1, 0x00, 0x01,
+									(nxs * 16 + tmp2) & 0x03ff, (nys * 16 + tmp3) & 0x03ff );
 				}
 			}
 			else
@@ -2559,41 +2456,24 @@ static void cps2_render_sprites( running_machine *machine, bitmap_t *bitmap, con
 				if (colour & 0x20)
 				{
 					for (nys = 0; nys < ny; nys++)
-					{
 						for (nxs = 0; nxs < nx; nxs++)
-						{
-							sx = (x + nxs * 16 + xoffs) & 0x03ff;
-							sy = (y + nys * 16 + yoffs) & 0x03ff;
-							DRAWSPRITE( code + (nx - 1) - nxs + 0x10 * nys,
-								   (col & 0x1f), 0x01, 0x00, sx, sy);
-						}
-					}
+							DRAWSPRITE( tmp4 - nxs - 1 + 0x10 * nys, tmp1, 0x01, 0x00,
+									(nxs * 16 + tmp2) & 0x03ff, (nys * 16 + tmp3) & 0x03ff );
 				}
 				else
 				{
+					tmp5 = code & ~0x0f;
 					for (nys = 0; nys < ny; nys++)
-					{
 						for (nxs = 0; nxs < nx; nxs++)
-						{
-							sx = (x + nxs * 16 + xoffs) & 0x3ff;
-							sy = (y + nys * 16 + yoffs) & 0x3ff;
-
-							DRAWSPRITE( (code & ~0x0f) + ((code + nxs) & 0x0f) + 0x10 * nys,	/* pgear fix */
-								    (col & 0x1f), 0x00, 0x00, sx, sy);
-						}
-					}
+							DRAWSPRITE( tmp5 + ((code + nxs) & 0x0f) + 0x10 * nys, tmp1, 0x00, 0x00, /* pgear fix */
+									(nxs * 16 + tmp2) & 0x03ff, (nys * 16 + tmp3) & 0x03ff );
 				}
 			}
 		}
 		else
-		{
-			/* Simple case... 1 sprite */
-			DRAWSPRITE( code, (col & 0x1f), colour & 0x20, colour & 0x40, (x + xoffs) & 0x03ff, (y + yoffs) & 0x03ff);
-		}
+			DRAWSPRITE( code, tmp1, colour & 0x20, colour & 0x40, tmp2 & 0x03ff, tmp3 & 0x03ff);	/* Simple case... 1 sprite */
 	}
 }
-
-
 
 
 static void cps1_render_stars( screen_device *screen, bitmap_t *bitmap, const rectangle *cliprect )
@@ -2601,26 +2481,19 @@ static void cps1_render_stars( screen_device *screen, bitmap_t *bitmap, const re
 	cps_state *state = (cps_state *)screen->machine->driver_data;
 	UINT8 *stars_rom = memory_region(screen->machine, "stars");
 
-	if (!stars_rom && (state->stars_enabled[0] || state->stars_enabled[1]))
-	{
-#ifdef MAME_DEBUG
-/*      popmessage("stars enabled but no stars ROM"); */
-#endif
-		return;
-	}
+	if (!stars_rom && (state->stars_enabled[0] || state->stars_enabled[1])) return;
 
-	INT32 offs;
+	INT32 offs, size = state->stars_rom_size / 2;
+
 	if (state->stars_enabled[0])
 	{
-		for (offs = 0; offs < state->stars_rom_size / 2; offs++)
+		for (offs = 0; offs < size; offs++)
 		{
 			INT32 col = stars_rom[8 * offs + 4];
 			if (col != 0x0f)
 			{
-				INT32 sx = (offs / 256) * 32;
-				INT32 sy = (offs % 256);
-				sx = (sx - state->stars2x + (col & 0x1f)) & 0x01ff;
-				sy = (sy - state->stars2y) & 0xff;
+				INT32 sx = ((offs >> 3) - state->stars2x + (col & 0x1f)) & 0x01ff;
+				INT32 sy = ((offs & 0xff) - state->stars2y) & 0xff;
 				if (flip_screen_get(screen->machine))
 				{
 					sx = 511 - sx;
@@ -2629,24 +2502,22 @@ static void cps1_render_stars( screen_device *screen, bitmap_t *bitmap, const re
 
 				col = ((col & 0xe0) >> 1) + (screen->frame_number() / 16 & 0x0f);
 
-				if (sx >= cliprect->min_x && sx <= cliprect->max_x &&
-					sy >= cliprect->min_y && sy <= cliprect->max_y)
-					*BITMAP_ADDR16(bitmap, sy, sx) = 0xa00 + col;
+				if (sx >= cliprect->min_x && sx <= cliprect->max_x)
+					if (sy >= cliprect->min_y && sy <= cliprect->max_y)
+						*BITMAP_ADDR16(bitmap, sy, sx) = 0xa00 + col;
 			}
 		}
 	}
 
 	if (state->stars_enabled[1])
 	{
-		for (offs = 0; offs < state->stars_rom_size / 2; offs++)
+		for (offs = 0; offs < size; offs++)
 		{
-			INT32 col = stars_rom[8*offs];
+			INT32 col = stars_rom[8 * offs];
 			if (col != 0x0f)
 			{
-				INT32 sx = (offs / 256) * 32;
-				INT32 sy = (offs % 256);
-				sx = (sx - state->stars1x + (col & 0x1f)) & 0x01ff;
-				sy = (sy - state->stars1y) & 0xff;
+				INT32 sx = ((offs >> 3) - state->stars1x + (col & 0x1f)) & 0x01ff;
+				INT32 sy = ((offs & 0xff) - state->stars1y) & 0xff;
 				if (flip_screen_get(screen->machine))
 				{
 					sx = 511 - sx;
@@ -2655,9 +2526,9 @@ static void cps1_render_stars( screen_device *screen, bitmap_t *bitmap, const re
 
 				col = ((col & 0xe0) >> 1) + (screen->frame_number() / 16 & 0x0f);
 
-				if (sx >= cliprect->min_x && sx <= cliprect->max_x &&
-					sy >= cliprect->min_y && sy <= cliprect->max_y)
-					*BITMAP_ADDR16(bitmap, sy, sx) = 0x800 + col;
+				if (sx >= cliprect->min_x && sx <= cliprect->max_x)
+					if (sy >= cliprect->min_y && sy <= cliprect->max_y)
+						*BITMAP_ADDR16(bitmap, sy, sx) = 0x800 + col;
 			}
 		}
 	}
@@ -2667,6 +2538,7 @@ static void cps1_render_stars( screen_device *screen, bitmap_t *bitmap, const re
 static void cps1_render_layer( running_machine *machine, bitmap_t *bitmap, const rectangle *cliprect, int layer, int primask )
 {
 	cps_state *state = (cps_state *)machine->driver_data;
+
 	switch (layer)
 	{
 		case 0:
@@ -2683,6 +2555,7 @@ static void cps1_render_layer( running_machine *machine, bitmap_t *bitmap, const
 static void cps1_render_high_layer( running_machine *machine, bitmap_t *bitmap, const rectangle *cliprect, int layer )
 {
 	cps_state *state = (cps_state *)machine->driver_data;
+
 	switch (layer)
 	{
 		case 0:
@@ -2707,7 +2580,6 @@ VIDEO_UPDATE( cps1 )
 {
 	cps_state *state = (cps_state *)screen->machine->driver_data;
 
-	INT32 layercontrol = state->cps_b_regs[state->game_config->layer_control / 2];
 	INT32 videocontrol = state->cps_a_regs[CPS1_VIDEOCONTROL];
 	flip_screen_set(screen->machine, videocontrol & 0x8000);
 
@@ -2730,9 +2602,8 @@ VIDEO_UPDATE( cps1 )
 
 		INT32 scrly = -state->scroll2y;
 		INT32 otheroffs = state->cps_a_regs[CPS1_ROWSCROLL_OFFS];
-		UINT32 i;
 
-		for (i = 0; i < 256; )
+		for (UINT32 i = 0; i < 256; )
 		{
 			tilemap_set_scrollx(state->bg_tilemap[1], (i - scrly) & 0x03ff, state->scroll2x + state->other[(i + otheroffs) & 0x03ff]); i++;
 			tilemap_set_scrollx(state->bg_tilemap[1], (i - scrly) & 0x03ff, state->scroll2x + state->other[(i + otheroffs) & 0x03ff]); i++;
@@ -2755,6 +2626,7 @@ VIDEO_UPDATE( cps1 )
 /*		CPS1 games use pen 0xbff as background color; this is used in 3wonders,
 		mtwins (explosion during attract), mercs (intermission). */
 		bitmap_fill(bitmap, cliprect, 0x0bff);
+		cps1_render_stars(screen, bitmap, cliprect);
 	}
 	else
 	{
@@ -2766,10 +2638,11 @@ VIDEO_UPDATE( cps1 )
 		bitmap_fill(bitmap, cliprect, get_black_pen(screen->machine));
 	}
 
-	cps1_render_stars(screen, bitmap, cliprect);
 	bitmap_fill(screen->machine->priority_bitmap, cliprect, 0);
 
 	/* Draw layers (0 = sprites, 1-3 = tilemaps) */
+	INT32 layercontrol = state->cps_b_regs[state->game_config->layer_control / 2];
+
 	INT32 l0 = (layercontrol >> 0x06) & 0x03;
 	INT32 l1 = (layercontrol >> 0x08) & 0x03;
 	INT32 l2 = (layercontrol >> 0x0a) & 0x03;
@@ -2801,7 +2674,6 @@ VIDEO_UPDATE( cps1 )
 		if (l2 == 0) { l2 = l3; l3 = 0; l2pri = l3pri; }
 
 		INT32 primasks[8];
-		UINT32 i;
 		{
 			INT32 mask0 = 0xaa;
 			INT32 mask1 = 0xcc;
@@ -2811,7 +2683,7 @@ VIDEO_UPDATE( cps1 )
 
 			primasks[0] = 0xff;
 
-			for (i = 1; i < 8; i++)
+			for (UINT32 i = 1; i < 8; i++)
 			{
 				if (i <= l0pri && i <= l1pri && i <= l2pri)
 				{
@@ -2819,6 +2691,7 @@ VIDEO_UPDATE( cps1 )
 					continue;
 				}
 				primasks[i] = 0;
+
 				if (i <= l0pri) primasks[i] |= mask0;
 				if (i <= l1pri) primasks[i] |= mask1;
 				if (i <= l2pri) primasks[i] |= 0xf0;
@@ -2833,13 +2706,14 @@ VIDEO_UPDATE( cps1 )
 	return 0;
 }
 
+
 VIDEO_EOF( cps1 )
 {
 	cps_state *state = (cps_state *)machine->driver_data;
 	cps1_get_video_base(machine);		/* Get video memory base registers */
 
-	if (state->cps_version == 1)
-		memcpy(state->buffered_obj, state->obj, state->obj_size);	/* CPS1 sprites have to be delayed one frame */
+	if (state->cps_version == 1)		/* CPS1 sprites have to be delayed one frame */
+		memcpy(state->buffered_obj, state->obj, state->obj_size);
 }
 
 void cps2_set_sprite_priorities( running_machine *machine )
