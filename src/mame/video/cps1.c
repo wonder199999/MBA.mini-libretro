@@ -841,7 +841,6 @@ static const struct gfx_range mapper_STF29_table[] =
 };
 
 
-
 // RT24B and RT22B are equivalent, but since we could dump both PALs we are
 // documenting both.
 
@@ -1383,7 +1382,7 @@ static const struct CPS1config cps1_config_table[]=
 	{"cps2",	CPS_B_21_DEF, mapper_cps2 },
 
 
-	{ 0, 0, 0 }		/* End of table */
+	{ NULL, 0, 0, 0, 0, 0, 0 }		/* End of table */
 };
 
 
@@ -1418,9 +1417,7 @@ static const struct CPS1config cps1_config_table[]=
 #define CPS2_OBJ_XOFFS	0x08	/* X offset (usually 0x0040) */
 #define CPS2_OBJ_YOFFS	0x0a	/* Y offset (always 0x0010) */
 
-
 static void cps1_build_palette(running_machine *machine, const UINT16* const palette_base);
-
 
 static MACHINE_RESET( cps )
 {
@@ -1600,7 +1597,6 @@ WRITE16_HANDLER( cps1_cps_b_w )
 		popmessage("CPS-B write %04x to port %02x contact MAMEDEV", data, offset * 2);
 #endif
 }
-
 
 
 INLINE int cps2_port( running_machine *machine, int offset )
@@ -1847,7 +1843,6 @@ WRITE16_HANDLER( cps1_gfxram_w )
 	if (page == (state->cps_a_regs[CPS1_SCROLL3_BASE] & 0x3c0))
 		tilemap_mark_tile_dirty(state->bg_tilemap[2], offset / 2 & 0x0fff);
 }
-
 
 
 static int gfxrom_bank_mapper( running_machine *machine, int type, int code )
@@ -2215,19 +2210,21 @@ static void cps1_render_sprites( running_machine *machine, bitmap_t *bitmap, con
 {
 	cps_state *state = (cps_state *)machine->driver_data;
 
-#define DRAWSPRITE( CODE, COLOR, FLIPX, FLIPY, SX, SY )							\
-{													\
-	if (flip_screen_get(machine))									\
-		pdrawgfx_transpen( bitmap, cliprect, machine->gfx[2],					\
-				CODE, COLOR, !(FLIPX), !(FLIPY),					\
-				511 - 16 - (SX), 255 - 16 - (SY), machine->priority_bitmap, 0x02, 15);  \
-	else 												\
-		pdrawgfx_transpen( bitmap, cliprect, machine->gfx[2],					\
-				CODE, COLOR, FLIPX, FLIPY,						\
-				SX, SY,				  machine->priority_bitmap, 0x02, 15);  \
+#define DRAWSPRITE( CODE, COLOR, FLIPX, FLIPY, SX, SY )							 \
+{													 \
+	if (flip_screen_get(machine))									 \
+		pdrawgfx_transpen( bitmap, cliprect, machine->gfx[2],					 \
+				CODE, COLOR, !(FLIPX), !(FLIPY),					 \
+				511 - 16 - (SX), 255 - 16 - (SY), machine->priority_bitmap, 0x02, 0x0f); \
+	else												 \
+		pdrawgfx_transpen( bitmap,								 \
+				cliprect, machine->gfx[2], 						 \
+				CODE, COLOR, FLIPX, FLIPY,						 \
+				SX, SY,				  machine->priority_bitmap, 0x02, 0x0f); \
 }
 	UINT16 *base = state->buffered_obj;
-	INT32 x, y, code, colour, col, nx, ny, tmp1, tmp2, tmp3, baseadd = 4;
+	UINT32 code, colour, col;
+	INT32 x, y, baseadd = 4;
 
 	/* some sf2 hacks draw the sprites in reverse order */
 	if (state->game_config->bootleg_kludge)
@@ -2239,42 +2236,41 @@ static void cps1_render_sprites( running_machine *machine, bitmap_t *bitmap, con
 		}
 	}
 
-	for (INT32 i = state->last_sprite_offset; i >= 0; i -= 4)
+	for (INT32 i = state->last_sprite_offset; i >= 0; i -= 4, base += baseadd)
 	{
+		x = *(base + 0);
+		y = *(base + 1);
 		code = *(base + 2);
+		colour = *(base + 3);
+		col = colour & 0x1f;
 		code = gfxrom_bank_mapper(machine, GFXTYPE_SPRITES, code);
 
 		if (code != -1)
 		{
-			x      = *(base + 0);
-			y      = *(base + 1);
-			colour = *(base + 3);
-			col    = colour & 0x1f;
-			tmp2   = col & 0x1f;
-
 			if (colour & 0xff00 )
 			{
 				/* handle blocked sprites */
-				nx = ((colour & 0x0f00) >> 8) + 1;
-				ny = ((colour & 0xf000) >> 12) + 1;
-				tmp1 = code & ~0x0f;
-				tmp3 = code + nx;
+				UINT32 nx = ((colour & 0x0f00) >> 8) + 1;
+				UINT32 ny = ((colour & 0xf000) >> 12) + 1;
+				UINT32 temp1 = code & ~0x0f;
+				UINT32 temp2 = col & 0x1f;
 
 				if (colour & 0x40)
 				{
-					if (colour & 0x20)	/* Y flip */
+					/* Y flip */
+					if (colour & 0x20)
 					{
 						for (UINT32 nys = 0; nys < ny; nys++)
 							for (UINT32 nxs = 0; nxs < nx; nxs++)
-								DRAWSPRITE( tmp1 + ((tmp3 - nxs - 1) & 0x0f) + 0x10 * (ny - nys - 1),
-									    tmp2, 0x01, 0x01, (x + nxs * 16) & 0x01ff, (y + nys * 16) & 0x01ff);
+								DRAWSPRITE( temp1 + ((code + nx - nxs - 1) & 0x0f) + 0x10 * (ny - 1 - nys),
+									    temp2, 0x01, 0x01, (x + nxs * 16) & 0x01ff, (y + nys * 16) & 0x01ff);
 					}
 					else
 					{
 						for (UINT32 nys = 0; nys < ny; nys++)
 							for (UINT32 nxs = 0; nxs < nx; nxs++)
-								DRAWSPRITE( tmp1 + ((code + nxs) & 0x0f) + 0x10 * (ny - nys - 1),
-									    tmp2, 0x00, 0x01, (x + nxs * 16) & 0x01ff, (y + nys * 16) & 0x01ff);
+								DRAWSPRITE( temp1 + ((code + nxs) & 0x0f) + 0x10 * (ny - 1 - nys),
+									    temp2, 0x00, 0x01, (x + nxs * 16) & 0x01ff, (y + nys * 16) & 0x01ff);
 					}
 				}
 				else
@@ -2282,23 +2278,22 @@ static void cps1_render_sprites( running_machine *machine, bitmap_t *bitmap, con
 					if (colour & 0x20)
 					{
 						for (UINT32 nys = 0; nys < ny; nys++)
-							for (UINT32 nxs = 0; nxs < nx; nxs++)
-								DRAWSPRITE( tmp1 + ((tmp3 - nxs - 1) & 0x0f) + 0x10 * nys,
-									    tmp2, 0x01, 0x00, (x + nxs * 16) & 0x01ff, (y + nys * 16) & 0x01ff);
+							for (UINT32 nxs = 0; nxs<nx; nxs++)
+								DRAWSPRITE( temp1 + ((code + nx - nxs - 1) & 0x0f) + 0x10 * nys,
+									    temp2, 0x01, 0x00, (x + nxs * 16) & 0x01ff, (y + nys * 16) & 0x01ff);
 					}
 					else
 					{
 						for (UINT32 nys = 0; nys < ny; nys++)
 							for (UINT32 nxs = 0; nxs < nx; nxs++)
-								DRAWSPRITE( tmp1 + ((code + nxs) & 0x0f) + 0x10 * nys, /* fix 00406: qadj: When playing as the ninja, there is one broekn frame in his animation loop when walking. */
-									    tmp2, 0x00, 0x00, (x + nxs * 16) & 0x01ff, (y + nys * 16) & 0x01ff);
+								DRAWSPRITE( temp1 + ((code + nxs) & 0x0f) + 0x10 * nys, /* fix 00406: qadj: When playing as the ninja, there is one broekn frame in his animation loop when walking. */
+									    temp2, 0x00, 0x00, (x + nxs * 16) & 0x01ff, (y + nys * 16) & 0x01ff);
 					}
 				}
 			}
 			else
-				DRAWSPRITE( code, tmp2, colour & 0x20, colour & 0x40, x & 0x01ff, y & 0x01ff );	/* Simple case... 1 sprite */
+				DRAWSPRITE( code, col & 0x1f, colour & 0x20, colour & 0x40, x & 0x01ff, y & 0x01ff );	/* Simple case... 1 sprite */
 		}
-		base += baseadd;
 	}
 #undef DRAWSPRITE
 }
@@ -2385,6 +2380,7 @@ static void cps2_find_last_sprite( running_machine *machine )		/* Find the offse
 	state->cps2_last_sprite_offset = size - 4;			/* Sprites must use full sprite RAM */
 }
 
+
 static void cps2_render_sprites( running_machine *machine, bitmap_t *bitmap, const rectangle *cliprect, int *primasks )
 {
 	cps_state *state = (cps_state *)machine->driver_data;
@@ -2393,28 +2389,28 @@ static void cps2_render_sprites( running_machine *machine, bitmap_t *bitmap, con
 {															\
 	if (flip_screen_get(machine))											\
 		pdrawgfx_transpen( bitmap, cliprect, machine->gfx[2],							\
-				CODE, COLOR, !(FLIPX), !(FLIPY), 511 - 16 - (SX), 255 - 16 - (SY),			\
-				machine->priority_bitmap, primasks[priority], 15);					\
+				CODE, COLOR, !(FLIPX), !(FLIPY),							\
+				511 - 16 - (SX), 255 - 16 - (SY), machine->priority_bitmap, primasks[priority], 0x0f);	\
 	else														\
 		pdrawgfx_transpen( bitmap, cliprect, machine->gfx[2],							\
-				CODE, COLOR, FLIPX, FLIPY, SX, SY,							\
-				machine->priority_bitmap, primasks[priority], 15);					\
+				CODE, COLOR, FLIPX, FLIPY,								\
+				SX, SY,				  machine->priority_bitmap, primasks[priority], 0x0f);	\
 }
+	UINT16 *base = state->cps2_buffered_obj;
+	UINT32 col, code, colour, priority;
+	INT32 xoffs = 64 - cps2_port(machine, CPS2_OBJ_XOFFS), x;
+	INT32 yoffs = 16 - cps2_port(machine, CPS2_OBJ_YOFFS), y;
+
 #ifdef MAME_DEBUG
 	if (input_code_pressed(machine, KEYCODE_Z) && input_code_pressed(machine, KEYCODE_R)) return;
 #endif
-	UINT16 *base = state->cps2_buffered_obj;
-	INT32 xoffs = 64 - cps2_port(machine, CPS2_OBJ_XOFFS);
-	INT32 yoffs = 16 - cps2_port(machine, CPS2_OBJ_YOFFS);
-	INT32 x, y, nx, ny, nxs, nys, col, code, colour, priority, tmp1, tmp2, tmp3, tmp4, tmp5;
-
 	for (INT32 i = state->cps2_last_sprite_offset; i >= 0; i -= 4)
 	{
 		x = base[i + 0];
 		y = base[i + 1];
+		priority = (x >> 13) & 0x07;
 		code = base[i + 2] + ((y & 0x6000) << 3);
 		colour = base[i + 3];
-		priority = (x >> 13) & 0x07;
 		col = colour & 0x1f;
 
 		if (colour & 0x80)
@@ -2423,55 +2419,50 @@ static void cps2_render_sprites( running_machine *machine, bitmap_t *bitmap, con
 			y += cps2_port(machine, CPS2_OBJ_YOFFS);  /* like Marvel vs. Capcom ending credits */
 		}
 
-		tmp1 = col & 0x1f;
-		tmp2 = x + xoffs;
-		tmp3 = y + yoffs;
-
 		if (colour & 0xff00)
 		{
 			/* handle blocked sprites */
-			nx = ((colour & 0x0f00) >> 8) + 1;
-			ny = ((colour & 0xf000) >> 12) + 1;
-			tmp4 = code + nx;
+			UINT32 nx = ((colour & 0x0f00) >> 8) + 1;
+			UINT32 ny = ((colour & 0xf000) >> 12) + 1;
+			INT32 x_temp = x + xoffs, y_temp = y + yoffs;
 
 			if (colour & 0x40)
 			{
-				if (colour & 0x20)		/* Y flip */
+				if (colour & 0x20)	/* Y flip */
 				{
-					for (nys = 0; nys < ny; nys++)
-						for (nxs = 0; nxs < nx; nxs++)
-							DRAWSPRITE( tmp4 - nxs - 1 + 0x10 * (ny - nys - 1), tmp1, 0x01, 0x01,
-									(nxs * 16 + tmp2) & 0x03ff, (nys * 16 + tmp3) & 0x03ff );
+					for (UINT32 nys = 0; nys < ny; nys++)
+						for (UINT32 nxs = 0; nxs < nx; nxs++)
+							DRAWSPRITE( code + (nx - 1) - nxs + 0x10 * (ny - 1 - nys), col, 0x01, 0x01,
+									(x_temp + nxs * 16) & 0x03ff, (y_temp + nys * 16) & 0x03ff );
 				}
 				else
 				{
-					for (nys = 0; nys < ny; nys++)
-						for (nxs = 0; nxs < nx; nxs++)
-							DRAWSPRITE( code + nxs + 0x10 * (ny - nys - 1), tmp1, 0x00, 0x01,
-									(nxs * 16 + tmp2) & 0x03ff, (nys * 16 + tmp3) & 0x03ff );
+					for (UINT32 nys = 0; nys < ny; nys++)
+						for (UINT32 nxs = 0; nxs < nx; nxs++)
+							DRAWSPRITE( code + nxs + 0x10 * (ny - 1 - nys), col, 0x00, 0x01,
+									(x_temp + nxs * 16) & 0x03ff, (y_temp + nys * 16) & 0x03ff );
 				}
 			}
 			else
 			{
 				if (colour & 0x20)
 				{
-					for (nys = 0; nys < ny; nys++)
-						for (nxs = 0; nxs < nx; nxs++)
-							DRAWSPRITE( tmp4 - nxs - 1 + 0x10 * nys, tmp1, 0x01, 0x00,
-									(nxs * 16 + tmp2) & 0x03ff, (nys * 16 + tmp3) & 0x03ff );
+					for (UINT32 nys = 0; nys < ny; nys++)
+						for (UINT32 nxs = 0; nxs < nx; nxs++)
+							DRAWSPRITE( code + (nx - 1) - nxs + 0x10 * nys, col, 0x01, 0x00,
+									(x_temp + nxs * 16) & 0x03ff, (y_temp + nys * 16) & 0x03ff );
 				}
 				else
 				{
-					tmp5 = code & ~0x0f;
-					for (nys = 0; nys < ny; nys++)
-						for (nxs = 0; nxs < nx; nxs++)
-							DRAWSPRITE( tmp5 + ((code + nxs) & 0x0f) + 0x10 * nys, tmp1, 0x00, 0x00, /* pgear fix */
-									(nxs * 16 + tmp2) & 0x03ff, (nys * 16 + tmp3) & 0x03ff );
+					for (UINT32 nys = 0; nys < ny; nys++)
+						for (UINT32 nxs = 0; nxs < nx; nxs++)
+							DRAWSPRITE( (code & ~0x0f) + ((code + nxs) & 0x0f) + 0x10 * nys,/* pgear fix */col, 0x00, 0x00,
+									(x_temp + nxs * 16) & 0x03ff, (y_temp + nys * 16) & 0x03ff );
 				}
 			}
 		}
 		else
-			DRAWSPRITE( code, tmp1, colour & 0x20, colour & 0x40, tmp2 & 0x03ff, tmp3 & 0x03ff);	/* Simple case... 1 sprite */
+			DRAWSPRITE( code, col, colour & 0x20, colour & 0x40, (x + xoffs) & 0x03ff, (y + yoffs) & 0x03ff);	/* Simple case... 1 sprite */
 	}
 }
 
