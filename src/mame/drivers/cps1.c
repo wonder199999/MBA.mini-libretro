@@ -1228,8 +1228,6 @@ static INPUT_PORTS_START( willow )
 	PORT_DIPSETTING(    0x80, "Level 4" )
 	PORT_DIPSETTING(    0x60, "Level 5" )
 	PORT_DIPSETTING(    0x40, "Level 6" )
-/*  	PORT_DIPSETTING(    0x20, "INVALID !" ) */
-/*  	PORT_DIPSETTING(    0x00, "INVALID !" ) */
 
 	PORT_START("DSWA")
 	/* Standard Dip Switches */
@@ -1254,7 +1252,6 @@ static INPUT_PORTS_START( willow )
 	PORT_DIPNAME( 0xc0, 0xc0, DEF_STR( Cabinet ) )		PORT_CONDITION("DSWC", 0x80, PORTCOND_EQUALS, 0x80) PORT_DIPLOCATION("SW(A):7,8")
 	PORT_DIPSETTING(    0xc0, "Upright 1 Player" )
 	PORT_DIPSETTING(    0x80, "Upright 2 Players" )
-/*  	PORT_DIPSETTING(    0x40, DEF_STR( Cocktail ) ) */
 	PORT_DIPSETTING(    0x00, DEF_STR( Cocktail ) )
 	/* Debug Dip Switches */
 	PORT_DIPNAME( 0x3f, 0x3f, DEF_STR( Free_Play ) ) 	PORT_CONDITION("DSWC", 0x80, PORTCOND_EQUALS, 0x00) PORT_DIPLOCATION("SW(A):1,2,3,4,5,6")
@@ -4021,35 +4018,35 @@ ROM_START( dynwarj )
 ROM_END
 
 /* B-Board 89624B-3 */
-ROM_START( willow )
+ROM_START( willow )	/* Synced romsets of the game to FBA02.97.38(MAME0.172) */
 	ROM_REGION( CODE_SIZE, "maincpu", 0 )      /* 68000 code */
-	ROM_LOAD16_BYTE( "wlu_30.11f",        0x00000, 0x20000, CRC(d604dbb1) SHA1(b5d78871011ff11a67f1a0cad147cd4de8d67f35) )
-	ROM_LOAD16_BYTE( "35.11h",            0x00001, 0x20000, CRC(7a791e77) SHA1(fe1429588b7eceab1d369abe03f2cad8de727f71) )
-	ROM_LOAD16_BYTE( "wlu_31.12f",        0x40000, 0x20000, CRC(0eb48a83) SHA1(28c40c4b5d767f88922cd899e948abf11a85a864) )
-	ROM_LOAD16_BYTE( "wl_36.12h",         0x40001, 0x20000, CRC(36100209) SHA1(63c9338e71dba8b52daffba50b4bca31aaa10d9e) )
-	ROM_LOAD16_WORD_SWAP( "wlm-32.8h",    0x80000, 0x80000, CRC(dfd9f643) SHA1(9c760c30af593a87e7fd39fb213a4c73c68ca440) )
+	ROM_LOAD16_BYTE( "wle_30.11f",     0x00000, 0x20000, CRC(15372aa2) SHA1(ba8e1984180b0438255dfc68dc4eb560f3ecbe56) )
+	ROM_LOAD16_BYTE( "wle_35.11h",     0x00001, 0x20000, CRC(2e64623b) SHA1(473f6fd10b2456553f1cbf92fd9a61ce94b1c59f) )
+	ROM_LOAD16_BYTE( "wlu_31.12f",     0x40000, 0x20000, CRC(0eb48a83) SHA1(28c40c4b5d767f88922cd899e948abf11a85a864) )
+	ROM_LOAD16_BYTE( "wlu_36.12h",     0x40001, 0x20000, CRC(36100209) SHA1(63c9338e71dba8b52daffba50b4bca31aaa10d9e) )
+	ROM_LOAD16_WORD_SWAP( "wlm-32.8h", 0x80000, 0x80000, CRC(dfd9f643) SHA1(9c760c30af593a87e7fd39fb213a4c73c68ca440) )
 
 	ROM_REGION( 0x400000, "gfx", 0 )
-	ROMX_LOAD( "wlm-7.7a",     0x000000, 0x80000, CRC(afa74b73) SHA1(09081926260c76986a13ac5351dddd2ea11d7a10) , ROM_GROUPWORD | ROM_SKIP(6) )	// in "5" socket
-	ROMX_LOAD( "wlm-5.9a",     0x000002, 0x80000, CRC(12a0dc0b) SHA1(fea235ce9489f04919daf52f4d3f3bac9b558316) , ROM_GROUPWORD | ROM_SKIP(6) )	// in "7" socket
-	ROMX_LOAD( "wlm-3.3a",     0x000004, 0x80000, CRC(c6f2abce) SHA1(ff5fcfe417c43b4747bbe12db6052fdb60f5f0e4) , ROM_GROUPWORD | ROM_SKIP(6) )	// in "1" socket
-	ROMX_LOAD( "wlm-1.5a",     0x000006, 0x80000, CRC(4aa4c6d3) SHA1(7dd6f18f6126c380821a2ca8955439fd6864f4c6) , ROM_GROUPWORD | ROM_SKIP(6) )	// in "3" socket
-	ROMX_LOAD( "wl_24.7d",     0x200000, 0x20000, CRC(6f0adee5) SHA1(07b18e51b376001f25173b78e0e816f252400210) , ROM_SKIP(7) )
-	ROMX_LOAD( "wl_14.7c",     0x200001, 0x20000, CRC(9cf3027d) SHA1(1e8eb20d51a54f6f756c0ab9395ac38b96e67fb2) , ROM_SKIP(7) )
-	ROMX_LOAD( "wl_26.9d",     0x200002, 0x20000, CRC(f09c8ecf) SHA1(b39f83e80af010d6481693d9ec8b1d7e258b531d) , ROM_SKIP(7) )
-	ROMX_LOAD( "wl_16.9c",     0x200003, 0x20000, CRC(e35407aa) SHA1(7ddae9cef96839da72488c1fe73268c50e0262ff) , ROM_SKIP(7) )
-	ROMX_LOAD( "wl_20.3d",     0x200004, 0x20000, CRC(84992350) SHA1(f0ebd810ce099337cda94222dccce8ab9b3c3281) , ROM_SKIP(7) )
-	ROMX_LOAD( "wl_10.3c",     0x200005, 0x20000, CRC(b87b5a36) SHA1(25fb8f9698142473233ee509d4146089920e94e1) , ROM_SKIP(7) )
-	ROMX_LOAD( "wl_22.5d",     0x200006, 0x20000, CRC(fd3f89f0) SHA1(51ff95cff56ac78682ea56401b35a0aa63cef8cb) , ROM_SKIP(7) )
-	ROMX_LOAD( "wl_12.5c",     0x200007, 0x20000, CRC(7da49d69) SHA1(b0ae7ac4f858ee8d72e6877c4275da7a631e2e4c) , ROM_SKIP(7) )
+	ROMX_LOAD( "wlm-7.7a", 0x000000, 0x80000, CRC(afa74b73) SHA1(09081926260c76986a13ac5351dddd2ea11d7a10) , ROM_GROUPWORD | ROM_SKIP(6) )  // in "5" socket
+	ROMX_LOAD( "wlm-5.9a", 0x000002, 0x80000, CRC(12a0dc0b) SHA1(fea235ce9489f04919daf52f4d3f3bac9b558316) , ROM_GROUPWORD | ROM_SKIP(6) )  // in "7" socket
+	ROMX_LOAD( "wlm-3.3a", 0x000004, 0x80000, CRC(c6f2abce) SHA1(ff5fcfe417c43b4747bbe12db6052fdb60f5f0e4) , ROM_GROUPWORD | ROM_SKIP(6) )  // in "1" socket
+	ROMX_LOAD( "wlm-1.5a", 0x000006, 0x80000, CRC(4aa4c6d3) SHA1(7dd6f18f6126c380821a2ca8955439fd6864f4c6) , ROM_GROUPWORD | ROM_SKIP(6) )  // in "3" socket
+	ROMX_LOAD( "wl_24.7d", 0x200000, 0x20000, CRC(6f0adee5) SHA1(07b18e51b376001f25173b78e0e816f252400210) , ROM_SKIP(7) )
+	ROMX_LOAD( "wl_14.7c", 0x200001, 0x20000, CRC(9cf3027d) SHA1(1e8eb20d51a54f6f756c0ab9395ac38b96e67fb2) , ROM_SKIP(7) )
+	ROMX_LOAD( "wl_26.9d", 0x200002, 0x20000, CRC(f09c8ecf) SHA1(b39f83e80af010d6481693d9ec8b1d7e258b531d) , ROM_SKIP(7) )
+	ROMX_LOAD( "wl_16.9c", 0x200003, 0x20000, CRC(e35407aa) SHA1(7ddae9cef96839da72488c1fe73268c50e0262ff) , ROM_SKIP(7) )
+	ROMX_LOAD( "wl_20.3d", 0x200004, 0x20000, CRC(84992350) SHA1(f0ebd810ce099337cda94222dccce8ab9b3c3281) , ROM_SKIP(7) )
+	ROMX_LOAD( "wl_10.3c", 0x200005, 0x20000, CRC(b87b5a36) SHA1(25fb8f9698142473233ee509d4146089920e94e1) , ROM_SKIP(7) )
+	ROMX_LOAD( "wl_22.5d", 0x200006, 0x20000, CRC(fd3f89f0) SHA1(51ff95cff56ac78682ea56401b35a0aa63cef8cb) , ROM_SKIP(7) )
+	ROMX_LOAD( "wl_12.5c", 0x200007, 0x20000, CRC(7da49d69) SHA1(b0ae7ac4f858ee8d72e6877c4275da7a631e2e4c) , ROM_SKIP(7) )
 
 	ROM_REGION( 0x18000, "audiocpu", 0 ) /* 64k for the audio CPU (+banks) */
-	ROM_LOAD( "wl_09.12b",     0x00000, 0x08000, CRC(f6b3d060) SHA1(0ed2e2f64ba53ba2c371b66ab1e52e40b16d8baf) )
-	ROM_CONTINUE(              0x10000, 0x08000 )
+	ROM_LOAD( "wl_09.12b", 0x00000, 0x08000, CRC(f6b3d060) SHA1(0ed2e2f64ba53ba2c371b66ab1e52e40b16d8baf) )
+	ROM_CONTINUE(          0x10000, 0x08000 )
 
-	ROM_REGION( 0x40000, "oki", 0 )	/* Samples */
-	ROM_LOAD( "wl_18.11c",    0x00000, 0x20000, CRC(bde23d4d) SHA1(d1fee2f99c858dfb07edcd600da491c7b656afe0) )
-	ROM_LOAD( "wl_19.12c",    0x20000, 0x20000, CRC(683898f5) SHA1(316a77b663d78c8b9ff6d85756cb05aaaeef4003) )
+	ROM_REGION( 0x40000, "oki", 0 ) /* Samples */
+	ROM_LOAD( "wl_18.11c", 0x00000, 0x20000, CRC(bde23d4d) SHA1(d1fee2f99c858dfb07edcd600da491c7b656afe0) )
+	ROM_LOAD( "wl_19.12c", 0x20000, 0x20000, CRC(683898f5) SHA1(316a77b663d78c8b9ff6d85756cb05aaaeef4003) )
 
 	ROM_REGION( 0x0200, "aboardplds", 0 )
 	ROM_LOAD( "buf1",         0x0000, 0x0117, CRC(eb122de7) SHA1(b26b5bfe258e3e184f069719f9fd008d6b8f6b9b) )
@@ -9137,7 +9134,7 @@ GAME( 1989, dynwar,     0,        cps1_10MHz, dynwar,     cps1,     ROT0,   "Cap
 GAME( 1989, dynwaru,    dynwar,   cps1_10MHz, dynwar,     cps1,     ROT0,   "Capcom", "Dynasty Wars (USA, set 2)", GAME_SUPPORTS_SAVE )	// (c) Capcom U.S.A. but World version since ROMs region labels are "TKE"
 GAME( 1989, dynwarj,    dynwar,   cps1_10MHz, dynwar,     cps1,     ROT0,   "Capcom", "Tenchi wo Kurau (Japan)", GAME_SUPPORTS_SAVE )
 //
-GAME( 1989, willow,     0,        cps1_10MHz, willow,     cps1,     ROT0,   "Capcom", "Willow (USA)", GAME_SUPPORTS_SAVE )
+GAME( 1989, willow,     0,        cps1_10MHz, willow,     cps1,     ROT0,   "Capcom", "Willow (World)", GAME_SUPPORTS_SAVE )		// No "Warning" (c) Capcom U.S.A., genuine export ROM labels
 GAME( 1989, willowj,    willow,   cps1_10MHz, willow,     cps1,     ROT0,   "Capcom", "Willow (Japan, Japanese)", GAME_SUPPORTS_SAVE )	// Japan "warning"
 GAME( 1989, willowje,   willow,   cps1_10MHz, willow,     cps1,     ROT0,   "Capcom", "Willow (Japan, English)", GAME_SUPPORTS_SAVE )	// (c) Capcom U.S.A. but Japan "warning"
 //

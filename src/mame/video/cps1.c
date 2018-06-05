@@ -2292,7 +2292,7 @@ static void cps1_render_sprites( running_machine *machine, bitmap_t *bitmap, con
 				}
 			}
 			else
-				DRAWSPRITE( code, col & 0x1f, colour & 0x20, colour & 0x40, x & 0x01ff, y & 0x01ff );	/* Simple case... 1 sprite */
+				DRAWSPRITE( code, col, colour & 0x20, colour & 0x40, x & 0x01ff, y & 0x01ff );	/* Simple case... 1 sprite */
 		}
 	}
 #undef DRAWSPRITE

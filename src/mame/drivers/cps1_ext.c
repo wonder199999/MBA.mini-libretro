@@ -1,5 +1,5 @@
 
-ROM_START( sfzch )		/* Street Fighter Zero (CPS Changer, Japan 951020) */
+ROM_START( sfzch )		/* Street Fighter Zero (CPS Changer, Japan 951020) */	/* Synced romsets of the game to FBA02.97.38(MAME0.172) */
 	ROM_REGION( CODE_SIZE, "maincpu", 0 )		/* 68000 code */
 	ROM_LOAD16_WORD_SWAP( "sfzch23",  0x000000, 0x080000, VERIFY_OFF )
 	ROM_LOAD16_WORD_SWAP( "sfza22",   0x080000, 0x080000, VERIFY_OFF )
@@ -36,7 +36,7 @@ ROM_START( sfzch )		/* Street Fighter Zero (CPS Changer, Japan 951020) */
 	ROM_LOAD( "sfz_19.12c", 0x020000, 0x020000, VERIFY_OFF )
 ROM_END
 
-ROM_START( sfzbch )
+ROM_START( sfzbch )		/* Synced romsets of the game to FBA02.97.38(MAME0.172) */
 	ROM_REGION( CODE_SIZE, "maincpu", 0 )		/* 68000 code */
 	ROM_LOAD16_WORD_SWAP( "sfzbch23",  0x000000, 0x80000, CRC(53699f68) SHA1(d7f132faf8c31b5e79c32e6b0cce45377ec8d474) )
 	ROM_LOAD16_WORD_SWAP( "sfza22",    0x080000, 0x80000, CRC(8d9b2480) SHA1(405305c1572908d00eab735f28676fbbadb4fac6) )
@@ -73,7 +73,7 @@ ROM_START( sfzbch )
 	ROM_LOAD( "sfz_19.12c",  0x20000, 0x20000, CRC(3b5886d5) SHA1(7e1b7d40ef77b5df628dd663d45a9a13c742cf58))
 ROM_END
 
-ROM_START( sfach )
+ROM_START( sfach )		/* Synced romsets of the game to FBA02.97.38(MAME0.172) */
 	ROM_REGION( CODE_SIZE, "maincpu", 0 )		/* 68000 code */
 	ROM_LOAD16_WORD_SWAP( "sfach23",  0x000000, 0x80000, CRC(02a1a853) SHA1(d92b9e774844fdcc9d9946b3e892b021e672d876) )
 	ROM_LOAD16_WORD_SWAP( "sfza22",   0x080000, 0x80000, CRC(8d9b2480) SHA1(405305c1572908d00eab735f28676fbbadb4fac6) )
