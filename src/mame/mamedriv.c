@@ -99,7 +99,7 @@ const game_driver *const drivers[] =
 	DRIVER( dynwarj )	/* 04/1989 (c) 1989 (Japan) */
 	DRIVER( willow )	/* 06/1989 (c) 1989 (US) */
 	DRIVER( willowj )	/* 06/1989 (c) 1989 (Japan) */
-//	DRIVER( willowje )	/* 06/1989 (c) 1989 (Japan) */
+	DRIVER( willowu )	/* 06/1989 (c) 1989 (USA) */
 	DRIVER( unsquad )	/* 08/1989 (c) 1989 */
 	DRIVER( area88 )	/* 08/1989 (c) 1989 */
 	DRIVER( ffight )	/* 12/1989 (c) (World) */
