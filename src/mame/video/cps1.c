@@ -1366,6 +1366,7 @@ static const struct CPS1config cps1_config_table[]=
 	{"willow",	CPS_B_03,     mapper_WL24B },
 	{"willowj",	CPS_B_03,     mapper_WL24B },	// wrong, this set uses WL22B, still non dumped
 	{"willowu",	CPS_B_03,     mapper_WL24B },
+	{"willowuo",	CPS_B_03,     mapper_WL24B },
 
 	/* New added */
 	{"sfzch",	CPS_B_21_DEF, mapper_sfzch },
