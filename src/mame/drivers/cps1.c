@@ -9099,6 +9099,7 @@ GAME( 1989, strider,    0,        cps1_10MHz, strider,    cps1,     ROT0,   "Cap
 GAME( 1989, striderua,  strider,  cps1_10MHz, stridrua,   cps1,     ROT0,   "Capcom", "Strider (USA, set 2)", GAME_SUPPORTS_SAVE )
 GAME( 1989, striderj,   strider,  cps1_10MHz, strider,    cps1,     ROT0,   "Capcom", "Strider Hiryu (Japan)", GAME_SUPPORTS_SAVE )
 GAME( 1989, striderjr,  strider,  cps1_10MHz, strider,    cps1,     ROT0,   "Capcom", "Strider Hiryu (Japan Resale Ver.)", GAME_SUPPORTS_SAVE )
+GAME( 1989, strideruc,	strider,  cps1_10MHz, stridrua,	  cps1,	    ROT0,   "bootleg (Capcom)", "Strider (USA, B-Board 90629B-3, buggy Street Fighter II conversion)", GAME_SUPPORTS_SAVE ) // various bugs even on PCB, see rom load
 //
 GAME( 1989, dynwar,     0,        cps1_10MHz, dynwar,     cps1,     ROT0,   "Capcom", "Dynasty Wars (USA, set 1)", GAME_SUPPORTS_SAVE )	// (c) Capcom U.S.A.
 GAME( 1989, dynwaru,    dynwar,   cps1_10MHz, dynwar,     cps1,     ROT0,   "Capcom", "Dynasty Wars (USA, set 2)", GAME_SUPPORTS_SAVE )	// (c) Capcom U.S.A. but World version since ROMs region labels are "TKE"

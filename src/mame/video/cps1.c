@@ -1340,6 +1340,7 @@ static const struct CPS1config cps1_config_table[]=
 	{"striderua",	CPS_B_01,     mapper_ST24M1 },	// wrong, this set uses ST24B2, still non dumped
 	{"striderj",	CPS_B_01,     mapper_ST22B },	// equivalent to ST24M1
 	{"striderjr",	CPS_B_01,     mapper_ST24M1 },	// wrong, PAL used could be STH63B, check CPS_B
+	{"strideruc",	CPS_B_17,     mapper_ST24M1 },
 
 	/* from here onwards the CPS-B board has suicide battery and multiply protection */
 	{"3wonders",	CPS_B_21_BT1, mapper_RT24B },

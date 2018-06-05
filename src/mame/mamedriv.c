@@ -99,8 +99,6 @@ const game_driver *const drivers[] =
 	DRIVER( dynwarj )	/* 04/1989 (c) 1989 (Japan) */
 	DRIVER( willow )	/* 06/1989 (c) 1989 (Euro) */
 	DRIVER( willowj )	/* 06/1989 (c) 1989 (Japan) */
-	DRIVER( willowu )	/* 06/1989 (c) 1989 (USA) */
-	DRIVER( willowuo )	/* 06/1989 (c) 1989 (USA old version) */
 	DRIVER( unsquad )	/* 08/1989 (c) 1989 */
 	DRIVER( area88 )	/* 08/1989 (c) 1989 */
 	DRIVER( ffight )	/* 12/1989 (c) (World) */
@@ -259,7 +257,9 @@ const game_driver *const drivers[] =
 	DRIVER( ffightbl )	/* Final Fight (bootleg) */
 	DRIVER( ffightbla )	/* Final Fight (bootleg on Final Crash PCB) */
 	DRIVER( nemor1 )	/* 09/11/1990 (c) Nemo (World) */
-
+	DRIVER( willowu )	/* 06/1989 (c) 1989 (USA) */
+	DRIVER( willowuo )	/* 06/1989 (c) 1989 (USA old version) */
+	DRIVER( strideruc )	/* Strider (bootleg, buggy Street Fighter II conversion) */
 
 	/* ************************* */
 	/*  Part 3 - Capcom System 2 */
