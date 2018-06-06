@@ -1235,6 +1235,7 @@ static const struct CPS1config cps1_config_table[]=
 	{"knights",	CPS_B_21_BT4, mapper_KR63B,  0x36, 0, 0x34 },
 	{"knightsu",	CPS_B_21_BT4, mapper_KR63B,  0x36, 0, 0x34 },
 	{"knightsj",	CPS_B_21_BT4, mapper_KR63B,  0x36, 0, 0x34 },	// PAL could be different if B-Board is 90629B
+	{"knightsja",	CPS_B_21_BT4, mapper_KR63B,  0x36, 0, 0x34 },
 
 	{"msword",	CPS_B_13,     mapper_MS24B },
 	{"mswordr1",	CPS_B_13,     mapper_MS24B },
@@ -1839,15 +1840,16 @@ WRITE16_HANDLER( cps1_gfxram_w )
 
 	int page = (offset >> 7) & 0x03c0;
 	COMBINE_DATA(&state->gfxram[offset]);
+	UINT32 index = offset / 2 & 0x0fff;
 
 	if (page == (state->cps_a_regs[CPS1_SCROLL1_BASE] & 0x3c0))
-		tilemap_mark_tile_dirty(state->bg_tilemap[0], offset / 2 & 0x0fff);
+		tilemap_mark_tile_dirty(state->bg_tilemap[0], index);
 
 	if (page == (state->cps_a_regs[CPS1_SCROLL2_BASE] & 0x3c0))
-		tilemap_mark_tile_dirty(state->bg_tilemap[1], offset / 2 & 0x0fff);
+		tilemap_mark_tile_dirty(state->bg_tilemap[1], index);
 
 	if (page == (state->cps_a_regs[CPS1_SCROLL3_BASE] & 0x3c0))
-		tilemap_mark_tile_dirty(state->bg_tilemap[2], offset / 2 & 0x0fff);
+		tilemap_mark_tile_dirty(state->bg_tilemap[2], index);
 }
 
 
@@ -2110,24 +2112,24 @@ static void cps1_build_palette( running_machine *machine, const UINT16* const pa
 /*	The palette is copied only for pages that are enabled in the ctrl
 	register. Note that if the first palette pages are skipped, all
 	the following pages are scaled down. */
-	UINT32 offset, page;
-	for (page = 0; page < 6; ++page)
+	UINT32 r, g, b, bright, palette, value;
+	for (UINT32 page = 0; page < 6; ++page)
 	{
 		if (BIT(ctrl, page))
 		{
-			for (offset = 0; offset < 0x200; ++offset)
+			for (UINT32 offset = 0; offset < 0x200; ++offset)
 			{
-				int palette = *(palette_ram++);
-				int r, g, b, bright;
+				palette = *(palette_ram++);
 
-				// from my understanding of the schematics, when the 'brightness'
-				// component is set to 0 it should reduce brightness to 1/3
+				/* from my understanding of the schematics, when the 'brightness'
+				   component is set to 0 it should reduce brightness to 1/3 */
 
 				bright = 0x0f + ((palette >> 12) << 1);
+				value = bright * 0x11 / 0x2d;
 
-				r = ((palette >> 8) & 0x0f) * 0x11 * bright / 0x2d;
-				g = ((palette >> 4) & 0x0f) * 0x11 * bright / 0x2d;
-				b = ((palette >> 0) & 0x0f) * 0x11 * bright / 0x2d;
+				r = ((palette >> 8) & 0x0f) * value;
+				g = ((palette >> 4) & 0x0f) * value;
+				b = ((palette >> 0) & 0x0f) * value;
 
 				palette_set_color (machine, 0x200 * page + offset, MAKE_RGB(r, g, b));
 			}
@@ -2500,7 +2502,7 @@ static void cps1_render_stars( screen_device *screen, bitmap_t *bitmap, const re
 
 				if (sx >= cliprect->min_x && sx <= cliprect->max_x)
 					if (sy >= cliprect->min_y && sy <= cliprect->max_y)
-						*BITMAP_ADDR16(bitmap, sy, sx) = 0xa00 + col;
+						*BITMAP_ADDR16(bitmap, sy, sx) = 0x0a00 + col;
 			}
 		}
 	}
@@ -2524,7 +2526,7 @@ static void cps1_render_stars( screen_device *screen, bitmap_t *bitmap, const re
 
 				if (sx >= cliprect->min_x && sx <= cliprect->max_x)
 					if (sy >= cliprect->min_y && sy <= cliprect->max_y)
-						*BITMAP_ADDR16(bitmap, sy, sx) = 0x800 + col;
+						*BITMAP_ADDR16(bitmap, sy, sx) = 0x0800 + col;
 			}
 		}
 	}
@@ -2671,8 +2673,7 @@ VIDEO_UPDATE( cps1 )
 
 		INT32 primasks[8];
 		{
-			INT32 mask0 = 0xaa;
-			INT32 mask1 = 0xcc;
+			INT32 mask0 = 0xaa, mask1 = 0xcc;
 			if (l0pri > l1pri) mask0 &= ~0x88;
 			if (l0pri > l2pri) mask0 &= ~0xa0;
 			if (l1pri > l2pri) mask1 &= ~0xc0;
@@ -2681,11 +2682,13 @@ VIDEO_UPDATE( cps1 )
 
 			for (UINT32 i = 1; i < 8; i++)
 			{
-				if (i <= l0pri && i <= l1pri && i <= l2pri)
-				{
-					primasks[i] = 0xfe;
-					continue;
-				}
+				if (i <= l0pri)
+					if (i <= l1pri && i <= l2pri)
+					{
+						primasks[i] = 0xfe;
+						continue;
+					}
+
 				primasks[i] = 0;
 
 				if (i <= l0pri) primasks[i] |= mask0;

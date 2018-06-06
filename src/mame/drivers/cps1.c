@@ -9168,7 +9168,7 @@ GAME( 1991, captcommjr1,captcomm, cps1_10MHz, captcomm,   cps1,     ROT0,   "Cap
 //
 GAME( 1991, knights,    0,        cps1_10MHz, knights,    cps1,     ROT0,   "Capcom", "Knights of the Round (World 911127)", GAME_SUPPORTS_SAVE )	// "ETC"
 GAME( 1991, knightsu,   knights,  cps1_10MHz, knights,    cps1,     ROT0,   "Capcom", "Knights of the Round (USA 911127)", GAME_SUPPORTS_SAVE )
-GAME( 1991, knightsj,   knights,  cps1_10MHz, knights,    cps1,     ROT0,   "Capcom", "Knights of the Round (Japan 911127)", GAME_SUPPORTS_SAVE )
+GAME( 1991, knightsj,	knights,  cps1_10MHz, knights,	  cps1,     ROT0,   "Capcom", "Knights of the Round (Japan 911127, B-Board 91634B-2)", GAME_SUPPORTS_SAVE )
 //
 GAME( 1992, sf2ce,      0,        cps1_12MHz, sf2,        cps1,     ROT0,   "Capcom", "Street Fighter II': Champion Edition (World 920313)", GAME_SUPPORTS_SAVE )	// "ETC"
 GAME( 1992, sf2ceua,    sf2ce,    cps1_12MHz, sf2,        cps1,     ROT0,   "Capcom", "Street Fighter II': Champion Edition (USA 920313)", GAME_SUPPORTS_SAVE )
@@ -9279,3 +9279,4 @@ GAME( 1993, punisherh,	punisher, qsound,	punisher, punisher,    ROT0,   "Capcom"
 GAME( 1992, varthjr,	varth,	  cps1_12MHz,	varth,	  cps1,	       ROT270, "Capcom", "Varth: Operation Thunderstorm (Japan Resale Ver. 920714)", GAME_SUPPORTS_SAVE )
 GAME( 1992, cworld2ja,	cworld2j, cps1_12MHz,	cworld2j, cps1,	       ROT0,   "Capcom", "Adventure Quiz Capcom World 2 (Japan 920611, B-Board 90629B-3, no battery)", GAME_SUPPORTS_SAVE )
 GAME( 1992, cworld2jb,	cworld2j, cps1_12MHz,	cworld2j, cps1,	       ROT0,   "Capcom", "Adventure Quiz Capcom World 2 (Japan 920611, B-Board 91634B-2)", GAME_SUPPORTS_SAVE )
+GAME( 1991, knightsja,	knights,  cps1_10MHz,	knights,  cps1,	       ROT0,   "Capcom", "Knights of the Round (Japan 911127, B-Board 89625B-1)", GAME_SUPPORTS_SAVE )

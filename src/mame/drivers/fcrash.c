@@ -353,14 +353,14 @@ static void bootleg_render_sprites( running_machine *machine, bitmap_t *bitmap, 
 	{
 		for (pos = last_sprite_offset; pos >= 0x0000; pos -= 4)
 		{
-			tileno = sprite_ram[base + pos];
-			if (tileno >= num_sprites) continue;
 			INT32 temp = base + pos + 1;
+			tileno = sprite_ram[temp - 1];
+			if (tileno >= num_sprites) continue;
 			xpos   = sprite_ram[temp + 1] & 0x01ff;
 			ypos   = sprite_ram[temp - 2] & 0x01ff;
-			flipx  = sprite_ram[temp + 0] & 0x20;
-			flipy  = sprite_ram[temp + 0] & 0x40;
-			color  = sprite_ram[temp + 0] & 0x1f;
+			flipx  = sprite_ram[temp] & 0x20;
+			flipy  = sprite_ram[temp] & 0x40;
+			color  = sprite_ram[temp] & 0x1f;
 			ypos   = 256 - 16 - ypos;
 			xpos   += state->sprite_x_offset + 49;
 
@@ -398,19 +398,19 @@ static void bootleg_build_palette( running_machine *machine )
 {
 	cps_state *state = (cps_state *)machine->driver_data;
 
-	INT32 palettebase = (state->cps_a_regs[0x0a / 2] << 8) & 0x01ffff;	/* all the bootlegs seem to write the palette offset as usual */
+	UINT32 r, g, b, bright, palette, value;
+	UINT32 palettebase = (state->cps_a_regs[0x0a / 2] << 8) & 0x01ffff;	/* all the bootlegs seem to write the palette offset as usual */
 
 	for (UINT32 offset = 0; offset < 32 * 6 * 16; offset++)
 	{
-		INT32 palette = state->gfxram[palettebase / 2 + offset];
-		INT32 r, g, b, bright;
-
+		palette = state->gfxram[palettebase / 2 + offset];
 		/* from my understanding of the schematics, when the 'brightness' component is set to 0 it should reduce brightness to 1/3 */
-		bright = 0x0f + ((palette >> 12) << 1);
+		bright = ((palette >> 12) << 1) + 0x0f;
+		value = bright * 0x11 / 0x2d;
 
-		r = ((palette >> 8) & 0x0f) * 0x11 * bright / 0x2d;
-		g = ((palette >> 4) & 0x0f) * 0x11 * bright / 0x2d;
-		b = ((palette >> 0) & 0x0f) * 0x11 * bright / 0x2d;
+		r = ((palette >> 8) & 0x0f) * value;
+		g = ((palette >> 4) & 0x0f) * value;
+		b = ((palette >> 0) & 0x0f) * value;
 
 		palette_set_color( machine, offset, MAKE_RGB(r, g, b) );
 	}

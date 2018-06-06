@@ -264,6 +264,7 @@ const game_driver *const drivers[] =
 	DRIVER( varthjr )	/* 14/07/1992 (c) Varth: Operation Thunderstorm (Japan Resale Version) */
 	DRIVER( cworld2ja )	/* 11/06/1992 (c) Adventure Quiz Capcom World 2 (Japan, B-Board 90629B-3, no battery) */
 	DRIVER( cworld2jb )	/* 11/06/1992 (c) Adventure Quiz Capcom World 2 (Japan, B-Board 90629B-2) */
+	DRIVER( knightsja)	/* 27/11/1991 (c) Knights of the Round (Japan, B-Board 89625B-1) */
 
 
 	/* ************************* */
