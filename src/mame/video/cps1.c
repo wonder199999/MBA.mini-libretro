@@ -1358,6 +1358,7 @@ static const struct CPS1config cps1_config_table[]=
 	{"varthr1",	CPS_B_04,     mapper_VA63B },	/* CPSB test has been patched out (60=0008) register is also written to, possibly leftover from development */	// wrong, this set uses VA24B, still non dumped
 	{"varthu",	CPS_B_04,     mapper_VA63B },	/* CPSB test has been patched out (60=0008) register is also written to, possibly leftover from development */
 	{"varthj",	CPS_B_21_BT5, mapper_VA22B },	/* CPSB test has been patched out (72=0001) register is also written to, possibly leftover from development */
+	{"varthjr",	CPS_B_21_BT5, mapper_VA22B },
 
 	{"wof",		CPS_B_21_DEF, mapper_TK263B },
 	{"wofa",	CPS_B_21_DEF, mapper_TK263B },

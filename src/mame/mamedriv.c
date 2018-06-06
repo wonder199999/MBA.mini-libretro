@@ -261,6 +261,7 @@ const game_driver *const drivers[] =
 	DRIVER( willowuo )	/* 06/1989 (c) 1989 (USA old version) */
 	DRIVER( strideruc )	/* Strider (bootleg, buggy Street Fighter II conversion) */
 	DRIVER( punisherh )	/* 22/04/1993 (c) The Punisher (Hispanic) */
+	DRIVER( varthjr )	/* 14/07/1992 (c) Varth: Operation Thunderstorm (Japan Resale Version) */
 
 
 	/* ************************* */
