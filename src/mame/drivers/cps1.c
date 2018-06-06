@@ -939,9 +939,6 @@ static INPUT_PORTS_START( ghoulsu )
 	PORT_DIPSETTING(    0x30, "Silver Armor" )
 	PORT_DIPSETTING(    0x28, "None (young man)" )
 	PORT_DIPSETTING(    0x20, "None (old man)" )
-/*  	PORT_DIPSETTING(    0x10, "INVALID !" ) */
-/*  	PORT_DIPSETTING(    0x08, "INVALID !" ) */
-/*  	PORT_DIPSETTING(    0x00, "INVALID !" ) */
 
 	PORT_DIPUNUSED_DIPLOC( 0x40, 0x40, "SW(B):7" )
 	PORT_DIPNAME( 0x80, 0x80, "Freeze" ) PORT_DIPLOCATION("SW(B):8")
@@ -981,11 +978,6 @@ static INPUT_PORTS_START( ghoulsu )
 	PORT_DIPSETTING(    0x07, "Level 5 (1st half)" )
 	PORT_DIPSETTING(    0x06, "Level 5 (2nd half)" )
 	PORT_DIPSETTING(    0x05, "Level 6" )
-/*  	PORT_DIPSETTING(    0x04, "INVALID !" ) */
-/*  	PORT_DIPSETTING(    0x03, "INVALID !" ) */
-/*  	PORT_DIPSETTING(    0x02, "INVALID !" ) */
-/*  	PORT_DIPSETTING(    0x01, "INVALID !" ) */
-/*  	PORT_DIPSETTING(    0x00, "INVALID !" ) */
 	PORT_DIPNAME( 0x10, 0x10, "Invulnerability" )		PORT_CONDITION("DSWC", 0x80, PORTCOND_EQUALS, 0x00) PORT_DIPLOCATION("SW(A):5")
 	PORT_DIPSETTING(    0x10, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
@@ -9099,7 +9091,6 @@ GAME( 1989, strider,    0,        cps1_10MHz, strider,    cps1,     ROT0,   "Cap
 GAME( 1989, striderua,  strider,  cps1_10MHz, stridrua,   cps1,     ROT0,   "Capcom", "Strider (USA, set 2)", GAME_SUPPORTS_SAVE )
 GAME( 1989, striderj,   strider,  cps1_10MHz, strider,    cps1,     ROT0,   "Capcom", "Strider Hiryu (Japan)", GAME_SUPPORTS_SAVE )
 GAME( 1989, striderjr,  strider,  cps1_10MHz, strider,    cps1,     ROT0,   "Capcom", "Strider Hiryu (Japan Resale Ver.)", GAME_SUPPORTS_SAVE )
-GAME( 1989, strideruc,	strider,  cps1_10MHz, stridrua,	  cps1,	    ROT0,   "bootleg (Capcom)", "Strider (USA, B-Board 90629B-3, buggy Street Fighter II conversion)", GAME_SUPPORTS_SAVE ) // various bugs even on PCB, see rom load
 //
 GAME( 1989, dynwar,     0,        cps1_10MHz, dynwar,     cps1,     ROT0,   "Capcom", "Dynasty Wars (USA, set 1)", GAME_SUPPORTS_SAVE )	// (c) Capcom U.S.A.
 GAME( 1989, dynwaru,    dynwar,   cps1_10MHz, dynwar,     cps1,     ROT0,   "Capcom", "Dynasty Wars (USA, set 2)", GAME_SUPPORTS_SAVE )	// (c) Capcom U.S.A. but World version since ROMs region labels are "TKE"
@@ -9107,8 +9098,6 @@ GAME( 1989, dynwarj,    dynwar,   cps1_10MHz, dynwar,     cps1,     ROT0,   "Cap
 //
 GAME( 1989, willow,     0,        cps1_10MHz, willow,     cps1,     ROT0,   "Capcom", "Willow (World)", GAME_SUPPORTS_SAVE )		// No "Warning" (c) Capcom U.S.A., genuine export ROM labels
 GAME( 1989, willowj,    willow,   cps1_10MHz, willow,     cps1,     ROT0,   "Capcom", "Willow (Japan)", GAME_SUPPORTS_SAVE )
-GAME( 1989, willowu,	willow,	  cps1_10MHz, willow,	  cps1,	    ROT0,   "Capcom", "Willow (USA)", GAME_SUPPORTS_SAVE )
-GAME( 1989, willowuo,	willow,	  cps1_10MHz, willow,	  cps1,     ROT0,   "Capcom", "Willow (USA Old Ver.)", GAME_SUPPORTS_SAVE ) // Japan "warning" but (c) Capcom U.S.A.
 //
 GAME( 1989, unsquad,    0,        cps1_10MHz, unsquad,    cps1,     ROT0,   "Capcom / Daipro", "U.N. Squadron (USA)", GAME_SUPPORTS_SAVE )
 GAME( 1989, area88,     unsquad,  cps1_10MHz, unsquad,    cps1,     ROT0,   "Capcom / Daipro", "Area 88 (Japan)", GAME_SUPPORTS_SAVE )
@@ -9283,3 +9272,7 @@ GAME( 1989, ffightuc,	ffight,	  cps1_10MHz,	ffight,	   cps1,       ROT0,   "Capc
 GAME( 1989, ffightj3,	ffight,	  cps1_10MHz,	ffight,    cps1,       ROT0,   "Capcom", "Final Fight (Japan 900613)", GAME_SUPPORTS_SAVE )
 GAME( 1989, ffightu2,	ffight,	  cps1_10MHz,   ffight,	   cps1,       ROT0,   "Capcom", "Final Fight (USA, set 3)", GAME_SUPPORTS_SAVE )
 GAME( 1990, nemor1,	nemo,	  cps1_10MHz,	nemo,	   cps1,       ROT0,   "Capcom", "Nemo (World 901109)", GAME_SUPPORTS_SAVE )
+GAME( 1989, willowu,	willow,	  cps1_10MHz,	willow,	  cps1,	       ROT0,   "Capcom", "Willow (USA)", GAME_SUPPORTS_SAVE )
+GAME( 1989, willowuo,	willow,	  cps1_10MHz,	willow,	  cps1,	       ROT0,   "Capcom", "Willow (USA Old Ver.)", GAME_SUPPORTS_SAVE ) // Japan "warning" but (c) Capcom U.S.A.
+GAME( 1989, strideruc,	strider,  cps1_10MHz,	stridrua, cps1,	       ROT0,   "bootleg (Capcom)", "Strider (USA, B-Board 90629B-3, buggy Street Fighter II conversion)", GAME_SUPPORTS_SAVE ) // various bugs even on PCB, see rom load
+GAME( 1993, punisherh,	punisher, qsound,	punisher, punisher,    ROT0,   "Capcom", "The Punisher (Hispanic 930422)", GAME_SUPPORTS_SAVE )

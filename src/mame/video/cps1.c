@@ -1279,6 +1279,7 @@ static const struct CPS1config cps1_config_table[]=
 	{"punipic2",	CPS_B_21_QS3, mapper_PS63B },
 	{"punipic3",	CPS_B_21_QS3, mapper_PS63B },
 	{"punisherbz",	CPS_B_21_DEF, mapper_PS63B },	/* Chinese bootleg */
+	{"punisherh",	CPS_B_21_QS3, mapper_PS63B },
 
 	{"qad",		CPS_B_21_BT7, mapper_QD22B,  0x36 },	/* TODO: layer enable (port 36 probably leftover input code from another game) */
 	{"qadj",	CPS_B_21_DEF, mapper_qadj,   0x36, 0x38, 0x34 },	/* (ports 36, 38, 34 probably leftover input code from another game) */
@@ -2255,7 +2256,6 @@ static void cps1_render_sprites( running_machine *machine, bitmap_t *bitmap, con
 				UINT32 nx = ((colour & 0x0f00) >> 8) + 1;
 				UINT32 ny = ((colour & 0xf000) >> 12) + 1;
 				UINT32 temp1 = code & ~0x0f;
-				UINT32 temp2 = col & 0x1f;
 
 				if (colour & 0x40)
 				{
@@ -2265,14 +2265,14 @@ static void cps1_render_sprites( running_machine *machine, bitmap_t *bitmap, con
 						for (UINT32 nys = 0; nys < ny; nys++)
 							for (UINT32 nxs = 0; nxs < nx; nxs++)
 								DRAWSPRITE( temp1 + ((code + nx - nxs - 1) & 0x0f) + 0x10 * (ny - 1 - nys),
-									    temp2, 0x01, 0x01, (x + nxs * 16) & 0x01ff, (y + nys * 16) & 0x01ff);
+									    col, 0x01, 0x01, (x + nxs * 16) & 0x01ff, (y + nys * 16) & 0x01ff);
 					}
 					else
 					{
 						for (UINT32 nys = 0; nys < ny; nys++)
 							for (UINT32 nxs = 0; nxs < nx; nxs++)
 								DRAWSPRITE( temp1 + ((code + nxs) & 0x0f) + 0x10 * (ny - 1 - nys),
-									    temp2, 0x00, 0x01, (x + nxs * 16) & 0x01ff, (y + nys * 16) & 0x01ff);
+									    col, 0x00, 0x01, (x + nxs * 16) & 0x01ff, (y + nys * 16) & 0x01ff);
 					}
 				}
 				else
@@ -2282,14 +2282,14 @@ static void cps1_render_sprites( running_machine *machine, bitmap_t *bitmap, con
 						for (UINT32 nys = 0; nys < ny; nys++)
 							for (UINT32 nxs = 0; nxs<nx; nxs++)
 								DRAWSPRITE( temp1 + ((code + nx - nxs - 1) & 0x0f) + 0x10 * nys,
-									    temp2, 0x01, 0x00, (x + nxs * 16) & 0x01ff, (y + nys * 16) & 0x01ff);
+									    col, 0x01, 0x00, (x + nxs * 16) & 0x01ff, (y + nys * 16) & 0x01ff);
 					}
 					else
 					{
 						for (UINT32 nys = 0; nys < ny; nys++)
 							for (UINT32 nxs = 0; nxs < nx; nxs++)
 								DRAWSPRITE( temp1 + ((code + nxs) & 0x0f) + 0x10 * nys, /* fix 00406: qadj: When playing as the ninja, there is one broekn frame in his animation loop when walking. */
-									    temp2, 0x00, 0x00, (x + nxs * 16) & 0x01ff, (y + nys * 16) & 0x01ff);
+									    col, 0x00, 0x00, (x + nxs * 16) & 0x01ff, (y + nys * 16) & 0x01ff);
 					}
 				}
 			}

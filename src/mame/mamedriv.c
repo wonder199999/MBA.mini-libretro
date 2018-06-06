@@ -260,6 +260,8 @@ const game_driver *const drivers[] =
 	DRIVER( willowu )	/* 06/1989 (c) 1989 (USA) */
 	DRIVER( willowuo )	/* 06/1989 (c) 1989 (USA old version) */
 	DRIVER( strideruc )	/* Strider (bootleg, buggy Street Fighter II conversion) */
+	DRIVER( punisherh )	/* 22/04/1993 (c) The Punisher (Hispanic) */
+
 
 	/* ************************* */
 	/*  Part 3 - Capcom System 2 */
