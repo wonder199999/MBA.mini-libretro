@@ -1272,6 +1272,7 @@ static const struct CPS1config cps1_config_table[]=
 
 	{"cworld2j",	CPS_B_21_BT6, mapper_Q522B,  0x36, 0, 0x34 },	/* (ports 36, 34 probably leftover input code from another game) */
 	{"cworld2ja",	CPS_B_21_DEF, mapper_Q522B },	/* patched set, no battery, could be desuicided */
+	{"cworld2jb",	CPS_B_21_BT6, mapper_Q522B,  0x36, 0, 0x34 },
 
 	{"punisher",	CPS_B_21_QS3, mapper_PS63B },
 	{"punisheru",	CPS_B_21_QS3, mapper_PS63B },
