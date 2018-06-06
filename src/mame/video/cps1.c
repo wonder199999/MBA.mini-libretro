@@ -1236,6 +1236,7 @@ static const struct CPS1config cps1_config_table[]=
 	{"knightsu",	CPS_B_21_BT4, mapper_KR63B,  0x36, 0, 0x34 },
 	{"knightsj",	CPS_B_21_BT4, mapper_KR63B,  0x36, 0, 0x34 },	// PAL could be different if B-Board is 90629B
 	{"knightsja",	CPS_B_21_BT4, mapper_KR63B,  0x36, 0, 0x34 },
+	{"knightsh",	CPS_B_21_DEF, mapper_KR63B,  0x36, 0, 0x34 },
 
 	{"msword",	CPS_B_13,     mapper_MS24B },
 	{"mswordr1",	CPS_B_13,     mapper_MS24B },

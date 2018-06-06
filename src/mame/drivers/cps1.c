@@ -1673,7 +1673,6 @@ static INPUT_PORTS_START( nemo )
 	PORT_DIPNAME( 0x18, 0x18, "Life Bar" )					PORT_DIPLOCATION("SW(B):4,5")
 	PORT_DIPSETTING(    0x00, "Minimun" )
 	PORT_DIPSETTING(    0x18, DEF_STR( Medium ) )
-/*  	PORT_DIPSETTING(    0x10, DEF_STR( Medium ) ) */
 	PORT_DIPSETTING(    0x08, "Maximum" )
 	PORT_DIPUNUSED_DIPLOC( 0x20, 0x20, "SW(B):6" )
 	PORT_DIPUNUSED_DIPLOC( 0x40, 0x40, "SW(B):7" )
@@ -2070,6 +2069,17 @@ INPUT_PORTS_START( knights )
 	PORT_DIPNAME( 0x80, 0x80, "Game Mode")				PORT_DIPLOCATION("SW(C):8")
 	PORT_DIPSETTING(    0x80, "Game" )
 	PORT_DIPSETTING(    0x00, DEF_STR( Test ) )
+INPUT_PORTS_END
+
+static INPUT_PORTS_START( knightsh )
+	PORT_INCLUDE( knights )
+
+//	PORT_MODIFY("IN1")
+//	PORT_BIT( 0x0040, IP_ACTIVE_LOW, IPT_BUTTON3 ) PORT_PLAYER(1)
+//	PORT_BIT( 0x4000, IP_ACTIVE_LOW, IPT_BUTTON3 ) PORT_PLAYER(2)
+
+	PORT_MODIFY("IN2")      /* Player 3 */
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_COIN3 ) PORT_NAME("Coin 3 (P3 Button 3 in-game)")
 INPUT_PORTS_END
 
 static INPUT_PORTS_START( varth )
@@ -9265,18 +9275,19 @@ GAME( 1995, pang3b2,	pang3,	  pang3,	pang3,	   pang3,      ROT0,   "bootleg",  "
 GAME( 1995, pang3b3,	pang3,	  pang3,	pang3,	   pang3,      ROT0,   "bootleg",  "Pang! 3 (bootleg set 3, Euro 950601)", GAME_SUPPORTS_SAVE )
 GAME( 1990, 1941u,	1941,	  cps1_10MHz,	1941,	   cps1,       ROT270, "Capcom",   "1941: Counter Attack (USA 900227)", GAME_SUPPORTS_SAVE )
 GAME( 1989, area88r,	unsquad,  cps1_12MHz,	unsquad,   cps1,       ROT0,   "Capcom / Daipro",   "Area 88 (Japan Resale Ver.)", GAME_SUPPORTS_SAVE )
-GAME( 1991, 3wondersr1,	3wonders, cps1_10MHz,	3wonders,  cps1,       ROT0,   "Capcom", "Three Wonders (World 910513)", GAME_SUPPORTS_SAVE )
-GAME( 1989, ffighta,	ffight,	  cps1_10MHz,	ffight,	   cps1,       ROT0,   "Capcom", "Final Fight (World, set 2)", GAME_SUPPORTS_SAVE )
-GAME( 1989, ffightu1,	ffight,	  cps1_10MHz,   ffight,	   cps1,       ROT0,   "Capcom", "Final Fight (USA, set 2)", GAME_SUPPORTS_SAVE )
-GAME( 1989, ffightuc,	ffight,	  cps1_10MHz,	ffight,	   cps1,       ROT0,   "Capcom", "Final Fight (USA 900613)", GAME_SUPPORTS_SAVE )
-GAME( 1989, ffightj3,	ffight,	  cps1_10MHz,	ffight,    cps1,       ROT0,   "Capcom", "Final Fight (Japan 900613)", GAME_SUPPORTS_SAVE )
-GAME( 1989, ffightu2,	ffight,	  cps1_10MHz,   ffight,	   cps1,       ROT0,   "Capcom", "Final Fight (USA, set 3)", GAME_SUPPORTS_SAVE )
-GAME( 1990, nemor1,	nemo,	  cps1_10MHz,	nemo,	   cps1,       ROT0,   "Capcom", "Nemo (World 901109)", GAME_SUPPORTS_SAVE )
-GAME( 1989, willowu,	willow,	  cps1_10MHz,	willow,	  cps1,	       ROT0,   "Capcom", "Willow (USA)", GAME_SUPPORTS_SAVE )
-GAME( 1989, willowuo,	willow,	  cps1_10MHz,	willow,	  cps1,	       ROT0,   "Capcom", "Willow (USA Old Ver.)", GAME_SUPPORTS_SAVE ) // Japan "warning" but (c) Capcom U.S.A.
-GAME( 1989, strideruc,	strider,  cps1_10MHz,	stridrua, cps1,	       ROT0,   "bootleg (Capcom)", "Strider (USA, B-Board 90629B-3, buggy Street Fighter II conversion)", GAME_SUPPORTS_SAVE ) // various bugs even on PCB, see rom load
-GAME( 1993, punisherh,	punisher, qsound,	punisher, punisher,    ROT0,   "Capcom", "The Punisher (Hispanic 930422)", GAME_SUPPORTS_SAVE )
-GAME( 1992, varthjr,	varth,	  cps1_12MHz,	varth,	  cps1,	       ROT270, "Capcom", "Varth: Operation Thunderstorm (Japan Resale Ver. 920714)", GAME_SUPPORTS_SAVE )
-GAME( 1992, cworld2ja,	cworld2j, cps1_12MHz,	cworld2j, cps1,	       ROT0,   "Capcom", "Adventure Quiz Capcom World 2 (Japan 920611, B-Board 90629B-3, no battery)", GAME_SUPPORTS_SAVE )
-GAME( 1992, cworld2jb,	cworld2j, cps1_12MHz,	cworld2j, cps1,	       ROT0,   "Capcom", "Adventure Quiz Capcom World 2 (Japan 920611, B-Board 91634B-2)", GAME_SUPPORTS_SAVE )
-GAME( 1991, knightsja,	knights,  cps1_10MHz,	knights,  cps1,	       ROT0,   "Capcom", "Knights of the Round (Japan 911127, B-Board 89625B-1)", GAME_SUPPORTS_SAVE )
+GAME( 1991, 3wondersr1,	3wonders, cps1_10MHz,	3wonders,  cps1,       ROT0,   "Capcom",   "Three Wonders (World 910513)", GAME_SUPPORTS_SAVE )
+GAME( 1989, ffighta,	ffight,	  cps1_10MHz,	ffight,	   cps1,       ROT0,   "Capcom",   "Final Fight (World, set 2)", GAME_SUPPORTS_SAVE )
+GAME( 1989, ffightu1,	ffight,	  cps1_10MHz,   ffight,	   cps1,       ROT0,   "Capcom",   "Final Fight (USA, set 2)", GAME_SUPPORTS_SAVE )
+GAME( 1989, ffightuc,	ffight,	  cps1_10MHz,	ffight,	   cps1,       ROT0,   "Capcom",   "Final Fight (USA 900613)", GAME_SUPPORTS_SAVE )
+GAME( 1989, ffightj3,	ffight,	  cps1_10MHz,	ffight,    cps1,       ROT0,   "Capcom",   "Final Fight (Japan 900613)", GAME_SUPPORTS_SAVE )
+GAME( 1989, ffightu2,	ffight,	  cps1_10MHz,   ffight,	   cps1,       ROT0,   "Capcom",   "Final Fight (USA, set 3)", GAME_SUPPORTS_SAVE )
+GAME( 1990, nemor1,	nemo,	  cps1_10MHz,	nemo,	   cps1,       ROT0,   "Capcom",   "Nemo (World 901109)", GAME_SUPPORTS_SAVE )
+GAME( 1989, willowu,	willow,	  cps1_10MHz,	willow,	  cps1,	       ROT0,   "Capcom",   "Willow (USA)", GAME_SUPPORTS_SAVE )
+GAME( 1989, willowuo,	willow,	  cps1_10MHz,	willow,	  cps1,	       ROT0,   "Capcom",   "Willow (USA Old Ver.)", GAME_SUPPORTS_SAVE ) // Japan "warning" but (c) Capcom U.S.A.
+GAME( 1989, strideruc,	strider,  cps1_10MHz,	stridrua, cps1,	       ROT0,   "bootleg (Capcom)",   "Strider (USA, B-Board 90629B-3, buggy Street Fighter II conversion)", GAME_SUPPORTS_SAVE ) // various bugs even on PCB, see rom load
+GAME( 1993, punisherh,	punisher, qsound,	punisher, punisher,    ROT0,   "Capcom",   "The Punisher (Hispanic 930422)", GAME_SUPPORTS_SAVE )
+GAME( 1992, varthjr,	varth,	  cps1_12MHz,	varth,	  cps1,	       ROT270, "Capcom",   "Varth: Operation Thunderstorm (Japan Resale Ver. 920714)", GAME_SUPPORTS_SAVE )
+GAME( 1992, cworld2ja,	cworld2j, cps1_12MHz,	cworld2j, cps1,	       ROT0,   "Capcom",   "Adventure Quiz Capcom World 2 (Japan 920611, B-Board 90629B-3, no battery)", GAME_SUPPORTS_SAVE )
+GAME( 1992, cworld2jb,	cworld2j, cps1_12MHz,	cworld2j, cps1,	       ROT0,   "Capcom",   "Adventure Quiz Capcom World 2 (Japan 920611, B-Board 91634B-2)", GAME_SUPPORTS_SAVE )
+GAME( 1991, knightsja,	knights,  cps1_10MHz,	knights,  cps1,	       ROT0,   "Capcom",   "Knights of the Round (Japan 911127, B-Board 89625B-1)", GAME_SUPPORTS_SAVE )
+GAME( 1991, knightsh,	knights,  cps1_10MHz,	knightsh, cps1,	       ROT0,   "bootleg",  "Knights of the Round (hack set 1)", GAME_SUPPORTS_SAVE )
