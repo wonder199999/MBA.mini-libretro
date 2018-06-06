@@ -262,6 +262,7 @@ const game_driver *const drivers[] =
 	DRIVER( strideruc )	/* Strider (bootleg, buggy Street Fighter II conversion) */
 	DRIVER( punisherh )	/* 22/04/1993 (c) The Punisher (Hispanic) */
 	DRIVER( varthjr )	/* 14/07/1992 (c) Varth: Operation Thunderstorm (Japan Resale Version) */
+	DRIVER( cworld2ja )	/* 11/06/1992 (c) Adventure Quiz Capcom World 2 (Japan, B-Board 90629B-3, no battery) */
 
 
 	/* ************************* */
