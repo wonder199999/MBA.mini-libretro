@@ -1938,10 +1938,18 @@ ROM_END
 GAME( year, archives name,  parent name, MACHINE_DRIVER_START, INPUT_PORTS, DRIVER_INIT,   flip,   producer name,   title information,	status )
 */
 
-/* fcrash - old sprites show on next screen. (Fixes) */
+/* fcrash - ok */
 GAME( 1990,   fcrash,	  ffight,	fcrash,		ffight,		fcrash,	  ROT0,   "bootleg (Playmark)", "Final Crash (bootleg of Final Fight)", GAME_SUPPORTS_SAVE )
-/* kodb - old sprites show on next screen. (Fixes) */
+/* ffightbl - ok */
+GAME( 1990,   ffightbl,	  ffight,	fcrash,		ffight,		fcrash,	  ROT0,   "bootleg", "Final Fight (bootleg)", GAME_SUPPORTS_SAVE )
+/* ffightbl - ok */
+GAME( 1990,   ffightbla,  ffight,	fcrash,		ffight,		fcrash,	  ROT0,   "bootleg", "Final Fight (bootleg on Final Crash PCB)", GAME_SUPPORTS_SAVE )
+/* kodb - ok */
 GAME( 1991,   kodb,	  kod,		kodb,		kod,		kodb,     ROT0,   "bootleg (Playmark)", "The King of Dragons (bootleg)", GAME_SUPPORTS_SAVE )
+/* cawingbl - that's ok */
+GAME( 1990,   cawingbl,	  cawing,	cawingbl,	cawingbl,	cawingbl, ROT0,   "bootleg", "Carrier Air Wing (bootleg with 2xYM2203 + 2xMSM205 set 1)", GAME_SUPPORTS_SAVE )
+/* cawingb2 - ok */
+GAME( 1990,   cawingb2,	  cawing,	cawingbl,	cawingbl,	cawingbl, ROT0,   "bootleg", "Carrier Air Wing (bootleg with 2xYM2203 + 2xMSM205 set 2)", GAME_SUPPORTS_SAVE )
 /* knightsb - sprites are entangled with the front layer. */
 GAME( 1991,   knightsb,	  knights,	knightsb,	knights,	knightsb, ROT0,   "bootleg", "Knights of the Round (bootleg)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )
 /* sf2mdt - problem with scrolls */
@@ -1958,18 +1966,9 @@ GAME( 1993,   punipic,    punisher,	punipic,	punisher,	punipic,  ROT0,   "bootle
 GAME( 1993,   punipic2,   punisher,	punipic,	punisher,	punipic,  ROT0,   "bootleg", "The Punisher (bootleg with PIC16c57, set 2)", GAME_NO_SOUND | GAME_SUPPORTS_SAVE )
 /* punipic3 - same as punipic, and doors are missing. */
 GAME( 1993,   punipic3,   punisher,	punipic,	punisher,	punipic3, ROT0,   "bootleg", "The Punisher (bootleg with PIC16c57, set 3)", GAME_IMPERFECT_GRAPHICS | GAME_NO_SOUND | GAME_SUPPORTS_SAVE )
-/* cawingbl - that's ok */
-GAME( 1990,   cawingbl,	  cawing,	cawingbl,	cawingbl,	cawingbl, ROT0,   "bootleg", "Carrier Air Wing (bootleg with 2xYM2203 + 2xMSM205 set 1)", GAME_SUPPORTS_SAVE )
-/* cawingb2 - ok */
-GAME( 1990,   cawingb2,	  cawing,	cawingbl,	cawingbl,	cawingbl, ROT0,   "bootleg", "Carrier Air Wing (bootleg with 2xYM2203 + 2xMSM205 set 2)", GAME_SUPPORTS_SAVE )
 /* dinopic - no sound */
 GAME( 1993,   dinopic,	  dino,		dinopic,	dino,		dinopic,  ROT0,   "bootleg", "Cadillacs and Dinosaurs (bootleg with PIC16c57, set 1)", GAME_NO_SOUND | GAME_SUPPORTS_SAVE )
 /* dinopic2 - no sound, one bad gfx rom. Copying 8.bin from dinopic fixes it. */
 GAME( 1993,   dinopic2,	  dino,		dinopic,	dino,		dinopic,  ROT0,   "bootleg", "Cadillacs and Dinosaurs (bootleg with PIC16c57, set 2)", GAME_NOT_WORKING | GAME_SUPPORTS_SAVE )
 /* slampic - no sound. A priority problem between sprites and crowd. */
 GAME( 1993,   slampic,	  slammast,	slampic,	slammast,	dinopic,  ROT0,   "bootleg", "Saturday Night Slam Masters (bootleg with PIC16c57)", GAME_IMPERFECT_GRAPHICS | GAME_NO_SOUND | GAME_SUPPORTS_SAVE )
-/* ffightbl - old sprites show on next screen. (Fixes) */
-GAME( 1990,   ffightbl,	  ffight,	fcrash,		ffight,		fcrash,	  ROT0,   "bootleg", "Final Fight (bootleg)", GAME_SUPPORTS_SAVE )
-/* ffightbl - old sprites show on next screen. (Fixes) */
-GAME( 1990,   ffightbla,  ffight,	fcrash,		ffight,		fcrash,	  ROT0,   "bootleg", "Final Fight (bootleg on Final Crash PCB)", GAME_SUPPORTS_SAVE )
-
