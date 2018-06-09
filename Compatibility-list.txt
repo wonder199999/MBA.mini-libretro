@@ -17,7 +17,9 @@ Support the following :
 	1941: Counter Attack(Japan)		- N: 1941j,  P: 1941,    S: 0.139
 	+1941: Counter Attack(USA 900227)	- N: 1941u,  P: 1941,    S: FBA02.97.38
 
-*Adventure Quiz Capcom World 2(Japan 920611) - N: cworld2j,  P: Itself,  S: 0.139
+*Adventure Quiz Capcom World 2(Japan 920611)						- N: cworld2j,   P: Itself,  S: 0.139
+	+Adventure Quiz Capcom World 2(Japan 920611, B-Board 90629B-3, no battery) 	- N: cworld2ja,  P: Itself,  S: FBA02.97.38
+	+Adventure Quiz Capcom World 2(Japan 920611, B-Board 90629B-2) 			- N: cworld2jb,  P: Itself,  S: FBA02.97.38
 
 *Cadillacs and Dinosaurs(World 930201)	 			  - N: dino, 	  P: Itself,  S: 0.139
 	Cadillacs and Dinosaurs(bootleg with PIC16c57, set1) 	  - N: dinopic,   P: dino,    S: 0.139  Note: No Sound
@@ -44,18 +46,22 @@ Support the following :
 	Dynasty Wars(USA, set2)	 	- N: dynwaru,  P: dynwar,  S: 0.139
 	Tenchi wo Kurau(Japan)	 	- N: dynwarj,  P: dynwar,  S: 0.139
 
-*Final Fight(World)				 - N: ffight,    P: Itself,  S: 0.139
-	Final Fight(Japan 900112)		 - N: ffightj1,  P: ffight,  S: 0.139
-	Final Fight(Japan 900305)		 - N: ffightj2,  P: ffight,  S: 0.139
-	Final Fight(Japan)			 - N: ffightj,   P: ffight,  S: 0.139
-	Final Fight(USA 900112)		 	 - N: ffightua,  P: ffight,  S: 0.139
-	+Final Fight(USA 900424)		 - N: ffightub,  P: ffight,  S: FBA02.97.38
-	+Final Fight(USA 900613)		 - N: ffightuc,  P: ffight,  S: FBA02.97.38
-	Final Fight(USA)			 - N: ffightu,   P: ffight,  S: 0.139
-	Street Smart / Final Fight(Japan, hack)  - N: ffightjh,  P: ffight,  S: 0.139
-	Final Crash(bootleg of Final Fight)	 - N: fcrash,	 P: ffight,  S: 0.139, Note: Imperfect Graphics
-	+Final Fight(World, set 2)		 - N: ffighta,   P: ffight,  S: FBA02.97.38
-	+Final Fight(USA, set 2)		 - N: ffightu1,  P: ffight,  S: FBA02.97.38
+*Final Fight(World)				 - N: ffight,     P: Itself,  S: 0.139
+	Final Fight(Japan 900112)		 - N: ffightj1,   P: ffight,  S: 0.139
+	Final Fight(Japan 900305)		 - N: ffightj2,   P: ffight,  S: 0.139
+	Final Fight(Japan)			 - N: ffightj,    P: ffight,  S: 0.139
+	Final Fight(USA 900112)		 	 - N: ffightua,   P: ffight,  S: 0.139
+	+Final Fight(USA 900424)		 - N: ffightub,   P: ffight,  S: FBA02.97.38
+	+Final Fight(USA 900613)		 - N: ffightuc,   P: ffight,  S: FBA02.97.38
+	Final Fight(USA)			 - N: ffightu,    P: ffight,  S: 0.139
+	Street Smart / Final Fight(Japan, hack)  - N: ffightjh,   P: ffight,  S: 0.139
+	Final Crash(bootleg of Final Fight)	 - N: fcrash,	  P: ffight,  S: 0.139, Note: Imperfect Graphics
+	+Final Fight(World, set 2)		 - N: ffighta,    P: ffight,  S: FBA02.97.38
+	+Final Fight(USA, set 2)		 - N: ffightu1,   P: ffight,  S: FBA02.97.38
+	+Final Fight(USA, set 3)		 - N: ffightu2,   P: ffight,  S: FBA02.97.38
+	+Final Fight(bootleg)			 - N: ffightbl,   P: ffight,  S: FBA02.97.38
+	+Final Fight(Japan 900613)		 - N: ffightj3,   P: ffight,  S: FBA02.97.38
+	+Final Fight(bootleg on Final Crash PCB	 - N: ffightbla,  P: ffight,  S: FBA02.97.38
 
 *Forgotten Worlds(World)			- N: forgottn,    P: Itself,    S: 0.139
 	Forgotten Worlds(USA, 88618B B-Board)	- N: forgottnu,   P: forgottn,  S: 0.139
@@ -73,10 +79,14 @@ Support the following :
 	King of Dragons, The(USA 910910)	- N: kodu,  P: kod ,    S: 0.139
 	King of Dragons, The(bootleg)		- N: kodb,  P: kod ,    S: 0.139, Note: Imperfect Graphics
 
-*Knight of the Round(World 911127)		- N: knights,   P: Itself,   S: 0.139 ,
-	Knight of the Round(Japan 911127)	- N: knightsj,  P: knights,  S: 0.139 ,
-	Knight of the Round(USA 911127)		- N: knightsu,  P: knights,  S: 0.139 ,
-	Knight of the Round(bootleg)		- N: knightsb,  P: knights,  S: 0.139 , Note: Imperfect Graphics
+*Knight of the Round(World 911127)				- N: knights,    P: Itself,   S: 0.139
+	Knight of the Round(Japan 911127)			- N: knightsj,   P: knights,  S: 0.139
+	Knight of the Round(USA 911127)				- N: knightsu,   P: knights,  S: 0.139
+	Knight of the Round(bootleg)				- N: knightsb,   P: knights,  S: 0.139 , Note: Imperfect Graphics
+	+Knight of the Round(Japan 911127, B-Board 89625B-1)	- N: knightsja,  P: knights,  S: FBA02.97.38
+	+Knight of the Round(hack set 1)			- N: knightsh,   P: knights,  S: FBA02.97.38
+	+Knight of the Round(hack set 2, 911127 etc)		- N: knightsh2,  P: knights,  S: FBA02.97.38
+
 	
 *Magic Sword: Heroic Fantasy(World 900725)		- N: msword,    P: Itself,  S: 0.139
 	Magic Sword: Heroic Fantasy(USA 900725)		- N: mswordu,   P: msword,  S: 0.139
@@ -99,6 +109,7 @@ Support the following :
 
 *Nemo(World 901130)		- N: nemo,   P: Itself,  S: 0.139
 	Nemo(Japan 901120)	- N: nemoj,  P: nemo,    S: 0.139
+	+Nemo(World 901109)	- N: nemor1, P: nemo,    S: FBA02.97.38
 
 *Pang! 3(Euro 950601)						- N: pang3,    P: Itself,  S: 0.139
 	Pang! 3(Euro 950511, not encrypted)			- N: pang3n,   P: pang3,   S: 0.139
@@ -117,6 +128,7 @@ Support the following :
 	Punisher, The(bootleg with PIC16c57, set3)		- N: punipic3,    P: punisher,  S: 0.139, Note: No Sound && Imperfect Graphics
 	Punisher, The(Japan 930422)				- N: punisherj,   P: punisher,  S: 0.139
 	Punisher, The(USA 930422)				- N: punisheru,   P: punisher,  S: 0.139
+	+Punisher, The(Hispanic 930422)				- N: punisherh,   P: punisher,  S: FBA02.97.38
 
 *Quiz & Dragons: Capcom Quiz Game(USA 920701)			- N: qad,   P: Itself,  S: 0.139
 	Quiz & Dragons: Capcom Quiz Game(Japan 940921)		- N: qadj,  P: qad,     S: 0.139
@@ -175,10 +187,11 @@ Support the following :
 	Street Fighter II: The World Warrior(USA 911101)		- N: sf2uk,     P: sf2,     S: 0.139
 	Street Fighter II: The World Warrior(World 910214)		- N: sf2eb,     P: sf2,     S: 0.139
 
-*Strider(USA, set 1)				- N: strider,    P: Itself,   S: 0.139
-	Strider(USA, set 2)			- N: striderua,  P: strider,  S: 0.139
-	Strider Hiryu(Japan Resale Ver.)	- N: striderjr,  P: strider,  S: 0.139
-	Strider Hiryu(Japan)			- N: striderj,   P: strider,  S: 0.139
+*Strider(USA, set 1)								- N: strider,    P: Itself,   S: 0.139
+	Strider(USA, set 2)							- N: striderua,  P: strider,  S: 0.139
+	Strider Hiryu(Japan Resale Ver.)					- N: striderjr,  P: strider,  S: 0.139
+	Strider Hiryu(Japan)							- N: striderj,   P: strider,  S: 0.139
+	+Strider(USA, B-Board 90629B-3, buggy Street Fighter II conversion)	- N: strideruc,  P: strider,  S: FBA02.97.38
 
 *Three Wonders(World 910520)		- N: 3wonders,    P: Itself,    S: 0.139
 	Three Wonders(hack)		- N: 3wondersh,   P: 3wonders,  S: 0.139
@@ -190,10 +203,11 @@ Support the following :
 	Area 88(Japan)			- N: area88,   P: unsquad,  S: 0.139
 	+Area 88(Japan Resale Ver.)	- N: area88r,  P: unsquad,  S: FBA02.97.38
 
-*Varth: Operation Thunderstorm(World 920714)		- N: varth,    P: Itself,  S: 0.139
-	Varth: Operation Thunderstorm(Japan 920714)	- N: varthj,   P: varth,   S: 0.139
-	Varth: Operation Thunderstorm(USA 920612)	- N: varthu,   P: varth,   S: 0.139
-	Varth: Operation Thunderstorm(World 920612)	- N: varthr1,  P: varth,   S: 0.139
+*Varth: Operation Thunderstorm(World 920714)				- N: varth,    P: Itself,  S: 0.139
+	Varth: Operation Thunderstorm(Japan 920714)			- N: varthj,   P: varth,   S: 0.139
+	Varth: Operation Thunderstorm(USA 920612)			- N: varthu,   P: varth,   S: 0.139
+	Varth: Operation Thunderstorm(World 920612)			- N: varthr1,  P: varth,   S: 0.139
+	+Varth: Operation Thunderstorm(Japan Resale Ver. 920714)	- N: varthjr,  P: varth,   S: FBA02.97.38
 
 *Warriors of Fate(World 921031)					- N: wof,      P: Itself,  S: 0.139
 	Huo Feng Huang(Chinese bootleg of Sangokushi II)	- N: wofhfb,   P: wof,     S: 0.139
@@ -202,9 +216,10 @@ Support the following :
 	Warriors of Fate(USA 921031)				- N: wofu,     P: wof,     S: 0.139
 	+SanGuo YingXiongZhuan(bootleg of Sangokushi, set 3)	- N: sgyxz,    P: wof,     S: FBA02.97.38, Note: Imperfect Graphics
 
-*Willow(USA)				- N: willow,    P: Itself,  S: 0.139
-	Willow(Japan, English)		- N: willowje,  P: willow,  S: 0.139
-	Willow(Japan, Japanese		- N: willowj,   P: willow,  S: 0.139
++*Willow(World)			- N: willow,   P: Itself,  S: FBA02.97.38, Note: Synced the romsets of willow to FBA02.97.38(MAME0.172)
+	+Willow(Japan)		- N: willowj,  P: willow,  S: FBA02.97.38
+	+Willow(USA)		- N: willowu,  P: willow,  S: FBA02.97.38
+	+Willow(USA Old Ver.)	- N: willowuo, P: willow,  S: FBA02.97.38
 
 +*Street Fighter Zero (CPS Changer)(Japan 951020)					- N: sfzch,   P: Itself,  S: FBA02.97.38
 	+Street Fighter Alpha: Warrior's Dreams (CPS Changer, Publicity USA 950727)	- N: sfach,   P: sfzch,   S: 0.177
