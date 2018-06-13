@@ -269,6 +269,7 @@ const game_driver *const drivers[] =
 	DRIVER( knightsh2 )	/* Knights of the Round (hack set 2, 911127 etc) */
 	DRIVER( knightsb2 )	/* Knights of the Round (bootleg set 2, World 911127) */
 	DRIVER( knightsb3 )	/* Knights of the Round (bootleg set 3, Japan 911127) */
+	DRIVER( knightsb4 )	/* bootleg set 4 */
 
 
 	/* ************************* */
