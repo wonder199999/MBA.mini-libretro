@@ -299,9 +299,9 @@ else ifeq ($(platform), wii)
 
 # Raspberry Pi 2/3
 else ifneq (,$(findstring rpi,$(platform)))
+   CC = g++
    CC_AS = gcc
    AR = @ar
-   CC = g++
    NATIVELD = g++
    LD = g++
    TARGETLIB := $(TARGET_NAME)_libretro.so
@@ -309,13 +309,13 @@ else ifneq (,$(findstring rpi,$(platform)))
    fpic = -fPIC
    LDFLAGS += $(SHARED)
    LIBS += -lstdc++ -lpthread
-   CCOMFLAGS += -fomit-frame-pointer -ffast-math -fsigned-char -falign-functions=16 -fno-merge-constants
+   CCOMFLAGS += -marm -fomit-frame-pointer -ffast-math -fsigned-char -falign-functions=16 -fno-merge-constants
    ARM_ENABLED = 1
    ALIGNED = 1
 ifneq (,$(findstring rpi2, $(platform)))
-   CCOMFLAGS += -marm -mcpu=cortex-a7 -mfpu=neon-vfpv4 -mfloat-abi=hard
+   CCOMFLAGS += -mcpu=cortex-a7 -mfpu=neon-vfpv4 -mfloat-abi=hard
 else ifneq (,$(findstring rpi3, $(platform)))
-   CCOMFLAGS += -marm -mcpu=cortex-a53 -mfpu=neon-fp-armv8 -mfloat-abi=hard
+   CCOMFLAGS += -mcpu=cortex-a53 -mfpu=neon-fp-armv8 -mfloat-abi=hard
 endif
 
 

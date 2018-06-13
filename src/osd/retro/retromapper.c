@@ -45,7 +45,7 @@ void retro_set_environment(retro_environment_t cb)
 
 static void check_variables(void)
 {
-	struct retro_variable var = {0};
+	struct retro_variable var = { 0 };
    	bool tmp_ar = set_par;
 
    	var.key = "mame_mini_aspect_ratio";
@@ -349,19 +349,16 @@ void retro_run (void)
 #endif
 }
 
-
 void prep_retro_rotation(int rot)
 {
 	LOGI("Rotation:%d\n", rot);
    	environ_cb(RETRO_ENVIRONMENT_SET_ROTATION, &rot);
 }
 
-
 bool retro_load_game(const struct retro_game_info *info)
 {
 	struct retro_log_callback log;
 	char basename[128];
-   	int result;
 #ifdef M16B
 	enum retro_pixel_format fmt = RETRO_PIXEL_FORMAT_RGB565;
 #else
@@ -372,14 +369,13 @@ bool retro_load_game(const struct retro_game_info *info)
       		fprintf(stderr, "RGB pixel format is not supported.\n");
       		exit(0);
    	}
-	init_input_descriptors();
-
-   	check_variables();
 #ifdef M16B
 	memset(videoBuffer, 0, 512 * 512 * 2);
 #else
    	memset(videoBuffer, 0, 512 * 512 * 2 * 2);
 #endif
+   	check_variables();
+
 #if defined(HAVE_OPENGL) || defined(HAVE_OPENGLES)
    #ifdef HAVE_OPENGLES
 	hw_render.context_type = RETRO_HW_CONTEXT_OPENGLES2;
@@ -389,14 +385,17 @@ bool retro_load_game(const struct retro_game_info *info)
 	hw_render.context_reset = context_reset;
    	hw_render.context_destroy = context_destroy;
 
-   	if (!environ_cb(RETRO_ENVIRONMENT_SET_HW_RENDER, &hw_render)) return false;
+   	if (!environ_cb(RETRO_ENVIRONMENT_SET_HW_RENDER, &hw_render))
+		return false;
 #endif
+	init_input_descriptors();
+
 	basename[0] = '\0';
    	extract_basename(basename, info->path, sizeof(basename));
    	extract_directory(retro_content_dir, info->path, sizeof(retro_content_dir));
    	strcpy(RPATH, info->path);
 
-   	result = mmain(1, RPATH);
+	int result = mmain(1, RPATH);
    	if (result != 1)
 	{
         	printf("Error: mame return an error\n");
