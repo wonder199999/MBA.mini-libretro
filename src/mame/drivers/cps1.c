@@ -9292,4 +9292,5 @@ GAME( 1992, cworld2jb,	cworld2j, cps1_12MHz,	cworld2j, cps1,	       ROT0,   "Cap
 GAME( 1991, knightsja,	knights,  cps1_10MHz,	knights,  cps1,	       ROT0,   "Capcom",   "Knights of the Round (Japan 911127, B-Board 89625B-1)", GAME_SUPPORTS_SAVE )
 GAME( 1991, knightsh,	knights,  cps1_10MHz,	knightsh, cps1,	       ROT0,   "bootleg",  "Knights of the Round (hack set 1)", GAME_SUPPORTS_SAVE )
 GAME( 1991, knightsh2,	knights,  cps1_10MHz,	knightsh, cps1,	       ROT0,   "bootleg",  "Knights of the Round (hack set 2, 911127 etc)", GAME_SUPPORTS_SAVE )
-GAME( 1991, knightsb2,	knights,  cps1_10MHz,	knights,  cps1,	       ROT0,   "bootleg",  "Knights of the Round (bootleg, World 911127)",  GAME_SUPPORTS_SAVE )  /* i.e. player selection screen problems */
+GAME( 1991, knightsb2,	knights,  cps1_10MHz,	knights,  cps1,	       ROT0,   "bootleg",  "Knights of the Round (bootleg set 2, World 911127)",  GAME_SUPPORTS_SAVE )  /* i.e. player selection screen problems */
+GAME( 1991, knightsb3,	knights,  cps1_10MHz,	knights,  cps1,	       ROT0,   "bootleg",  "Knights of the Round (bootleg set 3, Japan 911127)",  GAME_SUPPORTS_SAVE )

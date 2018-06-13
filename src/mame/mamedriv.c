@@ -217,7 +217,7 @@ const game_driver *const drivers[] =
 	DRIVER( kodb )		/* bootleg */
 	DRIVER( sf2mdt )	/* bootleg of SF2CE, set 1 */
 	DRIVER( sf2mdta )	/* bootleg of SF2CE, set 2 */
-	DRIVER( knightsb )	/* bootleg */
+	DRIVER( knightsb )	/* bootleg set 1 */
 	DRIVER( sf2m1 )		/* hack */
 	DRIVER( sf2m3 )		/* hack */
 	DRIVER( punipic )	/* bootleg */
@@ -267,7 +267,8 @@ const game_driver *const drivers[] =
 	DRIVER( knightsja)	/* 27/11/1991 (c) Knights of the Round (Japan, B-Board 89625B-1) */
 	DRIVER( knightsh )	/* Knights of the Round (hack set 1) */
 	DRIVER( knightsh2 )	/* Knights of the Round (hack set 2, 911127 etc) */
-	DRIVER( knightsb2 )	/* Knights of the Round (bootleg, World 911127) */
+	DRIVER( knightsb2 )	/* Knights of the Round (bootleg set 2, World 911127) */
+	DRIVER( knightsb3 )	/* Knights of the Round (bootleg set 3, Japan 911127) */
 
 
 	/* ************************* */
