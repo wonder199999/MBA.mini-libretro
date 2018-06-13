@@ -267,6 +267,7 @@ const game_driver *const drivers[] =
 	DRIVER( knightsja)	/* 27/11/1991 (c) Knights of the Round (Japan, B-Board 89625B-1) */
 	DRIVER( knightsh )	/* Knights of the Round (hack set 1) */
 	DRIVER( knightsh2 )	/* Knights of the Round (hack set 2, 911127 etc) */
+	DRIVER( knightsb2 )	/* Knights of the Round (bootleg, World 911127) */
 
 
 	/* ************************* */

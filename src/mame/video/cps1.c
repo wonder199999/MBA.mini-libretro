@@ -1238,6 +1238,7 @@ static const struct CPS1config cps1_config_table[]=
 	{"knightsja",	CPS_B_21_BT4, mapper_KR63B,  0x36, 0, 0x34 },
 	{"knightsh",	CPS_B_21_DEF, mapper_KR63B,  0x36, 0, 0x34 },
 	{"knightsh2",	CPS_B_21_DEF, mapper_KR63B,  0x36, 0, 0x34 },
+	{"knightsb2",	CPS_B_21_BT4, mapper_KR63B,  0x36, 0, 0x34, 4 },
 
 	{"msword",	CPS_B_13,     mapper_MS24B },
 	{"mswordr1",	CPS_B_13,     mapper_MS24B },
@@ -1391,7 +1392,7 @@ static const struct CPS1config cps1_config_table[]=
 	{"cps2",	CPS_B_21_DEF, mapper_cps2 },
 
 
-	{ NULL, 0, 0, 0, 0, 0, 0 }		/* End of table */
+	{ NULL, 0 }		/* End of table */
 };
 
 
@@ -2239,7 +2240,7 @@ static void cps1_render_sprites( running_machine *machine, bitmap_t *bitmap, con
 	/* some sf2 hacks draw the sprites in reverse order */
 	if (state->game_config->bootleg_kludge)
 	{
-		if (state->game_config->bootleg_kludge < 4)
+		if (state->game_config->bootleg_kludge < 5)
 		{
 			base += state->last_sprite_offset;
 			baseadd = -4;
@@ -2262,7 +2263,6 @@ static void cps1_render_sprites( running_machine *machine, bitmap_t *bitmap, con
 				/* handle blocked sprites */
 				UINT32 nx = ((colour & 0x0f00) >> 8) + 1;
 				UINT32 ny = ((colour & 0xf000) >> 12) + 1;
-				UINT32 temp1 = code & ~0x0f;
 
 				if (colour & 0x40)
 				{
@@ -2271,14 +2271,14 @@ static void cps1_render_sprites( running_machine *machine, bitmap_t *bitmap, con
 					{
 						for (UINT32 nys = 0; nys < ny; nys++)
 							for (UINT32 nxs = 0; nxs < nx; nxs++)
-								DRAWSPRITE( temp1 + ((code + nx - nxs - 1) & 0x0f) + 0x10 * (ny - 1 - nys),
+								DRAWSPRITE( (code & ~0x0f) + ((code + nx - nxs - 1) & 0x0f) + 0x10 * (ny - 1 - nys),
 									    col, 0x01, 0x01, (x + nxs * 16) & 0x01ff, (y + nys * 16) & 0x01ff);
 					}
 					else
 					{
 						for (UINT32 nys = 0; nys < ny; nys++)
 							for (UINT32 nxs = 0; nxs < nx; nxs++)
-								DRAWSPRITE( temp1 + ((code + nxs) & 0x0f) + 0x10 * (ny - 1 - nys),
+								DRAWSPRITE( (code & ~0x0f) + ((code + nxs) & 0x0f) + 0x10 * (ny - 1 - nys),
 									    col, 0x00, 0x01, (x + nxs * 16) & 0x01ff, (y + nys * 16) & 0x01ff);
 					}
 				}
@@ -2288,14 +2288,14 @@ static void cps1_render_sprites( running_machine *machine, bitmap_t *bitmap, con
 					{
 						for (UINT32 nys = 0; nys < ny; nys++)
 							for (UINT32 nxs = 0; nxs<nx; nxs++)
-								DRAWSPRITE( temp1 + ((code + nx - nxs - 1) & 0x0f) + 0x10 * nys,
+								DRAWSPRITE( (code & ~0x0f) + ((code + nx - nxs - 1) & 0x0f) + 0x10 * nys,
 									    col, 0x01, 0x00, (x + nxs * 16) & 0x01ff, (y + nys * 16) & 0x01ff);
 					}
 					else
 					{
 						for (UINT32 nys = 0; nys < ny; nys++)
 							for (UINT32 nxs = 0; nxs < nx; nxs++)
-								DRAWSPRITE( temp1 + ((code + nxs) & 0x0f) + 0x10 * nys, /* fix 00406: qadj: When playing as the ninja, there is one broekn frame in his animation loop when walking. */
+								DRAWSPRITE( (code & ~0x0f) + ((code + nxs) & 0x0f) + 0x10 * nys, /* fix 00406: qadj: When playing as the ninja, there is one broekn frame in his animation loop when walking. */
 									    col, 0x00, 0x00, (x + nxs * 16) & 0x01ff, (y + nys * 16) & 0x01ff);
 					}
 				}

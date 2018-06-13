@@ -9283,8 +9283,8 @@ GAME( 1989, ffightj3,	ffight,	  cps1_10MHz,	ffight,    cps1,       ROT0,   "Capc
 GAME( 1989, ffightu2,	ffight,	  cps1_10MHz,   ffight,	   cps1,       ROT0,   "Capcom",   "Final Fight (USA, set 3)", GAME_SUPPORTS_SAVE )
 GAME( 1990, nemor1,	nemo,	  cps1_10MHz,	nemo,	   cps1,       ROT0,   "Capcom",   "Nemo (World 901109)", GAME_SUPPORTS_SAVE )
 GAME( 1989, willowu,	willow,	  cps1_10MHz,	willow,	  cps1,	       ROT0,   "Capcom",   "Willow (USA)", GAME_SUPPORTS_SAVE )
-GAME( 1989, willowuo,	willow,	  cps1_10MHz,	willow,	  cps1,	       ROT0,   "Capcom",   "Willow (USA Old Ver.)", GAME_SUPPORTS_SAVE ) // Japan "warning" but (c) Capcom U.S.A.
-GAME( 1989, strideruc,	strider,  cps1_10MHz,	stridrua, cps1,	       ROT0,   "bootleg (Capcom)",   "Strider (USA, B-Board 90629B-3, buggy Street Fighter II conversion)", GAME_SUPPORTS_SAVE ) // various bugs even on PCB, see rom load
+GAME( 1989, willowuo,	willow,	  cps1_10MHz,	willow,	  cps1,	       ROT0,   "Capcom",   "Willow (USA Old Ver.)", GAME_SUPPORTS_SAVE )  /* Japan "warning" but (c) Capcom U.S.A. */
+GAME( 1989, strideruc,	strider,  cps1_10MHz,	stridrua, cps1,	       ROT0,   "bootleg (Capcom)",   "Strider (USA, B-Board 90629B-3, buggy Street Fighter II conversion)", GAME_SUPPORTS_SAVE )  /* various bugs even on PCB, see rom load */
 GAME( 1993, punisherh,	punisher, qsound,	punisher, punisher,    ROT0,   "Capcom",   "The Punisher (Hispanic 930422)", GAME_SUPPORTS_SAVE )
 GAME( 1992, varthjr,	varth,	  cps1_12MHz,	varth,	  cps1,	       ROT270, "Capcom",   "Varth: Operation Thunderstorm (Japan Resale Ver. 920714)", GAME_SUPPORTS_SAVE )
 GAME( 1992, cworld2ja,	cworld2j, cps1_12MHz,	cworld2j, cps1,	       ROT0,   "Capcom",   "Adventure Quiz Capcom World 2 (Japan 920611, B-Board 90629B-3, no battery)", GAME_SUPPORTS_SAVE )
@@ -9292,3 +9292,4 @@ GAME( 1992, cworld2jb,	cworld2j, cps1_12MHz,	cworld2j, cps1,	       ROT0,   "Cap
 GAME( 1991, knightsja,	knights,  cps1_10MHz,	knights,  cps1,	       ROT0,   "Capcom",   "Knights of the Round (Japan 911127, B-Board 89625B-1)", GAME_SUPPORTS_SAVE )
 GAME( 1991, knightsh,	knights,  cps1_10MHz,	knightsh, cps1,	       ROT0,   "bootleg",  "Knights of the Round (hack set 1)", GAME_SUPPORTS_SAVE )
 GAME( 1991, knightsh2,	knights,  cps1_10MHz,	knightsh, cps1,	       ROT0,   "bootleg",  "Knights of the Round (hack set 2, 911127 etc)", GAME_SUPPORTS_SAVE )
+GAME( 1991, knightsb2,	knights,  cps1_10MHz,	knights,  cps1,	       ROT0,   "bootleg",  "Knights of the Round (bootleg, World 911127)",  GAME_SUPPORTS_SAVE )  /* i.e. player selection screen problems */
