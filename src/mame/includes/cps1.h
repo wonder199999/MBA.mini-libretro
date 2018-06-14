@@ -330,6 +330,7 @@ INPUT_PORTS_EXTERN( ffight );
 INPUT_PORTS_EXTERN( kod );
 INPUT_PORTS_EXTERN( slammast );
 INPUT_PORTS_EXTERN( captcomm );
+INPUT_PORTS_EXTERN( varth );
 
 /*----------- defined in machine/kabuki.c -----------*/
 void mgakuen2_decode(running_machine *machine);

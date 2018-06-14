@@ -1759,26 +1759,6 @@ void cps1_get_video_base( running_machine *machine )
 			scroll2xoff = -0x0b;
 			scroll3xoff = -0x0c;
 		break;
-		case 0x0e:
-			scroll1xoff = 0xffba;
-			scroll2xoff = 0xffc0;
-			scroll3xoff = 0xffba;
-		break;
-		case 0x0f:
-			scroll1xoff = 0xffc0;
-			scroll2xoff = 0xffc0;
-			scroll3xoff = 0xffc0;
-		break;
-		case 0x88:
-			scroll1xoff = 0x04;
-			scroll2xoff = 0x06;
-			scroll3xoff = 0x0a;
-			state->cps_a_regs[0x30 / 2] = 0x3f;
-			state->cps_a_regs[0x22 / 2] = 0x3e;
-			state->cps_a_regs[0x04 / 2] = 0x90c0;
-			state->cps_a_regs[0x06 / 2] = 0x9100;
-			state->cps_a_regs[0x0a / 2] = 0x9140;
-		break;
 		default:
 			scroll1xoff = 0x00;
 			scroll2xoff = 0x00;

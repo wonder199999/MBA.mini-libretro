@@ -271,6 +271,8 @@ const game_driver *const drivers[] =
 	DRIVER( knightsb3 )	/* Knights of the Round (bootleg set 3, Japan 911127) */
 	DRIVER( knightsb4 )	/* bootleg set 4 */
 	DRIVER( captcommb2 )	/* Captain Commando (bootleg with YM2151 + 2xMSM5205) */
+	DRIVER( varthb )	/* Varth: Operation Thunderstorm (bootleg) */
+
 
 
 	/* ************************* */
