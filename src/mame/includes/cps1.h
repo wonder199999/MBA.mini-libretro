@@ -329,6 +329,7 @@ INPUT_PORTS_EXTERN( dino );
 INPUT_PORTS_EXTERN( ffight );
 INPUT_PORTS_EXTERN( kod );
 INPUT_PORTS_EXTERN( slammast );
+INPUT_PORTS_EXTERN( captcomm );
 
 /*----------- defined in machine/kabuki.c -----------*/
 void mgakuen2_decode(running_machine *machine);
