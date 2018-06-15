@@ -1472,3 +1472,43 @@ ROM_START( dynwara )		/* It's actually dynwaru */
 	ROM_LOAD( "tk22b.1a",     0x0000, 0x0117, CRC(1a1ab6d7) SHA1(eacd3a21a09683e1d8ad36215c1f8ea96a1f7c12) )
 	ROM_LOAD( "lwio.12c",     0x0000, 0x0117, CRC(ad52b90c) SHA1(f0fd6aeea515ee449320fe15684e6b3ab7f97bf4) )
 ROM_END
+
+ROM_START( dynwarjr )
+	ROM_REGION( CODE_SIZE, "maincpu", 0 )		/* 68000 code */
+	ROM_LOAD16_WORD_SWAP( "tk1j_23.8f", 0x00000, 0x80000, CRC(088a3009) SHA1(d4c8273d19291d278d2ff895712dfbd8dfda6c84) )
+	ROM_LOAD16_WORD_SWAP( "tk1j_22.7f", 0x80000, 0x80000, CRC(93654bcf) SHA1(c72daeb2a98d350568555059a3225343c219a1d2) )    // == tkm-9.8h
+
+	ROM_REGION( 0x400000, "gfx", 0 )
+	ROMX_LOAD( "tk1_01.3a",  0x000000, 0x80000, CRC(f64bb6a0) SHA1(8c0ae0305704ad876bb1938e46550c68b0de8e8e) , ROM_GROUPWORD | ROM_SKIP(6) )    // == tkm-5.7a
+	ROMX_LOAD( "tk1_02.4a",  0x000002, 0x80000, CRC(21fe6274) SHA1(f92e509d88d5e264be9c7812966d64ad9ac518e7) , ROM_GROUPWORD | ROM_SKIP(6) )    // == tkm-8.9a
+	ROMX_LOAD( "tk1_03.5a",  0x000004, 0x80000, CRC(0bf228cb) SHA1(e72957155cb459c4dee50df2e53256f271528964) , ROM_GROUPWORD | ROM_SKIP(6) )    // == tkm-6.3a
+	ROMX_LOAD( "tk1_04.6a",  0x000006, 0x80000, CRC(1255dfb1) SHA1(c943e3c989d5b20fbe24e38e54ee8ca294b3d182) , ROM_GROUPWORD | ROM_SKIP(6) )    // == tkm-7.5a
+	ROMX_LOAD( "tk1_05.7a",  0x200000, 0x80000, CRC(44f7661e) SHA1(f29b5ad0c5dfd91a56a4a1084ce578cfe496dd6f) , ROM_GROUPWORD | ROM_SKIP(6) )    // == tkm-1.8a
+	ROMX_LOAD( "tk1_06.8a",  0x200002, 0x80000, CRC(a54c515d) SHA1(bfa457cef7e29ae56ee9b10f60e233d82b4efc61) , ROM_GROUPWORD | ROM_SKIP(6) )    // == tkm-4.10a
+	ROMX_LOAD( "tk1_07.9a",  0x200004, 0x80000, CRC(ca5c687c) SHA1(de47cb5a071ffb3ff408f60d45b79345032232a7) , ROM_GROUPWORD | ROM_SKIP(6) )    // == tkm-2.4a
+	ROMX_LOAD( "tk1_08.10a", 0x200006, 0x80000, CRC(f9fe6591) SHA1(260da5f9e305cccd621b8b5b2073c79e161ddeb0) , ROM_GROUPWORD | ROM_SKIP(6) )    // == tkm-3.6a
+
+	ROM_REGION( 0x28000, "audiocpu", 0 )		/* 64k for the audio CPU (+banks) */
+	ROM_LOAD( "tk1_09.12a",  0x00000, 0x08000, CRC(db77d899) SHA1(314a8134ed15f603f1c7894fd50b14aef5c9fc7a) )
+	ROM_CONTINUE(            0x10000, 0x18000 )	/* second half of ROM is empty, not mapped in memory */
+
+	ROM_REGION( 0x40000, "oki", 0 )			/* Samples */
+	ROM_LOAD( "tk1_18.11c",  0x00000, 0x20000, CRC(7e5f6cb4) SHA1(c7b6b7d6dfe5f9f0e1521e7ce990229f480cf68d) )
+	ROM_LOAD( "tk1_19.12c",  0x20000, 0x20000, CRC(4a30c737) SHA1(426eb90f2edf73eb468c94b4a094da3d46acbab2) )
+
+	ROM_REGION( 0x0200, "aboardplds", 0 )
+	ROM_LOAD( "buf1",         0x0000, 0x0117, CRC(eb122de7) SHA1(b26b5bfe258e3e184f069719f9fd008d6b8f6b9b) )
+	ROM_LOAD( "ioa1",         0x0000, 0x0117, CRC(59c7ee3b) SHA1(fbb887c5b4f5cb8df77cec710eaac2985bc482a6) )
+	ROM_LOAD( "prg1",         0x0000, 0x0117, CRC(f1129744) SHA1(a5300f301c1a08a7da768f0773fa0fe3f683b237) )
+	ROM_LOAD( "rom1",         0x0000, 0x0117, CRC(41dc73b9) SHA1(7d4c9f1693c821fbf84e32dd6ef62ddf14967845) )
+	ROM_LOAD( "sou1",         0x0000, 0x0117, CRC(84f4b2fe) SHA1(dcc9e86cc36316fe42eace02d6df75d08bc8bb6d) )
+
+	ROM_REGION( 0x0200, "bboardplds", 0 )
+	ROM_LOAD( "tk163b.1a",    0x0000, 0x0117, NO_DUMP )
+	ROM_LOAD( "iob1.12d",     0x0000, 0x0117, CRC(3abc0700) SHA1(973043aa46ec6d5d1db20dc9d5937005a0f9f6ae) )
+	ROM_LOAD( "bprg1.11d",    0x0000, 0x0117, CRC(31793da7) SHA1(400fa7ac517421c978c1ee7773c30b9ed0c5d3f3) )
+
+	ROM_REGION( 0x0200, "cboardplds", 0 )
+	ROM_LOAD( "ioc1.ic7",     0x0000, 0x0117, CRC(0d182081) SHA1(475b3d417785da4bc512cce2b274bb00d4cc6792) )
+	ROM_LOAD( "c632.ic1",     0x0000, 0x0117, CRC(0fbd9270) SHA1(d7e737b20c44d41e29ca94be56114b31934dde81) )
+ROM_END

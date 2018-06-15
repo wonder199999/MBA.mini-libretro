@@ -9291,3 +9291,4 @@ GAME( 1991, knightsh2,	knights,  cps1_10MHz,	knightsh, cps1,	       ROT0,   "boo
 GAME( 1991, knightsb2,	knights,  cps1_10MHz,	knights,  cps1,	       ROT0,   "bootleg",  "Knights of the Round (bootleg set 2, World 911127)",  GAME_SUPPORTS_SAVE )  /* i.e. player selection screen problems */
 GAME( 1991, knightsb3,	knights,  cps1_10MHz,	knights,  cps1,	       ROT0,   "bootleg",  "Knights of the Round (bootleg set 3, Japan 911127)",  GAME_SUPPORTS_SAVE )
 GAME( 1989, dynwara,	dynwar,	  cps1_10MHz,	dynwar,	  cps1,	       ROT0,   "Capcom",   "Dynasty Wars (USA, B-Board 88622B-3)", GAME_SUPPORTS_SAVE )
+GAME( 1989, dynwarjr,	dynwar,	  cps1_12MHz,	dynwar,	  cps1,	       ROT0,   "Capcom",   "Tenchi wo Kurau (Japan Resale Ver.)", GAME_SUPPORTS_SAVE )  /* 12MHz verified */
