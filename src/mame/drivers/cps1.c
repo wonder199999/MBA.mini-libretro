@@ -9098,7 +9098,7 @@ GAME( 1989, striderua,  strider,  cps1_10MHz, stridrua,   cps1,     ROT0,   "Cap
 GAME( 1989, striderj,   strider,  cps1_10MHz, strider,    cps1,     ROT0,   "Capcom", "Strider Hiryu (Japan)", GAME_SUPPORTS_SAVE )
 GAME( 1989, striderjr,  strider,  cps1_10MHz, strider,    cps1,     ROT0,   "Capcom", "Strider Hiryu (Japan Resale Ver.)", GAME_SUPPORTS_SAVE )
 //
-GAME( 1989, dynwar,     0,        cps1_10MHz, dynwar,     cps1,     ROT0,   "Capcom", "Dynasty Wars (USA, set 1)", GAME_SUPPORTS_SAVE )	// (c) Capcom U.S.A.
+GAME( 1989, dynwar,     0,        cps1_10MHz, dynwar,     cps1,     ROT0,   "Capcom", "Dynasty Wars (USA, B-Board 89624B-?)", GAME_SUPPORTS_SAVE )	// (c) Capcom U.S.A.
 GAME( 1989, dynwaru,    dynwar,   cps1_10MHz, dynwar,     cps1,     ROT0,   "Capcom", "Dynasty Wars (USA, set 2)", GAME_SUPPORTS_SAVE )	// (c) Capcom U.S.A. but World version since ROMs region labels are "TKE"
 GAME( 1989, dynwarj,    dynwar,   cps1_10MHz, dynwar,     cps1,     ROT0,   "Capcom", "Tenchi wo Kurau (Japan)", GAME_SUPPORTS_SAVE )
 //
@@ -9290,3 +9290,4 @@ GAME( 1991, knightsh,	knights,  cps1_10MHz,	knightsh, cps1,	       ROT0,   "boot
 GAME( 1991, knightsh2,	knights,  cps1_10MHz,	knightsh, cps1,	       ROT0,   "bootleg",  "Knights of the Round (hack set 2, 911127 etc)", GAME_SUPPORTS_SAVE )
 GAME( 1991, knightsb2,	knights,  cps1_10MHz,	knights,  cps1,	       ROT0,   "bootleg",  "Knights of the Round (bootleg set 2, World 911127)",  GAME_SUPPORTS_SAVE )  /* i.e. player selection screen problems */
 GAME( 1991, knightsb3,	knights,  cps1_10MHz,	knights,  cps1,	       ROT0,   "bootleg",  "Knights of the Round (bootleg set 3, Japan 911127)",  GAME_SUPPORTS_SAVE )
+GAME( 1989, dynwara,	dynwar,	  cps1_10MHz,	dynwar,	  cps1,	       ROT0,   "Capcom",   "Dynasty Wars (USA, B-Board 88622B-3)", GAME_SUPPORTS_SAVE )

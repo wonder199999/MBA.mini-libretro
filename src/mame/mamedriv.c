@@ -272,6 +272,7 @@ const game_driver *const drivers[] =
 	DRIVER( knightsb4 )	/* bootleg set 4 */
 	DRIVER( captcommb2 )	/* Captain Commando (bootleg with YM2151 + 2xMSM5205) */
 	DRIVER( varthb )	/* Varth: Operation Thunderstorm (bootleg) */
+	DRIVER( dynwara )	/* 04/1989 (c) 1989 (US) */
 
 
 

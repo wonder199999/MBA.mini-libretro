@@ -1202,6 +1202,7 @@ static const struct CPS1config cps1_config_table[]=
 	{"dynwar",	CPS_B_02,     mapper_TK22B },	// wrong, this set uses TK24B1, dumped but equations still not added
 	{"dynwaru",	CPS_B_02,     mapper_TK22B },
 	{"dynwarj",	CPS_B_02,     mapper_TK22B },
+	{"dynwara",	CPS_B_02,     mapper_TK22B },
 
 	{"ffight",	CPS_B_04,     mapper_S224B },
 	{"ffightu",	CPS_B_04,     mapper_S224B },
