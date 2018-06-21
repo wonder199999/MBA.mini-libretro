@@ -66,7 +66,7 @@ const game_driver *const drivers[] =
 	DRIVER( inthunt )	/* (c) 1993 Irem (World) */
 	DRIVER( inthuntu )	/* (c) 1993 Irem (US) */
 	DRIVER( kaiteids )	/* (c) 1993 Irem (Japan) */
-	DRIVER( nbbatman )	/* (c) 1993 Irem America (US) */
+	DRIVER( nbbatman )	/* (c) 1993 Irem (World) */
 	DRIVER( leaguemn )	/* (c) 1993 Irem (Japan) */
 	DRIVER( ssoldier )	/* (c) 1993 Irem America (US) */
 	DRIVER( psoldier )	/* (c) 1993 Irem (Japan) */
@@ -76,6 +76,7 @@ const game_driver *const drivers[] =
 	/* new added */
 	DRIVER( majtitl2a )	/* (c) 1992 Irem (World, set 1, alt sound CPU) */
 	DRIVER( majtitl2b )	/* (c) 1992 Irem (World, set 2) */
+	DRIVER( nbbatmanu )	/* (c) 1992 Irem Americ (US) */
 
 
 	/* ************************* */
