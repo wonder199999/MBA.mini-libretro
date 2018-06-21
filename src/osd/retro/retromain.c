@@ -265,7 +265,7 @@ static int parsePath(char *path, char *gamePath, char *gameName)
 		strcpy(gamePath, ".\0");
 		strncpy(gameName, path, dotIndex);
 		gameName[dotIndex] = 0;
-		write_log("gamePath=%s , gameName=%s\n", gamePath, gameName);
+		write_log("*gamePath=%s , *gameName=%s\n", gamePath, gameName);
 		return 1;
 	}
 

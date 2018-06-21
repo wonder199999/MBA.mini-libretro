@@ -1232,7 +1232,7 @@ static MACHINE_DRIVER_START( gigaman2 )
 
 	MDRV_DEVICE_REMOVE("audiocpu")
 	MDRV_DEVICE_REMOVE("qsound")
-	MDRV_OKIM6295_ADD("oki", XTAL_32MHz/32, OKIM6295_PIN7_HIGH)	/* clock frequency & pin 7 not verified */
+	MDRV_OKIM6295_ADD("oki", XTAL_1MHz, OKIM6295_PIN7_HIGH)	/* clock frequency & pin 7 not verified */
 	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "lspeaker", 0.47)
 	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "rspeaker", 0.47)
 MACHINE_DRIVER_END

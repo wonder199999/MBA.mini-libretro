@@ -1509,10 +1509,6 @@ WRITE16_HANDLER( cps1_cps_a_w )
 	if (offset == CPS1_PALETTE_BASE)
 		cps1_build_palette(space->machine, cps1_base(space->machine, CPS1_PALETTE_BASE, state->palette_align));
 
-/*	pzloop2 write to register 24 on startup. This is probably just a bug. */
-	if (offset == 0x24 / 2 && state->cps_version == 2)
-		return;
-
 #ifdef MAME_DEBUG
 	if (offset > CPS1_VIDEOCONTROL)
 		popmessage("write to CPS-A register %02x contact MAMEDEV", offset * 2);
@@ -1529,6 +1525,14 @@ READ16_HANDLER( cps1_cps_b_r )
 	if (offset == state->game_config->cpsb_addr / 2)
 		return state->game_config->cpsb_value;
 
+	/* Extra input ports (on C-board) */
+	if (offset == state->game_config->in2_addr / 2)
+		return input_port_read(space->machine, "IN2");
+
+	/* Player 4 controls (on C-board) ("Captain Commando") */
+	if (offset == state->game_config->in3_addr / 2)
+		return input_port_read(space->machine, "IN3");
+
 	/* some games use as a protection check the ability to do 16-bit multiplications */
 	/* with a 32-bit result, by writing the factors to two ports and reading the */
 	/* result from two other ports. */
@@ -1540,15 +1544,9 @@ READ16_HANDLER( cps1_cps_b_r )
 		return (state->cps_b_regs[state->game_config->mult_factor1 / 2] *
 				state->cps_b_regs[state->game_config->mult_factor2 / 2]) >> 16;
 
-	if (offset == state->game_config->in2_addr / 2)		/* Extra input ports (on C-board) */
-		return input_port_read(space->machine, "IN2");
-
-	if (offset == state->game_config->in3_addr / 2)		/* Player 4 controls (on C-board) ("Captain Commando") */
-		return input_port_read(space->machine, "IN3");
-
 	if (state->cps_version == 2)
 	{
-		if (offset == 0x10 / 2)				/* UNKNOWN--only mmatrix appears to read this, and I'm not sure if the result is actuallyused */
+		if (offset == 0x10 / 2)		/* UNKNOWN--only mmatrix appears to read this, and I'm not sure if the result is actually used */
 			return state->cps_b_regs[0x10 / 2];
 		if (offset == 0x12 / 2)
 			return state->cps_b_regs[0x12 / 2];
@@ -1567,18 +1565,11 @@ WRITE16_HANDLER( cps1_cps_b_w )
 
 	if (state->cps_version == 2)
 	{
-		/* To mark scanlines for raster effects */
-		if (offset == 0x0e / 2)		/* UNKNOWN */
-			return;
-		if (offset == 0x10 / 2)
+		switch (offset)		/* To mark scanlines for raster effects */
 		{
-			state->scanline1 = (data & 0x01ff);
-			return;
-		}
-		if (offset == 0x12 / 2)
-		{
-			state->scanline2 = (data & 0x01ff);
-			return;
+			case 0x10 / 2: state->scanline1 = (data & 0x01ff); return;
+			case 0x12 / 2: state->scanline2 = (data & 0x01ff);
+			case 0x0e / 2: return;	/* UNKNOWN */
 		}
 	}
 
@@ -1626,14 +1617,13 @@ static void cps1_gfx_decode( running_machine *machine )
 	UINT8 *cps1_gfx = memory_region(machine, "gfx");
 	INT32 size = memory_region_length(machine, "gfx");
 	INT32 gfxsize = size / 4;
-	UINT32 i, j;
 
-	for (i = 0; i < gfxsize; i++)
+	for (UINT32 i = 0; i < gfxsize; i++)
 	{
 		UINT32 src = cps1_gfx[4 * i] + (cps1_gfx[4 * i + 1] << 8) + (cps1_gfx[4 * i + 2] << 16) + (cps1_gfx[4 * i + 3] << 24);
 		UINT32 dwval = 0;
 
-		for (j = 0; j < 8; j++)
+		for (UINT32 j = 0; j < 8; j++)
 		{
 			INT32 n = 0;
 			UINT32 mask = (0x80808080 >> j) & src;
@@ -2526,14 +2516,10 @@ static void cps1_render_layer( running_machine *machine, bitmap_t *bitmap, const
 
 	switch (layer)
 	{
-		case 0:
-			cps1_render_sprites(machine, bitmap, cliprect);
-			break;
+		case 0: cps1_render_sprites(machine, bitmap, cliprect); break;
 		case 1:
 		case 2:
-		case 3:
-			tilemap_draw(bitmap, cliprect, state->bg_tilemap[layer - 1], TILEMAP_DRAW_LAYER1, primask);
-			break;
+		case 3: tilemap_draw(bitmap, cliprect, state->bg_tilemap[layer - 1], TILEMAP_DRAW_LAYER1, primask); break;
 	}
 }
 
@@ -2543,14 +2529,10 @@ static void cps1_render_high_layer( running_machine *machine, bitmap_t *bitmap, 
 
 	switch (layer)
 	{
-		case 0:
-			/* there are no high priority sprites */
-			break;
+		case 0: break; /* there are no high priority sprites */
 		case 1:
 		case 2:
-		case 3:
-			tilemap_draw(NULL, cliprect, state->bg_tilemap[layer - 1], TILEMAP_DRAW_LAYER0, 1);
-			break;
+		case 3: tilemap_draw(NULL, cliprect, state->bg_tilemap[layer - 1], TILEMAP_DRAW_LAYER0, 1); break;
 	}
 }
 
