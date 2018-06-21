@@ -2,14 +2,16 @@
 #ifndef __NEC_H_
 #define __NEC_H_
 
-
 typedef struct _nec_config nec_config;
 struct _nec_config
 {
 	const UINT8*	v25v35_decryptiontable; // internal decryption table
 };
 
-#define NEC_INPUT_LINE_POLL 20
+#define NEC_INPUT_LINE_INTP0	10
+#define NEC_INPUT_LINE_INTP1	11
+#define NEC_INPUT_LINE_INTP2	12
+#define NEC_INPUT_LINE_POLL	20
 
 enum
 {
