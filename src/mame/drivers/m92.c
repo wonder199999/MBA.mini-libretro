@@ -194,24 +194,23 @@ psoldier dip locations still need veritication.
 *****************************************************************************/
 
 #include "emu.h"
+#include "cpu/nec/nec.h"
+
 #include "includes/m92.h"
 #include "includes/iremipt.h"
-#include "cpu/nec/nec.h"
+
 #include "machine/irem_cpu.h"
+
 #include "sound/2151intf.h"
 #include "sound/iremga20.h"
 #include "sound/okim6295.h"
 
-static UINT8  m92_irq_vectorbase;
-static UINT8  irqvector;
-static UINT16 sound_status;
-static UINT32 bankaddress;
-static emu_timer *scanline_timer;
 
-#define M92_IRQ_0 ((m92_irq_vectorbase +  0) / 4)	/* VBL interrupt */
-#define M92_IRQ_1 ((m92_irq_vectorbase +  4) / 4)  	/* Sprite buffer complete interrupt */
-#define M92_IRQ_2 ((m92_irq_vectorbase +  8) / 4)  	/* Raster interrupt */
-#define M92_IRQ_3 ((m92_irq_vectorbase + 12) / 4) 	/* Sound cpu interrupt */
+
+#define M92_IRQ_0 ((state->irq_vectorbase +  0) / 4)	/* VBL interrupt */
+#define M92_IRQ_1 ((state->irq_vectorbase +  4) / 4)  	/* Sprite buffer complete interrupt */
+#define M92_IRQ_2 ((state->irq_vectorbase +  8) / 4)  	/* Raster interrupt */
+#define M92_IRQ_3 ((state->irq_vectorbase + 12) / 4) 	/* Sound cpu interrupt */
 
 
 static TIMER_CALLBACK( m92_scanline_interrupt );
@@ -220,8 +219,10 @@ static TIMER_CALLBACK( m92_scanline_interrupt );
 
 static void set_m92_bank(running_machine *machine)
 {
+	m92_state *state = (m92_state *)machine->driver_data;
+
 	UINT8 *RAM = memory_region(machine, "maincpu");
-	memory_set_bankptr(machine, "bank1", &RAM[bankaddress]);
+	memory_set_bankptr(machine, "bank1", &RAM[state->bankaddress]);
 }
 
 static STATE_POSTLOAD( m92_postload )
@@ -231,34 +232,39 @@ static STATE_POSTLOAD( m92_postload )
 
 static MACHINE_START( m92 )
 {
-	state_save_register_global(machine, irqvector);
-	state_save_register_global(machine, sound_status);
-	state_save_register_global(machine, bankaddress);
+	m92_state *state = (m92_state *)machine->driver_data;
+
+	state_save_register_global(machine, state->irqvector);
+	state_save_register_global(machine, state->sound_status);
+	state_save_register_global(machine, state->bankaddress);
 	state_save_register_postload(machine, m92_postload, NULL);
 
-	scanline_timer = timer_alloc(machine, m92_scanline_interrupt, NULL);
+	state->scanline_timer = timer_alloc(machine, m92_scanline_interrupt, NULL);
 }
 
 static MACHINE_RESET( m92 )
 {
-	timer_adjust_oneshot(scanline_timer, machine->primary_screen->time_until_pos(0), 0);
+	m92_state *state = (m92_state *)machine->driver_data;
+
+	timer_adjust_oneshot(state->scanline_timer, machine->primary_screen->time_until_pos(0), 0);
 }
 
 /*****************************************************************************/
 
 static TIMER_CALLBACK( m92_scanline_interrupt )
 {
+	m92_state *state = (m92_state *)machine->driver_data;
+
 	UINT32 scanline = param;
 
 	/* raster interrupt */
-	if (scanline == m92_raster_irq_position)
+	if (scanline == state->raster_irq_position)
 	{
 		machine->primary_screen->update_partial(scanline);
 		cputag_set_input_line_and_vector(machine, "maincpu", 0, HOLD_LINE, M92_IRQ_2);
 	}
 	/* VBLANK interrupt */
-	else
-	if (scanline == machine->primary_screen->visible_area().max_y + 1)
+	else if (scanline == machine->primary_screen->visible_area().max_y + 1)
 	{
 		machine->primary_screen->update_partial(scanline);
 		cputag_set_input_line_and_vector(machine, "maincpu", 0, HOLD_LINE, M92_IRQ_0);
@@ -267,20 +273,20 @@ static TIMER_CALLBACK( m92_scanline_interrupt )
 	if (++scanline >= machine->primary_screen->height())
 		scanline = 0;
 
-	timer_adjust_oneshot(scanline_timer, machine->primary_screen->time_until_pos(scanline), scanline);
+	timer_adjust_oneshot(state->scanline_timer, machine->primary_screen->time_until_pos(scanline), scanline);
 }
 
 /*****************************************************************************/
 
 static READ16_HANDLER( m92_eeprom_r )
 {
-	UINT8 *RAM = memory_region(space->machine, "user1");
+	UINT8 *RAM = memory_region(space->machine, "eeprom");
 	return RAM[offset] | 0xff00;
 }
 
 static WRITE16_HANDLER( m92_eeprom_w )
 {
-	UINT8 *RAM = memory_region(space->machine, "user1");
+	UINT8 *RAM = memory_region(space->machine, "eeprom");
 
 	if (ACCESSING_BITS_0_7)
 		RAM[offset] = data;
@@ -302,14 +308,18 @@ static WRITE16_HANDLER( m92_bankswitch_w )
 {
 	if (ACCESSING_BITS_0_7)
 	{
-		bankaddress = 0x100000 + ((data & 0x07) * 0x10000);
+		m92_state *state = (m92_state *)space->machine->driver_data;
+
+		state->bankaddress = 0x100000 + ((data & 0x07) * 0x10000);
 		set_m92_bank(space->machine);
 	}
 }
 
 static CUSTOM_INPUT( m92_sprite_busy_r )
 {
-	return m92_sprite_buffer_busy;
+	m92_state *state = (m92_state *)field->port->machine->driver_data;
+
+	return state->sprite_buffer_busy;
 }
 
 /*****************************************************************************/
@@ -320,22 +330,23 @@ static TIMER_CALLBACK( setvector_callback )
 {
 	if (!machine->device("soundcpu")) return;
 
+	m92_state *state = (m92_state *)machine->driver_data;
+
 	switch (param)
 	{
-		case VECTOR_INIT:   irqvector  =  0x00; break;
-		case YM2151_ASSERT: irqvector |=  0x02; break;
-		case YM2151_CLEAR:  irqvector &= ~0x02; break;
-		case V30_ASSERT:    irqvector |=  0x01; break;
-		case V30_CLEAR:     irqvector &= ~0x01; break;
+		case VECTOR_INIT:   state->irqvector  =  0x00; break;
+		case YM2151_ASSERT: state->irqvector |=  0x02; break;
+		case YM2151_CLEAR:  state->irqvector &= ~0x02; break;
+		case V30_ASSERT:    state->irqvector |=  0x01; break;
+		case V30_CLEAR:     state->irqvector &= ~0x01; break;
 	}
 
-	if (irqvector & 0x02)		/* YM2151 has precedence */
+	if (state->irqvector & 0x02)		/* YM2151 has precedence */
 		cpu_set_input_line_vector(machine->device("soundcpu"), 0, 0x18);
-	else
-	if (irqvector & 0x01)		/* V30 */
+	else if (state->irqvector & 0x01)		/* V30 */
 		cpu_set_input_line_vector(machine->device("soundcpu"), 0, 0x19);
 
-	if (irqvector == 0)		/* no IRQs pending */
+	if (state->irqvector == 0)		/* no IRQs pending */
 		cputag_set_input_line(machine, "soundcpu", 0, CLEAR_LINE);
 	else				/* IRQ pending */
 		cputag_set_input_line(machine, "soundcpu", 0, ASSERT_LINE);
@@ -349,7 +360,9 @@ static WRITE16_HANDLER( m92_soundlatch_w )
 
 static READ16_HANDLER( m92_sound_status_r )
 {
-	return sound_status;
+	m92_state *state = (m92_state *)space->machine->driver_data;
+
+	return state->sound_status;
 }
 
 static READ16_HANDLER( m92_soundlatch_r )
@@ -364,7 +377,9 @@ static WRITE16_HANDLER( m92_sound_irq_ack_w )
 
 static WRITE16_HANDLER( m92_sound_status_w )
 {
-	COMBINE_DATA(&sound_status);
+	m92_state *state = (m92_state *)space->machine->driver_data;
+
+	COMBINE_DATA(&state->sound_status);
 	cputag_set_input_line_and_vector(space->machine, "maincpu", 0, HOLD_LINE, M92_IRQ_3);
 }
 
@@ -383,11 +398,11 @@ static WRITE16_DEVICE_HANDLER( oki_bank_w )	/* for ppan (bootleg of hook) */
 /* appears to be an earlier board */
 static ADDRESS_MAP_START( lethalth_map, ADDRESS_SPACE_PROGRAM, 16 )
 	AM_RANGE(0x00000, 0x7ffff) AM_ROM
-	AM_RANGE(0x80000, 0x8ffff) AM_RAM_WRITE(m92_vram_w) AM_BASE(&m92_vram_data)
+	AM_RANGE(0x80000, 0x8ffff) AM_RAM_WRITE(m92_vram_w) AM_BASE_MEMBER(m92_state, vram_data)
 	AM_RANGE(0xe0000, 0xeffff) AM_RAM	/* System ram */
 	AM_RANGE(0xf8000, 0xf87ff) AM_RAM AM_BASE_SIZE_GENERIC(spriteram)
 	AM_RANGE(0xf8800, 0xf8fff) AM_READWRITE(m92_paletteram_r, m92_paletteram_w)
-	AM_RANGE(0xf9000, 0xf900f) AM_WRITE(m92_spritecontrol_w) AM_BASE(&m92_spritecontrol)
+	AM_RANGE(0xf9000, 0xf900f) AM_WRITE(m92_spritecontrol_w) AM_BASE_MEMBER(m92_state, spritecontrol)
 	AM_RANGE(0xf9800, 0xf9801) AM_WRITE(m92_videocontrol_w)
 	AM_RANGE(0xffff0, 0xfffff) AM_ROM
 ADDRESS_MAP_END
@@ -396,11 +411,11 @@ static ADDRESS_MAP_START( m92_map, ADDRESS_SPACE_PROGRAM, 16 )
 	AM_RANGE(0x00000, 0x9ffff) AM_ROM
 	AM_RANGE(0xa0000, 0xbffff) AM_ROMBANK("bank1")
 	AM_RANGE(0xc0000, 0xcffff) AM_ROMBANK("bank2")	/* Mirror of rom: Used by In The Hunt as protection */
-	AM_RANGE(0xd0000, 0xdffff) AM_RAM_WRITE(m92_vram_w) AM_BASE(&m92_vram_data)
+	AM_RANGE(0xd0000, 0xdffff) AM_RAM_WRITE(m92_vram_w) AM_BASE_MEMBER(m92_state, vram_data)
 	AM_RANGE(0xe0000, 0xeffff) AM_RAM	/* System ram */
 	AM_RANGE(0xf8000, 0xf87ff) AM_RAM AM_BASE_SIZE_GENERIC(spriteram)
 	AM_RANGE(0xf8800, 0xf8fff) AM_READWRITE(m92_paletteram_r, m92_paletteram_w)
-	AM_RANGE(0xf9000, 0xf900f) AM_WRITE(m92_spritecontrol_w) AM_BASE(&m92_spritecontrol)
+	AM_RANGE(0xf9000, 0xf900f) AM_WRITE(m92_spritecontrol_w) AM_BASE_MEMBER(m92_state, spritecontrol)
 	AM_RANGE(0xf9800, 0xf9801) AM_WRITE(m92_videocontrol_w)
 	AM_RANGE(0xffff0, 0xfffff) AM_ROM
 ADDRESS_MAP_END
@@ -897,10 +912,13 @@ static const ym2151_interface ym2151_config =
 
 void m92_sprite_interrupt(running_machine *machine)
 {
+	m92_state *state = (m92_state *)machine->driver_data;
+
 	cputag_set_input_line_and_vector(machine, "maincpu", 0, HOLD_LINE, M92_IRQ_1);
 }
 
 static MACHINE_DRIVER_START( m92 )
+	MDRV_DRIVER_DATA(m92_state)
 
 	/* basic machine hardware */
 	MDRV_CPU_ADD("maincpu", V33, XTAL_9MHz)			/* NEC V33, 18 MHz clock */
@@ -908,39 +926,35 @@ static MACHINE_DRIVER_START( m92 )
 	MDRV_CPU_IO_MAP(m92_portmap)
 	MDRV_CPU_ADD("soundcpu" , V35, XTAL_7_15909MHz)		/* 14.31818 MHz */
 	MDRV_CPU_PROGRAM_MAP(sound_map)
-
 	MDRV_MACHINE_START(m92)
 	MDRV_MACHINE_RESET(m92)
 
 	/* video hardware */
 	MDRV_VIDEO_ATTRIBUTES(VIDEO_BUFFERS_SPRITERAM)
-
 	MDRV_SCREEN_ADD("screen", RASTER)
 	MDRV_SCREEN_REFRESH_RATE(60)
 	MDRV_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MDRV_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
 	MDRV_SCREEN_SIZE(512, 256)
 	MDRV_SCREEN_VISIBLE_AREA(80, 511-112, 8, 247)	/* 320 x 240 */
-
 	MDRV_GFXDECODE(m92)
-	MDRV_PALETTE_LENGTH(2048)
-
+	MDRV_PALETTE_LENGTH(0x0800)
 	MDRV_VIDEO_START(m92)
 	MDRV_VIDEO_UPDATE(m92)
 
 	/* sound hardware */
 	MDRV_SPEAKER_STANDARD_MONO("mono")
-
 	MDRV_SOUND_ADD("ymsnd", YM2151, XTAL_3_579545MHz)
 	MDRV_SOUND_CONFIG(ym2151_config)
 	MDRV_SOUND_ROUTE(0, "mono", 0.40)
 	MDRV_SOUND_ROUTE(1, "mono", 0.40)
-
 	MDRV_SOUND_ADD("irem", IREMGA20, XTAL_3_579545MHz)
 	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.0)
 MACHINE_DRIVER_END
 
 static MACHINE_DRIVER_START( ppan )
+	MDRV_DRIVER_DATA(m92_state)
+
 	/* basic machine hardware */
 	MDRV_CPU_ADD( "maincpu", V33, XTAL_9MHz)
 	MDRV_CPU_PROGRAM_MAP( m92_map )
@@ -957,12 +971,10 @@ static MACHINE_DRIVER_START( ppan )
 	MDRV_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
 	MDRV_SCREEN_SIZE(512, 256)
 	MDRV_SCREEN_VISIBLE_AREA(80, 511-112, 8, 247)	/* 320 x 240 */
-
-	MDRV_VIDEO_UPDATE(ppan)
 	MDRV_GFXDECODE(m92)
-	MDRV_PALETTE_LENGTH(2048)
-
+	MDRV_PALETTE_LENGTH(0x0800)
 	MDRV_VIDEO_START(ppan)
+	MDRV_VIDEO_UPDATE(ppan)
 
 	/* sound hardware */
 	MDRV_SPEAKER_STANDARD_MONO("mono")
@@ -1060,7 +1072,7 @@ MACHINE_DRIVER_END
 
 
 /***************************************************************************/
-ROM_START( bmaster ) /* M92-B-B PCB used for program rom locations */
+ROM_START( bmaster )				/* M92-B-B PCB used for program rom locations */
 	ROM_REGION( 0x100000, "maincpu", 0 )
 	ROM_LOAD16_BYTE( "bm_d-h0-b.5m", 0x000001, 0x40000, CRC(49b257c7) SHA1(cb4917ef6c5f959094f95b8535ea12e6b9b0bcc2) )
 	ROM_LOAD16_BYTE( "bm_d-l0-b.5f", 0x000000, 0x40000, CRC(a873523e) SHA1(9aee134c299e12064842e16db296f4259eccdf5b) )
@@ -1071,13 +1083,13 @@ ROM_START( bmaster ) /* M92-B-B PCB used for program rom locations */
 	ROM_LOAD16_BYTE( "bm_d-sh0.rom", 0x00001, 0x10000, CRC(9f7c075b) SHA1(1dd3fb4dc41d3adea9ca8d1b4363dadebea49bda) )
 	ROM_LOAD16_BYTE( "bm_d-sl0.rom", 0x00000, 0x10000, CRC(1fa87c89) SHA1(971eae7dd2591191ed7a948a444387896735e149) )
 
-	ROM_REGION( 0x100000, "gfx1", 0 ) /* Tiles */
+	ROM_REGION( 0x100000, "gfx1", 0 )	/* Tiles */
 	ROM_LOAD( "bm_c0.rom", 0x000000, 0x40000, CRC(2cc966b8) SHA1(4d55954813efe975b7e644448effc61b22896e0b) )
 	ROM_LOAD( "bm_c1.rom", 0x040000, 0x40000, CRC(46df773e) SHA1(6f075492c06768f7d2315906ec1349fe09def22f) )
 	ROM_LOAD( "bm_c2.rom", 0x080000, 0x40000, CRC(05b867bd) SHA1(d44667f3f4908bacb6e10becc431b0f213c20407) )
 	ROM_LOAD( "bm_c3.rom", 0x0c0000, 0x40000, CRC(0a2227a4) SHA1(30499e99f3731993607e04c77637f6bbe641c05c) )
 
-	ROM_REGION( 0x200000, "gfx2", 0 ) /* Sprites */
+	ROM_REGION( 0x200000, "gfx2", 0 )	/* Sprites */
 	ROM_LOAD( "bm_000.rom", 0x000000, 0x80000, CRC(339fc9f3) SHA1(36be0f3b5add2ecf3f602933f5456091daaeb1f6) )
 	ROM_LOAD( "bm_010.rom", 0x080000, 0x80000, CRC(6a14377d) SHA1(699e5b1984810ee9e504f9ddaec604671c0cb0b7) )
 	ROM_LOAD( "bm_020.rom", 0x100000, 0x80000, CRC(31532198) SHA1(7a285e003a7c359f5b1afe4da3b44069f716f7b5) )
@@ -1087,7 +1099,7 @@ ROM_START( bmaster ) /* M92-B-B PCB used for program rom locations */
 	ROM_LOAD( "bm_da.rom", 0x000000, 0x80000, CRC(62ce5798) SHA1(f7bf7706f71ce36d85c99e531d4789c4d7a095a0) )
 ROM_END
 
-ROM_START( crossbld ) /* M92-D-A PCB used for program rom locations */
+ROM_START( crossbld )				/* M92-D-A PCB used for program rom locations */
 	ROM_REGION( 0x100000, "maincpu", 0 )
 	ROM_LOAD16_BYTE( "bm_d-h0.3h", 0x000001, 0x40000, CRC(a28a5821) SHA1(2e79ec82dd79697f4a6b4082d49400d39cc3bad9) )
 	ROM_LOAD16_BYTE( "bm_d-l0.5h", 0x000000, 0x40000, CRC(a504f1a0) SHA1(33ccc944b08b89e6a975a164c72b36aa79b99392) )
@@ -1098,13 +1110,13 @@ ROM_START( crossbld ) /* M92-D-A PCB used for program rom locations */
 	ROM_LOAD16_BYTE( "bm_d-sh0.rom", 0x00001, 0x10000, CRC(9f7c075b) SHA1(1dd3fb4dc41d3adea9ca8d1b4363dadebea49bda) )
 	ROM_LOAD16_BYTE( "bm_d-sl0.rom", 0x00000, 0x10000, CRC(1fa87c89) SHA1(971eae7dd2591191ed7a948a444387896735e149) )
 
-	ROM_REGION( 0x100000, "gfx1", 0 ) /* Tiles */
+	ROM_REGION( 0x100000, "gfx1", 0 )	/* Tiles */
 	ROM_LOAD( "bm_c0.rom", 0x000000, 0x40000, CRC(2cc966b8) SHA1(4d55954813efe975b7e644448effc61b22896e0b) )
 	ROM_LOAD( "bm_c1.rom", 0x040000, 0x40000, CRC(46df773e) SHA1(6f075492c06768f7d2315906ec1349fe09def22f) )
 	ROM_LOAD( "bm_c2.rom", 0x080000, 0x40000, CRC(05b867bd) SHA1(d44667f3f4908bacb6e10becc431b0f213c20407) )
 	ROM_LOAD( "bm_c3.rom", 0x0c0000, 0x40000, CRC(0a2227a4) SHA1(30499e99f3731993607e04c77637f6bbe641c05c) )
 
-	ROM_REGION( 0x200000, "gfx2", 0 ) /* Sprites */
+	ROM_REGION( 0x200000, "gfx2", 0 )	/* Sprites */
 	ROM_LOAD( "bm_000.rom", 0x000000, 0x80000, CRC(339fc9f3) SHA1(36be0f3b5add2ecf3f602933f5456091daaeb1f6) )
 	ROM_LOAD( "bm_010.rom", 0x080000, 0x80000, CRC(6a14377d) SHA1(699e5b1984810ee9e504f9ddaec604671c0cb0b7) )
 	ROM_LOAD( "bm_020.rom", 0x100000, 0x80000, CRC(31532198) SHA1(7a285e003a7c359f5b1afe4da3b44069f716f7b5) )
@@ -1114,88 +1126,12 @@ ROM_START( crossbld ) /* M92-D-A PCB used for program rom locations */
 	ROM_LOAD( "bm_da.rom", 0x000000, 0x80000, CRC(62ce5798) SHA1(f7bf7706f71ce36d85c99e531d4789c4d7a095a0) )
 ROM_END
 
-ROM_START( skingame )
-	ROM_REGION( 0x100000, "maincpu", 0 )
-	ROM_LOAD16_BYTE( "is-h0-d.5m", 0x00001, 0x40000, CRC(80940abb) SHA1(7af5b667383f40987cc8190d81937410ea2c0301) )
-	ROM_LOAD16_BYTE( "is-l0-d.5f", 0x00000, 0x40000, CRC(b84beed6) SHA1(b026a68623d7d96545a4b01770fc6cdd2a0ed0f4) )
-	ROM_LOAD16_BYTE( "is-h1.5l",   0x80001, 0x40000, CRC(9ba8e1f2) SHA1(ae86697a97223d236e2e6dd33ddb8105b9f926cb) )
-	ROM_LOAD16_BYTE( "is-l1.5j",   0x80000, 0x40000, CRC(e4e00626) SHA1(e8c6c7ad6a367da4036915a155c8695ad90ae47b) )
-
-	ROM_REGION( 0x100000, "soundcpu", 0 )
-	ROM_LOAD16_BYTE( "mt2sh0",  0x00001, 0x10000, CRC(1ecbea43) SHA1(8d66ef419f75569f2c83a89c3985742b8a47914f) )
-	ROM_LOAD16_BYTE( "mt2sl0",  0x00000, 0x10000, CRC(8fd5b531) SHA1(92cae3f6dac7f89b559063de3be2f38587536b65) )
-
-	ROM_REGION( 0x100000, "gfx1", 0 ) /* Tiles */
-	ROM_LOAD( "c0", 0x000000, 0x40000, CRC(7e61e4b5) SHA1(d0164862937bd506e701777c51dea1ddb3e2eda4) )
-	ROM_LOAD( "c1", 0x040000, 0x40000, CRC(0a667564) SHA1(d122e0619ae5cc0202f30270933784c954eb1e5d) )
-	ROM_LOAD( "c2", 0x080000, 0x40000, CRC(5eb44312) SHA1(75b584b63d4f4f2236a679235461f11004aa317f) )
-	ROM_LOAD( "c3", 0x0c0000, 0x40000, CRC(f2866294) SHA1(75e0071bf6282c93034dc7e73466af0f51046d01) )
-
-	ROM_REGION( 0x400000, "gfx2", 0 ) /* Sprites */
-	ROM_LOAD( "k30", 0x000000, 0x100000, CRC(8c9a2678) SHA1(e8ed119c16ddd59af9e83d243e7be25974f7cbf8) )
-	ROM_LOAD( "k31", 0x100000, 0x100000, CRC(5455df78) SHA1(9e49bde1d5a310ff611932c3429601fbddf3a7b1) )
-	ROM_LOAD( "k32", 0x200000, 0x100000, CRC(3a258c41) SHA1(1d93fcd01728929848b782870f80a8cd0af44796) )
-	ROM_LOAD( "k33", 0x300000, 0x100000, CRC(c1e91a14) SHA1(1f0dbd99d8c5067dc3f8795fc3f1bd4466f64156) )
-
-	ROM_REGION( 0x80000, "irem", 0 )
-	ROM_LOAD( "da", 0x000000, 0x80000, CRC(713b9e9f) SHA1(91384d67d4ba9c7d926fbecb077293c661b8ec83) )
-
-	ROM_REGION( 0x4000, "user1", 0 )	/* EEPROM */
-//	ROM_REGION( 0x4000, "eeprom", 0 )   /* D28C64C-20 EEPROM */
-	ROM_LOAD( "mt2eep",  0x000000, 0x800, CRC(208af971) SHA1(69384cac24b7af35a031f9b60e035131a8b10cb2) )
-
-	ROM_REGION( 0x0c00, "plds", 0 )
-	ROM_LOAD( "pal16l8-m92-a-3m.ic11", 0x0000, 0x0104, NO_DUMP ) /* PAL is read protected */
-	ROM_LOAD( "pal16l8-m92-a-7j.ic41", 0x0200, 0x0104, NO_DUMP ) /* PAL is read protected */
-	ROM_LOAD( "pal16l8-m92-a-9j.ic51", 0x0400, 0x0104, NO_DUMP ) /* PAL is read protected */
-	ROM_LOAD( "pal16l8-m92-b-2l.ic7",  0x0600, 0x0104, NO_DUMP ) /* PAL is read protected */
-	ROM_LOAD( "pal16l8-m92-b-7h.ic47", 0x0800, 0x0104, NO_DUMP ) /* PAL is read protected */
-ROM_END
-
-ROM_START( skingame2 )
-	ROM_REGION( 0x100000, "maincpu", 0 )
-	ROM_LOAD16_BYTE( "mt2-h0-a.5m", 0x00001, 0x40000, CRC(7c6dbbc7) SHA1(6ac2df542cbcac782d733aaa0f2e4ded702ec24f) )
-	ROM_LOAD16_BYTE( "mt2-l0-a.5f", 0x00000, 0x40000, CRC(9de5f689) SHA1(ea5057cab0a2f5c4586337fc5a17f1a728450cbf) )
-	ROM_LOAD16_BYTE( "is-h1.5l",    0x80001, 0x40000, CRC(9ba8e1f2) SHA1(ae86697a97223d236e2e6dd33ddb8105b9f926cb) )
-	ROM_LOAD16_BYTE( "is-l1.5j",    0x80000, 0x40000, CRC(e4e00626) SHA1(e8c6c7ad6a367da4036915a155c8695ad90ae47b) )
-
-	ROM_REGION( 0x100000, "soundcpu", 0 )
-	ROM_LOAD16_BYTE( "mt2sh0",  0x00001, 0x10000, CRC(1ecbea43) SHA1(8d66ef419f75569f2c83a89c3985742b8a47914f) )
-	ROM_LOAD16_BYTE( "mt2sl0",  0x00000, 0x10000, CRC(8fd5b531) SHA1(92cae3f6dac7f89b559063de3be2f38587536b65) )
-
-	ROM_REGION( 0x100000, "gfx1", 0 ) /* Tiles */
-	ROM_LOAD( "c0", 0x000000, 0x40000, CRC(7e61e4b5) SHA1(d0164862937bd506e701777c51dea1ddb3e2eda4) )
-	ROM_LOAD( "c1", 0x040000, 0x40000, CRC(0a667564) SHA1(d122e0619ae5cc0202f30270933784c954eb1e5d) )
-	ROM_LOAD( "c2", 0x080000, 0x40000, CRC(5eb44312) SHA1(75b584b63d4f4f2236a679235461f11004aa317f) )
-	ROM_LOAD( "c3", 0x0c0000, 0x40000, CRC(f2866294) SHA1(75e0071bf6282c93034dc7e73466af0f51046d01) )
-
-	ROM_REGION( 0x400000, "gfx2", 0 ) /* Sprites */
-	ROM_LOAD( "k30", 0x000000, 0x100000, CRC(8c9a2678) SHA1(e8ed119c16ddd59af9e83d243e7be25974f7cbf8) )
-	ROM_LOAD( "k31", 0x100000, 0x100000, CRC(5455df78) SHA1(9e49bde1d5a310ff611932c3429601fbddf3a7b1) )
-	ROM_LOAD( "k32", 0x200000, 0x100000, CRC(3a258c41) SHA1(1d93fcd01728929848b782870f80a8cd0af44796) )
-	ROM_LOAD( "k33", 0x300000, 0x100000, CRC(c1e91a14) SHA1(1f0dbd99d8c5067dc3f8795fc3f1bd4466f64156) )
-
-	ROM_REGION( 0x80000, "irem", 0 )
-	ROM_LOAD( "da", 0x000000, 0x80000, CRC(713b9e9f) SHA1(91384d67d4ba9c7d926fbecb077293c661b8ec83) )
-
-	ROM_REGION( 0x4000, "user1", 0 )	/* EEPROM */
-//	ROM_REGION( 0x4000, "eeprom", 0 )   /* D28C64C-20 EEPROM */
-	ROM_LOAD( "mt2eep",  0x000000, 0x800, CRC(208af971) SHA1(69384cac24b7af35a031f9b60e035131a8b10cb2) )
-
-	ROM_REGION( 0x0c00, "plds", 0 )
-	ROM_LOAD( "pal16l8-m92-a-3m.ic11", 0x0000, 0x0104, NO_DUMP ) /* PAL is read protected */
-	ROM_LOAD( "pal16l8-m92-a-7j.ic41", 0x0200, 0x0104, NO_DUMP ) /* PAL is read protected */
-	ROM_LOAD( "pal16l8-m92-a-9j.ic51", 0x0400, 0x0104, NO_DUMP ) /* PAL is read protected */
-	ROM_LOAD( "pal16l8-m92-b-2l.ic7",  0x0600, 0x0104, NO_DUMP ) /* PAL is read protected */
-	ROM_LOAD( "pal16l8-m92-b-7h.ic47", 0x0800, 0x0104, NO_DUMP ) /* PAL is read protected */
-ROM_END
-
 ROM_START( majtitl2 )
-	ROM_REGION( 0x100000, "maincpu", 0 )
-	ROM_LOAD16_BYTE( "mt2-h0-b.5m", 0x00001, 0x40000, CRC(b163b12e) SHA1(cdb01a5266bd11f4cff1cb5c05cf24de13a527b2) )
-	ROM_LOAD16_BYTE( "mt2-l0-b.5f", 0x00000, 0x40000, CRC(6f3b5d9d) SHA1(a39f25f29195023fb507dc9ffbfcbd57a4e6b30a) )
-	ROM_LOAD16_BYTE( "is-h1.5l",    0x80001, 0x40000, CRC(9ba8e1f2) SHA1(ae86697a97223d236e2e6dd33ddb8105b9f926cb) )
-	ROM_LOAD16_BYTE( "is-l1.5j",    0x80000, 0x40000, CRC(e4e00626) SHA1(e8c6c7ad6a367da4036915a155c8695ad90ae47b) )
+	ROM_REGION( 0x180000, "maincpu", 0 )
+	ROM_LOAD16_BYTE( "mt2-h0-b.5m", 0x000001, 0x40000, CRC(b163b12e) SHA1(cdb01a5266bd11f4cff1cb5c05cf24de13a527b2) )
+	ROM_LOAD16_BYTE( "mt2-l0-b.5f", 0x000000, 0x40000, CRC(6f3b5d9d) SHA1(a39f25f29195023fb507dc9ffbfcbd57a4e6b30a) )
+	ROM_LOAD16_BYTE( "is-h1.5l",    0x100001, 0x40000, CRC(9ba8e1f2) SHA1(ae86697a97223d236e2e6dd33ddb8105b9f926cb) )
+	ROM_LOAD16_BYTE( "is-l1.5j",    0x100000, 0x40000, CRC(e4e00626) SHA1(e8c6c7ad6a367da4036915a155c8695ad90ae47b) )
 
 	ROM_REGION( 0x100000, "soundcpu", 0 )
 	ROM_LOAD16_BYTE( "mt2sh0",  0x00001, 0x10000, CRC(1ecbea43) SHA1(8d66ef419f75569f2c83a89c3985742b8a47914f) )
@@ -1216,8 +1152,8 @@ ROM_START( majtitl2 )
 	ROM_REGION( 0x80000, "irem", 0 )
 	ROM_LOAD( "da", 0x000000, 0x80000, CRC(713b9e9f) SHA1(91384d67d4ba9c7d926fbecb077293c661b8ec83) )
 
-	ROM_REGION( 0x4000, "user1", 0 )	/* EEPROM */
-//	ROM_REGION( 0x4000, "eeprom", 0 )   /* D28C64C-20 EEPROM */
+//	ROM_REGION( 0x4000, "user1", 0 )	/* EEPROM */
+	ROM_REGION( 0x4000, "eeprom", 0 )   /* D28C64C-20 EEPROM */
 	ROM_LOAD( "mt2eep",  0x000000, 0x800, CRC(208af971) SHA1(69384cac24b7af35a031f9b60e035131a8b10cb2) )
 
 	ROM_REGION( 0x0c00, "plds", 0 )
@@ -1229,11 +1165,11 @@ ROM_START( majtitl2 )
 ROM_END
 
 ROM_START( majtitl2j )
-	ROM_REGION( 0x100000, "maincpu", 0 )
-	ROM_LOAD16_BYTE( "mt2-h0",      0x00001, 0x40000, CRC(8a8d71ad) SHA1(8c45d947d15eb3a2c2584c9e1cd0e42988955905) )
-	ROM_LOAD16_BYTE( "mt2-l1",      0x00000, 0x40000, CRC(dd4fff51) SHA1(9281bac10fdbfa9eede9d069b70eb38d9ae612ce) )
-	ROM_LOAD16_BYTE( "is-h1.5l",    0x80001, 0x40000, CRC(9ba8e1f2) SHA1(ae86697a97223d236e2e6dd33ddb8105b9f926cb) )
-	ROM_LOAD16_BYTE( "is-l1.5j",    0x80000, 0x40000, CRC(e4e00626) SHA1(e8c6c7ad6a367da4036915a155c8695ad90ae47b) )
+	ROM_REGION( 0x180000, "maincpu", 0 )
+	ROM_LOAD16_BYTE( "mt2-h0",      0x000001, 0x40000, CRC(8a8d71ad) SHA1(8c45d947d15eb3a2c2584c9e1cd0e42988955905) )
+	ROM_LOAD16_BYTE( "mt2-l1",      0x000000, 0x40000, CRC(dd4fff51) SHA1(9281bac10fdbfa9eede9d069b70eb38d9ae612ce) )
+	ROM_LOAD16_BYTE( "is-h1.5l",    0x100001, 0x40000, CRC(9ba8e1f2) SHA1(ae86697a97223d236e2e6dd33ddb8105b9f926cb) )
+	ROM_LOAD16_BYTE( "is-l1.5j",    0x100000, 0x40000, CRC(e4e00626) SHA1(e8c6c7ad6a367da4036915a155c8695ad90ae47b) )
 
 	ROM_REGION( 0x100000, "soundcpu", 0 )
 	ROM_LOAD16_BYTE( "mt2sh0",  0x00001, 0x10000, CRC(1ecbea43) SHA1(8d66ef419f75569f2c83a89c3985742b8a47914f) )
@@ -1254,8 +1190,84 @@ ROM_START( majtitl2j )
 	ROM_REGION( 0x80000, "irem", 0 )
 	ROM_LOAD( "da", 0x000000, 0x80000, CRC(713b9e9f) SHA1(91384d67d4ba9c7d926fbecb077293c661b8ec83) )
 
-	ROM_REGION( 0x4000, "user1", 0 )	/* EEPROM */
-//	ROM_REGION( 0x4000, "eeprom", 0 )   /* D28C64C-20 EEPROM */
+//	ROM_REGION( 0x4000, "user1", 0 )	/* EEPROM */
+	ROM_REGION( 0x4000, "eeprom", 0 )   /* D28C64C-20 EEPROM */
+	ROM_LOAD( "mt2eep",  0x000000, 0x800, CRC(208af971) SHA1(69384cac24b7af35a031f9b60e035131a8b10cb2) )
+
+	ROM_REGION( 0x0c00, "plds", 0 )
+	ROM_LOAD( "pal16l8-m92-a-3m.ic11", 0x0000, 0x0104, NO_DUMP ) /* PAL is read protected */
+	ROM_LOAD( "pal16l8-m92-a-7j.ic41", 0x0200, 0x0104, NO_DUMP ) /* PAL is read protected */
+	ROM_LOAD( "pal16l8-m92-a-9j.ic51", 0x0400, 0x0104, NO_DUMP ) /* PAL is read protected */
+	ROM_LOAD( "pal16l8-m92-b-2l.ic7",  0x0600, 0x0104, NO_DUMP ) /* PAL is read protected */
+	ROM_LOAD( "pal16l8-m92-b-7h.ic47", 0x0800, 0x0104, NO_DUMP ) /* PAL is read protected */
+ROM_END
+
+ROM_START( skingame )
+	ROM_REGION( 0x180000, "maincpu", 0 )
+	ROM_LOAD16_BYTE( "is-h0-d.5m", 0x000001, 0x40000, CRC(80940abb) SHA1(7af5b667383f40987cc8190d81937410ea2c0301) )
+	ROM_LOAD16_BYTE( "is-l0-d.5f", 0x000000, 0x40000, CRC(b84beed6) SHA1(b026a68623d7d96545a4b01770fc6cdd2a0ed0f4) )
+	ROM_LOAD16_BYTE( "is-h1.5l",   0x100001, 0x40000, CRC(9ba8e1f2) SHA1(ae86697a97223d236e2e6dd33ddb8105b9f926cb) )
+	ROM_LOAD16_BYTE( "is-l1.5j",   0x100000, 0x40000, CRC(e4e00626) SHA1(e8c6c7ad6a367da4036915a155c8695ad90ae47b) )
+
+	ROM_REGION( 0x100000, "soundcpu", 0 )
+	ROM_LOAD16_BYTE( "mt2sh0",  0x00001, 0x10000, CRC(1ecbea43) SHA1(8d66ef419f75569f2c83a89c3985742b8a47914f) )
+	ROM_LOAD16_BYTE( "mt2sl0",  0x00000, 0x10000, CRC(8fd5b531) SHA1(92cae3f6dac7f89b559063de3be2f38587536b65) )
+
+	ROM_REGION( 0x100000, "gfx1", 0 ) /* Tiles */
+	ROM_LOAD( "c0", 0x000000, 0x40000, CRC(7e61e4b5) SHA1(d0164862937bd506e701777c51dea1ddb3e2eda4) )
+	ROM_LOAD( "c1", 0x040000, 0x40000, CRC(0a667564) SHA1(d122e0619ae5cc0202f30270933784c954eb1e5d) )
+	ROM_LOAD( "c2", 0x080000, 0x40000, CRC(5eb44312) SHA1(75b584b63d4f4f2236a679235461f11004aa317f) )
+	ROM_LOAD( "c3", 0x0c0000, 0x40000, CRC(f2866294) SHA1(75e0071bf6282c93034dc7e73466af0f51046d01) )
+
+	ROM_REGION( 0x400000, "gfx2", 0 ) /* Sprites */
+	ROM_LOAD( "k30", 0x000000, 0x100000, CRC(8c9a2678) SHA1(e8ed119c16ddd59af9e83d243e7be25974f7cbf8) )
+	ROM_LOAD( "k31", 0x100000, 0x100000, CRC(5455df78) SHA1(9e49bde1d5a310ff611932c3429601fbddf3a7b1) )
+	ROM_LOAD( "k32", 0x200000, 0x100000, CRC(3a258c41) SHA1(1d93fcd01728929848b782870f80a8cd0af44796) )
+	ROM_LOAD( "k33", 0x300000, 0x100000, CRC(c1e91a14) SHA1(1f0dbd99d8c5067dc3f8795fc3f1bd4466f64156) )
+
+	ROM_REGION( 0x80000, "irem", 0 )
+	ROM_LOAD( "da", 0x000000, 0x80000, CRC(713b9e9f) SHA1(91384d67d4ba9c7d926fbecb077293c661b8ec83) )
+
+//	ROM_REGION( 0x4000, "user1", 0 )	/* EEPROM */
+	ROM_REGION( 0x4000, "eeprom", 0 )   /* D28C64C-20 EEPROM */
+	ROM_LOAD( "mt2eep",  0x000000, 0x800, CRC(208af971) SHA1(69384cac24b7af35a031f9b60e035131a8b10cb2) )
+
+	ROM_REGION( 0x0c00, "plds", 0 )
+	ROM_LOAD( "pal16l8-m92-a-3m.ic11", 0x0000, 0x0104, NO_DUMP ) /* PAL is read protected */
+	ROM_LOAD( "pal16l8-m92-a-7j.ic41", 0x0200, 0x0104, NO_DUMP ) /* PAL is read protected */
+	ROM_LOAD( "pal16l8-m92-a-9j.ic51", 0x0400, 0x0104, NO_DUMP ) /* PAL is read protected */
+	ROM_LOAD( "pal16l8-m92-b-2l.ic7",  0x0600, 0x0104, NO_DUMP ) /* PAL is read protected */
+	ROM_LOAD( "pal16l8-m92-b-7h.ic47", 0x0800, 0x0104, NO_DUMP ) /* PAL is read protected */
+ROM_END
+
+ROM_START( skingame2 )
+	ROM_REGION( 0x180000, "maincpu", 0 )
+	ROM_LOAD16_BYTE( "mt2-h0-a.5m", 0x000001, 0x40000, CRC(7c6dbbc7) SHA1(6ac2df542cbcac782d733aaa0f2e4ded702ec24f) )
+	ROM_LOAD16_BYTE( "mt2-l0-a.5f", 0x000000, 0x40000, CRC(9de5f689) SHA1(ea5057cab0a2f5c4586337fc5a17f1a728450cbf) )
+	ROM_LOAD16_BYTE( "is-h1.5l",    0x100001, 0x40000, CRC(9ba8e1f2) SHA1(ae86697a97223d236e2e6dd33ddb8105b9f926cb) )
+	ROM_LOAD16_BYTE( "is-l1.5j",    0x100000, 0x40000, CRC(e4e00626) SHA1(e8c6c7ad6a367da4036915a155c8695ad90ae47b) )
+
+	ROM_REGION( 0x100000, "soundcpu", 0 )
+	ROM_LOAD16_BYTE( "mt2sh0",  0x00001, 0x10000, CRC(1ecbea43) SHA1(8d66ef419f75569f2c83a89c3985742b8a47914f) )
+	ROM_LOAD16_BYTE( "mt2sl0",  0x00000, 0x10000, CRC(8fd5b531) SHA1(92cae3f6dac7f89b559063de3be2f38587536b65) )
+
+	ROM_REGION( 0x100000, "gfx1", 0 ) /* Tiles */
+	ROM_LOAD( "c0", 0x000000, 0x40000, CRC(7e61e4b5) SHA1(d0164862937bd506e701777c51dea1ddb3e2eda4) )
+	ROM_LOAD( "c1", 0x040000, 0x40000, CRC(0a667564) SHA1(d122e0619ae5cc0202f30270933784c954eb1e5d) )
+	ROM_LOAD( "c2", 0x080000, 0x40000, CRC(5eb44312) SHA1(75b584b63d4f4f2236a679235461f11004aa317f) )
+	ROM_LOAD( "c3", 0x0c0000, 0x40000, CRC(f2866294) SHA1(75e0071bf6282c93034dc7e73466af0f51046d01) )
+
+	ROM_REGION( 0x400000, "gfx2", 0 ) /* Sprites */
+	ROM_LOAD( "k30", 0x000000, 0x100000, CRC(8c9a2678) SHA1(e8ed119c16ddd59af9e83d243e7be25974f7cbf8) )
+	ROM_LOAD( "k31", 0x100000, 0x100000, CRC(5455df78) SHA1(9e49bde1d5a310ff611932c3429601fbddf3a7b1) )
+	ROM_LOAD( "k32", 0x200000, 0x100000, CRC(3a258c41) SHA1(1d93fcd01728929848b782870f80a8cd0af44796) )
+	ROM_LOAD( "k33", 0x300000, 0x100000, CRC(c1e91a14) SHA1(1f0dbd99d8c5067dc3f8795fc3f1bd4466f64156) )
+
+	ROM_REGION( 0x80000, "irem", 0 )
+	ROM_LOAD( "da", 0x000000, 0x80000, CRC(713b9e9f) SHA1(91384d67d4ba9c7d926fbecb077293c661b8ec83) )
+
+//	ROM_REGION( 0x4000, "user1", 0 )	/* EEPROM */
+	ROM_REGION( 0x4000, "eeprom", 0 )   /* D28C64C-20 EEPROM */
 	ROM_LOAD( "mt2eep",  0x000000, 0x800, CRC(208af971) SHA1(69384cac24b7af35a031f9b60e035131a8b10cb2) )
 
 	ROM_REGION( 0x0c00, "plds", 0 )
@@ -1856,11 +1868,11 @@ ROM_START( thndblst )
 ROM_END
 
 ROM_START( nbbatman )
-	ROM_REGION( 0x100000, "maincpu", 0 )
+	ROM_REGION( 0x180000, "maincpu", 0 )
 	ROM_LOAD16_BYTE( "6_h0.34",   0x000001, 0x040000, CRC(5c4a1e3f) SHA1(583f83ae789040b28b62af67218abfdc6ea74d25) )
 	ROM_LOAD16_BYTE( "3_l0.31",   0x000000, 0x040000, CRC(3d6d70ae) SHA1(6585d0e2367d9400d83be483d849d2390cae7d39) )
-	ROM_LOAD16_BYTE( "a1-h1-.33", 0x080001, 0x040000, CRC(3ce2aab5) SHA1(b39f17853bcab7ab290fdfaf9f3d8e8c2d91072a) )
-	ROM_LOAD16_BYTE( "a1-l1-.32", 0x080000, 0x040000, CRC(116d9bcc) SHA1(c2faf8d1c6b51ac1483757777fd55961b74501fb) )
+	ROM_LOAD16_BYTE( "a1-h1-.33", 0x100001, 0x040000, CRC(3ce2aab5) SHA1(b39f17853bcab7ab290fdfaf9f3d8e8c2d91072a) )
+	ROM_LOAD16_BYTE( "a1-l1-.32", 0x100000, 0x040000, CRC(116d9bcc) SHA1(c2faf8d1c6b51ac1483757777fd55961b74501fb) )
 
 	ROM_REGION( 0x100000, "soundcpu", 0 )
 	ROM_LOAD16_BYTE( "a1-sh0-.14", 0x00001, 0x10000, CRC(b7fae3e6) SHA1(ce41380d6c0f29f2facf9bf23dd4403648cd9eb4) )
@@ -1883,11 +1895,11 @@ ROM_START( nbbatman )
 ROM_END
 
 ROM_START( nbbatmanu )
-	ROM_REGION( 0x100000, "maincpu", 0 )
+	ROM_REGION( 0x180000, "maincpu", 0 )
 	ROM_LOAD16_BYTE( "a1-h0-a.34", 0x000001, 0x040000, CRC(24a9b794) SHA1(a4867a89ea2749d60e6d1225bd84a488403b8cf3) )
 	ROM_LOAD16_BYTE( "a1-l0-a.31", 0x000000, 0x040000, CRC(846d7716) SHA1(28434fd74b168ef73d00779b3e5d8b36b1f3ef80) )
-	ROM_LOAD16_BYTE( "a1-h1-.33",  0x080001, 0x040000, CRC(3ce2aab5) SHA1(b39f17853bcab7ab290fdfaf9f3d8e8c2d91072a) )
-	ROM_LOAD16_BYTE( "a1-l1-.32",  0x080000, 0x040000, CRC(116d9bcc) SHA1(c2faf8d1c6b51ac1483757777fd55961b74501fb) )
+	ROM_LOAD16_BYTE( "a1-h1-.33",  0x100001, 0x040000, CRC(3ce2aab5) SHA1(b39f17853bcab7ab290fdfaf9f3d8e8c2d91072a) )
+	ROM_LOAD16_BYTE( "a1-l1-.32",  0x100000, 0x040000, CRC(116d9bcc) SHA1(c2faf8d1c6b51ac1483757777fd55961b74501fb) )
 
 	ROM_REGION( 0x100000, "soundcpu", 0 )
 	ROM_LOAD16_BYTE( "a1-sh0-.14", 0x00001, 0x10000, CRC(b7fae3e6) SHA1(ce41380d6c0f29f2facf9bf23dd4403648cd9eb4) )
@@ -1910,11 +1922,11 @@ ROM_START( nbbatmanu )
 ROM_END
 
 ROM_START( leaguemn )
-	ROM_REGION( 0x100000, "maincpu", 0 )
+	ROM_REGION( 0x180000, "maincpu", 0 )
 	ROM_LOAD16_BYTE( "lma1-h0.34", 0x000001, 0x040000, CRC(47c54204) SHA1(59de4e9a75c88dba71aa1949e7ac2c4b9e98f413) )
 	ROM_LOAD16_BYTE( "lma1-l0.31", 0x000000, 0x040000, CRC(1d062c82) SHA1(8d5969dc0264a05334196132bc2b5a3a59fb9e3a) )
-	ROM_LOAD16_BYTE( "a1-h1-.33",  0x080001, 0x040000, CRC(3ce2aab5) SHA1(b39f17853bcab7ab290fdfaf9f3d8e8c2d91072a) )
-	ROM_LOAD16_BYTE( "a1-l1-.32",  0x080000, 0x040000, CRC(116d9bcc) SHA1(c2faf8d1c6b51ac1483757777fd55961b74501fb) )
+	ROM_LOAD16_BYTE( "a1-h1-.33",  0x100001, 0x040000, CRC(3ce2aab5) SHA1(b39f17853bcab7ab290fdfaf9f3d8e8c2d91072a) )
+	ROM_LOAD16_BYTE( "a1-l1-.32",  0x100000, 0x040000, CRC(116d9bcc) SHA1(c2faf8d1c6b51ac1483757777fd55961b74501fb) )
 
 	ROM_REGION( 0x100000, "soundcpu", 0 )
 	ROM_LOAD16_BYTE( "a1-sh0-.14", 0x00001, 0x10000, CRC(b7fae3e6) SHA1(ce41380d6c0f29f2facf9bf23dd4403648cd9eb4) )
@@ -1999,11 +2011,11 @@ ROM_START( psoldier )
 ROM_END
 
 ROM_START( gunforc2 )
-	ROM_REGION( 0x100000, "maincpu", 0 )
+	ROM_REGION( 0x180000, "maincpu", 0 )
 	ROM_LOAD16_BYTE("a2-h0-a.6h", 0x000001, 0x040000, CRC(49965e22) SHA1(077283c66a4cc2c47221c5f3267f440223615a15) )
 	ROM_LOAD16_BYTE("a2-l0-a.8h", 0x000000, 0x040000, CRC(8c88b278) SHA1(0fd8e663619dcd8c81b3baa290bb0e72c185273a) )
-	ROM_LOAD16_BYTE("a2-h1-a.6f", 0x080001, 0x040000, CRC(34280b88) SHA1(3fd3cdf8acfa845abacb0708fb48741ee44dbf13) )
-	ROM_LOAD16_BYTE("a2-l1-a.8f", 0x080000, 0x040000, CRC(c8c13f51) SHA1(fde3fd983ebb920f79e6898aa0576da9dd9f0c15) )
+	ROM_LOAD16_BYTE("a2-h1-a.6f", 0x100001, 0x040000, CRC(34280b88) SHA1(3fd3cdf8acfa845abacb0708fb48741ee44dbf13) )
+	ROM_LOAD16_BYTE("a2-l1-a.8f", 0x100000, 0x040000, CRC(c8c13f51) SHA1(fde3fd983ebb920f79e6898aa0576da9dd9f0c15) )
 
 	ROM_REGION( 0x100000, "soundcpu", 0 )
 	ROM_LOAD16_BYTE("a2_sh0.3l",  0x00001, 0x10000, CRC(2e2d103d) SHA1(6b663948f69218308d9ecdb677557b2db1dfbf5a) )
@@ -2026,11 +2038,11 @@ ROM_START( gunforc2 )
 ROM_END
 
 ROM_START( geostorm )
-	ROM_REGION( 0x100000, "maincpu", 0 )
+	ROM_REGION( 0x180000, "maincpu", 0 )
 	ROM_LOAD16_BYTE("geo-h0.bin", 0x000001, 0x040000, CRC(9be58d09) SHA1(ab98b91abc8129c342c59674eab9683cccc6ca35) )
 	ROM_LOAD16_BYTE("geo-l0.bin", 0x000000, 0x040000, CRC(59abb75d) SHA1(52b48685470ffa3f36a8259bf333448bf40caea9) )
-	ROM_LOAD16_BYTE("a2-h1-a.6f", 0x080001, 0x040000, CRC(34280b88) SHA1(3fd3cdf8acfa845abacb0708fb48741ee44dbf13) )
-	ROM_LOAD16_BYTE("a2-l1-a.8f", 0x080000, 0x040000, CRC(c8c13f51) SHA1(fde3fd983ebb920f79e6898aa0576da9dd9f0c15) )
+	ROM_LOAD16_BYTE("a2-h1-a.6f", 0x100001, 0x040000, CRC(34280b88) SHA1(3fd3cdf8acfa845abacb0708fb48741ee44dbf13) )
+	ROM_LOAD16_BYTE("a2-l1-a.8f", 0x100000, 0x040000, CRC(c8c13f51) SHA1(fde3fd983ebb920f79e6898aa0576da9dd9f0c15) )
 
 	ROM_REGION( 0x100000, "soundcpu", 0 )
 	ROM_LOAD16_BYTE("a2_sh0.3l",  0x00001, 0x10000, CRC(2e2d103d) SHA1(6b663948f69218308d9ecdb677557b2db1dfbf5a) )
@@ -2058,12 +2070,14 @@ ROM_END
 
 static void init_m92(running_machine *machine, int hasbanks)
 {
+	m92_state *state = (m92_state *)machine->driver_data;
+
 	UINT8 *RAM = memory_region(machine, "maincpu");
 
 	if (hasbanks)
 	{
 		memcpy(RAM + 0xffff0, RAM + 0x7fff0, 0x10);	/* Start vector */
-		bankaddress = 0xa0000;				/* Initial bank */
+		state->bankaddress = 0xa0000;				/* Initial bank */
 		set_m92_bank(machine);
 
 		/* Mirror used by In The Hunt for protection */
@@ -2076,9 +2090,9 @@ static void init_m92(running_machine *machine, int hasbanks)
 	if (RAM)
 		memcpy(RAM + 0xffff0, RAM + 0x1fff0, 0x10);	/* Sound cpu Start vector */
 
-	m92_game_kludge = 0;
-	m92_irq_vectorbase = 0x80;
-	m92_sprite_buffer_busy = 1;
+	state->game_kludge = 0;
+	state->irq_vectorbase = 0x80;
+	state->sprite_buffer_busy = 1;
 
 	setvector_callback(machine, NULL, VECTOR_INIT);
 }
@@ -2090,8 +2104,10 @@ static DRIVER_INIT( m92_most )
 
 static DRIVER_INIT( m92_rtype )
 {
+	m92_state *state = (m92_state *)machine->driver_data;
+
 	init_m92(machine, 1);
-	m92_irq_vectorbase = 0x20;
+	state->irq_vectorbase = 0x20;
 }
 
 static DRIVER_INIT( m92_gunforc2 )
@@ -2104,25 +2120,32 @@ static DRIVER_INIT( m92_gunforc2 )
 static DRIVER_INIT( m92_ssoldier )
 {
 	init_m92(machine, 1);
-	m92_irq_vectorbase = 0x20;
+	m92_state *state = (m92_state *)machine->driver_data;
+
+	state->irq_vectorbase = 0x20;
 	/* main CPU expects an answer even before writing the first command */
-	sound_status = 0x80;
+	state->sound_status = 0x80;
 }
 
 static DRIVER_INIT( m92_majtitl2 )
 {
 	init_m92(machine, 1);
 
+	m92_state *state = (m92_state *)machine->driver_data;
+
 	/* This game has an eprom on the game board */
 	memory_install_readwrite16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0xf0000, 0xf3fff, 0, 0, m92_eeprom_r, m92_eeprom_w);
 
-	m92_game_kludge = 2;
+	state->game_kludge = 2;
 }
 
 static DRIVER_INIT( m92_lethalth )
 {
 	init_m92(machine, 0);
-	m92_irq_vectorbase = 0x20;
+
+	m92_state *state = (m92_state *)machine->driver_data;
+
+	state->irq_vectorbase = 0x20;
 
 	/* NOP out the bankswitcher */
 	memory_nop_write(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_IO), 0x20, 0x21, 0, 0);
@@ -2150,7 +2173,7 @@ GAME( 1992,  mysticri,   0,           mysticri,    mysticri, 	m92_most,   	ROT0,
 GAME( 1992,  gunhohki,   mysticri,    mysticri,    mysticri, 	m92_most,   	ROT0,   "Irem",         "Mahou Keibitai Gun Hohki (Japan)", 0 )
 GAME( 1992,  mysticrib,  mysticri,    mysticri,    mysticri, 	m92_most,   	ROT0,   "Irem",         "Mystic Riders (bootleg?)", 0 )
 //
-GAME( 1992,  majtitl2,   0,           majtitl2,    majtitl2, 	m92_majtitl2,   ROT0,   "Irem",         "Major Title 2 (World)", 0 )
+GAME( 1992,  majtitl2,   0,           majtitl2,    majtitl2, 	m92_majtitl2,   ROT0,   "Irem",         "Major Title 2 (World, set 1)", 0 )
 GAME( 1992,  majtitl2j,  majtitl2,    majtitl2,    majtitl2, 	m92_majtitl2,   ROT0,   "Irem",         "Major Title 2 (Japan)", 0 )
 GAME( 1992,  skingame,   majtitl2,    majtitl2,    majtitl2, 	m92_majtitl2,   ROT0,   "Irem America", "The Irem Skins Game (US set 1)", 0 )
 GAME( 1992,  skingame2,  majtitl2,    majtitl2,    majtitl2, 	m92_majtitl2,   ROT0,   "Irem America", "The Irem Skins Game (US set 2)", 0 )

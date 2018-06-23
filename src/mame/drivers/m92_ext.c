@@ -1,11 +1,11 @@
 
 // this set matches the 'majtitl2' except for the soundcpu roms, which are for a different CPU
 ROM_START( majtitl2a )		/* Major Title 2 (World, set 1, alt sound CPU) */
-	ROM_REGION( 0x100000, "maincpu", 0 ) // labels differ from 'majtitl2' (maybe the 'B' has faded, or was never there?)
-	ROM_LOAD16_BYTE( "mt2-h0-.5m", 0x00001, 0x40000, CRC(b163b12e) SHA1(cdb01a5266bd11f4cff1cb5c05cf24de13a527b2) )
-	ROM_LOAD16_BYTE( "mt2-l0-.5f", 0x00000, 0x40000, CRC(6f3b5d9d) SHA1(a39f25f29195023fb507dc9ffbfcbd57a4e6b30a) )
-	ROM_LOAD16_BYTE( "mt2-h1-.5l", 0x80001, 0x40000, CRC(9ba8e1f2) SHA1(ae86697a97223d236e2e6dd33ddb8105b9f926cb) )
-	ROM_LOAD16_BYTE( "mt2-l1-.5j", 0x80000, 0x40000, CRC(e4e00626) SHA1(e8c6c7ad6a367da4036915a155c8695ad90ae47b) )
+	ROM_REGION( 0x180000, "maincpu", 0 ) // labels differ from 'majtitl2' (maybe the 'B' has faded, or was never there?)
+	ROM_LOAD16_BYTE( "mt2-h0-.5m", 0x000001, 0x40000, CRC(b163b12e) SHA1(cdb01a5266bd11f4cff1cb5c05cf24de13a527b2) )
+	ROM_LOAD16_BYTE( "mt2-l0-.5f", 0x000000, 0x40000, CRC(6f3b5d9d) SHA1(a39f25f29195023fb507dc9ffbfcbd57a4e6b30a) )
+	ROM_LOAD16_BYTE( "mt2-h1-.5l", 0x100001, 0x40000, CRC(9ba8e1f2) SHA1(ae86697a97223d236e2e6dd33ddb8105b9f926cb) )
+	ROM_LOAD16_BYTE( "mt2-l1-.5j", 0x100000, 0x40000, CRC(e4e00626) SHA1(e8c6c7ad6a367da4036915a155c8695ad90ae47b) )
 
 	ROM_REGION( 0x100000, "soundcpu", 0 )
 	ROM_LOAD16_BYTE( "mt2sh0-a",  0x00001, 0x10000, CRC(50f076e5) SHA1(0490ee062c90e7e2ad3897b93a9c681c5bbc6d8a) )
@@ -26,8 +26,8 @@ ROM_START( majtitl2a )		/* Major Title 2 (World, set 1, alt sound CPU) */
 	ROM_REGION( 0x80000, "irem", 0 )
 	ROM_LOAD( "da", 0x000000, 0x80000, CRC(713b9e9f) SHA1(91384d67d4ba9c7d926fbecb077293c661b8ec83) )
 
-	ROM_REGION( 0x4000, "user1", 0 )
-//	ROM_REGION( 0x4000, "eeprom", 0 )   /* D28C64C-20 EEPROM */
+//	ROM_REGION( 0x4000, "user1", 0 )
+	ROM_REGION( 0x4000, "eeprom", 0 )   /* D28C64C-20 EEPROM */
 	ROM_LOAD( "mt2eep",  0x000000, 0x800, CRC(208af971) SHA1(69384cac24b7af35a031f9b60e035131a8b10cb2) )
 
 	ROM_REGION( 0x0c00, "plds", 0 )
@@ -64,7 +64,8 @@ ROM_START( majtitl2b )		/* Major Title 2 (World, set 2) */
 	ROM_REGION( 0x80000, "irem", 0 )
 	ROM_LOAD( "da", 0x000000, 0x80000, CRC(713b9e9f) SHA1(91384d67d4ba9c7d926fbecb077293c661b8ec83) )
 
-	ROM_REGION( 0x4000, "user1", 0 )
+//	ROM_REGION( 0x4000, "user1", 0 )
+	ROM_REGION( 0x4000, "eeprom", 0 )   /* D28C64C-20 EEPROM */
 	ROM_LOAD( "mt2eep",  0x000000, 0x800, CRC(208af971) SHA1(69384cac24b7af35a031f9b60e035131a8b10cb2) )
 
 	ROM_REGION( 0x0c00, "plds", 0 )
