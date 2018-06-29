@@ -4,7 +4,6 @@
 
 *************************************************************************/
 
-
 #define NEOGEO_MASTER_CLOCK                     (24000000)
 #define NEOGEO_MAIN_CPU_CLOCK                   (NEOGEO_MASTER_CLOCK / 2)
 #define NEOGEO_AUDIO_CPU_CLOCK                  (NEOGEO_MASTER_CLOCK / 6)
@@ -32,83 +31,70 @@ class neogeo_state
 {
 public:
 	static void *alloc(running_machine &machine) { return auto_alloc_clear(&machine, neogeo_state(machine)); }
-
 	neogeo_state(running_machine &machine) { }
 
-	/* memory pointers */
-//  UINT8      *memcard_data;   // this currently uses generic handlers
-//  UINT16     *save_ram;       // this currently uses generic handlers
-
-	/* video-related */
-	UINT8      *sprite_gfx;
-	UINT32     sprite_gfx_address_mask;
-	UINT16     *videoram;
-	UINT16     *palettes[2]; /* 0x100*16 2 byte palette entries */
-	pen_t      *pens;
-	UINT8      palette_bank;
-	UINT8      screen_dark;
-	UINT16     videoram_read_buffer;
-	UINT16     videoram_modulo;
-	UINT16     videoram_offset;
-
-	UINT8      fixed_layer_source;
-
-	UINT8      auto_animation_speed;
-	UINT8      auto_animation_disabled;
-	UINT8      auto_animation_counter;
-	UINT8      auto_animation_frame_counter;
-
-	const UINT8 *region_zoomy;
-
+	/* devices */
+	running_device	*maincpu;
+	running_device	*audiocpu;
+	running_device	*upd4990a;
 
 	/* palette */
-	double     rgb_weights_normal[5];
-	double     rgb_weights_normal_bit15[5];
-	double     rgb_weights_dark[5];
-	double     rgb_weights_dark_bit15[5];
+	double		rgb_weights_normal[5];
+	double		rgb_weights_normal_bit15[5];
+	double		rgb_weights_dark[5];
+	double		rgb_weights_dark_bit15[5];
+
+	/* video-related */
+	UINT32		sprite_gfx_address_mask;
+	UINT16		*videoram;
+	UINT16		*palettes[2];		/* 0x100*16 2 byte palette entries */
+	pen_t		*pens;
+	UINT8		*sprite_gfx;
+	const UINT8	*region_zoomy;
+	UINT16		videoram_read_buffer;
+	UINT16		videoram_modulo;
+	UINT16		videoram_offset;
+	UINT8		palette_bank;
+	UINT8		screen_dark;
+	UINT8		fixed_layer_source;
+	UINT8		auto_animation_speed;
+	UINT8		auto_animation_disabled;
+	UINT8		auto_animation_counter;
+	UINT8		auto_animation_frame_counter;
+	UINT8		display_position_interrupt_control;
 
 	/* timers */
-	emu_timer  *display_position_interrupt_timer;
-	emu_timer  *display_position_vblank_timer;
-	emu_timer  *vblank_interrupt_timer;
-	emu_timer  *auto_animation_timer;
-	emu_timer  *sprite_line_timer;
-	UINT8      display_position_interrupt_control;
-	UINT32     display_counter;
-	UINT32     vblank_interrupt_pending;
-	UINT32     display_position_interrupt_pending;
-	UINT32     irq3_pending;
+	emu_timer	*display_position_interrupt_timer;
+	emu_timer	*display_position_vblank_timer;
+	emu_timer	*vblank_interrupt_timer;
+	emu_timer	*auto_animation_timer;
+	emu_timer	*sprite_line_timer;
+	UINT32		display_counter;
+	UINT32		vblank_interrupt_pending;
+	UINT32		display_position_interrupt_pending;
+	UINT32		irq3_pending;
 
 	/* misc */
-	UINT8      controller_select;
-
-	UINT32     main_cpu_bank_address;
-	UINT8      main_cpu_vector_table_source;
-
-	UINT8      audio_result;
-	UINT8      audio_cpu_banks[4];
-	UINT8      audio_cpu_rom_source;
-	UINT8      audio_cpu_rom_source_last;
-
-	UINT8      save_ram_unlocked;
-
-	UINT8      output_data;
-	UINT8      output_latch;
-	UINT8      el_value;
-	UINT8      led1_value;
-	UINT8      led2_value;
-	UINT8      recurse;
+	UINT32		main_cpu_bank_address;
+	UINT8		main_cpu_vector_table_source;
+	UINT8		controller_select;
+	UINT8		save_ram_unlocked;
+	UINT8		output_data;
+	UINT8		output_latch;
+	UINT8		el_value;
+	UINT8		led1_value;
+	UINT8		led2_value;
+	UINT8		recurse;
+	UINT8		audio_result;
+	UINT8		audio_cpu_rom_source;
+	UINT8		audio_cpu_rom_source_last;
+	UINT8		audio_cpu_banks[4];
 
 	/* protection */
-	UINT32     fatfury2_prot_data;
-	UINT16     neogeo_rng;
-	UINT16     *pvc_cartridge_ram;
-	int        fixed_layer_bank_type;
-
-	/* devices */
-	running_device *maincpu;
-	running_device *audiocpu;
-	running_device *upd4990a;
+	UINT32		fatfury2_prot_data;
+	INT32		fixed_layer_bank_type;
+	UINT16		*pvc_cartridge_ram;
+	UINT16		neogeo_rng;
 };
 
 
@@ -209,21 +195,21 @@ void matrimbl_decrypt(running_machine *machine);
 
 /*----------- defined in video/neogeo.c -----------*/
 
+READ16_HANDLER( neogeo_video_register_r );
+READ16_HANDLER( neogeo_paletteram_r );
+WRITE16_HANDLER( neogeo_video_register_w );
+WRITE16_HANDLER( neogeo_paletteram_w );
+
+void neogeo_set_palette_bank(running_machine *machine, UINT8 data);
+void neogeo_set_screen_dark(running_machine *machine, UINT8 data);
+void neogeo_set_fixed_layer_source(running_machine *machine, UINT8 data);
+
+UINT8 neogeo_get_auto_animation_counter(running_machine *machine);
+
 VIDEO_START( neogeo );
 VIDEO_RESET( neogeo );
 VIDEO_UPDATE( neogeo );
 
-READ16_HANDLER( neogeo_video_register_r );
-WRITE16_HANDLER( neogeo_video_register_w );
-
-void neogeo_set_palette_bank(running_machine *machine, UINT8 data);
-void neogeo_set_screen_dark(running_machine *machine, UINT8 data);
-READ16_HANDLER( neogeo_paletteram_r );
-WRITE16_HANDLER( neogeo_paletteram_w );
-
-void neogeo_set_fixed_layer_source(running_machine *machine, UINT8 data);
-
-UINT8 neogeo_get_auto_animation_counter(running_machine *machine);
 
 /* -------------------------------------------------------------------------------- */
 /*

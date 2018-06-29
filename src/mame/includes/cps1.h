@@ -106,53 +106,53 @@ struct gfx_range
 	/* in the same scale a 8x8 tiles): they don't necessarily match the 	*/
 	/* position in ROM.							*/
 
-	INT32 type;
-	INT32 start;
-	INT32 end;
-	INT32 bank;
+	INT32	type;
+	INT32	start;
+	INT32	end;
+	INT32	bank;
 };
 
 struct CPS1config
 {
-	const char *name;	/* game driver name */
+	INT32		bootleg_kludge;
+
+	/* these depend on the B-board model and PAL */
+	INT32		bank_sizes[4];
+	const struct	gfx_range *bank_mapper;
+
+	const char	*name;		/* game driver name */
 
 	/* Some games interrogate a couple of registers on bootup. */
 	/* These are CPS1 board B self test checks. They wander from game to game. */
-	INT32 cpsb_addr;		/* CPS board B test register address */
-	INT32 cpsb_value;		/* CPS board B test register expected value */
+	INT32		cpsb_addr;	/* CPS board B test register address */
+	INT32		cpsb_value;	/* CPS board B test register expected value */
 
 	/* some games use as a protection check the ability to do 16-bit multiplies */
 	/* with a 32-bit result, by writing the factors to two ports and reading the */
 	/* result from two other ports. */
 	/* It looks like this feature was introduced with 3wonders (CPSB ID = 08xx) */
-	INT32 mult_factor1;
-	INT32 mult_factor2;
-	INT32 mult_result_lo;
-	INT32 mult_result_hi;
+	INT32		mult_factor1;
+	INT32		mult_factor2;
+	INT32		mult_result_lo;
+	INT32		mult_result_hi;
 
 	/* unknown registers which might be related to the multiply protection */
-	INT32 unknown1;
-	INT32 unknown2;
-	INT32 unknown3;
+	INT32		unknown1;
+	INT32		unknown2;
+	INT32		unknown3;
 
-	INT32 layer_control;
-	INT32 priority[4];
-	INT32 palette_control;
+	INT32		layer_control;
+	INT32		priority[4];
+	INT32		palette_control;
 
 	/* ideally, the layer enable masks should consist of only one bit, */
 	/* but in many cases it is unknown which bit is which. */
-	INT32 layer_enable_mask[5];
-
-	/* these depend on the B-board model and PAL */
-	INT32 bank_sizes[4];
-	const struct gfx_range *bank_mapper;
+	INT32		layer_enable_mask[5];
 
 	/* some C-boards have additional I/O for extra buttons/extra players */
-	INT32 in2_addr;
-	INT32 in3_addr;
-	INT32 out2_addr;
-
-	INT32 bootleg_kludge;
+	INT32		in2_addr;
+	INT32		in3_addr;
+	INT32		out2_addr;
 };
 
 class cps_state
@@ -161,8 +161,8 @@ public:
 	static void *alloc(running_machine &machine) { return auto_alloc_clear(&machine, cps_state(machine)); }
 	cps_state(running_machine &machine) { }
 
-	/* memory pointers */
 	/* in the cps1 */
+	/* memory pointers */
 	UINT16		*gfxram;
 	UINT16		*cps_a_regs;
 	UINT16		*cps_b_regs;
@@ -177,15 +177,23 @@ public:
 	UINT8		*qsound_sharedram2;
 
 	/* in the cps2 */
+	/* memory pointers */
 	UINT16		*objram1;
 	UINT16 		*objram2;
 	UINT16 		*output;
 	UINT16 		*cps2_buffered_obj;
-	size_t		gfxram_size;
-	size_t		output_size;
 
 	/* game-specific */
 	UINT16 		*gigaman2_dummyqsound_ram;
+
+	/* devices */
+	running_device	*maincpu;
+	running_device	*audiocpu;
+	running_device	*msm_1;		/* fcrash */
+	running_device	*msm_2;		/* fcrash */
+
+	size_t		gfxram_size;
+	size_t		output_size;
 
 	/* video-related */
 	tilemap_t	*bg_tilemap[3];
@@ -234,23 +242,16 @@ public:
 	UINT8		empty_tile[512];
 
 	/* fcrash(bootleg) video config */
-	UINT8		layer_enable_reg;
-	UINT8		layer_mask_reg[4];
+	UINT16		*bootleg_sprite_ram;
+	UINT16		*bootleg_work_ram;
 	INT32		sprite_base;
 	INT32		sprite_x_offset;
 	INT32		sprite_list_end_marker;
 	INT32		layer_scroll1x_offset;
 	INT32		layer_scroll2x_offset;
 	INT32		layer_scroll3x_offset;
-
-	UINT16		*bootleg_sprite_ram;
-	UINT16		*bootleg_work_ram;
-
-	/* devices */
-	running_device	*maincpu;
-	running_device	*audiocpu;
-	running_device	*msm_1;		/* fcrash */
-	running_device	*msm_2;		/* fcrash */
+	UINT8		layer_enable_reg;
+	UINT8		layer_mask_reg[4];
 };
 
 
@@ -258,9 +259,7 @@ public:
 void cps1_irq_handler_mus(running_device *device, int irq);
 
 ADDRESS_MAP_EXTERN( qsound_sub_map, 8 );
-
 INTERRUPT_GEN( cps1_interrupt );
-
 GFXDECODE_EXTERN( cps1 );
 
 WRITE8_DEVICE_HANDLER( cps1_oki_pin7_w );
