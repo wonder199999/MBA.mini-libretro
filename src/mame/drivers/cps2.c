@@ -1194,7 +1194,7 @@ static MACHINE_DRIVER_START( cps2 )
 	MDRV_CPU_ADD("maincpu", M68000, XTAL_16MHz / 10000 * 7375)	/* RAM access waitstates etc. aren't emulated - slow the CPU to compensate */
 	MDRV_CPU_PROGRAM_MAP(cps2_map)
 	MDRV_CPU_VBLANK_INT_HACK(cps2_interrupt, 262)			// 262  /* ??? interrupts per frame */
-	MDRV_CPU_ADD("audiocpu", Z80, 8000000)
+	MDRV_CPU_ADD("audiocpu", Z80, XTAL_8MHz)
 	MDRV_CPU_PROGRAM_MAP(qsound_sub_map)
 	MDRV_CPU_PERIODIC_INT(irq0_line_hold, 250)			/* 251 is good (see 'mercy mercy mercy'section of sgemf attract mode for accurate sound sync */
 	MDRV_MACHINE_START(cps2)
