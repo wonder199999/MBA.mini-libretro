@@ -50,9 +50,7 @@ static TIMER_CALLBACK( spritebuffer_callback )
 	m92_state *state = (m92_state *)machine->driver_data;
 
 	state->sprite_buffer_busy = 1;
-
-	/* Major Title 2 doesn't like this interrupt !? */
-	if (state->game_kludge != 2)
+	if (state->game_kludge != 2)	/* Major Title 2 doesn't like this interrupt !? */
 		m92_sprite_interrupt(machine);
 }
 
@@ -60,7 +58,7 @@ WRITE16_HANDLER( m92_spritecontrol_w )
 {
 	m92_state *state = (m92_state *)space->machine->driver_data;
 
-	COMBINE_DATA( &state->spritecontrol[offset] );
+	COMBINE_DATA(&state->spritecontrol[offset]);
 	/*
 		offset0: sprite list size (negative)
 		offset1: ? (always 0)
@@ -72,8 +70,9 @@ WRITE16_HANDLER( m92_spritecontrol_w )
 	Sprite control - display all sprites, or partial list */
 
 	/* Bit 0 is also significant */
-	if (ACCESSING_BITS_0_7 && offset == 2)
-		state->sprite_list = ((data & 0xff) == 8) ? (((0x0100 - state->spritecontrol[0]) & 0xff) * 4) : 0x0400;
+	if (ACCESSING_BITS_0_7)
+		if (offset == 2)
+			state->sprite_list = ((data & 0xff) == 8) ? (((0x0100 - state->spritecontrol[0]) & 0xff) * 4) : 0x0400;
 
 	/* Sprite buffer - the data written doesn't matter (confirmed by several games) */
 	if (offset == 4)
@@ -104,7 +103,6 @@ WRITE16_HANDLER( m92_videocontrol_w )
 	if (ACCESSING_BITS_0_7)
 	{
 		m92_state *state = (m92_state *)space->machine->driver_data;
-
 		state->palette_bank = (data >> 1) & 0x01;
 	}
 }
@@ -128,22 +126,21 @@ WRITE16_HANDLER( m92_paletteram_w )
 static TILE_GET_INFO( get_pf_tile_info )
 {
 	m92_state *state = (m92_state *)machine->driver_data;
-
 	pf_layer_info *layer = (pf_layer_info *)param;
-	int tile, attrib;
-	tile_index = 2 * tile_index + layer->vram_base;
 
-	attrib = state->vram_data[tile_index + 1];
-	tile = state->vram_data[tile_index] + ((attrib & 0x8000) << 1);
+	tile_index = tile_index * 2 + layer->vram_base;
+	INT32 attrib = state->vram_data[tile_index + 1];
+	INT32 tile = state->vram_data[tile_index] + ((attrib & 0x8000) << 1);
 
-	SET_TILE_INFO( 0, tile,
-		       attrib & 0x7f,
-		       TILE_FLIPYX( attrib >> 9) );
+	SET_TILE_INFO( 0, tile, attrib & 0x7f,
+		       TILE_FLIPYX(attrib >> 9) );
 
-	if (attrib & 0x100) tileinfo->group = 2;
+	if (attrib & 0x100)
+		tileinfo->group = 2;
+	else if (attrib & 0x80)
+		tileinfo->group = 1;
 	else
-	if (attrib & 0x80) tileinfo->group = 1;
-	else tileinfo->group = 0;
+		tileinfo->group = 0;
 }
 
 /*****************************************************************************/
@@ -152,11 +149,9 @@ WRITE16_HANDLER( m92_vram_w )
 {
 	m92_state *state = (m92_state *)space->machine->driver_data;
 
-	int laynum;
+	COMBINE_DATA(&state->vram_data[offset]);
 
-	COMBINE_DATA( &state->vram_data[offset] );
-
-	for (laynum = 0; laynum < 3; laynum++)
+	for (UINT32 laynum = 0; laynum < 3; laynum++)
 	{
 		if ((offset & 0x6000) == state->pf_layer[laynum].vram_base)
 		{
@@ -195,22 +190,20 @@ WRITE16_HANDLER( m92_pf3_control_w )
 WRITE16_HANDLER( m92_master_control_w )
 {
 	m92_state *state = (m92_state *)space->machine->driver_data;
-
-	UINT16 old = state->pf_master_control[offset];
 	pf_layer_info *layer;
 
+	UINT16 old = state->pf_master_control[offset];
 	COMBINE_DATA(&state->pf_master_control[offset]);
 
 	switch (offset)
 	{
-		case 0: /* Playfield 1 (top layer) */
-		case 1: /* Playfield 2 (middle layer) */
-		case 2: /* Playfield 3 (bottom layer) */
-			layer = &state->pf_layer[offset];
+		case 0:	/* Playfield 1 (top layer) */
+		case 1:	/* Playfield 2 (middle layer) */
+		case 2:	/* Playfield 3 (bottom layer) */
 
+			layer = &state->pf_layer[offset];
 			/* update VRAM base (bits 0-1) */
 			layer->vram_base = (state->pf_master_control[offset] & 3) * 0x2000;
-
 			/* update size (bit 2) */
 			if (state->pf_master_control[offset] & 0x04)
 			{
@@ -222,7 +215,6 @@ WRITE16_HANDLER( m92_master_control_w )
 				tilemap_set_enable(layer->tmap, (~state->pf_master_control[offset] >> 4) & 0x01);
 				tilemap_set_enable(layer->wide_tmap, FALSE);
 			}
-
 			/* mark everything dirty of the VRAM base or size changes */
 			if ((old ^ state->pf_master_control[offset]) & 0x07)
 			{
@@ -230,7 +222,6 @@ WRITE16_HANDLER( m92_master_control_w )
 				tilemap_mark_all_tiles_dirty(layer->wide_tmap);
 			}
 			break;
-
 		case 3:
 			state->raster_irq_position = state->pf_master_control[3] - 128;
 			break;
@@ -243,13 +234,12 @@ VIDEO_START( m92 )
 {
 	m92_state *state = (m92_state *)machine->driver_data;
 
-	int laynum;
-
 	memset(&state->pf_layer, 0, sizeof(state->pf_layer));
 
-	for (laynum = 0; laynum < 3; laynum++)
+	for (UINT32 laynum = 0; laynum < 3; laynum++)
 	{
 		pf_layer_info *layer = &state->pf_layer[laynum];
+		bool l2 = (laynum == 2) ? TRUE : FALSE;
 
 		/* allocate two tilemaps per layer, one normal, one wide */
 		layer->tmap = tilemap_create(machine, get_pf_tile_info, tilemap_scan_rows, 8, 8, 64, 64);
@@ -266,16 +256,16 @@ VIDEO_START( m92 )
 		tilemap_set_scrolldy(layer->wide_tmap, -128, -128);
 
 		/* layer group 0 - totally transparent in front half */
-		tilemap_set_transmask(layer->tmap, 0, 0xffff, (laynum == 2) ? 0x0000 : 0x0001);
-		tilemap_set_transmask(layer->wide_tmap, 0, 0xffff, (laynum == 2) ? 0x0000 : 0x0001);
+		tilemap_set_transmask(layer->tmap, 0, 0xffff, l2 ? 0x0000 : 0x0001);
+		tilemap_set_transmask(layer->wide_tmap, 0, 0xffff, l2 ? 0x0000 : 0x0001);
 
 		/* layer group 1 - pens 0-7 transparent in front half */
-		tilemap_set_transmask(layer->tmap, 1, 0x00ff, (laynum == 2) ? 0xff00 : 0xff01);
-		tilemap_set_transmask(layer->wide_tmap, 1, 0x00ff, (laynum == 2) ? 0xff00 : 0xff01);
+		tilemap_set_transmask(layer->tmap, 1, 0x00ff, l2 ? 0xff00 : 0xff01);
+		tilemap_set_transmask(layer->wide_tmap, 1, 0x00ff, l2 ? 0xff00 : 0xff01);
 
 		/* layer group 2 - pen 0 transparent in front half */
-		tilemap_set_transmask(layer->tmap, 2, 0x0001, (laynum == 2) ? 0xfffe : 0xffff);
-		tilemap_set_transmask(layer->wide_tmap, 2, 0x0001, (laynum == 2) ? 0xfffe : 0xffff);
+		tilemap_set_transmask(layer->tmap, 2, 0x0001, l2 ? 0xfffe : 0xffff);
+		tilemap_set_transmask(layer->wide_tmap, 2, 0x0001, l2 ? 0xfffe : 0xffff);
 
 		state_save_register_item(machine, "layer", NULL, laynum, layer->vram_base);
 		state_save_register_item_array(machine, "layer", NULL, laynum, layer->control);
@@ -287,12 +277,10 @@ VIDEO_START( m92 )
 	memset( machine->generic.buffered_spriteram.u16, 0, 0x0800 );
 
 	state_save_register_global_array(machine, state->pf_master_control);
-
 	state_save_register_global(machine, state->sprite_list);
 	state_save_register_global(machine, state->raster_irq_position);
 	state_save_register_global(machine, state->sprite_buffer_busy);
 	state_save_register_global(machine, state->palette_bank);
-
 	state_save_register_global_pointer(machine, machine->generic.paletteram.u16, 0x1000);
 }
 
@@ -302,14 +290,13 @@ VIDEO_START( ppan )
 
 	m92_state *state = (m92_state *)machine->driver_data;
 
-	int laynum;
-	for (laynum = 0; laynum < 3; laynum++)
+	for (UINT32 laynum = 0; laynum < 3; laynum++)
 	{
 		pf_layer_info *layer = &state->pf_layer[laynum];
 
 		tilemap_set_scrolldx(layer->tmap, 2 * laynum + 11, -2 * laynum + 11);
 		tilemap_set_scrolldy(layer->tmap, -8, -8);
-		tilemap_set_scrolldx(layer->wide_tmap, 2 * laynum - 256 + 11, -2 * laynum + 11 - 256);
+		tilemap_set_scrolldx(layer->wide_tmap, 2 * laynum + 11 - 256, -2 * laynum + 11 - 256);
 		tilemap_set_scrolldy(layer->wide_tmap, -8, -8);
 	}
 
@@ -322,7 +309,7 @@ static void draw_sprites(running_machine *machine, bitmap_t *bitmap, const recta
 	m92_state *state = (m92_state *)machine->driver_data;
 
 	UINT16 *source = machine->generic.buffered_spriteram.u16;
-	int x, y, sprite, color, pri_sprite, pri_back, fx, fy, x_multi, y_multi, row, col, s_ptr;
+	INT32 x, y, fx, fy, sprite, color, pri_sprite, pri_back, x_multi, y_multi, s_ptr;
 
 	for (UINT32 layer = 0; layer < 8; layer++)
 	{
@@ -330,35 +317,27 @@ static void draw_sprites(running_machine *machine, bitmap_t *bitmap, const recta
 		{
 			x = source[offs + 3] & 0x01ff;
 			y = source[offs + 0] & 0x01ff;
-
-			pri_back = (source[offs + 2] & 0x0080) ? 0 : 2;
-
+			pri_back = (~source[offs + 2] >> 6) & 0x02;
 			sprite = source[offs + 1];
 			color = source[offs + 2] & 0x007f;
-
-			pri_sprite = (source[offs + 0] & 0xe000) >> 13;
-
+			pri_sprite = (source[offs + 0] >> 13) & 0x07;
 			fx = (source[offs + 2] >> 8) & 0x01;
 			fy = (source[offs + 2] >> 9) & 0x01;
-
 			x_multi = 1 << ( (source[offs + 0] >> 11) & 0x03 );
 			y_multi = 1 << ( (source[offs + 0] >> 9) & 0x03 );
-
 			offs += x_multi * 4;
 			if (pri_sprite != layer) continue;
 
-			x -= 16;
+			x = (x - 16) & 0x01ff;
 			y = 384 - 16 - y;
 
 			if (fx) x += 16 * (x_multi - 1);
 
-			for (col = 0; col < x_multi; col++)
+			for (UINT32 col = 0; col < x_multi; col++)
 			{
 				s_ptr = col * 8;
 				if (!fy) s_ptr += y_multi - 1;
-				x &= 0x01ff;
-
-				for (row = 0; row < y_multi; row++)
+				for (UINT32 row = 0; row < y_multi; row++)
 				{
 					if (flip_screen_get(machine))
 					{
@@ -366,8 +345,7 @@ static void draw_sprites(running_machine *machine, bitmap_t *bitmap, const recta
 								sprite + s_ptr, color, !fx, !fy,
 								464 - x, 240 - (y - row * 16),
 								machine->priority_bitmap, pri_back, 0 );
-
-						// wrap around x
+						/* wrap around x */
 						pdrawgfx_transpen( bitmap, cliprect, machine->gfx[1],
 								sprite + s_ptr, color, !fx, !fy,
 								464 - x + 512, 240 - (y - row * 16),
@@ -379,8 +357,7 @@ static void draw_sprites(running_machine *machine, bitmap_t *bitmap, const recta
 								sprite + s_ptr, color, fx, fy,
 								x, y - row * 16,
 								machine->priority_bitmap, pri_back, 0 );
-
-						// wrap around x
+						/* wrap around x */
 						pdrawgfx_transpen( bitmap, cliprect, machine->gfx[1],
 								sprite + s_ptr, color, fx, fy,
 								x - 512, y - row * 16,
@@ -396,16 +373,16 @@ static void draw_sprites(running_machine *machine, bitmap_t *bitmap, const recta
 	}
 }
 
-static void ppan_draw_sprites(running_machine *machine, bitmap_t *bitmap, const rectangle *cliprect)
+static void ppan_draw_sprites(running_machine *machine, bitmap_t *bitmap, const rectangle *cliprect)	// This needs a lot of work...
 {
 	m92_state *state = (m92_state *)machine->driver_data;
 
-	UINT16 *source = machine->generic.buffered_spriteram.u16;
-	int offs, layer, x, y, sprite, color, pri_sprite, pri_back, fx, fy, x_multi, y_multi, row, col, s_ptr;
+	UINT16 *source = machine->generic.spriteram.u16;
+	INT32 x, y, fx, fy, sprite, color, pri_sprite, pri_back, x_multi, y_multi, s_ptr;
 
-	for (layer = 0; layer < 8; layer++)
+	for (UINT32 layer = 0; layer < 8; layer++)
 	{
-		for (offs = 0; offs < state->sprite_list; )
+		for (UINT32 offs = 0; offs < state->sprite_list; )
 		{
 			x = source[offs + 3] & 0x01ff;
 			y = source[offs + 0] & 0x01ff;
@@ -417,21 +394,20 @@ static void ppan_draw_sprites(running_machine *machine, bitmap_t *bitmap, const 
 			pri_back = (~source[offs + 2] >> 6) & 0x02;
 			x_multi = 1 << ( (source[offs + 0] >> 11) & 0x03 );
 			y_multi = 1 << ( (source[offs + 0] >> 9) & 0x03 );
-
 			offs += x_multi * 4;
+
 			if (pri_sprite != layer) continue;
 
 			y = 384 - 128 - 16 - 7 - y;
 			if (y < 0) y += 512;
-
 			if (fx) x += 16 * (x_multi - 1);
 
-			for (col = 0; col < x_multi; col++)
+			for (UINT32 col = 0; col < x_multi; col++)
 			{
 				s_ptr = col * 8;
 				if (!fy) s_ptr += y_multi - 1;
 
-				for (row = 0; row < y_multi; row++)
+				for (UINT32 row = 0; row < y_multi; row++)
 				{
 					if (flip_screen_get(machine))
 					{
@@ -439,8 +415,7 @@ static void ppan_draw_sprites(running_machine *machine, bitmap_t *bitmap, const 
 								sprite + s_ptr, color, !fx, !fy,
 								464 - x, 240 - (y - row * 16),
 								machine->priority_bitmap, pri_back, 0 );
-
-						// wrap around x
+						/* wrap around x */
 						pdrawgfx_transpen( bitmap, cliprect, machine->gfx[1],
 								sprite + s_ptr, color, !fx, !fy,
 								464 - x + 512, 240 - (y - row * 16),
@@ -452,8 +427,7 @@ static void ppan_draw_sprites(running_machine *machine, bitmap_t *bitmap, const 
 								sprite + s_ptr, color, fx, fy,
 								x, y - row * 16,
 								machine->priority_bitmap, pri_back, 0 );
-
-						// wrap around x
+						/* wrap around x */
 						pdrawgfx_transpen( bitmap, cliprect, machine->gfx[1],
 								sprite + s_ptr, color, fx, fy,
 								x - 512, y - row * 16,
@@ -469,13 +443,12 @@ static void ppan_draw_sprites(running_machine *machine, bitmap_t *bitmap, const 
 	}
 }
 
+
 /*****************************************************************************/
 
 static void m92_update_scroll_positions(running_machine *machine)
 {
 	m92_state *state = (m92_state *)machine->driver_data;
-
-	int laynum, i;
 
 	/*   Playfield 3 rowscroll data is 0xdfc00 - 0xdffff
              Playfield 2 rowscroll data is 0xdf800 - 0xdfbff
@@ -484,10 +457,9 @@ static void m92_update_scroll_positions(running_machine *machine)
              It appears to be hardwired to those locations.
 
              In addition, each playfield is staggered 2 pixels horizontally from the
-             previous one.  This is most obvious in Hook & Blademaster.
-	*/
+             previous one.  This is most obvious in Hook & Blademaster.		*/
 
-	for (laynum = 0; laynum < 3; laynum++)
+	for (UINT32 laynum = 0; laynum < 3; laynum++)
     	{
     		pf_layer_info *layer = &state->pf_layer[laynum];
 
@@ -497,16 +469,12 @@ static void m92_update_scroll_positions(running_machine *machine)
 
 			tilemap_set_scroll_rows(layer->tmap, 512);
 			tilemap_set_scroll_rows(layer->wide_tmap, 512);
-			for (i = 0; i < 512; )
+			for (UINT32 i = 0; i < 512; )
 			{
-				tilemap_set_scrollx(layer->tmap, i, scrolldata[i]);
-				tilemap_set_scrollx(layer->wide_tmap, i, scrolldata[i]); i++;
-				tilemap_set_scrollx(layer->tmap, i, scrolldata[i]);
-				tilemap_set_scrollx(layer->wide_tmap, i, scrolldata[i]); i++;
-				tilemap_set_scrollx(layer->tmap, i, scrolldata[i]);
-				tilemap_set_scrollx(layer->wide_tmap, i, scrolldata[i]); i++;
-				tilemap_set_scrollx(layer->tmap, i, scrolldata[i]);
-				tilemap_set_scrollx(layer->wide_tmap, i, scrolldata[i]); i++;
+				tilemap_set_scrollx(layer->tmap, i, scrolldata[i]); tilemap_set_scrollx(layer->wide_tmap, i, scrolldata[i]); i++;
+				tilemap_set_scrollx(layer->tmap, i, scrolldata[i]); tilemap_set_scrollx(layer->wide_tmap, i, scrolldata[i]); i++;
+				tilemap_set_scrollx(layer->tmap, i, scrolldata[i]); tilemap_set_scrollx(layer->wide_tmap, i, scrolldata[i]); i++;
+				tilemap_set_scrollx(layer->tmap, i, scrolldata[i]); tilemap_set_scrollx(layer->wide_tmap, i, scrolldata[i]); i++;
 			}
 		}
 		else
@@ -563,6 +531,7 @@ VIDEO_UPDATE( m92 )
 		flip_screen_set(screen->machine, 0);
 	else
 		flip_screen_set(screen->machine, 1);
+
 	return 0;
 }
 
@@ -577,5 +546,6 @@ VIDEO_UPDATE( ppan )
 		flip_screen_set(screen->machine, 0);
 	else
 		flip_screen_set(screen->machine, 1);
+
 	return 0;
 }
