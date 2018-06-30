@@ -114,19 +114,12 @@ struct gfx_range
 
 struct CPS1config
 {
-	INT32		bootleg_kludge;
-
-	/* these depend on the B-board model and PAL */
-	INT32		bank_sizes[4];
-	const struct	gfx_range *bank_mapper;
-
 	const char	*name;		/* game driver name */
 
 	/* Some games interrogate a couple of registers on bootup. */
 	/* These are CPS1 board B self test checks. They wander from game to game. */
 	INT32		cpsb_addr;	/* CPS board B test register address */
 	INT32		cpsb_value;	/* CPS board B test register expected value */
-
 	/* some games use as a protection check the ability to do 16-bit multiplies */
 	/* with a 32-bit result, by writing the factors to two ports and reading the */
 	/* result from two other ports. */
@@ -135,25 +128,26 @@ struct CPS1config
 	INT32		mult_factor2;
 	INT32		mult_result_lo;
 	INT32		mult_result_hi;
-
 	/* unknown registers which might be related to the multiply protection */
 	INT32		unknown1;
 	INT32		unknown2;
 	INT32		unknown3;
-
 	INT32		layer_control;
 	INT32		priority[4];
 	INT32		palette_control;
-
 	/* ideally, the layer enable masks should consist of only one bit, */
 	/* but in many cases it is unknown which bit is which. */
 	INT32		layer_enable_mask[5];
-
+	/* these depend on the B-board model and PAL */
+	INT32		bank_sizes[4];
+	const struct	gfx_range *bank_mapper;
 	/* some C-boards have additional I/O for extra buttons/extra players */
 	INT32		in2_addr;
 	INT32		in3_addr;
 	INT32		out2_addr;
+	INT32		bootleg_kludge;
 };
+
 
 class cps_state
 {
@@ -161,6 +155,7 @@ public:
 	static void *alloc(running_machine &machine) { return auto_alloc_clear(&machine, cps_state(machine)); }
 	cps_state(running_machine &machine) { }
 
+	const struct	CPS1config *game_config;
 	/* in the cps1 */
 	/* memory pointers */
 	UINT16		*gfxram;
@@ -183,14 +178,14 @@ public:
 	UINT16 		*output;
 	UINT16 		*cps2_buffered_obj;
 
-	/* game-specific */
-	UINT16 		*gigaman2_dummyqsound_ram;
-
 	/* devices */
 	running_device	*maincpu;
 	running_device	*audiocpu;
 	running_device	*msm_1;		/* fcrash */
 	running_device	*msm_2;		/* fcrash */
+
+	/* game-specific */
+	UINT16 		*gigaman2_dummyqsound_ram;
 
 	size_t		gfxram_size;
 	size_t		output_size;
@@ -229,7 +224,6 @@ public:
 	INT32		sample_select2;
 
 	/* video config (never changed after VIDEO_START) */
-	const struct	CPS1config *game_config;
 	INT32		scroll_size;
 	INT32		obj_size;
 	INT32		cps2_obj_size;

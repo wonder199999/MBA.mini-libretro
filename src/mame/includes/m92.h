@@ -3,7 +3,6 @@
 *************************************************************************/
 
 typedef struct _pf_layer_info pf_layer_info;
-
 struct _pf_layer_info
 {
 	tilemap_t	*tmap;
@@ -18,36 +17,37 @@ public:
 	static void *alloc(running_machine &machine) { return auto_alloc_clear(&machine, m92_state(machine)); }
 	m92_state(running_machine &machine) { }
 
-	UINT8		irqvector;
-	UINT16		sound_status;
-	UINT32		bankaddress;
-	emu_timer	*scanline_timer;
-
-	UINT8		irq_vectorbase;
+	UINT32		bank_address;
 	UINT32		raster_irq_position;
+	INT32		sprite_list;
+
 	/* memory pointers */
 	UINT16		*vram_data;
 	UINT16		*spritecontrol;
 
-	UINT8		sprite_buffer_busy;
-	UINT8		game_kludge;
-
-	pf_layer_info	pf_layer[3];
+	/* device */
+	running_device	*nec_maincpu;
+	running_device	*nec_soundcpu;
 
 	UINT16		pf_master_control[4];
+	UINT16		sound_status;
+	UINT16		video_control;
+	pf_layer_info	pf_layer[3];
 
-	INT32		sprite_list;
-	INT32		palette_bank;
+	UINT8		game_kludge;
+	UINT8		palette_bank;
+	UINT8		irq_vector;
+	UINT8		irq_vectorbase;
+	UINT8		sprite_buffer_busy;
 };
 
 
 /*----------- defined in drivers/m92.c -----------*/
 
-extern void m92_sprite_interrupt(running_machine *machine);
+void m92_sprite_interrupt(running_machine *machine);
 
 
 /*----------- defined in video/m92.c -----------*/
-
 
 READ16_HANDLER( m92_paletteram_r );
 

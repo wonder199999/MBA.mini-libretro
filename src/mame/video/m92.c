@@ -50,7 +50,8 @@ static TIMER_CALLBACK( spritebuffer_callback )
 	m92_state *state = (m92_state *)machine->driver_data;
 
 	state->sprite_buffer_busy = 1;
-	if (state->game_kludge != 2)	/* Major Title 2 doesn't like this interrupt !? */
+	/* Major Title 2 doesn't like this interrupt !? */
+	if (state->game_kludge != 2)
 		m92_sprite_interrupt(machine);
 }
 
@@ -59,8 +60,7 @@ WRITE16_HANDLER( m92_spritecontrol_w )
 	m92_state *state = (m92_state *)space->machine->driver_data;
 
 	COMBINE_DATA(&state->spritecontrol[offset]);
-	/*
-		offset0: sprite list size (negative)
+	/*	offset0: sprite list size (negative)
 		offset1: ? (always 0)
 		offset2: sprite control
 		offset3: ? (always 0)
@@ -79,32 +79,30 @@ WRITE16_HANDLER( m92_spritecontrol_w )
 	{
 		buffer_spriteram16_w(space, 0, 0, 0xffff);
 		state->sprite_buffer_busy = 0;
-
 	/*	Pixel clock is 26.6666 MHz (some boards 27MHz ?), we have 0x800 bytes, or 0x400 words to copy from
 		spriteram to the buffer.  It seems safe to assume 1 word can be copied per clock.	*/
-		timer_set(space->machine, attotime_mul(ATTOTIME_IN_HZ(26666000), 0x400), NULL, 0, spritebuffer_callback);
+		timer_set(space->machine, attotime_mul(ATTOTIME_IN_HZ(XTAL_26_66666MHz), 0x400), NULL, 0, spritebuffer_callback);
 	}
 }
 
 WRITE16_HANDLER( m92_videocontrol_w )
 {
-	/*	Many games write:
-            		0x2000
-            		0x201b in alternate frames.
+	m92_state *state = (m92_state *)space->machine->driver_data;
 
-         	Some games write to this both before and after the sprite buffer
-         	register - perhaps some kind of acknowledge bit is in there?
-         	Lethal Thunder fails it's RAM test with the upper palette bank
-         	enabled.  This was one of the earlier games and could actually
-         	be a different motherboard revision (most games use M92-A-B top
-         	pcb, a M92-A-A revision could exist...).	*/
+	COMBINE_DATA(&state->video_control);
+/*	Many games write:
+           0x2000
+           0x201b in alternate frames.
+
+	Some games write to this both before and after the sprite buffer
+	register - perhaps some kind of acknowledge bit is in there?
+	Lethal Thunder fails it's RAM test with the upper palette bank
+	enabled.  This was one of the earlier games and could actually
+	be a different motherboard revision (most games use M92-A-B top
+	pcb, a M92-A-A revision could exist...).	*/
 
 	/* Access to upper palette bank */
-	if (ACCESSING_BITS_0_7)
-	{
-		m92_state *state = (m92_state *)space->machine->driver_data;
-		state->palette_bank = (data >> 1) & 0x01;
-	}
+	state->palette_bank = (state->video_control >> 1) & 0x01;
 }
 
 READ16_HANDLER( m92_paletteram_r )
@@ -278,6 +276,7 @@ VIDEO_START( m92 )
 
 	state_save_register_global_array(machine, state->pf_master_control);
 	state_save_register_global(machine, state->sprite_list);
+	state_save_register_global(machine, state->video_control);
 	state_save_register_global(machine, state->raster_irq_position);
 	state_save_register_global(machine, state->sprite_buffer_busy);
 	state_save_register_global(machine, state->palette_bank);
@@ -307,6 +306,8 @@ VIDEO_START( ppan )
 static void draw_sprites(running_machine *machine, bitmap_t *bitmap, const rectangle *cliprect)
 {
 	m92_state *state = (m92_state *)machine->driver_data;
+
+	if (state->video_control & 0x0080) return;
 
 	UINT16 *source = machine->generic.buffered_spriteram.u16;
 	INT32 x, y, fx, fy, sprite, color, pri_sprite, pri_back, x_multi, y_multi, s_ptr;
@@ -376,6 +377,8 @@ static void draw_sprites(running_machine *machine, bitmap_t *bitmap, const recta
 static void ppan_draw_sprites(running_machine *machine, bitmap_t *bitmap, const rectangle *cliprect)	// This needs a lot of work...
 {
 	m92_state *state = (m92_state *)machine->driver_data;
+
+	if (state->video_control & 0x0080) return;
 
 	UINT16 *source = machine->generic.spriteram.u16;
 	INT32 x, y, fx, fy, sprite, color, pri_sprite, pri_back, x_multi, y_multi, s_ptr;
@@ -492,11 +495,11 @@ static void m92_update_scroll_positions(running_machine *machine)
 
 /*****************************************************************************/
 
-static void m92_screenrefresh(running_machine *machine, bitmap_t *bitmap, const rectangle *cliprect)
+static void m92_draw_tiles(running_machine *machine, bitmap_t *bitmap, const rectangle *cliprect)
 {
 	m92_state *state = (m92_state *)machine->driver_data;
 
-	bitmap_fill(machine->priority_bitmap, cliprect, 0);
+	if (state->video_control & 0x8000) return;
 
 	if ( (~state->pf_master_control[2] >> 4) & 0x01 )
 	{
@@ -505,8 +508,6 @@ static void m92_screenrefresh(running_machine *machine, bitmap_t *bitmap, const 
 		tilemap_draw(bitmap, cliprect, state->pf_layer[2].wide_tmap, TILEMAP_DRAW_LAYER0, 1);
 		tilemap_draw(bitmap, cliprect, state->pf_layer[2].tmap,      TILEMAP_DRAW_LAYER0, 1);
 	}
-	else
-		bitmap_fill(bitmap, cliprect, 0);
 
 	tilemap_draw(bitmap, cliprect, state->pf_layer[1].wide_tmap, TILEMAP_DRAW_LAYER1, 0);
 	tilemap_draw(bitmap, cliprect, state->pf_layer[1].tmap,      TILEMAP_DRAW_LAYER1, 0);
@@ -522,8 +523,11 @@ static void m92_screenrefresh(running_machine *machine, bitmap_t *bitmap, const 
 
 VIDEO_UPDATE( m92 )
 {
+	bitmap_fill(screen->machine->priority_bitmap, cliprect, 0);
+	bitmap_fill(bitmap, cliprect, 0);
+
 	m92_update_scroll_positions(screen->machine);
-	m92_screenrefresh(screen->machine, bitmap, cliprect);
+	m92_draw_tiles(screen->machine, bitmap, cliprect);
 	draw_sprites(screen->machine, bitmap, cliprect);
 
 	/* Flipscreen appears hardwired to the dipswitch - strange */
@@ -537,8 +541,11 @@ VIDEO_UPDATE( m92 )
 
 VIDEO_UPDATE( ppan )
 {
+	bitmap_fill(screen->machine->priority_bitmap, cliprect, 0);
+	bitmap_fill(bitmap, cliprect, 0);
+
 	m92_update_scroll_positions(screen->machine);
-	m92_screenrefresh(screen->machine, bitmap, cliprect);
+	m92_draw_tiles(screen->machine, bitmap, cliprect);
 	ppan_draw_sprites(screen->machine, bitmap, cliprect);
 
 	/* Flipscreen appears hardwired to the dipswitch - strange */
