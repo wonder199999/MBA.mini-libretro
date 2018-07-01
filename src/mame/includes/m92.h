@@ -23,11 +23,11 @@ public:
 
 	/* memory pointers */
 	UINT16		*vram_data;
-	UINT16		*spritecontrol;
+	UINT16		*sprite_control;
 
 	/* device */
 	running_device	*nec_maincpu;
-	running_device	*nec_soundcpu;
+	running_device	*nec_sndcpu;
 
 	UINT16		pf_master_control[4];
 	UINT16		sound_status;
@@ -37,7 +37,7 @@ public:
 	UINT8		game_kludge;
 	UINT8		palette_bank;
 	UINT8		irq_vector;
-	UINT8		irq_vectorbase;
+	UINT8		irq_vector_base;
 	UINT8		sprite_buffer_busy;
 };
 

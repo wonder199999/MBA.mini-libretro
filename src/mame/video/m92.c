@@ -59,7 +59,7 @@ WRITE16_HANDLER( m92_spritecontrol_w )
 {
 	m92_state *state = (m92_state *)space->machine->driver_data;
 
-	COMBINE_DATA(&state->spritecontrol[offset]);
+	COMBINE_DATA(&state->sprite_control[offset]);
 	/*	offset0: sprite list size (negative)
 		offset1: ? (always 0)
 		offset2: sprite control
@@ -72,7 +72,7 @@ WRITE16_HANDLER( m92_spritecontrol_w )
 	/* Bit 0 is also significant */
 	if (ACCESSING_BITS_0_7)
 		if (offset == 2)
-			state->sprite_list = ((data & 0xff) == 8) ? (((0x0100 - state->spritecontrol[0]) & 0xff) * 4) : 0x0400;
+			state->sprite_list = ((data & 0xff) == 8) ? (((0x0100 - state->sprite_control[0]) & 0xff) * 4) : 0x0400;
 
 	/* Sprite buffer - the data written doesn't matter (confirmed by several games) */
 	if (offset == 4)
@@ -90,17 +90,32 @@ WRITE16_HANDLER( m92_videocontrol_w )
 	m92_state *state = (m92_state *)space->machine->driver_data;
 
 	COMBINE_DATA(&state->video_control);
-/*	Many games write:
-           0x2000
-           0x201b in alternate frames.
+	/*
+	    Many games write:
+	        0x2000
+	        0x201b in alternate frames.
 
-	Some games write to this both before and after the sprite buffer
-	register - perhaps some kind of acknowledge bit is in there?
-	Lethal Thunder fails it's RAM test with the upper palette bank
-	enabled.  This was one of the earlier games and could actually
-	be a different motherboard revision (most games use M92-A-B top
-	pcb, a M92-A-A revision could exist...).	*/
+	    Some games write to this both before and after the sprite buffer
+	    register - perhaps some kind of acknowledge bit is in there?
 
+	    Lethal Thunder fails it's RAM test with the upper palette bank
+	    enabled.  This was one of the earlier games and could actually
+	    be a different motherboard revision (most games use M92-A-B top
+	    pcb, a M92-A-A revision could exist...).
+	*/
+	/*
+	    fedc ba98 7654 3210
+	    .x.. x... .xx. ....   always 0?
+	    x... .... .... ....   disable tiles?? (but that breaks mysticri)
+	    ..xx .... .... ....   ? only written at POST - otherwise always 2
+	    .... .xxx .... ....   ? only written at POST - otherwise always 0
+	    .... .... x... ....   disable sprites??
+	    .... .... ...x ....   ?
+	    .... .... .... x...   ?
+	    .... .... .... .x..   ? maybe more palette banks?
+	    .... .... .... ..x.   palette bank
+	    .... .... .... ...x   ?
+	*/
 	/* Access to upper palette bank */
 	state->palette_bank = (state->video_control >> 1) & 0x01;
 }
@@ -149,16 +164,20 @@ WRITE16_HANDLER( m92_vram_w )
 
 	COMBINE_DATA(&state->vram_data[offset]);
 
+	UINT32 result1 =  offset & 0x6000;
+	UINT32 result2 = (offset & 0x1fff) / 2;
+	UINT32 result3 = (offset & 0x3fff) / 2;
+
 	for (UINT32 laynum = 0; laynum < 3; laynum++)
 	{
-		if ((offset & 0x6000) == state->pf_layer[laynum].vram_base)
+		if (result1 == state->pf_layer[laynum].vram_base)
 		{
-			tilemap_mark_tile_dirty(state->pf_layer[laynum].tmap, (offset & 0x1fff) / 2);
-			tilemap_mark_tile_dirty(state->pf_layer[laynum].wide_tmap, (offset & 0x3fff) / 2);
+			tilemap_mark_tile_dirty(state->pf_layer[laynum].tmap, result2);
+			tilemap_mark_tile_dirty(state->pf_layer[laynum].wide_tmap, result3);
 		}
 
-		if ((offset & 0x6000) == state->pf_layer[laynum].vram_base + 0x2000)
-			tilemap_mark_tile_dirty(state->pf_layer[laynum].wide_tmap, (offset & 0x3fff) / 2);
+		if (result1 == state->pf_layer[laynum].vram_base + 0x2000)
+			tilemap_mark_tile_dirty(state->pf_layer[laynum].wide_tmap, result3);
 	}
 }
 
@@ -310,7 +329,8 @@ static void draw_sprites(running_machine *machine, bitmap_t *bitmap, const recta
 	if (state->video_control & 0x0080) return;
 
 	UINT16 *source = machine->generic.buffered_spriteram.u16;
-	INT32 x, y, fx, fy, sprite, color, pri_sprite, pri_back, x_multi, y_multi, s_ptr;
+	UINT32 sprite, s_ptr, color, pri_back, pri_sprite;
+	INT32 x, y, fx, fy, x_multi, y_multi;
 
 	for (UINT32 layer = 0; layer < 8; layer++)
 	{
@@ -338,6 +358,7 @@ static void draw_sprites(running_machine *machine, bitmap_t *bitmap, const recta
 			{
 				s_ptr = col * 8;
 				if (!fy) s_ptr += y_multi - 1;
+
 				for (UINT32 row = 0; row < y_multi; row++)
 				{
 					if (flip_screen_get(machine))
@@ -381,7 +402,8 @@ static void ppan_draw_sprites(running_machine *machine, bitmap_t *bitmap, const 
 	if (state->video_control & 0x0080) return;
 
 	UINT16 *source = machine->generic.spriteram.u16;
-	INT32 x, y, fx, fy, sprite, color, pri_sprite, pri_back, x_multi, y_multi, s_ptr;
+	UINT32 sprite, s_ptr, color, pri_back, pri_sprite;
+	INT32 x, y, fx, fy, x_multi, y_multi;
 
 	for (UINT32 layer = 0; layer < 8; layer++)
 	{

@@ -120,14 +120,17 @@ struct CPS1config
 	/* These are CPS1 board B self test checks. They wander from game to game. */
 	INT32		cpsb_addr;	/* CPS board B test register address */
 	INT32		cpsb_value;	/* CPS board B test register expected value */
+
 	/* some games use as a protection check the ability to do 16-bit multiplies */
 	/* with a 32-bit result, by writing the factors to two ports and reading the */
 	/* result from two other ports. */
 	/* It looks like this feature was introduced with 3wonders (CPSB ID = 08xx) */
+
 	INT32		mult_factor1;
 	INT32		mult_factor2;
 	INT32		mult_result_lo;
 	INT32		mult_result_hi;
+
 	/* unknown registers which might be related to the multiply protection */
 	INT32		unknown1;
 	INT32		unknown2;
@@ -135,12 +138,15 @@ struct CPS1config
 	INT32		layer_control;
 	INT32		priority[4];
 	INT32		palette_control;
+
 	/* ideally, the layer enable masks should consist of only one bit, */
 	/* but in many cases it is unknown which bit is which. */
 	INT32		layer_enable_mask[5];
+
 	/* these depend on the B-board model and PAL */
 	INT32		bank_sizes[4];
 	const struct	gfx_range *bank_mapper;
+
 	/* some C-boards have additional I/O for extra buttons/extra players */
 	INT32		in2_addr;
 	INT32		in3_addr;
@@ -156,8 +162,9 @@ public:
 	cps_state(running_machine &machine) { }
 
 	const struct	CPS1config *game_config;
-	/* in the cps1 */
+
 	/* memory pointers */
+	/* in the cps1 */
 	UINT16		*gfxram;
 	UINT16		*cps_a_regs;
 	UINT16		*cps_b_regs;
@@ -170,9 +177,7 @@ public:
 	UINT16		*mainram;
 	UINT8		*qsound_sharedram1;
 	UINT8		*qsound_sharedram2;
-
 	/* in the cps2 */
-	/* memory pointers */
 	UINT16		*objram1;
 	UINT16 		*objram2;
 	UINT16 		*output;
@@ -186,9 +191,6 @@ public:
 
 	/* game-specific */
 	UINT16 		*gigaman2_dummyqsound_ram;
-
-	size_t		gfxram_size;
-	size_t		output_size;
 
 	/* video-related */
 	tilemap_t	*bg_tilemap[3];
@@ -211,6 +213,10 @@ public:
 	INT32		cps2_last_sprite_offset;		/* Offset of the last sprite */
 	INT32		pri_ctrl;				/* Sprite layer priorities */
 	INT32		objram_bank;
+
+	/* memory size */
+	size_t		gfxram_size;
+	size_t		output_size;
 
 	/* misc */
 	INT32		dial[2];				/* forgottn */

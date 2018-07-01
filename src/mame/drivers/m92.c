@@ -204,16 +204,10 @@ psoldier dip locations still need veritication.
 #include "sound/okim6295.h"
 
 
-#define M92_IRQ_0 ((state->irq_vectorbase +  0) / 4)		/* VBL interrupt */
-#define M92_IRQ_1 ((state->irq_vectorbase +  4) / 4)		/* Sprite buffer complete interrupt */
-#define M92_IRQ_2 ((state->irq_vectorbase +  8) / 4)		/* Raster interrupt */
-#define M92_IRQ_3 ((state->irq_vectorbase + 12) / 4)		/* Sound cpu interrupt */
-
-static TIMER_CALLBACK( setvector_callback );
-static TIMER_DEVICE_CALLBACK(m92_scanline_interrupt);
-static void sound_irq(running_device *device, int irq);
-static void set_m92_bank(running_machine *machine);
-static void init_m92(running_machine *machine, int hasbanks);
+#define M92_IRQ_0	((state->irq_vector_base +  0) / 4)	/* VBL interrupt */
+#define M92_IRQ_1	((state->irq_vector_base +  4) / 4)	/* Sprite buffer complete interrupt */
+#define M92_IRQ_2	((state->irq_vector_base +  8) / 4)	/* Raster interrupt */
+#define M92_IRQ_3	((state->irq_vector_base + 12) / 4)	/* Sound cpu interrupt */
 
 /*****************************************************************************/
 
@@ -235,7 +229,7 @@ static MACHINE_START( m92 )
 	m92_state *state = (m92_state *)machine->driver_data;
 
 	state->nec_maincpu = machine->device("maincpu");
-	state->nec_soundcpu = machine->device("soundcpu");
+	state->nec_sndcpu = machine->device("soundcpu");
 
 	state_save_register_global(machine, state->irq_vector);
 	state_save_register_global(machine, state->sound_status);
@@ -410,7 +404,7 @@ static ADDRESS_MAP_START( m92_map, ADDRESS_SPACE_PROGRAM, 16 )
 	AM_RANGE(0xe0000, 0xeffff) AM_RAM			/* System ram */
 	AM_RANGE(0xf8000, 0xf87ff) AM_RAM AM_BASE_SIZE_GENERIC(spriteram)
 	AM_RANGE(0xf8800, 0xf8fff) AM_READWRITE(m92_paletteram_r, m92_paletteram_w)
-	AM_RANGE(0xf9000, 0xf900f) AM_WRITE(m92_spritecontrol_w) AM_BASE_MEMBER(m92_state, spritecontrol)
+	AM_RANGE(0xf9000, 0xf900f) AM_WRITE(m92_spritecontrol_w) AM_BASE_MEMBER(m92_state, sprite_control)
 	AM_RANGE(0xf9800, 0xf9801) AM_WRITE(m92_videocontrol_w)
 	AM_RANGE(0xffff0, 0xfffff) AM_ROM
 ADDRESS_MAP_END
@@ -422,7 +416,7 @@ static ADDRESS_MAP_START( lethalth_map, ADDRESS_SPACE_PROGRAM, 16 )
 	AM_RANGE(0xe0000, 0xeffff) AM_RAM			/* System ram */
 	AM_RANGE(0xf8000, 0xf87ff) AM_RAM AM_BASE_SIZE_GENERIC(spriteram)
 	AM_RANGE(0xf8800, 0xf8fff) AM_READWRITE(m92_paletteram_r, m92_paletteram_w)
-	AM_RANGE(0xf9000, 0xf900f) AM_WRITE(m92_spritecontrol_w) AM_BASE_MEMBER(m92_state, spritecontrol)
+	AM_RANGE(0xf9000, 0xf900f) AM_WRITE(m92_spritecontrol_w) AM_BASE_MEMBER(m92_state, sprite_control)
 	AM_RANGE(0xf9800, 0xf9801) AM_WRITE(m92_videocontrol_w)
 	AM_RANGE(0xffff0, 0xfffff) AM_ROM
 ADDRESS_MAP_END
@@ -853,7 +847,6 @@ static INPUT_PORTS_START( gunforc2 )
 	PORT_DIPSETTING(      0x0010, "20000 40000 90000 150000" )
 INPUT_PORTS_END
 
-
 /***************************************************************************/
 
 static const gfx_layout charlayout =
@@ -889,15 +882,16 @@ static const gfx_layout spritelayout2 =
 	32 * 8
 };
 
-static GFXDECODE_START( m92 )
+static GFXDECODE_START( gfx_m92 )
 	GFXDECODE_ENTRY( "gfx1", 0, charlayout,   0, 128 )
 	GFXDECODE_ENTRY( "gfx2", 0, spritelayout, 0, 128 )
 GFXDECODE_END
 
-static GFXDECODE_START( psoldier )
+static GFXDECODE_START( gfx_psoldier )
 	GFXDECODE_ENTRY( "gfx1", 0, charlayout,    0, 128 )
 	GFXDECODE_ENTRY( "gfx2", 0, spritelayout2, 0, 128 )
 GFXDECODE_END
+
 
 /***************************************************************************/
 
@@ -922,7 +916,7 @@ static MACHINE_DRIVER_START( m92 )
 	MDRV_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
 	MDRV_SCREEN_SIZE(512, 256)
 	MDRV_SCREEN_VISIBLE_AREA(80, 511-112, 8, 247)		/* 320 x 240 */
-	MDRV_GFXDECODE(m92)
+	MDRV_GFXDECODE(gfx_m92)
 	MDRV_PALETTE_LENGTH(0x0800)
 	MDRV_VIDEO_START(m92)
 	MDRV_VIDEO_UPDATE(m92)
@@ -957,7 +951,7 @@ static MACHINE_DRIVER_START( ppan )
 	MDRV_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
 	MDRV_SCREEN_SIZE(512, 256)
 	MDRV_SCREEN_VISIBLE_AREA(80, 511-112, 8, 247)
-	MDRV_GFXDECODE(m92)
+	MDRV_GFXDECODE(gfx_m92)
 	MDRV_PALETTE_LENGTH(0x0800)
 	MDRV_VIDEO_START(ppan)
 	MDRV_VIDEO_UPDATE(ppan)
@@ -1046,7 +1040,7 @@ static MACHINE_DRIVER_START( psoldier )
 	MDRV_CPU_MODIFY( "soundcpu" )
 	MDRV_CPU_CONFIG( psoldier_config )
 	/* video hardware */
-	MDRV_GFXDECODE( psoldier )
+	MDRV_GFXDECODE( gfx_psoldier )
 MACHINE_DRIVER_END
 
 static const nec_config gunforc2_config = { lethalth_decryption_table, };
@@ -2047,8 +2041,8 @@ ROM_END
 /* this set matches the 'majtitl2' except for the soundcpu roms, which are for a different CPU */
 ROM_START( majtitl2a )				/* Major Title 2 (World, set 1, alt sound CPU) */
 	ROM_REGION( 0x180000, "maincpu", 0 )	/* labels differ from 'majtitl2' (maybe the 'B' has faded, or was never there?) */
-	ROM_LOAD16_BYTE( "mt2-h0-.5m", 0x00001, 0x40000, CRC(b163b12e) SHA1(cdb01a5266bd11f4cff1cb5c05cf24de13a527b2) )
-	ROM_LOAD16_BYTE( "mt2-l0-.5f", 0x00000, 0x40000, CRC(6f3b5d9d) SHA1(a39f25f29195023fb507dc9ffbfcbd57a4e6b30a) )
+	ROM_LOAD16_BYTE( "mt2-h0-.5m", 0x000001, 0x40000, CRC(b163b12e) SHA1(cdb01a5266bd11f4cff1cb5c05cf24de13a527b2) )
+	ROM_LOAD16_BYTE( "mt2-l0-.5f", 0x000000, 0x40000, CRC(6f3b5d9d) SHA1(a39f25f29195023fb507dc9ffbfcbd57a4e6b30a) )
 	ROM_LOAD16_BYTE( "mt2-h1-.5l", 0x100001, 0x40000, CRC(9ba8e1f2) SHA1(ae86697a97223d236e2e6dd33ddb8105b9f926cb) )
 	ROM_LOAD16_BYTE( "mt2-l1-.5j", 0x100000, 0x40000, CRC(e4e00626) SHA1(e8c6c7ad6a367da4036915a155c8695ad90ae47b) )
 
@@ -2084,8 +2078,8 @@ ROM_END
 
 ROM_START( majtitl2b )		/* Major Title 2 (World, set 2) */
 	ROM_REGION( 0x180000, "maincpu", 0 )
-	ROM_LOAD16_BYTE( "mt2-h0-e.ic34", 0x00001, 0x40000, VERIFY_OFF )
-	ROM_LOAD16_BYTE( "mt2-l0-e.ic31", 0x00000, 0x40000, VERIFY_OFF )
+	ROM_LOAD16_BYTE( "mt2-h0-e.ic34", 0x000001, 0x40000, VERIFY_OFF )
+	ROM_LOAD16_BYTE( "mt2-l0-e.ic31", 0x000000, 0x40000, VERIFY_OFF )
 	ROM_LOAD16_BYTE( "mt2-h1-.ic33",  0x100001, 0x40000, VERIFY_OFF )
 	ROM_LOAD16_BYTE( "mt2-l1-.ic32",  0x100000, 0x40000, VERIFY_OFF )
 
@@ -2130,7 +2124,7 @@ static void init_m92(running_machine *machine, int hasbanks)
 	if (hasbanks)
 	{
 		memcpy(RAM + 0xffff0, RAM + 0x7fff0, 0x10);	/* Start vector */
-		state->bank_address = 0xa0000;				/* Initial bank */
+		state->bank_address = 0xa0000;			/* Initial bank */
 		set_m92_bank(machine);
 
 		/* Mirror used by In The Hunt for protection */
@@ -2144,7 +2138,7 @@ static void init_m92(running_machine *machine, int hasbanks)
 		memcpy(RAM + 0xffff0, RAM + 0x1fff0, 0x10);	/* Sound cpu Start vector */
 
 	state->game_kludge = 0;
-	state->irq_vectorbase = 0x80;
+	state->irq_vector_base = 0x80;
 	state->sprite_buffer_busy = 1;
 
 	setvector_callback(machine, NULL, VECTOR_INIT);
@@ -2160,7 +2154,7 @@ static DRIVER_INIT( m92_rtype )
 	m92_state *state = (m92_state *)machine->driver_data;
 
 	init_m92(machine, 1);
-	state->irq_vectorbase = 0x20;
+	state->irq_vector_base = 0x20;
 }
 
 static DRIVER_INIT( m92_gunforc2 )
@@ -2175,7 +2169,7 @@ static DRIVER_INIT( m92_ssoldier )
 	init_m92(machine, 1);
 	m92_state *state = (m92_state *)machine->driver_data;
 
-	state->irq_vectorbase = 0x20;
+	state->irq_vector_base = 0x20;
 	/* main CPU expects an answer even before writing the first command */
 	state->sound_status = 0x80;
 }
@@ -2197,7 +2191,7 @@ static DRIVER_INIT( m92_lethalth )
 
 	m92_state *state = (m92_state *)machine->driver_data;
 
-	state->irq_vectorbase = 0x20;
+	state->irq_vector_base = 0x20;
 	/* NOP out the bankswitcher */
 	memory_nop_write(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_IO), 0x20, 0x21, 0, 0);
 }
