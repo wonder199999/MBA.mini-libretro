@@ -17,7 +17,7 @@ void osd_exit(running_machine &machine)
 
 void osd_init(running_machine *machine)
 {
-	int gamRot = 0;
+	INT32 gamRot = 0;
 
    	machine->add_notifier(MACHINE_NOTIFY_EXIT, osd_exit);
 
@@ -66,7 +66,7 @@ void osd_update(running_machine *machine, int skip_redraw)
    	if (!skip_redraw)
    	{
       		draw_this_frame = true;
-		int minwidth, minheight;
+		INT32 minwidth, minheight;
 
       		/* get the minimum width/height for the current layout */
 		render_target_get_minimum_size(our_target, &minwidth, &minheight);
@@ -123,6 +123,10 @@ void osd_update(running_machine *machine, int skip_redraw)
 				if (adjust_opt[6])
 				{
 					adjust_opt[6] = 0;
+					/* RAM access waitstates etc. aren't emulated - slow the CPU to compensate */
+					if (strcmp(machine->gamedrv->source_file, "src/mame/drivers/cps2.c") == 0)
+						arroffset[3] *= 0.7375f;
+
 					machine->device("maincpu")->set_clock_scale(arroffset[3]);
 					/*
 					machine->device("slave")->set_clock_scale(1.0f);
