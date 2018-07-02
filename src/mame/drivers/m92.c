@@ -577,7 +577,6 @@ static INPUT_PORTS_START( bmaster )
 	PORT_DIPSETTING(      0x0000, DEF_STR( None ) )
 INPUT_PORTS_END
 
-
 static INPUT_PORTS_START( gunforce )
 	PORT_INCLUDE(m92_2player)
 
@@ -597,7 +596,6 @@ static INPUT_PORTS_START( gunforce )
 	PORT_DIPSETTING(      0x0000, "15000 35000 75000 120000" )
 	PORT_DIPSETTING(      0x0010, "20000 40000 90000 150000" )
 INPUT_PORTS_END
-
 
 static INPUT_PORTS_START( lethalth )
 	PORT_INCLUDE(m92_2player)
@@ -627,7 +625,6 @@ static INPUT_PORTS_START( lethalth )
 	PORT_DIPSETTING(      0x0010, DEF_STR( On ) )
 INPUT_PORTS_END
 
-
 static INPUT_PORTS_START( hook )
 	PORT_INCLUDE(m92_4player)
 
@@ -648,7 +645,6 @@ static INPUT_PORTS_START( hook )
 	PORT_DIPSETTING(      0x0000, DEF_STR( No ) )
 	PORT_DIPSETTING(      0x0020, DEF_STR( Yes ) )
 INPUT_PORTS_END
-
 
 static INPUT_PORTS_START( majtitl2 )
 	PORT_INCLUDE(m92_4player)
@@ -698,7 +694,6 @@ static INPUT_PORTS_START( majtitl2 )
 	PORT_DIPSETTING(      0x0000, DEF_STR( Yes ) )
 INPUT_PORTS_END
 
-
 static INPUT_PORTS_START( mysticri )
 	PORT_INCLUDE(m92_2player)
 
@@ -718,7 +713,6 @@ static INPUT_PORTS_START( mysticri )
 	PORT_DIPSETTING(      0x0000, "15000 35000 60000" )
 	PORT_DIPSETTING(      0x0010, "20000 50000 90000" )
 INPUT_PORTS_END
-
 
 static INPUT_PORTS_START( uccops )
 	PORT_INCLUDE(m92_3player)
@@ -742,7 +736,6 @@ static INPUT_PORTS_START( uccops )
 	PORT_DIPSETTING(      0x0020, DEF_STR( Yes ) )
 INPUT_PORTS_END
 
-
 static INPUT_PORTS_START( rtypeleo )
 	PORT_INCLUDE(m92_2player)
 
@@ -759,7 +752,6 @@ static INPUT_PORTS_START( rtypeleo )
 	PORT_DIPSETTING(      0x000c, DEF_STR( Normal ) )
 	PORT_DIPSETTING(      0x0004, DEF_STR( Hard ) )
 INPUT_PORTS_END
-
 
 static INPUT_PORTS_START( inthunt )
 	PORT_INCLUDE(m92_2player)
@@ -781,7 +773,6 @@ static INPUT_PORTS_START( inthunt )
 	PORT_DIPSETTING(      0x0000, DEF_STR( Yes ) )
 INPUT_PORTS_END
 
-
 static INPUT_PORTS_START( nbbatman )
 	PORT_INCLUDE(m92_4player)
 
@@ -801,7 +792,6 @@ static INPUT_PORTS_START( nbbatman )
 	PORT_DIPSETTING(      0x0020, DEF_STR( No ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( Yes ) )
 INPUT_PORTS_END
-
 
 static INPUT_PORTS_START( psoldier )
 	PORT_INCLUDE(m92_2player)
@@ -826,7 +816,6 @@ static INPUT_PORTS_START( psoldier )
 	PORT_BIT( 0x8000, IP_ACTIVE_LOW, IPT_BUTTON6 ) PORT_PLAYER(2)
 INPUT_PORTS_END
 
-
 static INPUT_PORTS_START( gunforc2 )
 	PORT_INCLUDE(m92_2player)
 
@@ -845,6 +834,45 @@ static INPUT_PORTS_START( gunforc2 )
 	PORT_DIPNAME( 0x0010, 0x0010, DEF_STR( Bonus_Life ) ) PORT_DIPLOCATION("SW1:5")
 	PORT_DIPSETTING(      0x0000, "15000 35000 75000 120000" )
 	PORT_DIPSETTING(      0x0010, "20000 40000 90000 150000" )
+INPUT_PORTS_END
+
+static INPUT_PORTS_START( dsoccr94j )
+	PORT_INCLUDE(m92_4player)
+	/* Dip Switch 2, dip 2 is listed as "Don't Change" and is "OFF" */
+
+	PORT_MODIFY("COINS_DSW3")
+	/* Dip switch bank 3 */
+	PORT_DIPNAME( 0x0300, 0x0300, "Player Power" ) PORT_DIPLOCATION("SW3:1,2")
+	PORT_DIPSETTING(      0x0000, "500" )
+	PORT_DIPSETTING(      0x0300, "1000" )
+	PORT_DIPSETTING(      0x0100, "1500" )
+	PORT_DIPSETTING(      0x0200, "2000" )
+
+	PORT_MODIFY("DSW")
+	/* Dip switch bank 1 */
+	PORT_DIPNAME( 0x0003, 0x0003, "Time" ) PORT_DIPLOCATION("SW1:1,2")
+	PORT_DIPSETTING(      0x0000, "1:30" )
+	PORT_DIPSETTING(      0x0003, "2:00" )
+	PORT_DIPSETTING(      0x0002, "2:30" )
+	PORT_DIPSETTING(      0x0001, "3:00" )
+	PORT_DIPNAME( 0x000c, 0x000c, DEF_STR( Difficulty ) ) PORT_DIPLOCATION("SW1:3,4")
+	PORT_DIPSETTING(      0x0000, DEF_STR( Very_Easy) )
+	PORT_DIPSETTING(      0x0008, DEF_STR( Easy ) )
+	PORT_DIPSETTING(      0x000c, DEF_STR( Normal ) )
+	PORT_DIPSETTING(      0x0004, DEF_STR( Hard ) )
+	PORT_DIPNAME( 0x0010, 0x0010, "Game Mode" ) PORT_DIPLOCATION("SW1:5")
+	PORT_DIPSETTING(      0x0010, "Match Mode" )
+	PORT_DIPSETTING(      0x0000, "Power Mode" )
+
+/*	Match Mode: Winner advances to the next game.  Game Over for the loser
+	Power Mode: The Players can play the game until their respective powers run
+               out, reguardless of whether they win or lose the game.
+               Player 2 can join in any time during the game
+               Player power (time) can be adjusted by dip switch #3 */
+
+	PORT_DIPNAME( 0x0020, 0x0020, "Starting Button" ) PORT_DIPLOCATION("SW1:6")
+	PORT_DIPSETTING( 0x0000, "Button 1" )
+	PORT_DIPSETTING( 0x0020, "Start Button" )
 INPUT_PORTS_END
 
 /***************************************************************************/
@@ -1050,6 +1078,14 @@ static MACHINE_DRIVER_START( gunforc2 )
 	MDRV_CPU_CONFIG( gunforc2_config )
 MACHINE_DRIVER_END
 
+static const nec_config dsoccr94_config ={ dsoccr94_decryption_table, };
+static MACHINE_DRIVER_START( dsoccr94j )
+	MDRV_IMPORT_FROM(m92)
+	MDRV_CPU_MODIFY("soundcpu")
+	MDRV_CPU_CONFIG(dsoccr94_config)
+	/* video hardware */
+	MDRV_GFXDECODE( gfx_psoldier )
+MACHINE_DRIVER_END
 
 /***************************************************************************/
 ROM_START( bmaster )				/* M92-B-B PCB used for program rom locations */
@@ -2113,6 +2149,37 @@ ROM_START( majtitl2b )		/* Major Title 2 (World, set 2) */
 	ROM_LOAD( "pal16l8-m92-b-7h.ic47", 0x0800, 0x0104, NO_DUMP )
 ROM_END
 
+ROM_START( dsoccr94j )
+	ROM_REGION( 0x180000, "maincpu", 0 )
+	ROM_LOAD16_BYTE("a3_-h0-e.bin", 0x000001, 0x040000, CRC(8de1dbcd) SHA1(3726c7f8bc1e61a488ab7ef0b79a7a45054235c2) )
+	ROM_LOAD16_BYTE("a3_-l0-e.bin", 0x000000, 0x040000, CRC(d3df8bfd) SHA1(b98064579491aef8eb8ccb94195412e79674a0c1) )
+	ROM_LOAD16_BYTE("ds_h1-c.rom",  0x100001, 0x040000, CRC(6109041b) SHA1(063898a88f8a6a9f1510aa55e53a39f037b02903) )
+	ROM_LOAD16_BYTE("ds_l1-c.rom",  0x100000, 0x040000, CRC(97a01f6b) SHA1(e188e28f880f5f3f4d7b49eca639d643989b1468) )
+
+	ROM_REGION( 0x100000, "soundcpu", 0 )
+	ROM_LOAD16_BYTE("ds_sh0.rom", 0x000001, 0x010000, CRC(23fe6ffc) SHA1(896377961cafc19e44d9d889f9fbfdbaedd556da) )
+	ROM_LOAD16_BYTE("ds_sl0.rom", 0x000000, 0x010000, CRC(768132e5) SHA1(1bb64516eb58d3b246f08e1c07f091e78085689f) )
+
+	ROM_REGION( 0x400000, "gfx1", 0 )	/* chars */
+	ROM_LOAD("c0.bin", 0x000000, 0x100000, CRC(83ea8a47) SHA1(b29c8cc50da85c8168dda92446dfa12582580f96) )
+	ROM_LOAD("c1.bin", 0x100000, 0x100000, CRC(64063e6d) SHA1(80b66e08292a3682f80d5670c5fe9f0fcc92062e) )
+	ROM_LOAD("c2.bin", 0x200000, 0x100000, CRC(cc1f621a) SHA1(a0bdfe582206d49ca01bedc2b6973ebe5248efe4) )
+	ROM_LOAD("c3.bin", 0x300000, 0x100000, CRC(515829e1) SHA1(2b5a5151eeb56cd3da30c8cb6415605cbe1d82e9) )
+
+	ROM_REGION( 0x400000, "gfx2", 0 )	/* sprites */
+	ROM_LOAD16_BYTE("a3-o00-w.bin", 0x000001, 0x80000, CRC(b094e5ad) SHA1(9acceb24a72eeb3c6e629c08d4cc9ef2a171da32) )
+	ROM_LOAD16_BYTE("a3-o01-w.bin", 0x000000, 0x80000, CRC(91f34018) SHA1(4982b914ecce0358d63800caf7e249e1723bf7cf) )
+	ROM_LOAD16_BYTE("a3-o10-w.bin", 0x100001, 0x80000, CRC(edddeef4) SHA1(73a90c20c99209206370e8bff35199c3a6b9dc3d) )
+	ROM_LOAD16_BYTE("a3-o11-w.bin", 0x100000, 0x80000, CRC(274a9526) SHA1(2844079b2ec33ff2ccf6f73586ff426bdab9cf83) )
+	ROM_LOAD16_BYTE("a3-o20-w.bin", 0x200001, 0x80000, CRC(32064393) SHA1(bacd4902079557141133920c44b16b52242692e7) )
+	ROM_LOAD16_BYTE("a3-o21-w.bin", 0x200000, 0x80000, CRC(57bae3d9) SHA1(11face0e157ed42d7836bb8d60a4b75740de52d5) )
+	ROM_LOAD16_BYTE("a3-o30-w.bin", 0x300001, 0x80000, CRC(be838e2f) SHA1(fc8a42b9183dfc60c317cbcef1da6798fed125ef) )
+	ROM_LOAD16_BYTE("a3-o31-w.bin", 0x300000, 0x80000, CRC(bf899f0d) SHA1(f781454df089743186816ce98d863c94f7b208bd) )
+
+	ROM_REGION( 0x100000, "irem", 0 )
+	ROM_LOAD("ds_da0.rom",  0x000000, 0x100000, CRC(67fc52fd) SHA1(5771e948115af8fe4a6d3f448c03a2a9b42b6f20) )
+ROM_END
+
 /***************************************************************************/
 
 static void init_m92(running_machine *machine, int hasbanks)
@@ -2197,60 +2264,55 @@ static DRIVER_INIT( m92_lethalth )
 }
 
 
-/***************************************************************************/
+/**************************************************************************
+GAME( year,   archives name,   parent name,  MACHINE_DRIVER_START,  INPUT_PORTS,  DRIVER_INIT,	flip,	producer name,	title information,	status ) */
 
-GAME( 1991,  gunforce,   0,	      gunforce,	   gunforce,	m92_most,	ROT0,   "Irem",         "Gunforce - Battle Fire Engulfed Terror Island (World)", 0 )
-GAME( 1991,  gunforcej,  gunforce,    gunforce,    gunforce, 	m92_most,   	ROT0,   "Irem",         "Gunforce - Battle Fire Engulfed Terror Island (Japan)", 0 )
-GAME( 1991,  gunforceu,  gunforce,    gunforce,    gunforce,	m92_most,   	ROT0,   "Irem America", "Gunforce - Battle Fire Engulfed Terror Island (US)", 0 )
+GAME( 1991,	gunforce,	0,		gunforce,	gunforce,	m92_most,	ROT0,	"Irem",		"Gunforce - Battle Fire Engulfed Terror Island (World)", 0 )
+GAME( 1991,	gunforcej,	gunforce,	gunforce,	gunforce,	m92_most,	ROT0,	"Irem",		"Gunforce - Battle Fire Engulfed Terror Island (Japan)", 0 )
+GAME( 1991,	gunforceu,	gunforce,	gunforce,	gunforce,	m92_most,	ROT0,	"Irem America",	"Gunforce - Battle Fire Engulfed Terror Island (US)", 0 )
 //
-GAME( 1991,  bmaster,    0,           bmaster,     bmaster,  	m92_most,    	ROT0,   "Irem",         "Blade Master (World)", 0 )
-GAME( 1991,  crossbld,   bmaster,     bmaster,     bmaster,  	m92_most,    	ROT0,   "Irem",         "Cross Blades! (Japan)", 0 )
+GAME( 1991,	bmaster,	0,		bmaster,	bmaster,	m92_most,	ROT0,	"Irem",		"Blade Master (World)", 0 )
+GAME( 1991,	crossbld,	bmaster,	bmaster,	bmaster,	m92_most,	ROT0,	"Irem",		"Cross Blades! (Japan)", 0 )
 //
-GAME( 1991,  lethalth,   0,           lethalth,    lethalth, 	m92_lethalth,   ROT270, "Irem",         "Lethal Thunder (World)", 0 )
-GAME( 1991,  thndblst,   lethalth,    lethalth,    lethalth, 	m92_lethalth,   ROT270, "Irem",         "Thunder Blaster (Japan)", 0 )
+GAME( 1991,	lethalth,	0,		lethalth,	lethalth,	m92_lethalth,	ROT270,	"Irem",		"Lethal Thunder (World)", 0 )
+GAME( 1991,	thndblst,	lethalth,	lethalth,	lethalth,	m92_lethalth,	ROT270,	"Irem",		"Thunder Blaster (Japan)", 0 )
 //
-GAME( 1992,  uccops,     0,           uccops,      uccops,   	m92_most,     	ROT0,   "Irem",         "Undercover Cops (World)", 0 )
-GAME( 1992,  uccopsu,    uccops,      uccops,      uccops,   	m92_most,     	ROT0,   "Irem",         "Undercover Cops (US)", 0 )
-GAME( 1992,  uccopsar,   uccops,      uccops,      uccops,   	m92_most,     	ROT0,   "Irem",         "Undercover Cops - Alpha Renewal Version", 0 )
-GAME( 1992,  uccopsj,    uccops,      uccops,      uccops,   	m92_most,     	ROT0,   "Irem",         "Undercover Cops (Japan)", 0 )
+GAME( 1992,	uccops,		0,		uccops,		uccops,		m92_most,	ROT0,	"Irem",		"Undercover Cops (World)", 0 )
+GAME( 1992,	uccopsu,	uccops,		uccops,		uccops,		m92_most,	ROT0,	"Irem",		"Undercover Cops (US)", 0 )
+GAME( 1992,	uccopsar,	uccops,		uccops,		uccops,		m92_most,	ROT0,	"Irem",		"Undercover Cops - Alpha Renewal Version", 0 )
+GAME( 1992,	uccopsj,	uccops,		uccops,		uccops,		m92_most,	ROT0,	"Irem",		"Undercover Cops (Japan)", 0 )
 //
-GAME( 1992,  mysticri,   0,           mysticri,    mysticri, 	m92_most,   	ROT0,   "Irem",         "Mystic Riders (World)", 0 )
-GAME( 1992,  gunhohki,   mysticri,    mysticri,    mysticri, 	m92_most,   	ROT0,   "Irem",         "Mahou Keibitai Gun Hohki (Japan)", 0 )
-GAME( 1992,  mysticrib,  mysticri,    mysticri,    mysticri, 	m92_most,   	ROT0,   "Irem",         "Mystic Riders (bootleg?)", 0 )
+GAME( 1992,	mysticri,	0,		mysticri,	mysticri,	m92_most,	ROT0,	"Irem",		"Mystic Riders (World)", 0 )
+GAME( 1992,	gunhohki,	mysticri,	mysticri,	mysticri,	m92_most,	ROT0,	"Irem",		"Mahou Keibitai Gun Hohki (Japan)", 0 )
+GAME( 1992,	mysticrib,	mysticri,	mysticri,	mysticri,	m92_most,	ROT0,	"Irem",		"Mystic Riders (bootleg?)", 0 )
 //
-GAME( 1992,  majtitl2,   0,           majtitl2,    majtitl2, 	m92_majtitl2,   ROT0,   "Irem",         "Major Title 2 (World, set 1)", 0 )
-GAME( 1992,  majtitl2j,  majtitl2,    majtitl2,    majtitl2, 	m92_majtitl2,   ROT0,   "Irem",         "Major Title 2 (Japan)", 0 )
-GAME( 1992,  skingame,   majtitl2,    majtitl2,    majtitl2, 	m92_majtitl2,   ROT0,   "Irem America", "The Irem Skins Game (US set 1)", 0 )
-GAME( 1992,  skingame2,  majtitl2,    majtitl2,    majtitl2, 	m92_majtitl2,   ROT0,   "Irem America", "The Irem Skins Game (US set 2)", 0 )
+GAME( 1992,	majtitl2,	0,		majtitl2,	majtitl2,	m92_majtitl2,	ROT0,	"Irem",		"Major Title 2 (World, set 1)", 0 )
+GAME( 1992,	majtitl2j,	majtitl2,	majtitl2,	majtitl2,	m92_majtitl2,	ROT0,	"Irem",		"Major Title 2 (Japan)", 0 )
+GAME( 1992,	skingame,	majtitl2,	majtitl2,	majtitl2,	m92_majtitl2,	ROT0,	"Irem America",	"The Irem Skins Game (US set 1)", 0 )
+GAME( 1992,	skingame2,	majtitl2,	majtitl2,	majtitl2,	m92_majtitl2,	ROT0,	"Irem America",	"The Irem Skins Game (US set 2)", 0 )
+GAME( 1992,	majtitl2a,	majtitl2,	mysticri,	majtitl2,	m92_majtitl2,	ROT0,	"Irem",		"Major Title 2 (World, set 1, alt sound CPU)", 0 )
+GAME( 1992,	majtitl2b,	majtitl2,	majtitl2,	majtitl2,	m92_majtitl2,	ROT0,	"Irem",		"Major Title 2 (World, set 2)", 0 )
 //
-GAME( 1992,  hook,       0,           hook,        hook,     	m92_most,       ROT0,   "Irem",         "Hook (World)", 0 )
-GAME( 1992,  hooku,      hook,        hook,        hook,     	m92_most,       ROT0,   "Irem America", "Hook (US)", 0 )
-GAME( 1992,  hookj,      hook,        hook,        hook,     	m92_most,       ROT0,   "Irem",         "Hook (Japan)", 0 )
-GAME( 1992,  ppan,       hook,        ppan,        hook,     	m92_most,       ROT0,   "bootleg",      "Peter Pan (bootleg of Hook)", GAME_IMPERFECT_GRAPHICS ) // PCB marked 'Peter Pan', no title screen, made in Italy?
+GAME( 1992,	hook,		0,		hook,		hook,		m92_most,	ROT0,	"Irem",		"Hook (World)", 0 )
+GAME( 1992,	hooku,		hook,		hook,		hook,		m92_most,	ROT0,	"Irem America",	"Hook (US)", 0 )
+GAME( 1992,	hookj,		hook,		hook,		hook,		m92_most,	ROT0,	"Irem",		"Hook (Japan)", 0 )
+GAME( 1992,	ppan,		hook,		ppan,		hook,		m92_most,	ROT0,	"bootleg",	"Peter Pan (bootleg of Hook)", GAME_IMPERFECT_GRAPHICS ) /*PCB marked 'Peter Pan', no title screen, made in Italy? */
 //
-GAME( 1992,  rtypeleo,   0,           rtypeleo,    rtypeleo, 	m92_rtype,   	ROT0,   "Irem",         "R-Type Leo (World)", 0 )
-GAME( 1992,  rtypeleoj,  rtypeleo,    rtypeleo,    rtypeleo, 	m92_rtype,   	ROT0,   "Irem",         "R-Type Leo (Japan)", 0 )
+GAME( 1992,	rtypeleo,	0,		rtypeleo,	rtypeleo,	m92_rtype,	ROT0,	"Irem",		"R-Type Leo (World)", 0 )
+GAME( 1992,	rtypeleoj,	rtypeleo,	rtypeleo,	rtypeleo,	m92_rtype,	ROT0,	"Irem",		"R-Type Leo (Japan)", 0 )
 //
-GAME( 1993,  inthunt,    0,           inthunt,     inthunt,  	m92_most,    	ROT0,   "Irem",         "In The Hunt (World)", 0 )
-GAME( 1993,  inthuntu,   inthunt,     inthunt,     inthunt,  	m92_most,    	ROT0,   "Irem America", "In The Hunt (US)", 0 )
-GAME( 1993,  kaiteids,   inthunt,     inthunt,     inthunt,  	m92_most,   	ROT0,   "Irem",         "Kaitei Daisensou (Japan)", 0 )
+GAME( 1993,	inthunt,	0,		inthunt,	inthunt,	m92_most,	ROT0,	"Irem",		"In The Hunt (World)", 0 )
+GAME( 1993,	inthuntu,	inthunt,	inthunt,	inthunt,	m92_most,	ROT0,	"Irem America",	"In The Hunt (US)", 0 )
+GAME( 1993,	kaiteids,	inthunt,	inthunt,	inthunt,	m92_most,	ROT0,	"Irem",		"Kaitei Daisensou (Japan)", 0 )
 //
-GAME( 1993,  nbbatman,   0,           nbbatman,    nbbatman, 	m92_gunforc2,   ROT0,   "Irem",		"Ninja Baseball Bat Man (World)", GAME_IMPERFECT_GRAPHICS )
-GAME( 1993,  leaguemn,   nbbatman,    nbbatman,    nbbatman, 	m92_gunforc2,   ROT0,   "Irem",         "Yakyuu Kakutou League-Man (Japan)", GAME_IMPERFECT_GRAPHICS )
-//
-GAME( 1993,  ssoldier,   0,           psoldier,    psoldier, 	m92_ssoldier,   ROT0,   "Irem America", "Superior Soldiers (US)", 0 )
-GAME( 1993,  psoldier,   ssoldier,    psoldier,    psoldier, 	m92_ssoldier,   ROT0,   "Irem",         "Perfect Soldiers (Japan)", 0 )
-//
-GAME( 1994,  gunforc2,   0,           gunforc2,    gunforc2, 	m92_gunforc2,   ROT0,   "Irem",         "Gun Force II (US)", 0 )
-GAME( 1994,  geostorm,   gunforc2,    gunforc2,    gunforc2, 	m92_gunforc2,   ROT0,   "Irem",         "Geo Storm (Japan)", 0 )
-
-
-/* ==================================== */
-/* 	new added support		*/
-/* ==================================== */
-/*
-GAME( year,   archives name,   parent name,  MACHINE_DRIVER_START,  INPUT_PORTS,  DRIVER_INIT,	flip,	producer name,	title information,	status )
-*/
-GAME( 1992,	majtitl2a,	majtitl2,	mysticri,	majtitl2,	m92_majtitl2,   ROT0,   "Irem",		"Major Title 2 (World, set 1, alt sound CPU)", 0 )
-GAME( 1992,	majtitl2b,	majtitl2,	majtitl2,	majtitl2,	m92_majtitl2,   ROT0,   "Irem",		"Major Title 2 (World, set 2)", 0 )
+GAME( 1993,	nbbatman,	0,		nbbatman,	nbbatman,	m92_gunforc2,	ROT0,	"Irem",		"Ninja Baseball Bat Man (World)", GAME_IMPERFECT_GRAPHICS )
 GAME( 1993,	nbbatmanu,	nbbatman,	nbbatman,	nbbatman,	m92_gunforc2,	ROT0,   "Irem America", "Ninja Baseball Bat Man (US)", GAME_IMPERFECT_GRAPHICS )
+GAME( 1993,	leaguemn,	nbbatman,	nbbatman,	nbbatman,	m92_gunforc2,	ROT0,	"Irem",		"Yakyuu Kakutou League-Man (Japan)", GAME_IMPERFECT_GRAPHICS )
+//
+GAME( 1993,	ssoldier,	0,		psoldier,	psoldier,	m92_ssoldier,	ROT0,	"Irem America",	"Superior Soldiers (US)", 0 )
+GAME( 1993,	psoldier,	ssoldier,	psoldier,	psoldier,	m92_ssoldier,	ROT0,	"Irem",		"Perfect Soldiers (Japan)", 0 )
+//
+GAME( 1994,	gunforc2,	0,		gunforc2,	gunforc2,	m92_gunforc2,	ROT0,	"Irem",		"Gun Force II (US)", 0 )
+GAME( 1994,	geostorm,	gunforc2,	gunforc2,	gunforc2,	m92_gunforc2,	ROT0,	"Irem",		"Geo Storm (Japan)", 0 )
+//
+GAME( 1994,	dsoccr94j,	0,		dsoccr94j,	dsoccr94j,	m92_most,	ROT0,	"Irem",         "Dream Soccer '94 (Japan, M92 Hardware)", 0 )

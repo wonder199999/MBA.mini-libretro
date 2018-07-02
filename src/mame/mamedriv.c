@@ -77,6 +77,7 @@ const game_driver *const drivers[] =
 	DRIVER( majtitl2a )	/* (c) 1992 Irem (World, set 1, alt sound CPU) */
 	DRIVER( majtitl2b )	/* (c) 1992 Irem (World, set 2) */
 	DRIVER( nbbatmanu )	/* (c) 1992 Irem Americ (US) */
+	DRIVER( dsoccr94j )	/* Dream Soccer '94 (Japan, M92 Hardware) */
 
 
 	/* ************************* */

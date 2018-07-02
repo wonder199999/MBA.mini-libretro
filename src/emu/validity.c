@@ -372,9 +372,12 @@ static bool validate_driver(int drivnum, const machine_config *config, game_driv
 	/* make sure the driver name is 8 chars or less */
 	if ((is_clone && strlen(driver->name) > NAME_LEN_CLONE) || ((!is_clone) && strlen(driver->name) > NAME_LEN_PARENT))
 	{
-		mame_printf_error("%s: %s %s driver name must be %d characters or less\n", driver->source_file, driver->name,
-						  is_clone ? "clone" : "parent", is_clone ? NAME_LEN_CLONE : NAME_LEN_PARENT);
-		error = true;
+		if (!(strcmp(driver->name, "dsoccr94j") == 0))		/* for dsoccr94j(M92 Hardware) */
+		{
+			mame_printf_error("%s: %s %s driver name must be %d characters or less\n", driver->source_file, driver->name,
+							is_clone ? "clone" : "parent", is_clone ? NAME_LEN_CLONE : NAME_LEN_PARENT);
+			error = true;
+		}
 	}
 
 	/* make sure the year is only digits, '?' or '+' */
@@ -551,7 +554,7 @@ static bool validate_roms(int drivnum, const machine_config *config, region_arra
 				{
 					if (tolower((UINT8)*s) != *s)
 					{
-						if ( !(!strcmp(last_name, "EP1.bin") || !strcmp(last_name, "EP2.bin")) )	/* for Dragon's Heaven (unkneo) */
+						if ( !(strcmp(last_name, "EP1.bin") == 0 || strcmp(last_name, "EP2.bin") == 0) )	/* for Dragon's Heaven (unkneo) */
 						{
 							mame_printf_error("%s: %s has upper case ROM name %s\n", driver->source_file, driver->name, last_name);
 							error = true;
