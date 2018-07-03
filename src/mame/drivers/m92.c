@@ -527,7 +527,6 @@ static INPUT_PORTS_START( m92_2player )
 	PORT_BIT( 0xffff, IP_ACTIVE_LOW, IPT_UNUSED )
 INPUT_PORTS_END
 
-
 static INPUT_PORTS_START( m92_3player )
 	PORT_INCLUDE(m92_2player)
 
@@ -540,7 +539,6 @@ static INPUT_PORTS_START( m92_3player )
 	IREM_INPUT_PLAYER_3
 	PORT_BIT( 0xff00, IP_ACTIVE_LOW, IPT_UNUSED )
 INPUT_PORTS_END
-
 
 static INPUT_PORTS_START( m92_4player )
 	PORT_INCLUDE(m92_3player)
@@ -1088,7 +1086,8 @@ static MACHINE_DRIVER_START( dsoccr94j )
 MACHINE_DRIVER_END
 
 /***************************************************************************/
-ROM_START( bmaster )				/* M92-B-B PCB used for program rom locations */
+
+ROM_START( bmaster )	/* Blade Master (World) */ /* M92-B-B PCB used for program rom locations */
 	ROM_REGION( 0x100000, "maincpu", 0 )
 	ROM_LOAD16_BYTE( "bm_d-h0-b.5m", 0x000001, 0x40000, CRC(49b257c7) SHA1(cb4917ef6c5f959094f95b8535ea12e6b9b0bcc2) )
 	ROM_LOAD16_BYTE( "bm_d-l0-b.5f", 0x000000, 0x40000, CRC(a873523e) SHA1(9aee134c299e12064842e16db296f4259eccdf5b) )
@@ -1115,7 +1114,7 @@ ROM_START( bmaster )				/* M92-B-B PCB used for program rom locations */
 	ROM_LOAD( "bm_da.rom", 0x000000, 0x80000, CRC(62ce5798) SHA1(f7bf7706f71ce36d85c99e531d4789c4d7a095a0) )
 ROM_END
 
-ROM_START( crossbld )				/* M92-D-A PCB used for program rom locations */
+ROM_START( crossbld )	/* Cross Blades! (Japan) */ /* M92-D-A PCB used for program rom locations */
 	ROM_REGION( 0x100000, "maincpu", 0 )
 	ROM_LOAD16_BYTE( "bm_d-h0.3h", 0x000001, 0x40000, CRC(a28a5821) SHA1(2e79ec82dd79697f4a6b4082d49400d39cc3bad9) )
 	ROM_LOAD16_BYTE( "bm_d-l0.5h", 0x000000, 0x40000, CRC(a504f1a0) SHA1(33ccc944b08b89e6a975a164c72b36aa79b99392) )
@@ -1142,7 +1141,7 @@ ROM_START( crossbld )				/* M92-D-A PCB used for program rom locations */
 	ROM_LOAD( "bm_da.rom", 0x000000, 0x80000, CRC(62ce5798) SHA1(f7bf7706f71ce36d85c99e531d4789c4d7a095a0) )
 ROM_END
 
-ROM_START( majtitl2 )
+ROM_START( majtitl2 )	/* Major Title 2 (World) */
 	ROM_REGION( 0x180000, "maincpu", 0 )
 	ROM_LOAD16_BYTE( "mt2-h0-b.5m", 0x000001, 0x40000, CRC(b163b12e) SHA1(cdb01a5266bd11f4cff1cb5c05cf24de13a527b2) )
 	ROM_LOAD16_BYTE( "mt2-l0-b.5f", 0x000000, 0x40000, CRC(6f3b5d9d) SHA1(a39f25f29195023fb507dc9ffbfcbd57a4e6b30a) )
@@ -1179,7 +1178,7 @@ ROM_START( majtitl2 )
 	ROM_LOAD( "pal16l8-m92-b-7h.ic47", 0x0800, 0x0104, NO_DUMP ) /* PAL is read protected */
 ROM_END
 
-ROM_START( majtitl2j )
+ROM_START( majtitl2j )	/* Major Title 2 (Japan) */
 	ROM_REGION( 0x180000, "maincpu", 0 )
 	ROM_LOAD16_BYTE( "mt2-h0",      0x000001, 0x40000, CRC(8a8d71ad) SHA1(8c45d947d15eb3a2c2584c9e1cd0e42988955905) )
 	ROM_LOAD16_BYTE( "mt2-l1",      0x000000, 0x40000, CRC(dd4fff51) SHA1(9281bac10fdbfa9eede9d069b70eb38d9ae612ce) )
@@ -1216,7 +1215,7 @@ ROM_START( majtitl2j )
 	ROM_LOAD( "pal16l8-m92-b-7h.ic47", 0x0800, 0x0104, NO_DUMP ) /* PAL is read protected */
 ROM_END
 
-ROM_START( skingame )
+ROM_START( skingame )	/* The Irem Skins Game (US set 1) */
 	ROM_REGION( 0x180000, "maincpu", 0 )
 	ROM_LOAD16_BYTE( "is-h0-d.5m", 0x000001, 0x40000, CRC(80940abb) SHA1(7af5b667383f40987cc8190d81937410ea2c0301) )
 	ROM_LOAD16_BYTE( "is-l0-d.5f", 0x000000, 0x40000, CRC(b84beed6) SHA1(b026a68623d7d96545a4b01770fc6cdd2a0ed0f4) )
@@ -1253,7 +1252,7 @@ ROM_START( skingame )
 	ROM_LOAD( "pal16l8-m92-b-7h.ic47", 0x0800, 0x0104, NO_DUMP ) /* PAL is read protected */
 ROM_END
 
-ROM_START( skingame2 )
+ROM_START( skingame2 )	/* The Irem Skins Game (US set 2) */
 	ROM_REGION( 0x180000, "maincpu", 0 )
 	ROM_LOAD16_BYTE( "mt2-h0-a.5m", 0x000001, 0x40000, CRC(7c6dbbc7) SHA1(6ac2df542cbcac782d733aaa0f2e4ded702ec24f) )
 	ROM_LOAD16_BYTE( "mt2-l0-a.5f", 0x000000, 0x40000, CRC(9de5f689) SHA1(ea5057cab0a2f5c4586337fc5a17f1a728450cbf) )
@@ -1290,7 +1289,7 @@ ROM_START( skingame2 )
 	ROM_LOAD( "pal16l8-m92-b-7h.ic47", 0x0800, 0x0104, NO_DUMP ) /* PAL is read protected */
 ROM_END
 
-ROM_START( gunforce )
+ROM_START( gunforce )	/* Gunforce - Battle Fire Engulfed Terror Island (World) */
 	ROM_REGION( 0x100000, "maincpu", 0 )
 	ROM_LOAD16_BYTE( "gf_h0-c.5m", 0x000001, 0x20000, CRC(c09bb634) SHA1(9b0e3174beeef173f5ef70f86f5db42bb01d9989) )
 	ROM_LOAD16_BYTE( "gf_l0-c.5f", 0x000000, 0x20000, CRC(1bef6f7d) SHA1(ff4d674fc5f97f5b298b4b5dc73fb8a6772b5f09) )
@@ -1317,7 +1316,7 @@ ROM_START( gunforce )
 	ROM_LOAD( "gf-da.rom", 0x000000, 0x020000, CRC(933ba935) SHA1(482811e01239feecf10e232566a7809d0d4f11b8) )
 ROM_END
 
-ROM_START( gunforcej )
+ROM_START( gunforcej )	/* Gunforce - Battle Fire Engulfed Terror Island (Japan) */
 	ROM_REGION( 0x100000, "maincpu", 0 )
 	ROM_LOAD16_BYTE( "gfb_h0-e.5m", 0x000001, 0x20000, CRC(43c36e0f) SHA1(08c278861568f0a2fb2699b89a4170f6843bbcb7) )
 	ROM_LOAD16_BYTE( "gfb_l0-e.5f", 0x000000, 0x20000, CRC(24a558d8) SHA1(89a9fb737d51798bdd5c08f448d2d8b3e161396a) )
@@ -1344,7 +1343,7 @@ ROM_START( gunforcej )
 	ROM_LOAD( "gf-da.rom", 0x000000, 0x020000, CRC(933ba935) SHA1(482811e01239feecf10e232566a7809d0d4f11b8) )
 ROM_END
 
-ROM_START( gunforceu )
+ROM_START( gunforceu )	/* Gunforce - Battle Fire Engulfed Terror Island (US) */
 	ROM_REGION( 0x100000, "maincpu", 0 )
 	ROM_LOAD16_BYTE( "gf_h0-d.5m", 0x000001, 0x20000, CRC(a6db7b5c) SHA1(5656473599e924ab799ea3c6f39d8ce34b08cb29) )
 	ROM_LOAD16_BYTE( "gf_l0-d.5f", 0x000000, 0x20000, CRC(82cf55f6) SHA1(42a2de61f2c5294c81fb135ea2472cc78637c66c) )
@@ -1371,7 +1370,7 @@ ROM_START( gunforceu )
 	ROM_LOAD( "gf-da.rom", 0x000000, 0x020000, CRC(933ba935) SHA1(482811e01239feecf10e232566a7809d0d4f11b8) )
 ROM_END
 
-ROM_START( inthunt )
+ROM_START( inthunt )	/* In The Hunt (World) */
 	ROM_REGION( 0x100000, "maincpu", 0 )
 	ROM_LOAD16_BYTE( "ith-h0-d.bin", 0x000001, 0x040000, CRC(52f8e7a6) SHA1(26d9e272b01e7b82019812059dcc9fbb043c6129) )
 	ROM_LOAD16_BYTE( "ith-l0-d.bin", 0x000000, 0x040000, CRC(5db79eb7) SHA1(ffd4228d7b88a44a82e639a5583753da183fcb23) )
@@ -1398,7 +1397,7 @@ ROM_START( inthunt )
 	ROM_LOAD( "ith_ic9.rom", 0x000000, 0x080000, CRC(318ee71a) SHA1(e6f49a7adf7155ba40c4f33a8fdc9553c00f5e3d) )
 ROM_END
 
-ROM_START( inthuntu )
+ROM_START( inthuntu )	/* In The Hunt (US) */
 	ROM_REGION( 0x100000, "maincpu", 0 )
 	ROM_LOAD16_BYTE( "ith-h0-c.bin", 0x000001, 0x040000, CRC(563dcec0) SHA1(0c7588ba603926fb0b490f2ba324ff73362a54d5) )
 	ROM_LOAD16_BYTE( "ith-l0-c.bin", 0x000000, 0x040000, CRC(1638c705) SHA1(8ca7a12c2f75172d4c2c808ea666b2f2e969398c) )
@@ -1425,7 +1424,7 @@ ROM_START( inthuntu )
 	ROM_LOAD( "ith_ic9.rom", 0x000000, 0x080000, CRC(318ee71a) SHA1(e6f49a7adf7155ba40c4f33a8fdc9553c00f5e3d) )
 ROM_END
 
-ROM_START( kaiteids )
+ROM_START( kaiteids )	/* Kaitei Daisensou (Japan) */
 	ROM_REGION( 0x100000, "maincpu", 0 )
 	ROM_LOAD16_BYTE( "ith-h0j.bin", 0x000001, 0x040000, CRC(dc1dec36) SHA1(f0a6e3be19752bffd9fd5f435405c8f591eab258) )
 	ROM_LOAD16_BYTE( "ith-l0j.bin", 0x000000, 0x040000, CRC(8835d704) SHA1(42be25ccdc31824797a17e6f76bd06edfe853833) )
@@ -1452,7 +1451,7 @@ ROM_START( kaiteids )
 	ROM_LOAD( "ith_ic9.rom", 0x000000, 0x080000, CRC(318ee71a) SHA1(e6f49a7adf7155ba40c4f33a8fdc9553c00f5e3d) )
 ROM_END
 
-ROM_START( hook )
+ROM_START( hook )	/* Hook (World) */
 	ROM_REGION( 0x100000, "maincpu", 0 )
 	ROM_LOAD16_BYTE( "h-h0-d.3h", 0x000001, 0x040000, CRC(40189ff6) SHA1(ed86a566f0f47c03dd0628cda8b31a167788116c) )
 	ROM_LOAD16_BYTE( "h-l0-d.3h", 0x000000, 0x040000, CRC(14567690) SHA1(74ddc300e81b006fdc57a4a86f5f178a30732dd8) )
@@ -1479,7 +1478,7 @@ ROM_START( hook )
 	ROM_LOAD( "hook-da.rom", 0x000000, 0x080000, CRC(88cd0212) SHA1(789532f5544b5d024d8af60eb8a5c133ae0d19d4) )
 ROM_END
 
-ROM_START( hooku )
+ROM_START( hooku )	/* Hook (US) */
 	ROM_REGION( 0x100000, "maincpu", 0 )
 	ROM_LOAD16_BYTE( "h-h0-c.3h", 0x000001, 0x040000, CRC(84cc239e) SHA1(0a3011cd64cd27336b967b1b2446c8916b8be8e7) )
 	ROM_LOAD16_BYTE( "h-l0-c.5h", 0x000000, 0x040000, CRC(45e194fe) SHA1(2049f242ea3058d42004bafb8b208759020be5bc) )
@@ -1506,7 +1505,7 @@ ROM_START( hooku )
 	ROM_LOAD( "hook-da.rom", 0x000000, 0x080000, CRC(88cd0212) SHA1(789532f5544b5d024d8af60eb8a5c133ae0d19d4) )
 ROM_END
 
-ROM_START( hookj )
+ROM_START( hookj )	/* Hook (Japan) */
 	ROM_REGION( 0x100000, "maincpu", 0 )
 	ROM_LOAD16_BYTE( "h-h0-g.3h", 0x000001, 0x040000, CRC(5964c886) SHA1(fe15f328d0e62b6be09c8ae9892f5b669585fcdb) )
 	ROM_LOAD16_BYTE( "h-l0-g.5h", 0x000000, 0x040000, CRC(7f7433f2) SHA1(e85c170332ed7195e713fd5a2a20c97d56a7297b) )
@@ -1533,7 +1532,7 @@ ROM_START( hookj )
 	ROM_LOAD( "hook-da.rom", 0x000000, 0x080000, CRC(88cd0212) SHA1(789532f5544b5d024d8af60eb8a5c133ae0d19d4) )
 ROM_END
 
-ROM_START( ppan )
+ROM_START( ppan )	/* Peter Pan (bootleg of Hook) */
 	ROM_REGION( 0x100000, "maincpu", 0 )
 	ROM_LOAD16_BYTE( "1.u6", 0x000001, 0x080000, CRC(b135dd6e) SHA1(3e7ac75db53804c605fb628546f5a506ba7f7a5f) )
 	ROM_LOAD16_BYTE( "2.u5", 0x000000, 0x080000, CRC(7785289c) SHA1(8125c4ae8e99b6eed5216c1d956426bf2034ada0) )
@@ -1568,7 +1567,7 @@ ROM_START( ppan )
 	ROM_COPY( "okidata",  0x060000, 0x0e0000, 0x20000 )
 ROM_END
 
-ROM_START( rtypeleo )
+ROM_START( rtypeleo )	/* R-Type Leo (World) */
 	ROM_REGION( 0x100000, "maincpu", 0 )
 	ROM_LOAD16_BYTE( "rtl-h0-c.bin", 0x000001, 0x040000, CRC(5fef7fa1) SHA1(7d18d4ea979d887d6da42c79734b8c695f3df02b) )
 	ROM_LOAD16_BYTE( "rtl-l0-c.bin", 0x000000, 0x040000, CRC(8156456b) SHA1(9755ab80feb92e3e3a36154d57ee2b53185b6816) )
@@ -1595,7 +1594,7 @@ ROM_START( rtypeleo )
 	ROM_LOAD( "rtl-da.bin", 0x000000, 0x080000, CRC(dbebd1ff) SHA1(b369d6e944331e6773608ff24f04b8f16267b8da) )
 ROM_END
 
-ROM_START( rtypeleoj )
+ROM_START( rtypeleoj )	/* R-Type Leo (Japan) */
 	ROM_REGION( 0x100000, "maincpu", 0 )
 	ROM_LOAD16_BYTE( "rtl-h0-d.bin", 0x000001, 0x040000, CRC(3dbac89f) SHA1(bfb4d1ab480b7828f6b7374df6d30d766f327b95) )
 	ROM_LOAD16_BYTE( "rtl-l0-d.bin", 0x000000, 0x040000, CRC(f85a2537) SHA1(50eeca8de0c7fd28375d082a05f18473d0b15ed4) )
@@ -1622,7 +1621,7 @@ ROM_START( rtypeleoj )
 	ROM_LOAD( "rtl-da.bin", 0x000000, 0x080000, CRC(dbebd1ff) SHA1(b369d6e944331e6773608ff24f04b8f16267b8da) )
 ROM_END
 
-ROM_START( mysticri )
+ROM_START( mysticri )	/* Mystic Riders (World) */
 	ROM_REGION( 0x100000, "maincpu", 0 )
 	ROM_LOAD16_BYTE( "mr-h0-b.bin", 0x000001, 0x040000, CRC(d529f887) SHA1(fedfedd23fdbb8c4a19970dc4e2c8c0f96915982) )
 	ROM_LOAD16_BYTE( "mr-l0-b.bin", 0x000000, 0x040000, CRC(a457ab44) SHA1(6f85428061cf384c6d645ff0aacd850730a86987) )
@@ -1649,7 +1648,7 @@ ROM_START( mysticri )
 	ROM_LOAD( "mr-da.bin", 0x000000, 0x040000, CRC(1a11fc59) SHA1(6d1f4ca688bf015ecbbe369fbc0eb5e2bcaefcfc) )
 ROM_END
 
-ROM_START( gunhohki )
+ROM_START( gunhohki )	/* Gun Hohki (Japan) */
 	ROM_REGION( 0x100000, "maincpu", 0 )
 	ROM_LOAD16_BYTE( "mr-h0.bin", 0x000001, 0x040000, CRC(83352270) SHA1(25393ac0ec0f91c2890bbfc8c1b12e0f6bccb2ab) )
 	ROM_LOAD16_BYTE( "mr-l0.bin", 0x000000, 0x040000, CRC(9db308ae) SHA1(eadec2e07a602d104a38bf9e159865405ab11581) )
@@ -1676,7 +1675,7 @@ ROM_START( gunhohki )
 	ROM_LOAD( "mr-da.bin", 0x000000, 0x040000, CRC(1a11fc59) SHA1(6d1f4ca688bf015ecbbe369fbc0eb5e2bcaefcfc) )
 ROM_END
 
-ROM_START( mysticrib )
+ROM_START( mysticrib )	/* Mystic Riders (bootleg?) */
 	ROM_REGION( 0x100000, "maincpu", 0 )
 	ROM_LOAD16_BYTE( "h0", 0x000001, 0x040000, CRC(e38c1f56) SHA1(491f370c66c36ab56a4bee3f335fe7357ff5668b) )
 	ROM_LOAD16_BYTE( "l0", 0x000000, 0x040000, CRC(77846e48) SHA1(c715136c4ed8dda24ec1ed634e6308d23c92ec05) )
@@ -1704,7 +1703,7 @@ ROM_START( mysticrib )
 	ROM_LOAD( "mr-da.bin", 0x000000, 0x040000, CRC(1a11fc59) SHA1(6d1f4ca688bf015ecbbe369fbc0eb5e2bcaefcfc) )
 ROM_END
 
-ROM_START( uccops )
+ROM_START( uccops )	/* Undercover Cops (World) */
 	ROM_REGION( 0x100000, "maincpu", 0 )
 	ROM_LOAD16_BYTE( "uc_h0.rom", 0x000001, 0x040000, CRC(240aa5f7) SHA1(8d864bb1377e9f6d266631ed365c5809b9da33f8) )
 	ROM_LOAD16_BYTE( "uc_l0.rom", 0x000000, 0x040000, CRC(df9a4826) SHA1(298033d97b9587e3548cb3bffa16b7ba9a6ff20d) )
@@ -1731,7 +1730,7 @@ ROM_START( uccops )
 	ROM_LOAD( "uc_w42.rom", 0x000000, 0x080000, CRC(d17d3fd6) SHA1(b02da0d01c41c7bf50cd35d6c75bacc3e3e0b85a) )
 ROM_END
 
-ROM_START( uccopsu )
+ROM_START( uccopsu )	/* Undercover Cops (US) */
 	ROM_REGION( 0x100000, "maincpu", 0 )
 	ROM_LOAD16_BYTE( "uc_h0.rom",   0x000001, 0x040000, CRC(240aa5f7) SHA1(8d864bb1377e9f6d266631ed365c5809b9da33f8) )
 	ROM_LOAD16_BYTE( "uc_l0.rom",   0x000000, 0x040000, CRC(df9a4826) SHA1(298033d97b9587e3548cb3bffa16b7ba9a6ff20d) )
@@ -1769,7 +1768,7 @@ ROM_END
 	Nanao 08J27504A1
 	Nanao 08J27291A5  @ 14.31818MHz	*/
 
-ROM_START( uccopsar )				/* Alpha Renewal Version */
+ROM_START( uccopsar )	/* Undercover Cops (Alpha Renewal Version) */
 	ROM_REGION( 0x100000, "maincpu", 0 )
 	ROM_LOAD16_BYTE( "uc_h0_a.ic28", 0x000001, 0x040000, CRC(9e17cada) SHA1(086bb9c1ab851cab3734c2f9188d8ff3c5f98913) )
 	ROM_LOAD16_BYTE( "uc_l0_a.ic39", 0x000000, 0x040000, CRC(4a4e3208) SHA1(d61c74d46584e2c15e70f7a17b598e51981da9e8) )
@@ -1796,7 +1795,7 @@ ROM_START( uccopsar )				/* Alpha Renewal Version */
 	ROM_LOAD( "uc_da.bin", 0x000000, 0x080000, CRC(0b2855e9) SHA1(70f9decd78eab679a2ccad69e01cb303b61e0d38) )
 ROM_END
 
-ROM_START( uccopsj )
+ROM_START( uccopsj )	/* Undercover Cops (Japan) */
 	ROM_REGION( 0x100000, "maincpu", 0 )
 	ROM_LOAD16_BYTE( "uc_h0_a.ic28", 0x000001, 0x040000, CRC(9e17cada) SHA1(086bb9c1ab851cab3734c2f9188d8ff3c5f98913) )
 	ROM_LOAD16_BYTE( "uc_l0_a.ic39", 0x000000, 0x040000, CRC(4a4e3208) SHA1(d61c74d46584e2c15e70f7a17b598e51981da9e8) )
@@ -1823,7 +1822,7 @@ ROM_START( uccopsj )
 	ROM_LOAD( "uc_da.bin", 0x000000, 0x080000, CRC(0b2855e9) SHA1(70f9decd78eab679a2ccad69e01cb303b61e0d38) )
 ROM_END
 
-ROM_START( lethalth )
+ROM_START( lethalth )	/* Lethal Thunder (World) */
 	ROM_REGION( 0x100000, "maincpu", 0 )
 	ROM_LOAD16_BYTE( "lt_d-h0.rom", 0x000001, 0x020000, CRC(20c68935) SHA1(edbb5322082bde7136ab015931fdcd18e5c293a8) )
 	ROM_LOAD16_BYTE( "lt_d-l0.rom", 0x000000, 0x020000, CRC(e1432fb3) SHA1(4b6c22d740cd598d0e34e257910fe7c3d4f3fd32) )
@@ -1850,7 +1849,7 @@ ROM_START( lethalth )
 	ROM_LOAD( "lt_8a.rom", 0x000000, 0x040000, CRC(357762a2) SHA1(d13b2a0f5d48c0171bcef708589cad194a7ea1ed) )
 ROM_END
 
-ROM_START( thndblst )
+ROM_START( thndblst )	/* Thunder Blaster (Japan) */
 	ROM_REGION( 0x100000, "maincpu", 0 )
 	ROM_LOAD16_BYTE( "lt_d-h0j.rom", 0x000001, 0x020000, CRC(dc218a18) SHA1(f092245fd56ca75096c77ce6abf848454b905cfc) )
 	ROM_LOAD16_BYTE( "lt_d-l0j.rom", 0x000000, 0x020000, CRC(ae9a3f81) SHA1(c323073e2c245b3c52f93e07b98b0c2d4f4e97b1) )
@@ -1877,7 +1876,7 @@ ROM_START( thndblst )
 	ROM_LOAD( "lt_8a.rom", 0x000000, 0x040000, CRC(357762a2) SHA1(d13b2a0f5d48c0171bcef708589cad194a7ea1ed) )
 ROM_END
 
-ROM_START( nbbatman )
+ROM_START( nbbatman )	/* Ninja Baseball Batman (World) */
 	ROM_REGION( 0x180000, "maincpu", 0 )
 	ROM_LOAD16_BYTE( "6_h0.34",   0x000001, 0x040000, CRC(5c4a1e3f) SHA1(583f83ae789040b28b62af67218abfdc6ea74d25) )
 	ROM_LOAD16_BYTE( "3_l0.31",   0x000000, 0x040000, CRC(3d6d70ae) SHA1(6585d0e2367d9400d83be483d849d2390cae7d39) )
@@ -1904,7 +1903,7 @@ ROM_START( nbbatman )
 	ROM_LOAD( "lh534k0k.8", 0x000000, 0x080000, CRC(735e6380) SHA1(bf019815e579ef2393c00869f101a01f746e04d6) )
 ROM_END
 
-ROM_START( nbbatmanu )
+ROM_START( nbbatmanu )	/* Ninja Baseball Batman (US) */
 	ROM_REGION( 0x180000, "maincpu", 0 )
 	ROM_LOAD16_BYTE( "a1-h0-a.34", 0x000001, 0x040000, CRC(24a9b794) SHA1(a4867a89ea2749d60e6d1225bd84a488403b8cf3) )
 	ROM_LOAD16_BYTE( "a1-l0-a.31", 0x000000, 0x040000, CRC(846d7716) SHA1(28434fd74b168ef73d00779b3e5d8b36b1f3ef80) )
@@ -1931,7 +1930,7 @@ ROM_START( nbbatmanu )
 	ROM_LOAD( "lh534k0k.8", 0x000000, 0x080000, CRC(735e6380) SHA1(bf019815e579ef2393c00869f101a01f746e04d6) )
 ROM_END
 
-ROM_START( leaguemn )
+ROM_START( leaguemn )	/* Yakyuu Kakutou League-Man (Japan) */
 	ROM_REGION( 0x180000, "maincpu", 0 )
 	ROM_LOAD16_BYTE( "lma1-h0.34", 0x000001, 0x040000, CRC(47c54204) SHA1(59de4e9a75c88dba71aa1949e7ac2c4b9e98f413) )
 	ROM_LOAD16_BYTE( "lma1-l0.31", 0x000000, 0x040000, CRC(1d062c82) SHA1(8d5969dc0264a05334196132bc2b5a3a59fb9e3a) )
@@ -1958,7 +1957,7 @@ ROM_START( leaguemn )
 	ROM_LOAD( "lh534k0k.8", 0x000000, 0x080000, CRC(735e6380) SHA1(bf019815e579ef2393c00869f101a01f746e04d6) )
 ROM_END
 
-ROM_START( ssoldier )
+ROM_START( ssoldier )	/* Superior Soldiers (US) */
 	ROM_REGION( 0x100000, "maincpu", 0 )
 	ROM_LOAD16_BYTE( "f3-h0-h.bin", 0x000001, 0x040000, CRC(b63fb9da) SHA1(429beb7ebc98815809fdd0ff69fcb4a14e1d8a14) )
 	ROM_LOAD16_BYTE( "f3-l0-h.bin", 0x000000, 0x040000, CRC(419361a2) SHA1(42284a7afedefdb58a9b505e87effeee8bb5a9d8) )
@@ -1989,7 +1988,7 @@ ROM_START( ssoldier )
 	ROM_LOAD( "f3_w95.da", 0x000000, 0x080000, CRC(f7ca432b) SHA1(274458b68f906e6043bc36110a4903280647ac2d) )
 ROM_END
 
-ROM_START( psoldier )
+ROM_START( psoldier )	/* Perfect Soldiers (Japan) */
 	ROM_REGION( 0x100000, "maincpu", 0 )
 	ROM_LOAD16_BYTE( "f3_h0-d.bin", 0x000001, 0x040000, CRC(38f131fd) SHA1(0e513a5edfd8ab14440c360000a40b9d750cb54a) )
 	ROM_LOAD16_BYTE( "f3_l0-d.bin", 0x000000, 0x040000, CRC(1662969c) SHA1(8de1683076d7128ec16f1d053afb5e236add73e6) )
@@ -2020,7 +2019,7 @@ ROM_START( psoldier )
 	ROM_LOAD( "f3_w95.da", 0x000000, 0x080000, CRC(f7ca432b) SHA1(274458b68f906e6043bc36110a4903280647ac2d) )
 ROM_END
 
-ROM_START( gunforc2 )
+ROM_START( gunforc2 )	/* Gunforce 2 (US) */
 	ROM_REGION( 0x180000, "maincpu", 0 )
 	ROM_LOAD16_BYTE("a2-h0-a.6h", 0x000001, 0x040000, CRC(49965e22) SHA1(077283c66a4cc2c47221c5f3267f440223615a15) )
 	ROM_LOAD16_BYTE("a2-l0-a.8h", 0x000000, 0x040000, CRC(8c88b278) SHA1(0fd8e663619dcd8c81b3baa290bb0e72c185273a) )
@@ -2047,7 +2046,7 @@ ROM_START( gunforc2 )
 	ROM_LOAD("a2_da.1l",  0x000000, 0x100000, CRC(3c8cdb6a) SHA1(d1f4186e8ddf99698443f8ee1c60a6e6bc367b09) )
 ROM_END
 
-ROM_START( geostorm )
+ROM_START( geostorm )	/* Geostorm (Japan) */
 	ROM_REGION( 0x180000, "maincpu", 0 )
 	ROM_LOAD16_BYTE("geo-h0.bin", 0x000001, 0x040000, CRC(9be58d09) SHA1(ab98b91abc8129c342c59674eab9683cccc6ca35) )
 	ROM_LOAD16_BYTE("geo-l0.bin", 0x000000, 0x040000, CRC(59abb75d) SHA1(52b48685470ffa3f36a8259bf333448bf40caea9) )
@@ -2075,7 +2074,7 @@ ROM_START( geostorm )
 ROM_END
 
 /* this set matches the 'majtitl2' except for the soundcpu roms, which are for a different CPU */
-ROM_START( majtitl2a )				/* Major Title 2 (World, set 1, alt sound CPU) */
+ROM_START( majtitl2a )	/* Major Title 2 (World, set 1, alt sound CPU) */
 	ROM_REGION( 0x180000, "maincpu", 0 )	/* labels differ from 'majtitl2' (maybe the 'B' has faded, or was never there?) */
 	ROM_LOAD16_BYTE( "mt2-h0-.5m", 0x000001, 0x40000, CRC(b163b12e) SHA1(cdb01a5266bd11f4cff1cb5c05cf24de13a527b2) )
 	ROM_LOAD16_BYTE( "mt2-l0-.5f", 0x000000, 0x40000, CRC(6f3b5d9d) SHA1(a39f25f29195023fb507dc9ffbfcbd57a4e6b30a) )
@@ -2112,7 +2111,7 @@ ROM_START( majtitl2a )				/* Major Title 2 (World, set 1, alt sound CPU) */
 	ROM_LOAD( "pal16l8-m92-b-7h.ic47", 0x0800, 0x0104, NO_DUMP ) /* PAL is read protected */
 ROM_END
 
-ROM_START( majtitl2b )				/* Major Title 2 (World, set 2) */
+ROM_START( majtitl2b )	/* Major Title 2 (World, set 2) */
 	ROM_REGION( 0x180000, "maincpu", 0 )
 	ROM_LOAD16_BYTE( "mt2-h0-e.ic34", 0x000001, 0x40000, VERIFY_OFF )
 	ROM_LOAD16_BYTE( "mt2-l0-e.ic31", 0x000000, 0x40000, VERIFY_OFF )
@@ -2149,7 +2148,7 @@ ROM_START( majtitl2b )				/* Major Title 2 (World, set 2) */
 	ROM_LOAD( "pal16l8-m92-b-7h.ic47", 0x0800, 0x0104, NO_DUMP )
 ROM_END
 
-ROM_START( dsoccr94j )
+ROM_START( dsoccr94j )	/* Dream Soccer'94 (Japan, M92 Hardware) */
 	ROM_REGION( 0x180000, "maincpu", 0 )
 	ROM_LOAD16_BYTE("a3_-h0-e.bin", 0x000001, 0x040000, CRC(8de1dbcd) SHA1(3726c7f8bc1e61a488ab7ef0b79a7a45054235c2) )
 	ROM_LOAD16_BYTE("a3_-l0-e.bin", 0x000000, 0x040000, CRC(d3df8bfd) SHA1(b98064579491aef8eb8ccb94195412e79674a0c1) )
