@@ -8,7 +8,7 @@ static INT32 iptdev_get_state(void *device_internal, void *item_internal)
    	return *itemdata;
 }
 
-kt_table ktable[] = {
+const kt_table ktable[] = {
 	{"A",        RETROK_a,           ITEM_ID_A},
 /*   	{"B",        RETROK_b,           ITEM_ID_B}, */
    	{"C",        RETROK_c,           ITEM_ID_C},

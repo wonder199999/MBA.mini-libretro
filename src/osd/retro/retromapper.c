@@ -264,11 +264,11 @@ static void init_input_descriptors(void)
 void retro_get_system_info(struct retro_system_info *info)
 {
 	memset(info, 0, sizeof(*info));
-   	info->library_name = "Mame2010 mini";
+   	info->library_name = "M.B.A Lite";
 #ifndef GIT_VERSION
 	#define GIT_VERSION ""
 #endif
-   	info->library_version = GIT_VERSION " (Based by 0.139 romset)";
+   	info->library_version = GIT_VERSION " (M.B.A = MAME's skeleton + FBA's romsets)";
    	info->valid_extensions = "zip|chd|7z";
    	info->need_fullpath = true;
    	info->block_extract = true;
