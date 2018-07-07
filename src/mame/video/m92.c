@@ -326,8 +326,6 @@ static void draw_sprites(running_machine *machine, bitmap_t *bitmap, const recta
 {
 	m92_state *state = (m92_state *)machine->driver_data;
 
-	if (state->video_control & 0x0080) return;
-
 	UINT16 *source = machine->generic.buffered_spriteram.u16;
 	UINT32 sprite, s_ptr, color, pri_back, pri_sprite;
 	INT32 x, y, fx, fy, x_multi, y_multi;
@@ -520,8 +518,6 @@ static void m92_update_scroll_positions(running_machine *machine)
 static void m92_draw_tiles(running_machine *machine, bitmap_t *bitmap, const rectangle *cliprect)
 {
 	m92_state *state = (m92_state *)machine->driver_data;
-
-	if (state->video_control & 0x8000) return;
 
 	if ( (~state->pf_master_control[2] >> 4) & 0x01 )
 	{
