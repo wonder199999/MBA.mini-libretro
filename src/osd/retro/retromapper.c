@@ -264,7 +264,7 @@ static void init_input_descriptors(void)
 void retro_get_system_info(struct retro_system_info *info)
 {
 	memset(info, 0, sizeof(*info));
-   	info->library_name = "M.B.A Lite";
+   	info->library_name = "M.B.A mini";
 #ifndef GIT_VERSION
 	#define GIT_VERSION ""
 #endif
