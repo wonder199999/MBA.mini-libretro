@@ -1,6 +1,7 @@
-	M.B.A lite (M.B.A = MAME's skeleton + FBA's romsets)
 
-M.B.A-lite from MAME2010-libretro (https://github.com/libretro/mame2010-libretro)
+	M.B.A-mini (M.B.A = MAME's skeleton + FBA's romsets)
+
+M.B.A-mini from MAME2010-libretro (https://github.com/libretro/mame2010-libretro)
 After the codes is streamlined, only CPS 1/2,NEOGEO,IREM M92 roms is supported.
 
 Build for android:
@@ -21,7 +22,7 @@ JOYPAD Controls are:
 	RETRO_DEVICE_ID_JOYPAD_B		[KEY_BUTTON_2]
 	RETRO_DEVICE_ID_JOYPAD_X		[KEY_BUTTON_3]
 	RETRO_DEVICE_ID_JOYPAD_Y		[KEY_BUTTON_4]
-	RETRO_DEVICE_ID_JOYPAD_L 		[KEY_BUTTON_5]
+	RETRO_DEVICE_ID_JOYPAD_L		[KEY_BUTTON_5]
 	RETRO_DEVICE_ID_JOYPAD_R		[KEY_BUTTON_6]
 	RETRO_DEVICE_ID_JOYPAD_UP		[KEY_JOYSTICK_U]
 	RETRO_DEVICE_ID_JOYPAD_DOWN		[KEY_JOYSTICK_D]
@@ -36,10 +37,8 @@ JOYPAD Controls are:
 Compatibility-list:  - Parent roms with the "*"
 /* ------------------------------------------------------ */
 /*			EXAMPLE:			  */
-/*							  */
 /* Parent name: Title name (year.month.day) - Note: 	  */
 /*	Clone name: Title name (year.month.day) - Note:	  */
-/*							  */
 /* ------------------------------------------------------ */
 
 
@@ -47,17 +46,16 @@ Support the following:
 / ******************** /
 / *  Capcom System 1 * /
 / ******************** /
-
+	TODO:
 
 / ********************************************************** /
 / *  Capcom System 2 (304 parent+clone roms are supported) * /
 / ********************************************************** /
-
 *1944: 1944 - the loop master (000620 USA)
 	1944ad (clone of 1944): 1944 - the loop master (000620 USA Phoenix Edition, alt)
 	1944d (clone of 1944): 1944 - the loop master (000620 USA Phoenix Edition)
 	1944j (clone of 1944): 1944 - the loop master (000620 Japan)
-
+	
 *19xx: 19XX - the war against destiny (951207 USA)
 	19xxa (clone of 19xx): 19XX - the war against destiny (960104 Asia)
 	19xxar1 (clone of 19xx): 19XX - the war against destiny (951207 Asia)
@@ -402,7 +400,6 @@ Support the following:
 / ***************************************************** /
 / *    IREM M92 (37 parent+clone roms are supported)  * /
 / ***************************************************** /
-
 *bmaster: Blade Master (World)
 	crossbld (clone of bmaster): Cross Blades! (Japan)
 
@@ -422,7 +419,7 @@ Support the following:
 
 *inthunt: In The Hunt (World)
 	inthuntu (clone of inthunt): In The Hunt (US)
-	kaiteids (clone of inthunt): Kaitei Daisensou (Japan) ◦ 睭镞❙♢襎
+	kaiteids (clone of inthunt): Kaitei Daisensou (Japan)
 
 *lethalth: Lethal Thunder (World)
 	thndblst (clone of lethalth): Thunder Blaster (Japan)
@@ -453,7 +450,8 @@ Support the following:
 	uccopsj (clone of uccops): Undercover Cops (Japan)
 	uccopsu (clone of uccops): Undercover Cops (US)
 
-
 / ******************** /
 / *     NEO GEO      * /
 / ******************** /
+	TODO:
+
