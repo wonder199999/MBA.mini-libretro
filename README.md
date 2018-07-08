@@ -18,39 +18,38 @@ Build for pc linux/win:
 JOYPAD Controls are: 
 	RETRO_DEVICE_ID_JOYPAD_START		[KEY_START]
 	RETRO_DEVICE_ID_JOYPAD_SELECT		[KEY_COIN]
-	RETRO_DEVICE_ID_JOYPAD_A		[KEY_BUTTON_1]
-	RETRO_DEVICE_ID_JOYPAD_B		[KEY_BUTTON_2]
-	RETRO_DEVICE_ID_JOYPAD_X		[KEY_BUTTON_3]
-	RETRO_DEVICE_ID_JOYPAD_Y		[KEY_BUTTON_4]
-	RETRO_DEVICE_ID_JOYPAD_L		[KEY_BUTTON_5]
-	RETRO_DEVICE_ID_JOYPAD_R		[KEY_BUTTON_6]
+	RETRO_DEVICE_ID_JOYPAD_A			[KEY_BUTTON_1]
+	RETRO_DEVICE_ID_JOYPAD_B			[KEY_BUTTON_2]
+	RETRO_DEVICE_ID_JOYPAD_X			[KEY_BUTTON_3]
+	RETRO_DEVICE_ID_JOYPAD_Y			[KEY_BUTTON_4]
+	RETRO_DEVICE_ID_JOYPAD_L			[KEY_BUTTON_5]
+	RETRO_DEVICE_ID_JOYPAD_R			[KEY_BUTTON_6]
 	RETRO_DEVICE_ID_JOYPAD_UP		[KEY_JOYSTICK_U]
 	RETRO_DEVICE_ID_JOYPAD_DOWN		[KEY_JOYSTICK_D]
 	RETRO_DEVICE_ID_JOYPAD_LEFT		[KEY_JOYSTICK_L]
 	RETRO_DEVICE_ID_JOYPAD_RIGHT		[KEY_JOYSTICK_R]
 
-        tips: P1 L2 to show MAMEUI
-              P1 R3 to show framerate
-              P1 L3 to access Service Mode
+        tips:  P1 L2 to show MAMEUI
+                 P1 R3 to show framerate
+                 P1 L3 to access Service Mode
 
 
 Compatibility-list:  - Parent roms with the "*"
-/* ------------------------------------------------------ */
-/*			EXAMPLE:			  */
-/* Parent name: Title name (year.month.day) - Note: 	  */
-/*	Clone name: Title name (year.month.day) - Note:	  */
-/* ------------------------------------------------------ */
-
+/* ------------------------------------------------------------------- */
+/*		EXAMPLE:			                */
+/* Parent name: Title name (year.month.day) - Note:                 */
+/*	Clone name: Title name (year.month.day) - Note:    */
+/* ------------------------------------------------------------------- */
 
 Support the following: 
-/ ******************** /
+/***********************/
 / *  Capcom System 1 * /
-/ ******************** /
+/*********** ***********/
 	TODO:
 
-/ ********************************************************** /
-/ *  Capcom System 2 (304 parent+clone roms are supported) * /
-/ ********************************************************** /
+/ ************************************************************** /
+/ *  Capcom System 2 (304 parent+clone roms are supported)   */
+/ ************************************************************** /
 *1944: 1944 - the loop master (000620 USA)
 	1944ad (clone of 1944): 1944 - the loop master (000620 USA Phoenix Edition, alt)
 	1944d (clone of 1944): 1944 - the loop master (000620 USA Phoenix Edition)
@@ -397,9 +396,9 @@ Support the following:
 	xmvsfur1 (clone of xmvsf): X-Men vs Street Fighter (961004 USA)
 	xmvsfur2 (clone of xmvsf): X-Men vs Street Fighter (960910 USA)
 
-/ ***************************************************** /
-/ *    IREM M92 (37 parent+clone roms are supported)  * /
-/ ***************************************************** /
+/ ****************************************************** /
+/ *    IREM M92 (37 parent+clone roms are supported) * /
+/ ****************************************************** /
 *bmaster: Blade Master (World)
 	crossbld (clone of bmaster): Cross Blades! (Japan)
 
@@ -450,8 +449,7 @@ Support the following:
 	uccopsj (clone of uccops): Undercover Cops (Japan)
 	uccopsu (clone of uccops): Undercover Cops (US)
 
-/ ******************** /
-/ *     NEO GEO      * /
-/ ******************** /
+/*********************/
+/ *       NEO GEO       * /
+/ ********************/
 	TODO:
-
