@@ -16,8 +16,8 @@ MDEBUG = 0
 # ----------------------------------------------------
 # Set the BIOS used by NEOGEO
 # NEOGEO_BIOS = 1 - Use Universe BIOS ver. 1.x ,
-# NEOGEO_BIOS = 2 - use Universe BIOS ver. 2.x , (default) (compatible with mame 0.139 romset)
-# NEOGEO_BIOS = 3 - use Universe BIOS ver. 3.x , (compatible with fbalpha 02.97.38 romset)
+# NEOGEO_BIOS = 2 - use Universe BIOS ver. 2.x , (default)
+# NEOGEO_BIOS = 3 - use Universe BIOS ver. 3.x
 # NEOGEO_BIOS = 4 - use MVS Europe ver. 2 ,
 # NEOGEO_BIOS = 5 - use MVS Asia/Europe ver. 3 ,
 # NEOGEO_BIOS = 6 - use MVS US ver. 2? ,
@@ -102,7 +102,7 @@ BUILD_ZLIB = 0
 # uncomment next line to build PortMidi as part of MAME/MESS build
 BUILD_MIDILIB = 0
 
-TARGET_NAME := mame2010_mini
+TARGET_NAME := mba_mini
 fpic := 
 EXE = 
 LIBS = 

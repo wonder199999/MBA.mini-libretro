@@ -49,24 +49,24 @@
 #ifndef __EMU_H__
 #define __EMU_H__
 
-// core emulator headers -- must be first
+/* core emulator headers -- must be first */
 #include "emucore.h"
 #include "eminline.h"
 
-// commonly-referenecd utilities imported from lib/util
+/* commonly-referenecd utilities imported from lib/util */
 #include "chd.h"
 #include "palette.h"
 #include "unicode.h"
 
-// emulator-specific utilities
+/* emulator-specific utilities */
 #include "attotime.h"
-#include "fileio.h" // remove me once NVRAM is implemented as device
+#include "fileio.h"	/* remove me once NVRAM is implemented as device */
 #include "tokenize.h"
 
-// memory and address spaces
-#include "mmry.h"
+/* memory and address spaces */
+#include "memory.h"
 
-// devices and callbacks
+/* devices and callbacks */
 #include "devintrf.h"
 #include "devcb.h"
 #include "distate.h"
@@ -80,47 +80,47 @@
 #include "timer.h"
 #include "schedule.h"
 
-// I/O
+/* I/O */
 #include "input.h"
 #include "inputseq.h"
 #include "inptport.h"
 #include "output.h"
 
-// timers, CPU and scheduling
+/* timers, CPU and scheduling */
 #include "devcpu.h"
 #include "watchdog.h"
 
-// machine and driver configuration
+/* machine and driver configuration */
 #include "mconfig.h"
 #include "driver.h"
 
-// machine-wide utilities
+/* machine-wide utilities */
 #include "romload.h"
 #include "state.h"
 
-// image-related
+/* image-related */
 #include "softlist.h"
 #include "image.h"
 
-// the running machine
+/* the running machine */
 #ifdef MESS
 	#include "mess.h"
-#endif /* MESS */
+#endif	/* MESS */
 
 #include "machine.h"
 #include "mame.h"
 
-// video-related
+/* video-related */
 #include "drawgfx.h"
 #include "tilemap.h"
 #include "emupal.h"
 #include "video.h"
 
-// sound-related
+/* sound-related */
 #include "streams.h"
 #include "sound.h"
 
-// generic helpers
+/* generic helpers */
 #include "drivers/xtal.h"
 #include "audio/generic.h"
 #include "machine/generic.h"
