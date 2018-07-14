@@ -41,9 +41,9 @@
 #include "devlegcy.h"
 
 
-//**************************************************************************
+/**************************************************************************/
 //  LEGACY DEVICE CONFIGURATION
-//**************************************************************************
+/**************************************************************************/
 
 //-------------------------------------------------
 //  legacy_device_config_base - constructor
@@ -54,12 +54,12 @@ legacy_device_config_base::legacy_device_config_base(const machine_config &mconf
 	  m_get_config_func(get_config),
 	  m_inline_config(NULL)
 {
-	// allocate a buffer for the inline configuration
+	/* allocate a buffer for the inline configuration */
 	UINT32 configlen = (UINT32)get_legacy_config_int(DEVINFO_INT_INLINE_CONFIG_BYTES);
 	if (configlen != 0)
 		m_inline_config = global_alloc_array_clear(UINT8, configlen);
 
-	// set the proper name
+	/* set the proper name */
 	m_name = get_legacy_config_string(DEVINFO_STR_NAME);
 }
 
@@ -142,9 +142,9 @@ bool legacy_device_config_base::device_validity_check(const game_driver &driver)
 
 
 
-//**************************************************************************
+/**************************************************************************/
 //  LIVE LEGACY DEVICE
-//**************************************************************************
+/**************************************************************************/
 
 //-------------------------------------------------
 //  legacy_device_base - constructor
@@ -200,10 +200,9 @@ void legacy_device_base::device_reset()
 }
 
 
-
-//**************************************************************************
+/**************************************************************************/
 //  LEGACY SOUND DEVICE CONFIGURATION
-//**************************************************************************
+/**************************************************************************/
 
 //-------------------------------------------------
 //  legacy_sound_device_config_base - constructor
@@ -216,10 +215,9 @@ legacy_sound_device_config_base::legacy_sound_device_config_base(const machine_c
 }
 
 
-
-//**************************************************************************
+/**************************************************************************/
 //  LIVE LEGACY SOUND DEVICE
-//**************************************************************************
+/**************************************************************************/
 
 //-------------------------------------------------
 //  legacy_sound_device_base - constructor
@@ -232,10 +230,9 @@ legacy_sound_device_base::legacy_sound_device_base(running_machine &machine, con
 }
 
 
-
-//**************************************************************************
+/**************************************************************************/
 //  LEGACY MEMORY DEVICE CONFIGURATION
-//**************************************************************************
+/**************************************************************************/
 
 //-------------------------------------------------
 //  legacy_memory_device_config_base - constructor
@@ -263,15 +260,14 @@ void legacy_memory_device_config_base::device_config_complete()
 	m_space_config.m_addrbus_shift = get_legacy_config_int(DEVINFO_INT_ADDRBUS_SHIFT);
 	m_space_config.m_logaddr_width = m_space_config.m_addrbus_width;
 	m_space_config.m_page_shift = 0;
-	m_space_config.m_internal_map = reinterpret_cast<const addrmap_token *>(get_legacy_config_ptr(DEVINFO_PTR_INTERNAL_MEMORY_MAP));
-	m_space_config.m_default_map = reinterpret_cast<const addrmap_token *>(get_legacy_config_ptr(DEVINFO_PTR_DEFAULT_MEMORY_MAP));
+	m_space_config.m_internal_map = reinterpret_cast<address_map_constructor>(get_legacy_config_fct(DEVINFO_PTR_INTERNAL_MEMORY_MAP));
+	m_space_config.m_default_map = reinterpret_cast<address_map_constructor>(get_legacy_config_fct(DEVINFO_PTR_DEFAULT_MEMORY_MAP));
 }
 
 
-
-//**************************************************************************
+/**************************************************************************/
 //  LIVE LEGACY MEMORY DEVICE
-//**************************************************************************
+/**************************************************************************/
 
 //-------------------------------------------------
 //  legacy_memory_device_base - constructor
@@ -284,10 +280,9 @@ legacy_memory_device_base::legacy_memory_device_base(running_machine &machine, c
 }
 
 
-
-//**************************************************************************
+/**************************************************************************/
 //  LEGACY NVRAM DEVICE CONFIGURATION
-//**************************************************************************
+/**************************************************************************/
 
 //-------------------------------------------------
 //  legacy_nvram_device_config_base - constructor
@@ -300,10 +295,9 @@ legacy_nvram_device_config_base::legacy_nvram_device_config_base(const machine_c
 }
 
 
-
-//**************************************************************************
+/**************************************************************************/
 //  LIVE LEGACY NVRAM DEVICE
-//**************************************************************************
+/**************************************************************************/
 
 //-------------------------------------------------
 //  legacy_nvram_device_base - constructor
