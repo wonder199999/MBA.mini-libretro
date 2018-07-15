@@ -1436,7 +1436,7 @@ static void cps1_build_palette(running_machine *machine, const UINT16* const pal
 
 static MACHINE_RESET( cps )
 {
-	cps_state *state = (cps_state *)machine->driver_data;
+	cps_state *state = machine->driver_data<cps_state>();
 	const char *gamename = machine->gamedrv->name;
 	const struct CPS1config *pCFG = &cps1_config_table[0];
 
@@ -1480,7 +1480,7 @@ static MACHINE_RESET( cps )
 
 INLINE UINT16 *cps1_base( running_machine *machine, int offset, int boundary )
 {
-	cps_state *state = (cps_state *)machine->driver_data;
+	cps_state *state = machine->driver_data<cps_state>();
 	int base = state->cps_a_regs[offset] * 256;
 
 /*	The scroll RAM must start on a 0x4000 boundary.
@@ -1497,7 +1497,7 @@ INLINE UINT16 *cps1_base( running_machine *machine, int offset, int boundary )
 
 WRITE16_HANDLER( cps1_cps_a_w )
 {
-	cps_state *state = (cps_state *)space->machine->driver_data;
+	cps_state *state = space->machine->driver_data<cps_state>();
 	data = COMBINE_DATA(&state->cps_a_regs[offset]);
 
 /*	The main CPU writes the palette to gfxram, and the CPS-B custom copies it
@@ -1518,7 +1518,7 @@ WRITE16_HANDLER( cps1_cps_a_w )
 
 READ16_HANDLER( cps1_cps_b_r )
 {
-	cps_state *state = (cps_state *)space->machine->driver_data;
+	cps_state *state = space->machine->driver_data<cps_state>();
 
 	/* Some games interrogate a couple of registers on bootup. */
 	/* These are CPS1 board B self test checks. They wander from game to game. */
@@ -1560,7 +1560,7 @@ READ16_HANDLER( cps1_cps_b_r )
 
 WRITE16_HANDLER( cps1_cps_b_w )
 {
-	cps_state *state = (cps_state *)space->machine->driver_data;
+	cps_state *state = space->machine->driver_data<cps_state>();
 	data = COMBINE_DATA(&state->cps_b_regs[offset]);
 
 	if (state->cps_version == 2)
@@ -1607,7 +1607,7 @@ WRITE16_HANDLER( cps1_cps_b_w )
 
 INLINE int cps2_port( running_machine *machine, int offset )
 {
-	cps_state *state = (cps_state *)machine->driver_data;
+	cps_state *state = machine->driver_data<cps_state>();
 	return state->output[offset / 2];
 }
 
@@ -1680,7 +1680,7 @@ static void cps2_gfx_decode( running_machine *machine )
 
 DRIVER_INIT( cps1 )
 {
-	cps_state *state = (cps_state *)machine->driver_data;
+	cps_state *state = machine->driver_data<cps_state>();
 
 	cps1_gfx_decode(machine);
 
@@ -1695,7 +1695,7 @@ DRIVER_INIT( cps1 )
 
 DRIVER_INIT( cps2_video )
 {
-	cps_state *state = (cps_state *)machine->driver_data;
+	cps_state *state = machine->driver_data<cps_state>();
 
 	cps2_gfx_decode(machine);
 
@@ -1711,7 +1711,7 @@ DRIVER_INIT( cps2_video )
 
 void cps1_get_video_base( running_machine *machine )
 {
-	cps_state *state = (cps_state *)machine->driver_data;
+	cps_state *state = machine->driver_data<cps_state>();
 	INT32 layercontrol, videocontrol, scroll1xoff, scroll2xoff, scroll3xoff;
 
 	/* Re-calculate the VIDEO RAM base */
@@ -1814,7 +1814,7 @@ void cps1_get_video_base( running_machine *machine )
 
 WRITE16_HANDLER( cps1_gfxram_w )
 {
-	cps_state *state = (cps_state *)space->machine->driver_data;
+	cps_state *state = space->machine->driver_data<cps_state>();
 
 	int page = (offset >> 7) & 0x03c0;
 	COMBINE_DATA(&state->gfxram[offset]);
@@ -1833,7 +1833,7 @@ WRITE16_HANDLER( cps1_gfxram_w )
 
 static int gfxrom_bank_mapper( running_machine *machine, int type, int code )
 {
-	cps_state *state = (cps_state *)machine->driver_data;
+	cps_state *state = machine->driver_data<cps_state>();
 
 	const struct gfx_range *range = state->game_config->bank_mapper;
 	int shift = 0;
@@ -1897,7 +1897,7 @@ static TILEMAP_MAPPER( tilemap2_scan )
 
 static TILE_GET_INFO( get_tile0_info )
 {
-	cps_state *state = (cps_state *)machine->driver_data;
+	cps_state *state = machine->driver_data<cps_state>();
 	int code = state->scroll1[2 * tile_index];
 	int attr = state->scroll1[2 * tile_index + 1];
 	int gfxset;
@@ -1921,7 +1921,7 @@ static TILE_GET_INFO( get_tile0_info )
 
 static TILE_GET_INFO( get_tile1_info )
 {
-	cps_state *state = (cps_state *)machine->driver_data;
+	cps_state *state = machine->driver_data<cps_state>();
 	int code = state->scroll2[2 * tile_index];
 	int attr = state->scroll2[2 * tile_index + 1];
 
@@ -1938,7 +1938,7 @@ static TILE_GET_INFO( get_tile1_info )
 
 static TILE_GET_INFO( get_tile2_info )
 {
-	cps_state *state = (cps_state *)machine->driver_data;
+	cps_state *state = machine->driver_data<cps_state>();
 	int code = state->scroll3[2 * tile_index] & 0x3fff;
 	int attr = state->scroll3[2 * tile_index + 1];
 
@@ -1957,7 +1957,7 @@ static TILE_GET_INFO( get_tile2_info )
 
 static void cps1_update_transmasks( running_machine *machine )
 {
-	cps_state *state = (cps_state *)machine->driver_data;
+	cps_state *state = machine->driver_data<cps_state>();
 
 	for (UINT32 i = 0; i < 4; i++)
 	{
@@ -1977,7 +1977,7 @@ static STATE_POSTLOAD( cps_postload )
 
 static VIDEO_START( cps )
 {
-	cps_state *state = (cps_state *)machine->driver_data;
+	cps_state *state = machine->driver_data<cps_state>();
 
 	MACHINE_RESET_CALL(cps);
 
@@ -2059,7 +2059,7 @@ static VIDEO_START( cps )
 
 VIDEO_START( cps1 )
 {
-	cps_state *state = (cps_state *)machine->driver_data;
+	cps_state *state = machine->driver_data<cps_state>();
 
 	state->cps_version = 1;
 	VIDEO_START_CALL(cps);
@@ -2067,7 +2067,7 @@ VIDEO_START( cps1 )
 
 VIDEO_START( cps2 )
 {
-	cps_state *state = (cps_state *)machine->driver_data;
+	cps_state *state = machine->driver_data<cps_state>();
 
 	state->cps_version = 2;
 	VIDEO_START_CALL(cps);
@@ -2083,7 +2083,7 @@ VIDEO_START( cps2 )
 
 static void cps1_build_palette( running_machine *machine, const UINT16* const palette_base )
 {
-	cps_state *state = (cps_state *)machine->driver_data;
+	cps_state *state = machine->driver_data<cps_state>();
 	const UINT16 *palette_ram = palette_base;
 	INT32 ctrl = state->cps_b_regs[state->game_config->palette_control / 2];
 
@@ -2159,7 +2159,7 @@ static void cps1_build_palette( running_machine *machine, const UINT16* const pa
 
 static void cps1_find_last_sprite( running_machine *machine )		/* Find the offset of last sprite */
 {
-	cps_state *state = (cps_state *)machine->driver_data;
+	cps_state *state = machine->driver_data<cps_state>();
 
 	INT32 offset, size = state->obj_size / 2;
 
@@ -2194,7 +2194,7 @@ static void cps1_find_last_sprite( running_machine *machine )		/* Find the offse
 
 static void cps1_render_sprites( running_machine *machine, bitmap_t *bitmap, const rectangle *cliprect )
 {
-	cps_state *state = (cps_state *)machine->driver_data;
+	cps_state *state = machine->driver_data<cps_state>();
 
 #define DRAWSPRITE( CODE, COLOR, FLIPX, FLIPY, SX, SY )							 \
 {													 \
@@ -2287,14 +2287,14 @@ WRITE16_HANDLER( cps2_objram_bank_w )
 {
 	if (ACCESSING_BITS_0_7)
 	{
-		cps_state *state = (cps_state *)space->machine->driver_data;
+		cps_state *state = space->machine->driver_data<cps_state>();
 		state->objram_bank = data & 1;
 	}
 }
 
 READ16_HANDLER( cps2_objram1_r )
 {
-	cps_state *state = (cps_state *)space->machine->driver_data;
+	cps_state *state = space->machine->driver_data<cps_state>();
 
 	if (state->objram_bank & 1)
 		return state->objram2[offset];
@@ -2304,7 +2304,7 @@ READ16_HANDLER( cps2_objram1_r )
 
 READ16_HANDLER( cps2_objram2_r )
 {
-	cps_state *state = (cps_state *)space->machine->driver_data;
+	cps_state *state = space->machine->driver_data<cps_state>();
 
 	if (state->objram_bank & 1)
 		return state->objram1[offset];
@@ -2314,7 +2314,7 @@ READ16_HANDLER( cps2_objram2_r )
 
 WRITE16_HANDLER( cps2_objram1_w )
 {
-	cps_state *state = (cps_state *)space->machine->driver_data;
+	cps_state *state = space->machine->driver_data<cps_state>();
 
 	if (state->objram_bank & 1)
 		COMBINE_DATA(&state->objram2[offset]);
@@ -2324,7 +2324,7 @@ WRITE16_HANDLER( cps2_objram1_w )
 
 WRITE16_HANDLER( cps2_objram2_w )
 {
-	cps_state *state = (cps_state *)space->machine->driver_data;
+	cps_state *state = space->machine->driver_data<cps_state>();
 
 	if (state->objram_bank & 1)
 		COMBINE_DATA(&state->objram1[offset]);
@@ -2334,7 +2334,7 @@ WRITE16_HANDLER( cps2_objram2_w )
 
 static UINT16 *cps2_objbase( running_machine *machine )
 {
-	cps_state *state = (cps_state *)machine->driver_data;
+	cps_state *state = machine->driver_data<cps_state>();
 	int baseptr = 0x7000;
 
 	if (state->objram_bank & 0x01)
@@ -2349,7 +2349,7 @@ static UINT16 *cps2_objbase( running_machine *machine )
 
 static void cps2_find_last_sprite( running_machine *machine )		/* Find the offset of last sprite */
 {
-	cps_state *state = (cps_state *)machine->driver_data;
+	cps_state *state = machine->driver_data<cps_state>();
 	UINT16 *base = state->cps2_buffered_obj;
 	INT32 size = state->cps2_obj_size / 2;
 
@@ -2367,7 +2367,7 @@ static void cps2_find_last_sprite( running_machine *machine )		/* Find the offse
 
 static void cps2_render_sprites( running_machine *machine, bitmap_t *bitmap, const rectangle *cliprect, int *primasks )
 {
-	cps_state *state = (cps_state *)machine->driver_data;
+	cps_state *state = machine->driver_data<cps_state>();
 
 #define DRAWSPRITE(CODE, COLOR, FLIPX, FLIPY, SX, SY)									\
 {															\
@@ -2453,7 +2453,7 @@ static void cps2_render_sprites( running_machine *machine, bitmap_t *bitmap, con
 
 static void cps1_render_stars( screen_device *screen, bitmap_t *bitmap, const rectangle *cliprect )
 {
-	cps_state *state = (cps_state *)screen->machine->driver_data;
+	cps_state *state = screen->machine->driver_data<cps_state>();
 	UINT8 *stars_rom = memory_region(screen->machine, "stars");
 
 	if (!stars_rom && (state->stars_enabled[0] || state->stars_enabled[1])) return;
@@ -2512,7 +2512,7 @@ static void cps1_render_stars( screen_device *screen, bitmap_t *bitmap, const re
 
 static void cps1_render_layer( running_machine *machine, bitmap_t *bitmap, const rectangle *cliprect, int layer, int primask )
 {
-	cps_state *state = (cps_state *)machine->driver_data;
+	cps_state *state = machine->driver_data<cps_state>();
 
 	switch (layer)
 	{
@@ -2525,7 +2525,7 @@ static void cps1_render_layer( running_machine *machine, bitmap_t *bitmap, const
 
 static void cps1_render_high_layer( running_machine *machine, bitmap_t *bitmap, const rectangle *cliprect, int layer )
 {
-	cps_state *state = (cps_state *)machine->driver_data;
+	cps_state *state = machine->driver_data<cps_state>();
 
 	switch (layer)
 	{
@@ -2545,7 +2545,7 @@ static void cps1_render_high_layer( running_machine *machine, bitmap_t *bitmap, 
 
 VIDEO_UPDATE( cps1 )
 {
-	cps_state *state = (cps_state *)screen->machine->driver_data;
+	cps_state *state = screen->machine->driver_data<cps_state>();
 
 	INT32 videocontrol = state->cps_a_regs[CPS1_VIDEOCONTROL];
 	flip_screen_set(screen->machine, videocontrol & 0x8000);
@@ -2677,7 +2677,7 @@ VIDEO_UPDATE( cps1 )
 
 VIDEO_EOF( cps1 )
 {
-	cps_state *state = (cps_state *)machine->driver_data;
+	cps_state *state = machine->driver_data<cps_state>();
 	cps1_get_video_base(machine);		/* Get video memory base registers */
 
 	if (state->cps_version == 1)		/* CPS1 sprites have to be delayed one frame */
@@ -2686,13 +2686,13 @@ VIDEO_EOF( cps1 )
 
 void cps2_set_sprite_priorities( running_machine *machine )
 {
-	cps_state *state = (cps_state *)machine->driver_data;
+	cps_state *state = machine->driver_data<cps_state>();
 	state->pri_ctrl = cps2_port(machine, CPS2_OBJ_PRI);
 }
 
 void cps2_objram_latch( running_machine *machine )
 {
-	cps_state *state = (cps_state *)machine->driver_data;
+	cps_state *state = machine->driver_data<cps_state>();
 	cps2_set_sprite_priorities(machine);
 	memcpy(state->cps2_buffered_obj, cps2_objbase(machine), state->cps2_obj_size);
 }

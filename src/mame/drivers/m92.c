@@ -213,7 +213,7 @@ psoldier dip locations still need veritication.
 
 static void set_m92_bank(running_machine *machine)
 {
-	m92_state *state = (m92_state *)machine->driver_data;
+	m92_state *state = machine->driver_data<m92_state>();
 
 	UINT8 *ROM = memory_region(machine, "maincpu");
 	memory_set_bankptr(machine, "bank1", &ROM[state->bank_address]);
@@ -226,7 +226,7 @@ static STATE_POSTLOAD( m92_postload )
 
 static MACHINE_START( m92 )
 {
-	m92_state *state = (m92_state *)machine->driver_data;
+	m92_state *state = machine->driver_data<m92_state>();
 
 	state->nec_maincpu = machine->device("maincpu");
 	state->nec_sndcpu = machine->device("soundcpu");
@@ -239,7 +239,7 @@ static MACHINE_START( m92 )
 
 static MACHINE_RESET( m92 )
 {
-	m92_state *state = (m92_state *)machine->driver_data;
+	m92_state *state = machine->driver_data<m92_state>();
 	state->sprite_buffer_busy = 1;
 }
 
@@ -247,7 +247,7 @@ static MACHINE_RESET( m92 )
 
 static TIMER_DEVICE_CALLBACK( m92_scanline_interrupt )
 {
-	m92_state *state = (m92_state *)timer.machine->driver_data;
+	m92_state *state = timer.machine->driver_data<m92_state>();
 
 	/* raster interrupt */
 	if (param == state->raster_irq_position)
@@ -296,7 +296,7 @@ static WRITE16_HANDLER( m92_bankswitch_w )
 {
 	if (ACCESSING_BITS_0_7)
 	{
-		m92_state *state = (m92_state *)space->machine->driver_data;
+		m92_state *state = space->machine->driver_data<m92_state>();
 		state->bank_address = 0x100000 + ((data & 0x07) * 0x10000);
 		set_m92_bank(space->machine);
 	}
@@ -304,13 +304,13 @@ static WRITE16_HANDLER( m92_bankswitch_w )
 
 static CUSTOM_INPUT( m92_sprite_busy_r )
 {
-	m92_state *state = (m92_state *)field->port->machine->driver_data;
+	m92_state *state = field->port->machine->driver_data<m92_state>();
 	return state->sprite_buffer_busy;
 }
 
 void m92_sprite_interrupt(running_machine *machine)
 {
-	m92_state *state = (m92_state *)machine->driver_data;
+	m92_state *state = machine->driver_data<m92_state>();
 	cpu_set_input_line_and_vector(state->nec_maincpu, 0, HOLD_LINE, M92_IRQ_1);
 }
 
@@ -322,7 +322,7 @@ static TIMER_CALLBACK( setvector_callback )
 {
 	if (!machine->device("soundcpu")) return;
 
-	m92_state *state = (m92_state *)machine->driver_data;
+	m92_state *state = machine->driver_data<m92_state>();
 
 	switch (param)
 	{
@@ -346,7 +346,7 @@ static TIMER_CALLBACK( setvector_callback )
 
 static READ16_HANDLER( m92_sound_status_r )
 {
-	m92_state *state = (m92_state *)space->machine->driver_data;
+	m92_state *state = space->machine->driver_data<m92_state>();
 	return state->sound_status;
 }
 
@@ -368,7 +368,7 @@ static WRITE16_HANDLER( m92_sound_irq_ack_w )
 
 static WRITE16_HANDLER( m92_sound_status_w )
 {
-	m92_state *state = (m92_state *)space->machine->driver_data;
+	m92_state *state = space->machine->driver_data<m92_state>();
 
 	COMBINE_DATA(&state->sound_status);
 	cpu_set_input_line_and_vector(state->nec_maincpu, 0, HOLD_LINE, M92_IRQ_3);
@@ -2183,7 +2183,7 @@ ROM_END
 
 static void init_m92(running_machine *machine, int hasbanks)
 {
-	m92_state *state = (m92_state *)machine->driver_data;
+	m92_state *state = machine->driver_data<m92_state>();
 
 	UINT8 *RAM = memory_region(machine, "maincpu");
 
@@ -2217,7 +2217,7 @@ static DRIVER_INIT( m92_most )
 
 static DRIVER_INIT( m92_rtype )
 {
-	m92_state *state = (m92_state *)machine->driver_data;
+	m92_state *state = machine->driver_data<m92_state>();
 
 	init_m92(machine, 1);
 	state->irq_vector_base = 0x20;
@@ -2233,7 +2233,7 @@ static DRIVER_INIT( m92_gunforc2 )
 static DRIVER_INIT( m92_ssoldier )
 {
 	init_m92(machine, 1);
-	m92_state *state = (m92_state *)machine->driver_data;
+	m92_state *state = machine->driver_data<m92_state>();
 
 	state->irq_vector_base = 0x20;
 	/* main CPU expects an answer even before writing the first command */
@@ -2244,7 +2244,8 @@ static DRIVER_INIT( m92_majtitl2 )
 {
 	init_m92(machine, 1);
 
-	m92_state *state = (m92_state *)machine->driver_data;
+
+	m92_state *state = machine->driver_data<m92_state>();
 
 	/* This game has an eprom on the game board */
 	memory_install_readwrite16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0xf0000, 0xf3fff, 0, 0, m92_eeprom_r, m92_eeprom_w);
@@ -2255,7 +2256,7 @@ static DRIVER_INIT( m92_lethalth )
 {
 	init_m92(machine, 0);
 
-	m92_state *state = (m92_state *)machine->driver_data;
+	m92_state *state = machine->driver_data<m92_state>();
 
 	state->irq_vector_base = 0x20;
 	/* NOP out the bankswitcher */

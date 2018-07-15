@@ -47,7 +47,7 @@
 
 static TIMER_CALLBACK( spritebuffer_callback )
 {
-	m92_state *state = (m92_state *)machine->driver_data;
+	m92_state *state = machine->driver_data<m92_state>();
 
 	state->sprite_buffer_busy = 1;
 	/* Major Title 2 doesn't like this interrupt !? */
@@ -57,7 +57,7 @@ static TIMER_CALLBACK( spritebuffer_callback )
 
 WRITE16_HANDLER( m92_spritecontrol_w )
 {
-	m92_state *state = (m92_state *)space->machine->driver_data;
+	m92_state *state = space->machine->driver_data<m92_state>();
 
 	COMBINE_DATA(&state->sprite_control[offset]);
 	/*	offset0: sprite list size (negative)
@@ -87,7 +87,7 @@ WRITE16_HANDLER( m92_spritecontrol_w )
 
 WRITE16_HANDLER( m92_videocontrol_w )
 {
-	m92_state *state = (m92_state *)space->machine->driver_data;
+	m92_state *state = space->machine->driver_data<m92_state>();
 
 	COMBINE_DATA(&state->video_control);
 	/*
@@ -122,14 +122,14 @@ WRITE16_HANDLER( m92_videocontrol_w )
 
 READ16_HANDLER( m92_paletteram_r )
 {
-	m92_state *state = (m92_state *)space->machine->driver_data;
+	m92_state *state = space->machine->driver_data<m92_state>();
 
 	return space->machine->generic.paletteram.u16[offset + 0x0400 * state->palette_bank];
 }
 
 WRITE16_HANDLER( m92_paletteram_w )
 {
-	m92_state *state = (m92_state *)space->machine->driver_data;
+	m92_state *state = space->machine->driver_data<m92_state>();
 
 	paletteram16_xBBBBBGGGGGRRRRR_word_w(space, offset + 0x400 * state->palette_bank, data, mem_mask);
 }
@@ -138,7 +138,7 @@ WRITE16_HANDLER( m92_paletteram_w )
 
 static TILE_GET_INFO( get_pf_tile_info )
 {
-	m92_state *state = (m92_state *)machine->driver_data;
+	m92_state *state = machine->driver_data<m92_state>();
 	pf_layer_info *layer = (pf_layer_info *)param;
 
 	tile_index = tile_index * 2 + layer->vram_base;
@@ -160,7 +160,7 @@ static TILE_GET_INFO( get_pf_tile_info )
 
 WRITE16_HANDLER( m92_vram_w )
 {
-	m92_state *state = (m92_state *)space->machine->driver_data;
+	m92_state *state = space->machine->driver_data<m92_state>();
 
 	COMBINE_DATA(&state->vram_data[offset]);
 
@@ -185,28 +185,28 @@ WRITE16_HANDLER( m92_vram_w )
 
 WRITE16_HANDLER( m92_pf1_control_w )
 {
-	m92_state *state = (m92_state *)space->machine->driver_data;
+	m92_state *state = space->machine->driver_data<m92_state>();
 
 	COMBINE_DATA(&state->pf_layer[0].control[offset]);
 }
 
 WRITE16_HANDLER( m92_pf2_control_w )
 {
-	m92_state *state = (m92_state *)space->machine->driver_data;
+	m92_state *state = space->machine->driver_data<m92_state>();
 
 	COMBINE_DATA(&state->pf_layer[1].control[offset]);
 }
 
 WRITE16_HANDLER( m92_pf3_control_w )
 {
-	m92_state *state = (m92_state *)space->machine->driver_data;
+	m92_state *state = space->machine->driver_data<m92_state>();
 
 	COMBINE_DATA(&state->pf_layer[2].control[offset]);
 }
 
 WRITE16_HANDLER( m92_master_control_w )
 {
-	m92_state *state = (m92_state *)space->machine->driver_data;
+	m92_state *state = space->machine->driver_data<m92_state>();
 	pf_layer_info *layer;
 
 	UINT16 old = state->pf_master_control[offset];
@@ -249,7 +249,7 @@ WRITE16_HANDLER( m92_master_control_w )
 
 VIDEO_START( m92 )
 {
-	m92_state *state = (m92_state *)machine->driver_data;
+	m92_state *state = machine->driver_data<m92_state>();
 
 	memset(&state->pf_layer, 0, sizeof(state->pf_layer));
 
@@ -306,7 +306,7 @@ VIDEO_START( ppan )
 {
 	VIDEO_START_CALL( m92 );
 
-	m92_state *state = (m92_state *)machine->driver_data;
+	m92_state *state = machine->driver_data<m92_state>();
 
 	for (UINT32 laynum = 0; laynum < 3; laynum++)
 	{
@@ -324,7 +324,7 @@ VIDEO_START( ppan )
 /*****************************************************************************/
 static void draw_sprites(running_machine *machine, bitmap_t *bitmap, const rectangle *cliprect)
 {
-	m92_state *state = (m92_state *)machine->driver_data;
+	m92_state *state = machine->driver_data<m92_state>();
 
 	UINT16 *source = machine->generic.buffered_spriteram.u16;
 	UINT32 sprite, s_ptr, color, pri_back, pri_sprite;
@@ -395,7 +395,7 @@ static void draw_sprites(running_machine *machine, bitmap_t *bitmap, const recta
 
 static void ppan_draw_sprites(running_machine *machine, bitmap_t *bitmap, const rectangle *cliprect)	// This needs a lot of work...
 {
-	m92_state *state = (m92_state *)machine->driver_data;
+	m92_state *state = machine->driver_data<m92_state>();
 
 	if (state->video_control & 0x0080) return;
 
@@ -471,7 +471,7 @@ static void ppan_draw_sprites(running_machine *machine, bitmap_t *bitmap, const 
 
 static void m92_update_scroll_positions(running_machine *machine)
 {
-	m92_state *state = (m92_state *)machine->driver_data;
+	m92_state *state = machine->driver_data<m92_state>();
 
 	/*   Playfield 3 rowscroll data is 0xdfc00 - 0xdffff
              Playfield 2 rowscroll data is 0xdf800 - 0xdfbff
@@ -517,7 +517,7 @@ static void m92_update_scroll_positions(running_machine *machine)
 
 static void m92_draw_tiles(running_machine *machine, bitmap_t *bitmap, const rectangle *cliprect)
 {
-	m92_state *state = (m92_state *)machine->driver_data;
+	m92_state *state = machine->driver_data<m92_state>();
 
 	if ( (~state->pf_master_control[2] >> 4) & 0x01 )
 	{

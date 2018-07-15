@@ -120,27 +120,27 @@
 #include <time.h>
 
 
-
 //*************************************************************************/
-//  GLOBAL VARIABLES
+//	GLOBAL VARIABLES
 //*************************************************************************/
 
 // a giant string buffer for temporary strings
 static char giant_string_buffer[65536] = { 0 };
 
-
+extern int RLOOP;
+extern int ENDEXEC;
 
 //*************************************************************************/
-//  RUNNING MACHINE
+//	RUNNING MACHINE
 //*************************************************************************/
 
 //-------------------------------------------------
-//  running_machine - constructor
+//	running_machine - constructor
 //-------------------------------------------------
 
 running_machine::running_machine(const game_driver &driver, const machine_config &_config, core_options &options, bool exit_to_game_select)
-	: m_regionlist(m_respool),
-	  m_devicelist(m_respool),
+	: m_regionlist( m_respool ),
+	  m_devicelist( m_respool ),
 	  config(&_config),
 	  m_config(_config),
 	  firstcpu(NULL),
@@ -154,7 +154,7 @@ running_machine::running_machine(const game_driver &driver, const machine_config
 	  priority_bitmap(NULL),
 	  sample_rate(options_get_int(&options, OPTION_SAMPLERATE)),
 	  debug_flags(0),
-      ui_active(false),
+	  ui_active(false),
 	  mame_data(NULL),
 	  timer_data(NULL),
 	  state_data(NULL),
@@ -174,7 +174,6 @@ running_machine::running_machine(const game_driver &driver, const machine_config
 	  generic_video_data(NULL),
 	  generic_audio_data(NULL),
 	  m_debug_view(NULL),
-	  driver_data(NULL),
 	  m_logerror_list(NULL),
 	  m_scheduler(*this),
 	  m_options(options),
@@ -190,7 +189,8 @@ running_machine::running_machine(const game_driver &driver, const machine_config
 	  m_saveload_schedule(SLS_NONE),
 	  m_saveload_schedule_time(attotime_zero),
 	  m_saveload_searchpath(NULL),
-	  m_rand_seed(0x9d14abd7)
+	  m_rand_seed(0x9d14abd7),
+	  m_driver_data(NULL)
 {
 	memset(gfx, 0, sizeof(gfx));
 	memset(&generic, 0, sizeof(generic));
@@ -202,7 +202,7 @@ running_machine::running_machine(const game_driver &driver, const machine_config
 
 	// allocate the driver data (after devices)
 	if (m_config.m_driver_data_alloc != NULL)
-		driver_data = (*m_config.m_driver_data_alloc)(*this);
+		m_driver_data = (*m_config.m_driver_data_alloc)(*this);
 
 	// find devices
 	primary_screen = screen_first(*this);
@@ -220,7 +220,7 @@ running_machine::running_machine(const game_driver &driver, const machine_config
 
 
 //-------------------------------------------------
-//  ~running_machine - destructor
+//	~running_machine - destructor
 //-------------------------------------------------
 
 running_machine::~running_machine()
@@ -230,11 +230,10 @@ running_machine::~running_machine()
 }
 
 
-//-------------------------------------------------
-//  describe_context - return a string describing
-//  which device is currently executing and its
-//  PC
-//-------------------------------------------------
+//-----------------------------------------------------
+//	describe_context - return a string describing
+//	which device is currently executing and its PC
+//-----------------------------------------------------
 
 const char *running_machine::describe_context()
 {
@@ -255,7 +254,7 @@ const char *running_machine::describe_context()
 
 
 //-------------------------------------------------
-//  start - initialize the emulated machine
+//	start - initialize the emulated machine
 //-------------------------------------------------
 
 void running_machine::start()
@@ -364,120 +363,114 @@ void running_machine::start()
 
 
 //-------------------------------------------------
-//  run - execute the machine
+//	run - execute the machine
 //-------------------------------------------------
 
 int running_machine::run(bool firstrun)
 {
-   int error = MAMERR_NONE;
+	int error = MAMERR_NONE;
 
-   // move to the init phase
-   m_current_phase = MACHINE_PHASE_INIT;
+	// move to the init phase
+	m_current_phase = MACHINE_PHASE_INIT;
 
-   // if we have a logfile, set up the callback
-   if (options_get_bool(&m_options, OPTION_LOG))
-   {
-      file_error filerr = mame_fopen(SEARCHPATH_DEBUGLOG, "error.log", OPEN_FLAG_WRITE | OPEN_FLAG_CREATE | OPEN_FLAG_CREATE_PATHS, &m_logfile);
-      assert_always(filerr == FILERR_NONE, "unable to open log file");
-      add_logerror_callback(logfile_callback);
-   }
+	// if we have a logfile, set up the callback
+	if (options_get_bool(&m_options, OPTION_LOG))
+	{
+		file_error filerr = mame_fopen(SEARCHPATH_DEBUGLOG, "error.log", OPEN_FLAG_WRITE | OPEN_FLAG_CREATE | OPEN_FLAG_CREATE_PATHS, &m_logfile);
+		assert_always(filerr == FILERR_NONE, "unable to open log file");
+		add_logerror_callback(logfile_callback);
+	}
 
-   // then finish setting up our local machine
-   start();
+	// then finish setting up our local machine
+	start();
 
-   // load the configuration settings and NVRAM
-   config_load_settings(this);
-   nvram_load(this);
-   sound_mute(this, FALSE);
+	// load the configuration settings and NVRAM
+	config_load_settings(this);
+	nvram_load(this);
+	sound_mute(this, FALSE);
 
-   // display the startup screens
-   ui_display_startup_screens(this, firstrun, !options_get_bool(&m_options, OPTION_SKIP_NAGSCREEN));
+	// display the startup screens
+	ui_display_startup_screens(this, firstrun, !options_get_bool(&m_options, OPTION_SKIP_NAGSCREEN));
 
-   // perform a soft reset -- this takes us to the running phase
-   soft_reset();
+	// perform a soft reset -- this takes us to the running phase
+	soft_reset();
 
-   // run the CPUs until a reset or exit
-   m_hard_reset_pending = false;
-   while ((!m_hard_reset_pending && !m_exit_pending) || m_saveload_schedule != SLS_NONE)
-      return 0;
+	// run the CPUs until a reset or exit
+	m_hard_reset_pending = false;
+	while ( (!m_hard_reset_pending && !m_exit_pending) || m_saveload_schedule != SLS_NONE )
+		return 0;
 
-   // and out via the exit phase
-   m_current_phase = MACHINE_PHASE_EXIT;
+	// and out via the exit phase
+	m_current_phase = MACHINE_PHASE_EXIT;
 
-   // save the NVRAM and configuration
-   sound_mute(this, true);
-   nvram_save(this);
-   config_save_settings(this);
+	// save the NVRAM and configuration
+	sound_mute(this, true);
+	nvram_save(this);
+	config_save_settings(this);
 
-   // call all exit callbacks registered
-   call_notifiers(MACHINE_NOTIFY_EXIT);
+	// call all exit callbacks registered
+	call_notifiers(MACHINE_NOTIFY_EXIT);
 
-   // close the logfile
-   if (m_logfile != NULL)
-      mame_fclose(m_logfile);
-   return error;
+	// close the logfile
+	if (m_logfile != NULL)
+		mame_fclose(m_logfile);
+
+	return error;
 }
+
 
 void running_machine::retro_machineexit()
 {
-   // and out via the exit phase
-   m_current_phase = MACHINE_PHASE_EXIT;
+	// and out via the exit phase
+	m_current_phase = MACHINE_PHASE_EXIT;
 
-   // save the NVRAM and configuration
-   sound_mute(this, true);
-   nvram_save(this);
-   config_save_settings(this);
+	// save the NVRAM and configuration
+	sound_mute(this, true);
+	nvram_save(this);
+	config_save_settings(this);
 
-   // close the logfile
-   if (m_logfile != NULL)
-      mame_fclose(m_logfile);
+	// close the logfile
+	if (m_logfile != NULL)
+		mame_fclose(m_logfile);
 }
-
-extern int RLOOP;
-extern int ENDEXEC;
 
 void running_machine::retro_loop()
 {
-   while (RLOOP==1)
-   {
-      // execute CPUs if not paused
-      if (!m_paused)
-         m_scheduler.timeslice();
+	while (RLOOP == 1)
+	{
+		if (!m_paused)		// execute CPUs if not paused
+			m_scheduler.timeslice();
+		else			// otherwise, just pump video updates through
+			video_frame_update(this, false);
 
-      // otherwise, just pump video updates through
-      else
-         video_frame_update(this, false);
+		if (m_saveload_schedule != SLS_NONE)	// handle save/load
+			handle_saveload();
+	}
 
-      // handle save/load
-      if (m_saveload_schedule != SLS_NONE)
-         handle_saveload();
+	if ( (m_hard_reset_pending || m_exit_pending) && m_saveload_schedule == SLS_NONE)
+	{
+		// and out via the exit phase
+		m_current_phase = MACHINE_PHASE_EXIT;
 
-   }
+		// save the NVRAM and configuration
+		sound_mute(this, true);
+		nvram_save(this);
+		config_save_settings(this);
 
-   if( (m_hard_reset_pending || m_exit_pending) && m_saveload_schedule == SLS_NONE)
-   {
-      // and out via the exit phase
-      m_current_phase = MACHINE_PHASE_EXIT;
+		// call all exit callbacks registered
+		call_notifiers(MACHINE_NOTIFY_EXIT);
 
-      // save the NVRAM and configuration
-      sound_mute(this, true);
-      nvram_save(this);
-      config_save_settings(this);
+		// close the logfile
+		if (m_logfile != NULL)
+			mame_fclose(m_logfile);
 
-      // call all exit callbacks registered
-      call_notifiers(MACHINE_NOTIFY_EXIT);
-
-      // close the logfile
-      if (m_logfile != NULL)
-         mame_fclose(m_logfile);
-
-
-      ENDEXEC=1;
-   }
+		ENDEXEC = 1;
+	}
 }
 
+
 //-------------------------------------------------
-//  schedule_exit - schedule a clean exit
+//	schedule_exit - schedule a clean exit
 //-------------------------------------------------
 
 void running_machine::schedule_exit()
@@ -488,7 +481,6 @@ void running_machine::schedule_exit()
 		options_set_string(&m_options, OPTION_GAMENAME, "", OPTION_PRIORITY_CMDLINE);
 		ui_menu_force_game_select(this, render_container_get_ui());
 	}
-
 	// otherwise, exit for real
 	else
 		m_exit_pending = true;
@@ -502,10 +494,10 @@ void running_machine::schedule_exit()
 }
 
 
-//-------------------------------------------------
-//  schedule_hard_reset - schedule a hard-reset of
-//  the machine
-//-------------------------------------------------
+//-----------------------------------------------------
+//	schedule_hard_reset - schedule a hard-reset of
+//	the machine
+//-----------------------------------------------------
 
 void running_machine::schedule_hard_reset()
 {
@@ -516,10 +508,10 @@ void running_machine::schedule_hard_reset()
 }
 
 
-//-------------------------------------------------
-//  schedule_soft_reset - schedule a soft-reset of
-//  the system
-//-------------------------------------------------
+//------------------------------------------------------
+//	schedule_soft_reset - schedule a soft-reset of
+//	the system
+//------------------------------------------------------
 
 void running_machine::schedule_soft_reset()
 {
@@ -533,10 +525,10 @@ void running_machine::schedule_soft_reset()
 }
 
 
-//-------------------------------------------------
-//  schedule_new_driver - schedule a new game to
-//  be loaded
-//-------------------------------------------------
+//----------------------------------------------------
+//	schedule_new_driver - schedule a new game to
+//	be loaded
+//----------------------------------------------------
 
 void running_machine::schedule_new_driver(const game_driver &driver)
 {
@@ -548,10 +540,10 @@ void running_machine::schedule_new_driver(const game_driver &driver)
 }
 
 
-//-------------------------------------------------
-//  set_saveload_filename - specifies the filename
-//  for state loading/saving
-//-------------------------------------------------
+//-----------------------------------------------------
+//	set_saveload_filename - specifies the filename
+//	for state loading/saving
+//-----------------------------------------------------
 
 void running_machine::set_saveload_filename(const char *filename)
 {
@@ -569,10 +561,10 @@ void running_machine::set_saveload_filename(const char *filename)
 }
 
 
-//-------------------------------------------------
-//  schedule_save - schedule a save to occur as
-//  soon as possible
-//-------------------------------------------------
+//---------------------------------------------------
+//	schedule_save - schedule a save to occur as
+//	soon as possible
+//---------------------------------------------------
 
 void running_machine::schedule_save(const char *filename)
 {
@@ -589,8 +581,8 @@ void running_machine::schedule_save(const char *filename)
 
 
 //-------------------------------------------------
-//  schedule_load - schedule a load to occur as
-//  soon as possible
+//	schedule_load - schedule a load to occur as
+//	soon as possible
 //-------------------------------------------------
 
 void running_machine::schedule_load(const char *filename)
@@ -608,7 +600,7 @@ void running_machine::schedule_load(const char *filename)
 
 
 //-------------------------------------------------
-//  pause - pause the system
+//	pause - pause the system
 //-------------------------------------------------
 
 void running_machine::pause()
@@ -624,7 +616,7 @@ void running_machine::pause()
 
 
 //-------------------------------------------------
-//  resume - resume the system
+//	resume - resume the system
 //-------------------------------------------------
 
 void running_machine::resume()
@@ -639,15 +631,15 @@ void running_machine::resume()
 }
 
 
-//-------------------------------------------------
-//  region_alloc - allocates memory for a region
-//-------------------------------------------------
+//----------------------------------------------------
+//	region_alloc - allocates memory for a region
+//----------------------------------------------------
 
 region_info *running_machine::region_alloc(const char *name, UINT32 length, UINT32 flags)
 {
-    // make sure we don't have a region of the same name; also find the end of the list
-    region_info *info = m_regionlist.find(name);
-    if (info != NULL)
+	// make sure we don't have a region of the same name; also find the end of the list
+	region_info *info = m_regionlist.find(name);
+	if (info != NULL)
 		fatalerror("region_alloc called with duplicate region name \"%s\"\n", name);
 
 	// allocate the region
@@ -656,7 +648,7 @@ region_info *running_machine::region_alloc(const char *name, UINT32 length, UINT
 
 
 //-------------------------------------------------
-//  region_free - releases memory for a region
+//	region_free - releases memory for a region
 //-------------------------------------------------
 
 void running_machine::region_free(const char *name)
@@ -666,8 +658,8 @@ void running_machine::region_free(const char *name)
 
 
 //-------------------------------------------------
-//  add_notifier - add a notifier of the
-//  given type
+//	add_notifier - add a notifier of the
+//	given type
 //-------------------------------------------------
 
 void running_machine::add_notifier(machine_notification event, notify_callback callback)
@@ -692,10 +684,10 @@ void running_machine::add_notifier(machine_notification event, notify_callback c
 }
 
 
-//-------------------------------------------------
-//  add_logerror_callback - adds a callback to be
-//  called on logerror()
-//-------------------------------------------------
+//-----------------------------------------------------
+//	add_logerror_callback - adds a callback to be
+//	called on logerror()
+//-----------------------------------------------------
 
 void running_machine::add_logerror_callback(logerror_callback callback)
 {
@@ -708,7 +700,7 @@ void running_machine::add_logerror_callback(logerror_callback callback)
 
 
 //-------------------------------------------------
-//  logerror - printf-style error logging
+//	logerror - printf-style error logging
 //-------------------------------------------------
 
 void CLIB_DECL running_machine::logerror(const char *format, ...)
@@ -725,7 +717,7 @@ void CLIB_DECL running_machine::logerror(const char *format, ...)
 
 
 //-------------------------------------------------
-//  vlogerror - vprintf-style error logging
+//	vlogerror - vprintf-style error logging
 //-------------------------------------------------
 
 void CLIB_DECL running_machine::vlogerror(const char *format, va_list args)
@@ -747,10 +739,10 @@ void CLIB_DECL running_machine::vlogerror(const char *format, va_list args)
 }
 
 
-//-------------------------------------------------
-//  base_datetime - retrieve the time of the host
-//  system; useful for RTC implementations
-//-------------------------------------------------
+//----------------------------------------------------
+//	base_datetime - retrieve the time of the host
+//	system; useful for RTC implementations
+//----------------------------------------------------
 
 void running_machine::base_datetime(system_time &systime)
 {
@@ -758,11 +750,11 @@ void running_machine::base_datetime(system_time &systime)
 }
 
 
-//-------------------------------------------------
-//  current_datetime - retrieve the current time
-//  (offset by the base); useful for RTC
-//  implementations
-//-------------------------------------------------
+//----------------------------------------------------
+//	current_datetime - retrieve the current time
+//	(offset by the base); useful for RTC
+//	implementations
+//----------------------------------------------------
 
 void running_machine::current_datetime(system_time &systime)
 {
@@ -771,7 +763,7 @@ void running_machine::current_datetime(system_time &systime)
 
 
 //-------------------------------------------------
-//  rand - standardized random numbers
+//	rand - standardized random numbers
 //-------------------------------------------------
 
 UINT32 running_machine::rand()
@@ -779,15 +771,15 @@ UINT32 running_machine::rand()
 	m_rand_seed = 1664525 * m_rand_seed + 1013904223;
 
 	// return rotated by 16 bits; the low bits have a short period
-    // and are frequently used
+	// and are frequently used
 	return (m_rand_seed >> 16) | (m_rand_seed << 16);
 }
 
 
-//-------------------------------------------------
-//  call_notifiers - call notifiers of the given
-//  type
-//-------------------------------------------------
+//-----------------------------------------------------
+//	call_notifiers - call notifiers of the given
+//	type
+//-----------------------------------------------------
 
 void running_machine::call_notifiers(machine_notification which)
 {
@@ -796,10 +788,10 @@ void running_machine::call_notifiers(machine_notification which)
 }
 
 
-//-------------------------------------------------
-//  handle_saveload - attempt to perform a save
-//  or load
-//-------------------------------------------------
+//-----------------------------------------------------
+//	handle_saveload - attempt to perform a save
+//	or load
+//-----------------------------------------------------
 
 void running_machine::handle_saveload()
 {
@@ -882,10 +874,10 @@ cancel:
 }
 
 
-//-------------------------------------------------
-//  soft_reset - actually perform a soft-reset
-//  of the system
-//-------------------------------------------------
+//-----------------------------------------------------
+//	soft_reset - actually perform a soft-reset
+//	of the system
+//-----------------------------------------------------
 
 TIMER_CALLBACK( running_machine::static_soft_reset ) { machine->soft_reset(); }
 
@@ -915,10 +907,10 @@ void running_machine::soft_reset()
 }
 
 
-//-------------------------------------------------
-//  logfile_callback - callback for logging to
-//  logfile
-//-------------------------------------------------
+//-----------------------------------------------------
+//	logfile_callback - callback for logging to
+//	logfile
+//-----------------------------------------------------
 
 void running_machine::logfile_callback(running_machine &machine, const char *buffer)
 {
@@ -927,9 +919,8 @@ void running_machine::logfile_callback(running_machine &machine, const char *buf
 }
 
 
-
 /***************************************************************************
-    MEMORY REGIONS
+	MEMORY REGIONS
 ***************************************************************************/
 
 //-------------------------------------------------
@@ -948,7 +939,7 @@ region_info::region_info(running_machine &machine, const char *name, UINT32 leng
 
 
 //-------------------------------------------------
-//  ~region_info - destructor
+//	~region_info - destructor
 //-------------------------------------------------
 
 region_info::~region_info()
@@ -957,13 +948,12 @@ region_info::~region_info()
 }
 
 
-
 //**************************************************************************
-//  CALLBACK ITEMS
+//	CALLBACK ITEMS
 //**************************************************************************
 
 //-------------------------------------------------
-//  notifier_callback_item - constructor
+//	notifier_callback_item - constructor
 //-------------------------------------------------
 
 running_machine::notifier_callback_item::notifier_callback_item(notify_callback func)
@@ -974,7 +964,7 @@ running_machine::notifier_callback_item::notifier_callback_item(notify_callback 
 
 
 //-------------------------------------------------
-//  logerror_callback_item - constructor
+//	logerror_callback_item - constructor
 //-------------------------------------------------
 
 running_machine::logerror_callback_item::logerror_callback_item(logerror_callback func)
@@ -983,6 +973,27 @@ running_machine::logerror_callback_item::logerror_callback_item(logerror_callbac
 {
 }
 
+
+//**************************************************************************
+//	DRIVER DATA
+//**************************************************************************
+
+//-------------------------------------------------
+//	driver_data_t - constructor
+//-------------------------------------------------
+
+driver_data_t::driver_data_t( running_machine &machine )
+	: m_machine( machine )
+{
+}
+
+//-------------------------------------------------
+//	driver_data_t - destructor
+//-------------------------------------------------
+
+driver_data_t::~driver_data_t()
+{
+}
 
 
 //**************************************************************************
@@ -1025,6 +1036,6 @@ void system_time::full_time::set(struct tm &t)
 	month	= t.tm_mon;
 	year	= t.tm_year + 1900;
 	weekday	= t.tm_wday;
-	day		= t.tm_yday;
+	day	= t.tm_yday;
 	is_dst	= t.tm_isdst;
 }

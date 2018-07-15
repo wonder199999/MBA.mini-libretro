@@ -626,7 +626,7 @@ static void gigaman2_gfx_reorder(running_machine *machine, int gfx_len, UINT16 *
 
 static INTERRUPT_GEN( cps2_interrupt )
 {
-	cps_state *state = (cps_state *)device->machine->driver_data;
+	cps_state *state = device->machine->driver_data<cps_state>();
 	/* 2 is vblank, 4 is some sort of scanline interrupt, 6 is both at the same time. */
 	if (state->scancount > 258 - 1)
 	{
@@ -693,7 +693,7 @@ static const eeprom_interface cps2_eeprom_interface =
 
 static WRITE16_HANDLER( cps2_eeprom_port_w )
 {
-	cps_state *state = (cps_state *)space->machine->driver_data;
+	cps_state *state = space->machine->driver_data<cps_state>();
 
 	if (ACCESSING_BITS_8_15)
 	{
@@ -758,7 +758,7 @@ static WRITE16_HANDLER( cps2_eeprom_port_w )
 
 static READ16_HANDLER( cps2_qsound_volume_r )
 {
-	cps_state *state = (cps_state *)space->machine->driver_data;
+	cps_state *state = space->machine->driver_data<cps_state>();
 
 	/* Extra adapter memory (0x660000-0x663fff) available when bit 14 = 0 */
 	/* Network adapter (ssf2tb) present when bit 15 = 0 */
@@ -781,7 +781,7 @@ static READ16_HANDLER( kludge_r )
 
 static READ16_HANDLER( joy_or_paddle_r )
 {
-	cps_state *state = (cps_state *)space->machine->driver_data;
+	cps_state *state = space->machine->driver_data<cps_state>();
 
 	if (state->readpaddle != 0)
 		return (input_port_read(space->machine, "IN0"));
@@ -1175,7 +1175,7 @@ GFXDECODE_END
 
 static MACHINE_START( cps2 )
 {
-	cps_state *state = (cps_state *)machine->driver_data;
+	cps_state *state = machine->driver_data<cps_state>();
 
 	state->maincpu = machine->device("maincpu");
 	state->audiocpu = machine->device("audiocpu");
@@ -8663,7 +8663,7 @@ ROM_END
 
 static DRIVER_INIT( cps2 )
 {
-	cps_state *state = (cps_state *)machine->driver_data;
+	cps_state *state = machine->driver_data<cps_state>();
 
 	/* Decrypt the game - see machine/cps2crpt.c */
 	DRIVER_INIT_CALL(cps2crpt);
@@ -8678,7 +8678,7 @@ static DRIVER_INIT( cps2 )
 
 static DRIVER_INIT( ssf2tb )
 {
-	cps_state *state = (cps_state *)machine->driver_data;
+	cps_state *state = machine->driver_data<cps_state>();
 
 	DRIVER_INIT_CALL(cps2);
 
@@ -8691,7 +8691,7 @@ static DRIVER_INIT( ssf2tb )
 
 static DRIVER_INIT ( pzloop2 )
 {
-	cps_state *state = (cps_state *)machine->driver_data;
+	cps_state *state = machine->driver_data<cps_state>();
 
 	DRIVER_INIT_CALL(cps2);
 
@@ -8702,13 +8702,13 @@ static DRIVER_INIT ( pzloop2 )
 
 static READ16_HANDLER( gigaman2_dummyqsound_r )
 {
-	cps_state *state = (cps_state *)space->machine->driver_data;
+	cps_state *state = space->machine->driver_data<cps_state>();
 	return state->gigaman2_dummyqsound_ram[offset];
 }
 
 static WRITE16_HANDLER( gigaman2_dummyqsound_w )
 {
-	cps_state *state = (cps_state *)space->machine->driver_data;
+	cps_state *state = space->machine->driver_data<cps_state>();
 	state->gigaman2_dummyqsound_ram[offset] = data;
 }
 
@@ -8734,7 +8734,7 @@ static void gigaman2_gfx_reorder( running_machine *machine, int gfx_len, UINT16 
 
 static DRIVER_INIT( gigaman2 )
 {
-	cps_state *state = (cps_state *)machine->driver_data;
+	cps_state *state = machine->driver_data<cps_state>();
 
 	const address_space *space = cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM);
 

@@ -252,7 +252,7 @@ static TIMER_DEVICE_CALLBACK( ganbare_interrupt )
 {
 	if (param == 0)
 	{
-		cps_state *state = (cps_state *)timer.machine->driver_data;
+		cps_state *state = timer.machine->driver_data<cps_state>();
 		cpu_set_input_line(state->maincpu, 4, HOLD_LINE);
 	}
 }
@@ -260,7 +260,7 @@ static TIMER_DEVICE_CALLBACK( ganbare_interrupt )
 static READ16_HANDLER( ganbare_ram_r )
 {
 	device_t *device = space->machine->device("m48t35");
-	cps_state *state = (cps_state *)space->machine->driver_data;
+	cps_state *state = space->machine->driver_data<cps_state>();
 
 	UINT16 result = 0xffff;
 
@@ -276,7 +276,7 @@ static READ16_HANDLER( ganbare_ram_r )
 static WRITE16_HANDLER( ganbare_ram_w )
 {
 	device_t *device = space->machine->device("m48t35");
-	cps_state *state = (cps_state *)space->machine->driver_data;
+	cps_state *state = space->machine->driver_data<cps_state>();
 
 	COMBINE_DATA(&state->mainram[offset]);
 
@@ -287,31 +287,31 @@ static WRITE16_HANDLER( ganbare_ram_w )
 /* ---------------------------------------------------------- */
 void cps1_irq_handler_mus(running_device *device, int irq)
 {
-	cps_state *state = (cps_state *)device->machine->driver_data;
+	cps_state *state = device->machine->driver_data<cps_state>();
 	cpu_set_input_line(state->audiocpu, 0, irq ? ASSERT_LINE : CLEAR_LINE);
 }
 
 static READ16_HANDLER( forgottn_dial_0_r )
 {
-	cps_state *state = (cps_state *)space->machine->driver_data;
+	cps_state *state = space->machine->driver_data<cps_state>();
 	return ((input_port_read(space->machine, "DIAL0") - state->dial[0]) >> (8 * offset)) & 0xff;
 }
 
 static READ16_HANDLER( forgottn_dial_1_r )
 {
-	cps_state *state = (cps_state *)space->machine->driver_data;
+	cps_state *state = space->machine->driver_data<cps_state>();
 	return ((input_port_read(space->machine, "DIAL1") - state->dial[1]) >> (8 * offset)) & 0xff;
 }
 
 static WRITE16_HANDLER( forgottn_dial_0_reset_w )
 {
-	cps_state *state = (cps_state *)space->machine->driver_data;
+	cps_state *state = space->machine->driver_data<cps_state>();
 	state->dial[0] = input_port_read(space->machine, "DIAL0");
 }
 
 static WRITE16_HANDLER( forgottn_dial_1_reset_w )
 {
-	cps_state *state = (cps_state *)space->machine->driver_data;
+	cps_state *state = space->machine->driver_data<cps_state>();
 	state->dial[1] = input_port_read(space->machine, "DIAL1");
 }
 
@@ -436,7 +436,7 @@ READ16_HANDLER( qsound_rom_r )
 
 READ16_HANDLER( qsound_sharedram1_r )
 {
-	cps_state *state = (cps_state *)space->machine->driver_data;
+	cps_state *state = space->machine->driver_data<cps_state>();
 	return state->qsound_sharedram1[offset] | 0xff00;
 }
 
@@ -444,14 +444,14 @@ WRITE16_HANDLER( qsound_sharedram1_w )
 {
 	if (ACCESSING_BITS_0_7)
 	{
-		cps_state *state = (cps_state *)space->machine->driver_data;
+		cps_state *state = space->machine->driver_data<cps_state>();
 		state->qsound_sharedram1[offset] = data;
 	}
 }
 
 READ16_HANDLER( qsound_sharedram2_r )
 {
-	cps_state *state = (cps_state *)space->machine->driver_data;
+	cps_state *state = space->machine->driver_data<cps_state>();
 	return state->qsound_sharedram2[offset] | 0xff00;
 }
 
@@ -459,7 +459,7 @@ WRITE16_HANDLER( qsound_sharedram2_w )
 {
 	if (ACCESSING_BITS_0_7)
 	{
-		cps_state *state = (cps_state *)space->machine->driver_data;
+		cps_state *state = space->machine->driver_data<cps_state>();
 		state->qsound_sharedram2[offset] = data;
 	}
 }
@@ -3075,7 +3075,7 @@ GFXDECODE_END
 
 static MACHINE_START( common )
 {
-	cps_state *state = (cps_state *)machine->driver_data;
+	cps_state *state = machine->driver_data<cps_state>();
 
 	state->maincpu = machine->device("maincpu");
 	state->audiocpu = machine->device("audiocpu");
@@ -8969,7 +8969,7 @@ ROM_END
 /* ------ DRIVER INIT ------ */
 static DRIVER_INIT( forgottn )
 {
-	cps_state *state = (cps_state *)machine->driver_data;
+	cps_state *state = machine->driver_data<cps_state>();
 
 	/* Forgotten Worlds has a NEC uPD4701AC on the B-board handling dial inputs from the CN-MOWS connector. */
 	/* The memory mapping is handled by PAL LWIO */

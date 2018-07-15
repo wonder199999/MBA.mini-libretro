@@ -72,7 +72,7 @@ static WRITE16_HANDLER( fcrash_soundlatch_w )
 {
 	if (ACCESSING_BITS_0_7)
 	{
-		cps_state *state = (cps_state *)space->machine->driver_data;
+		cps_state *state = space->machine->driver_data<cps_state>();
 		soundlatch_w(space, 0, data & 0xff);
 		cpu_set_input_line(state->audiocpu, 0, HOLD_LINE);
 	}
@@ -82,7 +82,7 @@ static WRITE16_HANDLER( sf2mdt_soundlatch_w )	/* The function will also be used 
 {
 	if (ACCESSING_BITS_8_15)
 	{
-		cps_state *state = (cps_state *)space->machine->driver_data;
+		cps_state *state = space->machine->driver_data<cps_state>();
 		soundlatch_w(space, 0, data >> 8);
 		cpu_set_input_line(state->audiocpu, 0, HOLD_LINE);
 		cpuexec_boost_interleave( space->machine, attotime_zero, ATTOTIME_IN_USEC(50) );
@@ -91,7 +91,7 @@ static WRITE16_HANDLER( sf2mdt_soundlatch_w )	/* The function will also be used 
 
 static WRITE8_HANDLER( fcrash_snd_bankswitch_w )
 {
-	cps_state *state = (cps_state *)space->machine->driver_data;
+	cps_state *state = space->machine->driver_data<cps_state>();
 	sound_set_output_gain(state->msm_1, 0, (data & 0x08) ? 0.0 : 1.0);
 	sound_set_output_gain(state->msm_2, 0, (data & 0x10) ? 0.0 : 1.0);
 	memory_set_bank(space->machine, "bank1", data & 0x07);
@@ -99,7 +99,7 @@ static WRITE8_HANDLER( fcrash_snd_bankswitch_w )
 
 static WRITE8_HANDLER( sf2mdt_snd_bankswitch_w )
 {
-	cps_state *state = (cps_state *)space->machine->driver_data;
+	cps_state *state = space->machine->driver_data<cps_state>();
 	sound_set_output_gain(state->msm_1, 0, (data & 0x20) ? 0.0 : 1.0);
 	sound_set_output_gain(state->msm_2, 0, (data & 0x10) ? 0.0 : 1.0);
 	memory_set_bank(space->machine, "bank1", data & 0x07);
@@ -107,7 +107,7 @@ static WRITE8_HANDLER( sf2mdt_snd_bankswitch_w )
 
 static WRITE8_HANDLER( knightsb_snd_bankswitch_w )
 {
-	cps_state *state = (cps_state *)space->machine->driver_data;
+	cps_state *state = space->machine->driver_data<cps_state>();
 	sound_set_output_gain(state->msm_1, 0, (data & 0x20) ? 0.0 : 1.0);
 	sound_set_output_gain(state->msm_2, 0, (data & 0x10) ? 0.0 : 1.0);
 	memory_set_bank(space->machine, "bank1", data & 0x0f);
@@ -115,7 +115,7 @@ static WRITE8_HANDLER( knightsb_snd_bankswitch_w )
 
 static void m5205_int1( running_device *device )
 {
-	cps_state *state = (cps_state *)device->machine->driver_data;
+	cps_state *state = device->machine->driver_data<cps_state>();
 	msm5205_data_w(device, state->sample_buffer1 & 0x0f);
 	state->sample_buffer1 >>= 0x04;
 	state->sample_select1 ^= 0x01;
@@ -125,7 +125,7 @@ static void m5205_int1( running_device *device )
 
 static void m5205_int2( running_device *device )
 {
-	cps_state *state = (cps_state *)device->machine->driver_data;
+	cps_state *state = device->machine->driver_data<cps_state>();
 	msm5205_data_w(device, state->sample_buffer2 & 0x0f);
 	state->sample_buffer2 >>= 0x04;
 	state->sample_select2 ^= 0x01;
@@ -133,13 +133,13 @@ static void m5205_int2( running_device *device )
 
 static WRITE8_HANDLER( fcrash_msm5205_0_data_w )
 {
-	cps_state *state = (cps_state *)space->machine->driver_data;
+	cps_state *state = space->machine->driver_data<cps_state>();
 	state->sample_buffer1 = data;
 }
 
 static WRITE8_HANDLER( fcrash_msm5205_1_data_w )
 {
-	cps_state *state = (cps_state *)space->machine->driver_data;
+	cps_state *state = space->machine->driver_data<cps_state>();
 	state->sample_buffer2 = data;
 }
 
@@ -150,7 +150,7 @@ static const ym2151_interface ym2151_config = { cps1_irq_handler_mus };
 
 static WRITE16_HANDLER( kodb_layer_w )		/* The function will also be used for 'cawingbl' */
 {
-	cps_state *state = (cps_state *)space->machine->driver_data;
+	cps_state *state = space->machine->driver_data<cps_state>();
 	switch (offset)
 	{
 		case 0x06: state->cps_b_regs[state->layer_enable_reg / 2] = data; break;
@@ -161,7 +161,7 @@ static WRITE16_HANDLER( kodb_layer_w )		/* The function will also be used for 'c
 
 static WRITE16_HANDLER( dinopic_layer_w )
 {
-	cps_state *state = (cps_state *)space->machine->driver_data;
+	cps_state *state = space->machine->driver_data<cps_state>();
 	switch (offset)
 	{
 		case 0x00: state->cps_a_regs[0x0e / 2] = data; break;
@@ -176,13 +176,13 @@ static WRITE16_HANDLER( dinopic_layer_w )
 
 static WRITE16_HANDLER( dinopic_layer2_w )
 {
-	cps_state *state = (cps_state *)space->machine->driver_data;
+	cps_state *state = space->machine->driver_data<cps_state>();
 	state->cps_a_regs[0x06 / 2] = data;
 }
 
 static WRITE16_HANDLER( slampic_layer_w )
 {
-	cps_state *state = (cps_state *)space->machine->driver_data;
+	cps_state *state = space->machine->driver_data<cps_state>();
 	switch (offset)
 	{
 		case 0x00:
@@ -197,7 +197,7 @@ static WRITE16_HANDLER( slampic_layer_w )
 
 static WRITE16_HANDLER( punipic_layer_w )
 {
-	cps_state *state = (cps_state *)space->machine->driver_data;
+	cps_state *state = space->machine->driver_data<cps_state>();
 	switch (offset)
 	{
 		case 0x00: state->cps_a_regs[0x0e / 2] = data; break;
@@ -226,7 +226,7 @@ static WRITE16_HANDLER( punipic_layer_w )
 
 static WRITE16_HANDLER( knightsb_layer_w )
 {
-	cps_state *state = (cps_state *)space->machine->driver_data;
+	cps_state *state = space->machine->driver_data<cps_state>();
 	switch (offset)
 	{
 		case 0x00: state->cps_a_regs[0x0e / 2] = data; break;
@@ -256,7 +256,7 @@ static WRITE16_HANDLER( knightsb_layer_w )
 
 static WRITE16_HANDLER( sf2m1_layer_w )
 {
-	cps_state *state = (cps_state *)space->machine->driver_data;
+	cps_state *state = space->machine->driver_data<cps_state>();
 	switch (offset)
 	{
 		case 0x00: state->cps_a_regs[0x0e / 2] = data; break;
@@ -287,7 +287,7 @@ static WRITE16_HANDLER( sf2m1_layer_w )
 
 static WRITE16_HANDLER( sf2mdta_layer_w )
 {
-	cps_state *state = (cps_state *)space->machine->driver_data;
+	cps_state *state = space->machine->driver_data<cps_state>();
 	switch (offset)
 	{
 		case 0x06: state->cps_a_regs[0x0c / 2] = data + 0xffbe;	break;
@@ -302,7 +302,7 @@ static WRITE16_HANDLER( sf2mdta_layer_w )
 
 static WRITE16_HANDLER( sf2mdt_layer_w )
 {
-	cps_state *state = (cps_state *)space->machine->driver_data;
+	cps_state *state = space->machine->driver_data<cps_state>();
 	switch (offset)
 	{
 		case 0x06: state->cps_a_regs[0x14 / 2] = data + 0xffce; break;
@@ -317,7 +317,7 @@ static WRITE16_HANDLER( sf2mdt_layer_w )
 
 static WRITE16_HANDLER( varthb_layer_w )
 {
-	cps_state *state = (cps_state *)space->machine->driver_data;
+	cps_state *state = space->machine->driver_data<cps_state>();
 
 	if (data > 0x9000)
 		state->cps_a_regs[0x06 / 2] = data;
@@ -327,7 +327,7 @@ static WRITE16_HANDLER( varthb_layer_w )
 /* ---  RENDER HANDLER  --- */
 static void bootleg_update_transmasks( running_machine *machine )
 {
-	cps_state *state = (cps_state *)machine->driver_data;
+	cps_state *state = machine->driver_data<cps_state>();
 
 	for (UINT32 i = 0; i < 4; i++)
 	{
@@ -341,7 +341,7 @@ static void bootleg_update_transmasks( running_machine *machine )
 
 static void bootleg_render_sprites( running_machine *machine, bitmap_t *bitmap, const rectangle *cliprect )
 {
-	cps_state *state = (cps_state *)machine->driver_data;
+	cps_state *state = machine->driver_data<cps_state>();
 
 	INT32 pos, base = state->sprite_base / 2;
 	INT32 last_sprite_offset = 0x1ffc;
@@ -378,7 +378,7 @@ static void bootleg_render_sprites( running_machine *machine, bitmap_t *bitmap, 
 
 static void bootleg_render_layer( running_machine *machine, bitmap_t *bitmap, const rectangle *cliprect, int layer, int primask )
 {
-	cps_state *state = (cps_state *)machine->driver_data;
+	cps_state *state = machine->driver_data<cps_state>();
 	switch (layer)
 	{
 		case 0: bootleg_render_sprites(machine, bitmap, cliprect); break;
@@ -390,7 +390,7 @@ static void bootleg_render_layer( running_machine *machine, bitmap_t *bitmap, co
 
 static void bootleg_render_high_layer( running_machine *machine, bitmap_t *bitmap, const rectangle *cliprect, int layer )
 {
-	cps_state *state = (cps_state *)machine->driver_data;
+	cps_state *state = machine->driver_data<cps_state>();
 	bitmap_t *dummy_bitmap = NULL;
 	switch (layer)
 	{
@@ -403,7 +403,7 @@ static void bootleg_render_high_layer( running_machine *machine, bitmap_t *bitma
 
 static void bootleg_build_palette( running_machine *machine )
 {
-	cps_state *state = (cps_state *)machine->driver_data;
+	cps_state *state = machine->driver_data<cps_state>();
 
 	UINT32 r, g, b, bright, palette, value;
 	UINT32 palettebase = (state->cps_a_regs[0x0a / 2] << 8) & 0x01ffff;	/* all the bootlegs seem to write the palette offset as usual */
@@ -425,7 +425,7 @@ static void bootleg_build_palette( running_machine *machine )
 
 static VIDEO_UPDATE( bootleg_updatescreen )
 {
-	cps_state *state = (cps_state *)screen->machine->driver_data;
+	cps_state *state = screen->machine->driver_data<cps_state>();
 
 	INT32 videocontrol = state->cps_a_regs[0x22 / 2];
 	flip_screen_set(screen->machine, videocontrol & 0x8000);
@@ -822,7 +822,7 @@ INPUT_PORTS_END
 /* --- MACHINE DRIVER --- */
 static MACHINE_RESET( fcrash )
 {
-	cps_state *state = (cps_state *)machine->driver_data;
+	cps_state *state = machine->driver_data<cps_state>();
 
 	state->sample_buffer1 = 0;
 	state->sample_buffer2 = 0;
@@ -832,7 +832,7 @@ static MACHINE_RESET( fcrash )
 
 static MACHINE_START( common )
 {
-	cps_state *state = (cps_state *)machine->driver_data;
+	cps_state *state = machine->driver_data<cps_state>();
 
 	state->maincpu = machine->device("maincpu");
 	state->audiocpu = machine->device("audiocpu");
@@ -841,7 +841,7 @@ static MACHINE_START( common )
 static MACHINE_START( msm5205snd )
 {
 	MACHINE_START_CALL( common );
-	cps_state *state = (cps_state *)machine->driver_data;
+	cps_state *state = machine->driver_data<cps_state>();
 
 	state->msm_1 = machine->device("msm1");
 	state->msm_2 = machine->device("msm2");
@@ -850,7 +850,7 @@ static MACHINE_START( msm5205snd )
 static MACHINE_START( fcrash )
 {
 	MACHINE_START_CALL( msm5205snd );
-	cps_state *state = (cps_state *)machine->driver_data;
+	cps_state *state = machine->driver_data<cps_state>();
 
 	UINT8 *src = memory_region(machine, "audiocpu");
 	memory_configure_bank(machine, "bank1", 0, 8, &src[0x10000], 0x4000);
@@ -876,7 +876,7 @@ static MACHINE_START( fcrash )
 static MACHINE_START( captcommb2 )
 {
 	MACHINE_START_CALL( msm5205snd );
-	cps_state *state = (cps_state *)machine->driver_data;
+	cps_state *state = machine->driver_data<cps_state>();
 
 	UINT8 *src = memory_region(machine, "audiocpu");
 	memory_configure_bank(machine, "bank1", 0, 16, &src[0x10000], 0x4000);
@@ -890,7 +890,7 @@ static MACHINE_START( captcommb2 )
 static MACHINE_START( sf2mdt )
 {
 	MACHINE_START_CALL( msm5205snd );
-	cps_state *state = (cps_state *)machine->driver_data;
+	cps_state *state = machine->driver_data<cps_state>();
 
 	UINT8 *src = memory_region(machine, "audiocpu");
 	memory_configure_bank(machine, "bank1", 0, 8, &src[0x10000], 0x4000);
@@ -916,7 +916,7 @@ static MACHINE_START( sf2mdt )
 static MACHINE_START( knightsb )
 {
 	MACHINE_START_CALL( msm5205snd );
-	cps_state *state = (cps_state *)machine->driver_data;
+	cps_state *state = machine->driver_data<cps_state>();
 
 	UINT8 *src = memory_region(machine, "audiocpu");
 	memory_configure_bank(machine, "bank1", 0, 16, &src[0x10000], 0x4000);
@@ -937,7 +937,7 @@ static MACHINE_START( knightsb )
 static MACHINE_START( sf2m1 )
 {
 	MACHINE_START_CALL( common );
-	cps_state *state = (cps_state *)machine->driver_data;
+	cps_state *state = machine->driver_data<cps_state>();
 
 	UINT8 *src = memory_region(machine, "audiocpu");
 	memory_configure_bank(machine, "bank1", 0, 8, &src[0x10000], 0x4000);
@@ -958,7 +958,7 @@ static MACHINE_START( sf2m1 )
 static MACHINE_START( kodb )
 {
 	MACHINE_START_CALL( common );
-	cps_state *state = (cps_state *)machine->driver_data;
+	cps_state *state = machine->driver_data<cps_state>();
 
 	state->layer_enable_reg = 0x20;
 	state->layer_mask_reg[0] = 0x2e;
@@ -976,7 +976,7 @@ static MACHINE_START( kodb )
 static MACHINE_START( sgyxz )
 {
 	MACHINE_START_CALL(kodb);
-	cps_state *state = (cps_state *)machine->driver_data;
+	cps_state *state = machine->driver_data<cps_state>();
 
 	state->layer_scroll1x_offset = 0x40;
 	state->layer_scroll2x_offset = 0x40;
@@ -987,7 +987,7 @@ static MACHINE_START( sgyxz )
 
 static MACHINE_START( punipic )
 {
-	cps_state *state = (cps_state *)machine->driver_data;
+	cps_state *state = machine->driver_data<cps_state>();
 
 	state->layer_enable_reg = 0x12;
 	state->layer_mask_reg[0] = 0x14;
@@ -1004,7 +1004,7 @@ static MACHINE_START( punipic )
 static MACHINE_START( cawingbl )
 {
 	MACHINE_START_CALL(fcrash);
-	cps_state *state = (cps_state *)machine->driver_data;
+	cps_state *state = machine->driver_data<cps_state>();
 
 	state->layer_enable_reg = 0x0c;
 	state->layer_mask_reg[0] = 0x0a;
@@ -1019,7 +1019,7 @@ static MACHINE_START( cawingbl )
 
 static MACHINE_START( dinopic )
 {
-	cps_state *state = (cps_state *)machine->driver_data;
+	cps_state *state = machine->driver_data<cps_state>();
 
 	state->layer_enable_reg = 0x0a;
 	state->layer_mask_reg[0] = 0x0c;
@@ -1036,7 +1036,7 @@ static MACHINE_START( dinopic )
 
 static MACHINE_START( slampic )
 {
-	cps_state *state = (cps_state *)machine->driver_data;
+	cps_state *state = machine->driver_data<cps_state>();
 
 	state->layer_enable_reg = 0x16;
 	state->layer_mask_reg[0] = 0x00;
@@ -1054,7 +1054,7 @@ static MACHINE_START( slampic )
 static MACHINE_START( varthb )
 {
 	MACHINE_START_CALL( common );
-	cps_state *state = (cps_state *)machine->driver_data;
+	cps_state *state = machine->driver_data<cps_state>();
 
 	UINT8 *src = memory_region(machine, "audiocpu");
 	memory_configure_bank(machine, "bank1", 0, 8, &src[0x10000], 0x4000);
@@ -1482,7 +1482,7 @@ MACHINE_DRIVER_END
 /* --- DRIVER INIT --- */
 static DRIVER_INIT( sf2mdta )
 {
-	cps_state *state = (cps_state *)machine->driver_data;
+	cps_state *state = machine->driver_data<cps_state>();
 
 	state->bootleg_sprite_ram = (UINT16 *)memory_install_ram(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x700000, 0x703fff, 0, 0, NULL);
 	memory_install_ram(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x704000, 0x707fff, 0, 0, state->bootleg_sprite_ram);
@@ -1500,7 +1500,7 @@ static DRIVER_INIT( sf2mdt )
 
 static DRIVER_INIT( kodb )
 {
-	cps_state *state = (cps_state *)machine->driver_data;
+	cps_state *state = machine->driver_data<cps_state>();
 	UINT8 *src = (UINT8 *)memory_region( machine, "maincpu" );
 
 	memory_install_read_port(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x800000, 0x800007, 0, 0, "IN1");
@@ -1517,7 +1517,7 @@ static DRIVER_INIT( kodb )
 
 static DRIVER_INIT( knightsb )
 {
-	cps_state *state = (cps_state *)machine->driver_data;
+	cps_state *state = machine->driver_data<cps_state>();
 	state->bootleg_sprite_ram = (UINT16 *)memory_install_ram(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x991000, 0x993fff, 0, 0, NULL);
 
 	DRIVER_INIT_CALL(cps1);
@@ -1525,7 +1525,7 @@ static DRIVER_INIT( knightsb )
 
 static DRIVER_INIT( dinopic )
 {
-	cps_state *state = (cps_state *)machine->driver_data;
+	cps_state *state = machine->driver_data<cps_state>();
 	state->bootleg_sprite_ram = (UINT16 *)memory_install_ram(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x990000, 0x993fff, 0, 0, NULL);
 
 	DRIVER_INIT_CALL(cps1);
