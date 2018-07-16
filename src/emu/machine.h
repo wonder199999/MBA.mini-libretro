@@ -157,7 +157,7 @@ typedef struct _generic_audio_private generic_audio_private;
 typedef tagged_list<region_info> region_list;
 
 // base class for all driver data structures
-class driver_data_t
+class driver_data_t : public bindable_object
 {
 public:
 	driver_data_t( running_machine &machine);
@@ -268,7 +268,7 @@ public:
 
 
 // description of the currently-running machine
-class running_machine
+class running_machine : public bindable_object
 {
 	DISABLE_COPYING(running_machine);
 
@@ -345,6 +345,7 @@ public:
 
 	// CPU information
 	cpu_device *			firstcpu;			// first CPU (allows for quick iteration via typenext)
+	address_space *			m_nonspecific_space;		// a dummy address_space used for legacy compatibility
 
 	// game-related information
 	const game_driver *		gamedrv;			// points to the definition of the game machine

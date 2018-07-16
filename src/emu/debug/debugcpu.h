@@ -45,9 +45,9 @@
 #include "express.h"
 
 
-//**************************************************************************
-//  CONSTANTS
-//**************************************************************************
+//*************************************************************************/
+//	CONSTANTS
+//*************************************************************************/
 
 const UINT8 WATCHPOINT_READ				= 1;
 const UINT8 WATCHPOINT_WRITE			= 2;
@@ -55,9 +55,9 @@ const UINT8 WATCHPOINT_READWRITE		= WATCHPOINT_READ | WATCHPOINT_WRITE;
 
 
 
-//**************************************************************************
-//  TYPE DEFINITIONS
-//**************************************************************************
+//*************************************************************************/
+//	TYPE DEFINITIONS
+//*************************************************************************/
 
 typedef int (*debug_instruction_hook_func)(device_t &device, offs_t curpc);
 
@@ -146,7 +146,7 @@ public:
 
 	// commonly-used pass-throughs
 	offs_t pc() const { return (m_state != NULL) ? m_state->pc() : 0; }
-	int logaddrchars(int spacenum = AS_PROGRAM) const { return (m_memory != NULL && m_memory->space(spacenum) != NULL) ? m_memory->space(spacenum)->logaddrchars : 8; }
+	int logaddrchars(int spacenum = AS_PROGRAM) const { return (m_memory != NULL && m_memory->space(spacenum) != NULL) ? m_memory->space(spacenum)->logaddrchars() : 8; }
 	int min_opcode_bytes() const { return (m_disasm != NULL) ? m_disasm->max_opcode_bytes() : 1; }
 	int max_opcode_bytes() const { return (m_disasm != NULL) ? m_disasm->max_opcode_bytes() : 1; }
 
@@ -339,17 +339,17 @@ public: // until comments get folded in
 
 
 
-//**************************************************************************
-//  GLOBAL VARIABLES
-//**************************************************************************
+//*************************************************************************/
+//	GLOBAL VARIABLES
+//*************************************************************************/
 
 extern const express_callbacks debug_expression_callbacks;
 
 
 
-//**************************************************************************
-//  FUNCTION PROTOTYPES
-//**************************************************************************
+//*************************************************************************/
+//	FUNCTION PROTOTYPES
+//*************************************************************************/
 
 /* ----- initialization and cleanup ----- */
 
