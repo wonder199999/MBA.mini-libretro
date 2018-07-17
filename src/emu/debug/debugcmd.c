@@ -157,7 +157,7 @@ static void execute_hardreset(running_machine *machine, int ref, int params, con
     given address is valid for cheating
 -------------------------------------------------*/
 
-INLINE int cheat_address_is_valid(const address_space *space, offs_t address)
+INLINE int cheat_address_is_valid(address_space *space, offs_t address)
 {
 	return debug_cpu_translate(space, TRANSLATE_READ, &address) && (memory_get_write_ptr(space, address) != NULL);
 }
@@ -206,7 +206,7 @@ INLINE UINT64 cheat_byte_swap(const cheat_system *cheatsys, UINT64 value)
     and swapping if necessary
 -------------------------------------------------*/
 
-INLINE UINT64 cheat_read_extended(const cheat_system *cheatsys, const address_space *space, offs_t address)
+INLINE UINT64 cheat_read_extended(const cheat_system *cheatsys, address_space *space, offs_t address)
 {
 	return cheat_sign_extend(cheatsys, cheat_byte_swap(cheatsys, debug_read_memory(space, address, cheatsys->width, TRUE)));
 }
@@ -550,7 +550,7 @@ int debug_command_parameter_cpu(running_machine *machine, const char *param, dev
     address space
 -------------------------------------------------*/
 
-int debug_command_parameter_cpu_space(running_machine *machine, const char *param, int spacenum, const address_space **result)
+int debug_command_parameter_cpu_space(running_machine *machine, const char *param, int spacenum, address_space **result)
 {
 	device_t *cpu;
 
@@ -1301,7 +1301,7 @@ static void execute_bplist(running_machine *machine, int ref, int params, const 
 static void execute_wpset(running_machine *machine, int ref, int params, const char *param[])
 {
 	parsed_expression *condition = NULL;
-	const address_space *space;
+	address_space *space;
 	const char *action = NULL;
 	UINT64 address, length;
 	int type = 0;
@@ -1507,7 +1507,7 @@ static void execute_hotspot(running_machine *machine, int ref, int params, const
 static void execute_save(running_machine *machine, int ref, int params, const char *param[])
 {
 	UINT64 offset, endoffset, length;
-	const address_space *space;
+	address_space *space;
 	FILE *f;
 	UINT64 i;
 
@@ -1551,7 +1551,7 @@ static void execute_save(running_machine *machine, int ref, int params, const ch
 static void execute_dump(running_machine *machine, int ref, int params, const char *param[])
 {
 	UINT64 offset, endoffset, length, width = 0, ascii = 1;
-	const address_space *space;
+	address_space *space;
 	FILE *f = NULL;
 	UINT64 i, j;
 
@@ -1649,7 +1649,7 @@ static void execute_dump(running_machine *machine, int ref, int params, const ch
 static void execute_cheatinit(running_machine *machine, int ref, int params, const char *param[])
 {
 	UINT64 offset, length = 0, real_length = 0;
-	const address_space *space;
+	address_space *space;
 	UINT32 active_cheat = 0;
 	UINT64 curaddr;
 	UINT8 i, region_count = 0;
@@ -1811,7 +1811,7 @@ static void execute_cheatinit(running_machine *machine, int ref, int params, con
 
 static void execute_cheatnext(running_machine *machine, int ref, int params, const char *param[])
 {
-	const address_space *space;
+	address_space *space;
 	UINT64 cheatindex;
 	UINT32 active_cheat = 0;
 	UINT8 condition;
@@ -1980,7 +1980,7 @@ static void execute_cheatnext(running_machine *machine, int ref, int params, con
 static void execute_cheatlist(running_machine *machine, int ref, int params, const char *param[])
 {
 	char spaceletter, sizeletter;
-	const address_space *space;
+	address_space *space;
 	device_t *cpu;
 	UINT32 active_cheat = 0;
 	UINT64 cheatindex;
@@ -2075,7 +2075,7 @@ static void execute_cheatundo(running_machine *machine, int ref, int params, con
 static void execute_find(running_machine *machine, int ref, int params, const char *param[])
 {
 	UINT64 offset, endoffset, length;
-	const address_space *space;
+	address_space *space;
 	UINT64 data_to_find[256];
 	UINT8 data_size[256];
 	int cur_data_size;
@@ -2175,7 +2175,7 @@ static void execute_dasm(running_machine *machine, int ref, int params, const ch
 {
 	UINT64 offset, length, bytes = 1;
 	int minbytes, maxbytes, byteswidth;
-	const address_space *space;
+	address_space *space;
 	FILE *f = NULL;
 	int i, j;
 
@@ -2369,7 +2369,7 @@ static void execute_traceflush(running_machine *machine, int ref, int params, co
 static void execute_history(running_machine *machine, int ref, int params, const char *param[])
 {
 	/* validate parameters */
-	const address_space *space;
+	address_space *space;
 	if (!debug_command_parameter_cpu_space(machine, (params > 0) ? param[0] : NULL, ADDRESS_SPACE_PROGRAM, &space))
 		return;
 
@@ -2469,7 +2469,7 @@ static void execute_source(running_machine *machine, int ref, int params, const 
 
 static void execute_map(running_machine *machine, int ref, int params, const char *param[])
 {
-	const address_space *space;
+	address_space *space;
 	offs_t taddress;
 	UINT64 address;
 	int intention;
