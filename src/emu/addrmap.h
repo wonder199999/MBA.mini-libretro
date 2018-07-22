@@ -431,15 +431,12 @@ public:
 // so that "0" can be used for unneeded address maps
 #define construct_address_map_0		NULL
 
-
 // start/end tags for the address map
 #define ADDRESS_MAP_NAME(_name) construct_address_map_##_name
 
 #define ADDRESS_MAP_START(_name, _space, _bits)					\
 void ADDRESS_MAP_NAME(_name)(address_map &map, const device_config &devconfig)	\
 {										\
-	typedef read##_bits##_proto_delegate	read_proto_delegate;		\
-	typedef write##_bits##_proto_delegate	write_proto_delegate;		\
 	address_map_entry##_bits *curentry = NULL;				\
 	(void)curentry;								\
 	map.configure(_space, _bits);						\

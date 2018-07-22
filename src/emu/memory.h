@@ -384,15 +384,33 @@ public:
 
 	// read accessors
 	virtual UINT8 read_byte(offs_t byteaddress) = 0;
-	virtual UINT16 read_word(offs_t byteaddress, UINT16 mask = 0xffff) = 0;
-	virtual UINT32 read_dword(offs_t byteaddress, UINT32 mask = 0xffffffff) = 0;
-	virtual UINT64 read_qword(offs_t byteaddress, UINT64 mask = U64(0xffffffffffffffff)) = 0;
+	virtual UINT16 read_word(offs_t byteaddress) = 0;
+	virtual UINT16 read_word(offs_t byteaddress, UINT16 mask) = 0;
+	virtual UINT16 read_word_unaligned(offs_t byteaddress) = 0;
+	virtual UINT16 read_word_unaligned(offs_t byteaddress, UINT16 mask) = 0;
+	virtual UINT32 read_dword(offs_t byteaddress) = 0;
+	virtual UINT32 read_dword(offs_t byteaddress, UINT32 mask) = 0;
+	virtual UINT32 read_dword_unaligned(offs_t byteaddress) = 0;
+	virtual UINT32 read_dword_unaligned(offs_t byteaddress, UINT32 mask) = 0;
+	virtual UINT64 read_qword(offs_t byteaddress) = 0;
+	virtual UINT64 read_qword(offs_t byteaddress, UINT64 mask) = 0;
+	virtual UINT64 read_qword_unaligned(offs_t byteaddress) = 0;
+	virtual UINT64 read_qword_unaligned(offs_t byteaddress, UINT64 mask) = 0;
 
 	// write accessors
 	virtual void write_byte(offs_t byteaddress, UINT8 data) = 0;
-	virtual void write_word(offs_t byteaddress, UINT16 data, UINT16 mask = 0xffff) = 0;
-	virtual void write_dword(offs_t byteaddress, UINT32 data, UINT32 mask = 0xffffffff) = 0;
-	virtual void write_qword(offs_t byteaddress, UINT64 data, UINT64 mask = U64(0xffffffffffffffff)) = 0;
+	virtual void write_word(offs_t byteaddress, UINT16 data) = 0;
+	virtual void write_word(offs_t byteaddress, UINT16 data, UINT16 mask) = 0;
+	virtual void write_word_unaligned(offs_t byteaddress, UINT16 data) = 0;
+	virtual void write_word_unaligned(offs_t byteaddress, UINT16 data, UINT16 mask) = 0;
+	virtual void write_dword(offs_t byteaddress, UINT32 data) = 0;
+	virtual void write_dword(offs_t byteaddress, UINT32 data, UINT32 mask) = 0;
+	virtual void write_dword_unaligned(offs_t byteaddress, UINT32 data) = 0;
+	virtual void write_dword_unaligned(offs_t byteaddress, UINT32 data, UINT32 mask) = 0;
+	virtual void write_qword(offs_t byteaddress, UINT64 data) = 0;
+	virtual void write_qword(offs_t byteaddress, UINT64 data, UINT64 mask) = 0;
+	virtual void write_qword_unaligned(offs_t byteaddress, UINT64 data) = 0;
+	virtual void write_qword_unaligned(offs_t byteaddress, UINT64 data, UINT64 mask) = 0;
 
 	// address-to-byte conversion helpers
 	offs_t address_to_byte(offs_t address) const { return m_config.addr2byte(address); }
@@ -402,7 +420,7 @@ public:
 
 	// decryption
 	void set_decrypted_region(offs_t addrstart, offs_t addrend, void *base);
-	
+
 	// direct access
 	direct_update_delegate set_direct_update_handler(direct_update_delegate function) { return m_direct.set_direct_update(function); }
 	bool set_direct_region(offs_t &byteaddress);
@@ -698,7 +716,6 @@ protected:
 
 extern const char *const address_space_names[ADDRESS_SPACES];
 
-
 //*************************************************************************/
 //	FUNCTION PROTOTYPES FOR CORE MEMORY FUNCTIONS
 //*************************************************************************/
@@ -769,7 +786,7 @@ inline UINT8 direct_read_data::read_decrypted_byte(offs_t byteaddress)
 		return m_decrypted[byteaddress & m_bytemask];
 	return m_space.read_byte(byteaddress);
 }
-		
+
 
 //-------------------------------------------------
 //  read_raw_word - read a word via the
@@ -782,14 +799,14 @@ inline UINT16 direct_read_data::read_raw_word(offs_t byteaddress)
 		return *reinterpret_cast<UINT16 *>(&m_raw[byteaddress & m_bytemask]);
 	return m_space.read_word(byteaddress);
 }
-		
+
 inline UINT16 direct_read_data::read_decrypted_word(offs_t byteaddress)
 {
 	if (address_is_valid(byteaddress))
 		return *reinterpret_cast<UINT16 *>(&m_decrypted[byteaddress & m_bytemask]);
 	return m_space.read_word(byteaddress);
 }
-		
+
 
 //-------------------------------------------------
 //  read_raw_dword - read a dword via the
@@ -802,14 +819,14 @@ inline UINT32 direct_read_data::read_raw_dword(offs_t byteaddress)
 		return *reinterpret_cast<UINT32 *>(&m_raw[byteaddress & m_bytemask]);
 	return m_space.read_dword(byteaddress);
 }
-		
+
 inline UINT32 direct_read_data::read_decrypted_dword(offs_t byteaddress)
 {
 	if (address_is_valid(byteaddress))
 		return *reinterpret_cast<UINT32 *>(&m_decrypted[byteaddress & m_bytemask]);
 	return m_space.read_dword(byteaddress);
 }
-		
+
 
 //-------------------------------------------------
 //  read_raw_qword - read a qword via the
@@ -822,20 +839,13 @@ inline UINT64 direct_read_data::read_raw_qword(offs_t byteaddress)
 		return *reinterpret_cast<UINT64 *>(&m_raw[byteaddress & m_bytemask]);
 	return m_space.read_qword(byteaddress);
 }
-		
+
 inline UINT64 direct_read_data::read_decrypted_qword(offs_t byteaddress)
 {
 	if (address_is_valid(byteaddress))
 		return *reinterpret_cast<UINT64 *>(&m_decrypted[byteaddress & m_bytemask]);
 	return m_space.read_qword(byteaddress);
 }
-		
-
-
-
-//*************************************************************************/
-//	LEGACY FUNCTIONS TO REMOVE
-//*************************************************************************/
 
 static inline void *memory_raw_read_ptr(address_space *space, offs_t byteaddress) { return space->direct().read_raw_ptr(byteaddress); }
 static inline UINT8 memory_raw_read_byte(address_space *space, offs_t byteaddress) { return space->direct().read_raw_byte(byteaddress); }
@@ -848,54 +858,6 @@ static inline UINT8 memory_decrypted_read_byte(address_space *space, offs_t byte
 static inline UINT16 memory_decrypted_read_word(address_space *space, offs_t byteaddress) { return space->direct().read_decrypted_word(byteaddress); }
 static inline UINT32 memory_decrypted_read_dword(address_space *space, offs_t byteaddress) { return space->direct().read_decrypted_dword(byteaddress); }
 static inline UINT64 memory_decrypted_read_qword(address_space *space, offs_t byteaddress) { return space->direct().read_decrypted_qword(byteaddress); }
-
-
-
-
-static inline void memory_set_decrypted_region(address_space *space, offs_t addrstart, offs_t addrend, void *base)
-{
-	const_cast<address_space *>(space)->set_decrypted_region(addrstart, addrend, base);
-}
-
-static inline void *memory_get_read_ptr(address_space *space, offs_t byteaddress)
-{
-	return const_cast<address_space *>(space)->get_read_ptr(byteaddress);
-}
-
-static inline void *memory_get_write_ptr(address_space *space, offs_t byteaddress)
-{
-	return const_cast<address_space *>(space)->get_write_ptr(byteaddress);
-}
-
-static inline const char *memory_get_handler_string(address_space *space, read_or_write readorwrite, offs_t byteaddress)
-{
-	return const_cast<address_space *>(space)->get_handler_string(readorwrite, byteaddress);
-}
-
-static inline void memory_enable_read_watchpoints(address_space *space, bool enable)
-{
-	const_cast<address_space *>(space)->enable_read_watchpoints(enable);
-}
-
-static inline void memory_enable_write_watchpoints(address_space *space, bool enable)
-{
-	const_cast<address_space *>(space)->enable_write_watchpoints(enable);
-}
-
-static inline void memory_set_debugger_access(address_space *space, bool debugger)
-{
-	const_cast<address_space *>(space)->set_debugger_access(debugger);
-}
-
-static inline void memory_set_log_unmap(address_space *space, bool log)
-{
-	const_cast<address_space *>(space)->set_log_unmap(log);
-}
-
-static inline bool memory_get_log_unmap(address_space *space)
-{
-	return space->log_unmap();
-}
 
 
 #endif	/* __MEMORY_H__ */

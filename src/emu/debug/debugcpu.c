@@ -861,14 +861,14 @@ UINT64 debug_read_opcode(address_space *_space, offs_t address, int size, int ar
 	switch (size)
 	{
 		case 1:
-			result = (arg) ? memory_raw_read_byte(space, address) : memory_decrypted_read_byte(space, address);
+			result = (arg) ? space->direct().read_raw_byte(address) : space->direct().read_decrypted_byte(address);
 			break;
 
 		case 2:
-			result = (arg) ? memory_raw_read_word(space, address & ~1) : memory_decrypted_read_word(space, address & ~1);
+			result = (arg) ? space->direct().read_raw_word(address & ~1) : space->direct().read_decrypted_word(address & ~1);
 			if ((address & 1) != 0)
 			{
-				result2 = (arg) ? memory_raw_read_word(space, (address & ~1) + 2) : memory_decrypted_read_word(space, (address & ~1) + 2);
+				result2 = (arg) ? space->direct().read_raw_word((address & ~1) + 2) : space->direct().read_decrypted_word((address & ~1) + 2);
 				if (space->endianness() == ENDIANNESS_LITTLE)
 					result = (result >> (8 * (address & 1))) | (result2 << (16 - 8 * (address & 1)));
 				else
@@ -878,10 +878,10 @@ UINT64 debug_read_opcode(address_space *_space, offs_t address, int size, int ar
 			break;
 
 		case 4:
-			result = (arg) ? memory_raw_read_dword(space, address & ~3) : memory_decrypted_read_dword(space, address & ~3);
+			result = (arg) ? space->direct().read_raw_dword(address & ~3) : space->direct().read_decrypted_dword(address & ~3);
 			if ((address & 3) != 0)
 			{
-				result2 = (arg) ? memory_raw_read_dword(space, (address & ~3) + 4) : memory_decrypted_read_dword(space, (address & ~3) + 4);
+				result2 = (arg) ? space->direct().read_raw_dword((address & ~3) + 4) : space->direct().read_decrypted_dword((address & ~3) + 4);
 				if (space->endianness() == ENDIANNESS_LITTLE)
 					result = (result >> (8 * (address & 3))) | (result2 << (32 - 8 * (address & 3)));
 				else
@@ -891,10 +891,10 @@ UINT64 debug_read_opcode(address_space *_space, offs_t address, int size, int ar
 			break;
 
 		case 8:
-			result = (arg) ? memory_raw_read_qword(space, address & ~7) : memory_decrypted_read_qword(space, address & ~7);
+			result = (arg) ? space->direct().read_raw_qword(address & ~7) : space->direct().read_decrypted_qword(address & ~7);
 			if ((address & 7) != 0)
 			{
-				result2 = (arg) ? memory_raw_read_qword(space, (address & ~7) + 8) : memory_decrypted_read_qword(space, (address & ~7) + 8);
+				result2 = (arg) ? space->direct().read_raw_qword((address & ~7) + 8) : space->direct().read_decrypted_qword((address & ~7) + 8);
 				if (space->endianness() == ENDIANNESS_LITTLE)
 					result = (result >> (8 * (address & 7))) | (result2 << (64 - 8 * (address & 7)));
 				else
@@ -1123,9 +1123,9 @@ static UINT64 expression_read_program_direct(address_space *_space, int opcode, 
 
 			/* get the base of memory, aligned to the address minus the lowbits */
 			if (opcode & 1)
-				base = (UINT8 *)memory_decrypted_read_ptr(space, address & ~lowmask);
+				base = (UINT8 *)space->direct().read_decrypted_ptr(address & ~lowmask);
 			else
-				base = (UINT8 *)memory_get_read_ptr(space, address & ~lowmask);
+				base = (UINT8 *)space->get_read_ptr(address & ~lowmask);
 
 			/* if we have a valid base, return the appropriate byte */
 			if (base != NULL)
@@ -1296,9 +1296,9 @@ static void expression_write_program_direct(address_space *_space, int opcode, o
 
 			/* get the base of memory, aligned to the address minus the lowbits */
 			if (opcode & 1)
-				base = (UINT8 *)memory_decrypted_read_ptr(space, address & ~lowmask);
+				base = (UINT8 *)space->direct().read_decrypted_ptr(address & ~lowmask);
 			else
-				base = (UINT8 *)memory_get_read_ptr(space, address & ~lowmask);
+				base = (UINT8 *)space->get_read_ptr(address & ~lowmask);
 
 			/* if we have a valid base, write the appropriate byte */
 			if (base != NULL)
@@ -2549,7 +2549,7 @@ void device_debug::breakpoint_check(offs_t pc)
 			global->execution_state = EXECUTION_STATE_STOPPED;
 
 			// if we hit, evaluate the action
-			if (bp->m_action.len() != 0)
+			if (bp->m_action)
 				debug_console_execute_command(m_device.machine, bp->m_action, 0);
 
 			// print a notification, unless the action made us go again
@@ -2584,8 +2584,8 @@ void device_debug::watchpoint_update_flags(address_space &space)
 		}
 
 	// push the flags out globally
-	memory_enable_read_watchpoints(&space, enableread);
-	memory_enable_write_watchpoints(&space, enablewrite);
+	space.enable_read_watchpoints(enableread);
+	space.enable_write_watchpoints(enablewrite);
 }
 
 
@@ -2642,7 +2642,7 @@ void device_debug::watchpoint_check(address_space &space, int type, offs_t addre
 			global->execution_state = EXECUTION_STATE_STOPPED;
 
 			// if we hit, evaluate the action
-			if (wp->m_action != NULL)
+			if (wp->m_action)
 				debug_console_execute_command(space.machine, wp->m_action, 0);
 
 			// print a notification, unless the action made us go again
@@ -2781,7 +2781,7 @@ UINT64 device_debug::get_cycles(void *globalref, void *ref)
 UINT64 device_debug::get_logunmap(void *globalref, void *ref)
 {
 	address_space *space = reinterpret_cast<address_space *>(ref);
-	return memory_get_log_unmap(space);
+	return space->log_unmap();
 }
 
 
@@ -3003,7 +3003,7 @@ void device_debug::tracer::update(offs_t pc)
 	m_loops = 0;
 
 	// execute any trace actions first
-	if (m_action != NULL)
+	if (m_action)
 		debug_console_execute_command(m_debug.m_device.machine, m_action, 0);
 
 	// print the address

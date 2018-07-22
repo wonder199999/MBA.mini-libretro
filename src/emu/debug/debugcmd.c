@@ -159,7 +159,7 @@ static void execute_hardreset(running_machine *machine, int ref, int params, con
 
 INLINE int cheat_address_is_valid(address_space *space, offs_t address)
 {
-	return debug_cpu_translate(space, TRANSLATE_READ, &address) && (memory_get_write_ptr(space, address) != NULL);
+	return debug_cpu_translate(space, TRANSLATE_READ, &address) && (space->get_write_ptr(address) != NULL);
 }
 
 
@@ -1001,7 +1001,7 @@ static void execute_ignore(running_machine *machine, int ref, int params, const 
 			}
 
 		/* special message for none */
-		if (buffer.len() == 0)
+		if (!buffer)
 			buffer.printf("Not currently ignoring any devices");
 		debug_console_printf(machine, "%s\n", buffer.cstr());
 	}
@@ -1056,14 +1056,14 @@ static void execute_observe(running_machine *machine, int ref, int params, const
 			/* build up a comma-separated list */
 			if (exec->device().debug()->observing())
 			{
-				if (buffer.len() == 0)
+				if (!buffer)
 					buffer.printf("Currently observing CPU '%s'", exec->device().tag());
 				else
 					buffer.catprintf(", '%s'", exec->device().tag());
 			}
 
 		/* special message for none */
-		if (buffer.len() == 0)
+		if (!buffer)
 			buffer.printf("Not currently observing any devices");
 		debug_console_printf(machine, "%s\n", buffer.cstr());
 	}

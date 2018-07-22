@@ -40,13 +40,15 @@ inline void map_handler_data::set_tag(const device_config &devconfig, const char
 {
 	if (tag == NULL)
 		m_tag = NULL;
-	else
-	if (strcmp(tag, DEVICE_SELF) == 0)
+	else if (strcmp(tag, DEVICE_SELF) == 0)
 		m_tag = devconfig.tag();
 	else
 		m_tag = devconfig.siblingtag(m_derived_tag, tag);
 }
 
+/**************************************************************************/
+//	ADDRESS MAP ENTRY
+/**************************************************************************/
 
 //-------------------------------------------------
 //	address_map_entry - constructor
