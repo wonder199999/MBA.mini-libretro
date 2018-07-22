@@ -39,7 +39,7 @@
 
 #include "emu.h"
 #include "emuopts.h"
-#include "profiler.h"
+//#include "profiler.h"
 #include "png.h"
 #include "debugger.h"
 #include "debugint/debugint.h"

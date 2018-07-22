@@ -211,9 +211,9 @@
 
 #define MEM_DUMP		(0)
 #define VERBOSE			(0)
-#define TEST_HANDLER	(0)
+#define TEST_HANDLER		(0)
 
-#define VPRINTF(x)	do { if (VERBOSE) mame_printf_debug x; } while (0)
+#define VPRINTF(x)	do { if (VERBOSE) printf x; } while (0)
 
 
 
@@ -353,7 +353,8 @@ public:
 	// compare a range against our range
 	bool matches_exactly(offs_t bytestart, offs_t byteend) const { return (m_bytestart == bytestart && m_byteend == byteend); }
 	bool fully_covers(offs_t bytestart, offs_t byteend) const { return (m_bytestart <= bytestart && m_byteend >= byteend); }
-	bool partially_covers(offs_t bytestart, offs_t byteend) const { return (m_bytestart <= byteend && m_byteend >= bytestart); }
+	bool is_covered_by(offs_t bytestart, offs_t byteend) const { return (m_bytestart >= bytestart && m_byteend <= byteend); }
+	bool straddles(offs_t bytestart, offs_t byteend) const { return (m_bytestart < byteend && m_byteend > bytestart); }
 
 	// track and verify address space references to this bank
 	bool references_space(address_space &space, read_or_write readorwrite) const;
@@ -783,15 +784,15 @@ private:
 	template<typename _UintType>
 	_UintType watchpoint_r(address_space &space, offs_t offset, _UintType mask)
 	{
-		m_space.device().debug()->memory_read_hook(m_space, offset, mask);
+		m_space.device().debug()->memory_read_hook(m_space, offset *sizeof(_UintType), mask);
 
 		UINT8 *oldtable = m_live_lookup;
 		m_live_lookup = m_table;
 		_UintType result;
 		if (sizeof(_UintType) == 1) result = m_space.read_byte(offset);
-		if (sizeof(_UintType) == 2) result = m_space.read_word(offset, mask);
-		if (sizeof(_UintType) == 4) result = m_space.read_dword(offset, mask);
-		if (sizeof(_UintType) == 8) result = m_space.read_qword(offset, mask);
+		if (sizeof(_UintType) == 2) result = m_space.read_word(offset << 1, mask);
+		if (sizeof(_UintType) == 4) result = m_space.read_dword(offset << 2, mask);
+		if (sizeof(_UintType) == 8) result = m_space.read_qword(offset << 3, mask);
 		m_live_lookup = oldtable;
 		return result;
 	}
@@ -836,14 +837,14 @@ private:
 	template<typename _UintType>
 	void watchpoint_w(address_space &space, offs_t offset, _UintType data, _UintType mask)
 	{
-		m_space.device().debug()->memory_write_hook(m_space, offset, data, 0xff);
+		m_space.device().debug()->memory_write_hook(m_space, offset *sizeof(_UintType), data, mask);
 
 		UINT8 *oldtable = m_live_lookup;
 		m_live_lookup = m_table;
 		if (sizeof(_UintType) == 1) m_space.write_byte(offset, data);
-		if (sizeof(_UintType) == 2) m_space.write_word(offset, data, mask);
-		if (sizeof(_UintType) == 4) m_space.write_dword(offset, data, mask);
-		if (sizeof(_UintType) == 8) m_space.write_qword(offset, data, mask);
+		if (sizeof(_UintType) == 2) m_space.write_word(offset << 1, data, mask);
+		if (sizeof(_UintType) == 4) m_space.write_dword(offset << 2, data, mask);
+		if (sizeof(_UintType) == 8) m_space.write_qword(offset << 3, data, mask);
 		m_live_lookup = oldtable;
 	}
 
@@ -1071,7 +1072,7 @@ public:
 	// native read
 	_NativeType read_native(offs_t offset, _NativeType mask)
 	{
-		profiler_mark_start(PROFILER_MEMREAD);
+		g_profiler.start(PROFILER_MEMREAD);
 
 		if (TEST_HANDLER) printf("[r%X,%s]", offset, core_i64_hex_format(mask, sizeof(_NativeType) * 2));
 
@@ -1089,14 +1090,14 @@ public:
 		else if (sizeof(_NativeType) == 4) result = handler.read32(*this, offset >> 2, mask);
 		else if (sizeof(_NativeType) == 8) result = handler.read64(*this, offset >> 3, mask);
 
-		profiler_mark_end();
+		g_profiler.stop();
 		return result;
 	}
 
 	// mask-less native read
 	_NativeType read_native(offs_t offset)
 	{
-		profiler_mark_start(PROFILER_MEMREAD);
+		g_profiler.start(PROFILER_MEMREAD);
 
 		if (TEST_HANDLER) printf("[r%X]", offset);
 
@@ -1114,14 +1115,14 @@ public:
 		else if (sizeof(_NativeType) == 4) result = handler.read32(*this, offset >> 2, 0xffffffff);
 		else if (sizeof(_NativeType) == 8) result = handler.read64(*this, offset >> 3, U64(0xffffffffffffffff));
 
-		profiler_mark_end();
+		g_profiler.stop();
 		return result;
 	}
 
 	// native write
 	void write_native(offs_t offset, _NativeType data, _NativeType mask)
 	{
-		profiler_mark_start(PROFILER_MEMWRITE);
+		g_profiler.start(PROFILER_MEMWRITE);
 
 		// look up the handler
 		offs_t byteaddress = offset & m_bytemask;
@@ -1140,13 +1141,13 @@ public:
 		else if (sizeof(_NativeType) == 4) handler.write32(*this, offset >> 2, data, mask);
 		else if (sizeof(_NativeType) == 8) handler.write64(*this, offset >> 3, data, mask);
 
-		profiler_mark_end();
+		g_profiler.stop();
 	}
 
 	// mask-less native write
 	void write_native(offs_t offset, _NativeType data)
 	{
-		profiler_mark_start(PROFILER_MEMWRITE);
+		g_profiler.start(PROFILER_MEMWRITE);
 
 		// look up the handler
 		offs_t byteaddress = offset & m_bytemask;
@@ -1161,7 +1162,7 @@ public:
 		else if (sizeof(_NativeType) == 4) handler.write32(*this, offset >> 2, data, 0xffffffff);
 		else if (sizeof(_NativeType) == 8) handler.write64(*this, offset >> 3, data, U64(0xffffffffffffffff));
 
-		profiler_mark_end();
+		g_profiler.stop();
 	}
 
 	// generic direct read
@@ -2237,8 +2238,8 @@ void address_space::set_decrypted_region(offs_t addrstart, offs_t addrend, void 
 		// consider this bank if it is used for reading and matches the address space
 		if (bank->references_space(*this, ROW_READ))
 		{
-			// verify that the region fully covers the decrypted range
-			if (bank->fully_covers(bytestart, byteend))
+			// verify that the provided range fully covers this bank
+			if (bank->is_covered_by(bytestart, byteend))
 			{
 				// set the decrypted pointer for the corresponding memory bank
 				bank->set_base_decrypted(reinterpret_cast<UINT8 *>(base) + bank->bytestart() - bytestart);
@@ -2246,7 +2247,7 @@ void address_space::set_decrypted_region(offs_t addrstart, offs_t addrend, void 
 			}
 
 			// fatal error if the decrypted region straddles the bank
-			else if (bank->partially_covers(bytestart, byteend))
+			else if (bank->straddles(bytestart, byteend))
 				throw emu_fatalerror("memory_set_decrypted_region found straddled region %08X-%08X for device '%s'", bytestart, byteend, m_device.tag());
 		}
 	}
@@ -2357,6 +2358,12 @@ void address_space::dump_map(FILE *file, read_or_write readorwrite)
 
 void address_space::unmap(offs_t addrstart, offs_t addrend, offs_t addrmask, offs_t addrmirror, read_or_write readorwrite, bool quiet)
 {
+	VPRINTF( ("address_space::unmap(%s-%s mask=%s mirror=%s, %s, %s)\n", 
+			core_i64_hex_format(addrstart, m_addrchars), core_i64_hex_format(addrend, m_addrchars), 
+			core_i64_hex_format(addrmask, m_addrchars), core_i64_hex_format(addrmirror, m_addrchars), 
+			(readorwrite == ROW_READ) ? "read" : (readorwrite == ROW_WRITE) ? "write" : (readorwrite == ROW_READWRITE) ? "read/write" : "??", 
+				quiet ? "quiet" : "normal") );
+
 	// read space
 	if (readorwrite == ROW_READ || readorwrite == ROW_READWRITE)
 		read().map_range(addrstart, addrend, addrmask, addrmirror, quiet ? STATIC_NOP : STATIC_UNMAP);
@@ -2374,6 +2381,11 @@ void address_space::unmap(offs_t addrstart, offs_t addrend, offs_t addrmask, off
 
 void address_space::install_port(offs_t addrstart, offs_t addrend, offs_t addrmask, offs_t addrmirror, const char *rtag, const char *wtag)
 {
+	VPRINTF( ("address_space::install_port(%s-%s mask=%s mirror=%s, read=\"%s\" / write=\"%s\")\n", 
+			core_i64_hex_format(addrstart, m_addrchars), core_i64_hex_format(addrend, m_addrchars), 
+			core_i64_hex_format(addrmask, m_addrchars), core_i64_hex_format(addrmirror, m_addrchars), 
+				(rtag != NULL) ? rtag : "(none)", (wtag != NULL) ? wtag : "(none)") );
+
 	// read handler
 	if (rtag != NULL)
 	{
@@ -2411,6 +2423,11 @@ void address_space::install_port(offs_t addrstart, offs_t addrend, offs_t addrma
 
 void address_space::install_bank(offs_t addrstart, offs_t addrend, offs_t addrmask, offs_t addrmirror, const char *rtag, const char *wtag)
 {
+	VPRINTF( ("address_space::install_bank(%s-%s mask=%s mirror=%s, read=\"%s\" / write=\"%s\")\n", 
+			core_i64_hex_format(addrstart, m_addrchars), core_i64_hex_format(addrend, m_addrchars), 
+			core_i64_hex_format(addrmask, m_addrchars), core_i64_hex_format(addrmirror, m_addrchars), 
+				(rtag != NULL) ? rtag : "(none)", (wtag != NULL) ? wtag : "(none)") );
+
 	// map the read bank
 	if (rtag != NULL)
 	{
@@ -2438,6 +2455,12 @@ void address_space::install_bank(offs_t addrstart, offs_t addrend, offs_t addrma
 void *address_space::install_ram(offs_t addrstart, offs_t addrend, offs_t addrmask, offs_t addrmirror, read_or_write readorwrite, void *baseptr)
 {
 	memory_private *memdata = m_machine.memory_data;
+
+	VPRINTF( ("address_space::install_ram(%s-%s mask=%s mirror=%s, %s, %p)\n", 
+			core_i64_hex_format(addrstart, m_addrchars), core_i64_hex_format(addrend, m_addrchars), 
+			core_i64_hex_format(addrmask, m_addrchars), core_i64_hex_format(addrmirror, m_addrchars), 
+			(readorwrite == ROW_READ) ? "read" : (readorwrite == ROW_WRITE) ? "write" : (readorwrite == ROW_READWRITE) ? "read/write" : "??", 
+				baseptr) );
 
 	// map for read
 	if (readorwrite == ROW_READ || readorwrite == ROW_READWRITE)
@@ -2508,6 +2531,11 @@ void *address_space::install_ram(offs_t addrstart, offs_t addrend, offs_t addrma
 
 UINT8 *address_space::install_handler(offs_t addrstart, offs_t addrend, offs_t addrmask, offs_t addrmirror, read8_delegate handler, UINT64 unitmask)
 {
+	VPRINTF( ("address_space::install_handler(%s-%s mask=%s mirror=%s, %s, %s)\n", 
+			core_i64_hex_format(addrstart, m_addrchars), core_i64_hex_format(addrend, m_addrchars), 
+			core_i64_hex_format(addrmask, m_addrchars), core_i64_hex_format(addrmirror, m_addrchars), 
+			handler.name(), core_i64_hex_format(unitmask, data_width() / 4)) );
+
 	UINT32 entry = read().map_range(addrstart, addrend, addrmask, addrmirror);
 	read().handler_read(entry).set_delegate(handler, unitmask);
 	generate_memdump(machine);
@@ -2516,6 +2544,11 @@ UINT8 *address_space::install_handler(offs_t addrstart, offs_t addrend, offs_t a
 
 UINT8 *address_space::install_handler(offs_t addrstart, offs_t addrend, offs_t addrmask, offs_t addrmirror, write8_delegate handler, UINT64 unitmask)
 {
+	VPRINTF( ("address_space::install_handler(%s-%s mask=%s mirror=%s, %s, %s)\n", 
+			core_i64_hex_format(addrstart, m_addrchars), core_i64_hex_format(addrend, m_addrchars), 
+			core_i64_hex_format(addrmask, m_addrchars), core_i64_hex_format(addrmirror, m_addrchars), 
+			handler.name(), core_i64_hex_format(unitmask, data_width() / 4)) );
+
 	UINT32 entry = write().map_range(addrstart, addrend, addrmask, addrmirror);
 	write().handler_write(entry).set_delegate(handler, unitmask);
 	generate_memdump(machine);
@@ -2537,6 +2570,11 @@ UINT8 *address_space::install_handler(offs_t addrstart, offs_t addrend, offs_t a
 
 UINT8 *address_space::install_legacy_handler(offs_t addrstart, offs_t addrend, offs_t addrmask, offs_t addrmirror, read8_space_func rhandler, const char *rname, UINT64 unitmask)
 {
+	VPRINTF( ("address_space::install_legacy_handler(%s-%s mask=%s mirror=%s, %s, %s) [read8]\n", 
+			core_i64_hex_format(addrstart, m_addrchars), core_i64_hex_format(addrend, m_addrchars), 
+			core_i64_hex_format(addrmask, m_addrchars), core_i64_hex_format(addrmirror, m_addrchars), 
+			rname, core_i64_hex_format(unitmask, data_width() / 4)) );
+
 	UINT32 entry = read().map_range(addrstart, addrend, addrmask, addrmirror);
 	read().handler_read(entry).set_legacy_func(*this, rhandler, rname, unitmask);
 	generate_memdump(machine);
@@ -2545,6 +2583,11 @@ UINT8 *address_space::install_legacy_handler(offs_t addrstart, offs_t addrend, o
 
 UINT8 *address_space::install_legacy_handler(offs_t addrstart, offs_t addrend, offs_t addrmask, offs_t addrmirror, write8_space_func whandler, const char *wname, UINT64 unitmask)
 {
+	VPRINTF( ("address_space::install_legacy_handler(%s-%s mask=%s mirror=%s, %s, %s) [write8]\n", 
+			core_i64_hex_format(addrstart, m_addrchars), core_i64_hex_format(addrend, m_addrchars), 
+			core_i64_hex_format(addrmask, m_addrchars), core_i64_hex_format(addrmirror, m_addrchars), 
+			wname, core_i64_hex_format(unitmask, data_width() / 4)) );
+
 	UINT32 entry = write().map_range(addrstart, addrend, addrmask, addrmirror);
 	write().handler_write(entry).set_legacy_func(*this, whandler, wname, unitmask);
 	generate_memdump(machine);
@@ -2565,6 +2608,11 @@ UINT8 *address_space::install_legacy_handler(offs_t addrstart, offs_t addrend, o
 
 UINT8 *address_space::install_legacy_handler(device_t &device, offs_t addrstart, offs_t addrend, offs_t addrmask, offs_t addrmirror, read8_device_func rhandler, const char *rname, UINT64 unitmask)
 {
+	VPRINTF( ("address_space::install_legacy_handler(%s-%s mask=%s mirror=%s, %s, %s, \"%s\") [read8]\n", 
+			core_i64_hex_format(addrstart, m_addrchars), core_i64_hex_format(addrend, m_addrchars), 
+			core_i64_hex_format(addrmask, m_addrchars), core_i64_hex_format(addrmirror, m_addrchars), 
+			rname, core_i64_hex_format(unitmask, data_width() / 4), device.tag()) );
+
 	UINT32 entry = read().map_range(addrstart, addrend, addrmask, addrmirror);
 	read().handler_read(entry).set_legacy_func(device, rhandler, rname, unitmask);
 	generate_memdump(machine);
@@ -2573,6 +2621,11 @@ UINT8 *address_space::install_legacy_handler(device_t &device, offs_t addrstart,
 
 UINT8 *address_space::install_legacy_handler(device_t &device, offs_t addrstart, offs_t addrend, offs_t addrmask, offs_t addrmirror, write8_device_func whandler, const char *wname, UINT64 unitmask)
 {
+	VPRINTF( ("address_space::install_legacy_handler(%s-%s mask=%s mirror=%s, %s, %s, \"%s\") [write8]\n", 
+			core_i64_hex_format(addrstart, m_addrchars), core_i64_hex_format(addrend, m_addrchars), 
+			core_i64_hex_format(addrmask, m_addrchars), core_i64_hex_format(addrmirror, m_addrchars), 
+			wname, core_i64_hex_format(unitmask, data_width() / 4), device.tag()) );
+
 	UINT32 entry = write().map_range(addrstart, addrend, addrmask, addrmirror);
 	write().handler_write(entry).set_legacy_func(device, whandler, wname, unitmask);
 	generate_memdump(machine);
@@ -3049,10 +3102,12 @@ UINT8 address_table::map_range(offs_t addrstart, offs_t addrend, offs_t addrmask
 			{
 				handler_entry &curentry = handler(scanentry);
 
-				// exact match takes precedence, and in fact doesn't need any
-				// further configuration or population
+				// exact match takes precedence
 				if (curentry.matches_exactly(bytestart, byteend, bytemask))
-					return scanentry;
+				{
+					entry = scanentry;
+					break;
+				}
 
 				// unpopulated is our second choice
 				if (entry == STATIC_INVALID && !curentry.populated())
