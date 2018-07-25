@@ -33,7 +33,7 @@ static void update_geometry();
 /* ============================================================ */
 #ifdef ANDROID
    #include <android/log.h>
-   #define LOGI(...) ((void)__android_log_print(ANDROID_LOG_INFO, "mame2010.mini", __VA_ARGS__))
+   #define LOGI(...) ((void)__android_log_print(ANDROID_LOG_INFO, "mba_mini", __VA_ARGS__))
    #undef write_log
    #define write_log LOGI
 #else

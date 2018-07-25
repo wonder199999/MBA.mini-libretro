@@ -1194,19 +1194,19 @@ static MACHINE_DRIVER_START( cps2 )
 	/* basic machine hardware */
 	MDRV_CPU_ADD("maincpu", M68000, XTAL_16MHz)
 	MDRV_CPU_PROGRAM_MAP(cps2_map)
-	MDRV_CPU_VBLANK_INT_HACK(cps2_interrupt, 262)		// 262  /* ??? interrupts per frame */
+	MDRV_CPU_VBLANK_INT_HACK(cps2_interrupt, 259)		// 262  /* ??? interrupts per frame */
 	MDRV_CPU_ADD("audiocpu", Z80, XTAL_8MHz)
 	MDRV_CPU_PROGRAM_MAP(qsound_sub_map)
-	MDRV_CPU_PERIODIC_INT(irq0_line_hold, 250)		/* 251 is good (see 'mercy mercy mercy'section of sgemf attract mode for accurate sound sync */
+	MDRV_CPU_PERIODIC_INT(irq0_line_hold, 251)		/* 251 is good (see 'mercy mercy mercy'section of sgemf attract mode for accurate sound sync */
 	MDRV_MACHINE_START(cps2)
 
 	MDRV_EEPROM_ADD("eeprom", cps2_eeprom_interface)
 
 	/* video hardware */
-	MDRV_SCREEN_ADD("screen", RASTER)
 	MDRV_VIDEO_ATTRIBUTES(VIDEO_UPDATE_BEFORE_VBLANK)
+	MDRV_SCREEN_ADD("screen", RASTER)
 	MDRV_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
-	MDRV_SCREEN_RAW_PARAMS(CPS_PIXEL_CLOCK, CPS_HTOTAL, CPS_HBEND, CPS_HBSTART, CPS_VTOTAL, CPS_VBEND, CPS_VBSTART)
+	MDRV_SCREEN_RAW_PARAMS(CPS_PIXEL_CLOCK, CPS2_HTOTAL, CPS_HBEND, CPS_HBSTART, CPS2_VTOTAL, CPS_VBEND, CPS_VBSTART)
 	MDRV_VIDEO_UPDATE(cps1)
 	MDRV_VIDEO_EOF(cps1)
 	MDRV_GFXDECODE(cps2)

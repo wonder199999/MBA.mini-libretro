@@ -370,12 +370,6 @@ CPUOBJS += $(CPUOBJ)/nec/v25sfr.o
 DASMOBJS += $(CPUOBJ)/nec/necdasm.o
 endif
 
-ifneq ($(filter V30MZ,$(CPUS)),)
-OBJDIRS += $(CPUOBJ)/v30mz $(CPUOBJ)/nec
-CPUOBJS += $(CPUOBJ)/v30mz/v30mz.o
-DASMOBJS += $(CPUOBJ)/nec/necdasm.o
-endif
-
 $(CPUOBJ)/nec/nec.o:	$(CPUSRC)/nec/nec.c \
 				$(CPUSRC)/nec/nec.h \
 					$(CPUSRC)/nec/necea.h \
@@ -397,13 +391,6 @@ $(CPUOBJ)/nec/v25sfr.o:		$(CPUSRC)/nec/v25sfr.c \
 					$(CPUSRC)/nec/nec.h \
 						$(CPUSRC)/nec/v25priv.h
 
-$(CPUOBJ)/v30mz/v30mz.o:	$(CPUSRC)/v30mz/v30mz.c \
-					$(CPUSRC)/v30mz/v30mz.h \
-						$(CPUSRC)/v30mz/necmodrm.h \
-							$(CPUSRC)/v30mz/necinstr.h \
-								$(CPUSRC)/v30mz/necea.h \
-									$(CPUSRC)/v30mz/nechost.h \
-										$(CPUSRC)/v30mz/nec.h
 
 #-------------------------------------------------
 # Zilog Z80

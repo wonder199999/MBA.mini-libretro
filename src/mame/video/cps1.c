@@ -1486,8 +1486,8 @@ INLINE UINT16 *cps1_base( running_machine *machine, int offset, int boundary )
 /*	The scroll RAM must start on a 0x4000 boundary.
     	Some games do not do this.
     	For example:
-       		Captain commando     - continue screen will not display
-       		Muscle bomber games  - will animate garbage during gameplay
+		Captain commando    - continue screen will not display
+		Muscle bomber games - will animate garbage during gameplay
 		Mask out the irrelevant bits. */
 
 	base &= ~(boundary - 1);
@@ -1508,6 +1508,11 @@ WRITE16_HANDLER( cps1_cps_a_w )
     	fixes glitches in the ghouls intro, but it might happen at next vblank.	    */
 	if (offset == CPS1_PALETTE_BASE)
 		cps1_build_palette(space->machine, cps1_base(space->machine, CPS1_PALETTE_BASE, state->palette_align));
+
+	/* pzloop2 write to register 24 on startup. This is probably just a bug. */
+	if (state->cps_version == 2)
+		if (offset == 0x24 / 2)
+			return;
 
 #ifdef MAME_DEBUG
 	if (offset > CPS1_VIDEOCONTROL)
@@ -1567,9 +1572,9 @@ WRITE16_HANDLER( cps1_cps_b_w )
 	{
 		switch (offset)		/* To mark scanlines for raster effects */
 		{
-			case 0x10 / 2: state->scanline1 = (data & 0x01ff); return;
-			case 0x12 / 2: state->scanline2 = (data & 0x01ff);
 			case 0x0e / 2: return;	/* UNKNOWN */
+			case 0x10 / 2: state->scanline1 = (data & 0x01ff); return;
+			case 0x12 / 2: state->scanline2 = (data & 0x01ff); return;
 		}
 	}
 
@@ -1615,8 +1620,7 @@ INLINE int cps2_port( running_machine *machine, int offset )
 static void cps1_gfx_decode( running_machine *machine )
 {
 	UINT8 *cps1_gfx = memory_region(machine, "gfx");
-	INT32 size = memory_region_length(machine, "gfx");
-	INT32 gfxsize = size / 4;
+	INT32 gfxsize = memory_region_length(machine, "gfx") / 4;
 
 	for (UINT32 i = 0; i < gfxsize; i++)
 	{
@@ -1657,10 +1661,12 @@ static void unshuffle( UINT64 *buf, int len )
 	unshuffle(buf, len);
 	unshuffle(buf + len, len);
 
-	for (UINT32 i = 0; i < len / 2; i++)
+	int length = len / 2;
+
+	for (UINT32 i = 0; i < length; i++)
 	{
-		t = buf[len / 2 + i];
-		buf[len / 2 + i] = buf[len + i];
+		t = buf[length + i];
+		buf[length + i] = buf[len + i];
 		buf[len + i] = t;
 	}
 }
@@ -1668,10 +1674,9 @@ static void unshuffle( UINT64 *buf, int len )
 
 static void cps2_gfx_decode( running_machine *machine )
 {
-	const int banksize = 0x200000;
 	INT32 size = memory_region_length(machine, "gfx");
 
-	for (UINT32 i = 0; i < size; i += banksize)
+	for (UINT32 i = 0; i < size; i += 0x200000)
 		unshuffle((UINT64 *)(memory_region(machine, "gfx") + i), 0x200000 / 8);
 
 	cps1_gfx_decode(machine);

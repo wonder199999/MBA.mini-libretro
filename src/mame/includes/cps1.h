@@ -14,13 +14,17 @@
 	Frame size: 262 scanlines
 	Refresh rate: 59.63 MHz.
 */
+
 #define CPS_PIXEL_CLOCK		(XTAL_16MHz / 2)
-#define CPS_HTOTAL		(512)
+#define CPS1_HTOTAL		(512)
+#define CPS2_HTOTAL		(518)
 #define CPS_HBEND		(64)
 #define CPS_HBSTART		(448)
-#define CPS_VTOTAL		(262)
+#define CPS1_VTOTAL		(262)
+#define CPS2_VTOTAL		(259)
 #define CPS_VBEND		(16)
 #define CPS_VBSTART		(240)
+
 
 #define CODE_SIZE		0x400000
 #define CPS1_ROWSCROLL_OFFS	(0x20 / 2)    /* base of row scroll offsets in other RAM */
