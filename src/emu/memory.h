@@ -212,7 +212,7 @@ typedef delegate_4param<void, address_space &, offs_t, UINT64, UINT64> write64_d
 class direct_read_data
 {
 	friend class address_table;
-	
+
 public:
 	// direct_range is an internal class that is part of a list of start/end ranges
 	class direct_range
@@ -226,11 +226,11 @@ public:
 
 		// getters
 		direct_range *next() const { return m_next; }
-		
+
 		// internal state
-		direct_range *			m_next;					// pointer to the next range in the list
-		offs_t					m_bytestart;			// starting byte offset of the range
-		offs_t					m_byteend;				// ending byte offset of the range
+		direct_range		*m_next;		// pointer to the next range in the list
+		offs_t			m_bytestart;		// starting byte offset of the range
+		offs_t			m_byteend;		// ending byte offset of the range
 	};
 
 	// construction/destruction
@@ -274,16 +274,16 @@ private:
 	void remove_intersecting_ranges(offs_t bytestart, offs_t byteend);
 
 	// internal state
-	address_space &				m_space;
-	UINT8 *						m_raw;					// direct access data pointer (raw)
-	UINT8 *						m_decrypted;			// direct access data pointer (decrypted)
-	offs_t						m_bytemask;				// byte address mask
-	offs_t						m_bytestart;			// minimum valid byte address
-	offs_t						m_byteend;				// maximum valid byte address
-	UINT8						m_entry;				// live entry
-	simple_list<direct_range> 	m_rangelist[256];		// list of ranges for each entry
-	simple_list<direct_range> 	m_freerangelist;		// list of recycled range entries
-	direct_update_delegate		m_directupdate;			// fast direct-access update callback
+	address_space		&m_space;
+	UINT8			*m_raw;					// direct access data pointer (raw)
+	UINT8			*m_decrypted;				// direct access data pointer (decrypted)
+	offs_t				m_bytemask;			// byte address mask
+	offs_t				m_bytestart;			// minimum valid byte address
+	offs_t				m_byteend;			// maximum valid byte address
+	UINT8						m_entry;	// live entry
+	simple_list<direct_range> 		m_rangelist[256];	// list of ranges for each entry
+	simple_list<direct_range> 		m_freerangelist;	// list of recycled range entries
+	direct_update_delegate			m_directupdate;		// fast direct-access update callback
 };
 
 
@@ -311,15 +311,15 @@ public:
 	inline offs_t byte2addr_end(offs_t address) const { return (m_addrbus_shift > 0) ? ((address << m_addrbus_shift) | ((1 << -m_addrbus_shift) - 1)) : (address >> -m_addrbus_shift); }
 
 	// state
-	const char *		m_name;
-	endianness_t		m_endianness;
+	const char		*m_name;
+	endianness_t			m_endianness;
 	UINT8				m_databus_width;
 	UINT8				m_addrbus_width;
 	INT8				m_addrbus_shift;
 	UINT8				m_logaddr_width;
 	UINT8				m_page_shift;
-	address_map_constructor m_internal_map;
-	address_map_constructor m_default_map;
+	address_map_constructor			m_internal_map;
+	address_map_constructor			m_default_map;
 };
 
 
@@ -493,26 +493,26 @@ private:
 
 public:
 	// public state (eventually will go away)
-	running_machine *		machine;			// kept for backwards compatibility
-	device_t *				cpu;				// kept for backwards compatibility
-	running_machine &		m_machine;			// reference to the owning machine
+	running_machine		*machine;			// kept for backwards compatibility
+	device_t		*cpu;				// kept for backwards compatibility
+	running_machine		&m_machine;			// reference to the owning machine
 
 protected:
 	// private state
-	address_space *			m_next;				// next address space in the global list
-	const address_space_config &m_config;		// configuration of this space
-	device_t &				m_device;			// reference to the owning device
-	address_map *			m_map;				// original memory map
-	offs_t					m_addrmask;			// physical address mask
-	offs_t					m_bytemask;			// byte-converted physical address mask
+	address_space			*m_next;			// next address space in the global list
+	const address_space_config	&m_config;			// configuration of this space
+	device_t			&m_device;			// reference to the owning device
+	address_map			*m_map;				// original memory map
+	offs_t					m_addrmask;		// physical address mask
+	offs_t					m_bytemask;		// byte-converted physical address mask
 	offs_t					m_logaddrmask;		// logical address mask
 	offs_t					m_logbytemask;		// byte-converted logical address mask
-	UINT64					m_unmap;			// unmapped value
-	UINT8					m_spacenum;			// address space index
+	UINT64					m_unmap;		// unmapped value
+	UINT8					m_spacenum;		// address space index
 	bool					m_debugger_access;	// treat accesses as coming from the debugger
 	bool					m_log_unmap;		// log unmapped accesses in this space?
-	direct_read_data &		m_direct;			// fast direct-access read info
-	const char *			m_name;				// friendly name of the address space
+	direct_read_data		&m_direct;			// fast direct-access read info
+	const char			*m_name;			// friendly name of the address space
 	UINT8					m_addrchars;		// number of characters to use for physical addresses
 	UINT8					m_logaddrchars;		// number of characters to use for logical addresses
 };
@@ -527,54 +527,51 @@ protected:
 #define DIRECT_UPDATE_MEMBER(name)		offs_t name(ATTR_UNUSED direct_read_data &direct, ATTR_UNUSED offs_t address)
 #define DIRECT_UPDATE_HANDLER(name)		offs_t name(ATTR_UNUSED running_machine *machine, ATTR_UNUSED direct_read_data &direct, ATTR_UNUSED offs_t address)
 
-
 // space read/write handler function macros
-#define READ8_HANDLER(name) 			UINT8  name(ATTR_UNUSED address_space *space, ATTR_UNUSED offs_t offset)
-#define WRITE8_HANDLER(name)			void   name(ATTR_UNUSED address_space *space, ATTR_UNUSED offs_t offset, ATTR_UNUSED UINT8 data)
-#define READ16_HANDLER(name)			UINT16 name(ATTR_UNUSED address_space *space, ATTR_UNUSED offs_t offset, ATTR_UNUSED UINT16 mem_mask)
-#define WRITE16_HANDLER(name)			void   name(ATTR_UNUSED address_space *space, ATTR_UNUSED offs_t offset, ATTR_UNUSED UINT16 data, ATTR_UNUSED UINT16 mem_mask)
-#define READ32_HANDLER(name)			UINT32 name(ATTR_UNUSED address_space *space, ATTR_UNUSED offs_t offset, ATTR_UNUSED UINT32 mem_mask)
-#define WRITE32_HANDLER(name)			void   name(ATTR_UNUSED address_space *space, ATTR_UNUSED offs_t offset, ATTR_UNUSED UINT32 data, ATTR_UNUSED UINT32 mem_mask)
-#define READ64_HANDLER(name)			UINT64 name(ATTR_UNUSED address_space *space, ATTR_UNUSED offs_t offset, ATTR_UNUSED UINT64 mem_mask)
-#define WRITE64_HANDLER(name)			void   name(ATTR_UNUSED address_space *space, ATTR_UNUSED offs_t offset, ATTR_UNUSED UINT64 data, ATTR_UNUSED UINT64 mem_mask)
-
+#define READ8_HANDLER(name) 		UINT8  name(ATTR_UNUSED address_space *space, ATTR_UNUSED offs_t offset)
+#define READ16_HANDLER(name)		UINT16 name(ATTR_UNUSED address_space *space, ATTR_UNUSED offs_t offset, ATTR_UNUSED UINT16 mem_mask)
+#define READ32_HANDLER(name)		UINT32 name(ATTR_UNUSED address_space *space, ATTR_UNUSED offs_t offset, ATTR_UNUSED UINT32 mem_mask)
+#define READ64_HANDLER(name)		UINT64 name(ATTR_UNUSED address_space *space, ATTR_UNUSED offs_t offset, ATTR_UNUSED UINT64 mem_mask)
+#define WRITE8_HANDLER(name)		void name(ATTR_UNUSED address_space *space, ATTR_UNUSED offs_t offset, ATTR_UNUSED UINT8 data)
+#define WRITE16_HANDLER(name)		void name(ATTR_UNUSED address_space *space, ATTR_UNUSED offs_t offset, ATTR_UNUSED UINT16 data, ATTR_UNUSED UINT16 mem_mask)
+#define WRITE32_HANDLER(name)		void name(ATTR_UNUSED address_space *space, ATTR_UNUSED offs_t offset, ATTR_UNUSED UINT32 data, ATTR_UNUSED UINT32 mem_mask)
+#define WRITE64_HANDLER(name)		void name(ATTR_UNUSED address_space *space, ATTR_UNUSED offs_t offset, ATTR_UNUSED UINT64 data, ATTR_UNUSED UINT64 mem_mask)
 
 // device read/write handler function macros
-#define READ8_DEVICE_HANDLER(name)		UINT8  name(ATTR_UNUSED device_t *device, ATTR_UNUSED offs_t offset)
-#define WRITE8_DEVICE_HANDLER(name) 	void   name(ATTR_UNUSED device_t *device, ATTR_UNUSED offs_t offset, ATTR_UNUSED UINT8 data)
-#define READ16_DEVICE_HANDLER(name)		UINT16 name(ATTR_UNUSED device_t *device, ATTR_UNUSED offs_t offset, ATTR_UNUSED UINT16 mem_mask)
-#define WRITE16_DEVICE_HANDLER(name)	void   name(ATTR_UNUSED device_t *device, ATTR_UNUSED offs_t offset, ATTR_UNUSED UINT16 data, ATTR_UNUSED UINT16 mem_mask)
-#define READ32_DEVICE_HANDLER(name)		UINT32 name(ATTR_UNUSED device_t *device, ATTR_UNUSED offs_t offset, ATTR_UNUSED UINT32 mem_mask)
-#define WRITE32_DEVICE_HANDLER(name)	void   name(ATTR_UNUSED device_t *device, ATTR_UNUSED offs_t offset, ATTR_UNUSED UINT32 data, ATTR_UNUSED UINT32 mem_mask)
-#define READ64_DEVICE_HANDLER(name)		UINT64 name(ATTR_UNUSED device_t *device, ATTR_UNUSED offs_t offset, ATTR_UNUSED UINT64 mem_mask)
-#define WRITE64_DEVICE_HANDLER(name)	void   name(ATTR_UNUSED device_t *device, ATTR_UNUSED offs_t offset, ATTR_UNUSED UINT64 data, ATTR_UNUSED UINT64 mem_mask)
-
+#define READ8_DEVICE_HANDLER(name)	UINT8  name(ATTR_UNUSED device_t *device, ATTR_UNUSED offs_t offset)
+#define READ16_DEVICE_HANDLER(name)	UINT16 name(ATTR_UNUSED device_t *device, ATTR_UNUSED offs_t offset, ATTR_UNUSED UINT16 mem_mask)
+#define READ32_DEVICE_HANDLER(name)	UINT32 name(ATTR_UNUSED device_t *device, ATTR_UNUSED offs_t offset, ATTR_UNUSED UINT32 mem_mask)
+#define READ64_DEVICE_HANDLER(name)	UINT64 name(ATTR_UNUSED device_t *device, ATTR_UNUSED offs_t offset, ATTR_UNUSED UINT64 mem_mask)
+#define WRITE8_DEVICE_HANDLER(name)	void name(ATTR_UNUSED device_t *device, ATTR_UNUSED offs_t offset, ATTR_UNUSED UINT8 data)
+#define WRITE16_DEVICE_HANDLER(name)	void name(ATTR_UNUSED device_t *device, ATTR_UNUSED offs_t offset, ATTR_UNUSED UINT16 data, ATTR_UNUSED UINT16 mem_mask)
+#define WRITE32_DEVICE_HANDLER(name)	void name(ATTR_UNUSED device_t *device, ATTR_UNUSED offs_t offset, ATTR_UNUSED UINT32 data, ATTR_UNUSED UINT32 mem_mask)
+#define WRITE64_DEVICE_HANDLER(name)	void name(ATTR_UNUSED device_t *device, ATTR_UNUSED offs_t offset, ATTR_UNUSED UINT64 data, ATTR_UNUSED UINT64 mem_mask)
 
 // space read/write handler function macros
-#define READ8_MEMBER(name) 				UINT8  name(ATTR_UNUSED address_space &space, ATTR_UNUSED offs_t offset, ATTR_UNUSED UINT8 mem_mask)
-#define WRITE8_MEMBER(name)				void   name(ATTR_UNUSED address_space &space, ATTR_UNUSED offs_t offset, ATTR_UNUSED UINT8 data, ATTR_UNUSED UINT8 mem_mask)
-#define READ16_MEMBER(name)				UINT16 name(ATTR_UNUSED address_space &space, ATTR_UNUSED offs_t offset, ATTR_UNUSED UINT16 mem_mask)
-#define WRITE16_MEMBER(name)			void   name(ATTR_UNUSED address_space &space, ATTR_UNUSED offs_t offset, ATTR_UNUSED UINT16 data, ATTR_UNUSED UINT16 mem_mask)
-#define READ32_MEMBER(name)				UINT32 name(ATTR_UNUSED address_space &space, ATTR_UNUSED offs_t offset, ATTR_UNUSED UINT32 mem_mask)
-#define WRITE32_MEMBER(name)			void   name(ATTR_UNUSED address_space &space, ATTR_UNUSED offs_t offset, ATTR_UNUSED UINT32 data, ATTR_UNUSED UINT32 mem_mask)
-#define READ64_MEMBER(name)				UINT64 name(ATTR_UNUSED address_space &space, ATTR_UNUSED offs_t offset, ATTR_UNUSED UINT64 mem_mask)
-#define WRITE64_MEMBER(name)			void   name(ATTR_UNUSED address_space &space, ATTR_UNUSED offs_t offset, ATTR_UNUSED UINT64 data, ATTR_UNUSED UINT64 mem_mask)
+#define READ8_MEMBER(name) 	UINT8  name(ATTR_UNUSED address_space &space, ATTR_UNUSED offs_t offset, ATTR_UNUSED UINT8 mem_mask)
+#define READ16_MEMBER(name)	UINT16 name(ATTR_UNUSED address_space &space, ATTR_UNUSED offs_t offset, ATTR_UNUSED UINT16 mem_mask)
+#define READ32_MEMBER(name)	UINT32 name(ATTR_UNUSED address_space &space, ATTR_UNUSED offs_t offset, ATTR_UNUSED UINT32 mem_mask)
+#define READ64_MEMBER(name)	UINT64 name(ATTR_UNUSED address_space &space, ATTR_UNUSED offs_t offset, ATTR_UNUSED UINT64 mem_mask)
+#define WRITE8_MEMBER(name)	void name(ATTR_UNUSED address_space &space, ATTR_UNUSED offs_t offset, ATTR_UNUSED UINT8 data, ATTR_UNUSED UINT8 mem_mask)
+#define WRITE16_MEMBER(name)	void name(ATTR_UNUSED address_space &space, ATTR_UNUSED offs_t offset, ATTR_UNUSED UINT16 data, ATTR_UNUSED UINT16 mem_mask)
+#define WRITE32_MEMBER(name)	void name(ATTR_UNUSED address_space &space, ATTR_UNUSED offs_t offset, ATTR_UNUSED UINT32 data, ATTR_UNUSED UINT32 mem_mask)
+#define WRITE64_MEMBER(name)	void name(ATTR_UNUSED address_space &space, ATTR_UNUSED offs_t offset, ATTR_UNUSED UINT64 data, ATTR_UNUSED UINT64 mem_mask)
 
-#define DECLARE_READ8_MEMBER(name) 		UINT8  name(ATTR_UNUSED address_space &space, ATTR_UNUSED offs_t offset, ATTR_UNUSED UINT8 mem_mask = 0xff)
-#define DECLARE_WRITE8_MEMBER(name)		void   name(ATTR_UNUSED address_space &space, ATTR_UNUSED offs_t offset, ATTR_UNUSED UINT8 data, ATTR_UNUSED UINT8 mem_mask = 0xff)
-#define DECLARE_READ16_MEMBER(name)		UINT16 name(ATTR_UNUSED address_space &space, ATTR_UNUSED offs_t offset, ATTR_UNUSED UINT16 mem_mask = 0xffff)
-#define DECLARE_WRITE16_MEMBER(name)	void   name(ATTR_UNUSED address_space &space, ATTR_UNUSED offs_t offset, ATTR_UNUSED UINT16 data, ATTR_UNUSED UINT16 mem_mask = 0xffff)
-#define DECLARE_READ32_MEMBER(name)		UINT32 name(ATTR_UNUSED address_space &space, ATTR_UNUSED offs_t offset, ATTR_UNUSED UINT32 mem_mask = 0xffffffff)
-#define DECLARE_WRITE32_MEMBER(name)	void   name(ATTR_UNUSED address_space &space, ATTR_UNUSED offs_t offset, ATTR_UNUSED UINT32 data, ATTR_UNUSED UINT32 mem_mask = 0xffffffff)
-#define DECLARE_READ64_MEMBER(name)		UINT64 name(ATTR_UNUSED address_space &space, ATTR_UNUSED offs_t offset, ATTR_UNUSED UINT64 mem_mask = U64(0xffffffffffffffff))
-#define DECLARE_WRITE64_MEMBER(name)	void   name(ATTR_UNUSED address_space &space, ATTR_UNUSED offs_t offset, ATTR_UNUSED UINT64 data, ATTR_UNUSED UINT64 mem_mask = U64(0xffffffffffffffff))
+#define DECLARE_READ8_MEMBER(name)	UINT8  name(ATTR_UNUSED address_space &space, ATTR_UNUSED offs_t offset, ATTR_UNUSED UINT8 mem_mask = 0xff)
+#define DECLARE_READ16_MEMBER(name)	UINT16 name(ATTR_UNUSED address_space &space, ATTR_UNUSED offs_t offset, ATTR_UNUSED UINT16 mem_mask = 0xffff)
+#define DECLARE_READ32_MEMBER(name)	UINT32 name(ATTR_UNUSED address_space &space, ATTR_UNUSED offs_t offset, ATTR_UNUSED UINT32 mem_mask = 0xffffffff)
+#define DECLARE_READ64_MEMBER(name)	UINT64 name(ATTR_UNUSED address_space &space, ATTR_UNUSED offs_t offset, ATTR_UNUSED UINT64 mem_mask = U64(0xffffffffffffffff))
+#define DECLARE_WRITE8_MEMBER(name)	void name(ATTR_UNUSED address_space &space, ATTR_UNUSED offs_t offset, ATTR_UNUSED UINT8 data, ATTR_UNUSED UINT8 mem_mask = 0xff)
+#define DECLARE_WRITE16_MEMBER(name)	void name(ATTR_UNUSED address_space &space, ATTR_UNUSED offs_t offset, ATTR_UNUSED UINT16 data, ATTR_UNUSED UINT16 mem_mask = 0xffff)
+#define DECLARE_WRITE32_MEMBER(name)	void name(ATTR_UNUSED address_space &space, ATTR_UNUSED offs_t offset, ATTR_UNUSED UINT32 data, ATTR_UNUSED UINT32 mem_mask = 0xffffffff)
+#define DECLARE_WRITE64_MEMBER(name)	void name(ATTR_UNUSED address_space &space, ATTR_UNUSED offs_t offset, ATTR_UNUSED UINT64 data, ATTR_UNUSED UINT64 mem_mask = U64(0xffffffffffffffff))
 
 
 // helper macro for merging data with the memory mask
 #define COMBINE_DATA(varptr)			(*(varptr) = (*(varptr) & ~mem_mask) | (data & mem_mask))
 
-#define ACCESSING_BITS_0_7				((mem_mask & 0x000000ff) != 0)
-#define ACCESSING_BITS_8_15				((mem_mask & 0x0000ff00) != 0)
+#define ACCESSING_BITS_0_7			((mem_mask & 0x000000ff) != 0)
+#define ACCESSING_BITS_8_15			((mem_mask & 0x0000ff00) != 0)
 #define ACCESSING_BITS_16_23			((mem_mask & 0x00ff0000) != 0)
 #define ACCESSING_BITS_24_31			((mem_mask & 0xff000000) != 0)
 #define ACCESSING_BITS_32_39			((mem_mask & U64(0x000000ff00000000)) != 0)
@@ -582,12 +579,12 @@ protected:
 #define ACCESSING_BITS_48_55			((mem_mask & U64(0x00ff000000000000)) != 0)
 #define ACCESSING_BITS_56_63			((mem_mask & U64(0xff00000000000000)) != 0)
 
-#define ACCESSING_BITS_0_15				((mem_mask & 0x0000ffff) != 0)
+#define ACCESSING_BITS_0_15			((mem_mask & 0x0000ffff) != 0)
 #define ACCESSING_BITS_16_31			((mem_mask & 0xffff0000) != 0)
 #define ACCESSING_BITS_32_47			((mem_mask & U64(0x0000ffff00000000)) != 0)
 #define ACCESSING_BITS_48_63			((mem_mask & U64(0xffff000000000000)) != 0)
 
-#define ACCESSING_BITS_0_31				((mem_mask & 0xffffffff) != 0)
+#define ACCESSING_BITS_0_31			((mem_mask & 0xffffffff) != 0)
 #define ACCESSING_BITS_32_63			((mem_mask & U64(0xffffffff00000000)) != 0)
 
 
@@ -779,7 +776,7 @@ inline UINT8 direct_read_data::read_raw_byte(offs_t byteaddress)
 		return m_raw[byteaddress & m_bytemask];
 	return m_space.read_byte(byteaddress);
 }
-		
+
 inline UINT8 direct_read_data::read_decrypted_byte(offs_t byteaddress)
 {
 	if (address_is_valid(byteaddress))

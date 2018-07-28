@@ -98,7 +98,6 @@
 #include "profiler.h"
 #include "ui.h"
 #include "uiinput.h"
-#include "debug/debugcon.h"
 
 #include <ctype.h>
 #include <time.h>
@@ -4937,11 +4936,11 @@ void inputx_init(running_machine *machine)
 	charqueue_empty = NULL;
 	keybuffer = NULL;
 
-	if (machine->debug_flags & DEBUG_FLAG_ENABLED)
+/*	if (machine->debug_flags & DEBUG_FLAG_ENABLED)
 	{
 		debug_console_register_command(machine, "input", CMDFLAG_NONE, 0, 1, 1, execute_input);
 		debug_console_register_command(machine, "dumpkbd", CMDFLAG_NONE, 0, 0, 1, execute_dumpkbd);
-	}
+	} */
 
 	/* posting keys directly only makes sense for a computer */
 	if (input_machine_has_keyboard(machine))
@@ -5527,7 +5526,7 @@ static void execute_dumpkbd(running_machine *machine, int ref, int params, const
 		file = fopen(filename, "w");
 		if (file == NULL)
 		{
-			debug_console_printf(machine, "Cannot open \"%s\"\n", filename);
+//			debug_console_printf(machine, "Cannot open \"%s\"\n", filename);
 			return;
 		}
 	}
@@ -5561,15 +5560,15 @@ static void execute_dumpkbd(running_machine *machine, int ref, int params, const
 			/* and output it as appropriate */
 			if (file != NULL)
 				fprintf(file, "%s\n", buffer);
-			else
-				debug_console_printf(machine, "%s\n", buffer);
+//			else
+//				debug_console_printf(machine, "%s\n", buffer);
 		}
 	}
-	else
+/*	else
 	{
 		debug_console_printf(machine, "No natural keyboard support\n");
 	}
-
+*/
 	/* cleanup */
 	if (file != NULL)
 		fclose(file);

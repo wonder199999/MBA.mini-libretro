@@ -79,8 +79,7 @@
 #include "ui.h"
 #include "uimenu.h"
 #include "cheat.h"
-#include "debug/debugcpu.h"
-#include "debug/express.h"
+#include "express.h"
 
 #include <ctype.h>
 
@@ -109,7 +108,6 @@ enum _script_state
 };
 typedef enum _script_state script_state;
 DECLARE_ENUM_OPERATORS(script_state)
-
 
 
 /***************************************************************************
@@ -386,8 +384,8 @@ void cheat_init(running_machine *machine)
 
 	/* we rely on the debugger expression callbacks; if the debugger isn't
        enabled, we must jumpstart them manually */
-	if ((machine->debug_flags & DEBUG_FLAG_ENABLED) == 0)
-		debug_cpu_init(machine);
+//	if ((machine->debug_flags & DEBUG_FLAG_ENABLED) == 0)
+//		debug_cpu_init(machine);
 }
 
 
@@ -1588,7 +1586,8 @@ static script_entry *script_entry_load(running_machine *machine, const char *fil
 	expression = xml_get_attribute_string(entrynode, "condition", NULL);
 	if (expression != NULL)
 	{
-		experr = expression_parse(expression, cheat->symbols, &debug_expression_callbacks, machine, &entry->condition);
+		experr = EXPRERR_NONE;
+//		experr = expression_parse(expression, cheat->symbols, &debug_expression_callbacks, machine, &entry->condition);
 		if (experr != EXPRERR_NONE)
 		{
 			mame_printf_error("%s.xml(%d): error parsing cheat expression \"%s\" (%s)\n", filename, entrynode->line, expression, exprerr_to_string(experr));
@@ -1605,7 +1604,8 @@ static script_entry *script_entry_load(running_machine *machine, const char *fil
 			mame_printf_error("%s.xml(%d): missing expression in action tag\n", filename, entrynode->line);
 			goto error;
 		}
-		experr = expression_parse(expression, cheat->symbols, &debug_expression_callbacks, machine, &entry->expression);
+		experr = EXPRERR_NONE;
+//		experr = expression_parse(expression, cheat->symbols, &debug_expression_callbacks, machine, &entry->expression);
 		if (experr != EXPRERR_NONE)
 		{
 			mame_printf_error("%s.xml(%d): error parsing cheat expression \"%s\" (%s)\n", filename, entrynode->line, expression, exprerr_to_string(experr));
@@ -1671,7 +1671,8 @@ static script_entry *script_entry_load(running_machine *machine, const char *fil
 				mame_printf_error("%s.xml(%d): missing expression in argument tag\n", filename, argnode->line);
 				goto error;
 			}
-			experr = expression_parse(expression, cheat->symbols, &debug_expression_callbacks, machine, &curarg->expression);
+			experr = EXPRERR_NONE;
+//			experr = expression_parse(expression, cheat->symbols, &debug_expression_callbacks, machine, &curarg->expression);
 			if (experr != EXPRERR_NONE)
 			{
 				mame_printf_error("%s.xml(%d): error parsing cheat expression \"%s\" (%s)\n", filename, argnode->line, expression, exprerr_to_string(experr));

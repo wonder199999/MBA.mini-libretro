@@ -164,17 +164,14 @@ EMULAYOUT = $(EMUOBJ)/layout
 EMUMACHINE = $(EMUOBJ)/machine
 EMUVIDEO = $(EMUOBJ)/video
 
-
 OBJDIRS += \
 	$(EMUOBJ)/cpu \
 	$(EMUOBJ)/sound \
-	$(EMUOBJ)/debug \
-	$(EMUOBJ)/debugint \
 	$(EMUOBJ)/audio \
 	$(EMUOBJ)/drivers \
 	$(EMUOBJ)/machine \
 	$(EMUOBJ)/layout \
-	$(EMUOBJ)/video \
+	$(EMUOBJ)/video
 
 #-------------------------------------------------
 # emulator core objects
@@ -188,7 +185,6 @@ EMUOBJS = \
 	$(EMUOBJ)/clifront.o \
 	$(EMUOBJ)/config.o \
 	$(EMUOBJ)/crsshair.o \
-	$(EMUOBJ)/debugger.o \
 	$(EMUOBJ)/delegate.o \
 	$(EMUOBJ)/devcb.o \
 	$(EMUOBJ)/devcpu.o \
@@ -241,20 +237,8 @@ EMUOBJS = \
 	$(EMUOBJ)/uimenu.o \
 	$(EMUOBJ)/validity.o \
 	$(EMUOBJ)/video.o \
-	$(EMUOBJ)/watchdog.o \
-	$(EMUOBJ)/debug/debugcmd.o \
-	$(EMUOBJ)/debug/debugcmt.o \
-	$(EMUOBJ)/debug/debugcon.o \
-	$(EMUOBJ)/debug/debugcpu.o \
-	$(EMUOBJ)/debug/debughlp.o \
-	$(EMUOBJ)/debug/debugvw.o \
-	$(EMUOBJ)/debug/dvdisasm.o \
-	$(EMUOBJ)/debug/dvmemory.o \
-	$(EMUOBJ)/debug/dvstate.o \
-	$(EMUOBJ)/debug/dvtext.o \
-	$(EMUOBJ)/debug/express.o \
-	$(EMUOBJ)/debug/textbuf.o \
-	$(EMUOBJ)/debugint/debugint.o
+	$(EMUOBJ)/express.o \
+	$(EMUOBJ)/watchdog.o
 
 ifdef PROFILER
 EMUOBJS += \
@@ -335,7 +319,7 @@ DASMOBJS += $(CPUOBJ)/mcs48/mcs48dsm.o
 endif
 
 $(CPUOBJ)/mcs48/mcs48.o:	$(CPUSRC)/mcs48/mcs48.c \
-							$(CPUSRC)/mcs48/mcs48.h
+						$(CPUSRC)/mcs48/mcs48.h
 
 #-------------------------------------------------
 # Motorola 68000 series
@@ -621,9 +605,9 @@ SOFTFLOATOBJS = \
 $(OBJ)/libsoftfloat.a: $(SOFTFLOATOBJS)
 
 $(LIBOBJ)/softfloat/softfloat.o: $(LIBSRC)/softfloat/softfloat.c \
-										   $(LIBSRC)/softfloat/softfloat.h \
-											$(LIBSRC)/softfloat/softfloat-macros \
-											$(LIBSRC)/softfloat/softfloat-specialize
+					   $(LIBSRC)/softfloat/softfloat.h \
+						$(LIBSRC)/softfloat/softfloat-macros \
+							$(LIBSRC)/softfloat/softfloat-specialize
 
 ###########################################################################
 #

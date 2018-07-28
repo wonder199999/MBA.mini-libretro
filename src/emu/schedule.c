@@ -39,7 +39,6 @@
 
 #include "emu.h"
 #include "profiler.h"
-#include "debugger.h"
 
 
 //**************************************************************************
@@ -188,14 +187,7 @@ if (TEMPLOG)
 if (TEMPLOG) printf("Executing %s for %d cycles\n", exec->device().tag(), ran);
 						m_executing_device = exec;
 						*exec->m_icount = exec->m_cycles_running;
-						if (!call_debugger)
-							exec->execute_run();
-						else
-						{
-							debugger_start_cpu_hook(&exec->device(), target);
-							exec->execute_run();
-							debugger_stop_cpu_hook(&exec->device());
-						}
+						exec->execute_run();
 
 						// adjust for any cycles we took back
 						assert(ran >= *exec->m_icount);

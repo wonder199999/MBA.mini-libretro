@@ -39,10 +39,7 @@
 
 #include "emu.h"
 #include "emuopts.h"
-//#include "profiler.h"
 #include "png.h"
-#include "debugger.h"
-#include "debugint/debugint.h"
 #include "rendutil.h"
 #include "ui.h"
 #include "aviio.h"
@@ -445,9 +442,6 @@ void video_frame_update(running_machine *machine, int debug)
 	/* draw the user interface */
 	ui_update_and_render(machine, render_container_get_ui());
 
-	/* update the internal render debugger */
-	debugint_update_during_game(machine);
-
 	/* if we're throttling, synchronize before rendering */
 	if (!debug && !skipped_it && effective_throttle(machine))
 		update_throttle(machine, current_time);
@@ -471,7 +465,7 @@ void video_frame_update(running_machine *machine, int debug)
 	if (phase == MACHINE_PHASE_RUNNING)
 	{
 		/* reset partial updates if we're paused or if the debugger is active */
-		if (machine->primary_screen != NULL && (machine->paused() || debug || debugger_within_instruction_hook(machine)))
+		if (machine->primary_screen != NULL && (machine->paused() || debug /*|| debugger_within_instruction_hook(machine) */ ))
 			machine->primary_screen->scanline0_callback();
 
 		/* otherwise, call the video EOF callback */
@@ -1648,9 +1642,9 @@ void video_assert_out_of_range_pixels(running_machine *machine, bitmap_t *bitmap
 
 
 
-//**************************************************************************
+//*************************************************************************/
 //  VIDEO SCREEN DEVICE CONFIGURATION
-//**************************************************************************
+//*************************************************************************/
 
 const attotime screen_device::k_default_frame_period = STATIC_ATTOTIME_IN_HZ(k_default_frame_rate);
 
@@ -1773,9 +1767,9 @@ bool screen_device_config::device_validity_check(const game_driver &driver) cons
 
 
 
-//**************************************************************************
+//*************************************************************************/
 //  LIVE VIDEO SCREEN DEVICE
-//**************************************************************************
+//*************************************************************************/
 
 //-------------------------------------------------
 //  screen_device - constructor

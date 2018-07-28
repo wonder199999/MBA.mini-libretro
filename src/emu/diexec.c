@@ -38,8 +38,6 @@
 ***************************************************************************/
 
 #include "emu.h"
-#include "profiler.h"
-#include "debugger.h"
 
 
 //**************************************************************************
@@ -51,7 +49,6 @@
 #define LOG(x)	do { if (VERBOSE) logerror x; } while (0)
 
 #define TEMPLOG	0
-
 
 
 //**************************************************************************
@@ -805,8 +802,6 @@ int device_execute_interface::standard_irq_callback(int irqline)
 	if (m_driver_irq != NULL)
 		vector = (*m_driver_irq)(&m_device, irqline);
 
-	// notify the debugger
-	debugger_interrupt_hook(&m_device, irqline);
 	return vector;
 }
 

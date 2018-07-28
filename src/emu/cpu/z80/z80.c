@@ -118,7 +118,6 @@
  *****************************************************************************/
 
 #include "emu.h"
-#include "debugger.h"
 #include "z80.h"
 #include "z80daisy.h"
 
@@ -3596,7 +3595,6 @@ static CPU_EXECUTE( z80 )
 		z80->after_ei = FALSE;
 
 		z80->PRVPC = z80->PCD;
-		debugger_instruction_hook(device, z80->PCD);
 		z80->r++;
 		EXEC_INLINE(z80,op,ROP(z80));
 	} while (z80->icount > 0);
@@ -3638,7 +3636,6 @@ static CPU_EXECUTE( z80 )
 		z80->after_ei = FALSE;
 
 		z80->PRVPC = z80->PCD;
-		debugger_instruction_hook(device, z80->PCD);
 		z80->r++;
 		EXEC_INLINE(z80,op,ROP(z80));
 	} while (z80->icount > 0);

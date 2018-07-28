@@ -24,8 +24,8 @@
 enum
 {
 	SEQ_PRESSED_FALSE = 0,		/* not pressed */
-	SEQ_PRESSED_TRUE,			/* pressed */
-	SEQ_PRESSED_RESET			/* reset -- converted to FALSE once detected as not pressed */
+	SEQ_PRESSED_TRUE,		/* pressed */
+	SEQ_PRESSED_RESET		/* reset -- converted to FALSE once detected as not pressed */
 };
 
 
@@ -38,19 +38,19 @@ enum
 struct _ui_input_private
 {
 	/* pressed states; retrieved with ui_input_pressed() */
-	osd_ticks_t					next_repeat[__ipt_max];
-	UINT8						seqpressed[__ipt_max];
+	osd_ticks_t				next_repeat[__ipt_max];
+	UINT8					seqpressed[__ipt_max];
 
 	/* mouse position/info */
 	render_target *				current_mouse_target;
-	INT32						current_mouse_x;
-	INT32						current_mouse_y;
-	int							current_mouse_down;
+	INT32					current_mouse_x;
+	INT32					current_mouse_y;
+	int					current_mouse_down;
 
 	/* popped states; ring buffer of ui_events */
-	ui_event					events[EVENT_QUEUE_SIZE];
-	int							events_start;
-	int							events_end;
+	ui_event				events[EVENT_QUEUE_SIZE];
+	int					events_start;
+	int					events_end;
 };
 
 
@@ -59,8 +59,7 @@ struct _ui_input_private
     FUNCTION PROTOYPES
 ***************************************************************************/
 
-//static void ui_input_frame_update(running_machine *machine);
-
+/* static void ui_input_frame_update(running_machine *machine); */
 
 
 /***************************************************************************
@@ -222,6 +221,7 @@ render_target *ui_input_find_mouse(running_machine *machine, INT32 *x, INT32 *y,
 		*y = uidata->current_mouse_y;
 	if (button != NULL)
 		*button = uidata->current_mouse_down;
+
 	return uidata->current_mouse_target;
 }
 
@@ -255,7 +255,7 @@ int ui_input_pressed_repeat(running_machine *machine, int code, int speed)
 	ui_input_private *uidata = machine->ui_input_data;
 	int pressed = FALSE;
 
-g_profiler.start(PROFILER_INPUT);
+	g_profiler.start(PROFILER_INPUT);
 
 	/* get the status of this key (assumed to be only in the defaults) */
 	assert(code >= IPT_UI_CONFIGURE && code <= IPT_OSD_16);
@@ -283,7 +283,7 @@ g_profiler.start(PROFILER_INPUT);
 	else
 		uidata->next_repeat[code] = 0;
 
-g_profiler.stop();
+	g_profiler.stop();
 
 	return pressed;
 }

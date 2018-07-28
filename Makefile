@@ -12,8 +12,9 @@
 NATIVE := 0
 ALIGNED = 0
 MDEBUG = 0
+# PROFILER = 
 
-# ----------------------------------------------------
+# ------------------------------------------------------------
 # Set the BIOS used by NEOGEO
 # NEOGEO_BIOS = 1 - Use Universe BIOS ver. 1.x ,
 # NEOGEO_BIOS = 2 - use Universe BIOS ver. 2.x , (default)
@@ -25,7 +26,7 @@ MDEBUG = 0
 # NEOGEO_BIOS = 8 - use MVS Japan (J3) ,
 # NEOGEO_BIOS = 9 - use NEO-MVH MV1C ,
 # NEOGEO_BIOS = 0 - use Custom Japanese Hotel BIOS .
-# ----------------------------------------------------
+# ------------------------------------------------------------
 NEOGEO_BIOS = 2
 
 UNAME = $(shell uname -a)
@@ -399,15 +400,6 @@ CROSS_BUILD_OSD = retro
 #-------------------------------------------------
 # specify architecture-specific optimizations
 #-------------------------------------------------
-# uncomment and specify architecture-specific optimizations here
-# some examples:
-#   ARCHOPTS = -march=pentiumpro  # optimize for I686
-#   ARCHOPTS = -march=core2       # optimize for Core 2
-#   ARCHOPTS = -march=native      # optimize for local machine (auto detect)
-#   ARCHOPTS = -mcpu=G4           # optimize for G4
-# note that we leave this commented by default so that you can
-# configure this in your environment and never have to think about it
-# ARCHOPTS =
 
 # specify optimization level or leave commented to use the default
 # (default is OPTIMIZE = 3 normally, or OPTIMIZE = 0 with symbols)
@@ -463,8 +455,6 @@ ifeq ($(PTR64), 1)
    DEFS += -DPTR64
 endif
 
-DEFS += -DNDEBUG 
-
 # need to ensure FLAC functions are statically linked
 DEFS += -DFLAC__NO_DLL
 
@@ -486,11 +476,16 @@ COBJFLAGS += -x objective-c++
 # this speeds it up a bit by piping between the preprocessor/compiler/assembler
 CCOMFLAGS += -pipe
 
-# add the optimization flag
+# add the optimization flag and define MAME_DEBUG if we are a debugging build
 ifeq ($(MDEBUG), 1)
-   CCOMFLAGS +=  -O0 -g
+   CCOMFLAGS +=  -O0 -g -DMAME_DEBUG
 else
-   CCOMFLAGS += -O$(OPTIMIZE)
+   CCOMFLAGS += -O$(OPTIMIZE) -DNDEBUG 
+endif
+
+# define MAME_PROFILER if we are a profiling build
+ifdef PROFILER
+   DEFS += -DMAME_PROFILER
 endif
 
 # add the error warning flag
