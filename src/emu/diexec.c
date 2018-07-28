@@ -48,7 +48,7 @@
 
 #define LOG(x)	do { if (VERBOSE) logerror x; } while (0)
 
-#define TEMPLOG	0
+#define TEMPLOG	VERBOSE
 
 
 //**************************************************************************
@@ -807,9 +807,9 @@ int device_execute_interface::standard_irq_callback(int irqline)
 
 
 
-//**************************************************************************
+//*************************************************************************/
 //  DEVICE INPUT
-//**************************************************************************
+//*************************************************************************/
 
 //-------------------------------------------------
 //  device_input - constructor
@@ -865,9 +865,9 @@ void device_execute_interface::device_input::reset()
 
 void device_execute_interface::device_input::set_state_synced(int state, int vector)
 {
-	LOG(("set_state_synced('%s',%d,%d,%02x)\n", m_device->tag(), m_linenum, state, vector));
+/*	LOG(("set_state_synced('%s',%d,%d,%02x)\n", m_device->tag(), m_linenum, state, vector));
+	if (TEMPLOG) printf("setline(%s,%d,%d,%d)\n", m_device->tag(), m_linenum, state, (vector == USE_STORED_VECTOR) ? 0 : vector); */
 
-if (TEMPLOG) printf("setline(%s,%d,%d,%d)\n", m_device->tag(), m_linenum, state, (vector == USE_STORED_VECTOR) ? 0 : vector);
 	assert(state == ASSERT_LINE || state == HOLD_LINE || state == CLEAR_LINE || state == PULSE_LINE);
 
 	// treat PULSE_LINE as ASSERT+CLEAR
@@ -889,7 +889,7 @@ if (TEMPLOG) printf("setline(%s,%d,%d,%d)\n", m_device->tag(), m_linenum, state,
 		m_qindex--;
 		empty_event_queue();
 		event_index = m_qindex++;
-		logerror("Exceeded pending input line event queue on device '%s'!\n", m_device->tag());
+//		logerror("Exceeded pending input line event queue on device '%s'!\n", m_device->tag());
 	}
 
 	// enqueue the event
@@ -973,7 +973,7 @@ if (TEMPLOG) printf(" (%d,%d)\n", m_curstate, m_curvector);
 					break;
 
 				default:
-					logerror("empty_event_queue device '%s', line %d, unknown state %d\n", m_device->tag(), m_linenum, m_curstate);
+//					logerror("empty_event_queue device '%s', line %d, unknown state %d\n", m_device->tag(), m_linenum, m_curstate);
 					break;
 			}
 

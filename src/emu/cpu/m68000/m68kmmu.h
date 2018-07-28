@@ -185,12 +185,12 @@ void m68881_mmu_ops(m68ki_cpu_core *m68k)
 	// catch the 2 "weird" encodings up front (PBcc)
 	if ((m68k->ir & 0xffc0) == 0xf0c0)
 	{
-		logerror("680x0: unhandled PBcc\n");
+//		logerror("680x0: unhandled PBcc\n");
 		return;
 	}
 	else if ((m68k->ir & 0xffc0) == 0xf080)
 	{
-		logerror("680x0: unhandled PBcc\n");
+//		logerror("680x0: unhandled PBcc\n");
 		return;
 	}
 	else	// the rest are 1111000xxxXXXXXX where xxx is the instruction family
@@ -202,32 +202,32 @@ void m68881_mmu_ops(m68ki_cpu_core *m68k)
 
 				if ((modes & 0xfde0) == 0x2000)	// PLOAD
 				{
-					logerror("680x0: unhandled PLOAD\n");
+//					logerror("680x0: unhandled PLOAD\n");
 					return;
 				}
 				else if ((modes & 0xe200) == 0x2000)	// PFLUSH
 				{
-					logerror("680x0: unhandled PFLUSH PC=%x\n", m68k->pc);
+//					logerror("680x0: unhandled PFLUSH PC=%x\n", m68k->pc);
 					return;
 				}
 				else if (modes == 0xa000)	// PFLUSHR
 				{
-					logerror("680x0: unhandled PFLUSHR\n");
+//					logerror("680x0: unhandled PFLUSHR\n");
 					return;
 				}
 				else if (modes == 0x2800)	// PVALID (FORMAT 1)
 				{
-					logerror("680x0: unhandled PVALID1\n");
+//					logerror("680x0: unhandled PVALID1\n");
 					return;
 				}
 				else if ((modes & 0xfff8) == 0x2c00)	// PVALID (FORMAT 2)
 				{
-					logerror("680x0: unhandled PVALID2\n");
+//					logerror("680x0: unhandled PVALID2\n");
 					return;
 				}
 				else if ((modes & 0xe000) == 0x8000)	// PTEST
 				{
-					logerror("680x0: unhandled PTEST\n");
+//					logerror("680x0: unhandled PTEST\n");
 					return;
 				}
 				else
@@ -253,7 +253,7 @@ void m68881_mmu_ops(m68ki_cpu_core *m68k)
 										break;
 
 									default:
-										logerror("680x0: PMOVE from unknown MMU register %x, PC %x\n", (modes>>10) & 7, m68k->pc);
+//										logerror("680x0: PMOVE from unknown MMU register %x, PC %x\n", (modes>>10) & 7, m68k->pc);
 										break;
 								}
 							}
@@ -287,7 +287,7 @@ void m68881_mmu_ops(m68ki_cpu_core *m68k)
 										break;
 
 									default:
-										logerror("680x0: PMOVE to unknown MMU register %x, PC %x\n", (modes>>10) & 7, m68k->pc);
+//										logerror("680x0: PMOVE to unknown MMU register %x, PC %x\n", (modes>>10) & 7, m68k->pc);
 										break;
 								}
 							}
@@ -305,14 +305,14 @@ void m68881_mmu_ops(m68ki_cpu_core *m68k)
 							break;
 
 						default:
-							logerror("680x0: unknown PMOVE mode %x (modes %04x) (PC %x)\n", (modes>>13) & 0x7, modes, m68k->pc);
+//							logerror("680x0: unknown PMOVE mode %x (modes %04x) (PC %x)\n", (modes>>13) & 0x7, modes, m68k->pc);
 							break;
 					}
 				}
 				break;
 
 			default:
-				logerror("680x0: unknown PMMU instruction group %d\n", (m68k->ir>>9) & 0x7);
+//				logerror("680x0: unknown PMMU instruction group %d\n", (m68k->ir>>9) & 0x7);
 				break;
 		}
 	}

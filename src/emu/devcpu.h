@@ -528,6 +528,7 @@ protected:
 
 	UINT64				m_state_io;			// temporary buffer for state I/O
 	bool				m_using_legacy_state;		// true if we are using the old-style state access
+	bool				m_inited;
 };
 
 #endif	/* __CPUINTRF_H__ */

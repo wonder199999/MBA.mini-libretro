@@ -45,18 +45,18 @@ static void m68k_op_040fpu1_32(m68ki_cpu_core *m68k)
 
 static void m68k_op_abcd_8_rr(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DX;
+	UINT32 *r_dst = &DX;
 	UINT32 src = DY;
 	UINT32 dst = *r_dst;
 	UINT32 res = LOW_NIBBLE(src) + LOW_NIBBLE(dst) + XFLAG_AS_1(m68k);
 
 	m68k->v_flag = ~res; /* Undefined V behavior */
 
-	if(res > 9)
+	if (res > 9)
 		res += 6;
 	res += HIGH_NIBBLE(src) + HIGH_NIBBLE(dst);
 	m68k->x_flag = m68k->c_flag = (res > 0x99) << 8;
-	if(m68k->c_flag)
+	if (m68k->c_flag)
 		res -= 0xa0;
 
 	m68k->v_flag &= res; /* Undefined V behavior part II */
@@ -78,11 +78,11 @@ static void m68k_op_abcd_8_mm_ax7(m68ki_cpu_core *m68k)
 
 	m68k->v_flag = ~res; /* Undefined V behavior */
 
-	if(res > 9)
+	if (res > 9)
 		res += 6;
 	res += HIGH_NIBBLE(src) + HIGH_NIBBLE(dst);
 	m68k->x_flag = m68k->c_flag = (res > 0x99) << 8;
-	if(m68k->c_flag)
+	if (m68k->c_flag)
 		res -= 0xa0;
 
 	m68k->v_flag &= res; /* Undefined V behavior part II */
@@ -104,11 +104,11 @@ static void m68k_op_abcd_8_mm_ay7(m68ki_cpu_core *m68k)
 
 	m68k->v_flag = ~res; /* Undefined V behavior */
 
-	if(res > 9)
+	if (res > 9)
 		res += 6;
 	res += HIGH_NIBBLE(src) + HIGH_NIBBLE(dst);
 	m68k->x_flag = m68k->c_flag = (res > 0x99) << 8;
-	if(m68k->c_flag)
+	if (m68k->c_flag)
 		res -= 0xa0;
 
 	m68k->v_flag &= res; /* Undefined V behavior part II */
@@ -130,11 +130,11 @@ static void m68k_op_abcd_8_mm_axy7(m68ki_cpu_core *m68k)
 
 	m68k->v_flag = ~res; /* Undefined V behavior */
 
-	if(res > 9)
+	if (res > 9)
 		res += 6;
 	res += HIGH_NIBBLE(src) + HIGH_NIBBLE(dst);
 	m68k->x_flag = m68k->c_flag = (res > 0x99) << 8;
-	if(m68k->c_flag)
+	if (m68k->c_flag)
 		res -= 0xa0;
 
 	m68k->v_flag &= res; /* Undefined V behavior part II */
@@ -156,11 +156,11 @@ static void m68k_op_abcd_8_mm(m68ki_cpu_core *m68k)
 
 	m68k->v_flag = ~res; /* Undefined V behavior */
 
-	if(res > 9)
+	if (res > 9)
 		res += 6;
 	res += HIGH_NIBBLE(src) + HIGH_NIBBLE(dst);
 	m68k->x_flag = m68k->c_flag = (res > 0x99) << 8;
-	if(m68k->c_flag)
+	if (m68k->c_flag)
 		res -= 0xa0;
 
 	m68k->v_flag &= res; /* Undefined V behavior part II */
@@ -175,7 +175,7 @@ static void m68k_op_abcd_8_mm(m68ki_cpu_core *m68k)
 
 static void m68k_op_add_8_er_d(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DX;
+	UINT32 *r_dst = &DX;
 	UINT32 src = MASK_OUT_ABOVE_8(DY);
 	UINT32 dst = MASK_OUT_ABOVE_8(*r_dst);
 	UINT32 res = src + dst;
@@ -191,7 +191,7 @@ static void m68k_op_add_8_er_d(m68ki_cpu_core *m68k)
 
 static void m68k_op_add_8_er_ai(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DX;
+	UINT32 *r_dst = &DX;
 	UINT32 src = OPER_AY_AI_8(m68k);
 	UINT32 dst = MASK_OUT_ABOVE_8(*r_dst);
 	UINT32 res = src + dst;
@@ -207,7 +207,7 @@ static void m68k_op_add_8_er_ai(m68ki_cpu_core *m68k)
 
 static void m68k_op_add_8_er_pi(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DX;
+	UINT32 *r_dst = &DX;
 	UINT32 src = OPER_AY_PI_8(m68k);
 	UINT32 dst = MASK_OUT_ABOVE_8(*r_dst);
 	UINT32 res = src + dst;
@@ -223,7 +223,7 @@ static void m68k_op_add_8_er_pi(m68ki_cpu_core *m68k)
 
 static void m68k_op_add_8_er_pi7(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DX;
+	UINT32 *r_dst = &DX;
 	UINT32 src = OPER_A7_PI_8(m68k);
 	UINT32 dst = MASK_OUT_ABOVE_8(*r_dst);
 	UINT32 res = src + dst;
@@ -239,7 +239,7 @@ static void m68k_op_add_8_er_pi7(m68ki_cpu_core *m68k)
 
 static void m68k_op_add_8_er_pd(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DX;
+	UINT32 *r_dst = &DX;
 	UINT32 src = OPER_AY_PD_8(m68k);
 	UINT32 dst = MASK_OUT_ABOVE_8(*r_dst);
 	UINT32 res = src + dst;
@@ -255,7 +255,7 @@ static void m68k_op_add_8_er_pd(m68ki_cpu_core *m68k)
 
 static void m68k_op_add_8_er_pd7(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DX;
+	UINT32 *r_dst = &DX;
 	UINT32 src = OPER_A7_PD_8(m68k);
 	UINT32 dst = MASK_OUT_ABOVE_8(*r_dst);
 	UINT32 res = src + dst;
@@ -271,7 +271,7 @@ static void m68k_op_add_8_er_pd7(m68ki_cpu_core *m68k)
 
 static void m68k_op_add_8_er_di(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DX;
+	UINT32 *r_dst = &DX;
 	UINT32 src = OPER_AY_DI_8(m68k);
 	UINT32 dst = MASK_OUT_ABOVE_8(*r_dst);
 	UINT32 res = src + dst;
@@ -287,7 +287,7 @@ static void m68k_op_add_8_er_di(m68ki_cpu_core *m68k)
 
 static void m68k_op_add_8_er_ix(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DX;
+	UINT32 *r_dst = &DX;
 	UINT32 src = OPER_AY_IX_8(m68k);
 	UINT32 dst = MASK_OUT_ABOVE_8(*r_dst);
 	UINT32 res = src + dst;
@@ -303,7 +303,7 @@ static void m68k_op_add_8_er_ix(m68ki_cpu_core *m68k)
 
 static void m68k_op_add_8_er_aw(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DX;
+	UINT32 *r_dst = &DX;
 	UINT32 src = OPER_AW_8(m68k);
 	UINT32 dst = MASK_OUT_ABOVE_8(*r_dst);
 	UINT32 res = src + dst;
@@ -319,7 +319,7 @@ static void m68k_op_add_8_er_aw(m68ki_cpu_core *m68k)
 
 static void m68k_op_add_8_er_al(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DX;
+	UINT32 *r_dst = &DX;
 	UINT32 src = OPER_AL_8(m68k);
 	UINT32 dst = MASK_OUT_ABOVE_8(*r_dst);
 	UINT32 res = src + dst;
@@ -335,7 +335,7 @@ static void m68k_op_add_8_er_al(m68ki_cpu_core *m68k)
 
 static void m68k_op_add_8_er_pcdi(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DX;
+	UINT32 *r_dst = &DX;
 	UINT32 src = OPER_PCDI_8(m68k);
 	UINT32 dst = MASK_OUT_ABOVE_8(*r_dst);
 	UINT32 res = src + dst;
@@ -351,7 +351,7 @@ static void m68k_op_add_8_er_pcdi(m68ki_cpu_core *m68k)
 
 static void m68k_op_add_8_er_pcix(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DX;
+	UINT32 *r_dst = &DX;
 	UINT32 src = OPER_PCIX_8(m68k);
 	UINT32 dst = MASK_OUT_ABOVE_8(*r_dst);
 	UINT32 res = src + dst;
@@ -367,7 +367,7 @@ static void m68k_op_add_8_er_pcix(m68ki_cpu_core *m68k)
 
 static void m68k_op_add_8_er_i(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DX;
+	UINT32 *r_dst = &DX;
 	UINT32 src = OPER_I_8(m68k);
 	UINT32 dst = MASK_OUT_ABOVE_8(*r_dst);
 	UINT32 res = src + dst;
@@ -383,7 +383,7 @@ static void m68k_op_add_8_er_i(m68ki_cpu_core *m68k)
 
 static void m68k_op_add_16_er_d(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DX;
+	UINT32 *r_dst = &DX;
 	UINT32 src = MASK_OUT_ABOVE_16(DY);
 	UINT32 dst = MASK_OUT_ABOVE_16(*r_dst);
 	UINT32 res = src + dst;
@@ -399,7 +399,7 @@ static void m68k_op_add_16_er_d(m68ki_cpu_core *m68k)
 
 static void m68k_op_add_16_er_a(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DX;
+	UINT32 *r_dst = &DX;
 	UINT32 src = MASK_OUT_ABOVE_16(AY);
 	UINT32 dst = MASK_OUT_ABOVE_16(*r_dst);
 	UINT32 res = src + dst;
@@ -415,7 +415,7 @@ static void m68k_op_add_16_er_a(m68ki_cpu_core *m68k)
 
 static void m68k_op_add_16_er_ai(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DX;
+	UINT32 *r_dst = &DX;
 	UINT32 src = OPER_AY_AI_16(m68k);
 	UINT32 dst = MASK_OUT_ABOVE_16(*r_dst);
 	UINT32 res = src + dst;
@@ -431,7 +431,7 @@ static void m68k_op_add_16_er_ai(m68ki_cpu_core *m68k)
 
 static void m68k_op_add_16_er_pi(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DX;
+	UINT32 *r_dst = &DX;
 	UINT32 src = OPER_AY_PI_16(m68k);
 	UINT32 dst = MASK_OUT_ABOVE_16(*r_dst);
 	UINT32 res = src + dst;
@@ -447,7 +447,7 @@ static void m68k_op_add_16_er_pi(m68ki_cpu_core *m68k)
 
 static void m68k_op_add_16_er_pd(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DX;
+	UINT32 *r_dst = &DX;
 	UINT32 src = OPER_AY_PD_16(m68k);
 	UINT32 dst = MASK_OUT_ABOVE_16(*r_dst);
 	UINT32 res = src + dst;
@@ -463,7 +463,7 @@ static void m68k_op_add_16_er_pd(m68ki_cpu_core *m68k)
 
 static void m68k_op_add_16_er_di(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DX;
+	UINT32 *r_dst = &DX;
 	UINT32 src = OPER_AY_DI_16(m68k);
 	UINT32 dst = MASK_OUT_ABOVE_16(*r_dst);
 	UINT32 res = src + dst;
@@ -479,7 +479,7 @@ static void m68k_op_add_16_er_di(m68ki_cpu_core *m68k)
 
 static void m68k_op_add_16_er_ix(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DX;
+	UINT32 *r_dst = &DX;
 	UINT32 src = OPER_AY_IX_16(m68k);
 	UINT32 dst = MASK_OUT_ABOVE_16(*r_dst);
 	UINT32 res = src + dst;
@@ -495,7 +495,7 @@ static void m68k_op_add_16_er_ix(m68ki_cpu_core *m68k)
 
 static void m68k_op_add_16_er_aw(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DX;
+	UINT32 *r_dst = &DX;
 	UINT32 src = OPER_AW_16(m68k);
 	UINT32 dst = MASK_OUT_ABOVE_16(*r_dst);
 	UINT32 res = src + dst;
@@ -511,7 +511,7 @@ static void m68k_op_add_16_er_aw(m68ki_cpu_core *m68k)
 
 static void m68k_op_add_16_er_al(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DX;
+	UINT32 *r_dst = &DX;
 	UINT32 src = OPER_AL_16(m68k);
 	UINT32 dst = MASK_OUT_ABOVE_16(*r_dst);
 	UINT32 res = src + dst;
@@ -527,7 +527,7 @@ static void m68k_op_add_16_er_al(m68ki_cpu_core *m68k)
 
 static void m68k_op_add_16_er_pcdi(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DX;
+	UINT32 *r_dst = &DX;
 	UINT32 src = OPER_PCDI_16(m68k);
 	UINT32 dst = MASK_OUT_ABOVE_16(*r_dst);
 	UINT32 res = src + dst;
@@ -543,7 +543,7 @@ static void m68k_op_add_16_er_pcdi(m68ki_cpu_core *m68k)
 
 static void m68k_op_add_16_er_pcix(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DX;
+	UINT32 *r_dst = &DX;
 	UINT32 src = OPER_PCIX_16(m68k);
 	UINT32 dst = MASK_OUT_ABOVE_16(*r_dst);
 	UINT32 res = src + dst;
@@ -559,7 +559,7 @@ static void m68k_op_add_16_er_pcix(m68ki_cpu_core *m68k)
 
 static void m68k_op_add_16_er_i(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DX;
+	UINT32 *r_dst = &DX;
 	UINT32 src = OPER_I_16(m68k);
 	UINT32 dst = MASK_OUT_ABOVE_16(*r_dst);
 	UINT32 res = src + dst;
@@ -575,7 +575,7 @@ static void m68k_op_add_16_er_i(m68ki_cpu_core *m68k)
 
 static void m68k_op_add_32_er_d(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DX;
+	UINT32 *r_dst = &DX;
 	UINT32 src = DY;
 	UINT32 dst = *r_dst;
 	UINT32 res = src + dst;
@@ -591,7 +591,7 @@ static void m68k_op_add_32_er_d(m68ki_cpu_core *m68k)
 
 static void m68k_op_add_32_er_a(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DX;
+	UINT32 *r_dst = &DX;
 	UINT32 src = AY;
 	UINT32 dst = *r_dst;
 	UINT32 res = src + dst;
@@ -607,7 +607,7 @@ static void m68k_op_add_32_er_a(m68ki_cpu_core *m68k)
 
 static void m68k_op_add_32_er_ai(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DX;
+	UINT32 *r_dst = &DX;
 	UINT32 src = OPER_AY_AI_32(m68k);
 	UINT32 dst = *r_dst;
 	UINT32 res = src + dst;
@@ -623,7 +623,7 @@ static void m68k_op_add_32_er_ai(m68ki_cpu_core *m68k)
 
 static void m68k_op_add_32_er_pi(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DX;
+	UINT32 *r_dst = &DX;
 	UINT32 src = OPER_AY_PI_32(m68k);
 	UINT32 dst = *r_dst;
 	UINT32 res = src + dst;
@@ -639,7 +639,7 @@ static void m68k_op_add_32_er_pi(m68ki_cpu_core *m68k)
 
 static void m68k_op_add_32_er_pd(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DX;
+	UINT32 *r_dst = &DX;
 	UINT32 src = OPER_AY_PD_32(m68k);
 	UINT32 dst = *r_dst;
 	UINT32 res = src + dst;
@@ -655,7 +655,7 @@ static void m68k_op_add_32_er_pd(m68ki_cpu_core *m68k)
 
 static void m68k_op_add_32_er_di(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DX;
+	UINT32 *r_dst = &DX;
 	UINT32 src = OPER_AY_DI_32(m68k);
 	UINT32 dst = *r_dst;
 	UINT32 res = src + dst;
@@ -671,7 +671,7 @@ static void m68k_op_add_32_er_di(m68ki_cpu_core *m68k)
 
 static void m68k_op_add_32_er_ix(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DX;
+	UINT32 *r_dst = &DX;
 	UINT32 src = OPER_AY_IX_32(m68k);
 	UINT32 dst = *r_dst;
 	UINT32 res = src + dst;
@@ -687,7 +687,7 @@ static void m68k_op_add_32_er_ix(m68ki_cpu_core *m68k)
 
 static void m68k_op_add_32_er_aw(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DX;
+	UINT32 *r_dst = &DX;
 	UINT32 src = OPER_AW_32(m68k);
 	UINT32 dst = *r_dst;
 	UINT32 res = src + dst;
@@ -703,7 +703,7 @@ static void m68k_op_add_32_er_aw(m68ki_cpu_core *m68k)
 
 static void m68k_op_add_32_er_al(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DX;
+	UINT32 *r_dst = &DX;
 	UINT32 src = OPER_AL_32(m68k);
 	UINT32 dst = *r_dst;
 	UINT32 res = src + dst;
@@ -719,7 +719,7 @@ static void m68k_op_add_32_er_al(m68ki_cpu_core *m68k)
 
 static void m68k_op_add_32_er_pcdi(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DX;
+	UINT32 *r_dst = &DX;
 	UINT32 src = OPER_PCDI_32(m68k);
 	UINT32 dst = *r_dst;
 	UINT32 res = src + dst;
@@ -735,7 +735,7 @@ static void m68k_op_add_32_er_pcdi(m68ki_cpu_core *m68k)
 
 static void m68k_op_add_32_er_pcix(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DX;
+	UINT32 *r_dst = &DX;
 	UINT32 src = OPER_PCIX_32(m68k);
 	UINT32 dst = *r_dst;
 	UINT32 res = src + dst;
@@ -751,7 +751,7 @@ static void m68k_op_add_32_er_pcix(m68ki_cpu_core *m68k)
 
 static void m68k_op_add_32_er_i(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DX;
+	UINT32 *r_dst = &DX;
 	UINT32 src = OPER_I_32(m68k);
 	UINT32 dst = *r_dst;
 	UINT32 res = src + dst;
@@ -8553,9 +8553,8 @@ static void m68k_op_callm_32_ai(m68ki_cpu_core *m68k)
 
 		m68ki_trace_t0();			   /* auto-disable (see m68kcpu.h) */
 		REG_PC += 2;
-(void)ea;	/* just to avoid an 'unused variable' warning */
-		logerror("%s at %08x: called unimplemented instruction %04x (callm)\n",
-					 m68k->device->tag(), REG_PC - 2, m68k->ir);
+		(void)ea;	/* just to avoid an 'unused variable' warning */
+//		logerror("%s at %08x: called unimplemented instruction %04x (callm)\n", m68k->device->tag(), REG_PC - 2, m68k->ir);
 		return;
 	}
 	m68ki_exception_illegal(m68k);
@@ -8571,9 +8570,8 @@ static void m68k_op_callm_32_di(m68ki_cpu_core *m68k)
 
 		m68ki_trace_t0();			   /* auto-disable (see m68kcpu.h) */
 		REG_PC += 2;
-(void)ea;	/* just to avoid an 'unused variable' warning */
-		logerror("%s at %08x: called unimplemented instruction %04x (callm)\n",
-					 m68k->device->tag(), REG_PC - 2, m68k->ir);
+		(void)ea;	/* just to avoid an 'unused variable' warning */
+//		logerror("%s at %08x: called unimplemented instruction %04x (callm)\n", m68k->device->tag(), REG_PC - 2, m68k->ir);
 		return;
 	}
 	m68ki_exception_illegal(m68k);
@@ -8589,9 +8587,8 @@ static void m68k_op_callm_32_ix(m68ki_cpu_core *m68k)
 
 		m68ki_trace_t0();			   /* auto-disable (see m68kcpu.h) */
 		REG_PC += 2;
-(void)ea;	/* just to avoid an 'unused variable' warning */
-		logerror("%s at %08x: called unimplemented instruction %04x (callm)\n",
-					 m68k->device->tag(), REG_PC - 2, m68k->ir);
+		(void)ea;	/* just to avoid an 'unused variable' warning */
+//		logerror("%s at %08x: called unimplemented instruction %04x (callm)\n", m68k->device->tag(), REG_PC - 2, m68k->ir);
 		return;
 	}
 	m68ki_exception_illegal(m68k);
@@ -8607,9 +8604,8 @@ static void m68k_op_callm_32_aw(m68ki_cpu_core *m68k)
 
 		m68ki_trace_t0();			   /* auto-disable (see m68kcpu.h) */
 		REG_PC += 2;
-(void)ea;	/* just to avoid an 'unused variable' warning */
-		logerror("%s at %08x: called unimplemented instruction %04x (callm)\n",
-					 m68k->device->tag(), REG_PC - 2, m68k->ir);
+		(void)ea;	/* just to avoid an 'unused variable' warning */
+//		logerror("%s at %08x: called unimplemented instruction %04x (callm)\n", m68k->device->tag(), REG_PC - 2, m68k->ir);
 		return;
 	}
 	m68ki_exception_illegal(m68k);
@@ -8625,9 +8621,8 @@ static void m68k_op_callm_32_al(m68ki_cpu_core *m68k)
 
 		m68ki_trace_t0();			   /* auto-disable (see m68kcpu.h) */
 		REG_PC += 2;
-(void)ea;	/* just to avoid an 'unused variable' warning */
-		logerror("%s at %08x: called unimplemented instruction %04x (callm)\n",
-					 m68k->device->tag(), REG_PC - 2, m68k->ir);
+		(void)ea;	/* just to avoid an 'unused variable' warning */
+//		logerror("%s at %08x: called unimplemented instruction %04x (callm)\n", m68k->device->tag(), REG_PC - 2, m68k->ir);
 		return;
 	}
 	m68ki_exception_illegal(m68k);
@@ -8643,9 +8638,8 @@ static void m68k_op_callm_32_pcdi(m68ki_cpu_core *m68k)
 
 		m68ki_trace_t0();			   /* auto-disable (see m68kcpu.h) */
 		REG_PC += 2;
-(void)ea;	/* just to avoid an 'unused variable' warning */
-		logerror("%s at %08x: called unimplemented instruction %04x (callm)\n",
-					 m68k->device->tag(), REG_PC - 2, m68k->ir);
+		(void)ea;	/* just to avoid an 'unused variable' warning */
+//		logerror("%s at %08x: called unimplemented instruction %04x (callm)\n", m68k->device->tag(), REG_PC - 2, m68k->ir);
 		return;
 	}
 	m68ki_exception_illegal(m68k);
@@ -8661,9 +8655,8 @@ static void m68k_op_callm_32_pcix(m68ki_cpu_core *m68k)
 
 		m68ki_trace_t0();			   /* auto-disable (see m68kcpu.h) */
 		REG_PC += 2;
-(void)ea;	/* just to avoid an 'unused variable' warning */
-		logerror("%s at %08x: called unimplemented instruction %04x (callm)\n",
-					 m68k->device->tag(), REG_PC - 2, m68k->ir);
+		(void)ea;	/* just to avoid an 'unused variable' warning */
+//		logerror("%s at %08x: called unimplemented instruction %04x (callm)\n", m68k->device->tag(), REG_PC - 2, m68k->ir);
 		return;
 	}
 	m68ki_exception_illegal(m68k);
@@ -12172,8 +12165,7 @@ static void m68k_op_cpbcc_32(m68ki_cpu_core *m68k)
 {
 	if(CPU_TYPE_IS_EC020_PLUS(m68k->cpu_type))
 	{
-		logerror( "%s at %08x: called unimplemented instruction %04x (cpbcc)\n",
-					 m68k->device->tag(), REG_PC - 2, m68k->ir);
+//		logerror( "%s at %08x: called unimplemented instruction %04x (cpbcc)\n", m68k->device->tag(), REG_PC - 2, m68k->ir);
 		return;
 	}
 	m68ki_exception_1111(m68k);
@@ -12184,8 +12176,7 @@ static void m68k_op_cpdbcc_32(m68ki_cpu_core *m68k)
 {
 	if(CPU_TYPE_IS_EC020_PLUS(m68k->cpu_type))
 	{
-		logerror("%s at %08x: called unimplemented instruction %04x (cpdbcc)\n",
-					 m68k->device->tag(), REG_PC - 2, m68k->ir);
+//		logerror("%s at %08x: called unimplemented instruction %04x (cpdbcc)\n", m68k->device->tag(), REG_PC - 2, m68k->ir);
 		return;
 	}
 	m68ki_exception_1111(m68k);
@@ -12196,8 +12187,7 @@ static void m68k_op_cpgen_32(m68ki_cpu_core *m68k)
 {
 	if(CPU_TYPE_IS_EC020_PLUS(m68k->cpu_type))
 	{
-		logerror("%s at %08x: called unimplemented instruction %04x (cpgen)\n",
-					 m68k->device->tag(), REG_PC - 2, m68k->ir);
+//		logerror("%s at %08x: called unimplemented instruction %04x (cpgen)\n", m68k->device->tag(), REG_PC - 2, m68k->ir);
 		return;
 	}
 	m68ki_exception_1111(m68k);
@@ -12208,8 +12198,7 @@ static void m68k_op_cpscc_32(m68ki_cpu_core *m68k)
 {
 	if(CPU_TYPE_IS_EC020_PLUS(m68k->cpu_type))
 	{
-		logerror("%s at %08x: called unimplemented instruction %04x (cpscc)\n",
-					 m68k->device->tag(), REG_PC - 2, m68k->ir);
+//		logerror("%s at %08x: called unimplemented instruction %04x (cpscc)\n", m68k->device->tag(), REG_PC - 2, m68k->ir);
 		return;
 	}
 	m68ki_exception_1111(m68k);
@@ -12220,8 +12209,7 @@ static void m68k_op_cptrapcc_32(m68ki_cpu_core *m68k)
 {
 	if(CPU_TYPE_IS_EC020_PLUS(m68k->cpu_type))
 	{
-		logerror("%s at %08x: called unimplemented instruction %04x (cptrapcc)\n",
-					 m68k->device->tag(), REG_PC - 2, m68k->ir);
+//		logerror("%s at %08x: called unimplemented instruction %04x (cptrapcc)\n", m68k->device->tag(), REG_PC - 2, m68k->ir);
 		return;
 	}
 	m68ki_exception_1111(m68k);
@@ -26032,7 +26020,7 @@ static void m68k_op_pflush_32(m68ki_cpu_core *m68k)
 {
 	if ((CPU_TYPE_IS_EC020_PLUS(m68k->cpu_type)) && (m68k->has_pmmu))
 	{
-		logerror("68040: unhandled PFLUSH\n");
+//		logerror("68040: unhandled PFLUSH\n");
 		return;
 	}
 	m68ki_exception_1111(m68k);
@@ -27230,8 +27218,7 @@ static void m68k_op_rtm_32(m68ki_cpu_core *m68k)
 	if(CPU_TYPE_IS_020_VARIANT(m68k->cpu_type))
 	{
 		m68ki_trace_t0();			   /* auto-disable (see m68kcpu.h) */
-		logerror("%s at %08x: called unimplemented instruction %04x (rtm)\n",
-					 m68k->device->tag(), REG_PC - 2, m68k->ir);
+//		logerror("%s at %08x: called unimplemented instruction %04x (rtm)\n", m68k->device->tag(), REG_PC - 2, m68k->ir);
 		return;
 	}
 	m68ki_exception_illegal(m68k);
@@ -32163,7 +32150,7 @@ static void m68k_op_unpk_16_mm(m68ki_cpu_core *m68k)
 
 #include "m68kops.h"
 
-#define NUM_CPU_TYPES 5
+#define NUM_CPU_TYPES	5
 
 void  (*m68ki_instruction_jump_table[0x10000])(m68ki_cpu_core *m68k); /* opcode handler jump table */
 unsigned char m68ki_cycles[NUM_CPU_TYPES][0x10000]; /* Cycles used by CPU type */
@@ -34159,10 +34146,8 @@ static const opcode_handler_struct m68k_opcode_handler_table[] =
 void m68ki_build_opcode_table(void)
 {
 	const opcode_handler_struct *ostruct;
-	int instr;
-	int i;
-	int j;
-	int k;
+
+	int instr, i, j, k;
 
 	for(i = 0; i < 0x10000; i++)
 	{

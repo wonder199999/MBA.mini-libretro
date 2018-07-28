@@ -213,8 +213,8 @@ static void nec_interrupt(v25_state_t *nec_state, unsigned int_num, unsigned mod
 		case 2:	/* BRKS: force secure mode */
 			if (nec_state->config->v25v35_decryptiontable)
 				nec_state->MF = 0;
-			else
-				logerror("%06x: BRKS executed with no decryption table\n",PC(nec_state));
+/*			else
+				logerror("%06x: BRKS executed with no decryption table\n",PC(nec_state)); */
 	}
 
 	if (int_num == -1)

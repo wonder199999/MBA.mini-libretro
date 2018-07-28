@@ -445,7 +445,7 @@ OPHANDLER(_name) { return (!(cpustate->feature_mask & UPI41_FEATURE)) ? _mcs48na
 
 OPHANDLER( illegal )
 {
-	logerror("MCS-48 PC:%04X - Illegal opcode = %02x\n", cpustate->pc - 1, program_r(cpustate->pc - 1));
+//	logerror("MCS-48 PC:%04X - Illegal opcode = %02x\n", cpustate->pc - 1, program_r(cpustate->pc - 1));
 	return 1;
 }
 
@@ -556,9 +556,10 @@ OPHANDLER( en_i )			{ cpustate->xirq_enabled = TRUE; return 1 + check_irqs(cpust
 OPHANDLER( en_tcnti )		{ cpustate->tirq_enabled = TRUE; return 1 + check_irqs(cpustate); }
 OPHANDLER( en_dma )			{ cpustate->dma_enabled = TRUE; port_w(2, cpustate->p2); return 1; }
 OPHANDLER( en_flags )		{ cpustate->flags_enabled = TRUE; port_w(2, cpustate->p2); return 1; }
+
 OPHANDLER( ent0_clk )
 {
-	logerror("MCS-48 PC:%04X - Unimplemented opcode = %02x\n", cpustate->pc - 1, program_r(cpustate->pc - 1));
+//	logerror("MCS-48 PC:%04X - Unimplemented opcode = %02x\n", cpustate->pc - 1, program_r(cpustate->pc - 1));
 	return 1;
 }
 

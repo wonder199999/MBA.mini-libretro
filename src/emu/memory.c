@@ -763,11 +763,11 @@ private:
 	template<typename _UintType>
 	_UintType unmap_r(address_space &space, offs_t offset, _UintType mask)
 	{
-		if (m_space.log_unmap() && !m_space.debugger_access())
+/*		if (m_space.log_unmap() && !m_space.debugger_access())
 			logerror("%s: unmapped %s memory read from %s & %s\n", 
 						cpuexec_describe_context(&m_space.m_machine), m_space.name(), 
 						core_i64_hex_format(m_space.byte_to_address(offset), m_space.addrchars()),
-						core_i64_hex_format(mask, 2 * sizeof(_UintType)));
+						core_i64_hex_format(mask, 2 * sizeof(_UintType))); */
 		return m_space.unmap();
 	}
 
@@ -817,12 +817,12 @@ private:
 	template<typename _UintType>
 	void unmap_w(address_space &space, offs_t offset, _UintType data, _UintType mask)
 	{
-		if (m_space.log_unmap() && !m_space.debugger_access())
+/*		if (m_space.log_unmap() && !m_space.debugger_access())
 			logerror("%s: unmapped %s memory write to %s = %s & %s\n", 
 					cpuexec_describe_context(&m_space.m_machine), m_space.name(), 
 					core_i64_hex_format(m_space.byte_to_address(offset), m_space.addrchars()),
 					core_i64_hex_format(data, 2 * sizeof(_UintType)),
-					core_i64_hex_format(mask, 2 * sizeof(_UintType)));
+					core_i64_hex_format(mask, 2 * sizeof(_UintType))); */
 	}
 
 	template<typename _UintType>

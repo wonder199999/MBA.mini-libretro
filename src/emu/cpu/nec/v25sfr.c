@@ -23,7 +23,7 @@ int read_sfr(v25_state_t *nec_state, unsigned o)
 			return nec_state->IDB;
 			break;
 		default:
-			logerror("%06x: Read from special function register %02x\n",PC(nec_state),o);
+/*			logerror("%06x: Read from special function register %02x\n",PC(nec_state),o); */
 			return 0;
 	}
 }
@@ -42,8 +42,8 @@ void write_sfr(v25_state_t *nec_state, unsigned o, unsigned d)
 		case 0xFF: /* IDB */
 			nec_state->IDB = d;
 			break;
-		default:
-			logerror("%06x: Wrote %02x to special function register %02x\n",PC(nec_state),d,o);
+		default:	break;
+/*			logerror("%06x: Wrote %02x to special function register %02x\n",PC(nec_state),d,o); */
 	}
 }
 

@@ -766,13 +766,16 @@ INLINE UINT32 ARG16(z80_state *z80)
 /***************************************************************
  * RETN
  ***************************************************************/
-#define RETN(Z) do {											\
-	LOG(("Z80 '%s' RETN z80->iff1:%d z80->iff2:%d\n",			\
-		(Z)->device->tag(), (Z)->iff1, (Z)->iff2));		\
-	POP((Z), pc);												\
-	(Z)->WZ = (Z)->PC;											\
-	(Z)->iff1 = (Z)->iff2;										\
-} while (0)
+#define RETN(Z)								\
+	do								\
+	{								\
+		POP((Z), pc);						\
+		(Z)->WZ = (Z)->PC;					\
+		(Z)->iff1 = (Z)->iff2;					\
+	}								\
+	while (0)
+
+/*	LOG( ("Z80 '%s' RETN z80->iff1:%d z80->iff2:%d\n", (Z)->device->tag(), (Z)->iff1, (Z)->iff2) ); */
 
 /***************************************************************
  * RETI
@@ -2034,9 +2037,9 @@ OP(xycb,fd) { z80->L = SET(7, RM(z80, z80->ea)); WM(z80, z80->ea,z80->L);			} /*
 OP(xycb,fe) { WM(z80, z80->ea, SET(7, RM(z80, z80->ea)));							} /* SET  7,(XY+o)    */
 OP(xycb,ff) { z80->A = SET(7, RM(z80, z80->ea)); WM(z80, z80->ea,z80->A);			} /* SET  7,A=(XY+o)  */
 
-OP(illegal,1) {
-	logerror("Z80 '%s' ill. opcode $%02x $%02x\n",
-			z80->device->tag(), z80->direct->read_decrypted_byte((z80->PCD-1)&0xffff), z80->direct->read_decrypted_byte(z80->PCD));
+OP(illegal, 1)
+{
+/*	logerror("Z80 '%s' ill. opcode $%02x $%02x\n", z80->device->tag(), z80->direct->read_decrypted_byte((z80->PCD-1)&0xffff), z80->direct->read_decrypted_byte(z80->PCD)); */
 }
 
 /**********************************************************
@@ -2621,10 +2624,9 @@ OP(fd,fd) { illegal_1(z80); op_fd(z80);												} /* DB   FD          */
 OP(fd,fe) { illegal_1(z80); op_fe(z80);												} /* DB   FD          */
 OP(fd,ff) { illegal_1(z80); op_ff(z80);												} /* DB   FD          */
 
-OP(illegal,2)
+OP(illegal, 2)
 {
-	logerror("Z80 '%s' ill. opcode $ed $%02x\n",
-			z80->device->tag(), z80->direct->read_decrypted_byte((z80->PCD-1)&0xffff));
+/*	logerror("Z80 '%s' ill. opcode $ed $%02x\n", z80->device->tag(), z80->direct->read_decrypted_byte((z80->PCD-1)&0xffff)); */
 }
 
 /**********************************************************

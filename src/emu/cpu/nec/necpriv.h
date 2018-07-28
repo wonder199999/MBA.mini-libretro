@@ -343,7 +343,6 @@ typedef enum {
 	unsigned di = Wreg(IY);								\
 	unsigned si = Wreg(IX);								\
 	static const UINT8 table[3]={18,19,19};					\
-	if (nec_state->seg_prefix) logerror("%06x: Warning: seg_prefix defined for add4s\n",PC(nec_state));	\
 	nec_state->ZeroVal = nec_state->CarryVal = 0;								\
 	for (i=0;i<count;i++) {									\
 		nec_state->icount-=table[nec_state->chip_type/8];					\
@@ -368,7 +367,6 @@ typedef enum {
     unsigned di = Wreg(IY);								\
 	unsigned si = Wreg(IX);								\
 	static const UINT8 table[3]={18,19,19};					\
-	if (nec_state->seg_prefix) logerror("%06x: Warning: seg_prefix defined for sub4s\n",PC(nec_state));	\
 	nec_state->ZeroVal = nec_state->CarryVal = 0;								\
 	for (i=0;i<count;i++) {									\
 		nec_state->icount-=table[nec_state->chip_type/8];					\
@@ -398,7 +396,6 @@ typedef enum {
     unsigned di = Wreg(IY);								\
 	unsigned si = Wreg(IX);								\
 	static const UINT8 table[3]={14,19,19};					\
-	if (nec_state->seg_prefix) logerror("%06x: Warning: seg_prefix defined for cmp4s\n",PC(nec_state));	\
 	nec_state->ZeroVal = nec_state->CarryVal = 0;								\
 	for (i=0;i<count;i++) {									\
 		nec_state->icount-=table[nec_state->chip_type/8];					\

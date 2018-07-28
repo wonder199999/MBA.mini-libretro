@@ -23,10 +23,10 @@ OP( 0x0f, i_pre_v25  ) { UINT32 ModRM, tmp, tmp2;
 		case 0x26 :	CMP4S; CLKS(7,7,2); break;
 		case 0x28 : ModRM = FETCH(); tmp = GetRMByte(ModRM); tmp <<= 4; tmp |= Breg(AL) & 0xf; Breg(AL) = (Breg(AL) & 0xf0) | ((tmp>>8)&0xf); tmp &= 0xff; PutbackRMByte(ModRM,tmp); CLKM(13,13,9,28,28,15); break;
 		case 0x2a : ModRM = FETCH(); tmp = GetRMByte(ModRM); tmp2 = (Breg(AL) & 0xf)<<4; Breg(AL) = (Breg(AL) & 0xf0) | (tmp&0xf); tmp = tmp2 | (tmp>>4);	PutbackRMByte(ModRM,tmp); CLKM(17,17,13,32,32,19); break;
-		case 0x31 : ModRM = FETCH(); ModRM=0; logerror("%06x: Unimplemented bitfield INS\n",PC(nec_state)); break;
-		case 0x33 : ModRM = FETCH(); ModRM=0; logerror("%06x: Unimplemented bitfield EXT\n",PC(nec_state)); break;
+		case 0x31 : ModRM = FETCH(); ModRM=0; /*logerror("%06x: Unimplemented bitfield INS\n",PC(nec_state));*/ break;
+		case 0x33 : ModRM = FETCH(); ModRM=0; /*logerror("%06x: Unimplemented bitfield EXT\n",PC(nec_state));*/ break;
 		case 0x92 : CLK(2); break; /* V25/35 FINT */
-		default:    logerror("%06x: Unknown V25 instruction\n",PC(nec_state)); break;
+		default:    /*logerror("%06x: Unknown V25 instruction\n",PC(nec_state));*/ break;
 	}
 }
 
