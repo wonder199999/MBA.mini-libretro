@@ -467,10 +467,9 @@ void video_frame_update(running_machine *machine, int debug)
 		/* reset partial updates if we're paused or if the debugger is active */
 		if (machine->primary_screen != NULL && (machine->paused() || debug /*|| debugger_within_instruction_hook(machine) */ ))
 			machine->primary_screen->scanline0_callback();
-
 		/* otherwise, call the video EOF callback */
-		else if (machine->config->m_video_eof != NULL)
-			(*machine->config->m_video_eof)(machine);
+		else
+			machine->driver_data<driver_data_t>()->video_eof();
 	}
 }
 
@@ -2083,13 +2082,11 @@ bool screen_device::update_partial(int scanline)
 	if (clip.min_y <= clip.max_y)
 	{
 		UINT32 flags = UPDATE_HAS_NOT_CHANGED;
-
 #if 0
 		LOG_PARTIAL_UPDATES(("updating %d-%d\n", clip.min_y, clip.max_y));
 #endif
+		flags = machine->driver_data<driver_data_t>()->video_update(*this, *m_bitmap[m_curbitmap], clip);
 
-		if (machine->config->m_video_update != NULL)
-			flags = (*machine->config->m_video_update)(this, m_bitmap[m_curbitmap], &clip);
 		global.partial_updates_this_frame++;
 
 		// if we modified the bitmap, we have to commit

@@ -110,7 +110,7 @@ device_scheduler::~device_scheduler()
 
 void device_scheduler::timeslice()
 {
-	bool call_debugger = ((m_machine.debug_flags & DEBUG_FLAG_ENABLED) != 0);
+//	bool call_debugger = ((m_machine.debug_flags & DEBUG_FLAG_ENABLED) != 0);
 	timer_execution_state *timerexec = timer_get_execution_state(&m_machine);
 if (TEMPLOG) printf("Timeslice start\n");
 
