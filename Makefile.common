@@ -684,7 +684,7 @@ ifeq ($(VRENDER),opengl)
    endif
 endif
 
-OSDOBJS += $(OBJ)/osd/retro/retromain.o
+OSDOBJS += $(OBJ)/osd/retro/libretro.o
 #-------------------------------------------------
 # rules for building the libaries
 #-------------------------------------------------

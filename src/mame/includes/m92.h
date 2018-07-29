@@ -17,7 +17,7 @@ public:
 	static driver_data_t *alloc(running_machine &machine) { return auto_alloc_clear(&machine, m92_state(machine)); }
 
 	m92_state(running_machine &machine)
-		: driver_data_t(machine) {}
+		: driver_data_t(machine) { }
 
 	UINT32		bank_address;
 	UINT32		raster_irq_position;

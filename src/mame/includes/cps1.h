@@ -104,6 +104,8 @@
 	PORT_DIPSETTING(    0x00, "8 (Hardest)" )
 
 
+/*----------- class && structs -----------*/
+
 struct gfx_range
 {
 	/* start and end are as passed by the game (shift adjusted to be all 	*/
@@ -263,6 +265,7 @@ public:
 
 
 /*----------- defined in drivers/cps1.c -----------*/
+
 void cps1_irq_handler_mus(running_device *device, int irq);
 
 ADDRESS_MAP_EXTERN( qsound_sub_map, 8 );
@@ -292,6 +295,7 @@ WRITE16_HANDLER( cpsq_coinctrl2_w );
 WRITE16_HANDLER( qsound_sharedram2_w );
 
 /*----------- defined in video/cps1.c -----------*/
+
 void cps1_get_video_base(running_machine *machine);
 void cps2_set_sprite_priorities(running_machine *machine);
 void cps2_objram_latch(running_machine *machine);
@@ -319,10 +323,13 @@ VIDEO_EOF( cps1 );
 /*************************************
 *	Encryption
 **************************************/
+
 /*----------- defined in machine/cps2crpt.c -----------*/
+
 DRIVER_INIT( cps2crpt );
 
 /*----------- defined in drivers/cps1.c -----------*/
+
 INPUT_PORTS_EXTERN( cps1_3b );
 INPUT_PORTS_EXTERN( cps1_2b );
 INPUT_PORTS_EXTERN( cps1_3players );
@@ -339,6 +346,7 @@ INPUT_PORTS_EXTERN( captcomm );
 INPUT_PORTS_EXTERN( varth );
 
 /*----------- defined in machine/kabuki.c -----------*/
+
 void mgakuen2_decode(running_machine *machine);
 void pang_decode(running_machine *machine);
 void cworld_decode(running_machine *machine);
@@ -355,6 +363,5 @@ void dino_decode(running_machine *machine);
 void punisher_decode(running_machine *machine);
 void slammast_decode(running_machine *machine);
 
-/* ----------------------------------------------------*/
 
 #endif
