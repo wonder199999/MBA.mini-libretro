@@ -59,7 +59,7 @@
     (this was written during 0.109u2 development) as some of the OSD
     responsibilities are pushed into the core.
 
-*******************************************************************c********/
+****************************************************************************/
 
 #pragma once
 
@@ -124,10 +124,10 @@ class device_t;
         Audio initialization may eventually move into here as well,
         instead of relying on independent callbacks from each system.
 -----------------------------------------------------------------------------*/
+
 void osd_init(running_machine *machine);
 
 void osd_wait_for_debugger(device_t *device, int firststop);
-
 
 
 /******************************************************************************
@@ -137,8 +137,6 @@ void osd_wait_for_debugger(device_t *device, int firststop);
 ******************************************************************************/
 
 void osd_update(running_machine *machine, int skip_redraw);
-
-
 
 
 /******************************************************************************
@@ -159,7 +157,6 @@ void osd_update_audio_stream(running_machine *machine, INT16 *buffer, int sample
 void osd_set_mastervolume(int attenuation);
 
 
-
 /******************************************************************************
 
     Controls
@@ -176,7 +173,6 @@ void osd_set_mastervolume(int attenuation);
   Scan the list, and change the keys/joysticks you want.
 */
 void osd_customize_input_type_list(input_type_desc *typelist);
-
 
 
 #endif	/* __OSDEPEND_H__ */
