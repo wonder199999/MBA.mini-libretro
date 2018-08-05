@@ -142,7 +142,7 @@ $(MAMEOBJ)/neogeo.a: \
 # misc dependencies
 #-------------------------------------------------
 
-$(DRIVERS)/neogeo.o:	$(MAMESRC)/drivers/neodrvr.c
+$(DRIVERS)/neogeo.o:	$(MAMESRC)/drivers/neogeo.inc
 
 ###########################################################################
 #

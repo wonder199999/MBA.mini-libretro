@@ -11,7 +11,7 @@
 
 #include "emu.h"
 #include "uiinput.h"
-#include "profiler.h"
+//#include "profiler.h"
 #include "render.h"
 
 
@@ -255,7 +255,7 @@ int ui_input_pressed_repeat(running_machine *machine, int code, int speed)
 	ui_input_private *uidata = machine->ui_input_data;
 	int pressed = FALSE;
 
-	g_profiler.start(PROFILER_INPUT);
+//	g_profiler.start(PROFILER_INPUT);
 
 	/* get the status of this key (assumed to be only in the defaults) */
 	assert(code >= IPT_UI_CONFIGURE && code <= IPT_OSD_16);
@@ -283,7 +283,7 @@ int ui_input_pressed_repeat(running_machine *machine, int code, int speed)
 	else
 		uidata->next_repeat[code] = 0;
 
-	g_profiler.stop();
+//	g_profiler.stop();
 
 	return pressed;
 }

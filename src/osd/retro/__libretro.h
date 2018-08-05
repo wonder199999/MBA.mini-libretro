@@ -13,9 +13,9 @@ bool verify_rom_hash = false;
 char RPATH[512];
 char retro_content_dir[1024];
 INT32 vertical, orient;
-INT32 RLOOP = 1;
 INT32 SHIFTON = -1;
 UINT32 allow_select_newgame = 0;
+UINT32 RETRO_LOOP = 1;
 
 /* fake a keyboard mapped to retro joypad */
 enum

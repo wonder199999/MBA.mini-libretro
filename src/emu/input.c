@@ -20,7 +20,7 @@
 
 #include "emu.h"
 #include "emuopts.h"
-#include "profiler.h"
+//#include "profiler.h"
 
 
 
@@ -857,7 +857,7 @@ INT32 input_code_value(running_machine *machine, input_code code)
 	INT32 result = 0;
 	int curindex;
 
-	g_profiler.start(PROFILER_INPUT);
+//	g_profiler.start(PROFILER_INPUT);
 
 	/* return 0 for any disabled or invalid device classes */
 	if (devclass <= DEVICE_CLASS_INVALID || devclass >= DEVICE_CLASS_MAXIMUM || !device_list[devclass].enabled)
@@ -908,7 +908,7 @@ INT32 input_code_value(running_machine *machine, input_code code)
 	}
 
 exit:
-	g_profiler.stop();
+//	g_profiler.stop();
 	return result;
 }
 

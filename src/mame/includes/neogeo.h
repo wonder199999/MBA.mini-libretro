@@ -336,14 +336,14 @@ VIDEO_UPDATE( neogeo );
 /*  Note you'll have to modify the last for lines of each block to use the extra bios roms,
     they're hacks / homebrew / console bios roms so MAME doesn't list them by default. */
 
-#define NEOGEO_BIOS \
-	ROM_REGION16_BE( 0x80000, "mainbios", 0 ) \
+#define NEOGEO_BIOS					\
+	ROM_REGION16_BE( 0x80000, "mainbios", 0 )	\
 	NEOGEOBIOS
 
-#define NEO_BIOS_AUDIO_64K(name, hash)		\
-	NEOGEO_BIOS 				\
+#define NEO_BIOS_AUDIO_64K(name, hash)										\
+	NEOGEO_BIOS												\
 	\
-	ROM_REGION( 0x20000, "audiobios", 0 )	\
+	ROM_REGION( 0x20000, "audiobios", 0 )									\
 	ROM_LOAD( "sm1.sm1", 0x00000, 0x20000, CRC(94416d67) SHA1(42f9d7ddd6c0931fd64226a60dc73602b2819dcf) )	\
 	\
 	ROM_REGION( 0x20000, "audiocpu", 0 )									\
@@ -433,8 +433,16 @@ VIDEO_UPDATE( neogeo );
 	\
 	ROM_Y_ZOOM
 
+#define NEO_SFIX(bytes, name, hash)											\
+	ROM_REGION( 0x20000, "fixedbios", 0 )										\
+	ROM_LOAD( "sfix.sfix", 0x000000, 0x20000, CRC(c2ea0cfd) SHA1(fd4a618cdcdbf849374f0a50dd8efe9dbab706c3) )	\
+	ROM_REGION( bytes, "fixed", ROMREGION_ERASE00 )									\
+	ROM_LOAD( name, 0x00000, bytes, hash )										\
+	ROM_Y_ZOOM
+
 #define ROM_Y_ZOOM				\
 	ROM_REGION( 0x20000, "zoomy", 0 )	\
 	ROM_LOAD( "000-lo.lo", 0x00000, 0x20000, CRC(5a86cff2) SHA1(5992277debadeb64d1c1c64b0a92d9293eaf7e4a) )
+
 
 /* ------------------------------------------------------------------------- */

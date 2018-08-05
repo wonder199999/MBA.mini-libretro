@@ -3,7 +3,7 @@
     Neo-Geo hardware
 
     main driver file - please do NOT put anything specific to a
-    particular game in this file, but use neodrvr.c instead
+    particular game in this file, but use neogeo.inc instead
 
     Credits:
         * This driver was made possible by the research done by
@@ -1280,4 +1280,4 @@ static DRIVER_INIT( neogeo )
 	state->fixed_layer_bank_type = 0;
 }
 
-#include "neodrvr.c"
+#include "neogeo.inc"

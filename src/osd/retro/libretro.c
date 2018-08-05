@@ -499,7 +499,7 @@ void retro_run (void)
 	retro_poll_mame_input();
 	retro_main_loop();
 
-	RLOOP = 1;
+	RETRO_LOOP = 1;
 
 #if defined(HAVE_OPENGL) || defined(HAVE_OPENGLES)
 	do_gl2d();
@@ -970,7 +970,7 @@ void osd_update(running_machine *machine, int skip_redraw)
    	else
       		draw_this_frame = false;
 
-	RLOOP = 0;
+	RETRO_LOOP = 0;
 
    	if (keyboard_input)
 		if (ui_ipt_pushchar != -1)

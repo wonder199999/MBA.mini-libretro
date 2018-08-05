@@ -586,6 +586,7 @@ const game_driver *const drivers[] =
 	DRIVER( vhunt2d )	/* Phoenix Edition, Vampire Hunter 2: Darkstalkers Revenge, Japan */
 	DRIVER( halfway )	/* Halfway To Hell: Progear Red Label (2016-1-17 Red label ver) */
 
+
 	/* ***************** */
 	/*  Part 4 - Neo Geo */
 	/* ***************** */
@@ -612,7 +613,7 @@ const game_driver *const drivers[] =
 	DRIVER( kotm )		/* 0016 (c) 1991 SNK */
 	DRIVER( kotmh )		/* 0016 (c) 1991 SNK */
 	DRIVER( sengoku )	/* 0017 (c) 1991 SNK */
-	DRIVER( sengokh )	/* 0017 (c) 1991 SNK */
+	DRIVER( sengokuh )	/* Sengoku (US) (NGH-017) */
 	DRIVER( burningf )	/* 0018 (c) 1991 SNK */
 	DRIVER( burningfh )	/* 0018 (c) 1991 SNK */
 	DRIVER( lbowling )	/* 0019 (c) 1990 SNK */
@@ -665,7 +666,7 @@ const game_driver *const drivers[] =
 	DRIVER( aof2a )		/* 0056 (c) 1994 SNK */
 	DRIVER( wh2 )		/* 0057 (c) 1993 ADK */
 	DRIVER( fatfursp )	/* 0058 (c) 1993 SNK */
-	DRIVER( fatfursa )	/* 0058 (c) 1993 SNK */
+	DRIVER( fatfurspa )	/* 0058 (c) 1993 SNK */
 	DRIVER( savagere )	/* 0059 (c) 1995 SNK */
 	DRIVER( fightfev )	/* 0060 (c) 1994 Viccom */
 	DRIVER( fightfeva )	/* 0060 (c) 1994 Viccom */
@@ -674,7 +675,6 @@ const game_driver *const drivers[] =
 	DRIVER( samsho2 )	/* 0063 (c) 1994 SNK */
 	DRIVER( samsho2k )	/* 0063 (c) 1994 SNK (Korean hack) */
 	DRIVER( wh2j )		/* 0064 (c) 1994 ADK / SNK */
-	DRIVER( wh2jh )		/* 0064 (c) 1994 ADK / SNK */
 	DRIVER( wjammers )	/* 0065 (c) 1994 Data East Corporation */
 	DRIVER( karnovr )	/* 0066 (c) 1994 Data East Corporation */
 	DRIVER( gururin )	/* 0067 (c) 1994 Face */
@@ -767,7 +767,7 @@ const game_driver *const drivers[] =
 	DRIVER( irrmaze )	/* 0236 (c) 1997 SNK / Saurus */
 	DRIVER( popbounc )	/* 0237 (c) 1997 Video System Co. */
 	DRIVER( shocktro )	/* 0238 (c) 1997 Saurus */
-	DRIVER( shocktra )	/* 0238 (c) 1997 Saurus */
+	DRIVER( shocktroa )	/* 0238 (c) 1997 Saurus */
 	DRIVER( blazstar )	/* 0239 (c) 1998 Yumekobo */
 	DRIVER( rbff2 )		/* 0240 (c) 1998 SNK */
 	DRIVER( rbff2h )	/* 0240 (c) 1998 SNK */
@@ -787,13 +787,11 @@ const game_driver *const drivers[] =
 	DRIVER( ctomaday )	/* 0249 (c) 1999 Visco */
 	DRIVER( mslugx )	/* 0250 (c) 1999 SNK */
 	DRIVER( kof99 )		/* 0251 (c) 1999 SNK */
-	DRIVER( kof99a )	/* 0251 (c) 1999 SNK */
 	DRIVER( kof99e )	/* 0251 (c) 1999 SNK */
 	DRIVER( kof99k )	/* 0152 (c) 1999 SNK */
 	DRIVER( kof99p )	/* 0251 (c) 1999 SNK */
 	DRIVER( ganryu )	/* 0252 (c) 1999 Visco */
 	DRIVER( garou )		/* 0253 (c) 1999 SNK */
-	DRIVER( garouo )	/* 0253 (c) 1999 SNK */
 	DRIVER( garoup )	/* 0253 (c) 1999 SNK */
 	DRIVER( garoubl )	/* bootleg */
 	DRIVER( s1945p )	/* 0254 (c) 1999 Psikyo */
@@ -853,7 +851,6 @@ const game_driver *const drivers[] =
 	DRIVER( kf2k3upl )	/* bootleg */
 	DRIVER( samsh5sp )	/* 0272 (c) 2004 Playmore */
 	DRIVER( samsh5sph )	/* 0272 (c) 2004 Playmore */
-	DRIVER( samsh5spn )	/* 0272 (c) 2004 Playmore */
 
 	/* The BrezzaSoft games don't have proper ID codes */
 	DRIVER( jockeygp )
@@ -867,9 +864,6 @@ const game_driver *const drivers[] =
 	DRIVER( 98best44 )
 
 	/* new added */
-	DRIVER( kof97hfa )	/* hackrom, based by kof97 */
-	DRIVER( ss2hfa )	/* hackrom, based by samsho2 */
-	DRIVER( sokhfa )	/* hackrom, based by ragnagrd */
 	DRIVER( crswd2bl )	/* Crossed Sword 2, bootleg of NGCD version */
 	DRIVER( 3countba )	/* 3 Count Bout / Fire Suplex (NGM-043) */
 	DRIVER( fatfury2a )	/* Fatal Fury 2 / Garou Densetsu 2 - arata-naru tatakai (NGM-047) */
@@ -911,7 +905,6 @@ const game_driver *const drivers[] =
 	DRIVER( lresortp )	/* Last Resort (prototype) */
 	DRIVER( mslug2t )	/* Metal Slug 2 turbo (hack) */
 	DRIVER( roboarma )	/* Robo Army (NGM-032 ~ NGH-032) */
-	DRIVER( sengokuh )	/* Sengoku (US) (NGH-017) */
 	DRIVER( samshoa )	/* Samurai Shodown / Samurai Spirits (NGM-045, alternate board) */
 	DRIVER( samsho2k2 )	/* Saulabi Spirits / Jin Saulabi Tu Hon (Korean release of Samsho2) */
 	DRIVER( wh2ja )		/* World Heroes 2 Jet (ADM-007) */
@@ -921,6 +914,12 @@ const game_driver *const drivers[] =
 	DRIVER( totcarib )	/* Treasure of the Caribbean */
 	DRIVER( samsho5x )	/* Samurai Shodown V / Samurai Spirits Zero (XBOX version, hack) */
 	DRIVER( mslug5b )	/* Metal Slug 5 (bootleg) */
+	DRIVER( samsh5spho )	/* Samurai Shodown V Special / Samurai Spirits Zero Special (NGH-2720) (1st release, censored) */
+	DRIVER( zintrkcd )	/* Zintrick / Oshidashi Zentrix (NGCD Conversion) */
+	DRIVER( lastblada )	/* The Last Blade / Bakumatsu Roman - Gekka no Kenshi (NGM-2340, alternate board) */
+	DRIVER( kof98ae2016 )
+	DRIVER( kof98cb )
+	DRIVER( kof98co )
 
 
 #endif	/* DRIVER_RECURSIVE */

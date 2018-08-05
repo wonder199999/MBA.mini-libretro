@@ -68,6 +68,17 @@
 #define IS_OPAQUE(a)		(a >= (NO_DEST_READ ? 0.5f : 1.0f))
 #define IS_TRANSPARENT(a)	(a <  (NO_DEST_READ ? 0.5f : 0.0001f))
 
+#undef	COMMON_PART
+#define	COMMON_PART					\
+		INT32 u0 = curu >> 16;				\
+		INT32 u1 = 1;						\
+		if (u0 < 0) u0 = u1 = 0;					\
+		else if (u0 + 1 >= texture->width) u0 = texture->width - 1, u1 = 0;	\
+		INT32 v0 = curv >> 16;							\
+		INT32 v1 = texture->rowpixels;						\
+		if (v0 < 0) v0 = v1 = 0;						\
+		else if (v0 + 1 >= texture->height) v0 = texture->height - 1, v1 = 0; 
+
 
 
 /***************************************************************************
@@ -77,10 +88,16 @@
 typedef struct _quad_setup_data quad_setup_data;
 struct _quad_setup_data
 {
-	INT32			dudx, dvdx, dudy, dvdy;
-	INT32			startu, startv;
-	INT32			startx, starty;
-	INT32			endx, endy;
+	INT32			dudx;
+	INT32			dvdx;
+	INT32			dudy;
+	INT32			dvdy;
+	INT32			startu;
+	INT32			startv;
+	INT32			startx;
+	INT32			starty;
+	INT32			endx;
+	INT32			endy;
 };
 
 
@@ -124,7 +141,7 @@ INLINE UINT8 clamp16_shift8(UINT32 x)
 
 INLINE UINT32 ycc_to_rgb(UINT32 ycc)
 {
-	/* original equations:
+/*	original equations:
 
         C = Y - 16
         D = Cb - 128
@@ -157,11 +174,11 @@ INLINE UINT32 ycc_to_rgb(UINT32 ycc)
         R = clip(( common            + 409 * Cr -     0) >> 8)
         G = clip(( common - 100 * Cb - 208 * Cr + 91776) >> 8)
         B = clip(( common + 516 * Cb            - 13696) >> 8)
+*/
 
-    */
-    UINT8 y = ycc;
-    UINT8 cb = ycc >> 8;
-    UINT8 cr = ycc >> 16;
+	UINT8 y = ycc;
+	UINT8 cb = ycc >> 8;
+	UINT8 cr = ycc >> 16;
 	UINT32 r, g, b, common;
 
 	common = 298 * y - 56992;
@@ -196,16 +213,7 @@ INLINE UINT32 get_texel_palette16_bilinear(const render_texinfo *texture, INT32 
 {
 	const UINT16 *texbase = (const UINT16 *)texture->base;
 	rgb_t pix00, pix01, pix10, pix11;
-	INT32 u0, u1, v0, v1;
-
-	u0 = curu >> 16;
-	u1 = 1;
-	if (u0 < 0) u0 = u1 = 0;
-	else if (u0 + 1 >= texture->width) u0 = texture->width - 1, u1 = 0;
-	v0 = curv >> 16;
-	v1 = texture->rowpixels;
-	if (v0 < 0) v0 = v1 = 0;
-	else if (v0 + 1 >= texture->height) v0 = texture->height - 1, v1 = 0;
+	COMMON_PART
 
 	texbase += v0 * texture->rowpixels + u0;
 
@@ -240,16 +248,7 @@ INLINE UINT32 get_texel_palette16a_bilinear(const render_texinfo *texture, INT32
 {
 	const UINT16 *texbase = (const UINT16 *)texture->base;
 	rgb_t pix00, pix01, pix10, pix11;
-	INT32 u0, u1, v0, v1;
-
-	u0 = curu >> 16;
-	u1 = 1;
-	if (u0 < 0) u0 = u1 = 0;
-	else if (u0 + 1 >= texture->width) u0 = texture->width - 1, u1 = 0;
-	v0 = curv >> 16;
-	v1 = texture->rowpixels;
-	if (v0 < 0) v0 = v1 = 0;
-	else if (v0 + 1 >= texture->height) v0 = texture->height - 1, v1 = 0;
+	COMMON_PART
 
 	texbase += v0 * texture->rowpixels + u0;
 
@@ -283,16 +282,7 @@ INLINE UINT32 get_texel_rgb15_bilinear(const render_texinfo *texture, INT32 curu
 {
 	const UINT16 *texbase = (const UINT16 *)texture->base;
 	rgb_t pix00, pix01, pix10, pix11, filtered;
-	INT32 u0, u1, v0, v1;
-
-	u0 = curu >> 16;
-	u1 = 1;
-	if (u0 < 0) u0 = u1 = 0;
-	else if (u0 + 1 >= texture->width) u0 = texture->width - 1, u1 = 0;
-	v0 = curv >> 16;
-	v1 = texture->rowpixels;
-	if (v0 < 0) v0 = v1 = 0;
-	else if (v0 + 1 >= texture->height) v0 = texture->height - 1, v1 = 0;
+	COMMON_PART
 
 	texbase += v0 * texture->rowpixels + u0;
 
@@ -332,16 +322,7 @@ INLINE UINT32 get_texel_yuy16_bilinear(const render_texinfo *texture, INT32 curu
 {
 	const UINT16 *texbase = (const UINT16 *)texture->base;
 	rgb_t pix00, pix01, pix10, pix11;
-	INT32 u0, u1, v0, v1;
-
-	u0 = curu >> 16;
-	u1 = 1;
-	if (u0 < 0) u0 = u1 = 0;
-	else if (u0 + 1 >= texture->width) u0 = texture->width - 1, u1 = 0;
-	v0 = curv >> 16;
-	v1 = texture->rowpixels;
-	if (v0 < 0) v0 = v1 = 0;
-	else if (v0 + 1 >= texture->height) v0 = texture->height - 1, v1 = 0;
+	COMMON_PART
 
 	texbase += v0 * texture->rowpixels + (u0 & ~1);
 
@@ -401,16 +382,7 @@ INLINE UINT32 get_texel_rgb32_bilinear(const render_texinfo *texture, INT32 curu
 {
 	const UINT32 *texbase = (const UINT32 *)texture->base;
 	rgb_t pix00, pix01, pix10, pix11;
-	INT32 u0, u1, v0, v1;
-
-	u0 = curu >> 16;
-	u1 = 1;
-	if (u0 < 0) u0 = u1 = 0;
-	else if (u0 + 1 >= texture->width) u0 = texture->width - 1, u1 = 0;
-	v0 = curv >> 16;
-	v1 = texture->rowpixels;
-	if (v0 < 0) v0 = v1 = 0;
-	else if (v0 + 1 >= texture->height) v0 = texture->height - 1, v1 = 0;
+	COMMON_PART
 
 	texbase += v0 * texture->rowpixels + u0;
 
@@ -445,16 +417,7 @@ INLINE UINT32 get_texel_argb32_bilinear(const render_texinfo *texture, INT32 cur
 {
 	const UINT32 *texbase = (const UINT32 *)texture->base;
 	rgb_t pix00, pix01, pix10, pix11;
-	INT32 u0, u1, v0, v1;
-
-	u0 = curu >> 16;
-	u1 = 1;
-	if (u0 < 0) u0 = u1 = 0;
-	else if (u0 + 1 >= texture->width) u0 = texture->width - 1, u1 = 0;
-	v0 = curv >> 16;
-	v1 = texture->rowpixels;
-	if (v0 < 0) v0 = v1 = 0;
-	else if (v0 + 1 >= texture->height) v0 = texture->height - 1, v1 = 0;
+	COMMON_PART
 
 	texbase += v0 * texture->rowpixels + u0;
 
@@ -549,33 +512,26 @@ INLINE void FUNC_PREFIX(draw_aa_pixel)(void *dstdata, UINT32 pitch, int x, int y
 
 static void FUNC_PREFIX(draw_line)(const render_primitive *prim, void *dstdata, INT32 width, INT32 height, UINT32 pitch)
 {
-	int dx,dy,sx,sy,cx,cy,bwidth;
+	INT32 dx, dy, sx, sy, cx, cy, bwidth;
 	UINT8 a1;
-	int x1,x2,y1,y2;
-	UINT32 col;
-	int xx,yy;
-	int beam;
 
 	/* compute the start/end coordinates */
-	x1 = (int)(prim->bounds.x0 * 65536.0f);
-	y1 = (int)(prim->bounds.y0 * 65536.0f);
-	x2 = (int)(prim->bounds.x1 * 65536.0f);
-	y2 = (int)(prim->bounds.y1 * 65536.0f);
+	INT32 x1 = (int)(prim->bounds.x0 * 65536.0f);
+	INT32 y1 = (int)(prim->bounds.y0 * 65536.0f);
+	INT32 x2 = (int)(prim->bounds.x1 * 65536.0f);
+	INT32 y2 = (int)(prim->bounds.y1 * 65536.0f);
 
 	/* handle color and intensity */
-	col = MAKE_RGB((int)(255.0f * prim->color.r * prim->color.a), (int)(255.0f * prim->color.g * prim->color.a), (int)(255.0f * prim->color.b * prim->color.a));
+	UINT32 col = MAKE_RGB((int)(255.0f * prim->color.r * prim->color.a), (int)(255.0f * prim->color.g * prim->color.a), (int)(255.0f * prim->color.b * prim->color.a));
 
 	if (PRIMFLAG_GET_ANTIALIAS(prim->flags))
 	{
 		/* build up the cosine table if we haven't yet */
 		if (cosine_table[0] == 0)
-		{
-			int entry;
-			for (entry = 0; entry <= 2048; entry++)
-				cosine_table[entry] = (int)((double)(1.0 / cos(atan((double)(entry) / 2048.0))) * 0x10000000 + 0.5);
-		}
+			for (int entry = 2048; entry >= 0; entry--)
+				cosine_table[entry] = (int)( (double)(1.0 / cos(atan((double)(entry) / 2048.0))) * 0x10000000 + 0.5 );
 
-		beam = prim->width * 65536.0f;
+		INT32 beam = prim->width * 65536.0f;
 		if (beam < 0x00010000)
 			beam = 0x00010000;
 
@@ -587,10 +543,9 @@ static void FUNC_PREFIX(draw_line)(const render_primitive *prim, void *dstdata, 
 		{
 			sx = ((x1 <= x2) ? 1 : -1);
 			sy = (dy == 0) ? 0 : div_32x32_shift(y2 - y1, dx, 16);
-			if (sy < 0)
-				dy--;
+			if (sy < 0) dy--;
 			x1 >>= 16;
-			xx = x2 >> 16;
+			INT32 xx = x2 >> 16;
 			bwidth = mul_32x32_hi(beam << 4, cosine_table[abs(sy) >> 5]);
 			y1 -= bwidth >> 1; /* start back half the diameter */
 			for (;;)
@@ -623,10 +578,9 @@ static void FUNC_PREFIX(draw_line)(const render_primitive *prim, void *dstdata, 
 		{
 			sy = ((y1 <= y2) ? 1: -1);
 			sx = (dx == 0) ? 0 : div_32x32_shift(x2 - x1, dy, 16);
-			if (sx < 0)
-				dx--;
+			if (sx < 0) dx--;
 			y1 >>= 16;
-			yy = y2 >> 16;
+			INT32 yy = y2 >> 16;
 			bwidth = mul_32x32_hi(beam << 4,cosine_table[abs(sx) >> 5]);
 			x1 -= bwidth >> 1; /* start back half the width */
 			for (;;)
@@ -2373,3 +2327,5 @@ static void FUNC_PREFIX(draw_primitives)(const render_primitive *primlist, void 
 #undef NO_DEST_READ
 
 #undef VARIABLE_SHIFT
+
+#undef COMMON_PART

@@ -105,7 +105,7 @@
 #include "osdepend.h"
 #include "config.h"
 #include "image.h"
-#include "profiler.h"
+//#include "profiler.h"
 #include "render.h"
 #include "cheat.h"
 #include "ui.h"
@@ -125,7 +125,7 @@
 // a giant string buffer for temporary strings
 static char giant_string_buffer[65536] = { 0 };
 
-extern int RLOOP;
+extern UINT32 RETRO_LOOP;
 extern int ENDEXEC;
 
 //*************************************************************************/
@@ -431,7 +431,7 @@ void running_machine::retro_machineexit()
 
 void running_machine::retro_loop()
 {
-	while (RLOOP == 1)
+	while (RETRO_LOOP)
 	{
 		if (!m_paused)		// execute CPUs if not paused
 			m_scheduler.timeslice();
@@ -720,7 +720,7 @@ void CLIB_DECL running_machine::vlogerror(const char *format, va_list args)
 	// process only if there is a target
 	if (m_logerror_list != NULL)
 	{
-		g_profiler.start(PROFILER_LOGERROR);
+//		g_profiler.start(PROFILER_LOGERROR);
 
 		// dump to the buffer
 		vsnprintf(giant_string_buffer, ARRAY_LENGTH(giant_string_buffer), format, args);
@@ -729,7 +729,7 @@ void CLIB_DECL running_machine::vlogerror(const char *format, va_list args)
 		for (logerror_callback_item *cb = m_logerror_list; cb != NULL; cb = cb->m_next)
 			(*cb->m_func)(*this, giant_string_buffer);
 
-		g_profiler.stop();
+//		g_profiler.stop();
 	}
 }
 

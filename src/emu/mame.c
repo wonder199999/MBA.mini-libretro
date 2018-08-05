@@ -144,9 +144,9 @@ int mame_is_valid_machine(running_machine *machine)
 
 static running_machine *retro_global_machine;
 static const machine_config *retro_global_config;
-int ENDEXEC           = 0;
 static bool firstgame = true;
 static bool firstrun  = true;
+int ENDEXEC           = 0;
 
 /*-------------------------------------------------
     mame_execute - run the core emulation
@@ -203,7 +203,6 @@ int mame_execute(core_options *options)
    return error;
 }
 
-extern int RLOOP;
 extern void retro_loop(running_machine *machine);
 extern void retro_execute();
 extern core_options *retro_global_options;
@@ -234,14 +233,6 @@ void retro_main_loop(void)
       retro_execute();
 
    }
-
-/*
-	device_scheduler * scheduler;
-	scheduler = &(retro_global_machine->scheduler());
-	while (RLOOP==1) {
-		scheduler->timeslice();
-	}
-*/
 }
 
 void free_machineconfig(void)
