@@ -10456,9 +10456,10 @@ static DRIVER_INIT( kf2k3pcb )
 	neogeo_cmc50_m1_decrypt(machine);
 	UINT8 *rom = memory_region(machine, "audiocpu");
 
-	/*  extra little swap on the m1 - this must be performed AFTER the m1 decrypt
-	    or the m1 checksum (used to generate the key) for decrypting the m1 is
-	    incorrect */
+/*	extra little swap on the m1 - this must be performed AFTER the m1 decrypt
+	or the m1 checksum (used to generate the key) for decrypting the m1 is
+	incorrect	*/
+
 	for (UINT32 i = 0; i < 0x90000; i++)
 		rom[i] = BITSWAP8( rom[i], 5, 6, 1, 4, 3, 0, 7, 2 );
 
@@ -10576,7 +10577,6 @@ static DRIVER_INIT( lans2004 )
 	DRIVER_INIT_CALL(neogeo);
 }
 
-/* added */
 static DRIVER_INIT( kof2kps2 )
 {
 	neogeo_state *state = machine->driver_data<neogeo_state>();
@@ -10600,9 +10600,9 @@ static DRIVER_INIT( kf2k1pa )
 	DRIVER_INIT_CALL(neogeo);
 
 	UINT8 *rom = memory_region(machine, "fixed");
-	INT32 i, rom_len = memory_region_length(machine, "fixed");
+	INT32 rom_len = memory_region_length(machine, "fixed");
 
-	for (i = 0; i < rom_len; i++)
+	for (INT32 i = 0; i < rom_len; i++)
 		rom[i] = BITSWAP8( rom[i], 3, 2, 4, 5, 1, 6, 0, 7 );
 
 	cmc50_neogeo_gfx_decrypt(machine, 0x1e);
@@ -10618,13 +10618,13 @@ static DRIVER_INIT( cthd2k3a )
 		0x27, 0x0E, 0x1C, 0x15, 0x1B, 0x17, 0x0A, 0x0F,
 		0x16, 0x14, 0x23, 0x0B, 0x22, 0x26, 0x08, 0x24,
 		0x21, 0x13, 0x1A, 0x0C, 0x19, 0x1D, 0x25, 0x10,
-		0x09, 0x20, 0x18, 0x1F, 0x1E, 0x12, 0x0D, 0x11 };
+		0x09, 0x20, 0x18, 0x1F, 0x1E, 0x12, 0x0D, 0x11	};
 
-	INT32 i, size = memory_region_length( machine, "maincpu" );
+	INT32 size = memory_region_length( machine, "maincpu" );
 	UINT8 *src = memory_region( machine, "maincpu" );
 	UINT8 *dst = auto_alloc_array( machine, UINT8, size );
 
-	for (i = 0; i < 0x500000 / 0x20000; i++)
+	for (INT32 i = 0; i < 0x500000 / 0x20000; i++)
 		memcpy (dst + i * 0x20000, src + nBank[i] * 0x20000, 0x20000);
 
 	memcpy (src, dst, 0x500000);
@@ -10697,11 +10697,10 @@ static DRIVER_INIT( kof97oro )
 {
 	DRIVER_INIT_CALL(neogeo);
 
-	UINT16 *tmp = auto_alloc_array( machine, UINT16,  0x500000 );
+	UINT16 *tmp = auto_alloc_array( machine, UINT16, 0x500000 );
 	UINT16 *src = (UINT16 *)memory_region( machine, "maincpu" );
-	INT32 i;
 
-	for (i = 0; i < 0x500000 / 2; i++)
+	for (INT32 i = 0; i < 0x500000 / 2; i++)
 		tmp[i] = src[i ^ 0x07ffef];
 
 	memcpy ( src, tmp, 0x500000 );
@@ -10720,9 +10719,8 @@ static DRIVER_INIT( kof97pla )
 
 	const int dPatch[6] = { 0x6c, 0xd1, 0x3a, 0x01, 0x6c, 0x91 };
 	UINT8 *src = memory_region( machine, "maincpu" );
-	INT32 i;
 
-	for (i = 0; i < 0x06; i++)
+	for (INT32 i = 0; i < 0x06; i++)
 		src[0x1394a + i] = dPatch[i];
 }
 
@@ -10946,9 +10944,9 @@ GAME( 2003, kf2k3bla,  kof2003,  neogeo,   neogeo,   kf2k3pl,  ROT0, "bootleg", 
 GAME( 2003, kf2k3pl,   kof2003,  neogeo,   neogeo,   kf2k3pl,  ROT0, "bootleg", "The King of Fighters 2004 Plus / Hero (The King of Fighters 2003 bootleg)", GAME_SUPPORTS_SAVE ) // zooming is wrong because its a bootleg of the pcb version on a cart
 GAME( 2003, kf2k3upl,  kof2003,  neogeo,   neogeo,   kf2k3upl, ROT0, "bootleg", "The King of Fighters 2004 Ultra Plus (The King of Fighters 2003 bootleg)", GAME_SUPPORTS_SAVE ) // zooming is wrong because its a bootleg of the pcb version on a cart
 //
-GAME( 2004, samsh5sp,  neogeo,   neogeo,   neogeo,   samsh5sp, ROT0, "Yuki Enterprise / SNK Playmore", "Samurai Shodown V Special / Samurai Spirits Zero Special (set 1, uncensored)", GAME_SUPPORTS_SAVE )
-GAME( 2004, samsh5sph, samsh5sp, neogeo,   neogeo,   samsh5sp, ROT0, "Yuki Enterprise / SNK Playmore", "Samurai Shodown V Special / Samurai Spirits Zero Special (set 2, censored)", GAME_SUPPORTS_SAVE )
-GAME( 2004, samsh5spho, samsh5sp, neogeo,   neogeo,   samsh5sp, ROT0, "Yuki Enterprise / SNK Playmore", "Samurai Shodown V Special / Samurai Spirits Zero Special (NGH-2720) (1st release, censored)", GAME_SUPPORTS_SAVE )
+GAME( 2004, samsh5sp,	neogeo,   neogeo,   neogeo,   samsh5sp, ROT0, "Yuki Enterprise / SNK Playmore", "Samurai Shodown V Special / Samurai Spirits Zero Special (set 1, uncensored)", GAME_SUPPORTS_SAVE )
+GAME( 2004, samsh5sph,	samsh5sp, neogeo,   neogeo,   samsh5sp, ROT0, "Yuki Enterprise / SNK Playmore", "Samurai Shodown V Special / Samurai Spirits Zero Special (set 2, censored)", GAME_SUPPORTS_SAVE )
+GAME( 2004, samsh5spho,	samsh5sp, neogeo,   neogeo,   samsh5sp, ROT0, "Yuki Enterprise / SNK Playmore", "Samurai Shodown V Special / Samurai Spirits Zero Special (NGH-2720) (1st release, censored)", GAME_SUPPORTS_SAVE )
 
 /* there are other bootlegs kof96ep, kf2k1pls etc.? -- work out which should be supported */
 
@@ -11164,9 +11162,9 @@ GAME( 2003,	mslug5b,	neogeo,		neogeo,		neogeo,		mslug5b,   ROT0,   "bootleg", "M
 GAME( 1996,	zintrkcd,	zintrckb,	neogeo,		neogeo,		neogeo,	   ROT0,   "bootleg", "Zintrick / Oshidashi Zentrix (NGCD Conversion)", GAME_SUPPORTS_SAVE )
 GAME( 1997,	lastblada,	lastblad,	neogeo,		neogeo,		neogeo,	   ROT0,   "SNK", "The Last Blade / Bakumatsu Roman - Gekka no Kenshi (NGM-2340, alternate board)", GAME_SUPPORTS_SAVE )
 /* issues */
-GAME( 2016,	kof98ae2016,	kof98,		neogeo,		neogeo,		neogeo,	   ROT0,   "EGHT", "Kof'98 (Anniversary Edition) (2016-03-08)(NGM-2420)", GAME_NOT_WORKING | GAME_SUPPORTS_SAVE )
-GAME( 2007,	kof98cb,	kof98,		neogeo,		neogeo,		neogeo,	   ROT0,   "EGHT", "Kof'98 (Combo set 1) (NGM-2420)", GAME_NOT_WORKING | GAME_SUPPORTS_SAVE )
-GAME( 2007,	kof98co,	kof98,		neogeo,		neogeo,		neogeo,	   ROT0,   "EGHT", "Kof'98 (Combo set 2) (NGM-2420)", GAME_NOT_WORKING | GAME_SUPPORTS_SAVE )
-GAME( 2007,	kof98ae,	neogeo,		neogeo,		neogeo,		neogeo,    ROT0,   "bootleg (EGHT)", "King of Fighters' 98 Anniversary Edition (EGHT hack, bootleg of kof98)", GAME_NOT_WORKING | GAME_SUPPORTS_SAVE )
-GAME( 1997,	kogplus,	kof97,		neogeo,		kog,		kog,	   ROT0,   "bootleg", "King of Gladiator Plus (The King of Fighters '97 bootleg)", GAME_NOT_WORKING | GAME_SUPPORTS_SAVE )
+GAME( 2016,	kof98ae2016,	kof98,		neogeo,		neogeo,		neogeo,	   ROT0,   "hack (EGHT)", "Kof'98 (Anniversary Edition) (2016-03-08)(NGM-2420)", GAME_NOT_WORKING | GAME_SUPPORTS_SAVE )
+GAME( 2007,	kof98cb,	kof98,		neogeo,		neogeo,		neogeo,	   ROT0,   "hack (EGHT)", "Kof'98 (Combo set 1) (NGM-2420)", GAME_NOT_WORKING | GAME_SUPPORTS_SAVE )
+GAME( 2007,	kof98co,	kof98,		neogeo,		neogeo,		neogeo,	   ROT0,   "hack (EGHT)", "Kof'98 (Combo set 2) (NGM-2420)", GAME_NOT_WORKING | GAME_SUPPORTS_SAVE )
+GAME( 2007,	kof98ae,	neogeo,		neogeo,		neogeo,		neogeo,    ROT0,   "hack (EGHT)", "King of Fighters' 98 Anniversary Edition (EGHT hack, bootleg of kof98)", GAME_NOT_WORKING | GAME_SUPPORTS_SAVE )
+GAME( 1997,	kogplus,	kof97,		neogeo,		kog,		kog,	   ROT0,   "hack", "King of Gladiator Plus (The King of Fighters '97 bootleg)", GAME_NOT_WORKING | GAME_SUPPORTS_SAVE )
 GAME( 1996,	unkneo,		neogeo,		neogeo,		neogeo,		neogeo,	   ROT0,   "Face", "Dragon's Heaven (development board)", GAME_IS_SKELETON | GAME_SUPPORTS_SAVE )

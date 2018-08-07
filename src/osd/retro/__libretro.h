@@ -230,7 +230,7 @@ extern void retro_main_loop();
 			(core_stricmp(machine->gamedrv->name, "ringdest") == 0) || (core_stricmp(machine->gamedrv->parent, "ringdest") == 0) || \
 			(core_stricmp(machine->gamedrv->name, "nwarr") == 0) || (core_stricmp(machine->gamedrv->parent, "nwarr") == 0) || /* Before is the Capcom games */ \
 			(core_stricmp(machine->gamedrv->name, "ssoldier") == 0) || (core_stricmp(machine->gamedrv->parent, "ssoldier") == 0) 
-
+#if	0
 /* Neo Geo */
 #define NEOGEO_LAYOUT	(core_stricmp(machine->gamedrv->parent, "neogeo") == 0)	|| (core_stricmp(machine->gamedrv->parent, "bstars") == 0) ||	\
 			(core_stricmp(machine->gamedrv->parent, "mslug2") == 0) || (core_stricmp(machine->gamedrv->parent, "mslug3") == 0) || 	\
@@ -266,8 +266,11 @@ extern void retro_main_loop();
 			(core_stricmp(machine->gamedrv->parent, "jockeygp") == 0) || (core_stricmp(machine->gamedrv->parent, "ironclad") == 0) || \
 			(core_stricmp(machine->gamedrv->parent, "lresort") == 0) 
 
+#endif
+#define NEOGEO_LAYOUT	(core_stricmp(machine->gamedrv->source_file, "src/mame/drivers/neogeo.inc") == 0)
+
 #define PLAYER_PRESS(button)	input_state_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_##button)
 
-#define MAX_JOYPADS	4
+#define MAX_JOYPADS	(4)
 
 #endif	/* ___LIBRETRO_H_ */

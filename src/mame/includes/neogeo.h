@@ -33,27 +33,24 @@ public:
 	static driver_data_t *alloc(running_machine &machine) { return auto_alloc_clear(&machine, neogeo_state(machine)); }
 
 	neogeo_state(running_machine &machine)
-		: driver_data_t(machine) {}
-
-	/* devices */
-	running_device	*maincpu;
-	running_device	*audiocpu;
-	running_device	*upd4990a;
+		: driver_data_t(machine) { }
 
 	/* palette */
-	double		rgb_weights_normal[5];
-	double		rgb_weights_normal_bit15[5];
 	double		rgb_weights_dark[5];
 	double		rgb_weights_dark_bit15[5];
+	double		rgb_weights_normal[5];
+	double		rgb_weights_normal_bit15[5];
 
 	/* video-related */
-	UINT32		sprite_gfx_address_mask;
+	pen_t		*pens;
 	UINT16		*videoram;
 	UINT16		*palettes[2];		/* 0x100*16 2 byte palette entries */
-	pen_t		*pens;
 	UINT8		*sprite_gfx;
 	const UINT8	*region_zoomy;
+
+	UINT32		sprite_gfx_address_mask;
 	UINT16		videoram_read_buffer;
+	UINT16		videoram_write_buffer2;
 	UINT16		videoram_modulo;
 	UINT16		videoram_offset;
 	UINT8		palette_bank;
@@ -65,12 +62,18 @@ public:
 	UINT8		auto_animation_frame_counter;
 	UINT8		display_position_interrupt_control;
 
+	/* devices */
+	running_device	*maincpu;
+	running_device	*audiocpu;
+	running_device	*upd4990a;
+
 	/* timers */
 	emu_timer	*display_position_interrupt_timer;
 	emu_timer	*display_position_vblank_timer;
 	emu_timer	*vblank_interrupt_timer;
 	emu_timer	*auto_animation_timer;
 	emu_timer	*sprite_line_timer;
+
 	UINT32		display_counter;
 	UINT32		vblank_interrupt_pending;
 	UINT32		display_position_interrupt_pending;
@@ -93,9 +96,10 @@ public:
 	UINT8		audio_cpu_banks[4];
 
 	/* protection */
+	UINT16		*pvc_cartridge_ram;
+
 	UINT32		fatfury2_prot_data;
 	INT32		fixed_layer_bank_type;
-	UINT16		*pvc_cartridge_ram;
 	UINT16		neogeo_rng;
 };
 
