@@ -207,6 +207,7 @@ NOTE: On CTRG2-B, The "A" lines start at "A1". If you trace this on an
  *  Global variables
  *
  *************************************/
+
 static UINT8 *memcard_data;
 static UINT16 *save_ram;
 
@@ -216,6 +217,7 @@ static UINT16 *save_ram;
  *  Forward declerations
  *
  *************************************/
+
 static void set_output_latch(running_machine *machine, UINT8 data);
 static void set_output_data(running_machine *machine, UINT8 data);
 
@@ -225,6 +227,7 @@ static void set_output_data(running_machine *machine, UINT8 data);
  *  Main CPU interrupt generation
  *
  *************************************/
+
 #define IRQ2CTRL_ENABLE             (0x10)
 #define IRQ2CTRL_LOAD_RELATIVE      (0x20)
 #define IRQ2CTRL_AUTOLOAD_VBLANK    (0x40)
@@ -235,7 +238,7 @@ static void adjust_display_position_interrupt_timer( running_machine *machine )
 {
 	neogeo_state *state = machine->driver_data<neogeo_state>();
 
-	if ( (state->display_counter + 1) != 0 )
+	if ((state->display_counter + 1) != 0)
 	{
 		attotime period = attotime_mul(ATTOTIME_IN_HZ(NEOGEO_PIXEL_CLOCK), state->display_counter + 1);
 		timer_adjust_oneshot(state->display_position_interrupt_timer, period, 0);
@@ -358,6 +361,7 @@ static void start_interrupt_timers( running_machine *machine )
  *  Audio CPU interrupt generation
  *
  *************************************/
+
 static void audio_cpu_irq(running_device *device, int assert)
 {
 	neogeo_state *state = device->machine->driver_data<neogeo_state>();
@@ -385,6 +389,7 @@ static WRITE8_HANDLER( audio_cpu_clear_nmi_w )
  *  Input ports / Controllers
  *
  *************************************/
+
 static void select_controller( running_machine *machine, UINT8 data )
 {
 	neogeo_state *state = machine->driver_data<neogeo_state>();
@@ -417,7 +422,7 @@ static CUSTOM_INPUT( mahjong_controller_r )
 	switch (state->controller_select)
 	{
 		default: 
-		case 0x00: ret = 0x00; break;	/* nothing ?! */
+		case 0x00: break;		/* nothing ?! */
 		case 0x09: ret = input_port_read(field->port->machine, "MAHJONG1"); break;
 		case 0x12: ret = input_port_read(field->port->machine, "MAHJONG2"); break;
 		case 0x1b: ret = input_port_read(field->port->machine, "MAHJONG3"); break; /* player 1 normal inputs? */
@@ -448,12 +453,12 @@ static WRITE16_HANDLER( io_control_w )
 }
 
 
-
 /*************************************
  *
  *  Unmapped memory access
  *
  *************************************/
+
 READ16_HANDLER( neogeo_unmapped_r )
 {
 	neogeo_state *state = space->machine->driver_data<neogeo_state>();
@@ -480,6 +485,7 @@ READ16_HANDLER( neogeo_unmapped_r )
  *  uPD4990A calendar chip
  *
  *************************************/
+
 static CUSTOM_INPUT( get_calendar_status )
 {
 	neogeo_state *state = field->port->machine->driver_data<neogeo_state>();
@@ -493,6 +499,7 @@ static CUSTOM_INPUT( get_calendar_status )
  *  NVRAM (Save RAM)
  *
  *************************************/
+
 static NVRAM_HANDLER( neogeo )
 {
 	if (read_or_write)
@@ -525,12 +532,12 @@ static WRITE16_HANDLER( save_ram_w )
 }
 
 
-
 /*************************************
  *
  *  Memory card
  *
  *************************************/
+
 static CUSTOM_INPUT( get_memcard_status )
 {
 	/* D0 and D1 are memcard presence indicators, D2 indicates memcard
@@ -555,10 +562,8 @@ static READ16_HANDLER( memcard_r )
 static WRITE16_HANDLER( memcard_w )
 {
 	if (ACCESSING_BITS_0_7)
-	{
 		if (memcard_present(space->machine) != -1)
 			memcard_data[offset] = data;
-	}
 }
 
 
@@ -588,6 +593,7 @@ static MEMCARD_HANDLER( neogeo )
  *  Inter-CPU communications
  *
  *************************************/
+
 static WRITE16_HANDLER( audio_command_w )
 {
 	/* accessing the LSB only is not mapped */
@@ -627,12 +633,12 @@ static CUSTOM_INPUT( get_audio_result )
 }
 
 
-
 /*************************************
  *
  *  Main CPU banking
  *
  *************************************/
+
 static void _set_main_cpu_vector_table_source( running_machine *machine )
 {
 	neogeo_state *state = machine->driver_data<neogeo_state>();
@@ -700,6 +706,7 @@ static void main_cpu_banking_init( running_machine *machine )
  *  Audio CPU banking
  *
  *************************************/
+
 static void set_audio_cpu_banking( running_machine *machine )
 {
 	neogeo_state *state = machine->driver_data<neogeo_state>();
@@ -763,7 +770,8 @@ static void _set_audio_cpu_rom_source( address_space *space )
 	if (state->audio_cpu_rom_source != state->audio_cpu_rom_source_last)
 	{
 		state->audio_cpu_rom_source_last = state->audio_cpu_rom_source;
-		cputag_set_input_line(space->machine, "audiocpu", INPUT_LINE_RESET, PULSE_LINE);
+//		cputag_set_input_line(space->machine, "audiocpu", INPUT_LINE_RESET, PULSE_LINE);
+		cpu_set_input_line(state->audiocpu, INPUT_LINE_RESET, PULSE_LINE);
 	}
 }
 
@@ -813,12 +821,12 @@ static void audio_cpu_banking_init( running_machine *machine )
 }
 
 
-
 /*************************************
  *
  *  System control register
  *
  *************************************/
+
 static WRITE16_HANDLER( system_control_w )
 {
 	if (ACCESSING_BITS_0_7)
@@ -888,6 +896,7 @@ static WRITE16_HANDLER( watchdog_w )
  *  LEDs
  *
  *************************************/
+
 static void set_outputs( running_machine *machine )
 {
 	neogeo_state *state = machine->driver_data<neogeo_state>();
@@ -939,7 +948,6 @@ static void set_output_data( running_machine *machine, UINT8 data )
 }
 
 
-
 /*************************************
  *
  *  Machine initialization
@@ -959,6 +967,11 @@ static MACHINE_START( neogeo )
 {
 	neogeo_state *state = machine->driver_data<neogeo_state>();
 
+	/* get devices */
+	state->maincpu = machine->device("maincpu");
+	state->audiocpu = machine->device("audiocpu");
+	state->upd4990a = machine->device("upd4990a");
+
 	/* set the BIOS bank */
 	memory_set_bankptr(machine, NEOGEO_BANK_BIOS, memory_region(machine, "mainbios"));
 
@@ -975,11 +988,6 @@ static MACHINE_START( neogeo )
 
 	/* start with an IRQ3 - but NOT on a reset */
 	state->irq3_pending = 1;
-
-	/* get devices */
-	state->maincpu = machine->device("maincpu");
-	state->audiocpu = machine->device("audiocpu");
-	state->upd4990a = machine->device("upd4990a");
 
 	/* register state save */
 	state_save_register_global(machine, state->display_position_interrupt_control);
@@ -1007,12 +1015,12 @@ static MACHINE_START( neogeo )
 }
 
 
-
 /*************************************
  *
  *  Machine reset
  *
  *************************************/
+
 static MACHINE_RESET( neogeo )
 {
 	neogeo_state *state = machine->driver_data<neogeo_state>();
@@ -1037,18 +1045,17 @@ static MACHINE_RESET( neogeo )
 }
 
 
-
 /*************************************
  *
  *  Main CPU memory handlers
  *
  *************************************/
+
 static ADDRESS_MAP_START( main_map, ADDRESS_SPACE_PROGRAM, 16 )
 	AM_RANGE(0x000000, 0x00007f) AM_ROMBANK(NEOGEO_BANK_VECTORS)
 	AM_RANGE(0x000080, 0x0fffff) AM_ROM
 	AM_RANGE(0x100000, 0x10ffff) AM_MIRROR(0x0f0000) AM_RAM
-	/* some games have protection devices in the 0x200000 region, it appears to map to cart space, not surprising, the ROM is read here too */
-	AM_RANGE(0x200000, 0x2fffff) AM_ROMBANK(NEOGEO_BANK_CARTRIDGE)
+	AM_RANGE(0x200000, 0x2fffff) AM_ROMBANK(NEOGEO_BANK_CARTRIDGE)	/* some games have protection devices in the 0x200000 region, it appears to map to cart space, not surprising, the ROM is read here too */
 	AM_RANGE(0x2ffff0, 0x2fffff) AM_WRITE(main_cpu_bank_select_w)
 	AM_RANGE(0x300000, 0x300001) AM_MIRROR(0x01ff7e) AM_READ_PORT("IN0")
 	AM_RANGE(0x300080, 0x300081) AM_MIRROR(0x01ff7e) AM_READ_PORT("IN4")
@@ -1070,12 +1077,12 @@ static ADDRESS_MAP_START( main_map, ADDRESS_SPACE_PROGRAM, 16 )
 ADDRESS_MAP_END
 
 
-
 /*************************************
  *
  *  Audio CPU memory handlers
  *
  *************************************/
+
 static ADDRESS_MAP_START( audio_map, ADDRESS_SPACE_PROGRAM, 8 )
 	AM_RANGE(0x0000, 0x7fff) AM_ROMBANK(NEOGEO_BANK_AUDIO_CPU_MAIN_BANK)
 	AM_RANGE(0x8000, 0xbfff) AM_ROMBANK(NEOGEO_BANK_AUDIO_CPU_CART_BANK + 3)
@@ -1086,12 +1093,12 @@ static ADDRESS_MAP_START( audio_map, ADDRESS_SPACE_PROGRAM, 8 )
 ADDRESS_MAP_END
 
 
-
 /*************************************
  *
  *  Audio CPU port handlers
  *
  *************************************/
+
 static ADDRESS_MAP_START( audio_io_map, ADDRESS_SPACE_IO, 8 )
 	AM_RANGE(0x00, 0x00) AM_MIRROR(0xff00) AM_READ(audio_command_r)
 	AM_RANGE(0x04, 0x07) AM_MIRROR(0xff00) AM_DEVREADWRITE("ymsnd", ym2610_r, ym2610_w)
@@ -1105,14 +1112,13 @@ static ADDRESS_MAP_START( audio_io_map, ADDRESS_SPACE_IO, 8 )
 ADDRESS_MAP_END
 
 
-
 /*************************************
  *
  *  Audio interface
  *
  *************************************/
-static const ym2610_interface ym2610_config = { audio_cpu_irq };
 
+static const ym2610_interface ym2610_config = { audio_cpu_irq };
 
 
 /*************************************
@@ -1220,7 +1226,6 @@ static INPUT_PORTS_START( neogeo )
 
 	STANDARD_IN4
 INPUT_PORTS_END
-
 
 
 /*************************************

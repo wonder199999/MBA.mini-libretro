@@ -12,7 +12,6 @@
 NATIVE := 0
 ALIGNED = 0
 MDEBUG = 0
-# PROFILER = 
 
 # ------------------------------------------------------------
 # Set the BIOS used by NEOGEO

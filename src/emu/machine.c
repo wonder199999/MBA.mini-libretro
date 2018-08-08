@@ -125,8 +125,8 @@
 // a giant string buffer for temporary strings
 static char giant_string_buffer[65536] = { 0 };
 
-extern UINT32 RETRO_LOOP;
-extern int ENDEXEC;
+extern bool RETRO_LOOP;
+extern bool RETRO_ENDEXEC;
 
 //*************************************************************************/
 //	RUNNING MACHINE
@@ -433,33 +433,36 @@ void running_machine::retro_loop()
 {
 	while (RETRO_LOOP)
 	{
-		if (!m_paused)		// execute CPUs if not paused
-			m_scheduler.timeslice();
-		else			// otherwise, just pump video updates through
+		if (m_paused)				// execute CPUs if not paused
 			video_frame_update(this, false);
+		else					// otherwise, just pump video updates through
+			m_scheduler.timeslice();
 
 		if (m_saveload_schedule != SLS_NONE)	// handle save/load
 			handle_saveload();
 	}
 
-	if ( (m_hard_reset_pending || m_exit_pending) && m_saveload_schedule == SLS_NONE)
+	if (m_hard_reset_pending || m_exit_pending)
 	{
-		// and out via the exit phase
-		m_current_phase = MACHINE_PHASE_EXIT;
+		if (m_saveload_schedule == SLS_NONE)
+		{
+			// and out via the exit phase
+			m_current_phase = MACHINE_PHASE_EXIT;
 
-		// save the NVRAM and configuration
-		sound_mute(this, true);
-		nvram_save(this);
-		config_save_settings(this);
+			// save the NVRAM and configuration
+			sound_mute(this, true);
+			nvram_save(this);
+			config_save_settings(this);
 
-		// call all exit callbacks registered
-		call_notifiers(MACHINE_NOTIFY_EXIT);
+			// call all exit callbacks registered
+			call_notifiers(MACHINE_NOTIFY_EXIT);
 
-		// close the logfile
-		if (m_logfile != NULL)
-			mame_fclose(m_logfile);
+			// close the logfile
+			if (m_logfile != NULL)
+				mame_fclose(m_logfile);
 
-		ENDEXEC = 1;
+			RETRO_ENDEXEC = true;
+		}
 	}
 }
 

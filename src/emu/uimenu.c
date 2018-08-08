@@ -241,7 +241,7 @@ static const char priortext[] = "Return to Prior Menu";
 static const char backtext[] = "Return to " CAPSTARTGAMENOUN;
 static const char exittext[] = "Exit";
 
-extern unsigned int allow_select_newgame;
+extern bool allow_select_newgame;
 
 /***************************************************************************
     FUNCTION PROTOTYPES
