@@ -16,14 +16,13 @@
 
 #include "render.h"
 
-
 /***************************************************************************
     CONSTANTS
 ***************************************************************************/
 
 /* preferred font height; use ui_get_line_height() to get actual height */
 #define UI_TARGET_FONT_ROWS		(25)
-#define UI_TARGET_FONT_HEIGHT	(1.0f / (float)UI_TARGET_FONT_ROWS)
+#define UI_TARGET_FONT_HEIGHT		(1.0f / (float)UI_TARGET_FONT_ROWS)
 #define UI_MAX_FONT_HEIGHT		(1.0f / 15.0f)
 
 /* width of lines drawn in the UI */
@@ -34,27 +33,45 @@
 #define UI_BOX_TB_BORDER		(UI_TARGET_FONT_HEIGHT * 0.25f)
 
 /* handy colors */
-#define ARGB_WHITE				MAKE_ARGB(0xff,0xff,0xff,0xff)
-#define ARGB_BLACK				MAKE_ARGB(0xff,0x00,0x00,0x00)
-#define UI_BORDER_COLOR			MAKE_ARGB(0xff,0xff,0xff,0xff)
-#define UI_BACKGROUND_COLOR		MAKE_ARGB(0xe0,0x10,0x10,0x30)
-#define UI_GFXVIEWER_BG_COLOR	MAKE_ARGB(0xe0,0x10,0x10,0x30)
-#define UI_GREEN_COLOR			MAKE_ARGB(0xe0,0x10,0x60,0x10)
-#define UI_YELLOW_COLOR			MAKE_ARGB(0xe0,0x60,0x60,0x10)
-#define UI_RED_COLOR			MAKE_ARGB(0xf0,0x60,0x10,0x10)
-#define UI_UNAVAILABLE_COLOR	MAKE_ARGB(0xff,0x40,0x40,0x40)
-#define UI_TEXT_COLOR			MAKE_ARGB(0xff,0xff,0xff,0xff)
-#define UI_TEXT_BG_COLOR		MAKE_ARGB(0xe0,0x00,0x00,0x00)
-#define UI_SUBITEM_COLOR		MAKE_ARGB(0xff,0xff,0xff,0xff)
-#define UI_CLONE_COLOR			MAKE_ARGB(0xff,0x80,0x80,0x80)
-#define UI_SELECTED_COLOR		MAKE_ARGB(0xff,0xff,0xff,0x00)
-#define UI_SELECTED_BG_COLOR	MAKE_ARGB(0xe0,0x80,0x80,0x00)
-#define UI_MOUSEOVER_COLOR		MAKE_ARGB(0xff,0xff,0xff,0x80)
-#define UI_MOUSEOVER_BG_COLOR	MAKE_ARGB(0x70,0x40,0x40,0x00)
-#define UI_MOUSEDOWN_COLOR		MAKE_ARGB(0xff,0xff,0xff,0x80)
-#define UI_MOUSEDOWN_BG_COLOR	MAKE_ARGB(0xb0,0x60,0x60,0x00)
-#define UI_DIPSW_COLOR			MAKE_ARGB(0xff,0xff,0xff,0x00)
-#define UI_SLIDER_COLOR			MAKE_ARGB(0xff,0xff,0xff,0xff)
+/*		 R	 G	 B
+		0xff	0x00	0xff	// Magenta
+		0x00	0x00	0xff	// Pure blue
+		0x00	0xff	0xff	// Cyan blue
+		0x00	0xff	0x00	// Pure green
+		0xff	0xff	0x00	// Yellow
+		0xff	0x00	0x00	// Pure red
+		0x80	0x00	0x80	// Purpel
+		0x00	0x00	0x80	// Deep blue
+		0x00	0x80	0x80	// Duck green
+		0x00	0x80	0x00	// Deep green
+		0x80	0x80	0x00	// Olive
+		0x80	0x00	0x00	// Chestnut
+		0x00	0x00	0x00	// Black
+		0x80	0x80	0x80	// Gray
+		0xc0	0xc0	0xc0	// Silver
+		0xff	0xff	0xff	// White	*/
+/*						Aplha  /  R  /  G  /  B */
+#define ARGB_WHITE			MAKE_ARGB(0xff, 0xff, 0xff, 0xff)
+#define ARGB_BLACK			MAKE_ARGB(0xff, 0x00, 0x00, 0x00)
+#define UI_BORDER_COLOR			MAKE_ARGB(0xff, 0xff, 0xff, 0xff)
+#define UI_BACKGROUND_COLOR		MAKE_ARGB(0xe0, 0x10, 0x10, 0x30)
+#define UI_GFXVIEWER_BG_COLOR		MAKE_ARGB(0xe0, 0x10, 0x10, 0x30)
+#define UI_GREEN_COLOR			MAKE_ARGB(0xe0, 0x10, 0x60, 0x10)
+#define UI_YELLOW_COLOR			MAKE_ARGB(0xe0, 0x60, 0x60, 0x10)
+#define UI_RED_COLOR			MAKE_ARGB(0xf0, 0x60, 0x10, 0x10)
+#define UI_UNAVAILABLE_COLOR		MAKE_ARGB(0xff, 0x40, 0x40, 0x40)
+#define UI_TEXT_COLOR			MAKE_ARGB(0xff, 0xff, 0xff, 0xff)
+#define UI_TEXT_BG_COLOR		MAKE_ARGB(0xe0, 0x00, 0x00, 0x00)
+#define UI_SUBITEM_COLOR		MAKE_ARGB(0xff, 0xff, 0xff, 0xff)
+#define UI_CLONE_COLOR			MAKE_ARGB(0xff, 0x80, 0x80, 0x80)
+#define UI_SELECTED_COLOR		MAKE_ARGB(0xff, 0xff, 0xff, 0x00)
+#define UI_SELECTED_BG_COLOR		MAKE_ARGB(0xe0, 0x80, 0x80, 0x00)
+#define UI_MOUSEOVER_COLOR		MAKE_ARGB(0xff, 0xff, 0xff, 0x80)
+#define UI_MOUSEOVER_BG_COLOR		MAKE_ARGB(0x70, 0x40, 0x40, 0x00)
+#define UI_MOUSEDOWN_COLOR		MAKE_ARGB(0xff, 0xff, 0xff, 0x80)
+#define UI_MOUSEDOWN_BG_COLOR		MAKE_ARGB(0xb0, 0x60, 0x60, 0x00)
+#define UI_DIPSW_COLOR			MAKE_ARGB(0xff, 0xff, 0xff, 0x00)
+#define UI_SLIDER_COLOR			MAKE_ARGB(0xff, 0xff, 0xff, 0xff)
 
 /* cancel return value for a UI handler */
 #define UI_HANDLER_CANCEL		((UINT32)~0)
@@ -96,14 +113,14 @@ typedef INT32 (*slider_update)(running_machine *machine, void *arg, astring *str
 typedef struct _slider_state slider_state;
 struct _slider_state
 {
-	slider_state *	next;				/* pointer to next slider */
-	slider_update	update;				/* callback */
-	void *			arg;				/* argument */
+	void			*arg;				/* argument */
+	slider_state		*next;				/* pointer to next slider */
+	slider_update		update;				/* callback */
 	INT32			minval;				/* minimum value */
 	INT32			defval;				/* default value */
 	INT32			maxval;				/* maximum value */
 	INT32			incval;				/* increment value */
-	char			description[1];		/* textual description */
+	char			description[1];			/* textual description */
 };
 
 

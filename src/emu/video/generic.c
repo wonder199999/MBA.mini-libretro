@@ -12,7 +12,6 @@
 #include "emu.h"
 
 
-
 /***************************************************************************
     TYPE DEFINITIONS
 ***************************************************************************/
@@ -20,9 +19,8 @@
 struct _generic_video_private
 {
 	int 		flip_screen_x;
-	int			flip_screen_y;
+	int		flip_screen_y;
 };
-
 
 
 /***************************************************************************
@@ -235,9 +233,29 @@ void generic_video_init(running_machine *machine)
 
 	state_save_register_item(machine, "video", NULL, 0, state->flip_screen_x);
 	state_save_register_item(machine, "video", NULL, 0, state->flip_screen_y);
+
+	/* create spriteram buffers if necessary */
+	if (machine->config->m_video_attributes & VIDEO_BUFFERS_SPRITERAM)
+	{
+		assert_always(machine->generic.spriteram_size != 0, "Video buffers spriteram but spriteram size is 0");
+
+		/* allocate memory for the back buffer */
+		machine->generic.buffered_spriteram.u8 = auto_alloc_array(machine, UINT8, machine->generic.spriteram_size);
+
+		/* register for saving it */
+		state_save_register_global_pointer(machine, machine->generic.buffered_spriteram.u8, machine->generic.spriteram_size);
+
+		/* do the same for the second back buffer, if present */
+		if (machine->generic.spriteram2_size)
+		{
+			/* allocate memory */
+			machine->generic.buffered_spriteram2.u8 = auto_alloc_array(machine, UINT8, machine->generic.spriteram2_size);
+
+			/* register for saving it */
+			state_save_register_global_pointer(machine, machine->generic.buffered_spriteram2.u8, machine->generic.spriteram2_size);
+		}
+	}
 }
-
-
 
 /***************************************************************************
     GENERIC VIDEO START/UPDATE
@@ -398,17 +416,13 @@ static void updateflip(running_machine *machine)
 
 	if (state->flip_screen_x)
 	{
-		int temp;
-
-		temp = width - visarea.min_x - 1;
+		int temp = width - visarea.min_x - 1;
 		visarea.min_x = width - visarea.max_x - 1;
 		visarea.max_x = temp;
 	}
 	if (state->flip_screen_y)
 	{
-		int temp;
-
-		temp = height - visarea.min_y - 1;
+		int temp = height - visarea.min_y - 1;
 		visarea.min_y = height - visarea.max_y - 1;
 		visarea.max_y = temp;
 	}
@@ -436,10 +450,10 @@ void flip_screen_set(running_machine *machine, int on)
 void flip_screen_set_no_update(running_machine *machine, int on)
 {
 	/* flip_screen_y is not updated on purpose
-     * this function is for drivers which
-     * where writing to flip_screen_x to
-     * bypass update_flip
-     */
+	 * this function is for drivers which
+	 * where writing to flip_screen_x to
+	 * bypass update_flip	*/
+
 	generic_video_private *state = machine->generic_video_data;
 	state->flip_screen_x = on;
 }
@@ -452,7 +466,9 @@ void flip_screen_set_no_update(running_machine *machine, int on)
 void flip_screen_x_set(running_machine *machine, int on)
 {
 	generic_video_private *state = machine->generic_video_data;
+
 	if (on) on = ~0;
+
 	if (state->flip_screen_x != on)
 	{
 		state->flip_screen_x = on;
@@ -468,7 +484,9 @@ void flip_screen_x_set(running_machine *machine, int on)
 void flip_screen_y_set(running_machine *machine, int on)
 {
 	generic_video_private *state = machine->generic_video_data;
+
 	if (on) on = ~0;
+
 	if (state->flip_screen_y != on)
 	{
 		state->flip_screen_y = on;
@@ -521,12 +539,8 @@ int flip_screen_y_get(running_machine *machine)
 
 PALETTE_INIT( all_black )
 {
-	int i;
-
-	for (i = 0; i < machine->total_colors(); i++)
-	{
+	for (UINT32 i = 0; i < machine->total_colors(); i++)
 		palette_set_color(machine,i,RGB_BLACK); /* black */
-	}
 }
 
 
@@ -575,11 +589,9 @@ PALETTE_INIT( monochrome_green )
 
 PALETTE_INIT( RRRR_GGGG_BBBB )
 {
-	int i;
-
-	for (i = 0; i < machine->total_colors(); i++)
+	for (int i = 0; i < machine->total_colors(); i++)
 	{
-		int bit0,bit1,bit2,bit3,r,g,b;
+		int bit0, bit1, bit2, bit3, r, g, b;
 
 		/* red component */
 		bit0 = (color_prom[i] >> 0) & 0x01;
@@ -602,7 +614,7 @@ PALETTE_INIT( RRRR_GGGG_BBBB )
 		bit3 = (color_prom[i + 2*machine->total_colors()] >> 3) & 0x01;
 		b = 0x0e * bit0 + 0x1f * bit1 + 0x43 * bit2 + 0x8f * bit3;
 
-		palette_set_color(machine,i,MAKE_RGB(r,g,b));
+		palette_set_color(machine, i, MAKE_RGB(r, g, b));
 	}
 }
 
@@ -616,18 +628,14 @@ PALETTE_INIT( RRRR_GGGG_BBBB )
 
 PALETTE_INIT( RRRRR_GGGGG_BBBBB )
 {
-	int i;
-
-	for (i = 0; i < 0x8000; i++)
+	for (int i = 0; i < 0x8000; i++)
 		palette_set_color(machine, i, MAKE_RGB(pal5bit(i >> 10), pal5bit(i >> 5), pal5bit(i >> 0)));
 }
 
 
 PALETTE_INIT( BBBBB_GGGGG_RRRRR )
 {
-	int i;
-
-	for (i = 0; i < 0x8000; i++)
+	for (int i = 0; i < 0x8000; i++)
 		palette_set_color(machine, i, MAKE_RGB(pal5bit(i >> 0), pal5bit(i >> 5), pal5bit(i >> 10)));
 }
 
@@ -641,9 +649,7 @@ PALETTE_INIT( BBBBB_GGGGG_RRRRR )
 
 PALETTE_INIT( RRRRR_GGGGGG_BBBBB )
 {
-	int i;
-
-	for (i = 0; i < 0x10000; i++)
+	for (int i = 0; i < 0x10000; i++)
 		palette_set_color(machine, i, MAKE_RGB(pal5bit(i >> 11), pal6bit(i >> 5), pal5bit(i >> 0)));
 }
 

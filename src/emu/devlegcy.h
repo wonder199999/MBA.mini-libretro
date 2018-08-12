@@ -198,8 +198,9 @@ public:																		      \
 	static device_config *static_alloc_device_config(const machine_config &mconfig, const char *tag, const device_config *owner, UINT32 clock);	\
 	virtual device_t *alloc_device(running_machine &machine) const; 										\
 };																			\
-																			\
-extern const device_type name
+\
+extern const device_type name 
+
 
 
 /* macro for defining the implementation needed for configuration and device classes */
@@ -224,11 +225,13 @@ device_t *configclass::alloc_device(running_machine &machine) const											\
 {																			\
 	return pool_alloc(machine_get_pool(machine), deviceclass(machine, *this));									\
 }																			\
-const device_type name = configclass::static_alloc_device_config
+\
+const device_type name = configclass::static_alloc_device_config 
 
 
 
 /* reduced macros that are easier to use, and map to the above two macros */
+
 #define DECLARE_LEGACY_DEVICE(name, basename) _DECLARE_LEGACY_DEVICE(name, basename, basename##_device_config, basename##_device, legacy_device_config_base, legacy_device_base)
 #define DECLARE_LEGACY_SOUND_DEVICE(name, basename) _DECLARE_LEGACY_DEVICE(SOUND_##name, basename, basename##_sound_device_config, basename##_sound_device, legacy_sound_device_config_base, legacy_sound_device_base)
 #define DECLARE_LEGACY_MEMORY_DEVICE(name, basename) _DECLARE_LEGACY_DEVICE(name, basename, basename##_device_config, basename##_device, legacy_memory_device_config_base, legacy_memory_device_base)

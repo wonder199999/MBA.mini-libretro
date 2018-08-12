@@ -105,7 +105,6 @@
 #include "osdepend.h"
 #include "config.h"
 #include "image.h"
-//#include "profiler.h"
 #include "render.h"
 #include "cheat.h"
 #include "ui.h"
@@ -272,7 +271,6 @@ void running_machine::start()
 	render_init(this);
 	ui_init(this);
 	generic_machine_init(this);
-	generic_video_init(this);
 	generic_sound_init(this);
 
 	// initialize the timers and allocate a soft_reset timer
@@ -304,6 +302,9 @@ void running_machine::start()
 	rom_init(this);
 	memory_init(this);
 	watchdog_init(this);
+
+	// must happen after memory_init because this relies on generic.spriteram
+	generic_video_init(this);
 
 	// allocate the gfx elements prior to device initialization
 	gfx_init(this);

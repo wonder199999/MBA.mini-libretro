@@ -207,7 +207,7 @@ static double refresh_rate = 60.0;
 
 
 /**************************************************************************/
-//	DECLARE FUNCTIONS
+//	FUNCTION PROTOTYPES
 /**************************************************************************/
 
 static void retro_poll_mame_input();

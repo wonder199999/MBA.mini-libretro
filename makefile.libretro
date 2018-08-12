@@ -1,3 +1,4 @@
+
 SRC_DIR           = $(CORE_DIR)/src
 LIBRETRO_COMM_DIR = $(SRC_DIR)/osd/retro/libretro-common
 DEPS_DIR          = $(SRC_DIR)/lib
@@ -232,9 +233,7 @@ EMUMACHINEOBJS = \
 	$(EMUMACHINE)/eeprom.o \
 	$(EMUMACHINE)/generic.o \
 	$(EMUMACHINE)/ldcore.o \
-	$(EMUMACHINE)/ldpr8210.o \
 	$(EMUMACHINE)/ldv1000.o \
-	$(EMUMACHINE)/ldvp931.o \
 	$(EMUMACHINE)/pd4990a.o \
 	$(EMUMACHINE)/z80ctc.o \
 	$(EMUMACHINE)/timekpr.o \
@@ -278,7 +277,7 @@ DASMOBJS += $(CPUOBJ)/mcs48/mcs48dsm.o
 endif
 
 $(CPUOBJ)/mcs48/mcs48.o:	$(CPUSRC)/mcs48/mcs48.c \
-						$(CPUSRC)/mcs48/mcs48.h
+					$(CPUSRC)/mcs48/mcs48.h
 
 #-------------------------------------------------
 # Motorola 68000 series
@@ -346,7 +345,7 @@ DASMOBJS += $(CPUOBJ)/z80/z80dasm.o
 endif
 
 $(CPUOBJ)/z80/z80.o:	$(CPUSRC)/z80/z80.c \
-						$(CPUSRC)/z80/z80.h
+				$(CPUSRC)/z80/z80.h
 
 
 $(LIBCPU): $(CPUOBJS)
@@ -438,10 +437,6 @@ $(LIBSOUND): $(SOUNDOBJS)
 #-------------------------------------------------
 # additional dependencies
 #-------------------------------------------------
-
-$(EMUOBJ)/video.o:	$(EMUSRC)/rendersw.c
-$(EMUVIDEO)/v9938.o:	$(EMUSRC)/video/v9938mod.c
-
 
 LIBSRC = $(SRC_DIR)/lib
 LIBOBJ = $(OBJ)/lib

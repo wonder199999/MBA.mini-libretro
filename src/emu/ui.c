@@ -12,7 +12,7 @@
 #include "emu.h"
 #include "emuopts.h"
 #include "video/vector.h"
-#include "machine/laserdsc.h"
+//#include "machine/laserdsc.h"
 #include "profiler.h"
 #include "render.h"
 #include "cheat.h"
@@ -154,14 +154,15 @@ static INT32 slider_xscale(running_machine *machine, void *arg, astring *string,
 static INT32 slider_yscale(running_machine *machine, void *arg, astring *string, INT32 newval);
 static INT32 slider_xoffset(running_machine *machine, void *arg, astring *string, INT32 newval);
 static INT32 slider_yoffset(running_machine *machine, void *arg, astring *string, INT32 newval);
-static INT32 slider_overxscale(running_machine *machine, void *arg, astring *string, INT32 newval);
-static INT32 slider_overyscale(running_machine *machine, void *arg, astring *string, INT32 newval);
-static INT32 slider_overxoffset(running_machine *machine, void *arg, astring *string, INT32 newval);
-static INT32 slider_overyoffset(running_machine *machine, void *arg, astring *string, INT32 newval);
+//static INT32 slider_overxscale(running_machine *machine, void *arg, astring *string, INT32 newval);
+//static INT32 slider_overyscale(running_machine *machine, void *arg, astring *string, INT32 newval);
+//static INT32 slider_overxoffset(running_machine *machine, void *arg, astring *string, INT32 newval);
+//static INT32 slider_overyoffset(running_machine *machine, void *arg, astring *string, INT32 newval);
 static INT32 slider_flicker(running_machine *machine, void *arg, astring *string, INT32 newval);
 static INT32 slider_beam(running_machine *machine, void *arg, astring *string, INT32 newval);
 static char *slider_get_screen_desc(screen_device &screen);
-static char *slider_get_laserdisc_desc(device_t *screen);
+//static char *slider_get_laserdisc_desc(device_t *screen);
+
 #ifdef MAME_DEBUG
 static INT32 slider_crossscale(running_machine *machine, void *arg, astring *string, INT32 newval);
 static INT32 slider_crossoffset(running_machine *machine, void *arg, astring *string, INT32 newval);
@@ -196,7 +197,7 @@ INLINE int is_breakable_char(unicode_char ch)
 	if (ch == ' ' || ch == '-')
 		return TRUE;
 
-	/* In the following character sets, any character is breakable:
+/*	In the following character sets, any character is breakable:
         Hiragana (3040-309F)
         Katakana (30A0-30FF)
         Bopomofo (3100-312F)
@@ -209,7 +210,8 @@ INLINE int is_breakable_char(unicode_char ch)
         CJK Compatibility (3300-33FF)
         CJK Unified Ideographs Extension A (3400-4DBF)
         Yijing Hexagram Symbols (4DC0-4DFF)
-        CJK Unified Ideographs (4E00-9FFF) */
+        CJK Unified Ideographs (4E00-9FFF)
+*/
 	if (ch >= 0x3040 && ch <= 0x9fff)
 		return TRUE;
 
@@ -591,7 +593,7 @@ void ui_draw_text_full(render_container *container, const char *origs, float x, 
 			s += scharcount;
 
 			/* if we hit any non-space breakable character, remember the location and width
-               *with* the breakable character */
+			   *with* the breakable character */
 			if (schar != ' ' && is_breakable_char(schar) && curwidth <= wrapwidth)
 			{
 				lastbreak = s;
@@ -1693,7 +1695,7 @@ static slider_state *slider_init(running_machine *machine)
 		tailptr = &(*tailptr)->next;
 	}
 
-	for (device = machine->m_devicelist.first(LASERDISC); device != NULL; device = device->typenext())
+/*	for (device = machine->m_devicelist.first(LASERDISC); device != NULL; device = device->typenext())
 	{
 		const laserdisc_config *config = (const laserdisc_config *)downcast<const legacy_device_config_base &>(device->baseconfig()).inline_config();
 		if (config->overupdate != NULL)
@@ -1704,7 +1706,7 @@ static slider_state *slider_init(running_machine *machine)
 			int defyoffset = floor(config->overposy * 1000.0f + 0.5f);
 			void *param = (void *)device;
 
-			/* add scale and offset controls per-overlay */
+			// add scale and offset controls per-overlay
 			string.printf("%s Horiz Stretch", slider_get_laserdisc_desc(device));
 			*tailptr = slider_alloc(machine, string, 500, (defxscale == 0) ? 1000 : defxscale, 1500, 2, slider_overxscale, param);
 			tailptr = &(*tailptr)->next;
@@ -1719,7 +1721,7 @@ static slider_state *slider_init(running_machine *machine)
 			tailptr = &(*tailptr)->next;
 		}
 	}
-
+*/
 	for (screen_device *screen = screen_first(*machine); screen != NULL; screen = screen_next(screen))
 		if (screen->screen_type() == SCREEN_TYPE_VECTOR)
 		{
@@ -2006,7 +2008,7 @@ static INT32 slider_yoffset(running_machine *machine, void *arg, astring *string
 /*-------------------------------------------------
     slider_overxscale - screen horizontal scale slider
     callback
--------------------------------------------------*/
+-------------------------------------------------
 
 static INT32 slider_overxscale(running_machine *machine, void *arg, astring *string, INT32 newval)
 {
@@ -2023,12 +2025,12 @@ static INT32 slider_overxscale(running_machine *machine, void *arg, astring *str
 		string->printf("%.3f", settings.overscalex);
 	return floor(settings.overscalex * 1000.0f + 0.5f);
 }
-
+*/
 
 /*-------------------------------------------------
     slider_overyscale - screen vertical scale slider
     callback
--------------------------------------------------*/
+-------------------------------------------------
 
 static INT32 slider_overyscale(running_machine *machine, void *arg, astring *string, INT32 newval)
 {
@@ -2045,12 +2047,12 @@ static INT32 slider_overyscale(running_machine *machine, void *arg, astring *str
 		string->printf("%.3f", settings.overscaley);
 	return floor(settings.overscaley * 1000.0f + 0.5f);
 }
-
+*/
 
 /*-------------------------------------------------
     slider_overxoffset - screen horizontal position
     slider callback
--------------------------------------------------*/
+-------------------------------------------------
 
 static INT32 slider_overxoffset(running_machine *machine, void *arg, astring *string, INT32 newval)
 {
@@ -2067,12 +2069,12 @@ static INT32 slider_overxoffset(running_machine *machine, void *arg, astring *st
 		string->printf("%.3f", settings.overposx);
 	return floor(settings.overposx * 1000.0f + 0.5f);
 }
-
+*/
 
 /*-------------------------------------------------
     slider_overyoffset - screen vertical position
     slider callback
--------------------------------------------------*/
+-------------------------------------------------
 
 static INT32 slider_overyoffset(running_machine *machine, void *arg, astring *string, INT32 newval)
 {
@@ -2089,7 +2091,7 @@ static INT32 slider_overyoffset(running_machine *machine, void *arg, astring *st
 		string->printf("%.3f", settings.overposy);
 	return floor(settings.overposy * 1000.0f + 0.5f);
 }
-
+*/
 
 /*-------------------------------------------------
     slider_flicker - vector flicker slider
@@ -2143,7 +2145,7 @@ static char *slider_get_screen_desc(screen_device &screen)
 /*-------------------------------------------------
     slider_get_laserdisc_desc - returns the
     description for a given laseridsc
--------------------------------------------------*/
+-------------------------------------------------
 
 static char *slider_get_laserdisc_desc(device_t *laserdisc)
 {
@@ -2157,7 +2159,7 @@ static char *slider_get_laserdisc_desc(device_t *laserdisc)
 
 	return descbuf;
 }
-
+*/
 
 /*-------------------------------------------------
     slider_crossscale - crosshair scale slider

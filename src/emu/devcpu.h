@@ -180,8 +180,8 @@ public:																		      \
 	static device_config *static_alloc_device_config(const machine_config &mconfig, const char *tag, const device_config *owner, UINT32 clock);	\
 	virtual device_t *alloc_device(running_machine &machine) const; 										\
 };																			\
-																			\
-extern const device_type name
+\
+extern const device_type name 
 
 
 /* macro for defining the implementation needed for configuration and device classes */
@@ -206,7 +206,8 @@ device_t *basename##_device_config::alloc_device(running_machine &machine) const
 {																			  \
 	return pool_alloc(machine_get_pool(machine), basename##_device(machine, *this));								 \
 }																			\
-const device_type name = basename##_device_config::static_alloc_device_config
+\
+const device_type name = basename##_device_config::static_alloc_device_config 
 
 
 /* CPU interface functions */
