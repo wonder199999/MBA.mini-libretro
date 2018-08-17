@@ -15,18 +15,10 @@ MDEBUG = 0
 
 # ------------------------------------------------------------
 # Set the BIOS used by NEOGEO
-# NEOGEO_BIOS = 1 - Use Universe BIOS ver. 1.x ,
-# NEOGEO_BIOS = 2 - use Universe BIOS ver. 2.x , (default)
-# NEOGEO_BIOS = 3 - use Universe BIOS ver. 3.x
-# NEOGEO_BIOS = 4 - use MVS Europe ver. 2 ,
-# NEOGEO_BIOS = 5 - use MVS Asia/Europe ver. 3 ,
-# NEOGEO_BIOS = 6 - use MVS US ver. 2? ,
-# NEOGEO_BIOS = 7 - use MVS Japan ver. 3 ,
-# NEOGEO_BIOS = 8 - use MVS Japan (J3) ,
-# NEOGEO_BIOS = 9 - use NEO-MVH MV1C ,
-# NEOGEO_BIOS = 0 - use Custom Japanese Hotel BIOS .
+# NEOGEO_BIOS = 1 - Use all NEOGEO BIOS ,
+# NEOGEO_BIOS = 0 - Use part of the NEOGEO BIOS , (default, the resulting bin are smaller)
 # ------------------------------------------------------------
-NEOGEO_BIOS = 3
+NEOGEO_BIOS = 1
 
 UNAME = $(shell uname -a)
 ifeq ($(platform),)
@@ -651,25 +643,7 @@ ifeq ($(ARM_ENABLED), 1)
 endif
 
 ifeq ($(NEOGEO_BIOS), 1)
-   CFLAGS += -DUSE_UNIBIOS1
-else ifeq ($(NEOGEO_BIOS), 2)
-   CFLAGS += -DUSE_UNIBIOS2
-else ifeq ($(NEOGEO_BIOS), 3)
-   CFLAGS += -DUSE_UNIBIOS3
-else ifeq ($(NEOGEO_BIOS), 4)
-   CFLAGS += -DUSE_MVS_EURO
-else ifeq ($(NEOGEO_BIOS), 5)
-   CFLAGS += -DUSE_MVS_ASIA
-else ifeq ($(NEOGEO_BIOS), 6)
-   CFLAGS += -DUSE_MVS_US
-else ifeq ($(NEOGEO_BIOS), 7)
-   CFLAGS += -DUSE_MVS_JAP
-else ifeq ($(NEOGEO_BIOS), 8)
-   CFLAGS += -DUSE_MVS_J3
-else ifeq ($(NEOGEO_BIOS), 9)
-   CFLAGS += -DUSE_MVS_MV1C
-else
-   CFLAGS += -DUSE_MVS_HOTEL
+   CFLAGS += -DUSE_FULLY
 endif
 
 $(OBJ)/%.o: $(CORE_DIR)/src/%.c | $(OSPREBUILD)

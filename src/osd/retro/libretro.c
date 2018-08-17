@@ -37,14 +37,14 @@ enum
 	KEY_TOTAL
 };
 
-struct kt_table
+struct _keyboard_table
 {
 	const char	*mame_key_name;
 	INT32		retro_key_name;
 	input_item_id	mame_key;
 };
 
-const kt_table ktable[] = {
+static const _keyboard_table ktable[] = {
 	{"A",        RETROK_a,           ITEM_ID_A},
 /*   	{"B",        RETROK_b,           ITEM_ID_B}, */
    	{"C",        RETROK_c,           ITEM_ID_C},
@@ -152,7 +152,7 @@ const kt_table ktable[] = {
    	{"RMETA",    RETROK_RMETA,       ITEM_ID_RWIN},
    	{"MENU",     RETROK_MENU,        ITEM_ID_MENU},
    	{"BREAK",    RETROK_BREAK,       ITEM_ID_CANCEL}, */
-   	{"-1",       -1,                 ITEM_ID_INVALID},
+   	{"-1",       -1,                 ITEM_ID_INVALID}
 };
 
 // extern variables
@@ -191,6 +191,7 @@ static INT32 ui_ipt_pushchar = -1;
 static INT32 set_frame_skip;
 static INT32 vertical;
 static INT32 orient;
+static INT32 set_neogeo_bios;
 static UINT32 tate;
 static UINT32 screenRot;
 static UINT32 pauseg = 0;
@@ -407,28 +408,70 @@ static void extract_directory(char *buf, const char *path, size_t size)
 
 /**************************************************************************/
 
+struct _neogeo_bioses
+{
+	const char name[16];
+	const char desc[32];
+	const char bios[24];
+};
+
+static const struct _neogeo_bioses	neogeo_bioses[] = {
+	{ "euro",	  "Europe MVS(Ver. 2)",		"sp-s2.sp1" },		/* select 4 */
+	{ "euro-s1",	  "Europe MVS(Ver. 1)",		"sp-s.sp1" },
+	{ "us",		  "US MVS(Ver. 2?)",		"sp-u2.sp1" },		/* select 3 */
+	{ "us-e",	  "US MVS(Ver. 1)",		"sp-e.sp1" },
+	{ "asia",	  "Asia MVS(Ver. 3)",		"asia-s3.rom" },	/* select 5 */
+	{ "mv1c",	  "Asia MVS(Latest)",		"sp-45.sp1" },		/* latest Asia bios */
+	{ "japan",	  "Japan MVS(Ver. 3)",		"vs-bios.rom" },	/* select 2 */
+	{ "japan-s2",	  "Japan MVS(Ver. 2)",		"sp-j2.sp1" },
+	{ "japan-s1",	  "Japan MVS(Ver. 1)",		"sp1.jipan.1024" },
+	{ "japan-j3",	  "Japan MVS(J3)",		"japan-j3.bin" },
+	{ "japan-hotel",  "Custom Japanese Hotel",	"sp-1v1_3db8c.bin" },
+	{ "unibios32",	  "UniBIOS(Ver. 3.2)",		"uni-bios_3_2.rom" },	/* select 1 */
+	{ "unibios31",	  "UniBIOS(Ver. 3.1)",		"uni-bios_3_1.rom" },
+	{ "unibios30",	  "UniBIOS(Ver. 3.0)",		"uni-bios_3_0.rom" },
+	{ "unibios23",	  "UniBIOS(Ver. 2.3)",		"uni-bios_2_3.rom" },
+	{ "unibios23o",	  "UniBIOS(Ver. 2.3 older?)",	"uni-bios_2_3o.rom" },
+	{ "unibios22",	  "UniBIOS(Ver. 2.2)",		"uni-bios_2_2.rom" },
+	{ "unibios21",	  "UniBIOS(Ver. 2.1)",		"uni-bios_2_1.rom" },
+	{ "unibios20",	  "UniBIOS(Ver. 2.0)",		"uni-bios_2_0.rom" },
+	{ "unibios13",	  "UniBIOS(Ver. 1.3)",		"uni-bios_1_3.rom" },
+	{ "unibios12",	  "UniBIOS(Ver. 1.2)",		"uni-bios_1_2.rom" },
+	{ "unibios12o",	  "UniBIOS(Ver. 1.2 older)",	"uni-bios_1_2o.rom" },
+	{ "unibios11",	  "UniBIOS(Ver. 1.1)",		"uni-bios_1_1.rom" },
+	{ "unibios10",	  "UniBIOS(Ver. 1.0)",		"uni-bios_1_0.rom" },
+	{ "debug",	  "Debug MVS",			"neodebug.rom" },
+	{ "asia-aes",	  "Asia AES",			"neo-epo.sp1" },
+	{ "japan-aes",	  "Japan AES",			"neo-po.sp1" }
+};
+
 void retro_set_environment(retro_environment_t cb)
 {
 	static const struct retro_variable vars[] = {
-      	{ "mame_mini_cpu_overclock",	"Adjust CPU speed; disabled|110%|120%|130%|140%|150%|160%|170%|180%|190%|200%|50%|60%|70%|80%|90%" },
-      	{ "mame_mini_frame_skip", 	"Set frameskip; 0|1|2|3|4|automatic" },
-	{ "mame_mini_aspect_ratio",	"Core provided aspect ratio; DAR|PAR" },
-      	{ "mame_mini_turbo_button", 	"Enable autofire; disabled|button 1|button 2|R2 to button 1 mapping|R2 to button 2 mapping" },
-      	{ "mame_mini_turbo_delay", 	"Set autofire pulse speed; medium|slow|fast" },
-      	{ "mame_mini_kb_input", 	"Keyboard input; enabled|disabled" },
-      	{ "mame_mini_macro_button", 	"Use macro button; disabled|assign A+B to L|assign A+B to R|assign C+D to L|assign C+D to R|assign A+B to L & C+D to R|assign A+B to R & C+D to L" },
-      	{ "mame_mini_tate_mode", 	"T.A.T.E mode(Restart); disabled|enabled" },
-      	{ "mame_mini_sample_rate", 	"Set sample rate (Restart); 48000Hz|44100Hz|32000Hz|22050Hz" },
-	{ "mame_mini_rom_hash",		"Forced off ROM CRC verfiy(Restart); No|Yes" },
-      	{ "mame_mini_adj_brightness",
+      	{ "mba_mini_cpu_overclock",	"Adjust CPU speed; disabled|110%|120%|130%|140%|150%|160%|170%|180%|190%|200%|50%|60%|70%|80%|90%" },
+      	{ "mba_mini_frame_skip", 	"Set frameskip; 0|1|2|3|4|automatic" },
+	{ "mba_mini_aspect_ratio",	"Core provided aspect ratio; DAR|PAR" },
+      	{ "mba_mini_turbo_button", 	"Enable autofire; disabled|button 1|button 2|R2 to button 1 mapping|R2 to button 2 mapping" },
+      	{ "mba_mini_turbo_delay", 	"Set autofire pulse speed; medium|slow|fast" },
+      	{ "mba_mini_kb_input",		"Keyboard input; enabled|disabled" },
+      	{ "mba_mini_macro_button", 	"Use macro button; disabled|assign A+B to L|assign A+B to R|assign C+D to L|assign C+D to R|assign A+B to L & C+D to R|assign A+B to R & C+D to L" },
+      	{ "mba_mini_tate_mode", 	"T.A.T.E mode(Restart); disabled|enabled" },
+      	{ "mba_mini_sample_rate", 	"Set sample rate (Restart); 48000Hz|44100Hz|32000Hz|22050Hz" },
+	{ "mba_mini_rom_hash",		"Forced off ROM CRC verfiy(Restart); No|Yes" },
+      	{ "mba_mini_neogeo_bios",
+#if defined(USE_FULLY)
+	   "Set NEOGEO BIOS(Restart); Default|Europe MVS(Ver. 2)|Europe MVS(Ver. 1)|USA MVS(Ver. 2?)|USA MVS(Ver. 1)|Asia MVS(Ver. 3)|Asia MVS(Latest)|Japan MVS(Ver. 3)|Japan MVS(Ver. 2)|Japan MVS(Ver. 1)|Japan MVS(J3)|Custom Japanese Hotel|UniBIOS(Ver. 3.2)|UniBIOS(Ver. 3.1)|UniBIOS(Ver. 3.0)|UniBIOS(Ver. 2.3)|UniBIOS(Ver. 2.3 older?)|UniBIOS(Ver. 2.2)|UniBIOS(Ver. 2.1)|UniBIOS(Ver. 2.0)|UniBIOS(Ver. 1.3)|UniBIOS(Ver. 1.2)|UniBIOS(Ver. 1.2 older)|UniBIOS(Ver. 1.1)|UniBIOS(Ver. 1.0)|Debug MVS|Asia AES|Japan AES" },
+#else
+	   "Set NEOGEO BIOS(Restart); Default|Europe MVS(Ver. 2)|USA MVS(Ver. 2?)|Asia MVS(Ver. 3)|Japan MVS(Ver. 3)|UniBIOS(Ver. 3.2)" },
+#endif
+      	{ "mba_mini_adj_brightness",
 	   "Set brightness; default|+1%|+2%|+3%|+4%|+5%|+6%|+7%|+8%|+9%|+10%|+11%|+12%|+13%|+14%|+15%|+16%|+17%|+18%|+19%|+20%|-20%|-19%|-18%|-17%|-16%|-15%|-14%|-13%|-12%|-11%|-10%|-9%|-8%|-7%|-6%|-5%|-4%|-3%|-2%|-1%" },
-      	{ "mame_mini_adj_contrast",
+      	{ "mba_mini_adj_contrast",
 	   "Set contrast; default|+1%|+2%|+3%|+4%|+5%|+6%|+7%|+8%|+9%|+10%|+11%|+12%|+13%|+14%|+15%|+16%|+17%|+18%|+19%|+20%|-20%|-19%|-18%|-17%|-16%|-15%|-14%|-13%|-12%|-11%|-10%|-9%|-8%|-7%|-6%|-5%|-4%|-3%|-2%|-1%" },
-      	{ "mame_mini_adj_gamma",
+      	{ "mba_mini_adj_gamma",
 	   "Set gamma; default|+1%|+2%|+3%|+4%|+5%|+6%|+7%|+8%|+9%|+10%|+11%|+12%|+13%|+14%|+15%|+16%|+17%|+18%|+19%|+20%|-20%|-19%|-18%|-17%|-16%|-15%|-14%|-13%|-12%|-11%|-10%|-9%|-8%|-7%|-6%|-5%|-4%|-3%|-2%|-1%" },
 
-      	{ NULL, NULL },
-   	};
+      	{ NULL, NULL },	};
 
    	environ_cb = cb;
    	cb(RETRO_ENVIRONMENT_SET_VARIABLES, (void*)vars);
@@ -437,30 +480,65 @@ void retro_set_environment(retro_environment_t cb)
 static void check_variables(void)
 {
 	struct retro_variable var = { 0 };
-   	bool tmp_ar = set_par;
+	bool tmp_ar = set_par;
 
-   	var.key = "mame_mini_aspect_ratio";
-   	var.value = NULL;
-   	if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
-   	{
-      		if (!strcmp(var.value, "PAR"))
+	var.key = "mba_mini_neogeo_bios";
+	var.value = NULL;
+	if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
+	{
+		if (!strcmp(var.value, "Default"))			set_neogeo_bios = -1;
+		else if (!strcmp(var.value, "Europe MVS(Ver. 2)"))	set_neogeo_bios = 0;
+		else if (!strcmp(var.value, "Europe MVS(Ver. 1)"))	set_neogeo_bios = 1;
+		else if (!strcmp(var.value, "USA MVS(Ver. 2?)"))	set_neogeo_bios = 2;
+		else if (!strcmp(var.value, "USA MVS(Ver. 1)"))		set_neogeo_bios = 3;
+		else if (!strcmp(var.value, "Asia MVS(Ver. 3)"))	set_neogeo_bios = 4;
+		else if (!strcmp(var.value, "Asia MVS(Latest)"))	set_neogeo_bios = 5;
+		else if (!strcmp(var.value, "Japan MVS(Ver. 3)"))	set_neogeo_bios = 6;
+		else if (!strcmp(var.value, "Japan MVS(Ver. 2)"))	set_neogeo_bios = 7;
+		else if (!strcmp(var.value, "Japan MVS(Ver. 1)"))	set_neogeo_bios = 8;
+		else if (!strcmp(var.value, "Japan MVS(J3)"))		set_neogeo_bios = 9;
+		else if (!strcmp(var.value, "Custom Japanese Hotel"))	set_neogeo_bios = 10;
+		else if (!strcmp(var.value, "UniBIOS(Ver. 3.2)"))	set_neogeo_bios = 11;
+		else if (!strcmp(var.value, "UniBIOS(Ver. 3.1)"))	set_neogeo_bios = 12;
+		else if (!strcmp(var.value, "UniBIOS(Ver. 3.0)"))	set_neogeo_bios = 13;
+		else if (!strcmp(var.value, "UniBIOS(Ver. 2.3)"))	set_neogeo_bios = 14;
+		else if (!strcmp(var.value, "UniBIOS(Ver. 2.3 older?)"))set_neogeo_bios = 15;
+		else if (!strcmp(var.value, "UniBIOS(Ver. 2.2)"))	set_neogeo_bios = 16;
+		else if (!strcmp(var.value, "UniBIOS(Ver. 2.1)"))	set_neogeo_bios = 17;
+		else if (!strcmp(var.value, "UniBIOS(Ver. 2.0)"))	set_neogeo_bios = 18;
+		else if (!strcmp(var.value, "UniBIOS(Ver. 1.3)"))	set_neogeo_bios = 19;
+		else if (!strcmp(var.value, "UniBIOS(Ver. 1.2)"))	set_neogeo_bios = 20;
+		else if (!strcmp(var.value, "UniBIOS(Ver. 1.2 older)"))	set_neogeo_bios = 21;
+		else if (!strcmp(var.value, "UniBIOS(Ver. 1.1)"))	set_neogeo_bios = 22;
+		else if (!strcmp(var.value, "UniBIOS(Ver. 1.0)"))	set_neogeo_bios = 23;
+		else if (!strcmp(var.value, "Debug MVS"))		set_neogeo_bios = 24;
+		else if (!strcmp(var.value, "Asia AES"))		set_neogeo_bios = 25;
+		else if (!strcmp(var.value, "Japan AES"))		set_neogeo_bios = 26;
+	}
+	else set_neogeo_bios = -1;
+
+	var.key = "mba_mini_aspect_ratio";
+	var.value = NULL;
+	if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
+	{
+		if (!strcmp(var.value, "PAR"))
 			set_par = true;
 		else
 			set_par = false;
-   	}
+	}
 
-   	var.key = "mame_mini_tate_mode";
-   	var.value = NULL;
-   	if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
-   	{
-      		if (!strcmp(var.value, "enabled"))
+	var.key = "mba_mini_tate_mode";
+	var.value = NULL;
+	if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
+	{
+		if (!strcmp(var.value, "enabled"))
 			tate = 1;
 		else
 			tate = 0;
    	}
 	else tate = 0;
 
-   	var.key = "mame_mini_kb_input";
+   	var.key = "mba_mini_kb_input";
    	var.value = NULL;
    	if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
    	{
@@ -470,7 +548,7 @@ static void check_variables(void)
 			keyboard_input = false;
    	}
 
-	var.key = "mame_mini_frame_skip";
+	var.key = "mba_mini_frame_skip";
    	var.value = NULL;
    	if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
    	{
@@ -484,7 +562,7 @@ static void check_variables(void)
 			video_set_frameskip(set_frame_skip);
    	}
 
-   	var.key = "mame_mini_turbo_button";
+   	var.key = "mba_mini_turbo_button";
    	var.value = NULL;
    	if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
    	{
@@ -500,7 +578,7 @@ static void check_variables(void)
 			turbo_enable = 0;
    	}
 
-   	var.key = "mame_mini_turbo_delay";
+   	var.key = "mba_mini_turbo_delay";
    	var.value = NULL;
    	if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
    	{
@@ -512,12 +590,12 @@ static void check_variables(void)
 			turbo_delay = 3;
    	}
 
-   	var.key = "mame_mini_sample_rate";
+   	var.key = "mba_mini_sample_rate";
    	var.value = NULL;
    	if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
 		sample_rate = atoi(var.value);
 
-   	var.key = "mame_mini_adj_brightness";
+   	var.key = "mba_mini_adj_brightness";
    	var.value = NULL;
    	if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
    	{
@@ -531,7 +609,7 @@ static void check_variables(void)
 			adjust_opt[0] = adjust_opt[3] = 1;
    	}
 
-   	var.key = "mame_mini_adj_contrast";
+   	var.key = "mba_mini_adj_contrast";
    	var.value = NULL;
    	if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
    	{
@@ -545,7 +623,7 @@ static void check_variables(void)
 			adjust_opt[0] = adjust_opt[4] = 1;
    	}
 
-   	var.key = "mame_mini_adj_gamma";
+   	var.key = "mba_mini_adj_gamma";
    	var.value = NULL;
    	if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
    	{
@@ -559,7 +637,7 @@ static void check_variables(void)
 			adjust_opt[0] = adjust_opt[5] = 1;
    	}
 
-   	var.key = "mame_mini_cpu_overclock";
+   	var.key = "mba_mini_cpu_overclock";
    	var.value = NULL;
    	if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
    	{
@@ -573,7 +651,7 @@ static void check_variables(void)
 			adjust_opt[0] = adjust_opt[6] = 1;
    	}
 
-   	var.key = "mame_mini_macro_button";
+   	var.key = "mba_mini_macro_button";
    	var.value = NULL;
    	if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
    	{
@@ -596,7 +674,7 @@ static void check_variables(void)
 			macro_state = 0;
 	}
 
-   	var.key = "mame_mini_rom_hash";
+   	var.key = "mba_mini_rom_hash";
    	var.value = NULL;
    	if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
 	{
@@ -1267,6 +1345,9 @@ static const char *xargv[] = {
 	NULL, NULL,
 	NULL, NULL,
 	NULL, NULL,
+
+	NULL, NULL,
+	NULL, NULL
 };
 
 static int parsePath(char *path, char *gamePath, char *gameName)
@@ -1326,7 +1407,7 @@ static int getGameInfo(char *gameName, int *rotation, int *driverIndex)
 		{
 			gameFound = 1;
 			*driverIndex = drvindex;
-			*rotation = drivers[drvindex]->flags & 0x7;
+			*rotation = drivers[drvindex]->flags & 0x07;
 			write_log("%-18s\"%s\" rot=%i \n", drivers[drvindex]->name, drivers[drvindex]->description, *rotation);
 		}
 	}
@@ -1395,6 +1476,12 @@ int executeGame(char *path)
 	}
 
 	xargv[paramCount++] = MAME_GAME_NAME;
+
+	if (set_neogeo_bios >= 0)
+	{
+		xargv[paramCount++] = (char*)"-bios";
+		xargv[paramCount++] = (char*)neogeo_bioses[set_neogeo_bios].name;
+	}
 
 	write_log("executing frontend... params:%i\n", paramCount);
 
