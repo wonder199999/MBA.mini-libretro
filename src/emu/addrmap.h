@@ -75,16 +75,15 @@ public:
 		  m_name(NULL),
 		  m_tag(NULL) { }
 
-	map_handler_type	m_type;			// type of the handler
-	UINT8			m_bits;			// width of the handler in bits, or 0 for default
-	UINT64			m_mask;			// mask for which lanes apply
+	map_handler_type	 m_type;		// type of the handler
+	UINT8			 m_bits;		// width of the handler in bits, or 0 for default
+	UINT64			 m_mask;		// mask for which lanes apply
 	const char		*m_name;		// name of the handler
 	const char		*m_tag;			// tag pointing to a reference
-	astring			m_derived_tag;		// string used to hold derived names
+	astring			 m_derived_tag;		// string used to hold derived names
 
 	void set_tag(const device_config &devconfig, const char *tag);
 };
-
 
 
 // ======================> address_map_entry
@@ -125,59 +124,59 @@ public:
 	void set_readwrite_bank(const device_config &devconfig, const char *tag);
 
 	// public state
-	address_map_entry	*m_next;				// pointer to the next entry
-	address_map		&m_map;					// reference to our owning map
-	astring				m_region_string;		// string used to hold derived names
+	address_map_entry		*m_next;			// pointer to the next entry
+	address_map			&m_map;				// reference to our owning map
+	astring				 m_region_string;		// string used to hold derived names
 
 	// basic information
-	offs_t				m_addrstart;			// start address
-	offs_t				m_addrend;			// end address
-	offs_t				m_addrmirror;			// mirror bits
-	offs_t				m_addrmask;			// mask bits
-	map_handler_data		m_read;				// data for read handler
-	map_handler_data		m_write;			// data for write handler
-	const char		*m_share;				// tag of a shared memory block
-	void			**m_baseptr;				// receives pointer to memory (optional)
-	size_t			*m_sizeptr;				// receives size of area in bytes (optional)
-	UINT32				m_baseptroffs_plus1;		// offset of base pointer within driver_data, plus 1
-	UINT32				m_sizeptroffs_plus1;		// offset of size pointer within driver_data, plus 1
-	UINT32				m_genbaseptroffs_plus1;		// offset of base pointer within generic_pointers, plus 1
-	UINT32				m_gensizeptroffs_plus1;		// offset of size pointer within generic_pointers, plus 1
-	const char		*m_region;				// tag of region containing the memory backing this entry
-	offs_t				m_rgnoffs;			// offset within the region
+	offs_t				 m_addrstart;			// start address
+	offs_t				 m_addrend;			// end address
+	offs_t				 m_addrmirror;			// mirror bits
+	offs_t				 m_addrmask;			// mask bits
+	map_handler_data		 m_read;			// data for read handler
+	map_handler_data		 m_write;			// data for write handler
+	const char			*m_share;			// tag of a shared memory block
+	void			       **m_baseptr;			// receives pointer to memory (optional)
+	size_t				*m_sizeptr;			// receives size of area in bytes (optional)
+	UINT32				 m_baseptroffs_plus1;		// offset of base pointer within driver_data, plus 1
+	UINT32				 m_sizeptroffs_plus1;		// offset of size pointer within driver_data, plus 1
+	UINT32				 m_genbaseptroffs_plus1;	// offset of base pointer within generic_pointers, plus 1
+	UINT32				 m_gensizeptroffs_plus1;	// offset of size pointer within generic_pointers, plus 1
+	const char			*m_region;			// tag of region containing the memory backing this entry
+	offs_t				 m_rgnoffs;			// offset within the region
 
 	// handlers
-	read8_proto_delegate		m_rproto8;			// 8-bit read proto-delegate
-	read16_proto_delegate		m_rproto16;			// 16-bit read proto-delegate
-	read32_proto_delegate		m_rproto32;			// 32-bit read proto-delegate
-	read64_proto_delegate		m_rproto64;			// 64-bit read proto-delegate
-	read8_space_func		m_rspace8;			// 8-bit legacy address space handler
-	read16_space_func		m_rspace16;			// 16-bit legacy address space handler
-	read32_space_func		m_rspace32;			// 32-bit legacy address space handler
-	read64_space_func		m_rspace64;			// 64-bit legacy address space handler
-	read8_device_func		m_rdevice8;			// 8-bit legacy device handler
-	read16_device_func		m_rdevice16;			// 16-bit legacy device handler
-	read32_device_func		m_rdevice32;			// 32-bit legacy device handler
-	read64_device_func		m_rdevice64;			// 64-bit legacy device handler
-	write8_proto_delegate		m_wproto8;			// 8-bit write proto-delegate
-	write16_proto_delegate		m_wproto16;			// 16-bit write proto-delegate
-	write32_proto_delegate		m_wproto32;			// 32-bit write proto-delegate
-	write64_proto_delegate		m_wproto64;			// 64-bit write proto-delegate
-	write8_space_func		m_wspace8;			// 8-bit legacy address space handler
-	write16_space_func		m_wspace16;			// 16-bit legacy address space handler
-	write32_space_func		m_wspace32;			// 32-bit legacy address space handler
-	write64_space_func		m_wspace64;			// 64-bit legacy address space handler
-	write8_device_func		m_wdevice8;			// 8-bit legacy device handler
-	write16_device_func		m_wdevice16;			// 16-bit legacy device handler
-	write32_device_func		m_wdevice32;			// 32-bit legacy device handler
-	write64_device_func		m_wdevice64;			// 64-bit legacy device handler
+	read8_proto_delegate		 m_rproto8;			// 8-bit read proto-delegate
+	read16_proto_delegate		 m_rproto16;			// 16-bit read proto-delegate
+	read32_proto_delegate		 m_rproto32;			// 32-bit read proto-delegate
+	read64_proto_delegate		 m_rproto64;			// 64-bit read proto-delegate
+	read8_space_func		 m_rspace8;			// 8-bit legacy address space handler
+	read16_space_func		 m_rspace16;			// 16-bit legacy address space handler
+	read32_space_func		 m_rspace32;			// 32-bit legacy address space handler
+	read64_space_func		 m_rspace64;			// 64-bit legacy address space handler
+	read8_device_func		 m_rdevice8;			// 8-bit legacy device handler
+	read16_device_func		 m_rdevice16;			// 16-bit legacy device handler
+	read32_device_func		 m_rdevice32;			// 32-bit legacy device handler
+	read64_device_func		 m_rdevice64;			// 64-bit legacy device handler
+	write8_proto_delegate		 m_wproto8;			// 8-bit write proto-delegate
+	write16_proto_delegate		 m_wproto16;			// 16-bit write proto-delegate
+	write32_proto_delegate		 m_wproto32;			// 32-bit write proto-delegate
+	write64_proto_delegate		 m_wproto64;			// 64-bit write proto-delegate
+	write8_space_func		 m_wspace8;			// 8-bit legacy address space handler
+	write16_space_func		 m_wspace16;			// 16-bit legacy address space handler
+	write32_space_func		 m_wspace32;			// 32-bit legacy address space handler
+	write64_space_func		 m_wspace64;			// 64-bit legacy address space handler
+	write8_device_func		 m_wdevice8;			// 8-bit legacy device handler
+	write16_device_func		 m_wdevice16;			// 16-bit legacy device handler
+	write32_device_func		 m_wdevice32;			// 32-bit legacy device handler
+	write64_device_func		 m_wdevice64;			// 64-bit legacy device handler
 
 	// information used during processing
-	void			*m_memory;				// pointer to memory backing this entry
-	offs_t				m_bytestart;			// byte-adjusted start address
-	offs_t				m_byteend;			// byte-adjusted end address
-	offs_t				m_bytemirror;			// byte-adjusted mirror bits
-	offs_t				m_bytemask;			// byte-adjusted mask bits
+	void				*m_memory;			// pointer to memory backing this entry
+	offs_t				 m_bytestart;			// byte-adjusted start address
+	offs_t				 m_byteend;			// byte-adjusted end address
+	offs_t				 m_bytemirror;			// byte-adjusted mirror bits
+	offs_t				 m_bytemask;			// byte-adjusted mask bits
 
 protected:
 	// internal base pointer setting (derived classes provide typed versions)
@@ -409,7 +408,7 @@ public:
 	void set_unmap_value(UINT8 value) { m_unmapval = value; }
 
 	// add a new entry of the given type
-	address_map_entry8 *add(offs_t start, offs_t end, address_map_entry8 *ptr);
+	address_map_entry8  *add(offs_t start, offs_t end, address_map_entry8  *ptr);
 	address_map_entry16 *add(offs_t start, offs_t end, address_map_entry16 *ptr);
 	address_map_entry32 *add(offs_t start, offs_t end, address_map_entry32 *ptr);
 	address_map_entry64 *add(offs_t start, offs_t end, address_map_entry64 *ptr);
@@ -433,6 +432,7 @@ public:
 
 // start/end tags for the address map
 #define ADDRESS_MAP_NAME(_name) construct_address_map_##_name
+
 
 #define ADDRESS_MAP_START(_name, _space, _bits)					\
 void ADDRESS_MAP_NAME(_name)(address_map &map, const device_config &devconfig)	\
@@ -723,18 +723,18 @@ void ADDRESS_MAP_NAME(_name)(address_map &map, const device_config &devconfig)	\
 
 
 // common shortcuts
-#define AM_ROMBANK(_bank)					AM_READ_BANK(_bank)
-#define AM_RAMBANK(_bank)					AM_READWRITE_BANK(_bank)
-#define AM_RAM_READ(_read)					AM_READ(_read) AM_WRITEONLY
+#define AM_ROMBANK(_bank)				AM_READ_BANK(_bank)
+#define AM_RAMBANK(_bank)				AM_READWRITE_BANK(_bank)
+#define AM_RAM_READ(_read)				AM_READ(_read) AM_WRITEONLY
 #define AM_RAM_READ_MEMBER(_class, _read)		AM_READ_MEMBER(_class, _read) AM_WRITEONLY
 #define AM_RAM_WRITE(_write)				AM_READONLY AM_WRITE(_write)
 #define AM_RAM_WRITE_MEMBER(_class, _write)		AM_READONLY AM_WRITE_MEMBER(_class, _write)
 #define AM_RAM_DEVREAD(_tag, _read)			AM_DEVREAD(_tag, _read) AM_WRITEONLY
 #define AM_RAM_DEVREAD_MEMBER(_tag, _class, _read)	AM_DEVREAD_MEMBER(_tag, _class, _read) AM_WRITEONLY
-#define AM_RAM_DEVWRITE(_tag, _write)		AM_READONLY AM_DEVWRITE(_tag, _write)
+#define AM_RAM_DEVWRITE(_tag, _write)			AM_READONLY AM_DEVWRITE(_tag, _write)
 #define AM_RAM_DEVWRITE_MEMBER(_tag, _class, _write)	AM_READONLY AM_DEVWRITE_MEMBER(_tag, _class, _write)
 #define AM_BASE_SIZE_MEMBER(_struct, _base, _size)	AM_BASE_MEMBER(_struct, _base) AM_SIZE_MEMBER(_struct, _size)
-#define AM_BASE_SIZE_GENERIC(_member)		AM_BASE_GENERIC(_member) AM_SIZE_GENERIC(_member)
+#define AM_BASE_SIZE_GENERIC(_member)			AM_BASE_GENERIC(_member) AM_SIZE_GENERIC(_member)
 
 
 /*************************************************************************/

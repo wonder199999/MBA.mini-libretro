@@ -262,22 +262,21 @@ VIDEO_UPDATE( neogeo );
 		\
 		ROM_SYSTEM_BIOS( 4, "asia", "Asia MVS (Ver. 3)" ) /* Asia */ \
 		ROM_LOAD16_WORD_SWAP_BIOS( 4, "asia-s3.rom", 0x00000, 0x020000, CRC(91b64be3) SHA1(720a3e20d26818632aedf2c2fd16c54f213543e1) ) \
+		ROM_SYSTEM_BIOS( 5, "mv1c", "NEO-MVH MV1C" ) /* Latest Asia bios */ \
+		ROM_LOAD16_WORD_SWAP_BIOS( 5, "sp-45.sp1", 0x00000, 0x080000, CRC(03cc9f6a) SHA1(cdf1f49e3ff2bac528c21ed28449cf35b7957dc1) ) \
 		\
-		ROM_SYSTEM_BIOS( 5, "japan", "Japan MVS (Ver. 3)" ) /* Japan, Ver 6 VS Bios */ \
-		ROM_LOAD16_WORD_SWAP_BIOS( 5, "vs-bios.rom", 0x00000, 0x020000, CRC(f0e8f27d) SHA1(ecf01eda815909f1facec62abf3594eaa8d11075) ) \
-		ROM_SYSTEM_BIOS( 6, "japan-s2", "Japan MVS (Ver. 2)" ) /* Japan, Older */ \
-		ROM_LOAD16_WORD_SWAP_BIOS( 6, "sp-j2.sp1", 0x00000, 0x020000, CRC(acede59c) SHA1(b6f97acd282fd7e94d9426078a90f059b5e9dd91) ) \
-		ROM_SYSTEM_BIOS( 7, "japan-s1", "Japan MVS (Ver. 1)" ) /* Japan, Older */ \
-		ROM_LOAD16_WORD_SWAP_BIOS( 7, "sp1.jipan.1024", 0x00000, 0x020000, CRC(9fb0abe4) SHA1(18a987ce2229df79a8cf6a84f968f0e42ce4e59d) ) \
-		ROM_SYSTEM_BIOS( 8, "mv1c", "NEO-MVH MV1C" ) /* Latest Asia bios */ \
-		ROM_LOAD16_WORD_SWAP_BIOS( 8, "sp-45.sp1", 0x00000, 0x080000, CRC(03cc9f6a) SHA1(cdf1f49e3ff2bac528c21ed28449cf35b7957dc1) ) \
+		ROM_SYSTEM_BIOS( 6, "japan", "Japan MVS (Ver. 3)" ) /* Japan, Ver 6 VS Bios */ \
+		ROM_LOAD16_WORD_SWAP_BIOS( 6, "vs-bios.rom", 0x00000, 0x020000, CRC(f0e8f27d) SHA1(ecf01eda815909f1facec62abf3594eaa8d11075) ) \
+		ROM_SYSTEM_BIOS( 7, "japan-s2", "Japan MVS (Ver. 2)" ) /* Japan, Older */ \
+		ROM_LOAD16_WORD_SWAP_BIOS( 7, "sp-j2.sp1", 0x00000, 0x020000, CRC(acede59c) SHA1(b6f97acd282fd7e94d9426078a90f059b5e9dd91) ) \
+		ROM_SYSTEM_BIOS( 8, "japan-s1", "Japan MVS (Ver. 1)" ) /* Japan, Older */ \
+		ROM_LOAD16_WORD_SWAP_BIOS( 8, "sp1.jipan.1024", 0x00000, 0x020000, CRC(9fb0abe4) SHA1(18a987ce2229df79a8cf6a84f968f0e42ce4e59d) ) \
 		ROM_SYSTEM_BIOS( 9, "japan-j3", "Japan MVS (J3)" ) /* Latest Japan bios; correct chip label unknown */ \
 		ROM_LOAD16_WORD_SWAP_BIOS( 9, "japan-j3.bin", 0x00000, 0x020000, CRC(dff6d41f) SHA1(e92910e20092577a4523a6b39d578a71d4de7085) ) \
-		\
 		ROM_SYSTEM_BIOS(10, "japan-hotel", "Custom Japanese Hotel" ) /* 'rare MVS found in japanese hotels' shows v1.3 in test mode */ \
 		ROM_LOAD16_WORD_SWAP_BIOS(10, "sp-1v1_3db8c.bin", 0x00000, 0x020000, CRC(162f0ebe) SHA1(fe1c6dd3dfcf97d960065b1bb46c1e11cb7bf271) ) \
 		\
-		ROM_SYSTEM_BIOS( 11, "unibios32", "Universe Bios (Hack, Ver. 3.2)" ) /* Universe Bios v3.2 (hack) */ \
+		ROM_SYSTEM_BIOS(11, "unibios32", "Universe Bios (Hack, Ver. 3.2)" ) /* Universe Bios v3.2 (hack) */ \
 		ROM_LOAD16_WORD_SWAP_BIOS( 11, "uni-bios_3_2.rom", 0x00000, 0x020000, CRC(a4e8b9b3) SHA1(c92f18c3f1edda543d264ecd0ea915240e7c8258) ) \
 		ROM_SYSTEM_BIOS(12, "unibios31", "Universe Bios (Hack, Ver. 3.1)" ) /* Universe Bios v3.1 (hack) */ \
 		ROM_LOAD16_WORD_SWAP_BIOS(12, "uni-bios_3_1.rom", 0x00000, 0x020000, CRC(0c58093f) SHA1(29329a3448c2505e1ff45ffa75e61e9693165153) ) \
@@ -304,10 +303,10 @@ VIDEO_UPDATE( neogeo );
 		ROM_SYSTEM_BIOS(23, "unibios10", "Universe Bios (Hack, Ver. 1.0)" ) /* Universe Bios v1.0 (hack) */ \
 		ROM_LOAD16_WORD_SWAP_BIOS(23, "uni-bios_1_0.rom", 0x00000, 0x020000, CRC(0ce453a0) SHA1(3b4c0cd26c176fc6b26c3a2f95143dd478f6abf9) ) \
 		\
-		ROM_SYSTEM_BIOS(24, "debug",     "Debug MVS (Hack?)" ) /* Debug (Development) Bios */ \
+		ROM_SYSTEM_BIOS(24, "debug", "Debug MVS (Hack?)" ) /* Debug (Development) Bios */ \
 		ROM_LOAD16_WORD_SWAP_BIOS(24, "neodebug.rom", 0x00000, 0x020000, CRC(698ebb7d) SHA1(081c49aa8cc7dad5939833dc1b18338321ea0a07) ) \
 		\
-		ROM_SYSTEM_BIOS(25, "asia-aes",  "Asia AES" ) /* AES Console (Asia?) Bios */ \
+		ROM_SYSTEM_BIOS(25, "asia-aes", "Asia AES" ) /* AES Console (Asia?) Bios */ \
 		ROM_LOAD16_WORD_SWAP_BIOS(25, "neo-epo.sp1", 0x00000, 0x020000, CRC(d27a71f1) SHA1(1b3b22092f30c4d1b2c15f04d1670eb1e9fbea07) ) \
 		ROM_SYSTEM_BIOS(26, "japan-aes", "Japan AES" ) /* AES Console (Japan) Bios */ \
 		ROM_LOAD16_WORD_SWAP_BIOS(26, "neo-po.sp1", 0x00000, 0x020000, CRC(16d0c132) SHA1(4e4a440cae46f3889d20234aebd7f8d5f522e22c) )

@@ -418,8 +418,8 @@ struct _neogeo_bioses
 static const struct _neogeo_bioses	neogeo_bioses[] = {
 	{ "euro",	  "Europe MVS(Ver. 2)",		"sp-s2.sp1" },		/* select 4 */
 	{ "euro-s1",	  "Europe MVS(Ver. 1)",		"sp-s.sp1" },
-	{ "us",		  "US MVS(Ver. 2?)",		"sp-u2.sp1" },		/* select 3 */
-	{ "us-e",	  "US MVS(Ver. 1)",		"sp-e.sp1" },
+	{ "us",		  "USA MVS(Ver. 2?)",		"sp-u2.sp1" },		/* select 3 */
+	{ "us-e",	  "USA MVS(Ver. 1)",		"sp-e.sp1" },
 	{ "asia",	  "Asia MVS(Ver. 3)",		"asia-s3.rom" },	/* select 5 */
 	{ "mv1c",	  "Asia MVS(Latest)",		"sp-45.sp1" },		/* latest Asia bios */
 	{ "japan",	  "Japan MVS(Ver. 3)",		"vs-bios.rom" },	/* select 2 */
@@ -486,34 +486,20 @@ static void check_variables(void)
 	var.value = NULL;
 	if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
 	{
-		if (!strcmp(var.value, "Default"))			set_neogeo_bios = -1;
-		else if (!strcmp(var.value, "Europe MVS(Ver. 2)"))	set_neogeo_bios = 0;
-		else if (!strcmp(var.value, "Europe MVS(Ver. 1)"))	set_neogeo_bios = 1;
-		else if (!strcmp(var.value, "USA MVS(Ver. 2?)"))	set_neogeo_bios = 2;
-		else if (!strcmp(var.value, "USA MVS(Ver. 1)"))		set_neogeo_bios = 3;
-		else if (!strcmp(var.value, "Asia MVS(Ver. 3)"))	set_neogeo_bios = 4;
-		else if (!strcmp(var.value, "Asia MVS(Latest)"))	set_neogeo_bios = 5;
-		else if (!strcmp(var.value, "Japan MVS(Ver. 3)"))	set_neogeo_bios = 6;
-		else if (!strcmp(var.value, "Japan MVS(Ver. 2)"))	set_neogeo_bios = 7;
-		else if (!strcmp(var.value, "Japan MVS(Ver. 1)"))	set_neogeo_bios = 8;
-		else if (!strcmp(var.value, "Japan MVS(J3)"))		set_neogeo_bios = 9;
-		else if (!strcmp(var.value, "Custom Japanese Hotel"))	set_neogeo_bios = 10;
-		else if (!strcmp(var.value, "UniBIOS(Ver. 3.2)"))	set_neogeo_bios = 11;
-		else if (!strcmp(var.value, "UniBIOS(Ver. 3.1)"))	set_neogeo_bios = 12;
-		else if (!strcmp(var.value, "UniBIOS(Ver. 3.0)"))	set_neogeo_bios = 13;
-		else if (!strcmp(var.value, "UniBIOS(Ver. 2.3)"))	set_neogeo_bios = 14;
-		else if (!strcmp(var.value, "UniBIOS(Ver. 2.3 older?)"))set_neogeo_bios = 15;
-		else if (!strcmp(var.value, "UniBIOS(Ver. 2.2)"))	set_neogeo_bios = 16;
-		else if (!strcmp(var.value, "UniBIOS(Ver. 2.1)"))	set_neogeo_bios = 17;
-		else if (!strcmp(var.value, "UniBIOS(Ver. 2.0)"))	set_neogeo_bios = 18;
-		else if (!strcmp(var.value, "UniBIOS(Ver. 1.3)"))	set_neogeo_bios = 19;
-		else if (!strcmp(var.value, "UniBIOS(Ver. 1.2)"))	set_neogeo_bios = 20;
-		else if (!strcmp(var.value, "UniBIOS(Ver. 1.2 older)"))	set_neogeo_bios = 21;
-		else if (!strcmp(var.value, "UniBIOS(Ver. 1.1)"))	set_neogeo_bios = 22;
-		else if (!strcmp(var.value, "UniBIOS(Ver. 1.0)"))	set_neogeo_bios = 23;
-		else if (!strcmp(var.value, "Debug MVS"))		set_neogeo_bios = 24;
-		else if (!strcmp(var.value, "Asia AES"))		set_neogeo_bios = 25;
-		else if (!strcmp(var.value, "Japan AES"))		set_neogeo_bios = 26;
+		set_neogeo_bios = 0;
+		if (!strcmp(var.value, "Default"))
+			set_neogeo_bios = -1;
+		else
+		{
+			for (int i = 0; i < 27; i++)
+			{
+				if (!strcmp(var.value, neogeo_bioses[i].desc))
+				{
+					set_neogeo_bios = i;
+					break;
+				}
+			}
+		}
 	}
 	else set_neogeo_bios = -1;
 
@@ -1481,6 +1467,7 @@ int executeGame(char *path)
 	{
 		xargv[paramCount++] = (char*)"-bios";
 		xargv[paramCount++] = (char*)neogeo_bioses[set_neogeo_bios].name;
+		write_log("Currently loaded NEOGEO BIOS is <%s>\n", neogeo_bioses[set_neogeo_bios].bios);
 	}
 
 	write_log("executing frontend... params:%i\n", paramCount);
