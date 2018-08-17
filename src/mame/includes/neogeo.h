@@ -313,16 +313,16 @@ VIDEO_UPDATE( neogeo );
 
 
 #define NEOGEO_BIOS_CHOICE	\
-		ROM_SYSTEM_BIOS( 0, "unibios32", "Universe Bios (Hack, Ver. 3.2)" ) \
-		ROM_LOAD16_WORD_SWAP_BIOS( 0, "uni-bios_3_2.rom", 0x00000, 0x020000, CRC(a4e8b9b3) SHA1(c92f18c3f1edda543d264ecd0ea915240e7c8258) ) \
-		ROM_SYSTEM_BIOS( 1, "japan", "Japan MVS (Ver. 3)" ) \
-		ROM_LOAD16_WORD_SWAP_BIOS( 1, "vs-bios.rom", 0x00000, 0x020000, CRC(f0e8f27d) SHA1(ecf01eda815909f1facec62abf3594eaa8d11075) ) \
-		ROM_SYSTEM_BIOS( 2, "us", "US MVS (Ver. 2?)" ) \
-		ROM_LOAD16_WORD_SWAP_BIOS( 0, "sp-u2.sp1", 0x00000, 0x020000, CRC(e72943de) SHA1(5c6bba07d2ec8ac95776aa3511109f5e1e2e92eb) ) \
-		ROM_SYSTEM_BIOS( 3, "euro", "Europe MVS (Ver. 2)" ) \
-		ROM_LOAD16_WORD_SWAP_BIOS( 3, "sp-s2.sp1", 0x00000, 0x020000, CRC(9036d879) SHA1(4f5ed7105b7128794654ce82b51723e16e389543) ) \
-		ROM_SYSTEM_BIOS( 4, "asia", "Asia MVS (Ver. 3)" ) \
-		ROM_LOAD16_WORD_SWAP_BIOS( 4, "asia-s3.rom", 0x00000, 0x020000, CRC(91b64be3) SHA1(720a3e20d26818632aedf2c2fd16c54f213543e1) )
+		ROM_SYSTEM_BIOS( 0, "euro", "Europe MVS (Ver. 2)" )										\
+		ROM_LOAD16_WORD_SWAP_BIOS( 0, "sp-s2.sp1", 0x00000, 0x020000, CRC(9036d879) SHA1(4f5ed7105b7128794654ce82b51723e16e389543) )	\
+		ROM_SYSTEM_BIOS( 1, "us", "US MVS (Ver. 2?)" )											\
+		ROM_LOAD16_WORD_SWAP_BIOS( 1, "sp-u2.sp1", 0x00000, 0x020000, CRC(e72943de) SHA1(5c6bba07d2ec8ac95776aa3511109f5e1e2e92eb) )	\
+		ROM_SYSTEM_BIOS( 2, "asia", "Asia MVS (Ver. 3)" )										\
+		ROM_LOAD16_WORD_SWAP_BIOS( 2, "asia-s3.rom", 0x00000, 0x020000, CRC(91b64be3) SHA1(720a3e20d26818632aedf2c2fd16c54f213543e1) )	\
+		ROM_SYSTEM_BIOS( 3, "japan", "Japan MVS (Ver. 3)" )										\
+		ROM_LOAD16_WORD_SWAP_BIOS( 3, "vs-bios.rom", 0x00000, 0x020000, CRC(f0e8f27d) SHA1(ecf01eda815909f1facec62abf3594eaa8d11075) )	\
+		ROM_SYSTEM_BIOS(4, "unibios32", "Universe Bios (Hack, Ver. 3.2)" )								\
+		ROM_LOAD16_WORD_SWAP_BIOS( 4, "uni-bios_3_2.rom", 0x00000, 0x020000, CRC(a4e8b9b3) SHA1(c92f18c3f1edda543d264ecd0ea915240e7c8258) ) 
 
 
 #if defined(USE_FULLY)

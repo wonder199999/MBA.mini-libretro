@@ -1374,7 +1374,7 @@ static int parsePath(char *path, char *gamePath, char *gameName)
 	strncpy(gameName, path + (slashIndex + 1), dotIndex - (slashIndex + 1));
 	gameName[dotIndex - (slashIndex + 1)] = 0;
 
-	write_log("gamePath=%s , gameName=%s\n", gamePath, gameName);
+/*	write_log("gamePath=%s , gameName=%s\n", gamePath, gameName); */
 	return 1;
 }
 
@@ -1467,7 +1467,7 @@ int executeGame(char *path)
 	{
 		xargv[paramCount++] = (char*)"-bios";
 		xargv[paramCount++] = (char*)neogeo_bioses[set_neogeo_bios].name;
-		write_log("Currently loaded NEOGEO BIOS is <%s>\n", neogeo_bioses[set_neogeo_bios].bios);
+		write_log("Current loaded NEOGEO BIOS is < %s >\n", neogeo_bioses[set_neogeo_bios].bios);
 	}
 
 	write_log("executing frontend... params:%i\n", paramCount);

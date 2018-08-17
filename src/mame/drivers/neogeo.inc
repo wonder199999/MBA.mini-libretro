@@ -2807,7 +2807,7 @@ ROM_START( fightfeva ) /* MVS ONLY RELEASE */
 	ROM_LOAD16_WORD_SWAP( "1.sp2", 0x000000, 0x080000, CRC(3032041b) SHA1(4b8ed2e6f74579ea35a53e06ccac42d6905b0f51) )
 	/* P is on eprom, has a Viccom logo at the top of the label with a circled '1' in the center */
 
-	NEO_SFIX_128K( "060-s1.s1", CRC(d62a72e9) SHA1(a23e4c4fd4ec11a7467ce41227c418b4dd1ef649) ) /* VIC930100 */
+	NEO_SFIX_128K( "060-s1.s1", CRC(7f012104) SHA1(f366dcc3923655dff16ec08a40d5fce22a84257d) ) /* VIC930100 */
 
 	NEO_BIOS_AUDIO_128K( "060-m1.m1", CRC(0b7c4e65) SHA1(999a1e784de18db3f1332b30bc425836ea6970be) ) /* VIC930100 */
 

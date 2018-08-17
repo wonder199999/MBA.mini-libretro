@@ -18,7 +18,7 @@ MDEBUG = 0
 # NEOGEO_BIOS = 1 - Use all NEOGEO BIOS ,
 # NEOGEO_BIOS = 0 - Use part of the NEOGEO BIOS , (default, the resulting bin are smaller)
 # ------------------------------------------------------------
-NEOGEO_BIOS = 1
+NEOGEO_BIOS = 0
 
 UNAME = $(shell uname -a)
 ifeq ($(platform),)
