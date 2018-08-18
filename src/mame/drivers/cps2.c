@@ -1041,6 +1041,14 @@ static INPUT_PORTS_START( cps2_2p6b )
 	PORT_BIT( 0x4000, IP_ACTIVE_LOW, IPT_BUTTON6 ) PORT_PLAYER(2)
 INPUT_PORTS_END
 
+/* 2 players and 6 buttons (2 rows of 3 buttons) */
+static INPUT_PORTS_START( cps2_2p6bt )
+	PORT_INCLUDE(cps2_2p6b)
+
+	PORT_MODIFY("IN1")
+	PORT_BIT( 0x2000, IP_ACTIVE_HIGH, IPT_UNUSED )
+INPUT_PORTS_END
+
 /* 1 player and 4 buttons */
 static INPUT_PORTS_START( cps2_1p4b )
 	PORT_INCLUDE(cps2_2p4b)
@@ -9011,14 +9019,14 @@ GAME( 1998, mvscjsing,  mvsc,	  cps2, cps2_2p6b, cps2,     ROT0,   "Capcom", "Ma
 GAME( 1998, sfa3,       0,        cps2, cps2_2p6b, cps2,     ROT0,   "Capcom", "Street Fighter Alpha 3 (Euro 980904)", GAME_SUPPORTS_SAVE )
 GAME( 1998, sfa3u,      sfa3,     cps2, cps2_2p6b, cps2,     ROT0,   "Capcom", "Street Fighter Alpha 3 (USA 980904)", GAME_SUPPORTS_SAVE )
 GAME( 1998, sfa3ur1,    sfa3,     cps2, cps2_2p6b, cps2,     ROT0,   "Capcom", "Street Fighter Alpha 3 (USA 980629)", GAME_SUPPORTS_SAVE )
-GAME( 1998, sfa3h,      sfa3,     cps2, cps2_2p6b, cps2,     ROT0,   "Capcom", "Street Fighter Alpha 3 (Hispanic 980904)", GAME_SUPPORTS_SAVE )
-GAME( 1998, sfa3b,      sfa3,     cps2, cps2_2p6b, cps2,     ROT0,   "Capcom", "Street Fighter Alpha 3 (Brazil 980629)", GAME_SUPPORTS_SAVE )
+GAME( 1998, sfa3h,      sfa3,     cps2, cps2_2p6bt,cps2,     ROT0,   "Capcom", "Street Fighter Alpha 3 (Hispanic 980904)", GAME_SUPPORTS_SAVE )
+GAME( 1998, sfa3b,      sfa3,     cps2, cps2_2p6bt,cps2,     ROT0,   "Capcom", "Street Fighter Alpha 3 (Brazil 980629)", GAME_SUPPORTS_SAVE )
 GAME( 1998, sfz3j,      sfa3,     cps2, cps2_2p6b, cps2,     ROT0,   "Capcom", "Street Fighter Zero 3 (Japan 980904)", GAME_SUPPORTS_SAVE )
 GAME( 1998, sfz3jr1,    sfa3,     cps2, cps2_2p6b, cps2,     ROT0,   "Capcom", "Street Fighter Zero 3 (Japan 980727)", GAME_SUPPORTS_SAVE )
 GAME( 1998, sfz3jr2,    sfa3,     cps2, cps2_2p6b, cps2,     ROT0,   "Capcom", "Street Fighter Zero 3 (Japan 980629)", GAME_SUPPORTS_SAVE )
 GAME( 1998, sfz3a,      sfa3,     cps2, cps2_2p6b, cps2,     ROT0,   "Capcom", "Street Fighter Zero 3 (Asia 980904)", GAME_SUPPORTS_SAVE )
 GAME( 1998, sfz3ar1,    sfa3,     cps2, cps2_2p6b, cps2,     ROT0,   "Capcom", "Street Fighter Zero 3 (Asia 980701)", GAME_SUPPORTS_SAVE )
-GAME( 1998, sfa3hr1,    sfa3,     cps2, cps2_2p6b, cps2,     ROT0,   "Capcom", "Street Fighter Alpha 3 (Hispanic 980629)", GAME_SUPPORTS_SAVE )
+GAME( 1998, sfa3hr1,    sfa3,     cps2, cps2_2p6bt,cps2,     ROT0,   "Capcom", "Street Fighter Alpha 3 (Hispanic 980629)", GAME_SUPPORTS_SAVE )
 GAME( 1998, sfa3us,     sfa3,	  cps2, cps2_2p6b, cps2,     ROT0,   "Capcom", "Street Fighter Alpha 3 (USA 980616 SAMPLE Version)", GAME_SUPPORTS_SAVE )
 //
 GAME( 1999, jyangoku,   0,        cps2, cps2_1p2b, cps2,     ROT0,   "Capcom", "Jyangokushi: Haoh no Saihai (Japan 990527)", GAME_SUPPORTS_SAVE )

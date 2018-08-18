@@ -1,5 +1,4 @@
 #include <unistd.h>
-#include <stdint.h>
 
 #include "osdepend.h"
 #include "emu.h"
@@ -153,6 +152,43 @@ static const _keyboard_table ktable[] = {
    	{"MENU",     RETROK_MENU,        ITEM_ID_MENU},
    	{"BREAK",    RETROK_BREAK,       ITEM_ID_CANCEL}, */
    	{"-1",       -1,                 ITEM_ID_INVALID}
+};
+
+struct _neogeo_bioses
+{
+	const char name[16];
+	const char desc[32];
+	const char bios[24];
+};
+
+static const struct _neogeo_bioses	neogeo_bioses[] = {
+	{ "euro",	  "Europe MVS(Ver. 2)",		"sp-s2.sp1" },
+	{ "euro-s1",	  "Europe MVS(Ver. 1)",		"sp-s.sp1" },
+	{ "us",		  "USA MVS(Ver. 2?)",		"sp-u2.sp1" },
+	{ "us-e",	  "USA MVS(Ver. 1)",		"sp-e.sp1" },
+	{ "asia",	  "Asia MVS(Ver. 3)",		"asia-s3.rom" },
+	{ "mv1c",	  "Asia MVS(Latest)",		"sp-45.sp1" },
+	{ "japan",	  "Japan MVS(Ver. 3)",		"vs-bios.rom" },
+	{ "japan-s2",	  "Japan MVS(Ver. 2)",		"sp-j2.sp1" },
+	{ "japan-s1",	  "Japan MVS(Ver. 1)",		"sp1.jipan.1024" },
+	{ "japan-j3",	  "Japan MVS(J3)",		"japan-j3.bin" },
+	{ "japan-hotel",  "Custom Japanese Hotel",	"sp-1v1_3db8c.bin" },
+	{ "unibios32",	  "UniBIOS(Ver. 3.2)",		"uni-bios_3_2.rom" },
+	{ "unibios31",	  "UniBIOS(Ver. 3.1)",		"uni-bios_3_1.rom" },
+	{ "unibios30",	  "UniBIOS(Ver. 3.0)",		"uni-bios_3_0.rom" },
+	{ "unibios23",	  "UniBIOS(Ver. 2.3)",		"uni-bios_2_3.rom" },
+	{ "unibios23o",	  "UniBIOS(Ver. 2.3 older?)",	"uni-bios_2_3o.rom" },
+	{ "unibios22",	  "UniBIOS(Ver. 2.2)",		"uni-bios_2_2.rom" },
+	{ "unibios21",	  "UniBIOS(Ver. 2.1)",		"uni-bios_2_1.rom" },
+	{ "unibios20",	  "UniBIOS(Ver. 2.0)",		"uni-bios_2_0.rom" },
+	{ "unibios13",	  "UniBIOS(Ver. 1.3)",		"uni-bios_1_3.rom" },
+	{ "unibios12",	  "UniBIOS(Ver. 1.2)",		"uni-bios_1_2.rom" },
+	{ "unibios12o",	  "UniBIOS(Ver. 1.2 older)",	"uni-bios_1_2o.rom" },
+	{ "unibios11",	  "UniBIOS(Ver. 1.1)",		"uni-bios_1_1.rom" },
+	{ "unibios10",	  "UniBIOS(Ver. 1.0)",		"uni-bios_1_0.rom" },
+	{ "debug",	  "Debug MVS",			"neodebug.rom" },
+	{ "asia-aes",	  "Asia AES",			"neo-epo.sp1" },
+	{ "japan-aes",	  "Japan AES",			"neo-po.sp1" }
 };
 
 // extern variables
@@ -314,10 +350,10 @@ void CLIB_DECL mame_printf_verbose( const char *text, ... ) ATTR_PRINTF(1, 2);	/
 #endif
 
 #ifdef M16B
-	uint16_t videoBuffer[512 * 512];
+	UINT16 videoBuffer[512 * 512];
 	#define PITCH 1
 #else
-	unsigned int videoBuffer[512 * 512];
+	UINT32 videoBuffer[512 * 512];
 	#define PITCH 1 * 2
 #endif
 
@@ -408,43 +444,6 @@ static void extract_directory(char *buf, const char *path, size_t size)
 
 /**************************************************************************/
 
-struct _neogeo_bioses
-{
-	const char name[16];
-	const char desc[32];
-	const char bios[24];
-};
-
-static const struct _neogeo_bioses	neogeo_bioses[] = {
-	{ "euro",	  "Europe MVS(Ver. 2)",		"sp-s2.sp1" },		/* select 4 */
-	{ "euro-s1",	  "Europe MVS(Ver. 1)",		"sp-s.sp1" },
-	{ "us",		  "USA MVS(Ver. 2?)",		"sp-u2.sp1" },		/* select 3 */
-	{ "us-e",	  "USA MVS(Ver. 1)",		"sp-e.sp1" },
-	{ "asia",	  "Asia MVS(Ver. 3)",		"asia-s3.rom" },	/* select 5 */
-	{ "mv1c",	  "Asia MVS(Latest)",		"sp-45.sp1" },		/* latest Asia bios */
-	{ "japan",	  "Japan MVS(Ver. 3)",		"vs-bios.rom" },	/* select 2 */
-	{ "japan-s2",	  "Japan MVS(Ver. 2)",		"sp-j2.sp1" },
-	{ "japan-s1",	  "Japan MVS(Ver. 1)",		"sp1.jipan.1024" },
-	{ "japan-j3",	  "Japan MVS(J3)",		"japan-j3.bin" },
-	{ "japan-hotel",  "Custom Japanese Hotel",	"sp-1v1_3db8c.bin" },
-	{ "unibios32",	  "UniBIOS(Ver. 3.2)",		"uni-bios_3_2.rom" },	/* select 1 */
-	{ "unibios31",	  "UniBIOS(Ver. 3.1)",		"uni-bios_3_1.rom" },
-	{ "unibios30",	  "UniBIOS(Ver. 3.0)",		"uni-bios_3_0.rom" },
-	{ "unibios23",	  "UniBIOS(Ver. 2.3)",		"uni-bios_2_3.rom" },
-	{ "unibios23o",	  "UniBIOS(Ver. 2.3 older?)",	"uni-bios_2_3o.rom" },
-	{ "unibios22",	  "UniBIOS(Ver. 2.2)",		"uni-bios_2_2.rom" },
-	{ "unibios21",	  "UniBIOS(Ver. 2.1)",		"uni-bios_2_1.rom" },
-	{ "unibios20",	  "UniBIOS(Ver. 2.0)",		"uni-bios_2_0.rom" },
-	{ "unibios13",	  "UniBIOS(Ver. 1.3)",		"uni-bios_1_3.rom" },
-	{ "unibios12",	  "UniBIOS(Ver. 1.2)",		"uni-bios_1_2.rom" },
-	{ "unibios12o",	  "UniBIOS(Ver. 1.2 older)",	"uni-bios_1_2o.rom" },
-	{ "unibios11",	  "UniBIOS(Ver. 1.1)",		"uni-bios_1_1.rom" },
-	{ "unibios10",	  "UniBIOS(Ver. 1.0)",		"uni-bios_1_0.rom" },
-	{ "debug",	  "Debug MVS",			"neodebug.rom" },
-	{ "asia-aes",	  "Asia AES",			"neo-epo.sp1" },
-	{ "japan-aes",	  "Japan AES",			"neo-po.sp1" }
-};
-
 void retro_set_environment(retro_environment_t cb)
 {
 	static const struct retro_variable vars[] = {
@@ -524,20 +523,20 @@ static void check_variables(void)
    	}
 	else tate = 0;
 
-   	var.key = "mba_mini_kb_input";
-   	var.value = NULL;
-   	if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
-   	{
-      		if (!strcmp(var.value, "enabled"))
+	var.key = "mba_mini_kb_input";
+	var.value = NULL;
+	if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
+	{
+		if (!strcmp(var.value, "enabled"))
 			keyboard_input = true;
 		else
 			keyboard_input = false;
-   	}
+	}
 
 	var.key = "mba_mini_frame_skip";
-   	var.value = NULL;
-   	if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
-   	{
+	var.value = NULL;
+	if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
+	{
 		int temp_fs = set_frame_skip;
 		if (!strcmp(var.value, "automatic"))
 			set_frame_skip = -1;
@@ -546,45 +545,45 @@ static void check_variables(void)
 
 		if (temp_fs != set_frame_skip)
 			video_set_frameskip(set_frame_skip);
-   	}
+	}
 
-   	var.key = "mba_mini_turbo_button";
-   	var.value = NULL;
-   	if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
-   	{
-      		if (!strcmp(var.value, "button 1"))
+	var.key = "mba_mini_turbo_button";
+	var.value = NULL;
+	if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
+	{
+		if (!strcmp(var.value, "button 1"))
 			turbo_enable = 1;
-      		else if (!strcmp(var.value, "button 2"))
+		else if (!strcmp(var.value, "button 2"))
 			turbo_enable = 2;
-      		else if (!strcmp(var.value, "R2 to button 1 mapping"))
+		else if (!strcmp(var.value, "R2 to button 1 mapping"))
 			turbo_enable = 3;
-      		else if (!strcmp(var.value, "R2 to button 2 mapping"))
+		else if (!strcmp(var.value, "R2 to button 2 mapping"))
 			turbo_enable = 4;
-      		else
+		else
 			turbo_enable = 0;
-   	}
+	}
 
-   	var.key = "mba_mini_turbo_delay";
-   	var.value = NULL;
-   	if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
-   	{
-      		if (!strcmp(var.value, "medium"))
+	var.key = "mba_mini_turbo_delay";
+	var.value = NULL;
+	if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
+	{
+		if (!strcmp(var.value, "medium"))
 			turbo_delay = 5;
-      		else if (!strcmp(var.value, "slow"))
+		else if (!strcmp(var.value, "slow"))
 			turbo_delay = 7;
 		else
 			turbo_delay = 3;
-   	}
+	}
 
-   	var.key = "mba_mini_sample_rate";
-   	var.value = NULL;
-   	if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
+	var.key = "mba_mini_sample_rate";
+	var.value = NULL;
+	if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
 		sample_rate = atoi(var.value);
 
-   	var.key = "mba_mini_adj_brightness";
-   	var.value = NULL;
-   	if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
-   	{
+	var.key = "mba_mini_adj_brightness";
+	var.value = NULL;
+	if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
+	{
 		float temp_value = arroffset[0];
 		if (!strcmp(var.value, "default"))
 			arroffset[0] = 0.0;
@@ -593,12 +592,12 @@ static void check_variables(void)
 
 		if (temp_value != arroffset[0])
 			adjust_opt[0] = adjust_opt[3] = 1;
-   	}
+	}
 
-   	var.key = "mba_mini_adj_contrast";
-   	var.value = NULL;
-   	if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
-   	{
+	var.key = "mba_mini_adj_contrast";
+	var.value = NULL;
+	if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
+	{
 		float temp_value = arroffset[1];
 		if (!strcmp(var.value, "default"))
 			arroffset[1] = 0.0;
@@ -607,12 +606,12 @@ static void check_variables(void)
 
 		if (temp_value != arroffset[1])
 			adjust_opt[0] = adjust_opt[4] = 1;
-   	}
+	}
 
-   	var.key = "mba_mini_adj_gamma";
-   	var.value = NULL;
-   	if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
-   	{
+	var.key = "mba_mini_adj_gamma";
+	var.value = NULL;
+	if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
+	{
 		float temp_value = arroffset[2];
 		if (!strcmp(var.value, "default"))
 			arroffset[2] = 0.0;
@@ -621,12 +620,12 @@ static void check_variables(void)
 
 		if (temp_value != arroffset[2])
 			adjust_opt[0] = adjust_opt[5] = 1;
-   	}
+	}
 
-   	var.key = "mba_mini_cpu_overclock";
-   	var.value = NULL;
-   	if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
-   	{
+	var.key = "mba_mini_cpu_overclock";
+	var.value = NULL;
+	if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
+	{
 		float temp_value = arroffset[3];
 		if (!strcmp(var.value, "disabled"))
 			arroffset[3] = 1.0f;
@@ -635,12 +634,12 @@ static void check_variables(void)
 
 		if (temp_value != arroffset[3])
 			adjust_opt[0] = adjust_opt[6] = 1;
-   	}
+	}
 
-   	var.key = "mba_mini_macro_button";
-   	var.value = NULL;
-   	if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
-   	{
+	var.key = "mba_mini_macro_button";
+	var.value = NULL;
+	if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
+	{
 		if (!strcmp(var.value, "disabled"))
 			macro_state = 0;
 		else if (!strcmp(var.value, "assign A+B to L"))
@@ -660,9 +659,9 @@ static void check_variables(void)
 			macro_state = 0;
 	}
 
-   	var.key = "mba_mini_rom_hash";
-   	var.value = NULL;
-   	if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
+	var.key = "mba_mini_rom_hash";
+	var.value = NULL;
+	if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
 	{
 		if (!strcmp(var.value, "No"))
 			verify_rom_hash = true;
@@ -670,7 +669,7 @@ static void check_variables(void)
 			verify_rom_hash = false;
 	}
 
-   	if (tmp_ar != set_par)
+	if (tmp_ar != set_par)
 		update_geometry();
 }
 
@@ -1189,7 +1188,7 @@ void osd_update(running_machine *machine, int skip_redraw)
 		if (FirstTimeUpdate)
 		{
          		FirstTimeUpdate = 0;
-         		write_log("Game screen width=%i height=%i rowPixels=%i\n", minwidth, minheight, minwidth);
+         		write_log("Game screen: width=%i, height=%i, rowPixels=%i\n", minwidth, minheight, minwidth);
 
          		rtwi = topw = minwidth;
          		rthe = minheight;
@@ -1331,8 +1330,6 @@ static const char *xargv[] = {
 	NULL, NULL,
 	NULL, NULL,
 	NULL, NULL,
-
-	NULL, NULL,
 	NULL, NULL
 };
 
@@ -1394,7 +1391,7 @@ static int getGameInfo(char *gameName, int *rotation, int *driverIndex)
 			gameFound = 1;
 			*driverIndex = drvindex;
 			*rotation = drivers[drvindex]->flags & 0x07;
-			write_log("%-18s\"%s\" rot=%i \n", drivers[drvindex]->name, drivers[drvindex]->description, *rotation);
+/*			write_log("%-18s\"%s\" rot=%i \n", drivers[drvindex]->name, drivers[drvindex]->description, *rotation); */
 		}
 	}
 	return gameFound;

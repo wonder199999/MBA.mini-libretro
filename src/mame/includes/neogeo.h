@@ -277,7 +277,7 @@ VIDEO_UPDATE( neogeo );
 		ROM_LOAD16_WORD_SWAP_BIOS(10, "sp-1v1_3db8c.bin", 0x00000, 0x020000, CRC(162f0ebe) SHA1(fe1c6dd3dfcf97d960065b1bb46c1e11cb7bf271) ) \
 		\
 		ROM_SYSTEM_BIOS(11, "unibios32", "Universe Bios (Hack, Ver. 3.2)" ) /* Universe Bios v3.2 (hack) */ \
-		ROM_LOAD16_WORD_SWAP_BIOS( 11, "uni-bios_3_2.rom", 0x00000, 0x020000, CRC(a4e8b9b3) SHA1(c92f18c3f1edda543d264ecd0ea915240e7c8258) ) \
+		ROM_LOAD16_WORD_SWAP_BIOS(11, "uni-bios_3_2.rom", 0x00000, 0x020000, CRC(a4e8b9b3) SHA1(c92f18c3f1edda543d264ecd0ea915240e7c8258) ) \
 		ROM_SYSTEM_BIOS(12, "unibios31", "Universe Bios (Hack, Ver. 3.1)" ) /* Universe Bios v3.1 (hack) */ \
 		ROM_LOAD16_WORD_SWAP_BIOS(12, "uni-bios_3_1.rom", 0x00000, 0x020000, CRC(0c58093f) SHA1(29329a3448c2505e1ff45ffa75e61e9693165153) ) \
 		ROM_SYSTEM_BIOS(13, "unibios30", "Universe Bios (Hack, Ver. 3.0)" ) /* Universe Bios v3.0 (hack) */ \
@@ -321,7 +321,7 @@ VIDEO_UPDATE( neogeo );
 		ROM_LOAD16_WORD_SWAP_BIOS( 2, "asia-s3.rom", 0x00000, 0x020000, CRC(91b64be3) SHA1(720a3e20d26818632aedf2c2fd16c54f213543e1) )	\
 		ROM_SYSTEM_BIOS( 3, "japan", "Japan MVS (Ver. 3)" )										\
 		ROM_LOAD16_WORD_SWAP_BIOS( 3, "vs-bios.rom", 0x00000, 0x020000, CRC(f0e8f27d) SHA1(ecf01eda815909f1facec62abf3594eaa8d11075) )	\
-		ROM_SYSTEM_BIOS(4, "unibios32", "Universe Bios (Hack, Ver. 3.2)" )								\
+		ROM_SYSTEM_BIOS( 4, "unibios32", "Universe Bios (Hack, Ver. 3.2)" )								\
 		ROM_LOAD16_WORD_SWAP_BIOS( 4, "uni-bios_3_2.rom", 0x00000, 0x020000, CRC(a4e8b9b3) SHA1(c92f18c3f1edda543d264ecd0ea915240e7c8258) ) 
 
 
