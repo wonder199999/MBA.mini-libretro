@@ -6,11 +6,11 @@
 	Browse Compatibility-list for a list of supported games.
 
 	Build for android:
-		make -f Makefile "NATIVE=1" buildtools
-		make -f Makefile platform=android
+		make -f makefile "NATIVE=1" buildtools
+		make -f makefile platform=android
      
 	Build for pc linux/win:
-		make -f Makefile platform= #platform name
+		make -f makefile platform= #platform name
 		(NB: for 64 bits build export PTR64=1 at least on win64)
 
 	JOYPAD controls are: 
@@ -41,8 +41,8 @@
 
 	Support the following: 
 	/***********************/
-	/ *  Capcom System 1 * /
-	/*********** ***********/
+	/ *  Capcom System 1  * /
+	/***********************/
 		TODO:
 
 	/ ********************************************************* /
@@ -447,7 +447,460 @@
 		uccopsj (clone of uccops): Undercover Cops (Japan)
 		uccopsu (clone of uccops): Undercover Cops (US)
 
-	/*********************/
-	/ *     NEO GEO     * /
-	/ ********************/
-		TODO:
+	/****************************************************/
+	/ *  NEO GEO (293 parent+clone roms are supported)  */
+	/****************************************************/
+	*2020bb: 2020 Super Baseball (set 1)
+		2020bba (clone of 2020bb): 2020 Super Baseball (set 2)
+		2020bbh (clone of 2020bb): 2020 Super Baseball (set 3)
+	
+	*3countb: 3 Count Bout / Fire Suplex (NGM-043)(NGH-043)
+
+	*3countba (uses ROMs from 3countb): 3 Count Bout / Fire Suplex (NGM-043)
+
+	*alpham2: Alpha Mission II / ASO II - Last Guardian (NGM-007)(NGH-007)
+		alpham2p (clone of alpham2): Alpha Mission II / ASO II - Last Guardian (prototype)
+
+	*androdun: Andro Dunos (NGM-049)(NGH-049)
+
+	*aodk: Aggressors of Dark Kombat· 痛快Ｇａｎｇａｎ行進曲 (ADM-008)(ADH-008)
+
+	*aof: Art of Fighting· 龍虎の拳 (NGM-044)(NGH-044)
+
+	*aof2: Art of Fighting 2 ◦ 龍虎の拳２ (NGM-056)
+		aof2a (clone of aof2): Art of Fighting 2 ◦ 龍虎の拳２ (NGH-056)
+
+	*aof3: Art of Fighting 3 - The Path of the Warrior ◦ Art of Fighting - 龍虎の拳外伝
+		aof3k (clone of aof3): Art of Fighting 3 - The Path of the Warrior (Korean release)
+	
+	*b2b: Bang Bang Busters (2010 NCI release)
+
+	*bakatono: バカ殿様 麻雀漫遊記 ◦ Bakatonosama Mahjong Manyuki (MOM-002)(MOH-002)
+
+	*bangbead: Bang Bead
+		bangbedp (clone of bangbead): Bang Bead (Prototype?)
+	
+	*bjourney: Blue's Journey / Raguy (ALM-001)(ALH-001)
+
+	*blazstar: Blazing Star
+
+	*breakers: Breakers
+
+	*breakrev: Breakers Revenge
+
+	*bstars: Baseball Stars Professional (NGM-002)
+		bstarsh (clone of bstars): Baseball Stars Professional (NGH-002)
+	
+	*bstars2: Baseball Stars 2
+
+	*burningf: Burning Fight (NGM-018)(NGH-018)
+		burningfh (clone of burningf): Burning Fight (NGH-018)(US)
+		burningfp (clone of burningf): Burning Fight (prototype)
+	
+	*crsword: Crossed Swords (ALM-002)(ALH-002)
+
+	*ctomaday: Captain Tomaday
+
+	*cyberlip: Cyber-Lip (NGM-010)
+
+	*doubledr: Double Dragon (Neo-Geo)
+
+	*eightman: Eight Man (NGM-025)(NGH-025)
+
+	*fatfursp: Fatal Fury Special ◦ 餓狼伝説 Special (set 1)(NGM-058)(NGH-058)
+		fatfurspa (clone of fatfursp): Fatal Fury Special ◦ 餓狼伝説 Special (set 2)(NGM-058)(NGH-058)
+	
+	*fatfury1: Fatal Fury - King of Fighters ◦ 餓狼伝説 - 宿命の闘い (NGM-033)(NGH-033)
+
+	*fatfury2: Fatal Fury 2 ◦ 餓狼伝説２ - 新たなる闘 (NGM-047)(NGH-047)
+		fatfury2a (clone of fatfury2): Fatal Fury 2 ◦ 餓狼伝説２ - 新たなる闘 (NGM-047)
+
+	*fatfury3: Fatal Fury 3 - Road to the Final Victory ◦ 餓狼伝説３ (NGM-069)(NGH-069)
+		fatfury3a (clone of fatfury3): Fatal Fury 3 - Road to the Final Victory ◦ 餓狼伝説３ (NGM-069)(NGH-069) (alternate set)
+	
+	*fbfrenzy: Football Frenzy (NGM-034)(NGH-034)
+
+	*fightfev: Fight Fever ◦ 왕중왕 (set 1)
+		fightfeva (clone of fightfev): Fight Fever ◦ 왕중왕 (set 2)
+
+	*flipshot: Battle Flip Shot
+
+	*fr2ch: Idol Mahjong - final romance 2 (Neo CD Conversion)
+
+	*galaxyfg: Galaxy Fight - Universal Warriors
+
+	*ganryu: Ganryu ◦ 武蔵巌流記
+
+	*garou: Garou ◦ 餓狼 - mark of the wolves (NGM-2530)
+		garoubl (clone of garou): Garou ◦ 餓狼 - mark of the wolves (bootleg)
+		garouh (clone of garou): Garou ◦ 餓狼 - mark of the wolves (NGM-2530) (NGH-2530)
+		garoup (clone of garou): Garou ◦ 餓狼 - mark of the wolves (prototype)
+	
+	*ghostlop: Ghostlop ゴーストロップ (prototype)
+
+	*goalx3: Goal! Goal! Goal!
+
+	*gowcaizr: Voltage Fighter - Gowcaizer ◦ 超人学園ゴウカイザー
+
+	*gpilots: Ghost Pilots (NGM-020)(NGH-020)
+		gpilotsh (clone of gpilots): Ghost Pilots (NGH-020)(US)
+
+	*gururin: ぐるりん ◦ Gururin
+
+	*ironclad: Choutetsu Brikin'ger - Iron clad (Prototype)
+		ironclado (clone of ironclad): Choutetsu Brikin'ger - Iron clad (Prototype, older)
+	
+	*irrmaze: The Irritating Maze ◦ ウルトラ電流イライラ棒
+
+	*janshin: 雀神伝説 - quest of jongmaster ◦ Jyanshin Densetsu
+
+	*jockeygp: Jockey Grand Prix (set 1)
+		jockeygpa (clone of jockeygp): Jockey Grand Prix (set 2)
+	
+	*joyjoy: Puzzled / Joy Joy Kid (NGM-021)(NGH-021)
+
+	*kabukikl: Kabuki Klash - far east of eden ◦ 天外魔境 - 真伝
+
+	*karnovr: Karnov's Revenge / Fighter's History Dynamite
+
+	*kf2k3pcb: The King of Fighters 2003 (Japan, JAMMA PCB)
+
+	*kizuna: Kizuna Encounter - Super Tag Battle ◦ 風雲 Super Tag Battle
+
+	*kof2000: The King of Fighters 2000 (NGM-2570) (NGH-2570)
+		kof2000n (clone of kof2000): The King of Fighters 2000 (not encrypted)
+		kof2000ps2 (clone of kof2000): The King of Fighters 2000 (Playstation 2 ver. , EGHT hack)
+	
+	*kof2001: The King of Fighters 2001 (NGM-262?)
+		ct2k3sa (clone of kof2001): Crouching Tiger Hidden Dragon 2003 Super Plus (alternate set) ◦ 臥虎藏龍
+		ct2k3sp (clone of kof2001): Crouching Tiger Hidden Dragon 2003 Super Plus ◦ 臥虎藏龍
+		cthd2003 (clone of kof2001): Crouching Tiger Hidden Dragon 2003 (set 1) ◦ 臥虎藏龍
+		cthd2k3a (clone of kof2001): Crouching Tiger Hidden Dragon 2003 (set 2) ◦ 臥虎藏龍
+		kf2k1pa (clone of kof2001): The King of Fighters 2001 Plus (set 2, bootleg / hack)
+		kf2k1pls (clone of kof2001): The King of Fighters 2001 Plus (set 1, bootleg / hack)
+		kof2001h (clone of kof2001): The King of Fighters 2001 (NGH-2621)
+
+	*kof2002: The King of Fighters 2002 (NGM-2650)(NGH-2650)
+		kf10thep (clone of kof2002): The King of Fighters 10th Anniversary Extra Plus (bootleg)
+		kf2k2mp (clone of kof2002): The King of Fighters 2002 Magic Plus (bootleg)
+		kf2k2mp2 (clone of kof2002): The King of Fighters 2002 Magic Plus II (bootleg)
+		kf2k2pla (clone of kof2002): The King of Fighters 2002 Plus (bootleg set 2)
+		kf2k2plb (clone of kof2002): The King of Fighters 2002 Plus (bootleg set 3)
+		kf2k2plc (clone of kof2002): The King of Fighters 2002 Super (bootleg)
+		kf2k2pls (clone of kof2002): The King of Fighters 2002 Plus (bootleg set 1)
+		kf2k2ps2 (clone of kof2002): The King of Fighters 2002 (PlayStation 2 ver 0.4, EGHT hack)
+		kf2k4pls (clone of kof2002): The King of Fighters Special Edition 2004 Plus (bootleg)
+		kf2k5uni (clone of kof2002): The King of Fighters 10th Anniversary 2005 Unique (bootleg)
+		kof10th (clone of kof2002): The King of Fighters 10th Anniversary (bootleg)
+		kof2002b (clone of kof2002): The King of Fighters 2002 (bootleg)
+		kof2k4se (clone of kof2002): The King of Fighters Special Edition 2004 (bootleg)
+	
+	*kof2003: The King of Fighters 2003 (NGM-2710)
+		kf2k3bl (clone of kof2003): The King of Fighters 2003 (bootleg set 1)
+		kf2k3bla (clone of kof2003): The King of Fighters 2003 (bootleg set 2)
+		kf2k3pl (clone of kof2003): The King of Fighters 2004 Plus / Hero (bootleg)
+		kf2k3upl (clone of kof2003): The King of Fighters 2004 Ultra Plus (bootleg)
+		kof2003h (clone of kof2003): The King of Fighters 2003 (NGH-2710)
+
+	*kof94: The King of Fighters '94 (NGM-055)(NGH-055)
+
+	*kof95: The King of Fighters '95 (NGM-084)
+		kof95a (clone of kof95): The King of Fighters '95 (NGH-084, alternate board)
+		kof95h (clone of kof95): The King of Fighters '95 (NGH-084)
+	
+	*kof96: The King of Fighters '96 (NGM-214)
+		kof96a (clone of kof96): The King of Fighters '96 (NGM-214, alternate board)
+		kof96ae (clone of kof96): The King of Fighters '96 (Anniversary Edition, EGHT hack)
+		kof96ae20 (clone of kof96): The King of Fighters '96 (Anniversary Edition 2.0.0430, EGHT hack)
+		kof96cn (clone of kof96): The King of Fighters '96 (Chinese Edition ver 1.0, hack)
+		kof96ep (clone of kof96): The King of Fighters '96 (bootleg / hack)
+		kof96h (clone of kof96): The King of Fighters '96 (NGH-214)
+	
+	*kof97: The King of Fighters '97 (NGM-2320)
+		kof97cn (clone of kof97): The King of Fighters '97 (10th Anniversary Chinese Edition, EGHT hack)
+		kof97h (clone of kof97): The King of Fighters '97 (NGH-2320)
+		kof97k (clone of kof97): The King of Fighters '97 (Korean release)
+		kof97oro (clone of kof97): The King of Fighters '97 oroshi plus 2003
+		kof97pla (clone of kof97): The King of Fighters '97 Plus 2003 (bootleg / hack)
+		kof97pls (clone of kof97): The King of Fighters '97 Plus (bootleg)
+		kof97xt (clone of kof97): The King of Fighters '97 - Final Battle (hack)
+		kog (clone of kof97): King of Gladiator (The King of Fighters '97 bootleg)
+		kogplus (clone of kof97): King of Gladiator Plus (The King of Fighters '97 bootleg)
+	
+	*kof98: The King of Fighters '98 - The Slugfest / King of Fighters '98 - dream match never ends (NGM-2420)
+		kof98a (clone of kof98): The King of Fighters '98 - The Slugfest / King of Fighters '98 - dream match never ends (NGM-2420, alternate board)
+		kof98ae (clone of kof98): The King of Fighters '98 (Anniversary Edition, EGHT hack)
+		kof98ae2016 (clone of kof98): The King of Fighters '98 (Anniversary Edition 2016, EGHT hack)
+		kof98cb (clone of kof98): The King of Fighters '98 (Combo)
+		kof98h (clone of kof98): The King of Fighters '98 - The Slugfest / King of Fighters '98 - dream match never ends (NGH-2420)
+		kof98k (clone of kof98): The King of Fighters '98 - The Slugfest / King of Fighters '98 - dream match never ends (Korean board)
+		kof98ka (clone of kof98): The King of Fighters '98 - The Slugfest / King of Fighters '98 - dream match never ends (Korean board 2)
+
+	*kof99: The King of Fighters '99 - Millennium Battle (NGM-2510)
+		kof99ae (clone of kof99): The King of Fighters '99 (15th Anniversary Edition)
+		kof99e (clone of kof99): The King of Fighters '99 - Millennium Battle (earlier)
+		kof99h (clone of kof99): The King of Fighters '99 - Millennium Battle (NGH-2510)
+		kof99k (clone of kof99): The King of Fighters '99 - Millennium Battle (Korean release)
+		kof99p (clone of kof99): The King of Fighters '99 - Millennium Battle (prototype)
+
+	*kotm: King of the Monsters (set 1)
+		kotmh (clone of kotm): King of the Monsters (set 2)
+	
+	*kotm2: King of the Monsters 2 - The Next Thing (NGM-039)(NGH-039)
+		kotm2p (clone of kotm2): King of the Monsters 2 - The Next Thing (prototype)
+	
+	*lastblad: The Last Blade ◦ 幕末浪漫 月華の剣士 (NGM-2340)
+		lastblada (clone of lastblad): The Last Blade ◦ 幕末浪漫 月華の剣士 (NGM-2340, alternate board)
+		lastbladh (clone of lastblad): The Last Blade ◦ 幕末浪漫 月華の剣士 (NGH-2340)
+		lastsold (clone of lastblad): The Last Soldier (Korean release of The Last Blade)
+	
+	*lastbld2: The Last Blade 2 ◦ 幕末浪漫第二幕 - 月華の剣士 - 月に咲く華、散りゆく花 (NGM-2430)(NGH-2430)
+
+	*lbowling: League Bowling (NGM-019)(NGH-019)
+
+	*legendos: Legend of Success Joe / Ashitano Joe Densetsu ◦ あしたのジョー伝説
+
+	*lhcdb: Last Hope CD Beta (Neo CD conversion)
+
+	*lresort: Last Resort
+		lresortp (clone of lresort): Last Resort (prototype)
+
+	*magdrop2: Magical Drop II ◦ マジカルドロップ２
+
+	*magdrop3: Magical Drop III ◦ マジカルドロップIII
+
+	*maglord: Magician Lord (NGM-005)
+		maglordh (clone of maglord): Magician Lord (NGH-005)
+	
+	*mahretsu: 麻雀狂列伝 ◦ Mahjong Kyo Retsuden (NGM-004)(NGH-004)
+
+	*marukodq: ちびまる子ちゃん まる子デラックスクイズ ◦ Chibi Marukochan Deluxe Quiz
+
+	*matrim: 新豪血寺一族 - 闘婚 ◦ Matrimelee (NGM-2660) (NGH-2660)
+		matrimbl (clone of matrim): 新豪血寺一族 - 闘婚 ◦ Matrimelee (bootleg)
+	
+	*miexchng: Money Puzzle Exchanger ◦ マネーアイドルエクスチェンジャー
+
+	*minasan: みなさんのおかげさまです！ ◦ Minnasanno Okagesamadesu (MOM-001)(MOH-001)
+
+	*mosyougi: 将棋の達人 ◦ Master of Syougi
+
+	*ms5pcb: Metal Slug 5 (JAMMA PCB)
+
+	*mslug: Metal Slug - Super Vehicle-001
+
+	*mslug2: Metal Slug 2 - Super Vehicle-001/II (NGM-2410) (NGH-2410)
+		mslug2t (clone of mslug2): Metal Slug 2 - Super Vehicle-001/II (NGM-9410) (slowdown/fix hack by Trap15)
+	
+	*mslug3: Metal Slug 3 (NGM-2560)
+		mslug3b6 (clone of mslug3): Metal Slug 6 (Metal Slug 3 bootleg)
+		mslug3h (clone of mslug3): Metal Slug 3 (NGH-2560)
+
+	*mslug4: Metal Slug 4 (NGM-2630)
+		ms4plus (clone of mslug4): Metal Slug 4 Plus (bootleg)
+		mslug4h (clone of mslug4): Metal Slug 4 (NGH-2630)
+	
+	*mslug5: Metal Slug 5 (NGM-2680)
+		ms5plus (clone of mslug5): Metal Slug 5 Plus (bootleg)
+		mslug5b (clone of mslug5): Metal Slug 5 (bootleg)
+		mslug5h (clone of mslug5): Metal Slug 5 (NGH-2680)
+
+	*mslugx: Metal Slug X - Super Vehicle-001 (NGM-2500)(NGH-2500)
+
+	*mutnat: Mutation Nation (NGM-014)(NGH-014)
+
+	*nam1975: NAM-1975 (NGM-001)(NGH-001)
+
+	*ncombat: Ninja Combat (NGM-009)
+		ncombath (clone of ncombat): Ninja Combat (NGH-009)
+
+	*ncommand: Ninja Commando
+
+	*neobombe: Neo Bomberman
+
+	*neocup98: Neo-Geo Cup '98 - The Road to the Victory
+
+	*neodrift: Neo Drift Out - New Technology
+
+	*neomrdo: Neo Mr. Do!
+
+	*ninjamas: Ninja master's 覇王忍法帖 ◦ Ninja Master's haoh ninpo cho
+
+	*nitd: Nightmare in the Dark
+		nitdbl (clone of nitd): Nightmare in the Dark (bootleg)
+
+	*overtop: Over Top
+
+	*panicbom: Panic Bomber ◦ ぱにっくボンバー ボンバーマン
+
+	*pbobbl2n: Puzzle Bobble 2 / Bust-A-Move Again (Neo-Geo)
+
+	*pbobblen: Puzzle Bobble / Bust-A-Move (Neo-Geo) (NGM-083)
+		pbobblenb (clone of pbobblen): Puzzle Bobble / Bust-A-Move (Neo-Geo) (bootleg)
+	
+	*pgoal: Pleasure Goal / Futsal - 5 on 5 Mini Soccer (NGM-219)
+
+	*pnyaa: Pochi and Nyaa ◦ ポチッとにゃ～
+
+	*popbounc: Pop 'n Bounce ◦ ガッポリン
+
+	*preisle2: Prehistoric Isle 2
+
+	*pspikes2: Power Spikes II (NGM-068)
+
+	*pulstar: Pulstar
+
+	*puzzledp: Puzzle De Pon!
+		puzzldpr (clone of puzzledp): Puzzle De Pon! R!
+	
+	*quizdai2: クイズ迷探偵ネオ＆ジオ - Quiz Daisousa Sen part 2 (NGM-042)(NGH-042)
+
+	*quizdais: クイズ大捜査線 - the last count down ◦ Quiz Daisousa Sen - The Last Count Down (NGM-023)(NGH-023)
+		quizdaisk (clone of quizdais): クイズ大捜査線 - The Last Count Down ◦ Quiz Daisousa Sen - The Last Count Down (Korean release)
+	
+	*quizkof: クイズキングオブファイターズ ◦ Quiz King of Fighters (SAM-080)(SAH-080)
+		quizkofk (clone of quizkof): クイズキングオブファイターズ ◦ Quiz King of Fighters (Korean release)
+	
+	*ragnagrd: Operation Ragnagard ◦ 神凰拳
+
+	*rbff1: Real Bout Fatal Fury ◦ Real Bout 餓狼伝説 (NGM-095)(NGH-095)
+		rbff1a (clone of rbff1): Real Bout Fatal Fury ◦ Real Bout 餓狼伝説 (bug fix revision)
+
+	*rbff2: Real Bout Fatal Fury 2 - The Newcomers ◦ Real Bout 餓狼伝説２ (NGM-2400)
+		rbff2h (clone of rbff2): Real Bout Fatal Fury 2 - The Newcomers ◦ Real Bout 餓狼伝説２ (NGH-2400)
+		rbff2k (clone of rbff2): Real Bout Fatal Fury 2 - The Newcomers (Korean release)
+	
+	*rbffspec: Real Bout Fatal Fury Special / Real Bout Garou Densetsu Special
+		rbffspeck (clone of rbffspec): Real Bout Fatal Fury Special / Real Bout Garou Densetsu Special (Korean release)
+	
+	*ridhero: Riding Hero (NGM-006)(NGH-006)
+		ridheroh (clone of ridhero): Riding Hero (set 2)
+	
+	*roboarmy: Robo Army (set 1)
+		roboarma (clone of roboarmy): Robo Army (set 2)
+	
+	*rotd: Rage of the Dragons (NGM-264?)
+
+	*s1945p: Strikers 1945 Plus
+
+	*samsh5sp: Samurai Shodown V Special ◦ サムライスピリッツ零 Special  (NGM-2720)
+		samsh5sph (clone of samsh5sp): Samurai Shodown V Special ◦ サムライスピリッツ零 Special (NGH-2720) (2nd release, less censored)
+		samsh5spho (clone of samsh5sp): Samurai Shodown V Special ◦ サムライスピリッツ零 Special (NGH-2720) (1st release, censored)
+
+	*samsho: Samurai Shodown / Samurai Spirits (NGM-045)
+		samshoa (clone of samsho): Samurai Shodown / Samurai Spirits (NGM-045, alternate board)
+		samshoh (clone of samsho): Samurai Shodown / Samurai Spirits (NGH-045)
+
+	*samsho2: Samurai Shodown II ◦ 真 Samurai Spirits - 覇王丸地獄変 (NGM-063)(NGH-063)
+		samsho2k (clone of samsho2): Saulabi Spirits / Jin Saulabi Tu Hon (Korean release of Samurai Shodown II)
+		samsho2k2 (clone of samsho2): Saulabi Spirits / Jin Saulabi Tu Hon (Korean release of Samurai Shodown II, set 2)
+	
+	*samsho3: Samurai Shodown III ◦ サムライスピリッツ - 斬紅郎無双剣 (NGM-087)
+		fswords (clone of samsho3): Fighters Swords (Korean release of Samurai Shodown III)
+		samsho3h (clone of samsho3): Samurai Shodown III ◦ サムライスピリッツ - 斬紅郎無双剣 (NGH-087)
+	
+	*samsho4: Samurai Shodown IV - Amakusa's Revenge ◦ サムライスピリッツ - 天草降臨 (NGM-222)(NGH-222)
+		samsho4k (clone of samsho4): Pae Wang Jeon Seol / Legend of a Warrior (Korean censored Samurai Shodown IV)
+	
+	*samsho5: Samurai Shodown V ◦ サムライスピリッツ零 (NGM-2700)
+		samsho5b (clone of samsho5): Samurai Shodown V ◦ サムライスピリッツ零 (bootleg)
+		samsho5h (clone of samsho5): Samurai Shodown V ◦ サムライスピリッツ零 (NGH-2700)
+		samsho5x (clone of samsho5): Samurai Shodown V ◦ サムライスピリッツ零 (hack of XBOX version)
+	
+	*savagere: Savage Reign ◦ 風雲黙示録 - 格闘創世
+
+	*sdodgeb: Super Dodge Ball ◦ くにおの熱血闘球伝説
+
+	*sengoku: Sengoku / Sengoku Denshou (NGM-017)(NGH-017) ◦ 戦国伝承
+		sengokuh (clone of sengoku): Sengoku / Sengoku Denshou (NGH-017)(US) ◦ 戦国伝承
+	
+	*sengoku2: Sengoku 2 ◦ 戦国伝承２
+
+	*sengoku3: Sengoku 3 ◦ 戦国伝承２００１
+		sengoku3s (clone of sengoku3): Sengoku 3 ◦ 戦国伝承２００１ (Evolution 1.0, FCHT hack)
+	
+	*shocktr2: Shock Troopers - 2nd Squad
+		lans2004 (clone of shocktr2): Lansquenet 2004 (Shock Troopers - 2nd Squad bootleg)
+	
+	*shocktro: Shock Troopers (set 1)
+		shocktroa (clone of shocktro): Shock Troopers (set 2)
+	
+	*socbrawl: Soccer Brawl (NGM-031)
+		socbrawlh (clone of socbrawl): Soccer Brawl (NGH-031)
+	
+	*sonicwi2: Aero Fighters 2 / Sonic Wings 2
+
+	*sonicwi3: Aero Fighters 3 / Sonic Wings 3
+
+	*spinmast: Spin Master / Miracle Adventure
+
+	*ssideki: Super Sidekicks ◦ 得点王
+
+	*ssideki2: Super Sidekicks 2 - the world championship ◦ 得点王２ - リアルファイトフットボール (NGM-061)(NGH-061)
+
+	*ssideki3: Super Sidekicks 3 - The Next Glory ◦ 得点王３ - 栄光への挑戦
+
+	*ssideki4: The Ultimate 11 - SNK Football Championship ◦ 得点王 - 炎のリベロ
+
+	*stakwin: Stakes Winner / Stakes Winner - GI kinzen seiha e no michi
+
+	*stakwin2: Stakes Winner 2
+
+	*strhoop: Street Hoop / Street Slam / Dunk Dream (DEM-004) (DEH-004)
+
+	*superspy: The Super Spy (NGM-011)(NGH-011)
+
+	*svc: SNK vs. Capcom - SVC Chaos (NGM-2690)(NGH-2690)
+		svcboot (clone of svc): SNK vs. Capcom - SVC Chaos (bootleg)
+		svcplus (clone of svc): SNK vs. Capcom - SVC Chaos Plus (bootleg set 1)
+		svcplusa (clone of svc): SNK vs. Capcom - SVC Chaos Plus (bootleg set 2)
+		svcsplus (clone of svc): SNK vs. Capcom - SVC Chaos Super Plus (bootleg)
+
+	*svcpcb: SNK vs. Capcom - SVC Chaos (JAMMA PCB, set 1)
+		svcpcba (clone of svcpcb): SNK vs. Capcom - SVC Chaos (JAMMA PCB, set 2)
+	
+	*tophuntr: Top Hunter - Roddy & Cathy (NGM-046)
+		tophuntrh (clone of tophuntr): Top Hunter - Roddy & Cathy (NGH-046)
+	
+	*totcarib: Treasure of the Carribean
+
+	*tpgolf: Top Player's Golf (NGM-003)(NGH-003)
+
+	*trally: Thrash Rally (ALM-003)(ALH-003)
+
+	*turfmast: Neo Turf Masters / Big Tournament Golf
+
+	*twinspri: TwinkleStar Sprites ◦ ティンクルスタースプライツ
+
+	*tws96: Tecmo World Soccer '96
+
+	*unkneo: Unknown Neo-Geo Vs. Fighter (prototype)
+
+	*viewpoin: Viewpoint
+
+	*vliner: V-Liner (set 1)
+		vlinero (clone of vliner): V-Liner (set 2)
+	
+	*wakuwak7: Waku Waku 7 ◦ わくわく７
+
+	*wh1: World Heroes (ALM-005)
+		wh1h (clone of wh1): World Heroes (ALH-005)
+		wh1ha (clone of wh1): World Heroes (set 3)
+	
+	*wh2: World Heroes 2 (ALM-006)(ALH-006)
+
+	*wh2j: World Heroes 2 Jet (ADM-007)(ADH-007)
+		wh2ja (clone of wh2j): World Heroes 2 Jet (ADM-007)
+	
+	*whp: World Heroes Perfect
+
+	*wjammers: Windjammers / Flying Power Disc
+
+	*zedblade: Zed Blade ◦ Operation Ragnarok ◦ 作戦名＂ラグナロク＂
+
+	*zintrckb: Zintrick ◦ 押し出しジントリック (hack / bootleg)
+		zintrkcd (clone of zintrckb): Zintrick ◦ 押し出しジントリック (Neo CD conversion)
+	
+	*zupapa: Zupapa!
+
+	*crswd2bl: Crossed Swords 2 (bootleg CD to cartridge conversion)- Note: From fbalpha 02.97.43 romsets.
