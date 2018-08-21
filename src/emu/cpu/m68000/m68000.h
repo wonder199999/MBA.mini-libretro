@@ -7,14 +7,14 @@
 /* There are 7 levels of interrupt to the 68K.
  * A transition from < 7 to 7 will cause a non-maskable interrupt (NMI).
  */
-#define M68K_IRQ_NONE 0
-#define M68K_IRQ_1    1
-#define M68K_IRQ_2    2
-#define M68K_IRQ_3    3
-#define M68K_IRQ_4    4
-#define M68K_IRQ_5    5
-#define M68K_IRQ_6    6
-#define M68K_IRQ_7    7
+#define M68K_IRQ_NONE	0
+#define M68K_IRQ_1	1
+#define M68K_IRQ_2	2
+#define M68K_IRQ_3	3
+#define M68K_IRQ_4	4
+#define M68K_IRQ_5	5
+#define M68K_IRQ_6	6
+#define M68K_IRQ_7	7
 
 /* CPU types for use in m68k_set_cpu_type() */
 enum
@@ -29,8 +29,7 @@ enum
 	M68K_CPU_TYPE_68030,
 	M68K_CPU_TYPE_68EC040,
 	M68K_CPU_TYPE_68LC040,
-	M68K_CPU_TYPE_68040,
-	M68K_CPU_TYPE_SCC68070
+	M68K_CPU_TYPE_68040
 };
 
 
@@ -84,7 +83,6 @@ DECLARE_LEGACY_CPU_DEVICE(M68030, m68030);
 DECLARE_LEGACY_CPU_DEVICE(M68EC040, m68ec040);
 DECLARE_LEGACY_CPU_DEVICE(M68LC040, m68lc040);
 DECLARE_LEGACY_CPU_DEVICE(M68040, m68040);
-DECLARE_LEGACY_CPU_DEVICE(SCC68070, scc68070);
 
 
 void m68k_set_encrypted_opcode_range(running_device *device, offs_t start, offs_t end);

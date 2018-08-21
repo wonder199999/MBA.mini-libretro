@@ -68,15 +68,10 @@ int generic_sound_init(running_machine *machine)
 static TIMER_CALLBACK( latch_callback )
 {
 	generic_audio_private *state = machine->generic_audio_data;
-	UINT16 value = param >> 8;
 	int which = param & 0xff;
 
-	/* if the latch hasn't been read and the value is changed, log a warning */
-	if (!state->latch_read[which] && state->latched_value[which] != value)
-		logerror("Warning: sound latch %d written before being read. Previous: %02x, new: %02x\n", which, state->latched_value[which], value);
-
 	/* store the new value and mark it not read */
-	state->latched_value[which] = value;
+	state->latched_value[which] = param >> 8;
 	state->latch_read[which] = 0;
 }
 

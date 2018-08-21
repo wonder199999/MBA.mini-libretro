@@ -32,17 +32,17 @@ static void interrupt_reset(running_machine &machine);
 struct _generic_machine_private
 {
 	/* tickets and coin counters */
-	UINT32		dispensed_tickets;
-	UINT32		coin_count[COIN_COUNTERS];
-	UINT32		coinlockedout[COIN_COUNTERS];
-	UINT32		lastcoin[COIN_COUNTERS];
+	UINT32		 dispensed_tickets;
+	UINT32		 coin_count[COIN_COUNTERS];
+	UINT32		 coinlockedout[COIN_COUNTERS];
+	UINT32		 lastcoin[COIN_COUNTERS];
 
 	/* memory card status */
-	int 		memcard_inserted;
+	int 		 memcard_inserted;
 
 	/* interrupt status for up to 8 CPUs */
-	device_t *	interrupt_device[8];
-	UINT8		interrupt_enable[8];
+	device_t	*interrupt_device[8];
+	UINT8		 interrupt_enable[8];
 };
 
 
@@ -79,14 +79,13 @@ INLINE int interrupt_enabled(running_device *device)
 void generic_machine_init(running_machine *machine)
 {
 	generic_machine_private *state;
-	int counternum;
 
 	/* allocate our state */
 	machine->generic_machine_data = auto_alloc_clear(machine, generic_machine_private);
 	state = machine->generic_machine_data;
 
 	/* reset coin counters */
-	for (counternum = 0; counternum < COIN_COUNTERS; counternum++)
+	for (int counternum = 0; counternum < COIN_COUNTERS; counternum++)
 	{
 		state->lastcoin[counternum] = 0;
 		state->coinlockedout[counternum] = 0;
@@ -95,6 +94,7 @@ void generic_machine_init(running_machine *machine)
 	// map devices to the interrupt state
 	memset(state->interrupt_device, 0, sizeof(state->interrupt_device));
 	device_execute_interface *exec = NULL;
+
 	int index = 0;
 	for (bool gotone = machine->m_devicelist.first(exec); gotone && index < ARRAY_LENGTH(state->interrupt_device); gotone = exec->next(exec))
 		state->interrupt_device[index++] = &exec->device();
@@ -209,14 +209,14 @@ static void counters_load(running_machine *machine, int config_type, xml_data_no
 static void counters_save(running_machine *machine, int config_type, xml_data_node *parentnode)
 {
 	generic_machine_private *state = machine->generic_machine_data;
-	int i;
 
 	/* only care about game-specific data */
 	if (config_type != CONFIG_TYPE_GAME)
 		return;
 
 	/* iterate over coin counters */
-	for (i = 0; i < COIN_COUNTERS; i++)
+	for (int i = 0; i < COIN_COUNTERS; i++)
+	{
 		if (state->coin_count[i] != 0)
 		{
 			xml_data_node *coinnode = xml_add_child(parentnode, "coins", NULL);
@@ -226,6 +226,7 @@ static void counters_save(running_machine *machine, int config_type, xml_data_no
 				xml_set_attribute_int(coinnode, "number", state->coin_count[i]);
 			}
 		}
+	}
 
 	/* output tickets */
 	if (state->dispensed_tickets != 0)
@@ -244,12 +245,15 @@ static void counters_save(running_machine *machine, int config_type, xml_data_no
 void coin_counter_w(running_machine *machine, int num, int on)
 {
 	generic_machine_private *state = machine->generic_machine_data;
+
 	if (num >= ARRAY_LENGTH(state->coin_count))
 		return;
 
 	/* Count it only if the data has changed from 0 to non-zero */
-	if (on && (state->lastcoin[num] == 0))
-		state->coin_count[num]++;
+	if (on)
+		if (state->lastcoin[num] == 0)
+			state->coin_count[num]++;
+
 	state->lastcoin[num] = on;
 }
 
@@ -262,8 +266,10 @@ void coin_counter_w(running_machine *machine, int num, int on)
 int coin_counter_get_count(running_machine *machine, int num)
 {
 	generic_machine_private *state = machine->generic_machine_data;
+
 	if (num >= ARRAY_LENGTH(state->coin_count))
 		return 0;
+
 	return state->coin_count[num];
 }
 
@@ -275,8 +281,10 @@ int coin_counter_get_count(running_machine *machine, int num)
 void coin_lockout_w(running_machine *machine, int num,int on)
 {
 	generic_machine_private *state = machine->generic_machine_data;
+
 	if (num >= ARRAY_LENGTH(state->coinlockedout))
 		return;
+
 	state->coinlockedout[num] = on;
 }
 
@@ -289,8 +297,10 @@ void coin_lockout_w(running_machine *machine, int num,int on)
 int coin_lockout_get_state(running_machine *machine, int num)
 {
 	generic_machine_private *state = machine->generic_machine_data;
+
 	if (num >= ARRAY_LENGTH(state->coinlockedout))
 		return FALSE;
+
 	return state->coinlockedout[num];
 }
 
@@ -303,9 +313,8 @@ int coin_lockout_get_state(running_machine *machine, int num)
 void coin_lockout_global_w(running_machine *machine, int on)
 {
 	generic_machine_private *state = machine->generic_machine_data;
-	int i;
 
-	for (i = 0; i < ARRAY_LENGTH(state->coinlockedout); i++)
+	for (int i = 0; i < ARRAY_LENGTH(state->coinlockedout); i++)
 		coin_lockout_w(machine, i, on);
 }
 
@@ -357,7 +366,6 @@ void nvram_load(running_machine *machine)
 		// close the file
 		mame_fclose(nvram_file);
 	}
-
 	// otherwise, tell everyone to initialize their NVRAM areas
 	else
 	{
@@ -409,6 +417,7 @@ void nvram_save(running_machine *machine)
 NVRAM_HANDLER( generic_0fill )
 {
 	const region_info *region = machine->region("nvram");
+
 	if (read_or_write)
 		mame_fwrite(file, machine->generic.nvram.v, machine->generic.nvram_size);
 	else if (file != NULL)
@@ -428,6 +437,7 @@ NVRAM_HANDLER( generic_0fill )
 NVRAM_HANDLER( generic_1fill )
 {
 	const region_info *region = machine->region("nvram");
+
 	if (read_or_write)
 		mame_fwrite(file, machine->generic.nvram.v, machine->generic.nvram_size);
 	else if (file != NULL)
@@ -447,6 +457,7 @@ NVRAM_HANDLER( generic_1fill )
 NVRAM_HANDLER( generic_randfill )
 {
 	const region_info *region = machine->region("nvram");
+
 	if (read_or_write)
 		mame_fwrite(file, machine->generic.nvram.v, machine->generic.nvram_size);
 	else if (file != NULL)
@@ -456,8 +467,7 @@ NVRAM_HANDLER( generic_randfill )
 	else
 	{
 		UINT8 *nvram = (UINT8 *)machine->generic.nvram.v;
-		int i;
-		for (i = 0; i < machine->generic.nvram_size; i++)
+		for (int i = 0; i < machine->generic.nvram_size; i++)
 			nvram[i] = mame_rand(machine);
 	}
 }
@@ -516,6 +526,7 @@ int memcard_create(running_machine *machine, int index, int overwrite)
 
 	/* close the file */
 	mame_fclose(file);
+
 	return 0;
 }
 
@@ -553,6 +564,7 @@ int memcard_insert(running_machine *machine, int index)
 	/* close the file */
 	mame_fclose(file);
 	state->memcard_inserted = index;
+
 	return 0;
 }
 
@@ -635,10 +647,9 @@ void set_led_status(running_machine *machine, int num, int on)
 static void interrupt_reset(running_machine &machine)
 {
 	generic_machine_private *state = machine.generic_machine_data;
-	int cpunum;
 
 	/* on a reset, enable all interrupts */
-	for (cpunum = 0; cpunum < ARRAY_LENGTH(state->interrupt_enable); cpunum++)
+	for (int cpunum = 0; cpunum < ARRAY_LENGTH(state->interrupt_enable); cpunum++)
 		state->interrupt_enable[cpunum] = 1;
 }
 
@@ -716,12 +727,13 @@ void generic_pulse_irq_line_and_vector(running_device *device, int irqline, int 
 void cpu_interrupt_enable(running_device *device, int enabled)
 {
 	cpu_device *cpudevice = downcast<cpu_device *>(device);
-
 	generic_machine_private *state = device->machine->generic_machine_data;
+
 	int index;
 	for (index = 0; index < ARRAY_LENGTH(state->interrupt_device); index++)
 		if (state->interrupt_device[index] == device)
 			break;
+
 	assert_always(index < ARRAY_LENGTH(state->interrupt_enable), "cpu_interrupt_enable() called for invalid CPU!");
 
 	/* set the new state */

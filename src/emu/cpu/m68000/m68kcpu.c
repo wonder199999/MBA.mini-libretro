@@ -504,8 +504,7 @@ INLINE m68ki_cpu_core *get_safe_token(running_device *device)
 		   device->type() == M68EC030 ||
 		   device->type() == M68030 ||
 		   device->type() == M68EC040 ||
-		   device->type() == M68040 ||
-		   device->type() == SCC68070);
+		   device->type() == M68040 );
 	return (m68ki_cpu_core *)downcast<legacy_cpu_device *>(device)->token();
 }
 
@@ -1785,35 +1784,6 @@ CPU_GET_INFO( m68lc040 )
 	}
 }
 
-/****************************************************************************
- * SCC-68070 section
- ****************************************************************************/
-
-static CPU_INIT( scc68070 )
-{
-	m68ki_cpu_core *m68k = get_safe_token(device);
-
-	CPU_INIT_CALL(m68010);
-
-	m68k->cpu_type         = CPU_TYPE_SCC070;
-}
-
-CPU_GET_INFO( scc68070 )
-{
-	switch (state)
-	{
-		/* --- the following bits of info are returned as 64-bit signed integers --- */
-		case DEVINFO_INT_ADDRBUS_WIDTH + ADDRESS_SPACE_PROGRAM: 		info->i = 32;							break;
-
-		/* --- the following bits of info are returned as pointers to data or functions --- */
-		case CPUINFO_FCT_INIT:							info->init = CPU_INIT_NAME(scc68070);	break;
-
-		/* --- the following bits of info are returned as NULL-terminated strings --- */
-		case DEVINFO_STR_NAME:							strcpy(info->s, "SCC68070");			break;
-
-		default:										CPU_GET_INFO_CALL(m68k);				break;
-	}
-}
 
 DEFINE_LEGACY_CPU_DEVICE(M68000, m68000);
 DEFINE_LEGACY_CPU_DEVICE(M68008, m68008);
@@ -1826,5 +1796,3 @@ DEFINE_LEGACY_CPU_DEVICE(M68030, m68030);
 DEFINE_LEGACY_CPU_DEVICE(M68EC040, m68ec040);
 DEFINE_LEGACY_CPU_DEVICE(M68LC040, m68lc040);
 DEFINE_LEGACY_CPU_DEVICE(M68040, m68040);
-DEFINE_LEGACY_CPU_DEVICE(SCC68070, scc68070);
-

@@ -39,8 +39,8 @@
 Debug defines
 */
 #define LOG_WAVE	0
-#define VERBOSE  0
-#define LOG(x) do { if (VERBOSE) logerror x; } while (0)
+#define VERBOSE		0
+#define LOG(x)	do { if (VERBOSE) logerror x; } while (0)
 
 /* 8 bit source ROM samples */
 typedef INT8 QSOUND_SRC_SAMPLE;
@@ -52,40 +52,40 @@ typedef stream_sample_t QSOUND_SAMPLE;
 
 struct QSOUND_CHANNEL
 {
-	INT32 bank;	   /* bank (x16)    */
-	INT32 address;	/* start address */
-	INT32 pitch;	  /* pitch */
-	INT32 reg3;	   /* unknown (always 0x8000) */
-	INT32 loop;	   /* loop address */
+	INT32 bank;		/* bank (x16) */
+	INT32 address;		/* start address */
+	INT32 pitch;		/* pitch */
+	INT32 reg3;		/* unknown (always 0x8000) */
+	INT32 loop;		/* loop address */
 	INT32 end;		/* end address */
 	INT32 vol;		/* master volume */
 	INT32 pan;		/* Pan value */
-	INT32 reg9;	   /* unknown */
+	INT32 reg9;		/* unknown */
 
 	/* Work variables */
 	INT32 key;		/* Key on / key off */
 
-	INT32 lvol;	   /* left volume */
-	INT32 rvol;	   /* right volume */
-	INT32 lastdt;	 /* last sample value */
-	INT32 offset;	 /* current offset counter */
+	INT32 lvol;		/* left volume */
+	INT32 rvol;		/* right volume */
+	INT32 lastdt;		/* last sample value */
+	INT32 offset;		/* current offset counter */
 };
 
 typedef struct _qsound_state qsound_state;
 struct _qsound_state
 {
 	/* Private variables */
-	sound_stream * stream;				/* Audio stream */
+	sound_stream  *stream;				/* Audio stream */
 	struct QSOUND_CHANNEL channel[QSOUND_CHANNELS];
-	int data;				  /* register latch data */
-	QSOUND_SRC_SAMPLE *sample_rom;	/* Q sound sample ROM */
+	int data;					/* register latch data */
+	QSOUND_SRC_SAMPLE  *sample_rom;			/* Q sound sample ROM */
 	UINT32 sample_rom_length;
 
-	int pan_table[33];		 /* Pan volume table */
-	float frq_ratio;		   /* Frequency ratio */
+	int pan_table[33];				/* Pan volume table */
+	float frq_ratio;				/* Frequency ratio */
 
-	FILE *fpRawDataL;
-	FILE *fpRawDataR;
+	FILE	*fpRawDataL;
+	FILE	*fpRawDataR;
 };
 
 INLINE qsound_state *get_safe_token(running_device *device)

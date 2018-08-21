@@ -52,19 +52,19 @@ typedef struct
 
 #define CONTROL_W ( 0x80 )
 #define CONTROL_R ( 0x40 )
-#define CONTROL_S ( 0x20 ) /* not emulated */
-#define CONTROL_CALIBRATION ( 0x1f ) /* not emulated */
+#define CONTROL_S ( 0x20 )		/* not emulated */
+#define CONTROL_CALIBRATION ( 0x1f )	/* not emulated */
 
 #define SECONDS_ST ( 0x80 )
 
-#define DAY_FT ( 0x40 ) /* not emulated */
-#define DAY_CEB ( 0x20 ) /* M48T35/M48T58 */
-#define DAY_CB ( 0x10 ) /* M48T35/M48T58 */
+#define DAY_FT ( 0x40 )			/* not emulated */
+#define DAY_CEB ( 0x20 )		/* M48T35/M48T58 */
+#define DAY_CB ( 0x10 )			/* M48T35/M48T58 */
 
-#define DATE_BLE ( 0x80 ) /* M48T58: not emulated */
-#define DATE_BL ( 0x40 ) /* M48T58: not emulated */
+#define DATE_BLE ( 0x80 )		/* M48T58: not emulated */
+#define DATE_BL ( 0x40 )		/* M48T58: not emulated */
 
-#define FLAGS_BL ( 0x10 ) /* MK48T08: not emulated */
+#define FLAGS_BL ( 0x10 )		/* MK48T08: not emulated */
 
 INLINE UINT8 make_bcd(UINT8 data)
 {
@@ -84,11 +84,11 @@ static int inc_bcd( UINT8 *data, int mask, int min, int max )
 	bcd = ( *( data ) + 1 ) & mask;
 	carry = 0;
 
-	if( ( bcd & 0x0f ) > 9 )
+	if ( ( bcd & 0x0f ) > 9 )
 	{
 		bcd &= 0xf0;
 		bcd += 0x10;
-		if( bcd > max )
+		if ( bcd > max )
 		{
 			bcd = min;
 			carry = 1;
@@ -101,7 +101,7 @@ static int inc_bcd( UINT8 *data, int mask, int min, int max )
 
 static void counter_to_ram( UINT8 *data, int offset, int counter )
 {
-	if( offset >= 0 )
+	if ( offset >= 0 )
 		data[ offset ] = counter;
 }
 
@@ -120,7 +120,7 @@ static void counters_to_ram( timekeeper_state *c )
 
 static int counter_from_ram( UINT8 *data, int offset )
 {
-	if( offset >= 0 )
+	if ( offset >= 0 )
 	{
 		return data[ offset ];
 	}
@@ -146,18 +146,18 @@ static TIMER_CALLBACK( timekeeper_tick )
 
 	int carry;
 
-	if( ( c->seconds & SECONDS_ST ) != 0 || ( c->control & CONTROL_W ) != 0 )
+	if ( ( c->seconds & SECONDS_ST ) != 0 || ( c->control & CONTROL_W ) != 0 )
 		return;
 
 	carry = inc_bcd( &c->seconds, MASK_SECONDS, 0x00, 0x59 );
 
-	if( carry )
+	if ( carry )
 		carry = inc_bcd( &c->minutes, MASK_MINUTES, 0x00, 0x59 );
 
-	if( carry )
+	if ( carry )
 		carry = inc_bcd( &c->hours, MASK_HOURS, 0x00, 0x23 );
 
-	if( carry )
+	if ( carry )
 	{
 		UINT8 month, year, maxdays;
 		static const UINT8 daysinmonth[] = { 0x31, 0x28, 0x31, 0x30, 0x31, 0x30, 0x31, 0x31, 0x30, 0x31, 0x30, 0x31 };
@@ -167,14 +167,14 @@ static TIMER_CALLBACK( timekeeper_tick )
 		month = from_bcd( c->month );
 		year = from_bcd( c->year );
 
-		if( month == 2 )
+		if ( month == 2 )
 		{
 			if (year % 100 == 0)
 				maxdays = (year % 400 == 0) ? 0x29 : 0x28;
 			else
 				maxdays = (year % 4 == 0) ? 0x29 : 0x28;
 		}
-		else if( month >= 1 && month <= 12 )
+		else if ( month >= 1 && month <= 12 )
 			maxdays = daysinmonth[ month - 1 ];
 		else
 			maxdays = 0x31;
@@ -182,22 +182,22 @@ static TIMER_CALLBACK( timekeeper_tick )
 		carry = inc_bcd( &c->date, MASK_DATE, 0x01, maxdays );
 	}
 
-	if( carry )
+	if ( carry )
 		carry = inc_bcd( &c->month, MASK_MONTH, 0x01, 0x12 );
 
-	if( carry )
+	if ( carry )
 		carry = inc_bcd( &c->year, MASK_YEAR, 0x00, 0x99 );
 
-	if( carry )
+	if ( carry )
 	{
 		carry = inc_bcd( &c->century, MASK_CENTURY, 0x00, 0x99 );
 
-		if( c->device->type() == M48T35 || c->device->type() == M48T58 )
-			if( ( c->day & DAY_CEB ) != 0 )
+		if ( c->device->type() == M48T35 || c->device->type() == M48T58 )
+			if ( ( c->day & DAY_CEB ) != 0 )
 				c->day ^= DAY_CB;
 	}
 
-	if( ( c->control & CONTROL_R ) == 0 )
+	if ( ( c->control & CONTROL_R ) == 0 )
 		counters_to_ram( c );
 }
 
@@ -223,23 +223,23 @@ WRITE8_DEVICE_HANDLER( timekeeper_w )
 {
 	timekeeper_state *c = get_safe_token(device);
 
-	if( offset == c->offset_control )
+	if ( offset == c->offset_control )
 	{
-		if( ( c->control & CONTROL_W ) != 0 && ( data & CONTROL_W ) == 0 )
+		if ( ( c->control & CONTROL_W ) != 0 && ( data & CONTROL_W ) == 0 )
 			counters_from_ram( c );
 
 		c->control = data;
 	}
-	else if( offset == c->offset_day )
+	else if ( offset == c->offset_day )
 	{
-		if( c->device->type() == M48T35 || c->device->type() == M48T58 )
+		if ( c->device->type() == M48T35 || c->device->type() == M48T58 )
 			c->day = ( c->day & ~DAY_CEB ) | ( data & DAY_CEB );
 	}
-	else if( offset == c->offset_date && c->device->type() == M48T58 )
+	else if ( offset == c->offset_date && c->device->type() == M48T58 )
 	{
 		data &= ~DATE_BL;
 	}
-	else if( offset == c->offset_flags && c->device->type() == MK48T08 )
+	else if ( offset == c->offset_flags && c->device->type() == MK48T08 )
 	{
 		data &= ~FLAGS_BL;
 	}
@@ -394,19 +394,19 @@ static DEVICE_NVRAM(timekeeper)
 {
 	timekeeper_state *c = get_safe_token(device);
 
-	if( read_or_write )
+	if ( read_or_write )
 	{
 		mame_fwrite( file, c->data, c->size );
 	}
 	else
 	{
-		if( file )
+		if ( file )
 		{
 			mame_fread( file, c->data, c->size );
 		}
 		else
 		{
-			if( c->default_data != NULL )
+			if ( c->default_data != NULL )
 			{
 				memcpy( c->data, c->default_data, c->size );
 			}
@@ -429,21 +429,21 @@ static DEVICE_GET_INFO(timekeeper)
 	switch (state)
 	{
 		/* --- the following bits of info are returned as 64-bit signed integers --- */
-		case DEVINFO_INT_TOKEN_BYTES:			info->i = sizeof(timekeeper_state); break;
-		case DEVINFO_INT_INLINE_CONFIG_BYTES:	info->i = 0; break; // sizeof(timekeeper_config)
+		case DEVINFO_INT_TOKEN_BYTES:		info->i = sizeof(timekeeper_state); break;
+		case DEVINFO_INT_INLINE_CONFIG_BYTES:	info->i = 0; break;					// sizeof(timekeeper_config)
 
 		/* --- the following bits of info are returned as pointers to data or functions --- */
-		case DEVINFO_FCT_START:					info->start = DEVICE_START_NAME(timekeeper); break;
-		case DEVINFO_FCT_STOP:					/* nothing */ break;
-		case DEVINFO_FCT_RESET:					info->reset = DEVICE_RESET_NAME(timekeeper); break;
-		case DEVINFO_FCT_NVRAM:					info->nvram = DEVICE_NVRAM_NAME(timekeeper); break;
+		case DEVINFO_FCT_START:			info->start = DEVICE_START_NAME(timekeeper); break;
+		case DEVINFO_FCT_STOP:			break;							// nothing
+		case DEVINFO_FCT_RESET:			info->reset = DEVICE_RESET_NAME(timekeeper); break;
+		case DEVINFO_FCT_NVRAM:			info->nvram = DEVICE_NVRAM_NAME(timekeeper); break;
 
 		/* --- the following bits of info are returned as NULL-terminated strings --- */
-		case DEVINFO_STR_NAME:					strcpy(info->s, "Timekeeper"); break;
-		case DEVINFO_STR_FAMILY:				strcpy(info->s, "EEPROM"); break;
-		case DEVINFO_STR_VERSION:				strcpy(info->s, "1.0"); break;
-		case DEVINFO_STR_SOURCE_FILE:			strcpy(info->s, __FILE__); break;
-		case DEVINFO_STR_CREDITS:				strcpy(info->s, "Copyright Nicola Salmoria and the MAME Team"); break;
+		case DEVINFO_STR_NAME:			strcpy(info->s, "Timekeeper"); break;
+		case DEVINFO_STR_FAMILY:		strcpy(info->s, "EEPROM"); break;
+		case DEVINFO_STR_VERSION:		strcpy(info->s, "1.0"); break;
+		case DEVINFO_STR_SOURCE_FILE:		strcpy(info->s, __FILE__); break;
+		case DEVINFO_STR_CREDITS:		strcpy(info->s, "Copyright Nicola Salmoria and the MAME Team"); break;
 	}
 }
 
@@ -452,12 +452,12 @@ DEVICE_GET_INFO( m48t02 )
 	switch (state)
 	{
 		/* --- the following bits of info are returned as NULL-terminated strings --- */
-		case DEVINFO_STR_NAME:							strcpy(info->s, "M48T02");					break;
+		case DEVINFO_STR_NAME:			strcpy(info->s, "M48T02"); break;
 
 		/* --- the following bits of info are returned as pointers to data or functions --- */
-		case DEVINFO_FCT_START:							info->start = DEVICE_START_NAME(m48t02);	break;
+		case DEVINFO_FCT_START:			info->start = DEVICE_START_NAME(m48t02); break;
 
-		default:										DEVICE_GET_INFO_CALL(timekeeper);			break;
+		default:				DEVICE_GET_INFO_CALL(timekeeper); break;
 	}
 }
 
@@ -466,12 +466,12 @@ DEVICE_GET_INFO( m48t35 )
 	switch (state)
 	{
 		/* --- the following bits of info are returned as NULL-terminated strings --- */
-		case DEVINFO_STR_NAME:							strcpy(info->s, "M48T35");					break;
+		case DEVINFO_STR_NAME:			strcpy(info->s, "M48T35"); break;
 
 		/* --- the following bits of info are returned as pointers to data or functions --- */
-		case DEVINFO_FCT_START:							info->start = DEVICE_START_NAME(m48t35);	break;
+		case DEVINFO_FCT_START:			info->start = DEVICE_START_NAME(m48t35); break;
 
-		default:										DEVICE_GET_INFO_CALL(timekeeper);			break;
+		default:				DEVICE_GET_INFO_CALL(timekeeper); break;
 	}
 }
 
@@ -480,12 +480,12 @@ DEVICE_GET_INFO( m48t58 )
 	switch (state)
 	{
 		/* --- the following bits of info are returned as NULL-terminated strings --- */
-		case DEVINFO_STR_NAME:							strcpy(info->s, "M48T58");					break;
+		case DEVINFO_STR_NAME:			strcpy(info->s, "M48T58"); break;
 
 		/* --- the following bits of info are returned as pointers to data or functions --- */
-		case DEVINFO_FCT_START:							info->start = DEVICE_START_NAME(m48t58);	break;
+		case DEVINFO_FCT_START:			info->start = DEVICE_START_NAME(m48t58); break;
 
-		default:										DEVICE_GET_INFO_CALL(timekeeper);			break;
+		default:				DEVICE_GET_INFO_CALL(timekeeper); break;
 	}
 }
 
@@ -494,12 +494,12 @@ DEVICE_GET_INFO( mk48t08 )
 	switch (state)
 	{
 		/* --- the following bits of info are returned as NULL-terminated strings --- */
-		case DEVINFO_STR_NAME:							strcpy(info->s, "MK48T08");					break;
+		case DEVINFO_STR_NAME:			strcpy(info->s, "MK48T08"); break;
 
 		/* --- the following bits of info are returned as pointers to data or functions --- */
-		case DEVINFO_FCT_START:							info->start = DEVICE_START_NAME(mk48t08);	break;
+		case DEVINFO_FCT_START:			info->start = DEVICE_START_NAME(mk48t08); break;
 
-		default:										DEVICE_GET_INFO_CALL(timekeeper);			break;
+		default:				DEVICE_GET_INFO_CALL(timekeeper); break;
 	}
 }
 

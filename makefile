@@ -88,9 +88,6 @@ CPPONLYFLAGS =
 LDFLAGS =
 LDFLAGSEMULATOR =
 
-# uncomment next line to build zlib as part of MAME build
-BUILD_ZLIB = 0
-
 # uncomment next line to build PortMidi as part of MAME/MESS build
 BUILD_MIDILIB = 0
 

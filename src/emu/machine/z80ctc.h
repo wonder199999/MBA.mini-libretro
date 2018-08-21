@@ -17,10 +17,10 @@
 //  CONSTANTS
 //**************************************************************************
 
-const int NOTIMER_0 = (1<<0);
-const int NOTIMER_1 = (1<<1);
-const int NOTIMER_2 = (1<<2);
-const int NOTIMER_3 = (1<<3);
+const int NOTIMER_0 = (1 << 0);
+const int NOTIMER_1 = (1 << 1);
+const int NOTIMER_2 = (1 << 2);
+const int NOTIMER_3 = (1 << 3);
 
 
 
@@ -29,7 +29,7 @@ const int NOTIMER_3 = (1<<3);
 //**************************************************************************
 
 #define Z80CTC_INTERFACE(name) \
-	const z80ctc_interface (name)=
+	const z80ctc_interface (name) =
 
 
 #define MDRV_Z80CTC_ADD(_tag, _clock, _intrf) \
@@ -47,7 +47,7 @@ const int NOTIMER_3 = (1<<3);
 
 struct z80ctc_interface
 {
-	UINT8				m_notimer;	// timer disabler mask
+	UINT8			m_notimer;	// timer disabler mask
 	devcb_write_line	m_intr;		// callback when change interrupt status
 	devcb_write_line	m_zc0;		// ZC/TO0 callback
 	devcb_write_line	m_zc1;		// ZC/TO1 callback
@@ -58,9 +58,9 @@ struct z80ctc_interface
 
 // ======================> z80ctc_device_config
 
-class z80ctc_device_config :	public device_config,
-								public device_config_z80daisy_interface,
-								public z80ctc_interface
+class z80ctc_device_config : public device_config,
+		public device_config_z80daisy_interface,
+		public z80ctc_interface
 {
 	friend class z80ctc_device;
 
@@ -81,8 +81,8 @@ protected:
 
 // ======================> z80ctc_device
 
-class z80ctc_device :	public device_t,
-						public device_z80daisy_interface
+class z80ctc_device : public device_t,
+		public device_z80daisy_interface
 {
 	friend class z80ctc_device_config;
 
@@ -128,16 +128,16 @@ private:
 		void trigger(UINT8 data);
 		void timer_callback();
 
-		z80ctc_device *	m_device;				// pointer back to our device
-		int				m_index;				// our channel index
-		devcb_resolved_write_line m_zc;			// zero crossing callbacks
+		z80ctc_device		*m_device;				// pointer back to our device
+		int			m_index;				// our channel index
+		devcb_resolved_write_line	m_zc;				// zero crossing callbacks
 		bool			m_notimer;				// timer disabled?
 		UINT16			m_mode;					// current mode
 		UINT16			m_tconst;				// time constant
 		UINT16			m_down;					// down counter (clock mode only)
 		UINT8			m_extclk;				// current signal from the external clock
-		emu_timer *		m_timer;				// array of active timers
-		UINT8			m_int_state;			// interrupt status (for daisy chain)
+		emu_timer		*m_timer;				// array of active timers
+		UINT8			m_int_state;				// interrupt status (for daisy chain)
 
 	private:
 		static TIMER_CALLBACK( static_timer_callback ) { reinterpret_cast<z80ctc_device::ctc_channel *>(ptr)->timer_callback(); }

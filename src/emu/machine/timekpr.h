@@ -15,7 +15,6 @@
 #include "devlegcy.h"
 
 typedef struct _timekeeper_config timekeeper_config;
-
 struct _timekeeper_config
 {
 	const char *data;

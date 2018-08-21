@@ -15,17 +15,6 @@
 #include "cpu/z80/z80daisy.h"
 
 
-
-//**************************************************************************
-//  DEBUGGING
-//**************************************************************************
-
-#define VERBOSE		0
-
-#define VPRINTF(x) do { if (VERBOSE) logerror x; } while (0)
-
-
-
 //**************************************************************************
 //  CONSTANTS
 //**************************************************************************/
@@ -114,6 +103,7 @@ void z80ctc_device_config::device_config_complete()
 {
 	// inherit a copy of the static data
 	const z80ctc_interface *intf = reinterpret_cast<const z80ctc_interface *>(static_config());
+
 	if (intf != NULL)
 		*static_cast<z80ctc_interface *>(this) = *intf;
 
@@ -165,7 +155,7 @@ void z80ctc_device::device_start()
 	m_channel[3].start(this, 3, (m_config.m_notimer & NOTIMER_3) != 0, NULL);
 
 	// register for save states
-    state_save_register_device_item(this, 0, m_vector);
+	state_save_register_device_item(this, 0, m_vector);
 }
 
 
@@ -183,7 +173,6 @@ void z80ctc_device::device_reset()
 
 	// check for interrupts
 	interrupt_check();
-	VPRINTF(("CTC Reset\n"));
 }
 
 
@@ -199,8 +188,6 @@ void z80ctc_device::device_reset()
 
 int z80ctc_device::z80daisy_irq_state()
 {
-	VPRINTF(("CTC IRQ state = %d%d%d%d\n", m_channel[0].m_int_state, m_channel[1].m_int_state, m_channel[2].m_int_state, m_channel[3].m_int_state));
-
 	// loop over all channels
 	int state = 0;
 	for (int ch = 0; ch < 4; ch++)
@@ -235,11 +222,10 @@ int z80ctc_device::z80daisy_irq_ack()
 		// find the first channel with an interrupt requested
 		if (channel.m_int_state & Z80_DAISY_INT)
 		{
-			VPRINTF(("CTC IRQAck ch%d\n", ch));
-
 			// clear interrupt, switch to the IEO state, and update the IRQs
 			channel.m_int_state = Z80_DAISY_IEO;
 			interrupt_check();
+
 			return m_vector + ch * 2;
 		}
 	}
@@ -264,8 +250,6 @@ void z80ctc_device::z80daisy_irq_reti()
 		// find the first channel with an IEO pending
 		if (channel.m_int_state & Z80_DAISY_IEO)
 		{
-			VPRINTF(("CTC IRQReti ch%d\n", ch));
-
 			// clear the IEO state and update the IRQs
 			channel.m_int_state &= ~Z80_DAISY_IEO;
 			interrupt_check();
@@ -325,17 +309,19 @@ void z80ctc_device::ctc_channel::start(z80ctc_device *device, int index, bool no
 	// initialize state
 	m_device = device;
 	m_index = index;
+
 	if (write_line != NULL)
 		devcb_resolve_write_line(&m_zc, write_line, m_device);
+
 	m_notimer = notimer;
 	m_timer = timer_alloc(&m_device->m_machine, static_timer_callback, this);
 
 	// register for save states
-    state_save_register_device_item(m_device, m_index, m_mode);
-    state_save_register_device_item(m_device, m_index, m_tconst);
-    state_save_register_device_item(m_device, m_index, m_down);
-    state_save_register_device_item(m_device, m_index, m_extclk);
-    state_save_register_device_item(m_device, m_index, m_int_state);
+	state_save_register_device_item(m_device, m_index, m_mode);
+	state_save_register_device_item(m_device, m_index, m_tconst);
+	state_save_register_device_item(m_device, m_index, m_down);
+	state_save_register_device_item(m_device, m_index, m_extclk);
+	state_save_register_device_item(m_device, m_index, m_int_state);
 }
 
 
@@ -390,8 +376,6 @@ UINT8 z80ctc_device::ctc_channel::read()
 	{
 		attotime period = ((m_mode & PRESCALER) == PRESCALER_16) ? m_device->m_period16 : m_device->m_period256;
 
-		VPRINTF(("CTC clock %f\n",ATTOSECONDS_TO_HZ(period.attoseconds)));
-
 		if (m_timer != NULL)
 			return ((int)(attotime_to_double(timer_timeleft(m_timer)) / attotime_to_double(period)) + 1) & 0xff;
 		else
@@ -409,8 +393,6 @@ void z80ctc_device::ctc_channel::write(UINT8 data)
 	// if we're waiting for a time constant, this is it
 	if ((m_mode & CONSTANT) == CONSTANT_LOAD)
 	{
-		VPRINTF(("CTC ch.%d constant = %02x\n", m_index, data));
-
 		// set the time constant (0 -> 0x100)
 		m_tconst = data ? data : 0x100;
 
@@ -462,7 +444,6 @@ void z80ctc_device::ctc_channel::write(UINT8 data)
 	{
 		// set the new mode
 		m_mode = data;
-		VPRINTF(("CTC ch.%d mode = %02x\n", m_index, data));
 
 		// if we're being reset, clear out any pending timers for this channel
 		if ((data & RESET) == RESET_ACTIVE)
@@ -498,14 +479,10 @@ void z80ctc_device::ctc_channel::trigger(UINT8 data)
 				if (!m_notimer)
 				{
 					attotime curperiod = period();
-					VPRINTF(("CTC period %s\n", attotime_string(curperiod, 9)));
 					timer_adjust_periodic(m_timer, curperiod, m_index, curperiod);
 				}
 				else
-				{
-					VPRINTF(("CTC disabled\n"));
 					timer_adjust_oneshot(m_timer, attotime_never, 0);
-				}
 			}
 
 			// we're no longer waiting
@@ -534,7 +511,6 @@ void z80ctc_device::ctc_channel::timer_callback()
 	if ((m_mode & INTERRUPT) == INTERRUPT_ON)
 	{
 		m_int_state |= Z80_DAISY_INT;
-		VPRINTF(("CTC timer ch%d\n", m_index));
 		m_device->interrupt_check();
 	}
 

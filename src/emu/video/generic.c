@@ -18,8 +18,8 @@
 
 struct _generic_video_private
 {
-	int 		flip_screen_x;
-	int		flip_screen_y;
+	int	flip_screen_x;
+	int	flip_screen_y;
 };
 
 
@@ -178,14 +178,12 @@ INLINE void set_color_444(running_machine *machine, pen_t color, int rshift, int
 
 INLINE void set_color_4444(running_machine *machine, pen_t color, int ishift, int rshift, int gshift, int bshift, UINT16 data)
 {
-	static const UINT8 ztable[16] =
-		{ 0x0, 0x3, 0x4, 0x5, 0x6, 0x7, 0x8, 0x9, 0xa, 0xb, 0xc, 0xd, 0xe, 0xf, 0x10, 0x11 };
-	int i, r, g, b;
+	static const UINT8 ztable[16] = { 0x0, 0x3, 0x4, 0x5, 0x6, 0x7, 0x8, 0x9, 0xa, 0xb, 0xc, 0xd, 0xe, 0xf, 0x10, 0x11 };
 
-	i = ztable[(data >> ishift) & 15];
-	r = ((data >> rshift) & 15) * i;
-	g = ((data >> gshift) & 15) * i;
-	b = ((data >> bshift) & 15) * i;
+	int i = ztable[(data >> ishift) & 15];
+	int r = ((data >> rshift) & 15) * i;
+	int g = ((data >> gshift) & 15) * i;
+	int b = ((data >> bshift) & 15) * i;
 
 	palette_set_color_rgb(machine, color, r, g, b);
 }
@@ -407,6 +405,7 @@ void buffer_spriteram_2(running_machine *machine, UINT8 *ptr, int length)
 static void updateflip(running_machine *machine)
 {
 	generic_video_private *state = machine->generic_video_data;
+
 	int width = machine->primary_screen->width();
 	int height = machine->primary_screen->height();
 	attoseconds_t period = machine->primary_screen->frame_period().attoseconds;
@@ -540,7 +539,7 @@ int flip_screen_y_get(running_machine *machine)
 PALETTE_INIT( all_black )
 {
 	for (UINT32 i = 0; i < machine->total_colors(); i++)
-		palette_set_color(machine,i,RGB_BLACK); /* black */
+		palette_set_color(machine, i, RGB_BLACK); /* black */
 }
 
 
@@ -550,8 +549,8 @@ PALETTE_INIT( all_black )
 
 PALETTE_INIT( black_and_white )
 {
-	palette_set_color(machine,0,RGB_BLACK); /* black */
-	palette_set_color(machine,1,RGB_WHITE); /* white */
+	palette_set_color(machine, 0, RGB_BLACK); /* black */
+	palette_set_color(machine, 1, RGB_WHITE); /* white */
 }
 
 
