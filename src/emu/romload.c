@@ -39,7 +39,7 @@ typedef struct _open_chd open_chd;
 struct _open_chd
 {
 	open_chd *			next;					/* pointer to next in the list */
-	const char *		region;					/* disk region we came from */
+	const char *			region;					/* disk region we came from */
 	chd_file *			origchd;				/* handle to the original CHD */
 	mame_file *			origfile;				/* file handle to the original CHD file */
 	chd_file *			diffchd;				/* handle to the diff CHD */
@@ -50,22 +50,22 @@ struct _open_chd
 typedef struct _romload_private rom_load_data;
 struct _romload_private
 {
-	running_machine *machine;			/* machine object where needed */
-	int				system_bios;		/* the system BIOS we wish to load */
+	running_machine		*machine;		/* machine object where needed */
+	int			system_bios;		/* the system BIOS we wish to load */
 
-	int				warnings;			/* warning count during processing */
-	int				errors;				/* error count during processing */
+	int			warnings;		/* warning count during processing */
+	int			errors;			/* error count during processing */
 
-	int				romsloaded;			/* current ROMs loaded count */
-	int				romstotal;			/* total number of ROMs to read */
+	int			romsloaded;		/* current ROMs loaded count */
+	int			romstotal;		/* total number of ROMs to read */
 	UINT32			romsloadedsize;		/* total size of ROMs loaded so far */
 	UINT32			romstotalsize;		/* total size of ROMs to read */
 
-	mame_file *		file;				/* current file */
-	open_chd *		chd_list;			/* disks */
-	open_chd **		chd_list_tailptr;
+	mame_file		*file;			/* current file */
+	open_chd		*chd_list;		/* disks */
+	open_chd		**chd_list_tailptr;
 
-	region_info *	region;				/* info about current region */
+	region_info		*region;		/* info about current region */
 
 	astring			errorstring;		/* error string */
 };
@@ -527,18 +527,18 @@ static void verify_length_and_hash(rom_load_data *romdata, const char *name, UIN
 
 	/* Bypass file verify CRC */
 	if (hash_data_has_info(hash, HASH_INFO_VERIFY_OFF))
-	{
 		romdata->errorstring.catprintf("%s: bypass CRC verify\n", name);
-		romdata->warnings++;
-	}
+
 	/* If there is no good dump known, write it */
-	else if (hash_data_has_info(hash, HASH_INFO_NO_DUMP))
+	else
+	if (hash_data_has_info(hash, HASH_INFO_NO_DUMP))
 	{
 		romdata->errorstring.catprintf("%s NO GOOD DUMP KNOWN\n", name);
 		romdata->warnings++;
 	}
 	/* verify checksums */
-	else if (!hash_data_is_equal(hash, acthash, 0))
+	else
+	if (!hash_data_is_equal(hash, acthash, 0))
 	{
 		/* otherwise, it's just bad */
 		romdata->errorstring.catprintf("%s WRONG CHECKSUMS:\n", name);
@@ -548,7 +548,8 @@ static void verify_length_and_hash(rom_load_data *romdata, const char *name, UIN
 		romdata->warnings++;
 	}
 	/* If it matches, but it is actually a bad dump, write it */
-	else if (hash_data_has_info(hash, HASH_INFO_BAD_DUMP))
+	else
+	if (hash_data_has_info(hash, HASH_INFO_BAD_DUMP))
 	{
 		romdata->errorstring.catprintf("%s ROM NEEDS REDUMP\n",name);
 		romdata->warnings++;

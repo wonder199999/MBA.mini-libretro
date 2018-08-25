@@ -43,7 +43,7 @@ void decodechar(const gfx_element *gfx, UINT32 code, const UINT8 *src);
 
 INLINE int readbit(const UINT8 *src, unsigned int bitnum)
 {
-	return src[bitnum / 8] & (0x80 >> (bitnum % 8));
+	return src[bitnum >> 3] & (0x80 >> (bitnum & 0x07));
 }
 
 
@@ -403,14 +403,17 @@ static void calc_penusage(const gfx_element *gfx, UINT32 code)
 
 	/* packed case */
 	if (gfx->flags & GFX_ELEMENT_PACKED)
+	{
+		int halfwidth = gfx->origwidth / 2;
+
 		for (y = 0; y < gfx->origheight; y++)
 		{
-			for (x = 0; x < gfx->origwidth/2; x++)
+			for (x = 0; x < halfwidth; x++)
 				usage |= (1 << (dp[x] & 0x0f)) | (1 << (dp[x] >> 4));
 
 			dp += gfx->line_modulo;
 		}
-
+	}
 	/* unpacked case */
 	else
 		for (y = 0; y < gfx->origheight; y++)
@@ -450,6 +453,7 @@ void decodechar(const gfx_element *gfx, UINT32 code, const UINT8 *src)
 
 		/* packed case */
 		if (gfx->flags & GFX_ELEMENT_PACKED)
+		{
 			for (plane = 0; plane < planes; plane++)
 			{
 				int planebit = 1 << (planes - 1 - plane);
@@ -462,16 +466,17 @@ void decodechar(const gfx_element *gfx, UINT32 code, const UINT8 *src)
 					dp = gfx->gfxdata + code * gfx->char_modulo + y * gfx->line_modulo;
 					for (x = 0; x < gfx->origwidth; x += 2)
 					{
-						if (readbit(src, yoffs + xoffset[x+0]))
-							dp[x+0] |= planebit;
-						if (readbit(src, yoffs + xoffset[x+1]))
-							dp[x+1] |= planebit;
+						if (readbit(src, yoffs + xoffset[x + 0]))
+							dp[x + 0] |= planebit;
+						if (readbit(src, yoffs + xoffset[x + 1]))
+							dp[x + 1] |= planebit;
 					}
 				}
 			}
-
+		}
 		/* unpacked case */
 		else
+		{
 			for (plane = 0; plane < planes; plane++)
 			{
 				int planebit = 1 << (planes - 1 - plane);
@@ -487,8 +492,8 @@ void decodechar(const gfx_element *gfx, UINT32 code, const UINT8 *src)
 							dp[x] |= planebit;
 				}
 			}
+		}
 	}
-
 	/* compute pen usage */
 	calc_penusage(gfx, code);
 
@@ -1840,7 +1845,7 @@ void copybitmap_trans(bitmap_t *dest, bitmap_t *src, int flipx, int flipy, INT32
 void copyscrollbitmap(bitmap_t *dest, bitmap_t *src, UINT32 numrows, const INT32 *rowscroll, UINT32 numcols, const INT32 *colscroll, const rectangle *cliprect)
 {
 	/* just call through to the transparent case as the underlying copybitmap will
-       optimize for pen == 0xffffffff */
+	   optimize for pen == 0xffffffff */
 	copyscrollbitmap_trans(dest, src, numrows, rowscroll, numcols, colscroll, cliprect, 0xffffffff);
 }
 

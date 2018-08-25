@@ -6668,7 +6668,7 @@ static void m68k_op_bfffo_32_ai(m68ki_cpu_core *m68k)
 
 		/* Offset is signed so we have to use ugly math =( */
 		ea += offset / 8;
-		local_offset = offset % 8;
+		local_offset = offset & 0x07;
 		if(local_offset < 0)
 		{
 			local_offset += 8;
@@ -6720,7 +6720,7 @@ static void m68k_op_bfffo_32_di(m68ki_cpu_core *m68k)
 
 		/* Offset is signed so we have to use ugly math =( */
 		ea += offset / 8;
-		local_offset = offset % 8;
+		local_offset = offset & 0x07;
 		if(local_offset < 0)
 		{
 			local_offset += 8;
@@ -6772,7 +6772,7 @@ static void m68k_op_bfffo_32_ix(m68ki_cpu_core *m68k)
 
 		/* Offset is signed so we have to use ugly math =( */
 		ea += offset / 8;
-		local_offset = offset % 8;
+		local_offset = offset & 0x07;
 		if(local_offset < 0)
 		{
 			local_offset += 8;
@@ -6824,7 +6824,7 @@ static void m68k_op_bfffo_32_aw(m68ki_cpu_core *m68k)
 
 		/* Offset is signed so we have to use ugly math =( */
 		ea += offset / 8;
-		local_offset = offset % 8;
+		local_offset = offset & 0x07;
 		if(local_offset < 0)
 		{
 			local_offset += 8;
@@ -6876,7 +6876,7 @@ static void m68k_op_bfffo_32_al(m68ki_cpu_core *m68k)
 
 		/* Offset is signed so we have to use ugly math =( */
 		ea += offset / 8;
-		local_offset = offset % 8;
+		local_offset = offset & 0x07;
 		if(local_offset < 0)
 		{
 			local_offset += 8;
@@ -6928,7 +6928,7 @@ static void m68k_op_bfffo_32_pcdi(m68ki_cpu_core *m68k)
 
 		/* Offset is signed so we have to use ugly math =( */
 		ea += offset / 8;
-		local_offset = offset % 8;
+		local_offset = offset & 0x07;
 		if(local_offset < 0)
 		{
 			local_offset += 8;
@@ -6980,7 +6980,7 @@ static void m68k_op_bfffo_32_pcix(m68ki_cpu_core *m68k)
 
 		/* Offset is signed so we have to use ugly math =( */
 		ea += offset / 8;
-		local_offset = offset % 8;
+		local_offset = offset & 0x07;
 		if(local_offset < 0)
 		{
 			local_offset += 8;

@@ -32,20 +32,21 @@
 #define EXTENDED_YOFFS			{ 0 }
 
 #define GFX_ELEMENT_PACKED		1	/* two 4bpp pixels are packed in one byte of gfxdata */
-#define GFX_ELEMENT_DONT_FREE	2	/* gfxdata was not malloc()ed, so don't free it on exit */
+#define GFX_ELEMENT_DONT_FREE		2	/* gfxdata was not malloc()ed, so don't free it on exit */
 
-#define GFX_RAW 				0x12345678
-/* When planeoffset[0] is set to GFX_RAW, the gfx data is left as-is, with no conversion.
-   No buffer is allocated for the decoded data, and gfxdata is set to point to the source
-   data.
-   xoffset[0] is an optional displacement (*8) from the beginning of the source data, while
-   yoffset[0] is the line modulo (*8) and charincrement the char modulo (*8). They are *8
-   for consistency with the usual behaviour, but the bottom 3 bits are not used.
-   GFX_ELEMENT_PACKED is automatically set if planes is <= 4.
+#define GFX_RAW 			0x12345678
 
-   This special mode can be used to save memory in games that require several different
-   handlings of the same ROM data (e.g. metro.c can use both 4bpp and 8bpp tiles, and both
-   8x8 and 16x16; cps.c has 8x8, 16x16 and 32x32 tiles all fetched from the same ROMs).
+/*	When planeoffset[0] is set to GFX_RAW, the gfx data is left as-is, with no conversion.
+   	No buffer is allocated for the decoded data, and gfxdata is set to point to the source
+   	data.
+   	xoffset[0] is an optional displacement (*8) from the beginning of the source data, while
+   	yoffset[0] is the line modulo (*8) and charincrement the char modulo (*8). They are *8
+   	for consistency with the usual behaviour, but the bottom 3 bits are not used.
+   	GFX_ELEMENT_PACKED is automatically set if planes is <= 4.
+
+   	This special mode can be used to save memory in games that require several different
+   	handlings of the same ROM data (e.g. metro.c can use both 4bpp and 8bpp tiles, and both
+   	8x8 and 16x16; cps.c has 8x8, 16x16 and 32x32 tiles all fetched from the same ROMs).
 */
 
 enum
@@ -108,12 +109,12 @@ struct _gfx_layout
 	UINT16			height;				/* pixel height of each element */
 	UINT32			total;				/* total number of elements, or RGN_FRAC() */
 	UINT16			planes;				/* number of bitplanes */
-	UINT32			planeoffset[MAX_GFX_PLANES]; /* bit offset of each bitplane */
-	UINT32			xoffset[MAX_GFX_SIZE]; /* bit offset of each horizontal pixel */
-	UINT32			yoffset[MAX_GFX_SIZE]; /* bit offset of each vertical pixel */
-	UINT32			charincrement;		/* distance between two consecutive elements (in bits) */
-	const UINT32 *	extxoffs;			/* extended X offset array for really big layouts */
-	const UINT32 *	extyoffs;			/* extended Y offset array for really big layouts */
+	UINT32			planeoffset[MAX_GFX_PLANES];	/* bit offset of each bitplane */
+	UINT32			xoffset[MAX_GFX_SIZE];		/* bit offset of each horizontal pixel */
+	UINT32			yoffset[MAX_GFX_SIZE];		/* bit offset of each vertical pixel */
+	UINT32			charincrement;			/* distance between two consecutive elements (in bits) */
+	const UINT32		*extxoffs;			/* extended X offset array for really big layouts */
+	const UINT32		*extyoffs;			/* extended Y offset array for really big layouts */
 };
 
 
@@ -128,34 +129,34 @@ public:
 	UINT16			origwidth;			/* starting pixel width of each element */
 	UINT16			origheight;			/* staring pixel height of each element */
 	UINT8			flags;				/* one of the GFX_ELEMENT_* flags above */
-	UINT32			total_elements;		/* total number of decoded elements */
+	UINT32			total_elements;			/* total number of decoded elements */
 
 	UINT32			color_base;			/* base color for rendering */
-	UINT16			color_depth;		/* number of colors each pixel can represent */
-	UINT16			color_granularity;	/* number of colors for each color code */
-	UINT32			total_colors;		/* number of color codes */
+	UINT16			color_depth;			/* number of colors each pixel can represent */
+	UINT16			color_granularity;		/* number of colors for each color code */
+	UINT32			total_colors;			/* number of color codes */
 
-	UINT32 *		pen_usage;			/* bitmask of pens that are used (pens 0-31 only) */
+	UINT32			*pen_usage;			/* bitmask of pens that are used (pens 0-31 only) */
 
-	UINT8 *			gfxdata;			/* pixel data, 8bpp or 4bpp (if GFX_ELEMENT_PACKED) */
-	UINT32			line_modulo;		/* bytes between each row of data */
-	UINT32			char_modulo;		/* bytes between each element */
-	const UINT8 *	srcdata;			/* pointer to the source data for decoding */
-	UINT8 *			dirty;				/* dirty array for detecting tiles that need decoding */
+	UINT8			*gfxdata;			/* pixel data, 8bpp or 4bpp (if GFX_ELEMENT_PACKED) */
+	UINT32			line_modulo;			/* bytes between each row of data */
+	UINT32			char_modulo;			/* bytes between each element */
+	const UINT8		*srcdata;			/* pointer to the source data for decoding */
+	UINT8			*dirty;				/* dirty array for detecting tiles that need decoding */
 	UINT32			dirtyseq;			/* sequence number; incremented each time a tile is dirtied */
 
-	running_machine *machine;			/* pointer to the owning machine */
+	running_machine *machine;				/* pointer to the owning machine */
 	gfx_layout		layout;				/* copy of the original layout */
 };
 
 
 struct gfx_decode_entry
 {
-	const char *	memory_region;		/* memory region where the data resides */
+	const char		*memory_region;			/* memory region where the data resides */
 	UINT32			start;				/* offset of beginning of data to decode */
-	const gfx_layout *gfxlayout;		/* pointer to gfx_layout describing the layout; NULL marks the end of the array */
-	UINT16			color_codes_start;	/* offset in the color lookup table where color codes start */
-	UINT16			total_color_codes;	/* total number of color codes */
+	const gfx_layout	*gfxlayout;			/* pointer to gfx_layout describing the layout; NULL marks the end of the array */
+	UINT16			color_codes_start;		/* offset in the color lookup table where color codes start */
+	UINT16			total_color_codes;		/* total number of color codes */
 	UINT8			xscale;				/* optional horizontal scaling factor; 0 means 1x */
 	UINT8			yscale;				/* optional vertical scaling factor; 0 means 1x */
 };
@@ -269,15 +270,15 @@ void copybitmap(bitmap_t *dest, bitmap_t *src, int flipx, int flipy, INT32 destx
 void copybitmap_trans(bitmap_t *dest, bitmap_t *src, int flipx, int flipy, INT32 destx, INT32 desty, const rectangle *cliprect, UINT32 transpen);
 
 /*
-  Copy a bitmap onto another with scroll and wraparound.
-  These functions support multiple independently scrolling rows/columns.
-  "rows" is the number of indepentently scrolling rows. "rowscroll" is an
-  array of integers telling how much to scroll each row. Same thing for
-  "numcols" and "colscroll".
-  If the bitmap cannot scroll in one direction, set numrows or columns to 0.
-  If the bitmap scrolls as a whole, set numrows and/or numcols to 1.
-  Bidirectional scrolling is, of course, supported only if the bitmap
-  scrolls as a whole in at least one direction.
+	Copy a bitmap onto another with scroll and wraparound.
+	These functions support multiple independently scrolling rows/columns.
+	"rows" is the number of indepentently scrolling rows. "rowscroll" is an
+	array of integers telling how much to scroll each row. Same thing for
+	"numcols" and "colscroll".
+	If the bitmap cannot scroll in one direction, set numrows or columns to 0.
+	If the bitmap scrolls as a whole, set numrows and/or numcols to 1.
+	Bidirectional scrolling is, of course, supported only if the bitmap
+	scrolls as a whole in at least one direction.
 */
 
 /* copy from one bitmap to another, copying all unclipped pixels, and applying scrolling to one or more rows/colums */
@@ -287,32 +288,32 @@ void copyscrollbitmap(bitmap_t *dest, bitmap_t *src, UINT32 numrows, const INT32
 void copyscrollbitmap_trans(bitmap_t *dest, bitmap_t *src, UINT32 numrows, const INT32 *rowscroll, UINT32 numcols, const INT32 *colscroll, const rectangle *cliprect, UINT32 transpen);
 
 /*
-    Copy a bitmap applying rotation, zooming, and arbitrary distortion.
-    This function works in a way that mimics some real hardware like the Konami
-    051316, so it requires little or no further processing on the caller side.
+	Copy a bitmap applying rotation, zooming, and arbitrary distortion.
+    	This function works in a way that mimics some real hardware like the Konami
+    	051316, so it requires little or no further processing on the caller side.
 
-    Two 16.16 fixed point counters are used to keep track of the position on
-    the source bitmap. startx and starty are the initial values of those counters,
-    indicating the source pixel that will be drawn at coordinates (0,0) in the
-    destination bitmap. The destination bitmap is scanned left to right, top to
-    bottom; every time the cursor moves one pixel to the right, incxx is added
-    to startx and incxy is added to starty. Every time the cursor moves to the
-    next line, incyx is added to startx and incyy is added to startyy.
+    	Two 16.16 fixed point counters are used to keep track of the position on
+    	the source bitmap. startx and starty are the initial values of those counters,
+    	indicating the source pixel that will be drawn at coordinates (0,0) in the
+    	destination bitmap. The destination bitmap is scanned left to right, top to
+    	bottom; every time the cursor moves one pixel to the right, incxx is added
+    	to startx and incxy is added to starty. Every time the cursor moves to the
+    	next line, incyx is added to startx and incyy is added to startyy.
 
-    What this means is that if incxy and incyx are both 0, the bitmap will be
-    copied with only zoom and no rotation. If e.g. incxx and incyy are both 0x8000,
-    the source bitmap will be doubled.
+    	What this means is that if incxy and incyx are both 0, the bitmap will be
+    	copied with only zoom and no rotation. If e.g. incxx and incyy are both 0x8000,
+    	the source bitmap will be doubled.
 
-    Rotation is performed this way:
-    incxx = 0x10000 * cos(theta)
-    incxy = 0x10000 * -sin(theta)
-    incyx = 0x10000 * sin(theta)
-    incyy = 0x10000 * cos(theta)
-    this will perform a rotation around (0,0), you'll have to adjust startx and
-    starty to move the center of rotation elsewhere.
+    	Rotation is performed this way:
+    	incxx = 0x10000 * cos(theta)
+    	incxy = 0x10000 * -sin(theta)
+    	incyx = 0x10000 * sin(theta)
+    	incyy = 0x10000 * cos(theta)
+    	this will perform a rotation around (0,0), you'll have to adjust startx and
+    	starty to move the center of rotation elsewhere.
 
-    Optionally the bitmap can be tiled across the screen instead of doing a single
-    copy. This is obtained by setting the wraparound parameter to true.
+    	Optionally the bitmap can be tiled across the screen instead of doing a single
+    	copy. This is obtained by setting the wraparound parameter to true.
 */
 
 /* copy from one bitmap to another, with zoom and rotation, copying all unclipped pixels */

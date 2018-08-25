@@ -40,9 +40,9 @@
     CONSTANTS
 ***************************************************************************/
 
-#define DATA_BIT	0x01
-#define CLOCK_BIT	0x02
-#define END_BIT		0x04
+#define DATA_BIT	(0x01)
+#define CLOCK_BIT	(0x02)
+#define END_BIT		(0x04)
 
 /***************************************************************************
     TYPE DEFINITIONS
@@ -51,29 +51,29 @@
 typedef struct _upd4990a_state upd4990a_state;
 struct _upd4990a_state
 {
-	int seconds;	/* seconds BCD */
-	int minutes;	/* minutes BCD */
+	int seconds;		/* seconds BCD */
+	int minutes;		/* minutes BCD */
 	int hours;		/* hours   BCD */
 	int days;		/* days    BCD */
 	int month;		/* month   Hexadecimal form */
 	int year;		/* year    BCD */
-	int weekday;	/* weekday BCD */
+	int weekday;		/* weekday BCD */
 
 	UINT32 shiftlo;
 	UINT32 shifthi;
 
-	int retraces;	/* Assumes 60 retraces a second */
+	int retraces;		/* Assumes 60 retraces a second */
 	int testwaits;
-	int maxwaits;	/* Switch test every frame*/
-	int testbit;	/* Pulses a bit in order to simulate test output */
+	int maxwaits;		/* Switch test every frame*/
+	int testbit;		/* Pulses a bit in order to simulate test output */
+
+	int clock_line;
+	int command_line;	/* ?? */
 
 	int outputbit;
 	int bitno;
 	INT8 reading;
 	INT8 writing;
-
-	int clock_line;
-	int command_line;	//??
 };
 
 
@@ -117,7 +117,7 @@ static void upd4990a_increment_month( running_device *device )
 			upd4990a->year &= 0xf0;
 			upd4990a->year += 0x10;
 		}
-		if (upd4990a->year == 0xA0)
+		if (upd4990a->year == 0xa0)
 			upd4990a->year = 0;
 	}
 }
@@ -129,8 +129,8 @@ static void upd4990a_increment_month( running_device *device )
 static void upd4990a_increment_day( running_device *device )
 {
 	upd4990a_state *upd4990a = get_safe_token(device);
-	int real_year;
 
+	int real_year;
 	upd4990a->days++;
 	if ((upd4990a->days & 0x0f) >= 10)
 	{
@@ -150,9 +150,9 @@ static void upd4990a_increment_day( running_device *device )
 				upd4990a->days = 1;
 				upd4990a_increment_month(device);
 			}
-			break;
+		break;
 		case 2:
-			real_year = (upd4990a->year >> 4) * 10 + (upd4990a->year & 0xf);
+			real_year = (upd4990a->year >> 4) * 10 + (upd4990a->year & 0x0f);
 			if ((real_year % 4) && (!(real_year % 100) || (real_year % 400)))
 			{
 				if (upd4990a->days == 0x29)
@@ -169,14 +169,14 @@ static void upd4990a_increment_day( running_device *device )
 					upd4990a_increment_month(device);
 				}
 			}
-			break;
+		break;
 		case 4: case 6: case 9: case 11:
 			if (upd4990a->days == 0x31)
 			{
 				upd4990a->days = 1;
 				upd4990a_increment_month(device);
 			}
-			break;
+		break;
 	}
 }
 
@@ -189,7 +189,7 @@ void upd4990a_addretrace( running_device *device )
 	upd4990a_state *upd4990a = get_safe_token(device);
 
 	++upd4990a->testwaits;
-	if(upd4990a->testwaits >= upd4990a->maxwaits)
+	if (upd4990a->testwaits >= upd4990a->maxwaits)
 	{
 		upd4990a->testbit ^= 1;
 		upd4990a->testwaits = 0;
@@ -266,32 +266,32 @@ static void upd4990a_readbit( running_device *device )
 		case 0x00: case 0x01: case 0x02: case 0x03:
 		case 0x04: case 0x05: case 0x06: case 0x07:
 			upd4990a->outputbit = (upd4990a->seconds >> upd4990a->bitno) & 0x01;
-			break;
+		break;
 		case 0x08: case 0x09: case 0x0a: case 0x0b:
 		case 0x0c: case 0x0d: case 0x0e: case 0x0f:
 			upd4990a->outputbit = (upd4990a->minutes >> (upd4990a->bitno - 0x08)) & 0x01;
-			break;
+		break;
 		case 0x10: case 0x11: case 0x12: case 0x13:
 		case 0x14: case 0x15: case 0x16: case 0x17:
 			upd4990a->outputbit = (upd4990a->hours >> (upd4990a->bitno - 0x10)) & 0x01;
-			break;
+		break;
 		case 0x18: case 0x19: case 0x1a: case 0x1b:
 		case 0x1c: case 0x1d: case 0x1e: case 0x1f:
 			upd4990a->outputbit = (upd4990a->days >> (upd4990a->bitno - 0x18)) & 0x01;
-			break;
+		break;
 		case 0x20: case 0x21: case 0x22: case 0x23:
 			upd4990a->outputbit = (upd4990a->weekday >> (upd4990a->bitno - 0x20)) & 0x01;
-			break;
+		break;
 		case 0x24: case 0x25: case 0x26: case 0x27:
 			upd4990a->outputbit = (upd4990a->month >> (upd4990a->bitno - 0x24)) & 0x01;
-			break;
+		break;
 		case 0x28: case 0x29: case 0x2a: case 0x2b:
 		case 0x2c: case 0x2d: case 0x2e: case 0x2f:
 			upd4990a->outputbit = (upd4990a->year >> (upd4990a->bitno - 0x28)) & 0x01;
-			break;
+		break;
 		case 0x30: case 0x31: case 0x32: case 0x33:
 			//unknown
-			break;
+		break;
 	}
 }
 
@@ -315,9 +315,10 @@ static void upd4990a_resetbitstream( running_device *device )
 static void upd4990a_writebit( running_device *device , UINT8 bit )
 {
 	upd4990a_state *upd4990a = get_safe_token(device);
+
 	if (upd4990a->bitno <= 31)	//low part
 		upd4990a->shiftlo |= bit << upd4990a->bitno;
-	else	//high part
+	else				//high part
 		upd4990a->shifthi |= bit << (upd4990a->bitno - 32);
 }
 
@@ -328,8 +329,8 @@ static void upd4990a_writebit( running_device *device , UINT8 bit )
 static void upd4990a_nextbit( running_device *device )
 {
 	upd4990a_state *upd4990a = get_safe_token(device);
-	++upd4990a->bitno;
 
+	++upd4990a->bitno;
 	if (upd4990a->reading)
 		upd4990a_readbit(device);
 
@@ -338,7 +339,6 @@ static void upd4990a_nextbit( running_device *device )
 		upd4990a->reading = 0;
 		upd4990a_resetbitstream(device);
 	}
-
 }
 
 /*-------------------------------------------------
@@ -348,9 +348,9 @@ static void upd4990a_nextbit( running_device *device )
 static UINT8 upd4990a_getcommand( running_device *device )
 {
 	upd4990a_state *upd4990a = get_safe_token(device);
-	//Warning: problems if the 4 bits are in different
-	//parts, It's very strange that this case could happen.
-	if(upd4990a->bitno <= 31)
+	/* Warning: problems if the 4 bits are in different
+	   parts, It's very strange that this case could happen. */
+	if (upd4990a->bitno <= 31)
 		return upd4990a->shiftlo >> (upd4990a->bitno - 4);
 	else
 		return upd4990a->shifthi >> (upd4990a->bitno - 32 - 4);
@@ -383,26 +383,26 @@ static void upd4990a_process_command( running_device *device )
 
 	switch(upd4990a_getcommand(device))
 	{
-		case 0x1:	//load output register
+		case 0x01:					//load output register
 			upd4990a->bitno = 0;
 			if (upd4990a->reading)
 				upd4990a_readbit(device);	//prepare first bit
 			upd4990a->shiftlo = 0;
 			upd4990a->shifthi = 0;
-			break;
-		case 0x2:
-			upd4990a->writing = 0;	//store register to current date
+		break;
+		case 0x02:
+			upd4990a->writing = 0;			//store register to current date
 			upd4990a_update_date(device);
-			break;
-		case 0x3:	//start reading
+		break;
+		case 0x03:					//start reading
 			upd4990a->reading = 1;
-			break;
-		case 0x7:	//switch testbit every frame
+		break;
+		case 0x07:					//switch testbit every frame
 			upd4990a->maxwaits = 1;
-			break;
-		case 0x8:	//switch testbit every half-second
+		break;
+		case 0x08:					//switch testbit every half-second
 			upd4990a->maxwaits = 30;
-			break;
+		break;
 	}
 	upd4990a_resetbitstream(device);
 }
@@ -416,13 +416,13 @@ static void upd4990a_serial_control( running_device *device, UINT8 data )
 	upd4990a_state *upd4990a = get_safe_token(device);
 
 	//Check for command end
-	if(upd4990a->command_line && !(data & END_BIT)) //end of command
+	if (upd4990a->command_line && !(data & END_BIT)) //end of command
 	{
 		upd4990a_process_command(device);
 	}
 	upd4990a->command_line = data & END_BIT;
 
-	if(upd4990a->clock_line && !(data & CLOCK_BIT))	//clock lower edge
+	if (upd4990a->clock_line && !(data & CLOCK_BIT))	//clock lower edge
 	{
 		upd4990a_writebit(device, data & DATA_BIT);
 		upd4990a_nextbit(device);
@@ -450,7 +450,6 @@ static DEVICE_START( upd4990a )
 
 	system_time curtime, *systime = &curtime;
 	device->machine->current_datetime(curtime);
-
 #if 0
 	upd4990a->seconds = 0x00;
 	upd4990a->minutes = 0x00;

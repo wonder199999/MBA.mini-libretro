@@ -429,7 +429,8 @@ void device_execute_interface::spin_until_time(attotime duration)
 
 	// then set a timer for it
 	timer_set(&m_machine, duration, this, TRIGGER_SUSPENDTIME + timetrig, static_timed_trigger_callback);
-	timetrig = (timetrig + 1) % 256;
+//	timetrig = (timetrig + 1) % 256;
+	timetrig = (timetrig + 1) & 0xff;
 }
 
 

@@ -465,10 +465,11 @@ COBJFLAGS += -x objective-c++
 CCOMFLAGS += -pipe
 
 # add the optimization flag and define MAME_DEBUG if we are a debugging build
+# PS: void assert(int expression); - If NDEBUG is defined, do nothing.
 ifeq ($(MDEBUG), 1)
    CCOMFLAGS +=  -O0 -g -DMAME_DEBUG
 else
-   CCOMFLAGS += -O$(OPTIMIZE) -DNDEBUG 
+   CCOMFLAGS += -O$(OPTIMIZE) -DNDEBUG
 endif
 
 # define MAME_PROFILER if we are a profiling build

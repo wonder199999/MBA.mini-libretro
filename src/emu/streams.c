@@ -45,17 +45,6 @@
 
 #include "emu.h"
 #include "streams.h"
-//#include "profiler.h"
-
-
-
-/***************************************************************************
-    DEBUGGING
-***************************************************************************/
-
-#define VERBOSE			(0)
-
-#define VPRINTF(x)	do { if (VERBOSE) mame_printf_debug x; } while (0)
 
 
 
@@ -63,11 +52,11 @@
     CONSTANTS
 ***************************************************************************/
 
-#define OUTPUT_BUFFER_UPDATES			(5)
+#define OUTPUT_BUFFER_UPDATES		(5)
 
-#define FRAC_BITS						22
-#define FRAC_ONE						(1 << FRAC_BITS)
-#define FRAC_MASK						(FRAC_ONE - 1)
+#define FRAC_BITS			22
+#define FRAC_ONE			(1 << FRAC_BITS)
+#define FRAC_MASK			(FRAC_ONE - 1)
 
 
 
@@ -81,31 +70,31 @@ typedef struct _stream_output stream_output;
 struct _stream_input
 {
 	/* linking information */
-	sound_stream *		owner;					/* pointer to the owning stream */
-	stream_output *		source;					/* pointer to the sound_output for this source */
+	sound_stream		*owner;			/* pointer to the owning stream */
+	stream_output		*source;		/* pointer to the sound_output for this source */
 
 	/* resample buffer */
-	stream_sample_t *	resample;				/* buffer for resampling to the stream's sample rate */
-	UINT32				bufsize;				/* size of output buffer, in samples */
-	UINT32				bufalloc;				/* allocated size of output buffer, in samples */
+	stream_sample_t		*resample;		/* buffer for resampling to the stream's sample rate */
+	UINT32			bufsize;		/* size of output buffer, in samples */
+	UINT32			bufalloc;		/* allocated size of output buffer, in samples */
 
 	/* resampling information */
 	attoseconds_t		latency_attoseconds;	/* latency between this stream and the input stream */
-	INT16				gain;					/* gain to apply to this input */
+	INT16			gain;			/* gain to apply to this input */
 };
 
 
 struct _stream_output
 {
 	/* linking information */
-	sound_stream *		owner;					/* pointer to the owning stream */
+	sound_stream		*owner;			/* pointer to the owning stream */
 
 	/* output buffer */
-	stream_sample_t *	buffer;					/* output buffer */
+	stream_sample_t		*buffer;		/* output buffer */
 
 	/* output buffer position */
-	int					dependents;				/* number of dependents */
-	INT16				gain;					/* gain to apply to the output */
+	int			dependents;		/* number of dependents */
+	INT16			gain;			/* gain to apply to the output */
 };
 
 
@@ -113,50 +102,50 @@ class sound_stream
 {
 public:
 	/* linking information */
-	device_t *	device;				/* owning device */
-	sound_stream *		next;					/* next stream in the chain */
-	int					index;					/* index for save states */
+	device_t		*device;			/* owning device */
+	sound_stream		*next;				/* next stream in the chain */
+	int			index;				/* index for save states */
 
 	/* general information */
-	UINT32				sample_rate;			/* sample rate of this stream */
-	UINT32				new_sample_rate;		/* newly-set sample rate for the stream */
+	UINT32			sample_rate;			/* sample rate of this stream */
+	UINT32			new_sample_rate;		/* newly-set sample rate for the stream */
 
 	/* timing information */
-	attoseconds_t		attoseconds_per_sample;	/* number of attoseconds per sample */
-	INT32				max_samples_per_update;	/* maximum samples per update */
+	attoseconds_t		attoseconds_per_sample;		/* number of attoseconds per sample */
+	INT32			max_samples_per_update;		/* maximum samples per update */
 
 	/* input information */
-	int					inputs;					/* number of inputs */
-	stream_input *		input;					/* list of streams we directly depend upon */
-	stream_sample_t **	input_array;			/* array of inputs for passing to the callback */
+	int			inputs;				/* number of inputs */
+	stream_input		*input;				/* list of streams we directly depend upon */
+	stream_sample_t		**input_array;			/* array of inputs for passing to the callback */
 
 	/* resample buffer information */
-	UINT32				resample_bufalloc;		/* allocated size of each resample buffer */
+	UINT32			resample_bufalloc;		/* allocated size of each resample buffer */
 
 	/* output information */
-	int					outputs;				/* number of outputs */
-	stream_output *		output;					/* list of streams which directly depend upon us */
-	stream_sample_t **	output_array;			/* array of outputs for passing to the callback */
+	int			outputs;			/* number of outputs */
+	stream_output		*output;			/* list of streams which directly depend upon us */
+	stream_sample_t		**output_array;			/* array of outputs for passing to the callback */
 
 	/* output buffer information */
-	UINT32				output_bufalloc;		/* allocated size of each output buffer */
-	INT32				output_sampindex;		/* current position within each output buffer */
-	INT32				output_update_sampindex;/* position at time of last global update */
-	INT32				output_base_sampindex;	/* sample at base of buffer, relative to the current emulated second */
+	UINT32			output_bufalloc;		/* allocated size of each output buffer */
+	INT32			output_sampindex;		/* current position within each output buffer */
+	INT32			output_update_sampindex;	/* position at time of last global update */
+	INT32			output_base_sampindex;		/* sample at base of buffer, relative to the current emulated second */
 
 	/* callback information */
-	stream_update_func	callback;				/* callback function */
-	void *				param;					/* callback function parameter */
+	stream_update_func	callback;			/* callback function */
+	void			*param;				/* callback function parameter */
 };
 
 
 struct _streams_private
 {
-	sound_stream *		stream_head;			/* pointer to first stream */
-	sound_stream **		stream_tailptr;			/* pointer to pointer to last stream */
-	int					stream_index;			/* index of the current stream */
+	sound_stream		*stream_head;			/* pointer to first stream */
+	sound_stream		**stream_tailptr;		/* pointer to pointer to last stream */
+	int			stream_index;			/* index of the current stream */
 	attoseconds_t		update_attoseconds;		/* attoseconds between global updates */
-	attotime			last_update;			/* last update time */
+	attotime		last_update;			/* last update time */
 };
 
 
@@ -245,6 +234,7 @@ void streams_update(running_machine *machine)
 	attotime curtime = timer_get_time(machine);
 	int second_tick = FALSE;
 	sound_stream *stream;
+	int outputnum;
 
 	/* see if we ticked over to the next second */
 	if (curtime.seconds != strdata->last_update.seconds)
@@ -257,13 +247,12 @@ void streams_update(running_machine *machine)
 	for (stream = strdata->stream_head; stream != NULL; stream = stream->next)
 	{
 		INT32 output_bufindex = stream->output_sampindex - stream->output_base_sampindex;
-		int outputnum;
 
 		/* make sure this stream is up-to-date */
 		stream_update(stream);
 
 		/* if we've ticked over another second, adjust all the counters that are relative to
-           the current second */
+		   the current second */
 		if (second_tick)
 		{
 			stream->output_sampindex -= stream->sample_rate;
@@ -274,8 +263,8 @@ void streams_update(running_machine *machine)
 		stream->output_update_sampindex = stream->output_sampindex;
 
 		/* if we don't have enough output buffer space to hold two updates' worth of samples,
-           we need to shuffle things down */
-		if (stream->output_bufalloc - output_bufindex < 2 * stream->max_samples_per_update)
+		   we need to shuffle things down */
+		if (stream->output_bufalloc - output_bufindex < stream->max_samples_per_update * 2)
 		{
 			INT32 samples_to_lose = output_bufindex - stream->max_samples_per_update;
 			if (samples_to_lose > 0)
@@ -302,7 +291,6 @@ void streams_update(running_machine *machine)
 		if (stream->new_sample_rate != 0)
 		{
 			UINT32 old_rate = stream->sample_rate;
-			int outputnum;
 
 			/* update to the new rate and remember the old rate */
 			stream->sample_rate = stream->new_sample_rate;
@@ -342,8 +330,6 @@ sound_stream *stream_create(device_t *device, int inputs, int outputs, int sampl
 
 	/* allocate memory */
 	stream = auto_alloc_clear(device->machine, sound_stream);
-
-	VPRINTF(("stream_create(%d, %d, %d) => %p\n", inputs, outputs, sample_rate, stream));
 
 	/* fill in the data */
 	stream->device = device;
@@ -394,7 +380,7 @@ sound_stream *stream_create(device_t *device, int inputs, int outputs, int sampl
 	strdata->stream_tailptr = &stream->next;
 
 	/* force an update to the sample rates; this will cause everything to be recomputed
-       and will generate the initial resample buffers for our inputs */
+	   and will generate the initial resample buffers for our inputs */
 	recompute_sample_rate_data(device->machine, stream);
 
 	/* set up the initial output buffer positions now that we have data */
@@ -466,8 +452,6 @@ void stream_set_input(sound_stream *stream, int index, sound_stream *input_strea
 {
 	stream_input *input;
 
-	VPRINTF(("stream_set_input(%p, %d, %p, %d, %f)\n", stream, index, input_stream, output_index, gain));
-
 	/* make sure it's a valid input */
 	if (index >= stream->inputs)
 		fatalerror("Fatal error: stream_set_input attempted to configure non-existant input %d (%d max)", index, stream->inputs);
@@ -506,11 +490,9 @@ void stream_update(sound_stream *stream)
 	INT32 update_sampindex = time_to_sampindex(strdata, stream, timer_get_time(machine));
 
 	/* generate samples to get us up to the appropriate time */
-//	g_profiler.start(PROFILER_SOUND);
 	assert(stream->output_sampindex - stream->output_base_sampindex >= 0);
 	assert(update_sampindex - stream->output_base_sampindex <= stream->output_bufalloc);
 	generate_samples(stream, update_sampindex - stream->output_sampindex);
-//	g_profiler.stop();
 
 	/* remember this info for next time */
 	stream->output_sampindex = update_sampindex;
@@ -692,13 +674,12 @@ static STATE_POSTLOAD( stream_postload )
 {
 	streams_private *strdata = machine->streams_data;
 	sound_stream *stream = (sound_stream *)param;
-	int outputnum;
 
 	/* recompute the same rate information */
 	recompute_sample_rate_data(machine, stream);
 
 	/* make sure our output buffers are fully cleared */
-	for (outputnum = 0; outputnum < stream->outputs; outputnum++)
+	for (int outputnum = 0; outputnum < stream->outputs; outputnum++)
 		memset(stream->output[outputnum].buffer, 0, stream->output_bufalloc * sizeof(stream->output[outputnum].buffer[0]));
 
 	/* recompute the sample indexes to make sense */
@@ -721,15 +702,12 @@ static void allocate_resample_buffers(running_machine *machine, sound_stream *st
 	/* if we don't have enough room, allocate more */
 	if (stream->resample_bufalloc < bufsize)
 	{
-		int inputnum;
-		int oldsize;
-
 		/* this becomes the new allocation size */
-		oldsize = stream->resample_bufalloc;
+		int oldsize = stream->resample_bufalloc;
 		stream->resample_bufalloc = bufsize;
 
 		/* iterate over outputs and realloc their buffers */
-		for (inputnum = 0; inputnum < stream->inputs; inputnum++)
+		for (int inputnum = 0; inputnum < stream->inputs; inputnum++)
 		{
 			stream_input *input = &stream->input[inputnum];
 			stream_sample_t *newbuffer = auto_alloc_array(machine, stream_sample_t, stream->resample_bufalloc);
@@ -754,15 +732,12 @@ static void allocate_output_buffers(running_machine *machine, sound_stream *stre
 	/* if we don't have enough room, allocate more */
 	if (stream->output_bufalloc < bufsize)
 	{
-		int outputnum;
-		int oldsize;
-
 		/* this becomes the new allocation size */
-		oldsize = stream->output_bufalloc;
+		int oldsize = stream->output_bufalloc;
 		stream->output_bufalloc = bufsize;
 
 		/* iterate over outputs and realloc their buffers */
-		for (outputnum = 0; outputnum < stream->outputs; outputnum++)
+		for (int outputnum = 0; outputnum < stream->outputs; outputnum++)
 		{
 			stream_output *output = &stream->output[outputnum];
 			stream_sample_t *newbuffer = auto_alloc_array(machine, stream_sample_t, stream->output_bufalloc);
@@ -783,7 +758,6 @@ static void allocate_output_buffers(running_machine *machine, sound_stream *stre
 static void recompute_sample_rate_data(running_machine *machine, sound_stream *stream)
 {
 	streams_private *strdata = machine->streams_data;
-	int inputnum;
 
 	/* recompute the timing parameters */
 	stream->attoseconds_per_sample = ATTOSECONDS_PER_SECOND / stream->sample_rate;
@@ -794,7 +768,7 @@ static void recompute_sample_rate_data(running_machine *machine, sound_stream *s
 	allocate_output_buffers(machine, stream);
 
 	/* iterate over each input */
-	for (inputnum = 0; inputnum < stream->inputs; inputnum++)
+	for (int inputnum = 0; inputnum < stream->inputs; inputnum++)
 	{
 		stream_input *input = &stream->input[inputnum];
 
@@ -806,7 +780,7 @@ static void recompute_sample_rate_data(running_machine *machine, sound_stream *s
 			attoseconds_t latency;
 
 			/* okay, we have a new sample rate; recompute the latency to be the maximum
-               sample period between us and our input */
+			   sample period between us and our input */
 			latency = MAX(new_attosecs_per_sample, stream->attoseconds_per_sample);
 
 			/* if the input stream's sample rate is lower, we will use linear interpolation */
@@ -819,7 +793,7 @@ static void recompute_sample_rate_data(running_machine *machine, sound_stream *s
 				latency = 0;
 
 			/* we generally don't want to tweak the latency, so we just keep the greatest
-               one we've computed thus far */
+			   one we've computed thus far */
 			input->latency_attoseconds = MAX(input->latency_attoseconds, latency);
 			assert(input->latency_attoseconds < strdata->update_attoseconds);
 		}
@@ -841,14 +815,12 @@ static void recompute_sample_rate_data(running_machine *machine, sound_stream *s
 
 static void generate_samples(sound_stream *stream, int samples)
 {
-	int inputnum, outputnum;
-
 	/* if we're already there, skip it */
 	if (samples <= 0)
 		return;
 
 	/* ensure all inputs are up to date and generate resampled data */
-	for (inputnum = 0; inputnum < stream->inputs; inputnum++)
+	for (int inputnum = 0; inputnum < stream->inputs; inputnum++)
 	{
 		stream_input *input = &stream->input[inputnum];
 
@@ -861,7 +833,7 @@ static void generate_samples(sound_stream *stream, int samples)
 	}
 
 	/* loop over all outputs and compute the output pointer */
-	for (outputnum = 0; outputnum < stream->outputs; outputnum++)
+	for (int outputnum = 0; outputnum < stream->outputs; outputnum++)
 	{
 		stream_output *output = &stream->output[outputnum];
 		stream->output_array[outputnum] = output->buffer + (stream->output_sampindex - stream->output_base_sampindex);
