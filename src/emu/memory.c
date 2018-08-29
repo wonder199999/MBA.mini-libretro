@@ -222,20 +222,20 @@ const int BANK_ENTRY_UNSPECIFIED = -1;
 static void *UNMAPPED_SHARE_PTR = ((void *)-1);
 
 // other address map constants
-const int MEMORY_BLOCK_CHUNK = 65536;					// minimum chunk size of allocated memory blocks
+const int MEMORY_BLOCK_CHUNK = 65536;			// minimum chunk size of allocated memory blocks
 
 // static data access handler constants
 enum
 {
-	STATIC_INVALID = 0,									// invalid - should never be used
-	STATIC_BANK1 = 1,									// first memory bank
-	STATIC_BANKMAX = 122,								// last memory bank
-	STATIC_RAM,											// RAM - reads/writes map to dynamic banks
-	STATIC_ROM,											// ROM - reads = RAM; writes = UNMAP
-	STATIC_NOP,											// NOP - reads = unmapped value; writes = no-op
-	STATIC_UNMAP,										// unmapped - same as NOP except we log errors
-	STATIC_WATCHPOINT,									// watchpoint - used internally
-	STATIC_COUNT										// total number of static handlers
+	STATIC_INVALID = 0,				// invalid - should never be used
+	STATIC_BANK1 = 1,				// first memory bank
+	STATIC_BANKMAX = 122,				// last memory bank
+	STATIC_RAM,					// RAM - reads/writes map to dynamic banks
+	STATIC_ROM,					// ROM - reads = RAM; writes = UNMAP
+	STATIC_NOP,					// NOP - reads = unmapped value; writes = no-op
+	STATIC_UNMAP,					// unmapped - same as NOP except we log errors
+	STATIC_WATCHPOINT,				// watchpoint - used internally
+	STATIC_COUNT					// total number of static handlers
 };
 
 
@@ -276,7 +276,8 @@ private:
 	memory_block			*m_next;		// next memory block in the list
 	running_machine			&m_machine;		// need the machine to free our memory
 	address_space			&m_space;		// which address space are we associated with?
-	offs_t			m_bytestart, m_byteend;		// byte-normalized start/end for verifying a match
+	offs_t				 m_bytestart;		// byte-adjusted start address for handler
+	offs_t				 m_byteend;		// byte-adjusted end address for handler
 	UINT8				*m_data;		// pointer to the data for this block
 	UINT8				*m_allocated;		// pointer to the actually allocated block
 };
@@ -3777,20 +3778,20 @@ memory_block::memory_block(address_space &space, offs_t bytestart, offs_t byteen
 	// allocated a block if needed
 	if (m_data == NULL)
 	{
-		offs_t length = byteend - bytestart + 1;
+		offs_t length = byteend + 1 - bytestart;
 		if (length < 4096)
 			m_allocated = m_data = auto_alloc_array_clear(&space.m_machine, UINT8, length);
 		else
 		{
-			m_allocated = auto_alloc_array_clear(&space.m_machine, UINT8, length + 0x0fff);
-			m_data = reinterpret_cast<UINT8 *>((reinterpret_cast<FPTR>(m_allocated) + 0x0fff) & ~0x0fff);
+			m_allocated = auto_alloc_array_clear(&space.m_machine, UINT8, length + 0xfff);
+			m_data = reinterpret_cast<UINT8 *>((reinterpret_cast<FPTR>(m_allocated) + 0xfff) & ~0xfff);
 		}
 	}
 
 	// register for saving, but only if we're not part of a memory region
 	const region_info *region;
 	for (region = space.m_machine.m_regionlist.first(); region != NULL; region = region->next())
-		if (m_data >= region->base() && (m_data + (byteend - bytestart + 1)) < region->end())
+		if (m_data >= region->base() && (m_data + (byteend + 1 - bytestart)) < region->end())
 			break;
 
 	// if we didn't find a match, register
