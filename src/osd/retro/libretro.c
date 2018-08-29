@@ -249,10 +249,12 @@ static double refresh_rate = 60.0;
 
 static void retro_poll_mame_input();
 static void update_geometry();
+static int mmain(int argc, const char *argv);
+static int executeGame(char *path);
+static int iptdev_get_state(void *device_internal, void *item_internal);
 
 extern void retro_finish();
 extern void retro_main_loop();
-extern "C" int mmain(int argc, const char *argv);
 
 void osd_init( running_machine *machine );
 void osd_update( running_machine *machine, int skip_redraw );
@@ -287,40 +289,6 @@ void CLIB_DECL mame_printf_verbose( const char *text, ... ) ATTR_PRINTF(1, 2);	/
 #else
 	#define LOG(msg)
 #endif
-
-/* Capcom Eco Fighter , use L & R button to turn the weapon */
-#define ECOFGT_LAYOUT	(core_stricmp(machine->gamedrv->name, "ecofghtr") == 0) || (core_stricmp(machine->gamedrv->parent, "ecofghtr") == 0)
-
-/* Capcom Dynasty Wars */
-#define DYNWAR_LAYOUT	(core_stricmp(machine->gamedrv->name, "dynwar") == 0) || (core_stricmp(machine->gamedrv->parent, "dynwar") == 0)
-
-/* Neo Geo */
-#define NEOGEO_LAYOUT	(core_stricmp(machine->gamedrv->source_file, "src/mame/drivers/neogeo.inc") == 0)
-
-/* 6-buttons fighting games */
-#define VS6B_LAYOUT	(core_stricmp(machine->gamedrv->name, "sf2") == 0) || (core_stricmp(machine->gamedrv->parent, "sf2") == 0) ||		\
-			(core_stricmp(machine->gamedrv->name, "sf2ce") == 0) || (core_stricmp(machine->gamedrv->parent, "sf2ce") == 0) || 	\
-         		(core_stricmp(machine->gamedrv->name, "sf2hf") == 0) || (core_stricmp(machine->gamedrv->parent, "sf2hf") == 0) || 	\
-			(core_stricmp(machine->gamedrv->name, "sfzch") == 0) || (core_stricmp(machine->gamedrv->parent, "sfzch") == 0) || 	\
-         		(core_stricmp(machine->gamedrv->name, "ssf2") == 0) || (core_stricmp(machine->gamedrv->parent, "ssf2") == 0) ||		\
-			(core_stricmp(machine->gamedrv->name, "ssf2t") == 0) || (core_stricmp(machine->gamedrv->parent, "ssf2t") == 0) || 	\
-			(core_stricmp(machine->gamedrv->name, "sfa") == 0) || (core_stricmp(machine->gamedrv->parent, "sfa") == 0) || 		\
-			(core_stricmp(machine->gamedrv->name, "sfa2") == 0) || (core_stricmp(machine->gamedrv->parent, "sfa2") == 0) || 	\
-			(core_stricmp(machine->gamedrv->name, "sfz2al") == 0) || (core_stricmp(machine->gamedrv->parent, "sfz2al") == 0) || 	\
-         		(core_stricmp(machine->gamedrv->name, "sfa3") == 0) || (core_stricmp(machine->gamedrv->parent, "sfa3") == 0) || 	\
-			(core_stricmp(machine->gamedrv->name, "hsf2") == 0) || (core_stricmp(machine->gamedrv->parent, "hsf2") == 0) || 	\
-			(core_stricmp(machine->gamedrv->name, "dstlk") == 0) || (core_stricmp(machine->gamedrv->parent, "dstlk") == 0) || 	\
-         		(core_stricmp(machine->gamedrv->name, "vsav") == 0) || (core_stricmp(machine->gamedrv->parent, "vsav") == 0) || 	\
-			(core_stricmp(machine->gamedrv->name, "vsav2") == 0) || (core_stricmp(machine->gamedrv->parent, "vsav2") == 0) || 	\
-			(core_stricmp(machine->gamedrv->name, "vhunt2") == 0) || (core_stricmp(machine->gamedrv->parent, "vhunt2") == 0) || 	\
-			(core_stricmp(machine->gamedrv->name, "msh") == 0) || (core_stricmp(machine->gamedrv->parent, "msh") == 0) || 		\
-         		(core_stricmp(machine->gamedrv->name, "mshvsf") == 0) || (core_stricmp(machine->gamedrv->parent, "mshvsf") == 0) || 	\
-			(core_stricmp(machine->gamedrv->name, "mvsc") == 0) || (core_stricmp(machine->gamedrv->parent, "mvsc") == 0) || 	\
-			(core_stricmp(machine->gamedrv->name, "xmcota") == 0) || (core_stricmp(machine->gamedrv->parent, "xmcota") == 0) || 	\
-			(core_stricmp(machine->gamedrv->name, "xmvsf") == 0) || (core_stricmp(machine->gamedrv->parent, "xmvsf") == 0) || 	\
-			(core_stricmp(machine->gamedrv->name, "ringdest") == 0) || (core_stricmp(machine->gamedrv->parent, "ringdest") == 0) || \
-			(core_stricmp(machine->gamedrv->name, "nwarr") == 0) || (core_stricmp(machine->gamedrv->parent, "nwarr") == 0) || /* Before is the Capcom games */ \
-			(core_stricmp(machine->gamedrv->name, "ssoldier") == 0) || (core_stricmp(machine->gamedrv->parent, "ssoldier") == 0) 
 
 #define PLAYER_PRESS(button)	input_state_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_##button)
 #define MAX_JOYPADS	(4)
@@ -883,14 +851,30 @@ void retro_unload_game(void)
 	LOGI("Retro unload_game \n");
 }
 
+
 /**************************************************************************/
 
-static INT32 iptdev_get_state(void *device_internal, void *item_internal)
+static int iptdev_get_state(void *device_internal, void *item_internal)
 {
 	UINT8 *itemdata = (UINT8 *)item_internal;
    	return *itemdata;
 }
 
+static const char *specific_games_initinput_vs6b[] = {
+	"sf2",		"sf2ce",
+	"sf2hf",	"sfzch",
+	"ssf2",		"ssf2t",
+	"sfa",		"sfa2",
+	"sfa3",		"sfz2al",
+	"hsf2",		"dstlk",
+	"vsav",		"vsav2",
+	"vhunt2",	"msh",
+	"mshvsf",	"mvsc",
+	"xmcota",	"xmvsf",
+	"ringdest",	"nwarr",
+	"ssoldier",
+	NULL
+};
 
 static void initInput( running_machine *machine )
 {
@@ -965,27 +949,9 @@ static void initInput( running_machine *machine )
    	input_device_item_add(P4_device, "P4 JoyL",  &pad_state[3][KEY_JOYSTICK_L], ITEM_ID_4_PAD, iptdev_get_state);
    	input_device_item_add(P4_device, "P4 JoyR",  &pad_state[3][KEY_JOYSTICK_R], ITEM_ID_6_PAD, iptdev_get_state);
 
-   	if (VS6B_LAYOUT)      /* 6-buttons fighting games */
-   	{
-      		input_device_item_add(P1_device, "P1 B1", &pad_state[0][KEY_BUTTON_1], ITEM_ID_Z,	 iptdev_get_state);
-      		input_device_item_add(P1_device, "P1 B2", &pad_state[0][KEY_BUTTON_2], ITEM_ID_LSHIFT, 	 iptdev_get_state);
-      		input_device_item_add(P1_device, "P1 B3", &pad_state[0][KEY_BUTTON_3], ITEM_ID_LALT, 	 iptdev_get_state);
-      		input_device_item_add(P1_device, "P1 B4", &pad_state[0][KEY_BUTTON_4], ITEM_ID_LCONTROL, iptdev_get_state);
-      		input_device_item_add(P1_device, "P1 B5", &pad_state[0][KEY_BUTTON_5], ITEM_ID_SPACE, 	 iptdev_get_state);
-      		input_device_item_add(P1_device, "P1 B6", &pad_state[0][KEY_BUTTON_6], ITEM_ID_X, 	 iptdev_get_state);
-
-      		input_device_item_add(P2_device, "P2 B1", &pad_state[1][KEY_BUTTON_1], ITEM_ID_C, iptdev_get_state);
-      		input_device_item_add(P2_device, "P2 B2", &pad_state[1][KEY_BUTTON_2], ITEM_ID_W, iptdev_get_state);
-      		input_device_item_add(P2_device, "P2 B3", &pad_state[1][KEY_BUTTON_3], ITEM_ID_S, iptdev_get_state);
-      		input_device_item_add(P2_device, "P2 B4", &pad_state[1][KEY_BUTTON_4], ITEM_ID_A, iptdev_get_state);
-      		input_device_item_add(P2_device, "P2 B5", &pad_state[1][KEY_BUTTON_5], ITEM_ID_Q, iptdev_get_state);
-      		input_device_item_add(P2_device, "P2 B6", &pad_state[1][KEY_BUTTON_6], ITEM_ID_V, iptdev_get_state);
-
-		macro_enable = false;
-   	}
-	else      		/* Neo Geo */
-   	if (NEOGEO_LAYOUT)
-   	{
+	/* Neo Geo buttons layout */
+	if (!core_stricmp(machine->gamedrv->source_file, "src/mame/drivers/neogeo.inc"))
+	{
       		input_device_item_add(P1_device, "P1 B1", &pad_state[0][KEY_BUTTON_1], ITEM_ID_LALT, 	 iptdev_get_state);
       		input_device_item_add(P1_device, "P1 B2", &pad_state[0][KEY_BUTTON_2], ITEM_ID_LCONTROL, iptdev_get_state);
       		input_device_item_add(P1_device, "P1 B3", &pad_state[0][KEY_BUTTON_3], ITEM_ID_LSHIFT,   iptdev_get_state);
@@ -995,9 +961,10 @@ static void initInput( running_machine *machine )
       		input_device_item_add(P2_device, "P2 B2", &pad_state[1][KEY_BUTTON_2], ITEM_ID_A, iptdev_get_state);
       		input_device_item_add(P2_device, "P2 B3", &pad_state[1][KEY_BUTTON_3], ITEM_ID_W, iptdev_get_state);
       		input_device_item_add(P2_device, "P2 B4", &pad_state[1][KEY_BUTTON_4], ITEM_ID_Q, iptdev_get_state);
+		goto FINISHED;
 	}
-   	else	    		/* Capcom Eco Fighters */
-   	if (ECOFGT_LAYOUT)
+	/* Capcom Eco Fighter , use L & R button to turn the weapon */
+   	if (!core_stricmp(machine->gamedrv->name, "ecofghtr") || !core_stricmp(machine->gamedrv->parent, "ecofghtr"))
    	{
       		input_device_item_add(P1_device, "P1 B1", &pad_state[0][KEY_BUTTON_5], ITEM_ID_LCONTROL, iptdev_get_state);
       		input_device_item_add(P1_device, "P1 B2", &pad_state[0][KEY_BUTTON_2], ITEM_ID_LALT, 	 iptdev_get_state);
@@ -1008,9 +975,10 @@ static void initInput( running_machine *machine )
       		input_device_item_add(P2_device, "P2 B3", &pad_state[1][KEY_BUTTON_6], ITEM_ID_Q, iptdev_get_state);
 
 		macro_enable = false;
-   	}
-   	else			/* Capcom Dynasty Wars */
-   	if (DYNWAR_LAYOUT)
+		goto FINISHED;
+	}
+	/* Capcom Dynasty Wars layout */
+	if (!core_stricmp(machine->gamedrv->name, "dynwar") || !core_stricmp(machine->gamedrv->parent, "dynwar"))
 	{
       		input_device_item_add(P1_device, "P1 B1", &pad_state[0][KEY_BUTTON_2], ITEM_ID_LCONTROL, iptdev_get_state);
       		input_device_item_add(P1_device, "P1 B2", &pad_state[0][KEY_BUTTON_1], ITEM_ID_LALT, 	 iptdev_get_state);
@@ -1021,9 +989,33 @@ static void initInput( running_machine *machine )
       		input_device_item_add(P2_device, "P2 B3", &pad_state[1][KEY_BUTTON_3], ITEM_ID_Q, iptdev_get_state);
 
 		macro_enable = false;
+		goto FINISHED;
 	}
-   	else			/* Default config */
-   	{
+	/* 6-buttons fighting games input layout */
+	for (i = 0; specific_games_initinput_vs6b[i] != NULL; i++)
+	{
+		if ( !core_stricmp(machine->gamedrv->name, specific_games_initinput_vs6b[i]) || !core_stricmp(machine->gamedrv->parent, specific_games_initinput_vs6b[i]) )
+		{
+			input_device_item_add(P1_device, "P1 B1", &pad_state[0][KEY_BUTTON_1], ITEM_ID_Z,	 iptdev_get_state);
+			input_device_item_add(P1_device, "P1 B2", &pad_state[0][KEY_BUTTON_2], ITEM_ID_LSHIFT, 	 iptdev_get_state);
+			input_device_item_add(P1_device, "P1 B3", &pad_state[0][KEY_BUTTON_3], ITEM_ID_LALT, 	 iptdev_get_state);
+			input_device_item_add(P1_device, "P1 B4", &pad_state[0][KEY_BUTTON_4], ITEM_ID_LCONTROL, iptdev_get_state);
+			input_device_item_add(P1_device, "P1 B5", &pad_state[0][KEY_BUTTON_5], ITEM_ID_SPACE, 	 iptdev_get_state);
+			input_device_item_add(P1_device, "P1 B6", &pad_state[0][KEY_BUTTON_6], ITEM_ID_X, 	 iptdev_get_state);
+
+			input_device_item_add(P2_device, "P2 B1", &pad_state[1][KEY_BUTTON_1], ITEM_ID_C, iptdev_get_state);
+			input_device_item_add(P2_device, "P2 B2", &pad_state[1][KEY_BUTTON_2], ITEM_ID_W, iptdev_get_state);
+			input_device_item_add(P2_device, "P2 B3", &pad_state[1][KEY_BUTTON_3], ITEM_ID_S, iptdev_get_state);
+			input_device_item_add(P2_device, "P2 B4", &pad_state[1][KEY_BUTTON_4], ITEM_ID_A, iptdev_get_state);
+			input_device_item_add(P2_device, "P2 B5", &pad_state[1][KEY_BUTTON_5], ITEM_ID_Q, iptdev_get_state);
+			input_device_item_add(P2_device, "P2 B6", &pad_state[1][KEY_BUTTON_6], ITEM_ID_V, iptdev_get_state);
+
+			macro_enable = false;
+			goto FINISHED;
+		}
+	}
+	/* Default layout */
+	{
       		input_device_item_add(P1_device, "P1 B1", &pad_state[0][KEY_BUTTON_1], ITEM_ID_LCONTROL, iptdev_get_state);
       		input_device_item_add(P1_device, "P1 B2", &pad_state[0][KEY_BUTTON_2], ITEM_ID_LALT, 	 iptdev_get_state);
       		input_device_item_add(P1_device, "P1 B3", &pad_state[0][KEY_BUTTON_3], ITEM_ID_SPACE, 	 iptdev_get_state);
@@ -1044,6 +1036,8 @@ static void initInput( running_machine *machine )
       		input_device_item_add(P4_device, "P4 B3", &pad_state[3][KEY_BUTTON_3], ITEM_ID_ENTER_PAD, iptdev_get_state);
       		input_device_item_add(P4_device, "P4 B4", &pad_state[3][KEY_BUTTON_4], ITEM_ID_3_PAD, 	  iptdev_get_state);
    	}
+
+FINISHED: ;
 }
 
 static inline void retro_poll_mame_input( void )
@@ -1068,9 +1062,9 @@ static inline void retro_poll_mame_input( void )
    		}
 	}
 
-	pad_state[0][KEY_F11] = input_state_cb(0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_R3);
-	pad_state[0][KEY_TAB] = input_state_cb(0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_L2);
-	pad_state[0][KEY_F2]  = input_state_cb(0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_L3);
+	pad_state[0][KEY_F11] = input_state_cb(0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_R3);	/* Only */
+	pad_state[0][KEY_TAB] = input_state_cb(0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_L2);	/* For */
+	pad_state[0][KEY_F2]  = input_state_cb(0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_L3);	/* Player1 */
 
 	for (i = 0; i < MAX_JOYPADS; i++)
 	{
@@ -1122,11 +1116,11 @@ void osd_exit(running_machine &machine)
 
    	our_target = NULL;
 
-   	global_free(P1_device);
-  	global_free(P2_device);
-  	global_free(P3_device);
-  	global_free(P4_device);
    	global_free(KB_device);
+   	global_free(P4_device);
+  	global_free(P3_device);
+  	global_free(P2_device);
+  	global_free(P1_device);
 }
 
 void osd_init(running_machine *machine)
@@ -1397,7 +1391,7 @@ static int getGameInfo(char *gameName, int *rotation, int *driverIndex)
 	return gameFound;
 }
 
-int executeGame(char *path)
+static int executeGame(char *path)
 {
 	/* cli_frontend does the heavy lifting; if we have osd-specific options, we create a derivative of cli_options and add our own */
 	int result = 0;
@@ -1434,7 +1428,7 @@ int executeGame(char *path)
 		}
 	}
 
-	write_log("creating frontend... game=%s\n", MAME_GAME_NAME);
+	write_log("creating frontend...\n");
 
 	//find how many parameters we have
 	for (paramCount = 0; xargv[paramCount] != NULL; paramCount++) { };
@@ -1481,11 +1475,8 @@ int executeGame(char *path)
 	return result;
 }
 
-#ifdef __cplusplus
-	extern "C"
-#endif
 
-int mmain(int argc, const char *argv)
+static int mmain(int argc, const char *argv)
 {
 	static char gameName[1024];
 	int result = 0;
