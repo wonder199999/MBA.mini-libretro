@@ -221,6 +221,7 @@ static bool set_par = false;
 static bool retro_load_ok = false;
 static bool keyboard_input = true;
 static bool macro_enable = true;
+static bool is_neogeo = false;
 
 static INT32 rtwi = 320, rthe = 240, topw = 320;	/* DEFAULT TEXW/TEXH/PITCH */
 static INT32 ui_ipt_pushchar = -1;
@@ -238,8 +239,8 @@ static UINT32 turbo_delay;
 static UINT32 turbo_state;
 static UINT32 macro_state;
 static UINT32 sample_rate = 48000;
-static UINT32 adjust_opt[7] = {0/*Enable/Disable*/, 0/*Limit*/, 0/*GetRefreshRate*/, 0/*Brightness*/, 0/*Contrast*/, 0/*Gamma*/, 0/*Overclock*/};
-static float arroffset[4] = {0/*For brightness*/, 0/*For contrast*/, 0/*For gamma*/, 1.0/*For overclock*/};
+static UINT32 adjust_opt[7] = { 0/*Enable/Disable*/, 0/*Limit*/, 0/*GetRefreshRate*/, 0/*Brightness*/, 0/*Contrast*/, 0/*Gamma*/, 0/*Overclock*/ };
+static float arroffset[4] = { 0/*For brightness*/, 0/*For contrast*/, 0/*For gamma*/, 1.0/*For overclock*/ };
 static double refresh_rate = 60.0;
 
 
@@ -268,6 +269,9 @@ void CLIB_DECL mame_printf_verbose( const char *text, ... ) ATTR_PRINTF(1, 2);	/
 //	MACROS
 /**************************************************************************/
 
+#define PLAYER_PRESS(button)	input_state_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_##button)
+#define MAX_JOYPADS	(4)
+
 #ifdef _WIN32
 	char slash = '\\';
 #else
@@ -289,9 +293,6 @@ void CLIB_DECL mame_printf_verbose( const char *text, ... ) ATTR_PRINTF(1, 2);	/
 #else
 	#define LOG(msg)
 #endif
-
-#define PLAYER_PRESS(button)	input_state_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_##button)
-#define MAX_JOYPADS	(4)
 
 #if !defined(HAVE_OPENGL) && !defined(HAVE_OPENGLES) && !defined(HAVE_RGB32)
 	#define M16B
@@ -453,18 +454,13 @@ static void check_variables(void)
 	var.value = NULL;
 	if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
 	{
-		set_neogeo_bios = 0;
-		if (!strcmp(var.value, "Default"))
-			set_neogeo_bios = -1;
-		else
+		set_neogeo_bios = -1;
+		for (int i = 0; i < 27; i++)
 		{
-			for (int i = 0; i < 27; i++)
+			if (!strcmp(var.value, neogeo_bioses[i].desc))
 			{
-				if (!strcmp(var.value, neogeo_bioses[i].desc))
-				{
-					set_neogeo_bios = i;
-					break;
-				}
+				set_neogeo_bios = i;
+				break;
 			}
 		}
 	}
@@ -891,6 +887,7 @@ static void initInput( running_machine *machine )
    	P4_device = input_device_add(machine, DEVICE_CLASS_KEYBOARD, "Pad4", NULL);
    	if (P4_device == NULL) fatalerror("P4 Error creating keyboard device! \n");
 
+   	/* our faux keyboard only has a couple of keys (corresponding to the common defaults) */
    	for (i = 0; i < RETROK_LAST; i++)
       		retrokbd_state[i] = retrokbd_state2[i] = 0;
 
@@ -903,7 +900,6 @@ static void initInput( running_machine *machine )
 		pad_state[i][KEY_JOYSTICK_D] = pad_state[i][KEY_JOYSTICK_L] = pad_state[i][KEY_JOYSTICK_R] = 0;
 	}
 
-   	/* our faux keyboard only has a couple of keys (corresponding to the common defaults) */
    	fprintf(stderr, "SOURCE FILE: %s\n", machine->gamedrv->source_file);
    	fprintf(stderr, "PARENT: %s\n", machine->gamedrv->parent);
    	fprintf(stderr, "NAME: %s\n", machine->gamedrv->name);
@@ -961,6 +957,7 @@ static void initInput( running_machine *machine )
       		input_device_item_add(P2_device, "P2 B2", &pad_state[1][KEY_BUTTON_2], ITEM_ID_A, iptdev_get_state);
       		input_device_item_add(P2_device, "P2 B3", &pad_state[1][KEY_BUTTON_3], ITEM_ID_W, iptdev_get_state);
       		input_device_item_add(P2_device, "P2 B4", &pad_state[1][KEY_BUTTON_4], ITEM_ID_Q, iptdev_get_state);
+
 		goto FINISHED;
 	}
 	/* Capcom Eco Fighter , use L & R button to turn the weapon */
@@ -1125,8 +1122,6 @@ void osd_exit(running_machine &machine)
 
 void osd_init(running_machine *machine)
 {
-	INT32 gamRot = 0;
-
    	machine->add_notifier(MACHINE_NOTIFY_EXIT, osd_exit);
 
    	our_target = render_target_alloc(machine, NULL, 0);
@@ -1134,15 +1129,15 @@ void osd_init(running_machine *machine)
    	initInput(machine);
 
    	write_log("machine screen orientation: %s \n", (machine->gamedrv->flags & ORIENTATION_SWAP_XY) ? "VERTICAL" : "HORIZONTAL");
-
    	orient = (machine->gamedrv->flags & ORIENTATION_MASK);
    	vertical = (machine->gamedrv->flags & ORIENTATION_SWAP_XY);
 
-   	gamRot = (ROT270 == orient) ? 1 : gamRot;
-   	gamRot = (ROT180 == orient) ? 2 : gamRot;
-   	gamRot = (ROT90 == orient) ? 3 : gamRot;
+	INT32 gameRot = 0;
+   	gameRot = (ROT270 == orient) ? 1 : gameRot;
+   	gameRot = (ROT180 == orient) ? 2 : gameRot;
+   	gameRot = (ROT90 == orient) ? 3 : gameRot;
 
-   	prep_retro_rotation(gamRot);
+   	prep_retro_rotation(gameRot);
    	machine->sample_rate = sample_rate;	/* Override original value */
 
 	if (!macro_enable)
@@ -1324,6 +1319,7 @@ static const char *xargv[] = {
 	NULL, NULL,
 	NULL, NULL,
 	NULL, NULL,
+	NULL, NULL,
 	NULL, NULL
 };
 
@@ -1372,20 +1368,22 @@ static int parsePath(char *path, char *gamePath, char *gameName)
 static int getGameInfo(char *gameName, int *rotation, int *driverIndex)
 {
 	int gameFound = 0;
-	int drvindex;
 
 	/* check invalid game name */
 	if (gameName[0] == 0)
-		return 0;
+		return gameFound;
 
-	for (drvindex = 0; drivers[drvindex]; drvindex++)
+	for (int drvindex = 0; drivers[drvindex]; drvindex++)
 	{
 		if ( (drivers[drvindex]->flags & GAME_NO_STANDALONE) == 0 && mame_strwildcmp(gameName, drivers[drvindex]->name) == 0 )
 		{
 			gameFound = 1;
 			*driverIndex = drvindex;
 			*rotation = drivers[drvindex]->flags & 0x07;
-/*			write_log("%-18s\"%s\" rot=%i \n", drivers[drvindex]->name, drivers[drvindex]->description, *rotation); */
+
+			if (strcmp(drivers[drvindex]->source_file, "src/mame/drivers/neogeo.inc") == 0)
+				is_neogeo = true;
+/*			write_log("%-18s\"%s\" rot=%i\n", drivers[drvindex]->name, drivers[drvindex]->description, *rotation); */
 		}
 	}
 	return gameFound;
@@ -1454,7 +1452,7 @@ static int executeGame(char *path)
 
 	xargv[paramCount++] = MAME_GAME_NAME;
 
-	if (set_neogeo_bios >= 0)
+	if (is_neogeo && set_neogeo_bios >= 0)
 	{
 		xargv[paramCount++] = (char*)"-bios";
 		xargv[paramCount++] = (char*)neogeo_bioses[set_neogeo_bios].name;
