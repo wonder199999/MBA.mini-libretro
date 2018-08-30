@@ -196,6 +196,12 @@ bool verify_rom_hash = false;
 bool allow_select_newgame = false;
 bool RETRO_LOOP = true;
 
+#ifdef _WIN32
+	char slash = '\\';
+#else
+	char slash = '/';
+#endif
+
 // input device
 static input_device *P1_device = NULL;		// P1 JOYPAD
 static input_device *P2_device = NULL;		// P2 JOYPAD
@@ -248,22 +254,20 @@ static double refresh_rate = 60.0;
 //	FUNCTION PROTOTYPES
 /**************************************************************************/
 
-static void retro_poll_mame_input();
-static void update_geometry();
-static int mmain(int argc, const char *argv);
-static int executeGame(char *path);
-static int iptdev_get_state(void *device_internal, void *item_internal);
-
-extern void retro_finish();
-extern void retro_main_loop();
-
+extern void retro_finish(void);
+extern void retro_main_loop(void);
 void osd_init( running_machine *machine );
 void osd_update( running_machine *machine, int skip_redraw );
 void osd_update_audio_stream( running_machine *machine, short *buffer, int samples_this_frame );
 void osd_set_mastervolume( int attenuation );
 void osd_customize_input_type_list( input_type_desc *typelist );
 void osd_exit( running_machine &machine );
-void CLIB_DECL mame_printf_verbose( const char *text, ... ) ATTR_PRINTF(1, 2);	/* use if you want to print something with the verbose flag */
+
+static void update_geometry(void);
+static int mmain(int argc, const char *argv);
+static int executeGame(char *path);
+static int iptdev_get_state(void *device_internal, void *item_internal);
+static void retro_poll_mame_input(void);
 
 /**************************************************************************/
 //	MACROS
@@ -271,12 +275,6 @@ void CLIB_DECL mame_printf_verbose( const char *text, ... ) ATTR_PRINTF(1, 2);	/
 
 #define PLAYER_PRESS(button)	input_state_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_##button)
 #define MAX_JOYPADS	(4)
-
-#ifdef _WIN32
-	char slash = '\\';
-#else
-	char slash = '/';
-#endif
 
 #ifdef ANDROID
 	#include <android/log.h>
@@ -328,17 +326,6 @@ void CLIB_DECL mame_printf_verbose( const char *text, ... ) ATTR_PRINTF(1, 2);	/
 
 #include "rendersw.c"
 
-unsigned retro_get_region(void) { return RETRO_REGION_NTSC; }
-size_t retro_serialize_size(void) { return 0; }
-size_t retro_get_memory_size(unsigned type) { return 0; }
-bool retro_serialize(void *data, size_t size) { return false; }
-bool retro_unserialize(const void *data, size_t size) { return false; }
-bool retro_load_game_special(unsigned game_type, const struct retro_game_info *info, size_t num_info) { return false; }
-void *retro_get_memory_data(unsigned type) { return 0; }
-void retro_cheat_reset(void) { }
-void retro_cheat_set(unsigned unused, bool unused1, const char *unused2) { }
-void retro_set_controller_port_device(unsigned in_port, unsigned device) { }
-
 retro_log_printf_t log_cb = NULL;
 retro_environment_t environ_cb = NULL;
 retro_video_refresh_t video_cb = NULL;
@@ -346,6 +333,53 @@ retro_video_refresh_t video_cb = NULL;
 static retro_input_state_t input_state_cb = NULL;
 static retro_audio_sample_batch_t audio_batch_cb = NULL;
 static retro_input_poll_t input_poll_cb = NULL;
+
+unsigned retro_get_region(void)
+{
+	return RETRO_REGION_NTSC;
+}
+
+size_t retro_serialize_size(void)
+{
+	return 0;
+}
+
+size_t retro_get_memory_size(unsigned type)
+{
+	return 0;
+}
+
+bool retro_serialize(void *data, size_t size)
+{
+	return false;
+}
+
+bool retro_unserialize(const void *data, size_t size)
+{
+	return false;
+}
+
+bool retro_load_game_special(unsigned game_type, const struct retro_game_info *info, size_t num_info)
+{
+	return false;
+}
+
+void *retro_get_memory_data(unsigned type)
+{
+	return 0;
+}
+
+void retro_cheat_reset(void)
+{
+}
+
+void retro_cheat_set(unsigned unused, bool unused1, const char *unused2)
+{
+}
+
+void retro_set_controller_port_device(unsigned in_port, unsigned device)
+{
+}
 
 void retro_set_audio_sample_batch(retro_audio_sample_batch_t cb)
 {
@@ -729,7 +763,9 @@ void retro_get_system_av_info(struct retro_system_av_info *info)
 #endif
 }
 
-void retro_init (void) { }
+void retro_init (void)
+{
+}
 
 void retro_deinit(void)
 {
@@ -1380,10 +1416,10 @@ static int getGameInfo(char *gameName, int *rotation, int *driverIndex)
 			gameFound = 1;
 			*driverIndex = drvindex;
 			*rotation = drivers[drvindex]->flags & 0x07;
+/*			write_log("%-18s\"%s\" rot=%i\n", drivers[drvindex]->name, drivers[drvindex]->description, *rotation); */
 
 			if (strcmp(drivers[drvindex]->source_file, "src/mame/drivers/neogeo.inc") == 0)
 				is_neogeo = true;
-/*			write_log("%-18s\"%s\" rot=%i\n", drivers[drvindex]->name, drivers[drvindex]->description, *rotation); */
 		}
 	}
 	return gameFound;
