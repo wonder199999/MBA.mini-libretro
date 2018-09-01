@@ -1295,6 +1295,15 @@ static const struct CPS1config cps1_config_table[] =
 	{"captcommb",	CPS_B_21_BT3,	mapper_CC63B,	0x36, 0x38, 0x34, 3 },
 	{"captcommb2",	CPS_B_21_BT3,	mapper_CC63B,	0x36, 0x38, 0x34 },
 	//
+	{"cawing",	CPS_B_16,	mapper_CA24B },
+	{"cawingr1",	CPS_B_16,	mapper_CA24B },
+	{"cawingu",	CPS_B_16,	mapper_CA24B },
+	{"cawingj",	CPS_B_16,	mapper_CA22B },				/* equivalent to CA24B */
+	//
+	{"cworld2j",	CPS_B_21_BT6,	mapper_Q522B,	0x36, 0, 0x34 },	/* (ports 36, 34 probably leftover input code from another game) */
+	{"cworld2ja",	CPS_B_21_DEF,	mapper_Q522B },				/* patched set, no battery, could be desuicided */
+	{"cworld2jb",	CPS_B_21_BT6,	mapper_Q522B,	0x36, 0, 0x34 },
+
 
 
 
@@ -1305,11 +1314,6 @@ static const struct CPS1config cps1_config_table[] =
 	{"dinopic",	CPS_B_21_QS2, mapper_CD63B },	/* layer enable never used */
 	{"dinopic2",	CPS_B_21_QS2, mapper_CD63B },	/* layer enable never used */
 	{"dinohunt",	CPS_B_21_DEF, mapper_CD63B },	/* Chinese bootleg */
-
-	{"cawing",	CPS_B_16,     mapper_CA24B },
-	{"cawingr1",	CPS_B_16,     mapper_CA24B },
-	{"cawingu",	CPS_B_16,     mapper_CA24B },
-	{"cawingj",	CPS_B_16,     mapper_CA22B },	// equivalent to CA24B
 
 	{"dynwar",	CPS_B_02,     mapper_TK22B },	// wrong, this set uses TK24B1, dumped but equations still not added
 	{"dynwaru",	CPS_B_02,     mapper_TK22B },
@@ -1390,10 +1394,6 @@ static const struct CPS1config cps1_config_table[] =
 	{"pang3b",	CPS_B_21_DEF, mapper_pang3 },
 	{"pang3b2",	CPS_B_04,     mapper_pang3 },
 	{"pang3b3",	CPS_B_04,     mapper_pang3 },
-
-	{"cworld2j",	CPS_B_21_BT6, mapper_Q522B,  0x36, 0, 0x34 },	/* (ports 36, 34 probably leftover input code from another game) */
-	{"cworld2ja",	CPS_B_21_DEF, mapper_Q522B },	/* patched set, no battery, could be desuicided */
-	{"cworld2jb",	CPS_B_21_BT6, mapper_Q522B,  0x36, 0, 0x34 },
 
 	{"punisher",	CPS_B_21_QS3, mapper_PS63B },
 	{"punisheru",	CPS_B_21_QS3, mapper_PS63B },

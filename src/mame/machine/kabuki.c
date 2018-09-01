@@ -98,7 +98,7 @@ Slam Masters                             54321076  65432107    3131     19
 
 
 
-static int bitswap1(int src,int key,int select)
+static int bitswap1(int src, int key, int select)
 {
 	if (select & (1 << ((key >> 0) & 7)))
 		src = (src & 0xfc) | ((src & 0x01) << 1) | ((src & 0x02) >> 1);
@@ -112,9 +112,9 @@ static int bitswap1(int src,int key,int select)
 	return src;
 }
 
-static int bitswap2(int src,int key,int select)
+static int bitswap2(int src, int key, int select)
 {
-	if (select & (1 << ((key >>12) & 7)))
+	if (select & (1 << ((key >> 12) & 7)))
 		src = (src & 0xfc) | ((src & 0x01) << 1) | ((src & 0x02) >> 1);
 	if (select & (1 << ((key >> 8) & 7)))
 		src = (src & 0xf3) | ((src & 0x04) << 1) | ((src & 0x08) >> 1);
@@ -128,32 +128,31 @@ static int bitswap2(int src,int key,int select)
 
 static int bytedecode(int src,int swap_key1,int swap_key2,int xor_key,int select)
 {
-	src = bitswap1(src,swap_key1 & 0xffff,select & 0xff);
+	src = bitswap1(src, swap_key1 & 0xffff, select & 0xff);
 	src = ((src & 0x7f) << 1) | ((src & 0x80) >> 7);
-	src = bitswap2(src,swap_key1 >> 16,select & 0xff);
+	src = bitswap2(src, swap_key1 >> 16, select & 0xff);
 	src ^= xor_key;
 	src = ((src & 0x7f) << 1) | ((src & 0x80) >> 7);
-	src = bitswap2(src,swap_key2 & 0xffff,select >> 8);
+	src = bitswap2(src, swap_key2 & 0xffff, select >> 8);
 	src = ((src & 0x7f) << 1) | ((src & 0x80) >> 7);
-	src = bitswap1(src,swap_key2 >> 16,select >> 8);
+	src = bitswap1(src, swap_key2 >> 16, select >> 8);
 	return src;
 }
 
-static void kabuki_decode(UINT8 *src,UINT8 *dest_op,UINT8 *dest_data,
-		int base_addr,int length,int swap_key1,int swap_key2,int addr_key,int xor_key)
+static void kabuki_decode(UINT8 *src, UINT8 *dest_op, UINT8 *dest_data,
+		int base_addr, int length, int swap_key1, int swap_key2, int addr_key, int xor_key)
 {
-	int A;
 	int select;
 
-	for (A = 0;A < length;A++)
+	for (int A = 0; A < length; A++)
 	{
 		/* decode opcodes */
 		select = (A + base_addr) + addr_key;
-		dest_op[A] = bytedecode(src[A],swap_key1,swap_key2,xor_key,select);
+		dest_op[A] = bytedecode(src[A], swap_key1, swap_key2, xor_key, select);
 
 		/* decode data */
 		select = ((A + base_addr) ^ 0x1fc0) + addr_key + 1;
-		dest_data[A] = bytedecode(src[A],swap_key1,swap_key2,xor_key,select);
+		dest_data[A] = bytedecode(src[A], swap_key1, swap_key2, xor_key, select);
 	}
 }
 
@@ -168,22 +167,22 @@ static void mitchell_decode(running_machine *machine, int swap_key1,int swap_key
 	int i;
 
 	space->set_decrypted_region(0x0000, 0x7fff, decrypt);
-	kabuki_decode(rom,decrypt,rom,0x0000,0x8000, swap_key1,swap_key2,addr_key,xor_key);
+	kabuki_decode(rom, decrypt, rom, 0x0000, 0x8000, swap_key1, swap_key2, addr_key, xor_key);
 
 	rom += 0x10000;
 	decrypt += 0x10000;
 	for (i = 0; i < numbanks; i++)
-		kabuki_decode(rom+i*0x4000,decrypt+i*0x4000,rom+i*0x4000,0x8000,0x4000, swap_key1,swap_key2,addr_key,xor_key);
+		kabuki_decode(rom + i * 0x4000, decrypt + i * 0x4000, rom + i * 0x4000, 0x8000, 0x4000, swap_key1, swap_key2, addr_key, xor_key);
 
 	memory_configure_bank_decrypted(machine, "bank1", 0, numbanks, decrypt, 0x4000);
 /*
-    {
-        FILE *f;
-        f = fopen("a","wb");
-        fwrite(rom,1,0x8000,f);
-        fwrite(rom+0x10000,1,0x40000,f);
-        fclose(f);
-    }
+	{
+	FILE *f;
+	f = fopen("a","wb");
+	fwrite(rom,1,0x8000,f);
+	fwrite(rom+0x10000,1,0x40000,f);
+	fclose(f);
+	}
 */
 }
 
@@ -200,17 +199,17 @@ void qsangoku_decode(running_machine *machine) { mitchell_decode(machine,0x23456
 void block_decode(running_machine *machine)    { mitchell_decode(machine,0x02461357,0x64207531,0x0002,0x01); }
 
 
-static void cps1_decode(running_machine *machine,int swap_key1,int swap_key2,int addr_key,int xor_key)
+static void cps1_decode(running_machine *machine, int swap_key1, int swap_key2, int addr_key, int xor_key)
 {
 	address_space *space = cputag_get_address_space(machine, "audiocpu", ADDRESS_SPACE_PROGRAM);
 	UINT8 *decrypt = auto_alloc_array(machine, UINT8, 0x8000);
 	UINT8 *rom = memory_region(machine, "audiocpu");
 
 	space->set_decrypted_region(0x0000, 0x7fff, decrypt);
-	kabuki_decode(rom,decrypt,rom,0x0000,0x8000, swap_key1,swap_key2,addr_key,xor_key);
+	kabuki_decode(rom, decrypt, rom, 0x0000, 0x8000, swap_key1, swap_key2, addr_key, xor_key);
 }
 
-void wof_decode(running_machine *machine)      { cps1_decode(machine,0x01234567,0x54163072,0x5151,0x51); }
-void dino_decode(running_machine *machine)     { cps1_decode(machine,0x76543210,0x24601357,0x4343,0x43); }
-void punisher_decode(running_machine *machine) { cps1_decode(machine,0x67452103,0x75316024,0x2222,0x22); }
-void slammast_decode(running_machine *machine) { cps1_decode(machine,0x54321076,0x65432107,0x3131,0x19); }
+void wof_decode(running_machine *machine)      { cps1_decode(machine, 0x01234567, 0x54163072, 0x5151, 0x51); }
+void dino_decode(running_machine *machine)     { cps1_decode(machine, 0x76543210, 0x24601357, 0x4343, 0x43); }
+void punisher_decode(running_machine *machine) { cps1_decode(machine, 0x67452103, 0x75316024, 0x2222, 0x22); }
+void slammast_decode(running_machine *machine) { cps1_decode(machine, 0x54321076, 0x65432107, 0x3131, 0x19); }
