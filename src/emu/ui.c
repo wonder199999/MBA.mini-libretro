@@ -1604,7 +1604,7 @@ static slider_state *slider_init(running_machine *machine)
 {
 	const input_field_config *field;
 	const input_port_config *port;
-	device_t *device;
+//	device_t *device;
 	slider_state *listhead = NULL;
 	slider_state **tailptr = &listhead;
 	astring string;

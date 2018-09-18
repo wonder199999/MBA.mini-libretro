@@ -117,8 +117,8 @@ static void m5205_int1( running_device *device )
 {
 	cps_state *state = device->machine->driver_data<cps_state>();
 	msm5205_data_w(device, state->sample_buffer1 & 0x0f);
-	state->sample_buffer1 >>= 0x04;
-	state->sample_select1 ^= 0x01;
+	state->sample_buffer1 >>= 4;
+	state->sample_select1 ^= 1;
 	if (state->sample_select1 == 0)
 		cpu_set_input_line(state->audiocpu, INPUT_LINE_NMI, PULSE_LINE);
 }
@@ -127,8 +127,8 @@ static void m5205_int2( running_device *device )
 {
 	cps_state *state = device->machine->driver_data<cps_state>();
 	msm5205_data_w(device, state->sample_buffer2 & 0x0f);
-	state->sample_buffer2 >>= 0x04;
-	state->sample_select2 ^= 0x01;
+	state->sample_buffer2 >>= 4;
+	state->sample_select2 ^= 1;
 }
 
 static WRITE8_HANDLER( fcrash_msm5205_0_data_w )
@@ -1653,6 +1653,110 @@ ROM_START( cawingb2 )
 	ROM_RELOAD(            0x10000, 0x20000 )
 ROM_END
 
+/*
+Cadillac Bootleg Hardware:
+
+1x 68000p10
+1x PIC16c57
+1x AD-65
+1x OSC 30mhz
+1x OSC 24mhz
+13x 27c4000 ROMS
+*/
+ROM_START( dinopic )
+	ROM_REGION( CODE_SIZE, "maincpu", 0 )		/* 68000 code */
+	ROM_LOAD16_BYTE( "3.bin",      0x000001, 0x80000, CRC(13dfeb08) SHA1(cd2f9dd64f4fabe93901247e36dff3763169716d) )
+	ROM_LOAD16_BYTE( "5.bin",      0x000000, 0x80000, CRC(96dfcbf1) SHA1(a8bda6edae2c1b79db7ae8a8976fd2457f874373) )
+	ROM_LOAD16_BYTE( "2.bin",      0x100001, 0x80000, CRC(0e4058ba) SHA1(346f9e34ea53dd1bf5cdafa1e38bf2edb09b9a7f) )
+	ROM_LOAD16_BYTE( "7.bin",      0x100000, 0x80000, CRC(6133f349) SHA1(d13af99910623f62c090d25372a2253dbc2f8cbe) )
+
+	ROM_REGION( 0x400000, "gfx", 0 )		// same data, different format, except for 8 which is a 99% match (bad rom?)
+	ROMX_LOAD( "4.bin",   0x000000, 0x40000, CRC(f3c2c98d) SHA1(98ae51a67fa4159456a4a205eebdd8d1775888d1), ROM_SKIP(7) )
+	ROM_CONTINUE(         0x000004, 0x40000)
+	ROMX_LOAD( "8.bin",   0x000001, 0x40000, CRC(d574befc) SHA1(56482e7a9aa8439f30e3cf72311495ce677a083d), ROM_SKIP(7) )
+	ROM_CONTINUE(         0x000005, 0x40000)
+	ROMX_LOAD( "9.bin",   0x000002, 0x40000, CRC(55ef0adc) SHA1(3b5551ae76ae80882d37fc70a1031a57885d6840), ROM_SKIP(7) )
+	ROM_CONTINUE(         0x000006, 0x40000)
+	ROMX_LOAD( "6.bin",   0x000003, 0x40000, CRC(cc0805fc) SHA1(c512734c28b878a30a0de249929f69784d5d77a1), ROM_SKIP(7) )
+	ROM_CONTINUE(         0x000007, 0x40000)
+	ROMX_LOAD( "13.bin",  0x200000, 0x40000, CRC(1371f714) SHA1(d2c98096fab08e3d4fd2482e6ebfc970ead656ee), ROM_SKIP(7) )
+	ROM_CONTINUE(         0x200004, 0x40000)
+	ROMX_LOAD( "12.bin",  0x200001, 0x40000, CRC(b284c4a7) SHA1(166f571e0afa115f8e38ba427b40e30abcfd70ee), ROM_SKIP(7) )
+	ROM_CONTINUE(         0x200005, 0x40000)
+	ROMX_LOAD( "11.bin",  0x200002, 0x40000, CRC(b7ad3394) SHA1(58dec34d9d991ff2817c8a7847749716abae6c77), ROM_SKIP(7) )
+	ROM_CONTINUE(         0x200006, 0x40000)
+	ROMX_LOAD( "10.bin",  0x200003, 0x40000, CRC(88847705) SHA1(05dc90067921960e417b7436056a5e1f86abaa1a), ROM_SKIP(7) )
+	ROM_CONTINUE(         0x200007, 0x40000)
+
+	ROM_REGION( 0x28000, "audiocpu", 0 )		/* PIC16c57 - protected, dump isn't valid */
+	ROM_LOAD( "pic16c57-rp", 0x00000, 0x2d4c, BAD_DUMP CRC(5a6d393c) SHA1(1391a1590aff5f75bb6fae1c83eddb796b53135d) )
+
+	ROM_REGION( 0x80000, "oki", 0 )			/* OKI6295 samples */
+	ROM_LOAD( "1.bin",      0x000000, 0x80000,  CRC(7d921309) SHA1(d51e60e904d302c2516b734189e141aa171b2b82) )
+ROM_END
+
+/* this is basically the same set as above, from a different bootleg pcb, with a few extra pal dumps etc.
+   the first dump will probably be removed eventually
+
+  CPU
+  1x TS68000CP10 (main)
+  1x AD-65 (sound)(equivalent to M6295)
+  1x PIC16C57-XT/P
+  1x A1020B-PL84C
+  1x oscillator 24.000MHz (close to main)
+  1x oscillator 30.000MHz (close to sound)
+
+  ROMs
+  13x 27C4000
+  3x GAL20V8A
+  3x PALCE16V8H (1 broken not dumped)
+  1x CAT93C46P
+
+  Note
+  1x JAMMA edge connector
+  1x 10 legs connector
+  1x trimmer (volume)
+*/
+ROM_START( dinopic2 )
+	ROM_REGION( CODE_SIZE, "maincpu", 0 )		/* 68000 code */
+	ROM_LOAD16_BYTE( "27c4000-m12374r-2.bin",      0x000001, 0x80000, CRC(13dfeb08) SHA1(cd2f9dd64f4fabe93901247e36dff3763169716d) )
+	ROM_LOAD16_BYTE( "27c4000-m12481.bin",         0x000000, 0x80000, CRC(96dfcbf1) SHA1(a8bda6edae2c1b79db7ae8a8976fd2457f874373) )
+	ROM_LOAD16_BYTE( "27c4000-m12374r-1.bin",      0x100001, 0x80000, CRC(0e4058ba) SHA1(346f9e34ea53dd1bf5cdafa1e38bf2edb09b9a7f) )
+	ROM_LOAD16_BYTE( "27c4000-m12374r-3.bin",      0x100000, 0x80000, CRC(6133f349) SHA1(d13af99910623f62c090d25372a2253dbc2f8cbe) )
+
+	ROM_REGION( 0x400000, "gfx", 0 )
+	ROMX_LOAD( "27c4000-m12481-4.bin",   0x000000, 0x40000, CRC(f3c2c98d) SHA1(98ae51a67fa4159456a4a205eebdd8d1775888d1), ROM_SKIP(7) )
+	ROM_CONTINUE(                        0x000004, 0x40000)
+	ROMX_LOAD( "27c4000-m12481-3.bin",   0x000001, 0x40000, BAD_DUMP CRC(d574befc) SHA1(56482e7a9aa8439f30e3cf72311495ce677a083d), ROM_SKIP(7) ) // this one is a perfect match, unlike dinopic set
+	ROM_CONTINUE(                        0x000005, 0x40000)
+	ROMX_LOAD( "27c4000-m12481-2.bin",   0x000002, 0x40000, CRC(55ef0adc) SHA1(3b5551ae76ae80882d37fc70a1031a57885d6840), ROM_SKIP(7) )
+	ROM_CONTINUE(                        0x000006, 0x40000)
+	ROMX_LOAD( "27c4000-m12481-1.bin",   0x000003, 0x40000, CRC(cc0805fc) SHA1(c512734c28b878a30a0de249929f69784d5d77a1), ROM_SKIP(7) )
+	ROM_CONTINUE(                        0x000007, 0x40000)
+	ROMX_LOAD( "27c4000-m12481-8.bin",   0x200000, 0x40000, CRC(1371f714) SHA1(d2c98096fab08e3d4fd2482e6ebfc970ead656ee), ROM_SKIP(7) )
+	ROM_CONTINUE(                        0x200004, 0x40000)
+	ROMX_LOAD( "27c4000-m12481-7.bin",   0x200001, 0x40000, CRC(b284c4a7) SHA1(166f571e0afa115f8e38ba427b40e30abcfd70ee), ROM_SKIP(7) )
+	ROM_CONTINUE(                        0x200005, 0x40000)
+	ROMX_LOAD( "27c4000-m12481-6.bin",   0x200002, 0x40000, CRC(b7ad3394) SHA1(58dec34d9d991ff2817c8a7847749716abae6c77), ROM_SKIP(7) )
+	ROM_CONTINUE(                        0x200006, 0x40000)
+	ROMX_LOAD( "27c4000-m12481-5.bin",   0x200003, 0x40000, CRC(88847705) SHA1(05dc90067921960e417b7436056a5e1f86abaa1a), ROM_SKIP(7) )
+	ROM_CONTINUE(                        0x200007, 0x40000)
+
+	ROM_REGION( 0x28000, "audiocpu", 0 )		/* PIC16c57 - protected, dump isn't valid */
+	ROM_LOAD( "pic16c57-xt.hex", 0x00000, 0x26cc, BAD_DUMP CRC(a6a5eac4) SHA1(2039789084836769180f0bfd230c2553a37e2aaf) )
+
+	ROM_REGION( 0x80000, "oki", 0 )			/* OKI6295 samples */
+	ROM_LOAD( "27c4000-m12623.bin",      0x000000, 0x80000,  CRC(7d921309) SHA1(d51e60e904d302c2516b734189e141aa171b2b82) )
+
+	ROM_REGION( 0xc00, "user1", 0 )			/* extra bits on this set */
+	ROM_LOAD( "cat93c46p.bin",       0x000, 0x080,  CRC(d49fa351) SHA1(e6dfaff1c6aa962d34ae8e82b71e6f394d82e19c) )
+	ROM_LOAD( "gal20v8a-1.bin",      0x200, 0x157,  CRC(cd99ca47) SHA1(ee1d990fd294aa46f56f31264134251569f6792e) )
+	ROM_LOAD( "gal20v8a-2.bin",      0x400, 0x157,  CRC(60d016b9) SHA1(add42c763c819f3fe6d7cf3adc7123a52c2a3be9) )
+	ROM_LOAD( "gal20v8a-3.bin",      0x600, 0x157,  CRC(049b7f4f) SHA1(6c6ea03d9a293db69a8bd10e042ee75e3c01313c) )
+	ROM_LOAD( "palce16v8h-1.bin",    0x800, 0x117,  CRC(48253c66) SHA1(8c94e655b768c45c3edf6ef39e62e3b7a4e57530) )
+	ROM_LOAD( "palce16v8h-2.bin",    0xa00, 0x117,  CRC(9ae375ba) SHA1(6f227c2a5b1170a41e6419f12d1e1f98edc6f8e5) )
+ROM_END
+
 
 
 
@@ -1928,78 +2032,6 @@ ROM_START( punipic3 )
 	ROM_REGION( 0x200000, "oki", ROMREGION_ERASE00 )
 ROM_END
 
-ROM_START( dinopic )
-	ROM_REGION( CODE_SIZE, "maincpu", 0 )		/* 68000 code */
-	ROM_LOAD16_BYTE( "3.bin",      0x000001, 0x80000, CRC(13dfeb08) SHA1(cd2f9dd64f4fabe93901247e36dff3763169716d) )
-	ROM_LOAD16_BYTE( "5.bin",      0x000000, 0x80000, CRC(96dfcbf1) SHA1(a8bda6edae2c1b79db7ae8a8976fd2457f874373) )
-	ROM_LOAD16_BYTE( "2.bin",      0x100001, 0x80000, CRC(0e4058ba) SHA1(346f9e34ea53dd1bf5cdafa1e38bf2edb09b9a7f) )
-	ROM_LOAD16_BYTE( "7.bin",      0x100000, 0x80000, CRC(6133f349) SHA1(d13af99910623f62c090d25372a2253dbc2f8cbe) )
-
-	ROM_REGION( 0x400000, "gfx", 0 )		/* same data, different format, except for 8 which is a 99% match (bad rom?) */
-	ROMX_LOAD( "4.bin",   0x000000, 0x40000, CRC(f3c2c98d) SHA1(98ae51a67fa4159456a4a205eebdd8d1775888d1), ROM_SKIP(7) )
-	ROM_CONTINUE(         0x000004, 0x40000)
-	ROMX_LOAD( "8.bin",   0x000001, 0x40000, CRC(d574befc) SHA1(56482e7a9aa8439f30e3cf72311495ce677a083d), ROM_SKIP(7) )
-	ROM_CONTINUE(         0x000005, 0x40000)
-	ROMX_LOAD( "9.bin",   0x000002, 0x40000, CRC(55ef0adc) SHA1(3b5551ae76ae80882d37fc70a1031a57885d6840), ROM_SKIP(7) )
-	ROM_CONTINUE(         0x000006, 0x40000)
-	ROMX_LOAD( "6.bin",   0x000003, 0x40000, CRC(cc0805fc) SHA1(c512734c28b878a30a0de249929f69784d5d77a1), ROM_SKIP(7) )
-	ROM_CONTINUE(         0x000007, 0x40000)
-	ROMX_LOAD( "13.bin",  0x200000, 0x40000, CRC(1371f714) SHA1(d2c98096fab08e3d4fd2482e6ebfc970ead656ee), ROM_SKIP(7) )
-	ROM_CONTINUE(         0x200004, 0x40000)
-	ROMX_LOAD( "12.bin",  0x200001, 0x40000, CRC(b284c4a7) SHA1(166f571e0afa115f8e38ba427b40e30abcfd70ee), ROM_SKIP(7) )
-	ROM_CONTINUE(         0x200005, 0x40000)
-	ROMX_LOAD( "11.bin",  0x200002, 0x40000, CRC(b7ad3394) SHA1(58dec34d9d991ff2817c8a7847749716abae6c77), ROM_SKIP(7) )
-	ROM_CONTINUE(         0x200006, 0x40000)
-	ROMX_LOAD( "10.bin",  0x200003, 0x40000, CRC(88847705) SHA1(05dc90067921960e417b7436056a5e1f86abaa1a), ROM_SKIP(7) )
-	ROM_CONTINUE(         0x200007, 0x40000)
-
-	ROM_REGION( 0x28000, "audiocpu", 0 )		/* PIC16c57 - protected, dump isn't valid */
-	ROM_LOAD( "pic16c57-rp", 0x00000, 0x2d4c, BAD_DUMP CRC(5a6d393c) SHA1(1391a1590aff5f75bb6fae1c83eddb796b53135d) )
-
-	ROM_REGION( 0x80000, "oki", 0 )			/* OKI6295 samples */
-	ROM_LOAD( "1.bin",      0x000000, 0x80000,  CRC(7d921309) SHA1(d51e60e904d302c2516b734189e141aa171b2b82) )
-ROM_END
-
-ROM_START( dinopic2 )
-	ROM_REGION( CODE_SIZE, "maincpu", 0 )		/* 68000 code */
-	ROM_LOAD16_BYTE( "27c4000-m12374r-2.bin",      0x000001, 0x80000, CRC(13dfeb08) SHA1(cd2f9dd64f4fabe93901247e36dff3763169716d) )
-	ROM_LOAD16_BYTE( "27c4000-m12481.bin",         0x000000, 0x80000, CRC(96dfcbf1) SHA1(a8bda6edae2c1b79db7ae8a8976fd2457f874373) )
-	ROM_LOAD16_BYTE( "27c4000-m12374r-1.bin",      0x100001, 0x80000, CRC(0e4058ba) SHA1(346f9e34ea53dd1bf5cdafa1e38bf2edb09b9a7f) )
-	ROM_LOAD16_BYTE( "27c4000-m12374r-3.bin",      0x100000, 0x80000, CRC(6133f349) SHA1(d13af99910623f62c090d25372a2253dbc2f8cbe) )
-
-	ROM_REGION( 0x400000, "gfx", 0 )
-	ROMX_LOAD( "27c4000-m12481-4.bin",   0x000000, 0x40000, CRC(f3c2c98d) SHA1(98ae51a67fa4159456a4a205eebdd8d1775888d1), ROM_SKIP(7) )
-	ROM_CONTINUE(                        0x000004, 0x40000)
-	ROMX_LOAD( "27c4000-m12481-3.bin",   0x000001, 0x40000, VERIFY_OFF, ROM_SKIP(7) ) // this one is a perfect match, unlike dinopic set
-	ROM_CONTINUE(                        0x000005, 0x40000)
-	ROMX_LOAD( "27c4000-m12481-2.bin",   0x000002, 0x40000, CRC(55ef0adc) SHA1(3b5551ae76ae80882d37fc70a1031a57885d6840), ROM_SKIP(7) )
-	ROM_CONTINUE(                        0x000006, 0x40000)
-	ROMX_LOAD( "27c4000-m12481-1.bin",   0x000003, 0x40000, CRC(cc0805fc) SHA1(c512734c28b878a30a0de249929f69784d5d77a1), ROM_SKIP(7) )
-	ROM_CONTINUE(                        0x000007, 0x40000)
-	ROMX_LOAD( "27c4000-m12481-8.bin",   0x200000, 0x40000, CRC(1371f714) SHA1(d2c98096fab08e3d4fd2482e6ebfc970ead656ee), ROM_SKIP(7) )
-	ROM_CONTINUE(                        0x200004, 0x40000)
-	ROMX_LOAD( "27c4000-m12481-7.bin",   0x200001, 0x40000, CRC(b284c4a7) SHA1(166f571e0afa115f8e38ba427b40e30abcfd70ee), ROM_SKIP(7) )
-	ROM_CONTINUE(                        0x200005, 0x40000)
-	ROMX_LOAD( "27c4000-m12481-6.bin",   0x200002, 0x40000, CRC(b7ad3394) SHA1(58dec34d9d991ff2817c8a7847749716abae6c77), ROM_SKIP(7) )
-	ROM_CONTINUE(                        0x200006, 0x40000)
-	ROMX_LOAD( "27c4000-m12481-5.bin",   0x200003, 0x40000, CRC(88847705) SHA1(05dc90067921960e417b7436056a5e1f86abaa1a), ROM_SKIP(7) )
-	ROM_CONTINUE(                        0x200007, 0x40000)
-
-	ROM_REGION( 0x28000, "audiocpu", 0 )		/* PIC16c57 - protected, dump isn't valid */
-	ROM_LOAD( "pic16c57-xt.hex", 0x00000, 0x26cc, BAD_DUMP CRC(a6a5eac4) SHA1(2039789084836769180f0bfd230c2553a37e2aaf) )
-
-	ROM_REGION( 0x80000, "oki", 0 )			/* OKI6295 samples */
-	ROM_LOAD( "27c4000-m12623.bin",      0x000000, 0x80000,  CRC(7d921309) SHA1(d51e60e904d302c2516b734189e141aa171b2b82) )
-
-	ROM_REGION( 0x0c00, "user1", 0 )		/* extra bits on this set */
-	ROM_LOAD( "cat93c46p.bin",       0x0000, 0x0080,  CRC(d49fa351) SHA1(e6dfaff1c6aa962d34ae8e82b71e6f394d82e19c) )
-	ROM_LOAD( "gal20v8a-1.bin",      0x0200, 0x0157,  CRC(cd99ca47) SHA1(ee1d990fd294aa46f56f31264134251569f6792e) )
-	ROM_LOAD( "gal20v8a-2.bin",      0x0400, 0x0157,  CRC(60d016b9) SHA1(add42c763c819f3fe6d7cf3adc7123a52c2a3be9) )
-	ROM_LOAD( "gal20v8a-3.bin",      0x0600, 0x0157,  CRC(049b7f4f) SHA1(6c6ea03d9a293db69a8bd10e042ee75e3c01313c) )
-	ROM_LOAD( "palce16v8h-1.bin",    0x0800, 0x0117,  CRC(48253c66) SHA1(8c94e655b768c45c3edf6ef39e62e3b7a4e57530) )
-	ROM_LOAD( "palce16v8h-2.bin",    0x0a00, 0x0117,  CRC(9ae375ba) SHA1(6f227c2a5b1170a41e6419f12d1e1f98edc6f8e5) )
-ROM_END
-
 ROM_START( slampic )
 	ROM_REGION( CODE_SIZE, "maincpu", 0 )		/* 68000 code */
 	ROM_LOAD16_BYTE( "5.bin",      0x000000, 0x80000,  CRC(7dba63cd) SHA1(222e781ffc40c5c23f5789c0682f549f00beeb8d) )
@@ -2163,6 +2195,10 @@ GAME( 1991,	captcommb2,	captcomm,	captcommb2,	captcomm,	cps1,	  ROT0,	"bootleg",
 GAME( 1990,	cawingbl,	cawing,		cawingbl,	cawingbl,	cawingbl, ROT0,	"bootleg",	"Carrier Air Wing (bootleg with 2xYM2203 + 2xMSM205 set 1)", GAME_SUPPORTS_SAVE )
 /* cawingb2 - ok */
 GAME( 1990,	cawingb2,	cawing,		cawingbl,	cawingbl,	cawingbl, ROT0,	"bootleg",	"Carrier Air Wing (bootleg with 2xYM2203 + 2xMSM205 set 2)", GAME_SUPPORTS_SAVE )
+/* dinopic - no sound */
+GAME( 1993,	dinopic,	dino,		dinopic,	dino,		dinopic,  ROT0, "bootleg",	"Cadillacs and Dinosaurs (bootleg with PIC16c57, set 1)", GAME_NO_SOUND | GAME_SUPPORTS_SAVE )
+/* dinopic2 - no sound, one bad gfx rom. Copying 8.bin from dinopic fixes it. */
+GAME( 1993,	dinopic2,	dino,		dinopic,	dino,		dinopic,  ROT0, "bootleg",	"Cadillacs and Dinosaurs (bootleg with PIC16c57, set 2)", GAME_NOT_WORKING | GAME_SUPPORTS_SAVE )
 
 
 
@@ -2191,16 +2227,9 @@ GAME( 1993,   punipic,    punisher,	punipic,	punisher,	punipic,  ROT0,   "bootle
 GAME( 1993,   punipic2,   punisher,	punipic,	punisher,	punipic,  ROT0,   "bootleg", "The Punisher (bootleg with PIC16c57, set 2)", GAME_NO_SOUND | GAME_SUPPORTS_SAVE )
 /* punipic3 - same as punipic, and doors are missing. */
 GAME( 1993,   punipic3,   punisher,	punipic,	punisher,	punipic3, ROT0,   "bootleg", "The Punisher (bootleg with PIC16c57, set 3)", GAME_IMPERFECT_GRAPHICS | GAME_NO_SOUND | GAME_SUPPORTS_SAVE )
-/* dinopic - no sound */
-GAME( 1993,   dinopic,	  dino,		dinopic,	dino,		dinopic,  ROT0,   "bootleg", "Cadillacs and Dinosaurs (bootleg with PIC16c57, set 1)", GAME_NO_SOUND | GAME_SUPPORTS_SAVE )
-/* dinopic2 - no sound, one bad gfx rom. Copying 8.bin from dinopic fixes it. */
-GAME( 1993,   dinopic2,	  dino,		dinopic,	dino,		dinopic,  ROT0,   "bootleg", "Cadillacs and Dinosaurs (bootleg with PIC16c57, set 2)", GAME_NOT_WORKING | GAME_SUPPORTS_SAVE )
 /* slampic - no sound. A priority problem between sprites and crowd. */
 GAME( 1993,   slampic,	  slammast,	slampic,	slammast,	dinopic,  ROT0,   "bootleg", "Saturday Night Slam Masters (bootleg with PIC16c57)", GAME_IMPERFECT_GRAPHICS | GAME_NO_SOUND | GAME_SUPPORTS_SAVE )
 /* knightsb4 - like knightsb: sprites are entangled with the front layer. */
 GAME( 1991,   knightsb4,  knights,	knightsb,	knights,	knightsb, ROT0,   "bootleg", "Knights of the Round (bootleg set 4 with YM2151 + 2xMSM5205, 911127 etc)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )
 /* varthb - good */
 GAME( 1992,   varthb,	  varth,	varthb,		varth,		dinopic,  ROT270, "bootleg", "Varth: Operation Thunderstorm (bootleg)", GAME_SUPPORTS_SAVE )
-
-//
-

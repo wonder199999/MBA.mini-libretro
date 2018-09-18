@@ -125,18 +125,18 @@ const game_driver *const drivers[] =
 	DRIVER( cworld2jb )		/* 11/06/1992 (c) Adventure Quiz Capcom World 2 (Japan, B-Board 90629B-2) */
 	//
 	DRIVER( dino )			/* 01/02/1993 (c) 1993 (World) (CPS1 + QSound) */
-//	DRIVER( dinoeh )		/* hack */
-//	DRIVER( dinoh )			/* bootleg set 3 */
-//	DRIVER( dinohc )		/* Chinese bootleg */
-	DRIVER( dinohunt )		/* bootleg */
+	DRIVER( dinou )			/* 01/02/1993 (c) 1993 (US) (CPS1 + QSound) */
 	DRIVER( dinoj )			/* 01/02/1993 (c) 1993 (Japan) (CPS1 + QSound) */
 	DRIVER( dinopic )		/* bootleg set 1 with PIC16c57 */
 	DRIVER( dinopic2 )		/* bootleg set 2 with PIC16c57 */
+	DRIVER( dinohunt )		/* bootleg */
+	DRIVER( dinoeh )		/* hack */
+//	DRIVER( dinoh )			/* bootleg set 3 */
+//	DRIVER( dinohc )		/* Chinese bootleg */
 //	DRIVER( dinopic3 )		/* bootleg set 3 with PIC16c57 */
 //	DRIVER( dinopic4 )		/* bootleg set 4 with PIC16c57 */
 //	DRIVER( dinot )			/* bootleg set 1, 930223 Asia TW */
 //	DRIVER( dinotpic )		/* bootleg set 2 with PIC16c57, 930223 Asia TW */
-	DRIVER( dinou )			/* 01/02/1993 (c) 1993 (US) (CPS1 + QSound) */
 	//
 	DRIVER( dynwar )		/* 04/1989 (c) 1989 (USA set 1) */
 	DRIVER( dynwara )		/* 04/1989 (c) 1989 (USA set 2) */

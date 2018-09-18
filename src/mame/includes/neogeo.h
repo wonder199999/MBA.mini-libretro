@@ -312,7 +312,7 @@ VIDEO_UPDATE( neogeo );
 		ROM_LOAD16_WORD_SWAP_BIOS(26, "neo-po.sp1", 0x00000, 0x020000, CRC(16d0c132) SHA1(4e4a440cae46f3889d20234aebd7f8d5f522e22c) )
 
 
-#define NEOGEO_BIOS_CHOICE	\
+#define NEOGEO_BIOS_TYPICAL	\
 		ROM_SYSTEM_BIOS( 0, "euro", "Europe MVS (Ver. 2)" )										\
 		ROM_LOAD16_WORD_SWAP_BIOS( 0, "sp-s2.sp1", 0x00000, 0x020000, CRC(9036d879) SHA1(4f5ed7105b7128794654ce82b51723e16e389543) )	\
 		ROM_SYSTEM_BIOS( 1, "us", "US MVS (Ver. 2?)" )											\
@@ -328,7 +328,7 @@ VIDEO_UPDATE( neogeo );
 #if defined(USE_FULLY)
    #define NEOGEOBIOS	NEOGEO_BIOS_FULLY
 #else
-   #define NEOGEOBIOS	NEOGEO_BIOS_CHOICE
+   #define NEOGEOBIOS	NEOGEO_BIOS_TYPICAL
 #endif
 
 

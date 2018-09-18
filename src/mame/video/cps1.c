@@ -1274,7 +1274,7 @@ static const struct gfx_range mapper_cps2_table[] =
 
 static const struct CPS1config cps1_config_table[] =
 {
-	/* name        CPSB          gfx mapper	    in2   in3  out2  kludge */
+	/* name         CPSB            gfx mapper	 in2  in3 out2 kludge */
 	{"1941",	CPS_B_05,	mapper_YI24B },
 	{"1941r1",      CPS_B_05,	mapper_YI24B },
 	{"1941u",       CPS_B_05,	mapper_YI24B },
@@ -1303,17 +1303,20 @@ static const struct CPS1config cps1_config_table[] =
 	{"cworld2j",	CPS_B_21_BT6,	mapper_Q522B,	0x36, 0, 0x34 },	/* (ports 36, 34 probably leftover input code from another game) */
 	{"cworld2ja",	CPS_B_21_DEF,	mapper_Q522B },				/* patched set, no battery, could be desuicided */
 	{"cworld2jb",	CPS_B_21_BT6,	mapper_Q522B,	0x36, 0, 0x34 },
+	//
+	{"dino",	CPS_B_21_QS2,	mapper_CD63B },		/* layer enable never used */
+	{"dinou",	CPS_B_21_QS2,	mapper_CD63B },		/* layer enable never used */
+	{"dinoj",	CPS_B_21_QS2,	mapper_CD63B },		/* layer enable never used */
+	{"dinopic",	CPS_B_21_QS2,	mapper_CD63B },		/* layer enable never used */
+	{"dinopic2",	CPS_B_21_QS2,	mapper_CD63B },		/* layer enable never used */
+	{"dinohunt",	CPS_B_21_DEF,	mapper_CD63B },		/* Chinese bootleg */
+	{"dinoeh",	CPS_B_21_QS2,	mapper_CD63B },	
 
 
 
 
 
-	{"dino",	CPS_B_21_QS2, mapper_CD63B },	/* layer enable never used */
-	{"dinou",	CPS_B_21_QS2, mapper_CD63B },	/* layer enable never used */
-	{"dinoj",	CPS_B_21_QS2, mapper_CD63B },	/* layer enable never used */
-	{"dinopic",	CPS_B_21_QS2, mapper_CD63B },	/* layer enable never used */
-	{"dinopic2",	CPS_B_21_QS2, mapper_CD63B },	/* layer enable never used */
-	{"dinohunt",	CPS_B_21_DEF, mapper_CD63B },	/* Chinese bootleg */
+
 
 	{"dynwar",	CPS_B_02,     mapper_TK22B },	// wrong, this set uses TK24B1, dumped but equations still not added
 	{"dynwaru",	CPS_B_02,     mapper_TK22B },
@@ -1972,21 +1975,17 @@ static int gfxrom_bank_mapper( running_machine *machine, int type, int code )
 
 	while (range->type)
 	{
-		if (code >= range->start)
-			if (code <= range->end)
-				if (range->type & type)
-				{
-					INT32 base = 0;
-					for (INT32 i = 0; i < range->bank; ++i)
-						base += state->game_config->bank_sizes[i];
+		if (code >= range->start && code <= range->end)
+			if (range->type & type)
+			{
+				INT32 base = 0;
+				for (INT32 i = 0; i < range->bank; ++i)
+					base += state->game_config->bank_sizes[i];
 
-					return (base + (code & (state->game_config->bank_sizes[range->bank] - 1))) >> shift;
-				}
+				return (base + (code & (state->game_config->bank_sizes[range->bank] - 1))) >> shift;
+			}
 		++range;
 	}
-#ifdef MAME_DEBUG
-	/*  popmessage("tile %02x/%04x out of range", type, code >> shift); */
-#endif
 	return -1;
 }
 
@@ -2201,7 +2200,7 @@ VIDEO_START( cps2 )
 
 ***************************************************************************/
 
-static void cps1_build_palette( running_machine *machine, const UINT16* const palette_base )
+static void cps1_build_palette(running_machine *machine, const UINT16* const palette_base)
 {
 	cps_state *state = machine->driver_data<cps_state>();
 	const UINT16 *palette_ram = palette_base;
@@ -2737,8 +2736,7 @@ VIDEO_UPDATE( cps1 )
 
 	if (state->cps_version == 1)
 	{
-/*		if ((state->game_config->bootleg_kludge >> 7) & 0x01)	*/
-		if ((0x88 >> 7) & 0x01)
+		if ((state->game_config->bootleg_kludge >> 7) & 0x01)			/* - fixed 3wondersb */
 			cps1_build_palette(screen->machine, cps1_base(screen->machine, CPS1_PALETTE_BASE, state->palette_align));
 
 		cps1_render_layer(screen->machine, bitmap, cliprect, l0, 0);
