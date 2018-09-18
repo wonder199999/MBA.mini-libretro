@@ -4405,7 +4405,64 @@ ROM_START( dinoeh )
 	ROM_LOAD( "cd_q4.rom",      0x180000, 0x80000, CRC(2c67821d) SHA1(6e2528d0b22508300a6a142a796dd3bf53a66946) )
 ROM_END
 
+ROM_START( dinoh )
+	ROM_REGION( CODE_SIZE, "maincpu", 0 )
+	ROM_LOAD16_WORD_SWAP( "cda_23h.rom",  0x000000, 0x80000, CRC(8e2a9cf0) SHA1(01111582e579bd3b43b52d0e0c445c32fe5e053b) )
+	ROM_LOAD16_WORD_SWAP( "cda_22h.rom",  0x080000, 0x80000, CRC(f72cd219) SHA1(a3f580bd328b54d2546ae7e94262c1a706d27172) )
+	ROM_LOAD16_WORD_SWAP( "cda_21h.rom",  0x100000, 0x80000, CRC(bc275b76) SHA1(1f7f7533b4ccb511dc479f531d9d6740d3ca6712) )
+	ROM_LOAD16_WORD_SWAP( "cda_20h.rom",  0x180000, 0x80000, CRC(8987c975) SHA1(3fd856805d627f855f72acc7aacc2e8ecf0f12bd) )
 
+	ROM_REGION( 0x400000, "gfx", 0 )
+	ROMX_LOAD( "cd_gfx01.rom",  0x000000, 0x80000, CRC(8da4f917) SHA1(4f7b2304b7d9b545d6707d7ec921d3e28200699d) , ROM_GROUPWORD | ROM_SKIP(6) )
+	ROMX_LOAD( "cd_gfx03.rom",  0x000002, 0x80000, CRC(6c40f603) SHA1(cdbd11dfcec08e87355d7e21e9fd39f7eacab016) , ROM_GROUPWORD | ROM_SKIP(6) )
+	ROMX_LOAD( "cd_gfx02.rom",  0x000004, 0x80000, CRC(09c8fc2d) SHA1(d0c0a1258ec5dd484ab6ec1c5663425431f929ee) , ROM_GROUPWORD | ROM_SKIP(6) )
+	ROMX_LOAD( "cd_gfx04.rom",  0x000006, 0x80000, CRC(637ff38f) SHA1(859926b33b9955b3ed67471c61faa442d42b9696) , ROM_GROUPWORD | ROM_SKIP(6) )
+	ROMX_LOAD( "cd_gfx05.rom",  0x200000, 0x80000, CRC(470befee) SHA1(a42e38319e9b7424381352512f11bd8edf0bbb96) , ROM_GROUPWORD | ROM_SKIP(6) )
+	ROMX_LOAD( "cd_gfx07.rom",  0x200002, 0x80000, CRC(22bfb7a3) SHA1(c44959bd3d42b9fc8ecb482dfaf63fbd469d2c3e) , ROM_GROUPWORD | ROM_SKIP(6) )
+	ROMX_LOAD( "cd_gfx06.rom",  0x200004, 0x80000, CRC(e7599ac4) SHA1(0e788a38547a8701115d01190ddeaca64388db4d) , ROM_GROUPWORD | ROM_SKIP(6) )
+	ROMX_LOAD( "cd_gfx08.rom",  0x200006, 0x80000, CRC(211b4b15) SHA1(374f6b185faa0f14f5c45b9b1d60d0772d93fb17) , ROM_GROUPWORD | ROM_SKIP(6) )
+
+	ROM_REGION( 0x28000, "audiocpu", 0 )
+	ROM_LOAD( "cd_q.rom",       0x00000, 0x08000, CRC(605fdb0b) SHA1(9da90ddc6513aaaf2260f0c69719c6b0e585ba8c) )
+	ROM_CONTINUE(               0x10000, 0x18000 )
+
+	ROM_REGION( 0x200000, "qsound", 0 )
+	ROM_LOAD( "cd_q1.rom",      0x000000, 0x80000, CRC(60927775) SHA1(f8599bc84c38573ebbe8685822c58b6a38b50462) )
+	ROM_LOAD( "cd_q2.rom",      0x080000, 0x80000, CRC(770f4c47) SHA1(fec8ef00a6669d4d5e37787ecc7b58ee46709326) )
+	ROM_LOAD( "cd_q3.rom",      0x100000, 0x80000, CRC(2f273ffc) SHA1(f0de462f6c4d251911258e0ebd886152c14d1586) )
+	ROM_LOAD( "cd_q4.rom",      0x180000, 0x80000, CRC(2c67821d) SHA1(6e2528d0b22508300a6a142a796dd3bf53a66946) )
+ROM_END
+
+ROM_START( dinohc )
+	ROM_REGION( CODE_SIZE, "maincpu", 0 )
+	ROM_LOAD16_WORD_SWAP( "23",  0x000000, 0x80000, CRC(cecf4b12) SHA1(75f13fe91442b7c044e58a37d6e7b5bf05150be5) )
+	ROM_LOAD16_WORD_SWAP( "22",  0x080000, 0x80000, CRC(07eeb238) SHA1(b217625839108b826b3955ad675ab8ccd3aa424c) )
+	ROM_LOAD16_WORD_SWAP( "21",  0x100000, 0x80000, CRC(3bc3d57a) SHA1(cca8101d6171472f4f4c506aa0e3d789e5cbe785) )
+
+	ROM_REGION( 0x400000, "gfx", 0 )
+	ROMX_LOAD( "1",   0x000000, 0x80000, CRC(8da4f917) SHA1(4f7b2304b7d9b545d6707d7ec921d3e28200699d) , ROM_GROUPWORD | ROM_SKIP(6) )
+	ROMX_LOAD( "3",   0x000002, 0x80000, CRC(6c40f603) SHA1(cdbd11dfcec08e87355d7e21e9fd39f7eacab016) , ROM_GROUPWORD | ROM_SKIP(6) )
+	ROMX_LOAD( "2",   0x000004, 0x80000, CRC(09c8fc2d) SHA1(d0c0a1258ec5dd484ab6ec1c5663425431f929ee) , ROM_GROUPWORD | ROM_SKIP(6) )
+	ROMX_LOAD( "4",   0x000006, 0x80000, CRC(637ff38f) SHA1(859926b33b9955b3ed67471c61faa442d42b9696) , ROM_GROUPWORD | ROM_SKIP(6) )
+	ROMX_LOAD( "5",   0x200000, 0x80000, CRC(470befee) SHA1(a42e38319e9b7424381352512f11bd8edf0bbb96) , ROM_GROUPWORD | ROM_SKIP(6) )
+	ROMX_LOAD( "7",   0x200002, 0x80000, CRC(22bfb7a3) SHA1(c44959bd3d42b9fc8ecb482dfaf63fbd469d2c3e) , ROM_GROUPWORD | ROM_SKIP(6) )
+	ROMX_LOAD( "6",   0x200004, 0x80000, CRC(e7599ac4) SHA1(0e788a38547a8701115d01190ddeaca64388db4d) , ROM_GROUPWORD | ROM_SKIP(6) )
+	ROMX_LOAD( "8",   0x200006, 0x80000, CRC(211b4b15) SHA1(374f6b185faa0f14f5c45b9b1d60d0772d93fb17) , ROM_GROUPWORD | ROM_SKIP(6) )
+
+	ROM_REGION( 0x18000, "audiocpu", 0 )
+	ROM_LOAD( "9",    0x00000, 0x08000, CRC(698e8b58) SHA1(b7a3d905a7ed2c430426ca2e185e3d7e75e752a1) )
+	ROM_CONTINUE(	  0x10000, 0x08000 )
+
+	ROM_REGION( 0x40000, "oki", 0 )
+	ROM_LOAD( "18",     0x00000, 0x20000, CRC(6de2c2db) SHA1(9a1eaba8d104f59a5e61f89679bb5de0c0c64364) )
+	ROM_LOAD( "19",     0x20000, 0x20000, CRC(b99091ae) SHA1(b19197c7ad3aeaf5f41c26bf853b0c9b502ecfca) )
+
+	ROM_REGION( 0x200000, "qsound", 0 )
+	ROM_LOAD( "cd-q1.1k",      0x000000, 0x80000, CRC(60927775) SHA1(f8599bc84c38573ebbe8685822c58b6a38b50462) )
+	ROM_LOAD( "cd-q2.2k",      0x080000, 0x80000, CRC(770f4c47) SHA1(fec8ef00a6669d4d5e37787ecc7b58ee46709326) )
+	ROM_LOAD( "cd-q3.3k",      0x100000, 0x80000, CRC(2f273ffc) SHA1(f0de462f6c4d251911258e0ebd886152c14d1586) )
+	ROM_LOAD( "cd-q4.4k",      0x180000, 0x80000, CRC(2c67821d) SHA1(6e2528d0b22508300a6a142a796dd3bf53a66946) )
+ROM_END
 
 
 
@@ -10746,6 +10803,58 @@ static DRIVER_INIT( dinoeh )
 	DRIVER_INIT_CALL(dino);
 }
 
+static DRIVER_INIT( dinoh )
+{
+	UINT16 *rom = (UINT16 *)memory_region(machine, "maincpu");	/* Patch out Q-Sound test */
+
+	rom[0xAACF4 / 2] = 0x4e71;
+
+	DRIVER_INIT_CALL(dinoeh);
+}
+
+static DRIVER_INIT( dinohc )
+{
+	UINT8 *src = (UINT8 *)memory_region(machine, "maincpu");
+
+	unsigned int i;
+
+	const int fix_gfx_table[55][2] = {
+		{ 0x472, 0xFC }, { 0x473, 0x33 }, { 0x474, 0x00 }, { 0x475, 0x90 }, { 0x476, 0x80 }, { 0x478, 0x00 },
+		{ 0x479, 0x01 }, { 0x47A, 0xFC }, { 0x47B, 0x33 }, { 0x47C, 0x80 }, { 0x47D, 0x90 }, { 0x47E, 0x80 },
+		{ 0x480, 0x02 }, { 0x481, 0x01 }, { 0x482, 0xFC }, { 0x483, 0x33 }, { 0x484, 0xC0 }, { 0x485, 0x90 },
+		{ 0x486, 0x80 }, { 0x487, 0x00 }, { 0x488, 0x04 }, { 0x489, 0x01 }, { 0x48A, 0xFC }, { 0x48B, 0x33 },
+		{ 0x48C, 0x00 }, { 0x48D, 0x91 }, { 0x48E, 0x80 }, { 0x48F, 0x00 }, { 0x490, 0x06 }, { 0x491, 0x01 },
+		{ 0x006cc, 0x80 }, { 0x006cd, 0x00 }, { 0x006ce, 0x0C }, { 0x006cf, 0x01 }, { 0x006de, 0x80 }, { 0x006df, 0x00 },
+		{ 0x006e0, 0x10 }, { 0x006e1, 0x01 }, { 0x006f0, 0x80 }, { 0x006f1, 0x00 }, { 0x006f2, 0x14 }, { 0x006f3, 0x01 },
+		{ 0x00704, 0x80 }, { 0x00705, 0x00 }, { 0x00706, 0x0E }, { 0x00707, 0x01 }, { 0x00718, 0x80 }, { 0x00719, 0x00 },
+		{ 0x0071a, 0x12 }, { 0x0071b, 0x01 }, { 0x0072c, 0x80 }, { 0x0072d, 0x00 }, { 0x0072e, 0x16 }, { 0x0072f, 0x01 },
+		{ -1, -1 }
+	};
+
+	const int fix_screen_transitions_table[9][2] = {
+		{ 0x00b28, 0x00 }, { 0x00b29, 0x70 }, { 0x00b2a, 0x00 }, { 0x00b2b, 0x72 },
+		{ 0x00b2c, 0x3C }, { 0x00b2d, 0x34 }, { 0x00b32, 0xC1 }, { 0x00b33, 0x20 },
+		{ -1, -1 }
+	};
+
+	const int fix_sound_table[7][2] = {
+		{ 0x00666, 0xF1 }, { 0x00667, 0x00 }, { 0x00668, 0x02 }, { 0x00669, 0x80 }, { 0xaaa6c, 0xD8 }, { 0xaaa6d, 0x00 },
+		{ -1, -1 }
+	};
+
+	for (i = 0; fix_gfx_table[i][0] != -1; i++)
+		src[fix_gfx_table[i][0]] = fix_gfx_table[i][1];
+
+	for (i = 0; fix_screen_transitions_table[i][0] != -1; i++)
+		src[fix_screen_transitions_table[i][0]] = fix_screen_transitions_table[i][1];
+
+	for (i = 0; fix_sound_table[i][0] != -1; i++)
+		src[fix_sound_table[i][0]] = fix_sound_table[i][1];
+
+	DRIVER_INIT_CALL(dino);
+}
+
+
 
 
 /* ------ DRIVER INIT end ------ */
@@ -10785,7 +10894,8 @@ GAME( 1993,	dinou,		dino,		qsound,		dino,		dino,		ROT0,	"Capcom",	"Cadillacs and
 GAME( 1993,	dinoj,		dino,		qsound,		dino,		dino,		ROT0,	"Capcom",	"Cadillacs: Kyouryuu Shin Seiki (Japan 930201)", GAME_SUPPORTS_SAVE )
 GAME( 1993,	dinohunt,	dino,		wofhfb,		dinoh,		dinohunt,	ROT0,	"bootleg",	"Dinosaur Hunter (Chinese bootleg of Cadillacs and Dinosaurs)", GAME_SUPPORTS_SAVE )
 GAME( 200?,	dinoeh,		dino,		qsound,		dino,		dinoeh,		ROT0,	"Ydmis(hack)",	"Cadillacs and Dinosaurs (Select Characters)(World 930201)", GAME_SUPPORTS_SAVE )
-
+GAME( 200?,	dinoh,		dino,		qsound,		dino,		dinoh,		ROT0,	"Unknown(hack)","Cadillacs and Dinosaurs (Hack set 1)(Asia TW 930223)" , GAME_SUPPORTS_SAVE )
+GAME( 200?,	dinohc,		dino,		qsound,		dino,		dinohc,		ROT0,	"Unknown(hack)","Cadillacs and Dinosaurs (Chinese bootleg, 930223 Asia TW)", GAME_SUPPORTS_SAVE )
 
 
 
@@ -10967,4 +11077,4 @@ GAME( 1989, dynwara,	dynwar,	  cps1_10MHz,	dynwar,	  cps1,	       ROT0,   "Capco
 GAME( 1989, dynwarjr,	dynwar,	  cps1_12MHz,	dynwar,	  cps1,	       ROT0,   "Capcom",   "Tenchi wo Kurau (Japan Resale Ver.)", GAME_SUPPORTS_SAVE )  /* 12MHz verified */
 
 
-//
+

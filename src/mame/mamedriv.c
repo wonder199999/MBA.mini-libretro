@@ -131,8 +131,8 @@ const game_driver *const drivers[] =
 	DRIVER( dinopic2 )		/* bootleg set 2 with PIC16c57 */
 	DRIVER( dinohunt )		/* bootleg */
 	DRIVER( dinoeh )		/* hack */
-//	DRIVER( dinoh )			/* bootleg set 3 */
-//	DRIVER( dinohc )		/* Chinese bootleg */
+	DRIVER( dinoh )			/* hack */
+	DRIVER( dinohc )		/* hack */
 //	DRIVER( dinopic3 )		/* bootleg set 3 with PIC16c57 */
 //	DRIVER( dinopic4 )		/* bootleg set 4 with PIC16c57 */
 //	DRIVER( dinot )			/* bootleg set 1, 930223 Asia TW */
