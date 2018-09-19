@@ -1757,6 +1757,47 @@ ROM_START( dinopic2 )
 	ROM_LOAD( "palce16v8h-2.bin",    0xa00, 0x117,  CRC(9ae375ba) SHA1(6f227c2a5b1170a41e6419f12d1e1f98edc6f8e5) )
 ROM_END
 
+ROM_START( dinopic3 )
+	ROM_REGION( CODE_SIZE, "maincpu", 0 )		/* 68000 code */
+	ROM_LOAD16_BYTE( "27c4000-m15262-a-3.bin",      0x000001, 0x80000, CRC(13dfeb08) SHA1(cd2f9dd64f4fabe93901247e36dff3763169716d) )
+	ROM_LOAD16_BYTE( "27c4000-m15377-a-5.bin",      0x000000, 0x80000, CRC(96dfcbf1) SHA1(a8bda6edae2c1b79db7ae8a8976fd2457f874373) )
+	ROM_LOAD16_BYTE( "27c4000-m15263-a-1-2.bin",    0x100001, 0x80000, CRC(0e4058ba) SHA1(346f9e34ea53dd1bf5cdafa1e38bf2edb09b9a7f) )
+	ROM_LOAD16_BYTE( "27c4000-m15295-a-4.bin",      0x100000, 0x80000, CRC(6133f349) SHA1(d13af99910623f62c090d25372a2253dbc2f8cbe) )
+
+	ROM_REGION( 0x400000, "gfx", 0 )
+	ROMX_LOAD( "27c4000-m15263-a-1-9.bin",	0x000000, 0x40000, CRC(f3c2c98d) SHA1(98ae51a67fa4159456a4a205eebdd8d1775888d1), ROM_SKIP(7) )
+	ROM_CONTINUE(				0x000004, 0x40000)
+	ROMX_LOAD( "27c4000-m15262-a-8.bin",	0x000001, 0x40000, BAD_DUMP CRC(a0e1f6e0) SHA1(119af72fb6e75933b6d39bc4a8030823ce9b7611), ROM_SKIP(7) )
+	ROM_CONTINUE(				0x000005, 0x40000)
+	ROMX_LOAD( "27c4000-m15279-a-7.bin",	0x000002, 0x40000, CRC(55ef0adc) SHA1(3b5551ae76ae80882d37fc70a1031a57885d6840), ROM_SKIP(7) )
+	ROM_CONTINUE(				0x000006, 0x40000)
+	ROMX_LOAD( "27c4000-m15279-a-6.bin",	0x000003, 0x40000, CRC(cc0805fc) SHA1(c512734c28b878a30a0de249929f69784d5d77a1), ROM_SKIP(7) )
+	ROM_CONTINUE(				0x000007, 0x40000)
+	ROMX_LOAD( "27c4000-m15013-b-1-13.bin",	0x200000, 0x40000, CRC(1371f714) SHA1(d2c98096fab08e3d4fd2482e6ebfc970ead656ee), ROM_SKIP(7) )
+	ROM_CONTINUE(				0x200004, 0x40000)
+	ROMX_LOAD( "27c4000-m15263-a-1-12.bin",	0x200001, 0x40000, CRC(b284c4a7) SHA1(166f571e0afa115f8e38ba427b40e30abcfd70ee), ROM_SKIP(7) )
+	ROM_CONTINUE(				0x200005, 0x40000)
+	ROMX_LOAD( "27c4000-m15377-a-11.bin",	0x200002, 0x40000, CRC(b7ad3394) SHA1(58dec34d9d991ff2817c8a7847749716abae6c77), ROM_SKIP(7) )
+	ROM_CONTINUE(				0x200006, 0x40000)
+	ROMX_LOAD( "27c4000-m15279-a-10.bin",	0x200003, 0x40000, CRC(88847705) SHA1(05dc90067921960e417b7436056a5e1f86abaa1a), ROM_SKIP(7) )
+	ROM_CONTINUE(				0x200007, 0x40000)
+
+	ROM_REGION( 0x28000, "audiocpu", 0 )		/* PIC16c57 - protected, dump isn't valid */
+	ROM_LOAD( "pic16c57-rc.bin",		0x00000, 0x1030, BAD_DUMP CRC(4d262eaa) SHA1(d659cfa9c9909eec9013b3dc164ba92dd2146479) )
+
+	ROM_REGION( 0x80000, "oki", 0 )			/* OKI6295 samples */
+	ROM_LOAD( "27c4000-m15388-a-1.bin",	0x000000, 0x80000,  CRC(7d921309) SHA1(d51e60e904d302c2516b734189e141aa171b2b82) )
+
+	ROM_REGION( 0xc00, "user1", 0 )			/* extra bits on this set */
+	ROM_LOAD( "cat93c46p.bin",       0x000, 0x080,  CRC(d49fa351) SHA1(e6dfaff1c6aa962d34ae8e82b71e6f394d82e19c) )
+	ROM_LOAD( "gal20v8a-1.bin",      0x200, 0x157,  CRC(cd99ca47) SHA1(ee1d990fd294aa46f56f31264134251569f6792e) )
+	ROM_LOAD( "gal20v8a-2.bin",      0x400, 0x157,  CRC(60d016b9) SHA1(add42c763c819f3fe6d7cf3adc7123a52c2a3be9) )
+	ROM_LOAD( "gal20v8a-3.bin",      0x600, 0x157,  CRC(049b7f4f) SHA1(6c6ea03d9a293db69a8bd10e042ee75e3c01313c) )
+	ROM_LOAD( "palce16v8h-1.bin",    0x800, 0x117,  CRC(48253c66) SHA1(8c94e655b768c45c3edf6ef39e62e3b7a4e57530) )
+	ROM_LOAD( "palce16v8h-2.bin",    0xa00, 0x117,  CRC(9ae375ba) SHA1(6f227c2a5b1170a41e6419f12d1e1f98edc6f8e5) )
+ROM_END
+
+
 
 
 
@@ -2196,9 +2237,11 @@ GAME( 1990,	cawingbl,	cawing,		cawingbl,	cawingbl,	cawingbl, ROT0,	"bootleg",	"C
 /* cawingb2 - ok */
 GAME( 1990,	cawingb2,	cawing,		cawingbl,	cawingbl,	cawingbl, ROT0,	"bootleg",	"Carrier Air Wing (bootleg with 2xYM2203 + 2xMSM205 set 2)", GAME_SUPPORTS_SAVE )
 /* dinopic - no sound */
-GAME( 1993,	dinopic,	dino,		dinopic,	dino,		dinopic,  ROT0, "bootleg",	"Cadillacs and Dinosaurs (bootleg with PIC16c57, set 1)", GAME_NO_SOUND | GAME_SUPPORTS_SAVE )
+GAME( 1993,	dinopic,	dino,		dinopic,	dino,		dinopic,  ROT0, "bootleg",	"Cadillacs and Dinosaurs (bootleg set 1 (with PIC16c57), 930201 etc)", GAME_NO_SOUND | GAME_SUPPORTS_SAVE )
 /* dinopic2 - no sound, one bad gfx rom. Copying 8.bin from dinopic fixes it. */
-GAME( 1993,	dinopic2,	dino,		dinopic,	dino,		dinopic,  ROT0, "bootleg",	"Cadillacs and Dinosaurs (bootleg with PIC16c57, set 2)", GAME_NOT_WORKING | GAME_SUPPORTS_SAVE )
+GAME( 1993,	dinopic2,	dino,		dinopic,	dino,		dinopic,  ROT0, "bootleg",	"Cadillacs and Dinosaurs (bootleg set 2 (with PIC16c57), 930201 etc)", GAME_NOT_WORKING | GAME_SUPPORTS_SAVE )
+/* dinopic3 - no sound, no different from dinopic2 */
+GAME( 1993,	dinopic3,	dino,		dinopic,	dino,		dinopic,  ROT0, "bootleg",	"Cadillacs and Dinosaurs (bootleg set 3 (with PIC16c57), 930201 etc)", GAME_NOT_WORKING | GAME_SUPPORTS_SAVE )
 
 
 
@@ -2233,3 +2276,4 @@ GAME( 1993,   slampic,	  slammast,	slampic,	slammast,	dinopic,  ROT0,   "bootleg
 GAME( 1991,   knightsb4,  knights,	knightsb,	knights,	knightsb, ROT0,   "bootleg", "Knights of the Round (bootleg set 4 with YM2151 + 2xMSM5205, 911127 etc)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )
 /* varthb - good */
 GAME( 1992,   varthb,	  varth,	varthb,		varth,		dinopic,  ROT270, "bootleg", "Varth: Operation Thunderstorm (bootleg)", GAME_SUPPORTS_SAVE )
+

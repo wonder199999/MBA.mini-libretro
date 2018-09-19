@@ -1313,6 +1313,7 @@ static const struct CPS1config cps1_config_table[] =
 	{"dinoeh",	CPS_B_21_QS2,	mapper_CD63B },	
 	{"dinoh",	CPS_B_21_DEF,	mapper_CD63B,	0x36 },
 	{"dinohc",	CPS_B_21_DEF,	mapper_CD63B,	0x36 },
+	{"dinopic3",	CPS_B_21_QS2,	mapper_CD63B },
 
 
 
