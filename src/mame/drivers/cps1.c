@@ -10854,6 +10854,17 @@ static DRIVER_INIT( ganbare )
 	memory_install_readwrite16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0xff0000, 0xffffff, 0, 0, ganbare_ram_r, ganbare_ram_w);
 }
 
+/*
+static DRIVER_INIT( dinoz )
+{
+	UINT16 *rom = (UINT16 *)memory_region(machine, "maincpu");
+
+	rom[0xAAA82 / 2] = 0x4e71;	// Patch out Q-Sound test
+	rom[0x1CFB4 / 2] = 0x4e71;	// patch out invalid instruction
+
+	DRIVER_INIT_CALL(dinoeh);
+}	*/
+
 static DRIVER_INIT( dinoeh )
 {
 	memory_install_write16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x800180, 0x800181, 0, 0, dinohack_sound_command_w);
@@ -10869,18 +10880,7 @@ static DRIVER_INIT( dinoh )
 	DRIVER_INIT_CALL(dinoeh);
 }
 
-/*
-static DRIVER_INIT( dinoz )
-{
-	UINT16 *rom = (UINT16 *)memory_region(machine, "maincpu");
-
-	rom[0xAAA82 / 2] = 0x4e71;	// Patch out Q-Sound test
-	rom[0x1CFB4 / 2] = 0x4e71;	// patch out invalid instruction
-
-	DRIVER_INIT_CALL(dinoeh);
-}	*/
-
-static DRIVER_INIT( dinohc )
+static DRIVER_INIT( dinotpic )
 {
 	const int fix_gfx_table[55][2] = {
 		{ 0x0472, 0xFC }, { 0x0473, 0x33 }, { 0x0474, 0x00 }, { 0x0475, 0x90 }, { 0x0476, 0x80 }, { 0x0478, 0x00 },
@@ -10963,7 +10963,7 @@ GAME( 200?,	dinoeh,		dino,		qsound,		dino,		dinoeh,		ROT0,	"Ydmis(hack)",	"Cadil
 GAME( 200?,	dinoh,		dino,		qsound,		dino,		dinoh,		ROT0,	"Unknown(hack)","Cadillacs and Dinosaurs (Hack set 1)(Asia TW 930223)" , GAME_SUPPORTS_SAVE )
 GAME( 200?,	dinot,		dino,		qsound,		dino,		dinoh,		ROT0,	"Unknown",	"Cadillacs and Dinosaurs Turbo (bootleg set 1, 930223 Asia TW)", GAME_SUPPORTS_SAVE )
 GAME( 200?,	dinohc,		dino,		wofhfb,		dinoh,		dinohunt,	ROT0,	"Unknown(hack)","Cadillacs and Dinosaurs (Chinese bootleg, 930223 Asia TW)", GAME_SUPPORTS_SAVE )
-GAME( 200?,	dinotpic,	dino,		qsound,		dino,		dinohc,		ROT0,	"Unknown",	"Cadillacs and Dinosaurs Turbo (bootleg set 1 with PIC, 930223 Asia TW)", GAME_SUPPORTS_SAVE )
+GAME( 200?,	dinotpic,	dino,		qsound,		dino,		dinotpic,	ROT0,	"Unknown",	"Cadillacs and Dinosaurs Turbo (bootleg set 1 with PIC, 930223 Asia TW)", GAME_SUPPORTS_SAVE )
 
 
 

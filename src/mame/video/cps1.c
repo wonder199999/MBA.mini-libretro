@@ -1316,7 +1316,7 @@ static const struct CPS1config cps1_config_table[] =
 	{"dinopic3",	CPS_B_21_QS2,	mapper_CD63B },
 	{"dinopic4",	CPS_B_21_QS2,	mapper_CD63B },
 	{"dinot",	CPS_B_21_DEF,	mapper_CD63B,	0x36 },
-//	{"dinotpic",	CPS_B_21_QS2,	mapper_CD63B,	0, 0, 0, 0x0F },
+	{"dinotpic",	CPS_B_21_QS2,	mapper_CD63B,	0, 0, 0, 0x0F },
 
 
 
@@ -1851,7 +1851,7 @@ void cps1_get_video_base( running_machine *machine )
 	}
 
 	/* Some of the sf2 hacks use only sprite port 0x9100 and the scroll layers are offset */
-	switch ( state->game_config->bootleg_kludge )
+	switch ( state->game_config->bootleg_kludge & 15 )
 	{
 		case 0x01:
 			state->cps_a_regs[CPS1_OBJ_BASE] = 0x9100;
@@ -1871,9 +1871,9 @@ void cps1_get_video_base( running_machine *machine )
 			scroll3xoff = -0x0c;
 		break;
 		case 0x0F:
-			scroll1xoff = 0xc0;
-			scroll2xoff = 0xc0;
-			scroll3xoff = 0xc0;
+			scroll1xoff = -0x40;
+			scroll2xoff = -0x40;
+			scroll3xoff = -0x40;
 		break;
 		case 0x88:
 			scroll1xoff = 0x04;
