@@ -134,9 +134,9 @@ const game_driver *const drivers[] =
 	DRIVER( dinoh )			/* hack */
 	DRIVER( dinohc )		/* hack */
 	DRIVER( dinopic3 )		/* bootleg set 3 with PIC16c57 */
-//	DRIVER( dinopic4 )		/* bootleg set 4 with PIC16c57 */
-//	DRIVER( dinot )			/* bootleg set 1, 930223 Asia TW */
-//	DRIVER( dinotpic )		/* bootleg set 2 with PIC16c57, 930223 Asia TW */
+	DRIVER( dinopic4 )		/* bootleg set 4 with PIC16c57 */
+	DRIVER( dinot )			/* bootleg set 1, 930223 Asia TW */
+	DRIVER( dinotpic )		/* bootleg set 2 with PIC16c57, 930223 Asia TW */
 	//
 	DRIVER( dynwar )		/* 04/1989 (c) 1989 (USA set 1) */
 	DRIVER( dynwara )		/* 04/1989 (c) 1989 (USA set 2) */

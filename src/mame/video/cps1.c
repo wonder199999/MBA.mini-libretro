@@ -1274,7 +1274,7 @@ static const struct gfx_range mapper_cps2_table[] =
 
 static const struct CPS1config cps1_config_table[] =
 {
-	/* name         CPSB            gfx mapper	 in2  in3 out2 kludge */
+	/* name         CPSB            gfx mapper	 in2  in3  out2  kludge */
 	{"1941",	CPS_B_05,	mapper_YI24B },
 	{"1941r1",      CPS_B_05,	mapper_YI24B },
 	{"1941u",       CPS_B_05,	mapper_YI24B },
@@ -1314,6 +1314,9 @@ static const struct CPS1config cps1_config_table[] =
 	{"dinoh",	CPS_B_21_DEF,	mapper_CD63B,	0x36 },
 	{"dinohc",	CPS_B_21_DEF,	mapper_CD63B,	0x36 },
 	{"dinopic3",	CPS_B_21_QS2,	mapper_CD63B },
+	{"dinopic4",	CPS_B_21_QS2,	mapper_CD63B },
+	{"dinot",	CPS_B_21_DEF,	mapper_CD63B,	0x36 },
+//	{"dinotpic",	CPS_B_21_QS2,	mapper_CD63B,	0, 0, 0, 0x0F },
 
 
 
@@ -1866,6 +1869,11 @@ void cps1_get_video_base( running_machine *machine )
 			scroll1xoff = -0x08;
 			scroll2xoff = -0x0b;
 			scroll3xoff = -0x0c;
+		break;
+		case 0x0F:
+			scroll1xoff = 0xc0;
+			scroll2xoff = 0xc0;
+			scroll3xoff = 0xc0;
 		break;
 		case 0x88:
 			scroll1xoff = 0x04;

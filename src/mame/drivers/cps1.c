@@ -249,6 +249,7 @@ Stephh's log (2006.09.20) :
 #include "includes/cps1.h"       /* External CPS1 definitions */
 
 
+
 /* -------------------  Game-specific function  -------------------- */
 static WRITE16_HANDLER( dinohack_sound_command_w )
 {
@@ -4463,6 +4464,62 @@ ROM_START( dinohc )
 	ROM_LOAD( "cd-q3.3k",      0x100000, 0x80000, CRC(2f273ffc) SHA1(f0de462f6c4d251911258e0ebd886152c14d1586) )
 	ROM_LOAD( "cd-q4.4k",      0x180000, 0x80000, CRC(2c67821d) SHA1(6e2528d0b22508300a6a142a796dd3bf53a66946) )
 ROM_END
+
+ROM_START( dinot )
+	ROM_REGION( CODE_SIZE, "maincpu", 0 )
+	ROM_LOAD16_WORD_SWAP( "kl2-r1.800", 0x080000, 0x080000, CRC(4c70dca7) SHA1(2e7a10c90924e0f87903eddb04313f61233a998f) )
+	ROM_CONTINUE(			    0x000000, 0x080000 )
+	ROM_LOAD16_WORD_SWAP( "kl2-l2.800", 0x180000, 0x080000, CRC(c6ae7338) SHA1(4b8543cf1ac89ae95fe63e6d81c87d2bda52da69) )
+	ROM_CONTINUE(			    0x100000, 0x080000 )
+
+	ROM_REGION( 0x400000, "gfx", 0 )
+	ROMX_LOAD( "cd-a.160",	0x000000, 0x80000, CRC(7e4f9fb3) SHA1(b985d925e0fb799cdf0a671e4800961d9872cd8f), ROM_GROUPWORD | ROM_SKIP(6) )
+	ROM_CONTINUE(		0x000004, 0x80000 )
+	ROM_CONTINUE(		0x200000, 0x80000 )
+	ROM_CONTINUE(		0x200004, 0x80000 )
+	ROMX_LOAD( "cd-b.160",	0x000002, 0x80000, CRC(89532d85) SHA1(6743c4d9b4407421416c13878b8a1fae097dd7a7), ROM_GROUPWORD | ROM_SKIP(6) )
+	ROM_CONTINUE(		0x000006, 0x80000 )
+	ROM_CONTINUE(		0x200002, 0x80000 )
+	ROM_CONTINUE(		0x200006, 0x80000 )
+
+	ROM_REGION( 0x28000, "audiocpu", 0 )
+	ROM_LOAD( "cd_q.rom",	0x00000, 0x08000, CRC(605fdb0b) SHA1(9da90ddc6513aaaf2260f0c69719c6b0e585ba8c) )
+	ROM_CONTINUE(		0x10000, 0x18000 )
+
+	ROM_REGION( 0x200000, "qsound", 0 )
+	ROM_LOAD( "cd_q1.rom",	0x000000, 0x80000, CRC(60927775) SHA1(f8599bc84c38573ebbe8685822c58b6a38b50462) )
+	ROM_LOAD( "cd_q2.rom",	0x080000, 0x80000, CRC(770f4c47) SHA1(fec8ef00a6669d4d5e37787ecc7b58ee46709326) )
+	ROM_LOAD( "cd_q3.rom",	0x100000, 0x80000, CRC(2f273ffc) SHA1(f0de462f6c4d251911258e0ebd886152c14d1586) )
+	ROM_LOAD( "cd_q4.rom",	0x180000, 0x80000, CRC(2c67821d) SHA1(6e2528d0b22508300a6a142a796dd3bf53a66946) )
+ROM_END
+
+ROM_START( dinotpic )
+	ROM_REGION( CODE_SIZE, "maincpu", 0 )
+	ROM_LOAD16_WORD_SWAP( "cd-d.800",  0x000000, 0x100000, CRC(2a7b2915) SHA1(817d24c5206a60c4d93affffc9bd5a72abccbb01) )
+	ROM_LOAD16_WORD_SWAP( "cd-e.800",  0x100000, 0x100000, CRC(e8370226) SHA1(9c6915ad9e48ccd2020fcad58ec56e6f7cd0c25c) )
+
+	ROM_REGION( 0x400000, "gfx", 0 )
+	ROMX_LOAD( "cd-a.160",   0x000000, 0x80000, CRC(7e4f9fb3) SHA1(b985d925e0fb799cdf0a671e4800961d9872cd8f), ROM_GROUPWORD | ROM_SKIP(6) )
+	ROM_CONTINUE(            0x000004, 0x80000 )
+	ROM_CONTINUE(            0x200000, 0x80000 )
+	ROM_CONTINUE(            0x200004, 0x80000 )
+	ROMX_LOAD( "cd-b.160",   0x000002, 0x80000, CRC(89532d85) SHA1(6743c4d9b4407421416c13878b8a1fae097dd7a7), ROM_GROUPWORD | ROM_SKIP(6) )
+	ROM_CONTINUE(            0x000006, 0x80000 )
+	ROM_CONTINUE(            0x200002, 0x80000 )
+	ROM_CONTINUE(            0x200006, 0x80000 )
+
+	ROM_REGION( 0x28000, "audiocpu", 0 )
+	ROM_LOAD( "cd_q.5k",       0x00000, 0x08000, CRC(605fdb0b) SHA1(9da90ddc6513aaaf2260f0c69719c6b0e585ba8c) )
+	ROM_CONTINUE(              0x10000, 0x18000 )
+
+	ROM_REGION( 0x200000, "qsound", 0 )
+	ROM_LOAD( "cd-q1.1k",      0x000000, 0x80000, CRC(60927775) SHA1(f8599bc84c38573ebbe8685822c58b6a38b50462) )
+	ROM_LOAD( "cd-q2.2k",      0x080000, 0x80000, CRC(770f4c47) SHA1(fec8ef00a6669d4d5e37787ecc7b58ee46709326) )
+	ROM_LOAD( "cd-q3.3k",      0x100000, 0x80000, CRC(2f273ffc) SHA1(f0de462f6c4d251911258e0ebd886152c14d1586) )
+	ROM_LOAD( "cd-q4.4k",      0x180000, 0x80000, CRC(2c67821d) SHA1(6e2528d0b22508300a6a142a796dd3bf53a66946) )
+ROM_END
+
+
 
 
 
@@ -10805,19 +10862,26 @@ static DRIVER_INIT( dinoeh )
 
 static DRIVER_INIT( dinoh )
 {
-	UINT16 *rom = (UINT16 *)memory_region(machine, "maincpu");	/* Patch out Q-Sound test */
+	UINT16 *rom = (UINT16 *)memory_region(machine, "maincpu");
 
-	rom[0xAACF4 / 2] = 0x4e71;
+	rom[0xAACF4 / 2] = 0x4e71;	/* Patch out Q-Sound test */
 
 	DRIVER_INIT_CALL(dinoeh);
 }
 
+/*
+static DRIVER_INIT( dinoz )
+{
+	UINT16 *rom = (UINT16 *)memory_region(machine, "maincpu");
+
+	rom[0xAAA82 / 2] = 0x4e71;	// Patch out Q-Sound test
+	rom[0x1CFB4 / 2] = 0x4e71;	// patch out invalid instruction
+
+	DRIVER_INIT_CALL(dinoeh);
+}	*/
+
 static DRIVER_INIT( dinohc )
 {
-	UINT8 *src = (UINT8 *)memory_region(machine, "maincpu");
-
-	unsigned int i;
-
 	const int fix_gfx_table[55][2] = {
 		{ 0x0472, 0xFC }, { 0x0473, 0x33 }, { 0x0474, 0x00 }, { 0x0475, 0x90 }, { 0x0476, 0x80 }, { 0x0478, 0x00 },
 		{ 0x0479, 0x01 }, { 0x047A, 0xFC }, { 0x047B, 0x33 }, { 0x047C, 0x80 }, { 0x047D, 0x90 }, { 0x047E, 0x80 },
@@ -10842,18 +10906,20 @@ static DRIVER_INIT( dinohc )
 		{ -1, -1 }
 	};
 
-	for (i = 0; fix_gfx_table[i][0] != -1; i++)
+	UINT8 *src = (UINT8 *)memory_region(machine, "maincpu");
+	unsigned int i;
+
+	for (i = 0; fix_gfx_table[i][0] >= 0; i++)
 		src[fix_gfx_table[i][0]] = fix_gfx_table[i][1];
 
-	for (i = 0; fix_screen_transitions_table[i][0] != -1; i++)
+	for (i = 0; fix_screen_transitions_table[i][0] >= 0; i++)
 		src[fix_screen_transitions_table[i][0]] = fix_screen_transitions_table[i][1];
 
-	for (i = 0; fix_sound_table[i][0] != -1; i++)
+	for (i = 0; fix_sound_table[i][0] >= 0; i++)
 		src[fix_sound_table[i][0]] = fix_sound_table[i][1];
 
 	DRIVER_INIT_CALL(dino);
 }
-
 
 
 
@@ -10895,8 +10961,9 @@ GAME( 1993,	dinoj,		dino,		qsound,		dino,		dino,		ROT0,	"Capcom",	"Cadillacs: Ky
 GAME( 1993,	dinohunt,	dino,		wofhfb,		dinoh,		dinohunt,	ROT0,	"bootleg",	"Dinosaur Hunter (Chinese bootleg of Cadillacs and Dinosaurs)", GAME_SUPPORTS_SAVE )
 GAME( 200?,	dinoeh,		dino,		qsound,		dino,		dinoeh,		ROT0,	"Ydmis(hack)",	"Cadillacs and Dinosaurs (Select Characters)(World 930201)", GAME_SUPPORTS_SAVE )
 GAME( 200?,	dinoh,		dino,		qsound,		dino,		dinoh,		ROT0,	"Unknown(hack)","Cadillacs and Dinosaurs (Hack set 1)(Asia TW 930223)" , GAME_SUPPORTS_SAVE )
-GAME( 200?,	dinohc,		dino,		qsound,		dino,		dinohc,		ROT0,	"Unknown(hack)","Cadillacs and Dinosaurs (Chinese bootleg, 930223 Asia TW)", GAME_SUPPORTS_SAVE )
-
+GAME( 200?,	dinot,		dino,		qsound,		dino,		dinoh,		ROT0,	"Unknown",	"Cadillacs and Dinosaurs Turbo (bootleg set 1, 930223 Asia TW)", GAME_SUPPORTS_SAVE )
+GAME( 200?,	dinohc,		dino,		wofhfb,		dinoh,		dinohunt,	ROT0,	"Unknown(hack)","Cadillacs and Dinosaurs (Chinese bootleg, 930223 Asia TW)", GAME_SUPPORTS_SAVE )
+GAME( 200?,	dinotpic,	dino,		qsound,		dino,		dinohc,		ROT0,	"Unknown",	"Cadillacs and Dinosaurs Turbo (bootleg set 1 with PIC, 930223 Asia TW)", GAME_SUPPORTS_SAVE )
 
 
 
