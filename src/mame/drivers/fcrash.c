@@ -1577,39 +1577,8 @@ static DRIVER_INIT( fcrash )
 
 	DRIVER_INIT_CALL(cps1);
 }
-/*
-static UINT16 dinopic4protectvalue = 0;
 
-static READ16_HANDLER( dinohunt_sound_r )
-{
-	return 0xff;
-}
 
-static WRITE16_HANDLER( dinopic4_protectword_w )
-{
-	if (offset == 0x62b0 / 2)
-		dinopic4protectvalue = data;
-}
-
-static READ16_HANDLER( dinopic4_protectword_r )
-{
-	if (offset == 0xa2b0 / 2)
-	{
-		if (dinopic4protectvalue == 0x04)
-			return 0x0404;
-		return 0xffff;
-	}
-	return 0;
-}
-
-static DRIVER_INIT( dinopic4 )
-{
-	memory_install_read16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0xf18000, 0xf19fff, 0, 0, dinohunt_sound_r);
-	memory_install_readwrite16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x570000, 0x57ffff, 0, 0, dinopic4_protectword_r, dinopic4_protectword_w);
-
-	DRIVER_INIT_CALL(dinopic);
-}
-*/
 /* --- LOAD ROM --- */
 
 ROM_START( captcommb2 )
