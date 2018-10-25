@@ -236,7 +236,7 @@ static INT32 vertical;
 static INT32 orient;
 static INT32 set_neogeo_bios;
 static UINT32 tate;
-static UINT32 screenRot;
+static UINT32 screenRot = 0;
 static UINT32 pauseg = 0;
 static UINT32 mame_reset = 0;
 static UINT32 FirstTimeUpdate = 1;
@@ -1397,7 +1397,6 @@ static int parsePath(char *path, char *gamePath, char *gameName)
 	strncpy(gameName, path + (slashIndex + 1), dotIndex - (slashIndex + 1));
 	gameName[dotIndex - (slashIndex + 1)] = 0;
 
-/*	write_log("gamePath=%s , gameName=%s\n", gamePath, gameName); */
 	return 1;
 }
 
@@ -1420,6 +1419,10 @@ static int getGameInfo(char *gameName, int *rotation, int *driverIndex)
 
 			if (strcmp(drivers[drvindex]->source_file, "src/mame/drivers/neogeo.inc") == 0)
 				is_neogeo = true;
+
+			if ((drivers[drvindex]->flags & ORIENTATION_MASK) == ROT180)
+				if (strcmp(drivers[drvindex]->name, "dinopic4") == 0)
+					screenRot = 3;
 		}
 	}
 	return gameFound;
@@ -1433,7 +1436,6 @@ static int executeGame(char *path)
 	int paramCount;
 	int driverIndex;
 
-	screenRot = 0;
 	FirstTimeUpdate = 1;
 
 	//split the path to directory and the name without the zip extension
@@ -1452,7 +1454,7 @@ static int executeGame(char *path)
 		return -2;
 	}
 
-	if (gameRot != ROT0)
+	if (gameRot == ROT270 || gameRot == ROT90)
 	{
 		screenRot = 1;
 		if (gameRot & ORIENTATION_FLIP_X)
@@ -1465,7 +1467,7 @@ static int executeGame(char *path)
 	write_log("creating frontend...\n");
 
 	//find how many parameters we have
-	for (paramCount = 0; xargv[paramCount] != NULL; paramCount++) { };
+	for (paramCount = 0; xargv[paramCount] != NULL; paramCount++) ;
 
 	xargv[paramCount++] = (char*)retro_content_dir;
 
@@ -1480,10 +1482,19 @@ static int executeGame(char *path)
 
 	if (!tate)
 	{
-		if (screenRot == 2)
-			xargv[paramCount++] = (char*)"-rol";
-		else if (screenRot)
-			xargv[paramCount++] = (char*)"-ror";
+		switch (screenRot)
+		{
+			case 1:
+				xargv[paramCount++] = (char*)"-ror";
+			break;
+			case 2:
+				xargv[paramCount++] = (char*)"-rol";
+			break;
+			case 3:
+				xargv[paramCount++] = (char*)"-flipx";
+				xargv[paramCount++] = (char*)"-flipy";
+			break;
+		}
 	}
 
 	xargv[paramCount++] = MAME_GAME_NAME;

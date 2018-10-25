@@ -1851,7 +1851,7 @@ void cps1_get_video_base( running_machine *machine )
 	}
 
 	/* Some of the sf2 hacks use only sprite port 0x9100 and the scroll layers are offset */
-	switch ( state->game_config->bootleg_kludge & 15 )
+	switch ( state->game_config->bootleg_kludge )
 	{
 		case 0x01:
 			state->cps_a_regs[CPS1_OBJ_BASE] = 0x9100;
@@ -2483,7 +2483,7 @@ static void cps2_find_last_sprite( running_machine *machine )		/* Find the offse
 	UINT16 *base = state->cps2_buffered_obj;
 	INT32 size = state->cps2_obj_size / 2;
 
-	for (UINT32 offset = 0; offset < size; offset += 4)			/* Locate the end of table marker */
+	for (UINT32 offset = 0; offset < size; offset += 4)		/* Locate the end of table marker */
 	{
 		if (base[offset + 1] >= 0x8000 || base[offset + 3] >= 0xff00)
 		{
@@ -2747,7 +2747,8 @@ VIDEO_UPDATE( cps1 )
 
 	if (state->cps_version == 1)
 	{
-		if ((state->game_config->bootleg_kludge >> 7) & 0x01)			/* - fixed 3wondersb */
+//		if ((state->game_config->bootleg_kludge >> 7) & 0x01)			/* - fixed 3wondersb */
+		if (state->game_config->bootleg_kludge == 0x88)			/* - fixed 3wondersb */
 			cps1_build_palette(screen->machine, cps1_base(screen->machine, CPS1_PALETTE_BASE, state->palette_align));
 
 		cps1_render_layer(screen->machine, bitmap, cliprect, l0, 0);

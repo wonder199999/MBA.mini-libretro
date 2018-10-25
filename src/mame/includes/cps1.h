@@ -259,6 +259,7 @@ public:
 	INT32		layer_scroll1x_offset;
 	INT32		layer_scroll2x_offset;
 	INT32		layer_scroll3x_offset;
+	UINT16		dinopic4protectvalue;
 	UINT8		layer_enable_reg;
 	UINT8		layer_mask_reg[4];
 };

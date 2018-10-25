@@ -263,6 +263,28 @@ static READ16_HANDLER( dinohunt_sound_r )
 	return 0xff;
 }
 
+static WRITE16_HANDLER( dinopic4_decryption_w )
+{
+	if (offset == 0x62b0 / 2)
+	{
+		cps_state *state = space->machine->driver_data<cps_state>();
+		state->dinopic4protectvalue = data;
+	}
+}
+
+static READ16_HANDLER( dinopic4_decryption_r )
+{
+	if (offset == 0xa2b0 / 2)
+	{
+		cps_state *state = space->machine->driver_data<cps_state>();
+
+		if (state->dinopic4protectvalue == 0x04)
+			return 0x0404;
+		return 0xffff;
+	}
+	return 0;
+}
+
 static WRITE16_HANDLER( sf2m3_layer_w )
 {
 	cps1_cps_b_w(space, 0x0a, data, 0xffff);
@@ -4518,6 +4540,46 @@ ROM_START( dinotpic )
 	ROM_LOAD( "cd-q3.3k",      0x100000, 0x80000, CRC(2f273ffc) SHA1(f0de462f6c4d251911258e0ebd886152c14d1586) )
 	ROM_LOAD( "cd-q4.4k",      0x180000, 0x80000, CRC(2c67821d) SHA1(6e2528d0b22508300a6a142a796dd3bf53a66946) )
 ROM_END
+
+ROM_START( dinopic4 )
+	ROM_REGION( CODE_SIZE, "maincpu", 0 )
+	ROM_LOAD16_BYTE( "cad_32.bin",	0x000001, 0x040000, CRC(200a594f) SHA1(125bbf0f1cdc8740293cc3b73ac4bf82af24c0d5) )
+	ROM_LOAD16_BYTE( "cad_28.bin",	0x000000, 0x040000, CRC(97dc3d86) SHA1(8dbe9dab5682933b3ea2bfcd066f5f4503aad009) )
+	ROM_LOAD16_BYTE( "cad_33.bin",	0x080001, 0x040000, CRC(5bf6deda) SHA1(278f56a10db0f5975ac9ecc7b6e121c2f1dbfc94) )
+	ROM_LOAD16_BYTE( "cad_29.bin",	0x080000, 0x040000, CRC(302303c4) SHA1(42427215357f670d2943a8f09a2288cd4aacd14b) )
+	ROM_LOAD16_BYTE( "cad_35.bin",	0x100001, 0x020000, CRC(fbcf4314) SHA1(a59a1d867abea5216367220d8c9d005f451c9d88) )
+	ROM_LOAD16_BYTE( "cad_31.bin",	0x100000, 0x020000, CRC(f0110c8a) SHA1(eee714439a3802168c2cece91ed0e1e6ab630652) )
+	ROM_LOAD16_BYTE( "cad_34.bin",	0x140001, 0x020000, CRC(481369b8) SHA1(065b5f6b3d2f337def183c3ab5f0ef8c21d0c849) )
+	ROM_LOAD16_BYTE( "cad_30.bin",	0x140000, 0x020000, CRC(bbcafc3b) SHA1(52ff5928b1da862813ef150ea77ac59cff82df5b) )
+
+	ROM_REGION( 0x400000, "gfx", 0 )
+	ROMX_LOAD( "cad_24.bin",   0x000000, 0x040000, CRC(e59e0066) SHA1(de8868ac7c9323c9ce4a22d610f25e8932e09218), ROM_SKIP(7) )
+	ROMX_LOAD( "cad_14.bin",   0x000001, 0x040000, CRC(79b60fc5) SHA1(12519904ca235661a103f01918b8e713abbfb6f4), ROM_SKIP(7) )
+	ROMX_LOAD( "cad_26.bin",   0x000002, 0x040000, CRC(2db8cb57) SHA1(e4acc9e94067e3567e4a4b6c8439d5cc51cfbae0), ROM_SKIP(7) )
+	ROMX_LOAD( "cad_16.bin",   0x000003, 0x040000, CRC(569e5cf0) SHA1(c4b61d8c79d5d1dfd4079e57f444f7ac89a26422), ROM_SKIP(7) )
+	ROMX_LOAD( "cad_20.bin",   0x000004, 0x040000, CRC(779bffb2) SHA1(e591845761bf637d36764d84f7af84b1e3594f7b), ROM_SKIP(7) )
+	ROMX_LOAD( "cad_10.bin",   0x000005, 0x040000, CRC(9d5b2ed4) SHA1(4958fc59ca6dd45e82a1a9ea68ae40450f67badc), ROM_SKIP(7) )
+	ROMX_LOAD( "cad_22.bin",   0x000006, 0x040000, CRC(b58c4246) SHA1(fc3e705d025372edb3ded8840ff0157398897b8d), ROM_SKIP(7) )
+	ROMX_LOAD( "cad_12.bin",   0x000007, 0x040000, CRC(33ed501d) SHA1(f6f80e802444101bfcb38b1a27ed6a9b9e32ba3c), ROM_SKIP(7) )
+	ROMX_LOAD( "cad_25.bin",   0x200000, 0x040000, CRC(900b82b7) SHA1(c9b422daccaf793cd8fae5e3f88cbdfc757cc00b), ROM_SKIP(7) )
+	ROMX_LOAD( "cad_15.bin",   0x200001, 0x040000, CRC(aa54f07c) SHA1(b1a71d2efefec4fdf1eff61404d385d9f7d31468), ROM_SKIP(7) )
+	ROMX_LOAD( "cad_27.bin",   0x200002, 0x040000, CRC(27492fde) SHA1(2befbf43c316db072f63d771202c8e77b6e228ff), ROM_SKIP(7) )
+	ROMX_LOAD( "cad_17.bin",   0x200003, 0x040000, CRC(920df2fd) SHA1(7ad467e6ecf59a6b737ee5369ffcc4a5d203ea48), ROM_SKIP(7) )
+	ROMX_LOAD( "cad_21.bin",   0x200004, 0x040000, CRC(d65ee299) SHA1(bfad1473a05f4152dedefb5b8d10e7d27b4dc18a), ROM_SKIP(7) )
+	ROMX_LOAD( "cad_11.bin",   0x200005, 0x040000, CRC(8594b5e8) SHA1(10aca27488652da3c8421a8ea5acdfa7ec596e93), ROM_SKIP(7) )
+	ROMX_LOAD( "cad_23.bin",   0x200006, 0x040000, CRC(f07c16f2) SHA1(422ae1bcfe0a6704e374800d2af8cda69bd03138), ROM_SKIP(7) )
+	ROMX_LOAD( "cad_13.bin",   0x200007, 0x040000, CRC(07a564b4) SHA1(7be9f1a52eaa523a386d91d12ec0ddca716c363c), ROM_SKIP(7) )
+
+	ROM_REGION( 0x20000, "audiocpu", 0 )
+	ROM_LOAD( "cad_09.bin",		0x00000, 0x08000, CRC(46546432) SHA1(c37527f663713464f837295625345d485855122e) )
+	ROM_CONTINUE(			0x10000, 0x08000 )
+	ROM_LOAD( "pic16c57-rc",	0x00000, 0x01030, NO_DUMP )
+
+	ROM_REGION( 0x40000, "oki", 0 )
+	ROM_LOAD( "cad_18.bin",	0x00000, 0x20000, CRC(bd12c2ce) SHA1(4bb4d854be7aff2516241ba56f431a5464854be2) )
+	ROM_LOAD( "cad_19.bin",	0x20000, 0x20000, CRC(9233de5a) SHA1(c20f596648963ddf62a4452741cc9ad8b11f2ca2) )
+ROM_END
+
 
 
 
@@ -10808,15 +10870,6 @@ static DRIVER_INIT( pang3 )
 	DRIVER_INIT_CALL(pang3n);
 }
 
-/*
-static DRIVER_INIT( dinohunt )
-{
-	// is this shared with the new sound hw?
-	UINT8 *ram = (UINT8 *)memory_install_ram(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0xf18000, 0xf19fff, 0, 0, 0);
-	memset(ram, 0xff, 0x2000);
-	DRIVER_INIT_CALL(cps1);
-}	*/
-
 static DRIVER_INIT( dinohunt )
 {
 	memory_install_read16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0xf18000, 0xf19fff, 0, 0, dinohunt_sound_r);
@@ -10854,17 +10907,6 @@ static DRIVER_INIT( ganbare )
 	memory_install_readwrite16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0xff0000, 0xffffff, 0, 0, ganbare_ram_r, ganbare_ram_w);
 }
 
-/*
-static DRIVER_INIT( dinoz )
-{
-	UINT16 *rom = (UINT16 *)memory_region(machine, "maincpu");
-
-	rom[0xAAA82 / 2] = 0x4e71;	// Patch out Q-Sound test
-	rom[0x1CFB4 / 2] = 0x4e71;	// patch out invalid instruction
-
-	DRIVER_INIT_CALL(dinoeh);
-}	*/
-
 static DRIVER_INIT( dinoeh )
 {
 	memory_install_write16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x800180, 0x800181, 0, 0, dinohack_sound_command_w);
@@ -10882,7 +10924,7 @@ static DRIVER_INIT( dinoh )
 
 static DRIVER_INIT( dinotpic )
 {
-	const int fix_gfx_table[55][2] = {
+	const int patch_table[69][2] = {
 		{ 0x0472, 0xFC }, { 0x0473, 0x33 }, { 0x0474, 0x00 }, { 0x0475, 0x90 }, { 0x0476, 0x80 }, { 0x0478, 0x00 },
 		{ 0x0479, 0x01 }, { 0x047A, 0xFC }, { 0x047B, 0x33 }, { 0x047C, 0x80 }, { 0x047D, 0x90 }, { 0x047E, 0x80 },
 		{ 0x0480, 0x02 }, { 0x0481, 0x01 }, { 0x0482, 0xFC }, { 0x0483, 0x33 }, { 0x0484, 0xC0 }, { 0x0485, 0x90 },
@@ -10892,35 +10934,27 @@ static DRIVER_INIT( dinotpic )
 		{ 0x06e0, 0x10 }, { 0x06e1, 0x01 }, { 0x06f0, 0x80 }, { 0x06f1, 0x00 }, { 0x06f2, 0x14 }, { 0x06f3, 0x01 },
 		{ 0x0704, 0x80 }, { 0x0705, 0x00 }, { 0x0706, 0x0E }, { 0x0707, 0x01 }, { 0x0718, 0x80 }, { 0x0719, 0x00 },
 		{ 0x071a, 0x12 }, { 0x071b, 0x01 }, { 0x072c, 0x80 }, { 0x072d, 0x00 }, { 0x072e, 0x16 }, { 0x072f, 0x01 },
-		{ -1, -1 }
-	};
-
-	const int fix_screen_transitions_table[9][2] = {
-		{ 0x0b28, 0x00 }, { 0x0b29, 0x70 }, { 0x0b2a, 0x00 }, { 0x0b2b, 0x72 },
-		{ 0x0b2c, 0x3C }, { 0x0b2d, 0x34 }, { 0x0b32, 0xC1 }, { 0x0b33, 0x20 },
-		{ -1, -1 }
-	};
-
-	const int fix_sound_table[7][2] = {
-		{ 0x0666, 0xF1 }, { 0x0667, 0x00 }, { 0x0668, 0x02 }, { 0x0669, 0x80 }, { 0xaaa6c, 0xD8 }, { 0xaaa6d, 0x00 },
-		{ -1, -1 }
+		{ 0x0b28, 0x00 }, { 0x0b29, 0x70 }, { 0x0b2a, 0x00 }, { 0x0b2b, 0x72 }, { 0x0b2c, 0x3C }, { 0x0b2d, 0x34 },
+		{ 0x0b32, 0xC1 }, { 0x0b33, 0x20 }, { 0x0666, 0xF1 }, { 0x0667, 0x00 }, { 0x0668, 0x02 }, { 0x0669, 0x80 },
+		{ 0xaaa6c, 0xD8 }, { 0xaaa6d, 0x00 },	{ -1, -1 }
 	};
 
 	UINT8 *src = (UINT8 *)memory_region(machine, "maincpu");
-	unsigned int i;
 
-	for (i = 0; fix_gfx_table[i][0] >= 0; i++)
-		src[fix_gfx_table[i][0]] = fix_gfx_table[i][1];
-
-	for (i = 0; fix_screen_transitions_table[i][0] >= 0; i++)
-		src[fix_screen_transitions_table[i][0]] = fix_screen_transitions_table[i][1];
-
-	for (i = 0; fix_sound_table[i][0] >= 0; i++)
-		src[fix_sound_table[i][0]] = fix_sound_table[i][1];
+	for (int i = 0; patch_table[i][0] >= 0; i++)
+		src[patch_table[i][0]] = patch_table[i][1];
 
 	DRIVER_INIT_CALL(dino);
 }
 
+static DRIVER_INIT( dinopic4 )
+{
+	cps_state *state = machine->driver_data<cps_state>();
+
+	state->dinopic4protectvalue = 0;
+	memory_install_readwrite16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x570000, 0x57ffff, 0, 0, dinopic4_decryption_r, dinopic4_decryption_w);
+	DRIVER_INIT_CALL(dinohunt);
+}
 
 
 /* ------ DRIVER INIT end ------ */
@@ -10964,6 +10998,7 @@ GAME( 200?,	dinoh,		dino,		qsound,		dino,		dinoh,		ROT0,	"Unknown(hack)","Cadill
 GAME( 200?,	dinot,		dino,		qsound,		dino,		dinoh,		ROT0,	"Unknown",	"Cadillacs and Dinosaurs Turbo (bootleg set 1, 930223 Asia TW)", GAME_SUPPORTS_SAVE )
 GAME( 200?,	dinohc,		dino,		wofhfb,		dinoh,		dinohunt,	ROT0,	"Unknown(hack)","Cadillacs and Dinosaurs (Chinese bootleg, 930223 Asia TW)", GAME_SUPPORTS_SAVE )
 GAME( 200?,	dinotpic,	dino,		qsound,		dino,		dinotpic,	ROT0,	"Unknown",	"Cadillacs and Dinosaurs Turbo (bootleg set 1 with PIC, 930223 Asia TW)", GAME_SUPPORTS_SAVE )
+GAME( 200?,	dinopic4,	dino,		wofhfb,		dinoh,		dinopic4,	ROT180,	"bootleg",	"Cadillacs and Dinosaurs (bootleg set 4 (with PIC16c57), 930201 etc)", GAME_NOT_WORKING | GAME_SUPPORTS_SAVE )
 
 
 
@@ -11142,6 +11177,4 @@ GAME( 1991, knightsb2,	knights,  cps1_10MHz,	knights,  cps1,	       ROT0,   "boo
 GAME( 1991, knightsb3,	knights,  cps1_10MHz,	knights,  cps1,	       ROT0,   "bootleg",  "Knights of the Round (bootleg set 3, Japan 911127)",  GAME_SUPPORTS_SAVE )
 GAME( 1989, dynwara,	dynwar,	  cps1_10MHz,	dynwar,	  cps1,	       ROT0,   "Capcom",   "Dynasty Wars (USA, B-Board 88622B-3)", GAME_SUPPORTS_SAVE )
 GAME( 1989, dynwarjr,	dynwar,	  cps1_12MHz,	dynwar,	  cps1,	       ROT0,   "Capcom",   "Tenchi wo Kurau (Japan Resale Ver.)", GAME_SUPPORTS_SAVE )  /* 12MHz verified */
-
-
 

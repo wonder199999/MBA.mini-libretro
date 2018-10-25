@@ -1577,8 +1577,39 @@ static DRIVER_INIT( fcrash )
 
 	DRIVER_INIT_CALL(cps1);
 }
+/*
+static UINT16 dinopic4protectvalue = 0;
 
+static READ16_HANDLER( dinohunt_sound_r )
+{
+	return 0xff;
+}
 
+static WRITE16_HANDLER( dinopic4_protectword_w )
+{
+	if (offset == 0x62b0 / 2)
+		dinopic4protectvalue = data;
+}
+
+static READ16_HANDLER( dinopic4_protectword_r )
+{
+	if (offset == 0xa2b0 / 2)
+	{
+		if (dinopic4protectvalue == 0x04)
+			return 0x0404;
+		return 0xffff;
+	}
+	return 0;
+}
+
+static DRIVER_INIT( dinopic4 )
+{
+	memory_install_read16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0xf18000, 0xf19fff, 0, 0, dinohunt_sound_r);
+	memory_install_readwrite16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x570000, 0x57ffff, 0, 0, dinopic4_protectword_r, dinopic4_protectword_w);
+
+	DRIVER_INIT_CALL(dinopic);
+}
+*/
 /* --- LOAD ROM --- */
 
 ROM_START( captcommb2 )
@@ -1795,46 +1826,6 @@ ROM_START( dinopic3 )
 	ROM_LOAD( "gal20v8a-3.bin",      0x600, 0x157,  CRC(049b7f4f) SHA1(6c6ea03d9a293db69a8bd10e042ee75e3c01313c) )
 	ROM_LOAD( "palce16v8h-1.bin",    0x800, 0x117,  CRC(48253c66) SHA1(8c94e655b768c45c3edf6ef39e62e3b7a4e57530) )
 	ROM_LOAD( "palce16v8h-2.bin",    0xa00, 0x117,  CRC(9ae375ba) SHA1(6f227c2a5b1170a41e6419f12d1e1f98edc6f8e5) )
-ROM_END
-
-/* see code around BB3A6. If protection fails then it jumps to 100000 which causes an exception. */
-/* After fixing that, the picture is offset to the left, no sound, no sprites. Eprom required @ F1C006. */
-ROM_START( dinopic4 )
-	ROM_REGION( CODE_SIZE, "maincpu", 0 )
-	ROM_LOAD16_BYTE( "cad_28",   0x000000, 0x040000, CRC(97dc3d86) SHA1(8dbe9dab5682933b3ea2bfcd066f5f4503aad009) )
-	ROM_LOAD16_BYTE( "cad_32",   0x000001, 0x040000, CRC(200a594f) SHA1(125bbf0f1cdc8740293cc3b73ac4bf82af24c0d5) )
-	ROM_LOAD16_BYTE( "cad_29",   0x080000, 0x040000, CRC(302303c4) SHA1(42427215357f670d2943a8f09a2288cd4aacd14b) )
-	ROM_LOAD16_BYTE( "cad_33",   0x080001, 0x040000, CRC(5bf6deda) SHA1(278f56a10db0f5975ac9ecc7b6e121c2f1dbfc94) )
-	ROM_LOAD16_BYTE( "cad_31",   0x100000, 0x020000, CRC(f0110c8a) SHA1(eee714439a3802168c2cece91ed0e1e6ab630652) )
-	ROM_LOAD16_BYTE( "cad_35",   0x100001, 0x020000, CRC(fbcf4314) SHA1(a59a1d867abea5216367220d8c9d005f451c9d88) )
-	ROM_LOAD16_BYTE( "cad_30",   0x140000, 0x020000, CRC(bbcafc3b) SHA1(52ff5928b1da862813ef150ea77ac59cff82df5b) )
-	ROM_LOAD16_BYTE( "cad_34",   0x140001, 0x020000, CRC(481369b8) SHA1(065b5f6b3d2f337def183c3ab5f0ef8c21d0c849) )
-
-	ROM_REGION( 0x400000, "gfx", 0 )
-	ROMX_LOAD( "cad_24",   0x000000, 0x040000, CRC(e59e0066) SHA1(de8868ac7c9323c9ce4a22d610f25e8932e09218), ROM_SKIP(7) )
-	ROMX_LOAD( "cad_14",   0x000001, 0x040000, CRC(79b60fc5) SHA1(12519904ca235661a103f01918b8e713abbfb6f4), ROM_SKIP(7) )
-	ROMX_LOAD( "cad_26",   0x000002, 0x040000, CRC(2db8cb57) SHA1(e4acc9e94067e3567e4a4b6c8439d5cc51cfbae0), ROM_SKIP(7) )
-	ROMX_LOAD( "cad_16",   0x000003, 0x040000, CRC(569e5cf0) SHA1(c4b61d8c79d5d1dfd4079e57f444f7ac89a26422), ROM_SKIP(7) )
-	ROMX_LOAD( "cad_20",   0x000004, 0x040000, CRC(779bffb2) SHA1(e591845761bf637d36764d84f7af84b1e3594f7b), ROM_SKIP(7) )
-	ROMX_LOAD( "cad_10",   0x000005, 0x040000, CRC(9d5b2ed4) SHA1(4958fc59ca6dd45e82a1a9ea68ae40450f67badc), ROM_SKIP(7) )
-	ROMX_LOAD( "cad_22",   0x000006, 0x040000, CRC(b58c4246) SHA1(fc3e705d025372edb3ded8840ff0157398897b8d), ROM_SKIP(7) )
-	ROMX_LOAD( "cad_12",   0x000007, 0x040000, CRC(33ed501d) SHA1(f6f80e802444101bfcb38b1a27ed6a9b9e32ba3c), ROM_SKIP(7) )
-	ROMX_LOAD( "cad_25",   0x200000, 0x040000, CRC(900b82b7) SHA1(c9b422daccaf793cd8fae5e3f88cbdfc757cc00b), ROM_SKIP(7) )
-	ROMX_LOAD( "cad_15",   0x200001, 0x040000, CRC(aa54f07c) SHA1(b1a71d2efefec4fdf1eff61404d385d9f7d31468), ROM_SKIP(7) )
-	ROMX_LOAD( "cad_27",   0x200002, 0x040000, CRC(27492fde) SHA1(2befbf43c316db072f63d771202c8e77b6e228ff), ROM_SKIP(7) )
-	ROMX_LOAD( "cad_17",   0x200003, 0x040000, CRC(920df2fd) SHA1(7ad467e6ecf59a6b737ee5369ffcc4a5d203ea48), ROM_SKIP(7) )
-	ROMX_LOAD( "cad_21",   0x200004, 0x040000, CRC(d65ee299) SHA1(bfad1473a05f4152dedefb5b8d10e7d27b4dc18a), ROM_SKIP(7) )
-	ROMX_LOAD( "cad_11",   0x200005, 0x040000, CRC(8594b5e8) SHA1(10aca27488652da3c8421a8ea5acdfa7ec596e93), ROM_SKIP(7) )
-	ROMX_LOAD( "cad_23",   0x200006, 0x040000, CRC(f07c16f2) SHA1(422ae1bcfe0a6704e374800d2af8cda69bd03138), ROM_SKIP(7) )
-	ROMX_LOAD( "cad_13",   0x200007, 0x040000, CRC(07a564b4) SHA1(7be9f1a52eaa523a386d91d12ec0ddca716c363c), ROM_SKIP(7) )
-
-	ROM_REGION( 0x18000, "audiocpu", 0 ) // first and 2nd half identical
-	ROM_LOAD( "cad_09",    0x00000, 0x08000, CRC(46546432) SHA1(c37527f663713464f837295625345d485855122e) )
-	ROM_CONTINUE(	       0x10000, 0x08000 )
-
-	ROM_REGION( 0x40000, "oki", 0 )
-	ROM_LOAD( "cad_18",    0x00000, 0x20000, CRC(bd12c2ce) SHA1(4bb4d854be7aff2516241ba56f431a5464854be2) )
-	ROM_LOAD( "cad_19",    0x20000, 0x20000, CRC(9233de5a) SHA1(c20f596648963ddf62a4452741cc9ad8b11f2ca2) )
 ROM_END
 
 
@@ -2282,8 +2273,6 @@ GAME( 1993,	dinopic,	dino,		dinopic,	dino,		dinopic,	ROT0,	"bootleg",	"Cadillacs
 GAME( 1993,	dinopic2,	dino,		dinopic,	dino,		dinopic,	ROT0,	"bootleg",	"Cadillacs and Dinosaurs (bootleg set 2 (with PIC16c57), 930201 etc)", GAME_NO_SOUND | GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )
 /* dinopic3 - no sound, no different from dinopic2 */
 GAME( 1993,	dinopic3,	dino,		dinopic,	dino,		dinopic,	ROT0,	"bootleg",	"Cadillacs and Dinosaurs (bootleg set 3 (with PIC16c57), 930201 etc)", GAME_NO_SOUND | GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )
-/* dinopic4 - no sound */
-GAME( 1993,	dinopic4,	dino,		dinopic,	dino,		dinopic,	ROT0,	"bootleg",	"Cadillacs and Dinosaurs (bootleg set 4 (with PIC16c57), 930201 etc)", GAME_NOT_WORKING | GAME_SUPPORTS_SAVE )
 
 
 
@@ -2317,5 +2306,4 @@ GAME( 1993,   slampic,	  slammast,	slampic,	slammast,	dinopic,  ROT0,   "bootleg
 GAME( 1991,   knightsb4,  knights,	knightsb,	knights,	knightsb, ROT0,   "bootleg", "Knights of the Round (bootleg set 4 with YM2151 + 2xMSM5205, 911127 etc)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )
 /* varthb - good */
 GAME( 1992,   varthb,	  varth,	varthb,		varth,		dinopic,  ROT270, "bootleg", "Varth: Operation Thunderstorm (bootleg)", GAME_SUPPORTS_SAVE )
-
 
