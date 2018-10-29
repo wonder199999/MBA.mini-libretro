@@ -127,20 +127,19 @@ const game_driver *const drivers[] =
 	DRIVER( dino )			/* 01/02/1993 (c) 1993 (World) (CPS1 + QSound) */
 	DRIVER( dinou )			/* 01/02/1993 (c) 1993 (US) (CPS1 + QSound) */
 	DRIVER( dinoj )			/* 01/02/1993 (c) 1993 (Japan) (CPS1 + QSound) */
-	DRIVER( dinopic )		/* bootleg set 1 with PIC16c57 */
-	DRIVER( dinopic2 )		/* bootleg set 2 with PIC16c57 */
 	DRIVER( dinohunt )		/* bootleg */
+	DRIVER( dinohc )		/* hack */
 	DRIVER( dinoeh )		/* hack */
 	DRIVER( dinoh )			/* hack */
-	DRIVER( dinohc )		/* hack */
-	DRIVER( dinopic3 )		/* bootleg set 3 with PIC16c57 */
-	DRIVER( dinopic4 )		/* bootleg set 4 with PIC16c57 */
 	DRIVER( dinot )			/* bootleg set 1, 930223 Asia TW */
 	DRIVER( dinotpic )		/* bootleg set 2 with PIC16c57, 930223 Asia TW */
+	DRIVER( dinopic )		/* bootleg set 1 with PIC16c57 */
+	DRIVER( dinopic2 )		/* bootleg set 2 with PIC16c57 */
+	DRIVER( dinopic3 )		/* bootleg set 3 with PIC16c57 */
+	DRIVER( dinopic4 )		/* bootleg set 4 with PIC16c57 */
 	//
 	DRIVER( dynwar )		/* 04/1989 (c) 1989 (USA set 1) */
 	DRIVER( dynwara )		/* 04/1989 (c) 1989 (USA set 2) */
-/* obsolete */	DRIVER( dynwaru )	/* 04/1989 (c) 1989 (US) */
 	DRIVER( dynwarj )		/* 04/1989 (c) 1989 (Japan) */
 	DRIVER( dynwarjr )		/* Tenchi wo Kurau (Japan Resale Ver.) */
 	//

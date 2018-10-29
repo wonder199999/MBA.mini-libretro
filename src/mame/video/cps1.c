@@ -1317,6 +1317,11 @@ static const struct CPS1config cps1_config_table[] =
 	{"dinopic4",	CPS_B_21_QS2,	mapper_CD63B },
 	{"dinot",	CPS_B_21_DEF,	mapper_CD63B,	0x36 },
 	{"dinotpic",	CPS_B_21_QS2,	mapper_CD63B,	0, 0, 0, 0x0F },
+	//
+	{"dynwar",	CPS_B_02,	mapper_TK22B },		/* wrong, this set uses TK24B1, dumped but equations still not added */
+	{"dynwara",	CPS_B_02,	mapper_TK22B },
+	{"dynwarj",	CPS_B_02,	mapper_TK22B },
+	{"dynwarjr",	CPS_B_21_DEF,	mapper_TK22B },		/* wrong, this set uses TK163B, still not dumped */
 
 
 
@@ -1324,11 +1329,7 @@ static const struct CPS1config cps1_config_table[] =
 
 
 
-	{"dynwar",	CPS_B_02,     mapper_TK22B },	// wrong, this set uses TK24B1, dumped but equations still not added
-	{"dynwaru",	CPS_B_02,     mapper_TK22B },
-	{"dynwarj",	CPS_B_02,     mapper_TK22B },
-	{"dynwara",	CPS_B_02,     mapper_TK22B },
-	{"dynwarjr",	CPS_B_21_DEF, mapper_TK22B },   // wrong, this set uses TK163B, still not dumped
+
 
 	{"ffight",	CPS_B_04,     mapper_S224B },
 	{"ffightu",	CPS_B_04,     mapper_S224B },
