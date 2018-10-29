@@ -10995,8 +10995,8 @@ GAME( 200?,	dinoh,		dino,		qsound,		dino,		dinoh,		ROT0,	"Unknown(hack)","Cadill
 GAME( 200?,	dinot,		dino,		qsound,		dino,		dinoh,		ROT0,	"Unknown",	"Cadillacs and Dinosaurs Turbo (bootleg set 1, 930223 Asia TW)", GAME_SUPPORTS_SAVE )
 GAME( 200?,	dinohc,		dino,		wofhfb,		dinoh,		dinohunt,	ROT0,	"Unknown(hack)","Cadillacs and Dinosaurs (Chinese bootleg, 930223 Asia TW)", GAME_SUPPORTS_SAVE )
 GAME( 200?,	dinotpic,	dino,		qsound,		dino,		dinotpic,	ROT0,	"Unknown",	"Cadillacs and Dinosaurs Turbo (bootleg set 1 with PIC, 930223 Asia TW)", GAME_SUPPORTS_SAVE )
-/* dinopic4 - TODO: hook the sound, set flip when initializing */
-GAME( 200?,	dinopic4,	dino,		wofhfb,		dinoh,		dinopic4,	ROT180,	"bootleg",	"Cadillacs and Dinosaurs (bootleg set 4 (with PIC16c57), 930223 Asia TW)", GAME_NOT_WORKING | GAME_SUPPORTS_SAVE )
+/* dinopic4 - TODO: hook the sound */
+GAME( 200?,	dinopic4,	dino,		wofhfb,		dinoh,		dinopic4,	ROT0,	"bootleg",	"Cadillacs and Dinosaurs (bootleg set 4 (with PIC16c57), 930223 Asia TW)", GAME_NO_SOUND | GAME_SUPPORTS_SAVE )
 //
 GAME( 1989,	unsquad,	0,		cps1_10MHz,	unsquad,	cps1,		ROT0,	"Capcom / Daipro", "U.N. Squadron (USA)", GAME_SUPPORTS_SAVE )
 GAME( 1989,	area88,		unsquad,	cps1_10MHz,	unsquad,	cps1,		ROT0,	"Capcom / Daipro", "Area 88 (Japan)", GAME_SUPPORTS_SAVE )

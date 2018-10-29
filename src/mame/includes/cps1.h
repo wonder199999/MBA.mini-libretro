@@ -262,6 +262,7 @@ public:
 	UINT16		dinopic4protectvalue;
 	UINT8		layer_enable_reg;
 	UINT8		layer_mask_reg[4];
+	UINT8		force_screen_flip_flag;			/* used on some bootleg or hack roms */
 };
 
 

@@ -1416,13 +1416,8 @@ static int getGameInfo(char *gameName, int *rotation, int *driverIndex)
 			*driverIndex = drvindex;
 			*rotation = drivers[drvindex]->flags & 0x07;
 /*			write_log("%-18s\"%s\" rot=%i\n", drivers[drvindex]->name, drivers[drvindex]->description, *rotation); */
-
 			if (strcmp(drivers[drvindex]->source_file, "src/mame/drivers/neogeo.inc") == 0)
 				is_neogeo = true;
-
-			if ((drivers[drvindex]->flags & ORIENTATION_MASK) == ROT180)
-				if (strcmp(drivers[drvindex]->name, "dinopic4") == 0)
-					screenRot = 3;
 		}
 	}
 	return gameFound;

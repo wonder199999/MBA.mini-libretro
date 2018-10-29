@@ -1576,6 +1576,12 @@ static MACHINE_RESET( cps )
 		state->game_config = pCFG;
 	}
 
+	/* specific game_init */
+	state->force_screen_flip_flag = 0;
+
+	if (strcmp(gamename, "dinopic4") == 0)
+		state->force_screen_flip_flag = 1;
+
 	if (strcmp(gamename, "sf2rb") == 0)
 	{
 		/* Patch out protection check */
@@ -2678,7 +2684,9 @@ VIDEO_UPDATE( cps1 )
 	cps_state *state = screen->machine->driver_data<cps_state>();
 
 	INT32 videocontrol = state->cps_a_regs[CPS1_VIDEOCONTROL];
-	flip_screen_set(screen->machine, videocontrol & 0x8000);
+	INT32 flipflag = state->force_screen_flip_flag ? 0 : videocontrol & 0x8000;
+
+	flip_screen_set(screen->machine, flipflag);
 
 	/* Get video memory base registers */
 	cps1_get_video_base(screen->machine);
@@ -2748,7 +2756,7 @@ VIDEO_UPDATE( cps1 )
 	if (state->cps_version == 1)
 	{
 //		if ((state->game_config->bootleg_kludge >> 7) & 0x01)			/* - fixed 3wondersb */
-		if (state->game_config->bootleg_kludge == 0x88)			/* - fixed 3wondersb */
+		if (state->game_config->bootleg_kludge == 0x88)				/* - fixed 3wondersb */
 			cps1_build_palette(screen->machine, cps1_base(screen->machine, CPS1_PALETTE_BASE, state->palette_align));
 
 		cps1_render_layer(screen->machine, bitmap, cliprect, l0, 0);
