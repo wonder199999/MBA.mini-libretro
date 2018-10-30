@@ -2248,11 +2248,12 @@ GAME( 1993,	dinopic2,	dino,		dinopic,	dino,		dinopic,	ROT0,	"bootleg",	"Cadillac
 /* dinopic3 - no sound, no different from dinopic2 */
 GAME( 1993,	dinopic3,	dino,		dinopic,	dino,		dinopic,	ROT0,	"bootleg",	"Cadillacs and Dinosaurs (bootleg set 3 (with PIC16c57), 930201 etc)", GAME_NO_SOUND | GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )
 /* fcrash - ok */
-GAME( 1990,	fcrash,		ffight,		fcrash,		ffight,		fcrash,		ROT0,	"bootleg (Playmark)",	"Final Crash (bootleg of Final Fight)", GAME_SUPPORTS_SAVE )
+GAME( 1990,	fcrash,		ffight,		fcrash,		ffight,		fcrash,		ROT0,	"bootleg (Playmark)",	"Final Crash (bootleg with 2XYM2203 + 2XMSM5205)", GAME_SUPPORTS_SAVE )
 /* ffightbl - ok */
-GAME( 1990,	ffightbl,	ffight,		fcrash,		ffight,		fcrash,		ROT0,	"bootleg",	"Final Fight (bootleg)", GAME_SUPPORTS_SAVE )
+GAME( 1990,	ffightbl,	ffight,		fcrash,		ffight,		fcrash,		ROT0,	"bootleg",	"Final Fight (bootleg set 1 with 2XYM2203 + 2XMSM5205, World)", GAME_SUPPORTS_SAVE )
 /* ffightbl - ok */
-GAME( 1990,	ffightbla,	ffight,		fcrash,		ffight,		fcrash,		ROT0,	"bootleg",	"Final Fight (bootleg on Final Crash PCB)", GAME_SUPPORTS_SAVE )
+GAME( 1990,	ffightbla,	ffight,		fcrash,		ffight,		fcrash,		ROT0,	"bootleg",	"Final Fight (bootleg set 2 with 2XYM2203 + 2XMSM5205, World)", GAME_SUPPORTS_SAVE )
+
 
 
 

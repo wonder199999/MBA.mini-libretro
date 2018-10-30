@@ -5299,11 +5299,10 @@ ROM_END
 
 ROM_START( ffightu2 )
 	ROM_REGION( CODE_SIZE, "maincpu", 0 )		/* 68000 code */
-	ROM_LOAD16_BYTE( "ffu_h0.12f",  0x00000, 0x20000, VERIFY_OFF )
-	ROM_LOAD16_BYTE( "ffu_l0.12h",  0x00001, 0x20000, VERIFY_OFF )
-	ROM_LOAD16_BYTE( "ffu_h1.13f",  0x40000, 0x20000, VERIFY_OFF )
-	ROM_LOAD16_BYTE( "ffu_l1.13h",  0x40001, 0x20000, VERIFY_OFF )
-
+	ROM_LOAD16_BYTE( "ffu_h0.12f",  0x00000, 0x20000, CRC(f9a5ce83) SHA1(0756ae576a1f6d5b8b22f8630dca40ef38567ea6) )
+	ROM_LOAD16_BYTE( "ffu_l0.12h",  0x00001, 0x20000, CRC(65f11215) SHA1(5045a467f3e228c02b4a355b52f58263ffa90113) )
+	ROM_LOAD16_BYTE( "ffu_h1.13f",  0x40000, 0x20000, CRC(e1033784) SHA1(38f44434c8befd623953ae23d6e5ff4e201d6627) )
+	ROM_LOAD16_BYTE( "ffu_l1.13h",  0x40001, 0x20000, CRC(4ca65947) SHA1(74ffe00df96273770a24d9a46f13e53ea8812670) )
 	ROM_LOAD16_BYTE( "34.10f",	0x80000, 0x20000, CRC(0c8dc3fc) SHA1(edcce3efd9cdd131ef0c96df15a68722d5c3498e) )
 	ROM_LOAD16_BYTE( "40.10h",	0x80001, 0x20000, CRC(8075bab9) SHA1(f9c7405133f6fc5557c90e60e8ccc459e4f6fd7d) )
 	ROM_LOAD16_BYTE( "35.11f",	0xc0000, 0x20000, CRC(4a934121) SHA1(3982c261582755a0eac340d6d7ed96e6c263c8b6) )
@@ -10953,19 +10952,21 @@ GAME( 1989,	dynwara,	dynwar,		cps1_10MHz,	dynwar,		cps1,		ROT0,	"Capcom",	"Dynas
 GAME( 1989,	dynwarj,	dynwar,		cps1_10MHz,	dynwar,		cps1,		ROT0,	"Capcom",	"Tenchi wo Kurau (Japan)", GAME_SUPPORTS_SAVE )
 GAME( 1989,	dynwarjr,	dynwar,		cps1_12MHz,	dynwar,		cps1,		ROT0,	"Capcom",	"Tenchi wo Kurau (Japan Resale Ver.)", GAME_SUPPORTS_SAVE )	/* 12MHz verified */
 //
-GAME( 1989,	ffight,		0,		cps1_10MHz,	ffight,		cps1,		ROT0,	"Capcom",	"Final Fight (World)", GAME_SUPPORTS_SAVE )
+GAME( 1989,	ffight,		0,		cps1_10MHz,	ffight,		cps1,		ROT0,	"Capcom",	"Final Fight (World, set 1)", GAME_SUPPORTS_SAVE )
 GAME( 1989,	ffighta,	ffight,		cps1_10MHz,	ffight,		cps1,		ROT0,	"Capcom",	"Final Fight (World, set 2)", GAME_SUPPORTS_SAVE )
 GAME( 1989,	ffightj,	ffight,		cps1_10MHz,	ffight,		cps1,		ROT0,	"Capcom",	"Final Fight (Japan)", GAME_SUPPORTS_SAVE )
 GAME( 1989,	ffightj1,	ffight,		cps1_10MHz,	ffight,		cps1,		ROT0,	"Capcom",	"Final Fight (Japan 900112)", GAME_SUPPORTS_SAVE )
 GAME( 1989,	ffightj2,	ffight,		cps1_10MHz,	ffight,		cps1,		ROT0,	"Capcom",	"Final Fight (Japan 900305)", GAME_SUPPORTS_SAVE )
 GAME( 1989,	ffightj3,	ffight,		cps1_10MHz,	ffight,		cps1,		ROT0,	"Capcom",	"Final Fight (Japan 900613)", GAME_SUPPORTS_SAVE )
 GAME( 1989,	ffightjh,	ffight,		cps1_10MHz,	ffight,		cps1,		ROT0,	"bootleg",	"Street Smart / Final Fight (Japan, hack)", GAME_SUPPORTS_SAVE )
-GAME( 1989,	ffightu,	ffight,		cps1_10MHz,	ffight,		cps1,		ROT0,	"Capcom",	"Final Fight (USA)", GAME_SUPPORTS_SAVE )
+GAME( 1989,	ffightu,	ffight,		cps1_10MHz,	ffight,		cps1,		ROT0,	"Capcom",	"Final Fight (USA, set 1)", GAME_SUPPORTS_SAVE )
 GAME( 1989,	ffightu1,	ffight,		cps1_10MHz,	ffight,		cps1,		ROT0,	"Capcom",	"Final Fight (USA, set 2)", GAME_SUPPORTS_SAVE )
 GAME( 1989,	ffightu2,	ffight,		cps1_10MHz,	ffight,		cps1,		ROT0,	"Capcom",	"Final Fight (USA, set 3)", GAME_SUPPORTS_SAVE )
 GAME( 1989,	ffightua,	ffight,		cps1_10MHz,	ffight,		cps1,		ROT0,	"Capcom",	"Final Fight (USA 900112)", GAME_SUPPORTS_SAVE )
 GAME( 1989,	ffightub,	ffight,		cps1_10MHz,	ffight,		cps1,		ROT0,	"Capcom",	"Final Fight (USA 900424)", GAME_SUPPORTS_SAVE )
 GAME( 1989,	ffightuc,	ffight,		cps1_10MHz,	ffight,		cps1,		ROT0,	"Capcom",	"Final Fight (USA 900613)", GAME_SUPPORTS_SAVE )
+
+
 
 
 
