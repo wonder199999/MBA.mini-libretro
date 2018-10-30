@@ -1304,13 +1304,13 @@ static const struct CPS1config cps1_config_table[] =
 	{"cworld2ja",	CPS_B_21_DEF,	mapper_Q522B },				/* patched set, no battery, could be desuicided */
 	{"cworld2jb",	CPS_B_21_BT6,	mapper_Q522B,	0x36, 0, 0x34 },
 	//
-	{"dino",	CPS_B_21_QS2,	mapper_CD63B },		/* layer enable never used */
-	{"dinou",	CPS_B_21_QS2,	mapper_CD63B },		/* layer enable never used */
-	{"dinoj",	CPS_B_21_QS2,	mapper_CD63B },		/* layer enable never used */
-	{"dinopic",	CPS_B_21_QS2,	mapper_CD63B },		/* layer enable never used */
-	{"dinopic2",	CPS_B_21_QS2,	mapper_CD63B },		/* layer enable never used */
-	{"dinohunt",	CPS_B_21_DEF,	mapper_CD63B },		/* Chinese bootleg */
-	{"dinoeh",	CPS_B_21_QS2,	mapper_CD63B },	
+	{"dino",	CPS_B_21_QS2,	mapper_CD63B },				/* layer enable never used */
+	{"dinou",	CPS_B_21_QS2,	mapper_CD63B },				/* layer enable never used */
+	{"dinoj",	CPS_B_21_QS2,	mapper_CD63B },				/* layer enable never used */
+	{"dinopic",	CPS_B_21_QS2,	mapper_CD63B },				/* layer enable never used */
+	{"dinopic2",	CPS_B_21_QS2,	mapper_CD63B },				/* layer enable never used */
+	{"dinohunt",	CPS_B_21_DEF,	mapper_CD63B },				/* Chinese bootleg */
+	{"dinoeh",	CPS_B_21_QS2,	mapper_CD63B },
 	{"dinoh",	CPS_B_21_DEF,	mapper_CD63B,	0x36 },
 	{"dinohc",	CPS_B_21_DEF,	mapper_CD63B,	0x36 },
 	{"dinopic3",	CPS_B_21_QS2,	mapper_CD63B },
@@ -1318,10 +1318,24 @@ static const struct CPS1config cps1_config_table[] =
 	{"dinot",	CPS_B_21_DEF,	mapper_CD63B,	0x36 },
 	{"dinotpic",	CPS_B_21_QS2,	mapper_CD63B,	0, 0, 0, 0x0F },
 	//
-	{"dynwar",	CPS_B_02,	mapper_TK22B },		/* wrong, this set uses TK24B1, dumped but equations still not added */
+	{"dynwar",	CPS_B_02,	mapper_TK22B },				/* wrong, this set uses TK24B1, dumped but equations still not added */
 	{"dynwara",	CPS_B_02,	mapper_TK22B },
 	{"dynwarj",	CPS_B_02,	mapper_TK22B },
-	{"dynwarjr",	CPS_B_21_DEF,	mapper_TK22B },		/* wrong, this set uses TK163B, still not dumped */
+	{"dynwarjr",	CPS_B_21_DEF,	mapper_TK22B },				/* wrong, this set uses TK163B, still not dumped */
+	//
+	{"ffight",	CPS_B_04,	mapper_S224B },
+	{"ffighta",	CPS_B_04,	mapper_S224B },
+	{"ffightj",	CPS_B_04,	mapper_S224B },				/* wrong, this set uses S222B, still non dumped */
+	{"ffightj1",	CPS_B_01,	mapper_S224B },				/* wrong, this set uses S222B, still non dumped */
+	{"ffightj2",	CPS_B_02,	mapper_S224B },				/* wrong, this set uses S222B, still non dumped */
+	{"ffightj3",	CPS_B_05,	mapper_S224B },
+	{"ffightjh",	CPS_B_01,	mapper_S224B },				/* wrong, ffightjh hack doesn't even use the S222B PAL, since replaced with a GAL. */
+	{"ffightu",	CPS_B_04,	mapper_S224B },
+	{"ffightu1",	CPS_B_04,	mapper_S224B },
+	{"ffightu2",	CPS_B_04,	mapper_S224B },
+	{"ffightua",	CPS_B_01,	mapper_S224B },
+	{"ffightub",	CPS_B_03,	mapper_S224B },
+	{"ffightuc",	CPS_B_05,	mapper_S224B },
 
 
 
@@ -1331,19 +1345,6 @@ static const struct CPS1config cps1_config_table[] =
 
 
 
-	{"ffight",	CPS_B_04,     mapper_S224B },
-	{"ffightu",	CPS_B_04,     mapper_S224B },
-	{"ffightua",	CPS_B_01,     mapper_S224B },
-	{"ffightub",	CPS_B_03,     mapper_S224B },
-	{"ffightj",	CPS_B_04,     mapper_S224B },	// wrong, this set uses S222B, still non dumped
-	{"ffightj1",	CPS_B_01,     mapper_S224B },	// wrong, this set uses S222B, still non dumped
-	{"ffightj2",	CPS_B_02,     mapper_S224B },	// wrong, this set uses S222B, still non dumped
-	{"ffightjh",	CPS_B_01,     mapper_S224B },	// wrong, ffightjh hack doesn't even use the S222B PAL, since replaced with a GAL.
-	{"ffighta",	CPS_B_04,     mapper_S224B },
-	{"ffightu1",	CPS_B_04,     mapper_S224B },
-	{"ffightuc",	CPS_B_05,     mapper_S224B },
-	{"ffightj3",	CPS_B_05,     mapper_S224B },
-	{"ffightu2",	CPS_B_04,     mapper_S224B },
 
 	{"forgottn",	CPS_B_01,     mapper_LW621 },
 	{"forgottnua",	CPS_B_01,     mapper_LW621 },
