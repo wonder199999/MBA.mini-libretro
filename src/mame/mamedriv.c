@@ -161,11 +161,11 @@ const game_driver *const drivers[] =
 	DRIVER( ffightuc )		/* 13/06/1990 (c) Final Fight (USA) */
 	//
 	DRIVER( forgottn )		/* 07/1988 (c) 1988 (World, newer) */
-//	DRIVER( forgottna )		/* 07/1988 (c) 1988 (World) */
+	DRIVER( forgottna )		/* 07/1988 (c) 1988 (World) */
 	DRIVER( forgottnu )		/* 07/1988 (c) 1988 (US, B-Board 88621B-2, rev C) */
-//	DRIVER( forgottnu1 )		/* 07/1988 (c) 1988 (US, B-Board 88621B-2, Rev C) */
+	DRIVER( forgottnu1 )		/* 07/1988 (c) 1988 (US, B-Board 88621B-2, Rev C) */
 	DRIVER( forgottnua )		/* 07/1988 (c) 1988 (US, B-Board 88621B-2, rev A) */
-//	DRIVER( forgottnuaa )		/* 07/1988 (c) 1988 (US, B-Board 88621B-2, rev AA) */
+	DRIVER( forgottnuaa )		/* 07/1988 (c) 1988 (US, B-Board 88621B-2, rev AA) */
 	DRIVER( lostwrld )		/* 07/1988 (c) 1988 (Japan) */
 	DRIVER( lostwrldo )		/* 07/1988 (c) 1988 (Japan old ver.) */
 	//

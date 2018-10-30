@@ -1336,6 +1336,15 @@ static const struct CPS1config cps1_config_table[] =
 	{"ffightua",	CPS_B_01,	mapper_S224B },
 	{"ffightub",	CPS_B_03,	mapper_S224B },
 	{"ffightuc",	CPS_B_05,	mapper_S224B },
+	//
+	{"forgottn",	CPS_B_01,	mapper_LW621 },
+	{"forgottna",	CPS_B_01,	mapper_LW621 },
+	{"forgottnu",	CPS_B_01,	mapper_LW621 },
+	{"forgottnu1",	CPS_B_01,	mapper_LWCHR },
+	{"forgottnua",	CPS_B_01,	mapper_LWCHR },
+	{"forgottnuaa",	CPS_B_01,	mapper_LWCHR },
+	{"lostwrld",	CPS_B_01,	mapper_LWCHR },
+	{"lostwrldo",	CPS_B_01,	mapper_LWCHR },
 
 
 
@@ -1346,11 +1355,7 @@ static const struct CPS1config cps1_config_table[] =
 
 
 
-	{"forgottn",	CPS_B_01,     mapper_LW621 },
-	{"forgottnua",	CPS_B_01,     mapper_LW621 },
-	{"forgottnu",	CPS_B_01,     mapper_LWCHR },
-	{"lostwrld",	CPS_B_01,     mapper_LWCHR },
-	{"lostwrldo",	CPS_B_01,     mapper_LWCHR },
+
 
 	{"ghouls",	CPS_B_01,     mapper_DM620 },
 	{"ghoulsu",	CPS_B_01,     mapper_DM620 },
