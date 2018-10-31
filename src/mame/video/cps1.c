@@ -1345,6 +1345,9 @@ static const struct CPS1config cps1_config_table[] =
 	{"forgottnuaa",	CPS_B_01,	mapper_LWCHR },
 	{"lostwrld",	CPS_B_01,	mapper_LWCHR },
 	{"lostwrldo",	CPS_B_01,	mapper_LWCHR },
+	//
+	{"ganbare",	CPS_B_21_DEF,	mapper_sfzch },
+
 
 
 
@@ -1511,7 +1514,6 @@ static const struct CPS1config cps1_config_table[] =
 	{"wofchdx",	CPS_B_21_DEF, mapper_TK263B },
 	{"wofhfh",	CPS_B_21_DEF, mapper_TK263B, 0x36 },
 	{"wofches",	CPS_B_21_DEF, mapper_TK263B },
-	{"ganbare",	CPS_B_21_DEF, mapper_sfzch },
 
 
 	/* CPS2 games */
