@@ -1347,6 +1347,11 @@ static const struct CPS1config cps1_config_table[] =
 	{"lostwrldo",	CPS_B_01,	mapper_LWCHR },
 	//
 	{"ganbare",	CPS_B_21_DEF,	mapper_sfzch },
+	//
+	{"ghouls",	CPS_B_01,	mapper_DM620 },
+	{"ghoulsu",	CPS_B_01,	mapper_DM620 },
+	{"daimakai",	CPS_B_01,	mapper_DM22A },				// equivalent to DM620
+	{"daimakair",	CPS_B_21_DEF,	mapper_DAM63B },			// equivalent to DM620, also CPS_B_21_DEF is equivalent to CPS_B_01
 
 
 
@@ -1360,10 +1365,6 @@ static const struct CPS1config cps1_config_table[] =
 
 
 
-	{"ghouls",	CPS_B_01,     mapper_DM620 },
-	{"ghoulsu",	CPS_B_01,     mapper_DM620 },
-	{"daimakai",	CPS_B_01,     mapper_DM22A },	// equivalent to DM620
-	{"daimakair",	CPS_B_21_DEF, mapper_DAM63B },	// equivalent to DM620, also CPS_B_21_DEF is equivalent to CPS_B_01
 
 	{"kod",		CPS_B_21_BT2, mapper_KD29B,  0x36, 0, 0x34 },
 	{"kodu",	CPS_B_21_BT2, mapper_KD29B,  0x36, 0, 0x34 },
