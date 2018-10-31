@@ -478,6 +478,8 @@ The games seem to use them to mark platforms, kill zones and no-go areas.
 
 #define HACK_B_1      	  -1,     -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,	0x14, {0x12, 0x10, 0x0e, 0x0c}, 0x0a, {0x0e, 0x0e, 0x0e, 0x30, 0x30}
 #define	HACK_B_2	  -1,	  -1, 0x0e, 0x0c, 0x0a, 0x08, 0x06, 0x04, 0x02, 0x28, {0x26, 0x24, 0x22, 0x20}, 0x22, {0x20, 0x04, 0x08, 0x12, 0x12}
+#define HACK_H_5	  -1, 0x0000,		__not_applicable__,		0x26, {0x28, 0x2a, 0x2c, 0x2e}, 0x30, {0x40, 0x40, 0x40, 0x00, 0x00}	/* for daimakaib */
+
 
 
 /*	CPS_B_21_DEF is CPS-B-21 at default settings (no battery)
@@ -1352,6 +1354,7 @@ static const struct CPS1config cps1_config_table[] =
 	{"ghoulsu",	CPS_B_01,	mapper_DM620 },
 	{"daimakai",	CPS_B_01,	mapper_DM22A },				// equivalent to DM620
 	{"daimakair",	CPS_B_21_DEF,	mapper_DAM63B },			// equivalent to DM620, also CPS_B_21_DEF is equivalent to CPS_B_01
+	{"daimakaib",	HACK_H_5,	mapper_DM22A },
 
 
 

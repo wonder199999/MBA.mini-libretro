@@ -174,8 +174,8 @@ const game_driver *const drivers[] =
 	DRIVER( ghouls )		/* 12/1988 (c) 1988 (World) */
 	DRIVER( ghoulsu )		/* 12/1988 (c) 1988 (US) */
 	DRIVER( daimakai )		/* 12/1988 (c) 1988 (Japan) */
-//	DRIVER( daimakaib )		/* bootleg */
 	DRIVER( daimakair )		/* 12/1988 (c) 1988 (Japan) */
+	DRIVER( daimakaib )		/* bootleg */
 	//
 	DRIVER( knights )		/* 27/11/1991 (c) 1991 (World) */
 	DRIVER( knightsb )		/* bootleg set 1 */

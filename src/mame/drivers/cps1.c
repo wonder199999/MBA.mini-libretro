@@ -326,6 +326,40 @@ static WRITE16_HANDLER( ganbare_ram_w )
 		timekeeper_w(device, offset, data & 0xff);
 }
 
+static WRITE16_HANDLER( daimakaib_palctrl_w )
+{
+	cps_state *state = space->machine->driver_data<cps_state>();
+	state->cps_b_regs[0x30 / 2] = data;
+}
+
+static WRITE16_HANDLER( daimakaib_layer_w )
+{
+	cps_state *state = space->machine->driver_data<cps_state>();
+
+	switch (offset)
+	{
+		case 0x00: state->cps_b_regs[0x0e / 2] = data; break;			/* scroll 1y */
+		case 0x01: state->cps_a_regs[0x0c / 2] = data - 0x40; break;		/* scroll 1x */
+		case 0x02: state->cps_a_regs[0x12 / 2] = data;				/* scroll 2y */
+			   state->cps_a_regs[0x20 / 2] = data; break;			/* row scroll start */
+		case 0x03: state->cps_a_regs[0x10 / 2] = data - 0x40; break;		/* scroll 2x */
+		case 0x04: state->cps_a_regs[0x16 / 2] = data; break;			/* scroll 3y */
+		case 0x05: state->cps_a_regs[0x14 / 2] = data - 0x40; break;		/* scroll 3x */
+		case 0x06:
+		{
+			switch (data)
+			{
+				case 0x0000: data = (1 << 12) | (2 << 8) | (3 << 6); break;
+				case 0x0001: data = (1 << 12) | (3 << 6); break;
+				case 0x0002: data = (3 << 12) | (1 << 6); break;
+				case 0x0006: data = 0x00; break;
+				default: logerror ("Unknown control word = %X\n", data); data = 0x00; break;
+			}
+			state->cps_b_regs[0x26 / 2] = data;
+		}
+	}
+}
+
 /* ---------------------------------------------------------- */
 void cps1_irq_handler_mus(running_device *device, int irq)
 {
@@ -702,6 +736,23 @@ static ADDRESS_MAP_START( sf2m3_map, ADDRESS_SPACE_PROGRAM, 16 )
 	AM_RANGE(0x900000, 0x92ffff) AM_RAM_WRITE(cps1_gfxram_w)  AM_BASE_SIZE_MEMBER(cps_state, gfxram, gfxram_size)
 	AM_RANGE(0xff0000, 0xffffff) AM_RAM
 ADDRESS_MAP_END
+
+static ADDRESS_MAP_START( daimakaib_map, ADDRESS_SPACE_PROGRAM, 16 )
+	AM_RANGE(0x000000, 0x3fffff) AM_ROM
+	AM_RANGE(0x800000, 0x800001) AM_READ_PORT("IN1")		/* Player input ports */
+	AM_RANGE(0x800006, 0x800007) AM_WRITE(cps1_soundlatch_w)	/* Sound command */
+	AM_RANGE(0x800018, 0x80001f) AM_READ(cps1_hack_dsw_r)		/* System input ports / Dip Switches */
+	AM_RANGE(0x800030, 0x800037) AM_WRITE(cps1_coinctrl_w)
+	AM_RANGE(0x800100, 0x80013f) AM_WRITE(cps1_cps_a_w) AM_BASE_MEMBER(cps_state, cps_a_regs)
+	AM_RANGE(0x800166, 0x800171) AM_WRITENOP
+	AM_RANGE(0xe00000, 0xe0003f) AM_READWRITE(cps1_cps_b_r, cps1_cps_b_w) AM_BASE_MEMBER(cps_state, cps_b_regs)
+	AM_RANGE(0x880000, 0x880001) AM_WRITE( daimakaib_palctrl_w )
+	AM_RANGE(0x900000, 0x92ffff) AM_RAM_WRITE(cps1_gfxram_w) AM_BASE_SIZE_MEMBER(cps_state, gfxram, gfxram_size)
+	AM_RANGE(0x980000, 0x98000d) AM_WRITE( daimakaib_layer_w )
+	AM_RANGE(0x990000, 0x993fff) AM_WRITENOP
+	AM_RANGE(0xff0000, 0xffffff) AM_RAM
+ADDRESS_MAP_END
+
 
 /*
 PAL SOU1 (16P8 @ 13E):
@@ -3233,6 +3284,14 @@ static MACHINE_DRIVER_START( ganbare )
 	MDRV_TIMER_ADD_SCANLINE("scantimer", ganbare_interrupt, "screen", 0, 1)
 
 	MDRV_M48T35_ADD( "m48t35" )
+MACHINE_DRIVER_END
+
+static MACHINE_DRIVER_START( daimakaib )
+	/* basic machine hardware */
+	MDRV_IMPORT_FROM(cps1_10MHz)
+
+	MDRV_CPU_MODIFY("maincpu")
+	MDRV_CPU_PROGRAM_MAP(daimakaib_map)
 MACHINE_DRIVER_END
 
 
@@ -6055,7 +6114,7 @@ ROM_START( daimakai )
 	ROM_LOAD( "37.13c",     0x00000, 0x08000, CRC(3692f6e5) SHA1(61b8438d60a39b4cf5062dff0a53228e8a4e4b5f) )    // == 26.10a
 	ROM_CONTINUE(           0x10000, 0x08000 )
 
-	ROM_REGION( 0x40000, "oki", ROMREGION_ERASEFF ) /* Samples (not present) */
+	ROM_REGION( 0x40000, "oki", ROMREGION_ERASEFF )		/* Samples (not present) */
 
 	ROM_REGION( 0x0200, "aboardplds", 0 )
 	ROM_LOAD( "buf1",         0x0000, 0x0117, CRC(eb122de7) SHA1(b26b5bfe258e3e184f069719f9fd008d6b8f6b9b) )
@@ -6071,7 +6130,7 @@ ROM_END
 
 /* B-Board 91634B-2, Japan Resale Ver. */
 ROM_START( daimakair )
-	ROM_REGION( CODE_SIZE, "maincpu", 0 )      /* 68000 code */
+	ROM_REGION( CODE_SIZE, "maincpu", 0 )		/* 68000 code */
 	ROM_LOAD16_WORD_SWAP( "damj_23.8f", 0x00000, 0x80000, CRC(c3b248ec) SHA1(5c016d2dcf882b2a9564e3c4502a0f51ee3d1803) )
 	ROM_LOAD16_WORD_SWAP( "damj_22.7f", 0x80000, 0x80000, CRC(595ff2f3) SHA1(ac14b81e15f2c340526a03acbb4c28181d94d5b9) )
 
@@ -6085,11 +6144,11 @@ ROM_START( daimakair )
 	ROMX_LOAD( "dam_07.9a",  0x200004, 0x80000, CRC(ec351d78) SHA1(1005a83be4b5577612143ae7f64ca4a08aae7959) , ROM_GROUPWORD | ROM_SKIP(6) )
 	ROMX_LOAD( "dam_08.10a", 0x200006, 0x80000, CRC(ee2acc1e) SHA1(4628a9b2447266349d97132003992a21e2bb423a) , ROM_GROUPWORD | ROM_SKIP(6) )
 
-	ROM_REGION( 0x28000, "audiocpu", 0 ) /* 64k for the audio CPU (+banks) */
+	ROM_REGION( 0x28000, "audiocpu", 0 )		/* 64k for the audio CPU (+banks) */
 	ROM_LOAD( "dam_09.12a",  0x00000, 0x08000, CRC(0656ff53) SHA1(063a8124dbe73d014b11f72007f1b877afd1a661) )   // == 26.10a + garbage
-	ROM_CONTINUE(            0x10000, 0x18000 ) // second half of ROM is unused, not mapped in memory
+	ROM_CONTINUE(            0x10000, 0x18000 )	// second half of ROM is unused, not mapped in memory
 
-	ROM_REGION( 0x40000, "oki", ROMREGION_ERASEFF ) /* Samples (not present) */
+	ROM_REGION( 0x40000, "oki", ROMREGION_ERASEFF )	/* Samples (not present) */
 
 	ROM_REGION( 0x0200, "aboardplds", 0 )
 	ROM_LOAD( "buf1",         0x0000, 0x0117, CRC(eb122de7) SHA1(b26b5bfe258e3e184f069719f9fd008d6b8f6b9b) )
@@ -6108,6 +6167,51 @@ ROM_START( daimakair )
 	ROM_LOAD( "c632.ic1",     0x0000, 0x0117, CRC(0fbd9270) SHA1(d7e737b20c44d41e29ca94be56114b31934dde81) )
 ROM_END
 
+ROM_START( daimakaib )
+	ROM_REGION( CODE_SIZE, "maincpu", 0 )
+	ROM_LOAD16_BYTE( "dmjb2.bin", 0x00000, 0x80000, CRC(7d5f9f84) SHA1(b334b3af610892ef4efe4764017659b8541a10c6) )
+	ROM_LOAD16_BYTE( "dmjb1.bin", 0x00001, 0x80000, CRC(9b945cc4) SHA1(dfdfabfd8ef06cee6be27350f79c5db4c6ace611) )
+
+	ROM_REGION( 0x300000, "gfx", 0 )
+	ROMX_LOAD( "dm_02.4b",    0x000000, 0x20000, CRC(8b98dc48) SHA1(e827881e2ba5cccd907d1692a1945c1b75d46f12) , ROM_SKIP(7) )
+	ROMX_LOAD( "dm_01.4a",    0x000001, 0x20000, CRC(80896c33) SHA1(20ffc427c596828005e34cdd8e4efa0d332262e9) , ROM_SKIP(7) )
+	ROMX_LOAD( "dm_10.9b",    0x000002, 0x20000, CRC(c2e7d9ef) SHA1(52aae6cf373f8c7150833047be28b74dd5eb5af6) , ROM_SKIP(7) )
+	ROMX_LOAD( "dm_09.9a",    0x000003, 0x20000, CRC(c9c4afa5) SHA1(34571e3e49c86b87fa34eefbc5f9fe258aba5f1a) , ROM_SKIP(7) )
+	ROMX_LOAD( "dm_18.5e",    0x000004, 0x20000, CRC(1aa0db99) SHA1(69ac302b2f6f0b96f78cb57b0b4cdae464086262) , ROM_SKIP(7) )
+	ROMX_LOAD( "dm_17.5c",    0x000005, 0x20000, CRC(dc6ed8ad) SHA1(1ffc4a48a7ff9b542ab6f63a60bea3c1a7a6e63b) , ROM_SKIP(7) )
+	ROMX_LOAD( "dm_30.8h",    0x000006, 0x20000, CRC(d9d3f8bd) SHA1(6c6853a384f8d60ca46a0607fd47c76a83700fba) , ROM_SKIP(7) )
+	ROMX_LOAD( "dm_29.8f",    0x000007, 0x20000, CRC(49a48796) SHA1(76c18c684dba4aa91ee6caae0f38fe3e1cc50832) , ROM_SKIP(7) )
+	ROMX_LOAD( "dm_04.5b",    0x100000, 0x20000, CRC(a4f4f8f0) SHA1(edca0f61b40a18afe279f7007c233064130cfb4f) , ROM_SKIP(7) )
+	ROMX_LOAD( "dm_03.5a",    0x100001, 0x20000, CRC(b1033e62) SHA1(547fc281dd9e7a74ac86c3692508c7bde9b6167b) , ROM_SKIP(7) )
+	ROMX_LOAD( "dm_12.10b",   0x100002, 0x20000, CRC(10fdd76a) SHA1(aee774d6323292799dff7a30ef9559c92fe5507a) , ROM_SKIP(7) )
+	ROMX_LOAD( "dm_11.10a",   0x100003, 0x20000, CRC(9040cb04) SHA1(b32e9056fc20a5162868eade10f3ef5efc167a28) , ROM_SKIP(7) )
+	ROMX_LOAD( "dm_20.7e",    0x100004, 0x20000, CRC(281d0b3e) SHA1(70e1813de184ad0ec164145b7b843b5e387494e3) , ROM_SKIP(7) )
+	ROMX_LOAD( "dm_19.7c",    0x100005, 0x20000, CRC(2623b52f) SHA1(fc4200924452bfbff687934782398ed345dc0aa0) , ROM_SKIP(7) )
+	ROMX_LOAD( "dm_32.9h",    0x100006, 0x20000, CRC(99692344) SHA1(67dc70618568b7c0adcb00a612aaf5501f6c8c0f) , ROM_SKIP(7) )
+	ROMX_LOAD( "dm_31.9f",    0x100007, 0x20000, CRC(54acb729) SHA1(d1fca43db36253fd19db4337c49272a6cadff597) , ROM_SKIP(7) )
+	ROMX_LOAD( "dm_06.7b",    0x200000, 0x10000, CRC(ae24bb19) SHA1(aa91c6ffe657b878e10e4e930457b530f7bb529b) , ROM_SKIP(7) )
+	ROMX_LOAD( "dm_05.7a",    0x200001, 0x10000, CRC(d34e271a) SHA1(55211fc2861dce32951f41624c9c99c09bf3b184) , ROM_SKIP(7) )
+	ROMX_LOAD( "dm_14.11b",   0x200002, 0x10000, CRC(3f70dd37) SHA1(9ecb4dec9d131e9fca15ded7d71986a9fcb62c19) , ROM_SKIP(7) )
+	ROMX_LOAD( "dm_13.11a",   0x200003, 0x10000, CRC(7e69e2e6) SHA1(4e0b4d2474beaa5c869c8f1a91893c79ac6e7f39) , ROM_SKIP(7) )
+	ROMX_LOAD( "dm_22.8e",    0x200004, 0x10000, CRC(37c9b6c6) SHA1(b2bb82537e335339846dbf9588cfacfdbdd75ee6) , ROM_SKIP(7) )
+	ROMX_LOAD( "dm_21.8c",    0x200005, 0x10000, CRC(2f1345b4) SHA1(14c450abcf9defa29c6f48e5ffd0b9d1e4a66a1d) , ROM_SKIP(7) )
+	ROMX_LOAD( "dm_26.10e",   0x200006, 0x10000, CRC(3c2a212a) SHA1(f8fa0e0e2d09ea37c54d1c2493752b4e97e3f534) , ROM_SKIP(7) )
+	ROMX_LOAD( "dm_25.10c",   0x200007, 0x10000, CRC(889aac05) SHA1(9301dcecee699e7f7672bb498122e1f4831ce536) , ROM_SKIP(7) )
+	ROMX_LOAD( "dm_08.8b",    0x280000, 0x10000, CRC(bcc0f28c) SHA1(02f587aa4ae71631f27b0e3aaf1829cdded1bdc2) , ROM_SKIP(7) )
+	ROMX_LOAD( "dm_07.8a",    0x280001, 0x10000, CRC(2a40166a) SHA1(dc4e75d7ed87ae5386d721a09113bba364740465) , ROM_SKIP(7) )
+	ROMX_LOAD( "dm_16.12b",   0x280002, 0x10000, CRC(20f85c03) SHA1(86385139a9b42270aade758bfe338525936f5671) , ROM_SKIP(7) )
+	ROMX_LOAD( "dm_15.12a",   0x280003, 0x10000, CRC(8426144b) SHA1(2dbf9625413b302fcdad5bef8733a9dfbfaead52) , ROM_SKIP(7) )
+	ROMX_LOAD( "dm_24.9e",    0x280004, 0x10000, CRC(da088d61) SHA1(67229eff2827a42af97a60ceb252e132e7f307bc) , ROM_SKIP(7) )
+	ROMX_LOAD( "dm_23.9c",    0x280005, 0x10000, CRC(17e11df0) SHA1(42fb15e9300b07fc5f4bc21744484869859b130c) , ROM_SKIP(7) )
+	ROMX_LOAD( "dm_28.11e",   0x280006, 0x10000, CRC(f187ba1c) SHA1(6d9441d04ecef2a9d9c7a2cc7781acd7904c2061) , ROM_SKIP(7) )
+	ROMX_LOAD( "dm_27.11c",   0x280007, 0x10000, CRC(29f79c78) SHA1(26000a58454a06c3016f99ebc3a79c52911a7070) , ROM_SKIP(7) )
+
+	ROM_REGION( 0x18000, "audiocpu", 0 )
+	ROM_LOAD( "dm_37.13c",  0x00000, 0x08000, CRC(3692f6e5) SHA1(61b8438d60a39b4cf5062dff0a53228e8a4e4b5f) )
+	ROM_CONTINUE(           0x10000, 0x08000 )
+
+	ROM_REGION( 0x40000, "oki", ROMREGION_ERASEFF )		// to keep validation quiet
+ROM_END
 
 
 
@@ -11148,6 +11252,7 @@ GAME( 1988,	ghouls,		0,		cps1_10MHz,	ghouls,		cps1,		ROT0,	"Capcom",	"Ghouls'n G
 GAME( 1988,	ghoulsu,	ghouls,		cps1_10MHz,	ghoulsu,	cps1,		ROT0,	"Capcom",	"Ghouls'n Ghosts (USA)", GAME_SUPPORTS_SAVE )			// "EXPORT" // Wed.26.10.1988 in the ROMs
 GAME( 1988,	daimakai,	ghouls,		cps1_10MHz,	daimakai,	cps1,		ROT0,	"Capcom",	"Dai Makai-Mura (Japan)", GAME_SUPPORTS_SAVE )			// Wed.26.10.1988 in the ROMs
 GAME( 1988,	daimakair,	ghouls,		cps1_10MHz,	daimakai,	cps1,		ROT0,	"Capcom",	"Dai Makai-Mura (Japan Resale Ver.)", GAME_SUPPORTS_SAVE )	// Wed.26.10.1988 in the ROMs
+GAME( 1988,	daimakaib,	ghouls,		daimakaib,	daimakai,	cps1,		ROT0,	"bootleg",	"Dai Makai-Mura (Japan, bootleg)" , GAME_SUPPORTS_SAVE )
 
 
 
@@ -11293,5 +11398,6 @@ GAME( 1991, knightsh,	knights,  cps1_10MHz,	knightsh, cps1,	       ROT0,   "boot
 GAME( 1991, knightsh2,	knights,  cps1_10MHz,	knightsh, cps1,	       ROT0,   "bootleg",  "Knights of the Round (hack set 2, 911127 etc)", GAME_SUPPORTS_SAVE )
 GAME( 1991, knightsb2,	knights,  cps1_10MHz,	knights,  cps1,	       ROT0,   "bootleg",  "Knights of the Round (bootleg set 2, World 911127)",  GAME_SUPPORTS_SAVE )  /* i.e. player selection screen problems */
 GAME( 1991, knightsb3,	knights,  cps1_10MHz,	knights,  cps1,	       ROT0,   "bootleg",  "Knights of the Round (bootleg set 3, Japan 911127)",  GAME_SUPPORTS_SAVE )
+
 
 
