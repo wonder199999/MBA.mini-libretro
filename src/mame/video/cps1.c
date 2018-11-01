@@ -1355,6 +1355,16 @@ static const struct CPS1config cps1_config_table[] =
 	{"daimakai",	CPS_B_01,	mapper_DM22A },				// equivalent to DM620
 	{"daimakair",	CPS_B_21_DEF,	mapper_DAM63B },			// equivalent to DM620, also CPS_B_21_DEF is equivalent to CPS_B_01
 	{"daimakaib",	HACK_H_5,	mapper_DM22A },
+	//
+	{"knights",	CPS_B_21_BT4,	mapper_KR63B,	0x36, 0, 0x34 },
+	{"knightsu",	CPS_B_21_BT4,	mapper_KR63B,	0x36, 0, 0x34 },
+	{"knightsj",	CPS_B_21_BT4,	mapper_KR63B,	0x36, 0, 0x34 },	// PAL could be different if B-Board is 90629B
+	{"knightsja",	CPS_B_21_BT4,	mapper_KR63B,	0x36, 0, 0x34 },
+	{"knightsh",	CPS_B_21_DEF,	mapper_KR63B,	0x36, 0, 0x34 },
+	{"knightsh2",	CPS_B_21_DEF,	mapper_KR63B,	0x36, 0, 0x34 },
+	{"knightsb2",	CPS_B_21_BT4,	mapper_KR63B,	0x36, 0, 0x34, 4 },
+	{"knightsb3",	CPS_B_21_DEF,	mapper_KR63B,	0x36, 0, 0x34 },
+	{"knightsb4",	CPS_B_21_BT4,	mapper_KR63B,	0x36, 0, 0x34 },
 
 
 
@@ -1373,16 +1383,6 @@ static const struct CPS1config cps1_config_table[] =
 	{"kodu",	CPS_B_21_BT2, mapper_KD29B,  0x36, 0, 0x34 },
 	{"kodj",	CPS_B_21_BT2, mapper_KD29B,  0x36, 0, 0x34 },
 	{"kodb",	CPS_B_21_BT2, mapper_KD29B,  0x36, 0, 0x34 },	/* bootleg, doesn't use multiply protection */
-
-	{"knights",	CPS_B_21_BT4, mapper_KR63B,  0x36, 0, 0x34 },
-	{"knightsu",	CPS_B_21_BT4, mapper_KR63B,  0x36, 0, 0x34 },
-	{"knightsj",	CPS_B_21_BT4, mapper_KR63B,  0x36, 0, 0x34 },	// PAL could be different if B-Board is 90629B
-	{"knightsja",	CPS_B_21_BT4, mapper_KR63B,  0x36, 0, 0x34 },
-	{"knightsh",	CPS_B_21_DEF, mapper_KR63B,  0x36, 0, 0x34 },
-	{"knightsh2",	CPS_B_21_DEF, mapper_KR63B,  0x36, 0, 0x34 },
-	{"knightsb2",	CPS_B_21_BT4, mapper_KR63B,  0x36, 0, 0x34, 4 },
-	{"knightsb3",	CPS_B_21_DEF, mapper_KR63B,  0x36, 0, 0x34 },
-	{"knightsb4",	CPS_B_21_BT4, mapper_KR63B,  0x36, 0, 0x34 },
 
 	{"msword",	CPS_B_13,     mapper_MS24B },
 	{"mswordr1",	CPS_B_13,     mapper_MS24B },
