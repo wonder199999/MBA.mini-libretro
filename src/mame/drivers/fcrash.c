@@ -241,16 +241,18 @@ static WRITE16_HANDLER( knightsb_layer_w )
 			{
 				case 0x0000:
 				case 0x001f:
-				case 0x00ff: data = 0x12f2; break;
+				case 0x00ff: data = 0x06d0; break;
 				case 0x2000: data = 0x06f2; break;
 				case 0xa000: data = 0x24d0; break;
+				case 0xd800: data = 0x12f2; break;
+
 				default: logerror ("Unknown control word = %X\n", data); data = 0x12c0;
 			}
 			state->cps_b_regs[state->layer_enable_reg / 2] = data; break;
 		}
 		case 0x10: state->cps_b_regs[state->layer_mask_reg[1] / 2] = data; break;
 		case 0x11: state->cps_b_regs[state->layer_mask_reg[2] / 2] = data; break;
-		case 0x12: state->cps_b_regs[state->layer_mask_reg[3] / 2] = data;
+		case 0x12: state->cps_b_regs[state->layer_mask_reg[3] / 2] = data; break;
 	}
 }
 
@@ -349,10 +351,10 @@ static void bootleg_render_sprites( running_machine *machine, bitmap_t *bitmap, 
 	UINT16 *sprite_ram = state->gfxram;
 	UINT16 tileno, color, xpos, ypos, flipx, flipy;
 
-	if (state->bootleg_sprite_ram)				/* if we have separate sprite ram, use it */
+	if (state->bootleg_sprite_ram)							/* if we have separate sprite ram, use it */
 		sprite_ram = state->bootleg_sprite_ram;
 
-	for ( pos = 0x1ffc - base; pos >= 0x0000; pos -= 4)	/* get end of sprite list marker */
+	for ( pos = 0x1ffc - base; pos >= 0x0000; pos -= 4)				/* get end of sprite list marker */
 		if (sprite_ram[base + pos - 1] == state->sprite_list_end_marker)
 			last_sprite_offset = pos;
 
@@ -915,11 +917,8 @@ static MACHINE_START( sf2mdt )
 
 static MACHINE_START( knightsb )
 {
-	MACHINE_START_CALL( msm5205snd );
+	MACHINE_START_CALL( captcommb2 );
 	cps_state *state = machine->driver_data<cps_state>();
-
-	UINT8 *src = memory_region(machine, "audiocpu");
-	memory_configure_bank(machine, "bank1", 0, 16, &src[0x10000], 0x4000);
 
 	state->layer_enable_reg = 0x30;
 	state->layer_mask_reg[0] = 0x28;
@@ -1197,12 +1196,13 @@ static MACHINE_DRIVER_START( knightsb )
 	MDRV_DRIVER_DATA(cps_state)
 
 	/* basic machine hardware */
-	MDRV_CPU_ADD("maincpu", M68000, XTAL_10MHz )
+	MDRV_CPU_ADD("maincpu", M68000, XTAL_12MHz )
 	MDRV_CPU_PROGRAM_MAP(knightsb_map)
 	MDRV_CPU_VBLANK_INT("screen", cps1_interrupt)
 	MDRV_CPU_ADD("audiocpu", Z80, XTAL_3_727625MHz)
 	MDRV_CPU_PROGRAM_MAP(knightsb_soundmap)
 	MDRV_MACHINE_START(knightsb)
+	MDRV_MACHINE_RESET(fcrash)
 
 	/* video hardware */
 	MDRV_SCREEN_ADD("screen", RASTER)
@@ -1511,14 +1511,6 @@ static DRIVER_INIT( kodb )
 	memory_install_ram(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x904000, 0x907fff, 0, 0, state->bootleg_sprite_ram);
 
 	src[0x0953] = 0x07;	/* fixes sprite ram clearing issue. */
-
-	DRIVER_INIT_CALL(cps1);
-}
-
-static DRIVER_INIT( knightsb )
-{
-	cps_state *state = machine->driver_data<cps_state>();
-	state->bootleg_sprite_ram = (UINT16 *)memory_install_ram(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x991000, 0x993fff, 0, 0, NULL);
 
 	DRIVER_INIT_CALL(cps1);
 }
@@ -1890,6 +1882,47 @@ ROM_START( ffightbla )
 	ROM_COPY( "gfx", 0x000000, 0x000000, 0x8000 )   /* stars */
 ROM_END
 
+ROM_START( knightsb )
+	ROM_REGION( CODE_SIZE, "maincpu", 0 )		/* 68000 code */
+	ROM_LOAD16_BYTE( "5.ic172",    0x00000, 0x40000, CRC(7fd91118) SHA1(d2832b21309a467938891946d7af35d8095787a4) )
+	ROM_LOAD16_BYTE( "3.ic173",    0x00001, 0x40000, CRC(c9c6e720) SHA1(e8a1cd73458b548e88fc49d8f659e0dc33a8e756) )
+	ROM_LOAD16_BYTE( "4.ic176",    0x80000, 0x40000, CRC(af352703) SHA1(7855ac65752203f45af4ef41af8c291540a1c8a8) )
+	ROM_LOAD16_BYTE( "2.ic175",    0x80001, 0x40000, CRC(1eb91343) SHA1(e02cfbbd7689346f14f2e3455ed17e7f0b51bad0) )
+
+	ROM_REGION( 0x400000, "gfx", 0 )		/* bootleg had 4x 1meg MASKroms, these need dumping so that the format is known */
+	ROMX_LOAD( "kr_gfx1.rom",  0x000000, 0x80000, CRC(9e36c1a4) SHA1(772daae74e119371dfb76fde9775bda78a8ba125) , ROM_GROUPWORD | ROM_SKIP(6) )
+	ROMX_LOAD( "kr_gfx3.rom",  0x000002, 0x80000, CRC(c5832cae) SHA1(a188cf401cd3a2909b377d3059f14d22ec3b0643) , ROM_GROUPWORD | ROM_SKIP(6) )
+	ROMX_LOAD( "kr_gfx2.rom",  0x000004, 0x80000, CRC(f095be2d) SHA1(0427d1574062f277a9d04440019d5638b05de561) , ROM_GROUPWORD | ROM_SKIP(6) )
+	ROMX_LOAD( "kr_gfx4.rom",  0x000006, 0x80000, CRC(179dfd96) SHA1(b1844e69da7ab13474da569978d5b47deb8eb2be) , ROM_GROUPWORD | ROM_SKIP(6) )
+	ROMX_LOAD( "kr_gfx5.rom",  0x200000, 0x80000, CRC(1f4298d2) SHA1(4b162a7f649b0bcd676f8ca0c5eee9a1250d6452) , ROM_GROUPWORD | ROM_SKIP(6) )
+	ROMX_LOAD( "kr_gfx7.rom",  0x200002, 0x80000, CRC(37fa8751) SHA1(b88b39d1f08621f15a5620095aef998346fa9891) , ROM_GROUPWORD | ROM_SKIP(6) )
+	ROMX_LOAD( "kr_gfx6.rom",  0x200004, 0x80000, CRC(0200bc3d) SHA1(c900b1be2b4e49b951e5c1e3fd1e19d21b82986e) , ROM_GROUPWORD | ROM_SKIP(6) )
+	ROMX_LOAD( "kr_gfx8.rom",  0x200006, 0x80000, CRC(0bb2b4e7) SHA1(983b800925d58e4aeb4e5105f93ed5faf66d009c) , ROM_GROUPWORD | ROM_SKIP(6) )
+
+	ROM_REGION( 0x50000, "audiocpu", 0 )		/* 64k for the audio CPU (+banks) */
+	ROM_LOAD( "1.ic26",     0x00000, 0x40000, CRC(bd6f9cc1) SHA1(9f33cccef224d2204736a9eae761196866bd6e41) )
+	ROM_RELOAD(             0x10000, 0x40000 )
+ROM_END
+
+ROM_START( knightsb4 )
+	ROM_REGION( CODE_SIZE, "maincpu", 0 )		/* 68000 code */
+	ROM_LOAD16_BYTE( "3.bin",   0x00000, 0x80000, CRC(b818272c) SHA1(680b1539bbeebf26706c9367decce2a8de0144e4) )
+	ROM_LOAD16_BYTE( "2.bin",   0x00001, 0x80000, CRC(b0b9a4c2) SHA1(7d49b260224756303f9c6cdb67e8c531b0f5689f) )
+
+	ROM_REGION( 0x400000, "gfx", 0 )
+	ROMX_LOAD( "kr_gfx1.rom",  0x000000, 0x80000, CRC(9e36c1a4) SHA1(772daae74e119371dfb76fde9775bda78a8ba125) , ROM_GROUPWORD | ROM_SKIP(6) )
+	ROMX_LOAD( "kr_gfx3.rom",  0x000002, 0x80000, CRC(c5832cae) SHA1(a188cf401cd3a2909b377d3059f14d22ec3b0643) , ROM_GROUPWORD | ROM_SKIP(6) )
+	ROMX_LOAD( "kr_gfx2.rom",  0x000004, 0x80000, CRC(f095be2d) SHA1(0427d1574062f277a9d04440019d5638b05de561) , ROM_GROUPWORD | ROM_SKIP(6) )
+	ROMX_LOAD( "kr_gfx4.rom",  0x000006, 0x80000, CRC(179dfd96) SHA1(b1844e69da7ab13474da569978d5b47deb8eb2be) , ROM_GROUPWORD | ROM_SKIP(6) )
+	ROMX_LOAD( "kr_gfx5.rom",  0x200000, 0x80000, CRC(1f4298d2) SHA1(4b162a7f649b0bcd676f8ca0c5eee9a1250d6452) , ROM_GROUPWORD | ROM_SKIP(6) )
+	ROMX_LOAD( "kr_gfx7.rom",  0x200002, 0x80000, CRC(37fa8751) SHA1(b88b39d1f08621f15a5620095aef998346fa9891) , ROM_GROUPWORD | ROM_SKIP(6) )
+	ROMX_LOAD( "kr_gfx6.rom",  0x200004, 0x80000, CRC(0200bc3d) SHA1(c900b1be2b4e49b951e5c1e3fd1e19d21b82986e) , ROM_GROUPWORD | ROM_SKIP(6) )
+	ROMX_LOAD( "kr_gfx8.rom",  0x200006, 0x80000, CRC(0bb2b4e7) SHA1(983b800925d58e4aeb4e5105f93ed5faf66d009c) , ROM_GROUPWORD | ROM_SKIP(6) )
+
+	ROM_REGION( 0x50000, "audiocpu", 0 )
+	ROM_LOAD( "1.bin",	0x00000, 0x40000, CRC(bd6f9cc1) SHA1(9f33cccef224d2204736a9eae761196866bd6e41) )
+	ROM_RELOAD(		0x10000, 0x40000 )
+ROM_END
 
 
 
@@ -1971,28 +2004,6 @@ ROM_START( sf2mdta )
 	ROM_REGION( 0x30000, "audiocpu", 0 )		/* Sound program + samples  */
 	ROM_LOAD( "1.ic28",    0x00000, 0x20000, CRC(d5bee9cc) SHA1(e638cb5ce7a22c18b60296a7defe8b03418da56c) )
 	ROM_RELOAD(            0x10000, 0x20000 )
-ROM_END
-
-ROM_START( knightsb )
-	ROM_REGION( CODE_SIZE, "maincpu", 0 )		/* 68000 code */
-	ROM_LOAD16_BYTE( "3.ic173",    0x00001, 0x40000, CRC(c9c6e720) SHA1(e8a1cd73458b548e88fc49d8f659e0dc33a8e756) )
-	ROM_LOAD16_BYTE( "5.ic172",    0x00000, 0x40000, CRC(7fd91118) SHA1(d2832b21309a467938891946d7af35d8095787a4) )
-	ROM_LOAD16_BYTE( "2.ic175",    0x80001, 0x40000, CRC(1eb91343) SHA1(e02cfbbd7689346f14f2e3455ed17e7f0b51bad0) )
-	ROM_LOAD16_BYTE( "4.ic176",    0x80000, 0x40000, CRC(af352703) SHA1(7855ac65752203f45af4ef41af8c291540a1c8a8) )
-
-	ROM_REGION( 0x400000, "gfx", 0 )		/* bootleg had 4x 1meg MASKroms, these need dumping so that the format is known */
-	ROMX_LOAD( "kr_gfx1.rom",  0x000000, 0x80000, BAD_DUMP CRC(9e36c1a4) SHA1(772daae74e119371dfb76fde9775bda78a8ba125) , ROM_GROUPWORD | ROM_SKIP(6) )
-	ROMX_LOAD( "kr_gfx3.rom",  0x000002, 0x80000, BAD_DUMP CRC(c5832cae) SHA1(a188cf401cd3a2909b377d3059f14d22ec3b0643) , ROM_GROUPWORD | ROM_SKIP(6) )
-	ROMX_LOAD( "kr_gfx2.rom",  0x000004, 0x80000, BAD_DUMP CRC(f095be2d) SHA1(0427d1574062f277a9d04440019d5638b05de561) , ROM_GROUPWORD | ROM_SKIP(6) )
-	ROMX_LOAD( "kr_gfx4.rom",  0x000006, 0x80000, BAD_DUMP CRC(179dfd96) SHA1(b1844e69da7ab13474da569978d5b47deb8eb2be) , ROM_GROUPWORD | ROM_SKIP(6) )
-	ROMX_LOAD( "kr_gfx5.rom",  0x200000, 0x80000, BAD_DUMP CRC(1f4298d2) SHA1(4b162a7f649b0bcd676f8ca0c5eee9a1250d6452) , ROM_GROUPWORD | ROM_SKIP(6) )
-	ROMX_LOAD( "kr_gfx7.rom",  0x200002, 0x80000, BAD_DUMP CRC(37fa8751) SHA1(b88b39d1f08621f15a5620095aef998346fa9891) , ROM_GROUPWORD | ROM_SKIP(6) )
-	ROMX_LOAD( "kr_gfx6.rom",  0x200004, 0x80000, BAD_DUMP CRC(0200bc3d) SHA1(c900b1be2b4e49b951e5c1e3fd1e19d21b82986e) , ROM_GROUPWORD | ROM_SKIP(6) )
-	ROMX_LOAD( "kr_gfx8.rom",  0x200006, 0x80000, BAD_DUMP CRC(0bb2b4e7) SHA1(983b800925d58e4aeb4e5105f93ed5faf66d009c) , ROM_GROUPWORD | ROM_SKIP(6) )
-
-	ROM_REGION( 0x50000, "audiocpu", 0 )		/* 64k for the audio CPU (+banks) */
-	ROM_LOAD( "1.ic26",     0x00000, 0x40000, CRC(bd6f9cc1) SHA1(9f33cccef224d2204736a9eae761196866bd6e41) )
-	ROM_RELOAD(             0x10000, 0x40000 )
 ROM_END
 
 ROM_START( sf2m1 )
@@ -2177,26 +2188,6 @@ ROM_START( slampic )
 	ROM_LOAD( "mb_qa.rom",   0x00000, 0x20000, CRC(e21a03c4) SHA1(98c03fd2c9b6bf8a4fc25a4edca87fff7c3c3819) )
 ROM_END
 
-ROM_START( knightsb4 )
-	ROM_REGION( CODE_SIZE, "maincpu", 0 )		/* 68000 code */
-	ROM_LOAD16_BYTE( "3.bin",   0x00000, 0x80000, VERIFY_OFF )
-	ROM_LOAD16_BYTE( "2.bin",   0x00001, 0x80000, VERIFY_OFF )
-
-	ROM_REGION( 0x400000, "gfx", 0 )
-	ROMX_LOAD( "kr_gfx1.rom",  0x000000, 0x80000, CRC(9e36c1a4) SHA1(772daae74e119371dfb76fde9775bda78a8ba125) , ROM_GROUPWORD | ROM_SKIP(6) )
-	ROMX_LOAD( "kr_gfx3.rom",  0x000002, 0x80000, CRC(c5832cae) SHA1(a188cf401cd3a2909b377d3059f14d22ec3b0643) , ROM_GROUPWORD | ROM_SKIP(6) )
-	ROMX_LOAD( "kr_gfx2.rom",  0x000004, 0x80000, CRC(f095be2d) SHA1(0427d1574062f277a9d04440019d5638b05de561) , ROM_GROUPWORD | ROM_SKIP(6) )
-	ROMX_LOAD( "kr_gfx4.rom",  0x000006, 0x80000, CRC(179dfd96) SHA1(b1844e69da7ab13474da569978d5b47deb8eb2be) , ROM_GROUPWORD | ROM_SKIP(6) )
-	ROMX_LOAD( "kr_gfx5.rom",  0x200000, 0x80000, CRC(1f4298d2) SHA1(4b162a7f649b0bcd676f8ca0c5eee9a1250d6452) , ROM_GROUPWORD | ROM_SKIP(6) )
-	ROMX_LOAD( "kr_gfx7.rom",  0x200002, 0x80000, CRC(37fa8751) SHA1(b88b39d1f08621f15a5620095aef998346fa9891) , ROM_GROUPWORD | ROM_SKIP(6) )
-	ROMX_LOAD( "kr_gfx6.rom",  0x200004, 0x80000, CRC(0200bc3d) SHA1(c900b1be2b4e49b951e5c1e3fd1e19d21b82986e) , ROM_GROUPWORD | ROM_SKIP(6) )
-	ROMX_LOAD( "kr_gfx8.rom",  0x200006, 0x80000, CRC(0bb2b4e7) SHA1(983b800925d58e4aeb4e5105f93ed5faf66d009c) , ROM_GROUPWORD | ROM_SKIP(6) )
-
-	ROM_REGION( 0x50000, "audiocpu", 0 )
-	ROM_LOAD( "1.bin",	0x00000, 0x40000, CRC(bd6f9cc1) SHA1(9f33cccef224d2204736a9eae761196866bd6e41) )
-	ROM_RELOAD(		0x10000, 0x40000 )
-ROM_END
-
 ROM_START( varthb )
 	ROM_REGION( CODE_SIZE, "maincpu", 0 )		/* 68000 code */
 	ROM_LOAD16_BYTE( "2",   0x000000, 0x80000, CRC(2f010023) SHA1(bf4b6c0cd82cf1b86e17d6ea2670110c06e6eabe) )
@@ -2253,6 +2244,10 @@ GAME( 1990,	fcrash,		ffight,		fcrash,		ffight,		fcrash,		ROT0,	"bootleg (Playmar
 GAME( 1990,	ffightbl,	ffight,		fcrash,		ffight,		fcrash,		ROT0,	"bootleg",	"Final Fight (bootleg set 1 with 2XYM2203 + 2XMSM5205, World)", GAME_SUPPORTS_SAVE )
 /* ffightbl - ok */
 GAME( 1990,	ffightbla,	ffight,		fcrash,		ffight,		fcrash,		ROT0,	"bootleg",	"Final Fight (bootleg set 2 with 2XYM2203 + 2XMSM5205, World)", GAME_SUPPORTS_SAVE )
+/* knightsb - sprites are entangled with the front layer. */
+GAME( 1991,	knightsb,	knights,	knightsb,	knights,	dinopic,	ROT0,	"bootleg",	"Knights of the Round (bootleg set 1 with YM2151 + 2xMSM5205, 911127 etc)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )
+/* knightsb4 - like knightsb: sprites are entangled with the front layer. */
+GAME( 1991,	knightsb4,	knights,	knightsb,	knights,	dinopic,	ROT0,	"bootleg",	"Knights of the Round (bootleg set 4 with YM2151 + 2xMSM5205, 911127 etc)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )
 
 
 
@@ -2261,8 +2256,6 @@ GAME( 1990,	ffightbla,	ffight,		fcrash,		ffight,		fcrash,		ROT0,	"bootleg",	"Fin
 
 /* kodb - ok */
 GAME( 1991,   kodb,	  kod,		kodb,		kod,		kodb,     ROT0,   "bootleg (Playmark)", "The King of Dragons (bootleg)", GAME_SUPPORTS_SAVE )
-/* knightsb - sprites are entangled with the front layer. */
-GAME( 1991,   knightsb,	  knights,	knightsb,	knights,	knightsb, ROT0,   "bootleg", "Knights of the Round (bootleg set 1 with YM2151 + 2xMSM5205, 911127 etc)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )
 /* sf2mdt - problem with scrolls */
 GAME( 1992,   sf2mdt,	  sf2ce,	sf2mdt,		sf2mdt,		sf2mdt,   ROT0,   "bootleg", "Street Fighter II': Magic Delta Turbo (bootleg)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE )
 /* sf2mdta - problem with background */
@@ -2279,8 +2272,7 @@ GAME( 1993,   punipic2,   punisher,	punipic,	punisher,	punipic,  ROT0,   "bootle
 GAME( 1993,   punipic3,   punisher,	punipic,	punisher,	punipic3, ROT0,   "bootleg", "The Punisher (bootleg with PIC16c57, set 3)", GAME_IMPERFECT_GRAPHICS | GAME_NO_SOUND | GAME_SUPPORTS_SAVE )
 /* slampic - no sound. A priority problem between sprites and crowd. */
 GAME( 1993,   slampic,	  slammast,	slampic,	slammast,	dinopic,  ROT0,   "bootleg", "Saturday Night Slam Masters (bootleg with PIC16c57)", GAME_IMPERFECT_GRAPHICS | GAME_NO_SOUND | GAME_SUPPORTS_SAVE )
-/* knightsb4 - like knightsb: sprites are entangled with the front layer. */
-GAME( 1991,   knightsb4,  knights,	knightsb,	knights,	knightsb, ROT0,   "bootleg", "Knights of the Round (bootleg set 4 with YM2151 + 2xMSM5205, 911127 etc)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )
 /* varthb - good */
 GAME( 1992,   varthb,	  varth,	varthb,		varth,		dinopic,  ROT270, "bootleg", "Varth: Operation Thunderstorm (bootleg)", GAME_SUPPORTS_SAVE )
+
 
