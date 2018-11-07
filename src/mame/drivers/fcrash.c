@@ -237,22 +237,30 @@ static WRITE16_HANDLER( knightsb_layer_w )
 		case 0x05: state->cps_a_regs[0x14 / 2] = data; break;
 		case 0x06:
 		{
+			UINT16 draw_mask[4] = { 0, 0, 0, 0 };
+
 			switch (data)
 			{
-				case 0x0000:
-				case 0x001f:
-				case 0x00ff: data = 0x06d0; break;
-				case 0x2000: data = 0x06f2; break;
-				case 0xa000: data = 0x24d0; break;
-				case 0xd800: data = 0x12f2; break;
-
-				default: logerror ("Unknown control word = %X\n", data); data = 0x12c0;
+				case 0x0000: data = 0x12c0; break;
+				case 0x001f: data = 0x12c0; draw_mask[1] = 0x03ff; draw_mask[2] = 0x003f; draw_mask[3] = 0x01ff; break;
+				case 0x00ff: data = 0x12c0; draw_mask[1] = 0x7fff; draw_mask[2] = 0x7ff8; draw_mask[3] = 0x00ff; break;
+				case 0x07ff: data = 0x12c0; draw_mask[1] = 0x001f; draw_mask[2] = 0x00ff; draw_mask[3] = 0x07ff; break;
+				case 0x2000: data = 0x06c0; break;
+				case 0x5800: data = 0x12c0; draw_mask[1] = 0xffee; draw_mask[2] = 0x01ff; draw_mask[3] = 0x7800; break;
+				case 0x5f00: data = 0x12c0; draw_mask[1] = 0x03ff; draw_mask[2] = 0x7e00; draw_mask[3] = 0x7f00; break;
+				case 0x80ff: data = 0x1380; draw_mask[1] = 0x7fff; draw_mask[2] = 0x7ff8; draw_mask[3] = 0x00ff; break;
+				case 0x87ff: data = 0x1380; draw_mask[1] = 0x001f; draw_mask[2] = 0x00ff; draw_mask[3] = 0x07ff; break;
+				case 0xa000: data = 0x24c0; break;
+				case 0xd800: data = 0x1380; draw_mask[1] = 0xffee; draw_mask[2] = 0x01ff; draw_mask[3] = 0x7800; break;
+				default: logerror ("Unknown control word = %X\n", data); data = 0x12c0; break;
 			}
+			state->cps_b_regs[state->layer_mask_reg[0] / 2] = draw_mask[0];
+			state->cps_b_regs[state->layer_mask_reg[1] / 2] = draw_mask[1];
+			state->cps_b_regs[state->layer_mask_reg[2] / 2] = draw_mask[2];
+			state->cps_b_regs[state->layer_mask_reg[3] / 2] = draw_mask[3];
+
 			state->cps_b_regs[state->layer_enable_reg / 2] = data; break;
 		}
-		case 0x10: state->cps_b_regs[state->layer_mask_reg[1] / 2] = data; break;
-		case 0x11: state->cps_b_regs[state->layer_mask_reg[2] / 2] = data; break;
-		case 0x12: state->cps_b_regs[state->layer_mask_reg[3] / 2] = data; break;
 	}
 }
 
@@ -1196,7 +1204,7 @@ static MACHINE_DRIVER_START( knightsb )
 	MDRV_DRIVER_DATA(cps_state)
 
 	/* basic machine hardware */
-	MDRV_CPU_ADD("maincpu", M68000, XTAL_12MHz )
+	MDRV_CPU_ADD("maincpu", M68000, XTAL_10MHz )
 	MDRV_CPU_PROGRAM_MAP(knightsb_map)
 	MDRV_CPU_VBLANK_INT("screen", cps1_interrupt)
 	MDRV_CPU_ADD("audiocpu", Z80, XTAL_3_727625MHz)
@@ -2274,5 +2282,4 @@ GAME( 1993,   punipic3,   punisher,	punipic,	punisher,	punipic3, ROT0,   "bootle
 GAME( 1993,   slampic,	  slammast,	slampic,	slammast,	dinopic,  ROT0,   "bootleg", "Saturday Night Slam Masters (bootleg with PIC16c57)", GAME_IMPERFECT_GRAPHICS | GAME_NO_SOUND | GAME_SUPPORTS_SAVE )
 /* varthb - good */
 GAME( 1992,   varthb,	  varth,	varthb,		varth,		dinopic,  ROT270, "bootleg", "Varth: Operation Thunderstorm (bootleg)", GAME_SUPPORTS_SAVE )
-
 
