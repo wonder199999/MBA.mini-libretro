@@ -1365,6 +1365,13 @@ static const struct CPS1config cps1_config_table[] =
 	{"knightsb2",	CPS_B_21_BT4,	mapper_KR63B,	0x36, 0, 0x34, 4 },
 	{"knightsb3",	CPS_B_21_DEF,	mapper_KR63B,	0x36, 0, 0x34 },
 	{"knightsb4",	CPS_B_21_BT4,	mapper_KR63B,	0x36, 0, 0x34 },
+	//
+	{"kod",		CPS_B_21_BT2,	mapper_KD29B,	0x36, 0, 0x34 },
+	{"kodr1",	CPS_B_21_BT2,	mapper_KD29B,	0x36, 0, 0x34 },
+	{"kodu",	CPS_B_21_BT2,	mapper_KD29B,	0x36, 0, 0x34 },
+	{"kodj",	CPS_B_21_BT2,	mapper_KD29B,	0x36, 0, 0x34 },
+	{"kodja",	CPS_B_21_BT2,	mapper_KD29B,	0x36, 0, 0x34 },	/* wrong, this set uses KD22B, still not dumped */
+	{"kodb",	CPS_B_21_BT2,	mapper_KD29B,	0x36, 0, 0x34 },	/* bootleg, doesn't use multiply protection */
 
 
 
@@ -1377,12 +1384,6 @@ static const struct CPS1config cps1_config_table[] =
 
 
 
-
-
-	{"kod",		CPS_B_21_BT2, mapper_KD29B,  0x36, 0, 0x34 },
-	{"kodu",	CPS_B_21_BT2, mapper_KD29B,  0x36, 0, 0x34 },
-	{"kodj",	CPS_B_21_BT2, mapper_KD29B,  0x36, 0, 0x34 },
-	{"kodb",	CPS_B_21_BT2, mapper_KD29B,  0x36, 0, 0x34 },	/* bootleg, doesn't use multiply protection */
 
 	{"msword",	CPS_B_13,     mapper_MS24B },
 	{"mswordr1",	CPS_B_13,     mapper_MS24B },

@@ -193,8 +193,8 @@ const game_driver *const drivers[] =
 //	DRIVER( kodda )
 //	DRIVER( kodh )
 	DRIVER( kodj )			/* 05/08/1991 (c) 1991 (Japan) */
-//	DRIVER( kodja )
-//	DRIVER( kodr1 )
+	DRIVER( kodja )
+	DRIVER( kodr1 )
 	DRIVER( kodu )			/* 10/09/1991 (c) 1991 (US)    */
 	//
 	DRIVER( mbombrd )		/* 06/12/1993 (c) 1993 (World) (CPS1 + QSound) */
