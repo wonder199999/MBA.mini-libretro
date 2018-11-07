@@ -1372,6 +1372,7 @@ static const struct CPS1config cps1_config_table[] =
 	{"kodj",	CPS_B_21_BT2,	mapper_KD29B,	0x36, 0, 0x34 },
 	{"kodja",	CPS_B_21_BT2,	mapper_KD29B,	0x36, 0, 0x34 },	/* wrong, this set uses KD22B, still not dumped */
 	{"kodb",	CPS_B_21_BT2,	mapper_KD29B,	0x36, 0, 0x34 },	/* bootleg, doesn't use multiply protection */
+	{"kodda",	CPS_B_21_DEF,	mapper_KD29B,	0x36, 0, 0x34 },
 
 
 

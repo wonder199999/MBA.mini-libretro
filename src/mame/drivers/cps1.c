@@ -6777,6 +6777,49 @@ ROM_START( kodja )
 	ROM_LOAD( "c632.ic1",     0x0000, 0x0117, CRC(0fbd9270) SHA1(d7e737b20c44d41e29ca94be56114b31934dde81) )
 ROM_END
 
+/* King Of Dragons 910731 ETC Phoenix set */
+ROM_START( kodda )
+	ROM_REGION( CODE_SIZE, "maincpu", 0 )      /* 68000 code */
+	ROM_LOAD16_WORD_SWAP( "8f",  0x00000, 0x80000, CRC(0a6ab826) SHA1(5156737304d3084e03dfb9e11c2a023f4b4da5ad) )
+	ROM_LOAD16_WORD_SWAP( "7f",  0x80000, 0x80000, CRC(9bd7ad4b) SHA1(7bece5d408fd13116bd5518014b632ecc9a2feaa) )
+
+	ROM_REGION( 0x400000, "gfx", 0 )
+	ROMX_LOAD( "kd-5m.4a",	0x000000, 0x80000, CRC(e45b8701) SHA1(604e39e455e81695ee4f899f102d0bcd789cedd0) , ROM_GROUPWORD | ROM_SKIP(6) )  // in "2" socket
+	ROMX_LOAD( "kd-7m.6a",	0x000002, 0x80000, CRC(a7750322) SHA1(3c583496a53cd64edf377db35f7f40f02b59b7e7) , ROM_GROUPWORD | ROM_SKIP(6) )  // in "4" socket
+	ROMX_LOAD( "kd-1m.3a",	0x000004, 0x80000, CRC(5f74bf78) SHA1(b7c43eea9bf77a0fb571dcd53f8be719e6655fd9) , ROM_GROUPWORD | ROM_SKIP(6) )  // in "1" socket
+	ROMX_LOAD( "kdda-7m.6a",0x000006, 0x80000, CRC(0e2cb76f) SHA1(2892caed6bf98378ce01648408fda162a8121ec0) , ROM_GROUPWORD | ROM_SKIP(6) )  // in "3" socket
+	ROMX_LOAD( "kd-6m.4c",	0x200000, 0x80000, CRC(113358f3) SHA1(9d98eafa74a046f65bf3847fe1d88ea1b0c82b0c) , ROM_GROUPWORD | ROM_SKIP(6) )  // in "11" socket
+	ROMX_LOAD( "kd-8m.6c",	0x200002, 0x80000, CRC(38853c44) SHA1(a6e552fb0138a76a7878b90d202904e2b44ae7ec) , ROM_GROUPWORD | ROM_SKIP(6) )  // in "13" socket
+	ROMX_LOAD( "kd-2m.3c",	0x200004, 0x80000, CRC(9ef36604) SHA1(b42ca0a910b65e1e7bb6e7d734e853ce67e821bf) , ROM_GROUPWORD | ROM_SKIP(6) )  // in "10" socket
+	ROMX_LOAD( "kd-4m.5c",	0x200006, 0x80000, CRC(402b9b4f) SHA1(4c11976976eadf1ad293b31b0a4d047d05032b06) , ROM_GROUPWORD | ROM_SKIP(6) )  // in "12" socket
+
+	ROM_REGION( 0x18000, "audiocpu", 0 )	/* 64k for the audio CPU (+banks) */
+	ROM_LOAD( "kd_9.12a",  0x00000, 0x08000, CRC(bac6ec26) SHA1(6cbb6d55660150ae3f5270e023328275ee1bbf50) )
+	ROM_CONTINUE(          0x10000, 0x08000 )
+
+	ROM_REGION( 0x40000, "oki", 0 )		/* Samples */
+	ROM_LOAD( "kd_18.11c", 0x00000, 0x20000, CRC(4c63181d) SHA1(270f27534a95cb0be3ff3f9ca71c502320d8090b) )
+	ROM_LOAD( "kd_19.12c", 0x20000, 0x20000, CRC(92941b80) SHA1(5fa7c2793e6febee54a83042d118ddd4f2b7d127) )
+
+	ROM_REGION( 0x0200, "aboardplds", 0 )
+	ROM_LOAD( "buf1",         0x0000, 0x0117, CRC(eb122de7) SHA1(b26b5bfe258e3e184f069719f9fd008d6b8f6b9b) )
+	ROM_LOAD( "ioa1",         0x0000, 0x0117, CRC(59c7ee3b) SHA1(fbb887c5b4f5cb8df77cec710eaac2985bc482a6) )
+	ROM_LOAD( "prg1",         0x0000, 0x0117, CRC(f1129744) SHA1(a5300f301c1a08a7da768f0773fa0fe3f683b237) )
+	ROM_LOAD( "rom1",         0x0000, 0x0117, CRC(41dc73b9) SHA1(7d4c9f1693c821fbf84e32dd6ef62ddf14967845) )
+	ROM_LOAD( "sou1",         0x0000, 0x0117, CRC(84f4b2fe) SHA1(dcc9e86cc36316fe42eace02d6df75d08bc8bb6d) )
+
+	ROM_REGION( 0x0200, "bboardplds", 0 )
+	ROM_LOAD( "kd29b.1a",     0x0000, 0x0117, NO_DUMP )
+	ROM_LOAD( "iob1.11d",     0x0000, 0x0117, CRC(3abc0700) SHA1(973043aa46ec6d5d1db20dc9d5937005a0f9f6ae) )
+
+	ROM_REGION( 0x0200, "cboardplds", 0 )
+	ROM_LOAD( "iob1.11d",     0x0000, 0x0117, NO_DUMP )
+	ROM_LOAD( "ioc1.ic7",     0x0000, 0x0117, CRC(0d182081) SHA1(475b3d417785da4bc512cce2b274bb00d4cc6792) )
+	ROM_LOAD( "c632.ic1",     0x0000, 0x0117, CRC(0fbd9270) SHA1(d7e737b20c44d41e29ca94be56114b31934dde81) )
+ROM_END
+
+
+
 
 
 
@@ -11396,6 +11439,7 @@ GAME( 1991,	kodr1,		kod,		cps1_10MHz,	kodr1,		cps1,		ROT0,	"Capcom",	"The King o
 GAME( 1991,	kodu,		kod,		cps1_10MHz,	kod,		cps1,		ROT0,	"Capcom",	"The King of Dragons (USA 910910)", GAME_SUPPORTS_SAVE )
 GAME( 1991,	kodj,		kod,		cps1_10MHz,	kod,		cps1,		ROT0,	"Capcom",	"The King of Dragons (Japan 910805, B-Board 90629B-3)", GAME_SUPPORTS_SAVE )
 GAME( 1991,	kodja,		kod,		cps1_10MHz,	kod,		cps1,		ROT0,	"Capcom",	"The King of Dragons (Japan 910805, B-Board 89625B-1)", GAME_SUPPORTS_SAVE )
+GAME( 1991,	kodda,		kod,		cps1_10MHz,	kod,		cps1,		ROT0,	"bootleg",	"The King of Dragons (Phoenix bootleg, ETC 910731)", GAME_SUPPORTS_SAVE )
 
 
 
@@ -11527,5 +11571,4 @@ GAME( 1989, willowuo,	willow,	  cps1_10MHz,	willow,	  cps1,	       ROT0,   "Capc
 GAME( 1989, strideruc,	strider,  cps1_10MHz,	stridrua, cps1,	       ROT0,   "bootleg (Capcom)",   "Strider (USA, B-Board 90629B-3, buggy Street Fighter II conversion)", GAME_SUPPORTS_SAVE )  /* various bugs even on PCB, see rom load */
 GAME( 1993, punisherh,	punisher, qsound,	punisher, punisher,    ROT0,   "Capcom",   "The Punisher (Hispanic 930422)", GAME_SUPPORTS_SAVE )
 GAME( 1992, varthjr,	varth,	  cps1_12MHz,	varth,	  cps1,	       ROT270, "Capcom",   "Varth: Operation Thunderstorm (Japan Resale Ver. 920714)", GAME_SUPPORTS_SAVE )
-
 
