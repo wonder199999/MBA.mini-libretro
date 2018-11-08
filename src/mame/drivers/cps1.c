@@ -338,22 +338,21 @@ static WRITE16_HANDLER( daimakaib_layer_w )
 
 	switch (offset)
 	{
-		case 0x00: state->cps_b_regs[0x0e / 2] = data; break;			/* scroll 1y */
-		case 0x01: state->cps_a_regs[0x0c / 2] = data - 0x40; break;		/* scroll 1x */
-		case 0x02: state->cps_a_regs[0x12 / 2] = data;				/* scroll 2y */
-			   state->cps_a_regs[0x20 / 2] = data; break;			/* row scroll start */
-		case 0x03: state->cps_a_regs[0x10 / 2] = data - 0x40; break;		/* scroll 2x */
-		case 0x04: state->cps_a_regs[0x16 / 2] = data; break;			/* scroll 3y */
-		case 0x05: state->cps_a_regs[0x14 / 2] = data - 0x40; break;		/* scroll 3x */
+		case 0x00: state->cps_b_regs[0x0e / 2] = data; break;						/* scroll 1y */
+		case 0x01: state->cps_a_regs[0x0c / 2] = data - 0x40; break;					/* scroll 1x */
+		case 0x02: state->cps_a_regs[0x12 / 2] = state->cps_a_regs[CPS1_ROWSCROLL_OFFS] = data; break;	/* scroll 2y, row scroll start */
+		case 0x03: state->cps_a_regs[0x10 / 2] = data - 0x40; break;					/* scroll 2x */
+		case 0x04: state->cps_a_regs[0x16 / 2] = data; break;						/* scroll 3y */
+		case 0x05: state->cps_a_regs[0x14 / 2] = data - 0x40; break;					/* scroll 3x */
 		case 0x06:
 		{
 			switch (data)
 			{
-				case 0x0000: data = (1 << 12) | (2 << 8) | (3 << 6); break;
-				case 0x0001: data = (1 << 12) | (3 << 6); break;
-				case 0x0002: data = (3 << 12) | (1 << 6); break;
-				case 0x0006: data = 0x00; break;
-				default: logerror ("Unknown control word = %X\n", data); data = 0x00; break;
+				case 0x0000: data = 0x12c0; break;
+				case 0x0001: data = 0x10c0; break;
+				case 0x0002: data = 0x3040; break;
+				case 0x0006: data = 0x0000; break;
+				default: logerror ("Unknown control word = %X\n", data); data = 0x0000; break;
 			}
 			state->cps_b_regs[0x26 / 2] = data;
 		}
@@ -6818,6 +6817,32 @@ ROM_START( kodda )
 	ROM_LOAD( "c632.ic1",     0x0000, 0x0117, CRC(0fbd9270) SHA1(d7e737b20c44d41e29ca94be56114b31934dde81) )
 ROM_END
 
+ROM_START( kodh )
+	ROM_REGION( CODE_SIZE, "maincpu", 0 )      /* 68000 code */
+	ROM_LOAD16_WORD_SWAP( "23.096",  0x00000, 0x80000, CRC(daf89cfb) SHA1(de0944884d0e64c6b0410294d25308201508afbe) )
+	ROM_LOAD16_WORD_SWAP( "22.096",  0x80000, 0x80000, CRC(c83e19d8) SHA1(8c342818a1c5337ad4b259700e184972f821aca4) )
+
+	ROM_REGION( 0x400000, "gfx", 0 )
+	ROMX_LOAD( "1.096", 0x000000, 0x80000, CRC(09261881) SHA1(e65abce3d39224c2c94673900291a210c1d949cb) , ROM_GROUPWORD | ROM_SKIP(6) )
+	ROMX_LOAD( "2.096", 0x000002, 0x80000, CRC(bc121ff2) SHA1(1f75f93652bb6c521bc538e7c2d10920a7897aa2) , ROM_GROUPWORD | ROM_SKIP(6) )
+	ROMX_LOAD( "3.096", 0x000004, 0x80000, CRC(f463ae22) SHA1(f8bc17814d38f3693a2a8dc64cc44e1f4fe3102c) , ROM_GROUPWORD | ROM_SKIP(6) )
+	ROMX_LOAD( "4.096", 0x000006, 0x80000, CRC(01308733) SHA1(8de29e7063d03493f197cee7a4e4edff3eee8e36) , ROM_GROUPWORD | ROM_SKIP(6) )
+	ROMX_LOAD( "5.096", 0x200000, 0x80000, CRC(113358f3) SHA1(9d98eafa74a046f65bf3847fe1d88ea1b0c82b0c) , ROM_GROUPWORD | ROM_SKIP(6) )
+	ROMX_LOAD( "6.096", 0x200002, 0x80000, CRC(38853c44) SHA1(a6e552fb0138a76a7878b90d202904e2b44ae7ec) , ROM_GROUPWORD | ROM_SKIP(6) )
+	ROMX_LOAD( "7.096", 0x200004, 0x80000, CRC(c7ab4704) SHA1(180852c4d59359c2094feb8ad1f05d70eafe6c55) , ROM_GROUPWORD | ROM_SKIP(6) )
+	ROMX_LOAD( "8.096", 0x200006, 0x80000, CRC(402b9b4f) SHA1(4c11976976eadf1ad293b31b0a4d047d05032b06) , ROM_GROUPWORD | ROM_SKIP(6) )
+
+	ROM_REGION( 0x18000, "audiocpu", 0 )	/* 64k for the audio CPU (+banks) */
+	ROM_LOAD( "9.096",  0x00000, 0x08000, CRC(f5514510) SHA1(07e9c836adf9ef2f7e7729e99015f71e3b5f16e0) )
+	ROM_CONTINUE(	    0x10000, 0x08000 )
+
+	ROM_REGION( 0x40000, "oki", 0 )		/* Samples */
+	ROM_LOAD( "18.096", 0x00000, 0x20000, CRC(69ecb2c8) SHA1(fadf266b6b20bd6329a3e638918c5a3106413476) )
+	ROM_LOAD( "19.096", 0x20000, 0x20000, CRC(02d851c1) SHA1(c959a6fc3e7d893557f319debae91f28471f4be2) )
+ROM_END
+
+
+
 
 
 
@@ -11440,6 +11465,7 @@ GAME( 1991,	kodu,		kod,		cps1_10MHz,	kod,		cps1,		ROT0,	"Capcom",	"The King of D
 GAME( 1991,	kodj,		kod,		cps1_10MHz,	kod,		cps1,		ROT0,	"Capcom",	"The King of Dragons (Japan 910805, B-Board 90629B-3)", GAME_SUPPORTS_SAVE )
 GAME( 1991,	kodja,		kod,		cps1_10MHz,	kod,		cps1,		ROT0,	"Capcom",	"The King of Dragons (Japan 910805, B-Board 89625B-1)", GAME_SUPPORTS_SAVE )
 GAME( 1991,	kodda,		kod,		cps1_10MHz,	kod,		cps1,		ROT0,	"bootleg",	"The King of Dragons (Phoenix bootleg, ETC 910731)", GAME_SUPPORTS_SAVE )
+GAME( 2002,	kodh,		kod,		cps1_10MHz,	kod,		cps1,		ROT0,	"bootleg",	"The King of Dragons (hack)", GAME_SUPPORTS_SAVE )
 
 
 

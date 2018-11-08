@@ -191,7 +191,7 @@ const game_driver *const drivers[] =
 	DRIVER( kod )			/* 11/07/1991 (c) 1991 (World) */
 	DRIVER( kodb )			/* bootleg */
 	DRIVER( kodda )			/* bootleg */
-//	DRIVER( kodh )
+	DRIVER( kodh )			/* hack */
 	DRIVER( kodj )			/* 05/08/1991 (c) 1991 (Japan) */
 	DRIVER( kodja )
 	DRIVER( kodr1 )

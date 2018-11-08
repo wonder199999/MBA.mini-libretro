@@ -1515,8 +1515,10 @@ static DRIVER_INIT( kodb )
 	memory_install_read16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x800018, 0x80001f, 0, 0, cps1_dsw_r);
 	memory_install_write16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x800180, 0x800187, 0, 0, cps1_soundlatch_w);
 	memory_install_write16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x980000, 0x98002f, 0, 0, kodb_layer_w);
+	/* the original game alternates between 2 sprite ram areas to achieve flashing sprites - the bootleg doesn't do the write to the register to achieve this
+	mapping both sprite ram areas to the same bootleg sprite ram - similar to how sf2mdt works */
 	state->bootleg_sprite_ram = (UINT16 *)memory_install_ram(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x900000, 0x903fff, 0, 0, NULL);
-	memory_install_ram(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x904000, 0x907fff, 0, 0, state->bootleg_sprite_ram);
+	memory_install_ram(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x904000, 0x907fff, 0, 0, state->bootleg_sprite_ram);	/* both of these need to be mapped */
 
 	src[0x0953] = 0x07;	/* fixes sprite ram clearing issue. */
 
@@ -1890,6 +1892,49 @@ ROM_START( ffightbla )
 	ROM_COPY( "gfx", 0x000000, 0x000000, 0x8000 )   /* stars */
 ROM_END
 
+/*
+
+CPU:
+
+1x MC68000P12 ic65 main
+1x Z0840006PSC ic1 sound
+1x YM2151 ic29 sound
+1x YM3012 ic30 sound
+2x LM324 ic15,ic31 sound
+2x M5205 ic184,ic185 sound
+1x TDA2003 ic14 sound
+1x oscillator 24.000000MHz (close to main)
+1x oscillator 29.821000MHz (close to sound)
+
+ROMs
+
+5x M27C2001 1,2,3,4,5 dumped
+4x maskrom KA,KB,KC,KD not dumped
+
+RAMs:
+
+4x KM62256ALP ic112,ic113,ic168,ic170
+1x SYC6116L ic24
+1x MCM2018AN ic7,ic8,ic51,ic56,ic70,ic71,ic77,ic78
+
+PLDs:
+
+1x TPC1020AFN ic116 read protected
+3x GAL20V8A ic120,ic121,ic169 read protected
+3x GAL16V8A ic7,ic72,ic80 read protected
+
+Note:
+
+1x JAMMA edge connector
+2x 10 legs connector
+1x trimmer (volume)
+3x 8x2 switches DIP
+
+*/
+/* bootleg */
+/* FIXME - GFX ROMs are wrong, copied from the other version */
+/* ROMs missing are KA.IC91 KB.IC92 KC.IC93 KD.IC94 */
+
 ROM_START( knightsb )
 	ROM_REGION( CODE_SIZE, "maincpu", 0 )		/* 68000 code */
 	ROM_LOAD16_BYTE( "5.ic172",    0x00000, 0x40000, CRC(7fd91118) SHA1(d2832b21309a467938891946d7af35d8095787a4) )
@@ -1932,15 +1977,39 @@ ROM_START( knightsb4 )
 	ROM_RELOAD(		0x10000, 0x40000 )
 ROM_END
 
+/*
+CPU
 
+1x TS68000CP12 (main)
+1x TPC1020AFN-084C
+1x Z8400BB1-Z80CPU (sound)
+1x YM2151 (sound)
+1x YM3012A (sound)
+1x OKI-M6295 (sound)
+2x LM324N (sound)
+1x TDA2003 (sound)
+1x oscillator 10.0 MHz
+1x oscillator 22.1184 MHz
 
+ROMs
 
+1x AM27C512 (1)(sound)
+1x AM27C020 (2)(sound)
+2x AM27C040 (3,4)(main)
+1x Am27C040 (bp)(gfx)
+7x maskrom (ai,bi,ci,di,ap,cp,dp)(gfx)
+1x GAL20V8A (not dumped)
+3x GAL16V8A (not dumped)
+1x PALCE20V8H (not dumped)
+1x GAL20V8S (not dumped)
 
+Note
 
+1x JAMMA edge connector
+1x trimmer (volume)
+3x 8 switches dip
 
-
-
-
+*/
 ROM_START( kodb )
 	ROM_REGION( CODE_SIZE, "maincpu", 0 )		/* 68000 code */
 	ROM_LOAD16_BYTE( "3.ic172",    0x00000, 0x080000, CRC(036dd74c) SHA1(489344e56863429e86b4c362b82d89819c1d6afb) )
@@ -1966,6 +2035,15 @@ ROM_START( kodb )
 	ROM_REGION( 0x40000, "oki", 0 )			/* Samples */
 	ROM_LOAD( "2.ic19",      0x00000, 0x40000, CRC(a2db1575) SHA1(1a4a29e4b045af50700adf1665697feab12cc234) )
 ROM_END
+
+
+
+
+
+
+
+
+
 
 ROM_START( sf2mdt )
 	ROM_REGION( CODE_SIZE, "maincpu", 0 )		/* 68000 code */
@@ -2252,18 +2330,18 @@ GAME( 1990,	fcrash,		ffight,		fcrash,		ffight,		fcrash,		ROT0,	"bootleg (Playmar
 GAME( 1990,	ffightbl,	ffight,		fcrash,		ffight,		fcrash,		ROT0,	"bootleg",	"Final Fight (bootleg set 1 with 2XYM2203 + 2XMSM5205, World)", GAME_SUPPORTS_SAVE )
 /* ffightbl - ok */
 GAME( 1990,	ffightbla,	ffight,		fcrash,		ffight,		fcrash,		ROT0,	"bootleg",	"Final Fight (bootleg set 2 with 2XYM2203 + 2XMSM5205, World)", GAME_SUPPORTS_SAVE )
-/* knightsb - sprites are entangled with the front layer. */
-GAME( 1991,	knightsb,	knights,	knightsb,	knights,	dinopic,	ROT0,	"bootleg",	"Knights of the Round (bootleg set 1 with YM2151 + 2xMSM5205, 911127 etc)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )
-/* knightsb4 - like knightsb: sprites are entangled with the front layer. */
-GAME( 1991,	knightsb4,	knights,	knightsb,	knights,	dinopic,	ROT0,	"bootleg",	"Knights of the Round (bootleg set 4 with YM2151 + 2xMSM5205, 911127 etc)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )
-
-
-
-
-
-
+/* knightsb - ok */
+GAME( 1991,	knightsb,	knights,	knightsb,	knights,	dinopic,	ROT0,	"bootleg",	"Knights of the Round (bootleg set 1 with YM2151 + 2xMSM5205, 911127 etc)", GAME_SUPPORTS_SAVE )
+/* knightsb4 - ok! */
+GAME( 1991,	knightsb4,	knights,	knightsb,	knights,	dinopic,	ROT0,	"bootleg",	"Knights of the Round (bootleg set 4 with YM2151 + 2xMSM5205, 911127 etc)", GAME_SUPPORTS_SAVE )
 /* kodb - ok */
-GAME( 1991,   kodb,	  kod,		kodb,		kod,		kodb,     ROT0,   "bootleg (Playmark)", "The King of Dragons (bootleg)", GAME_SUPPORTS_SAVE )
+GAME( 1991,	kodb,		kod,		kodb,		kod,		kodb,		ROT0,	"bootleg (Playmark)",	"The King of Dragons (bootleg, 910731 etc)", GAME_SUPPORTS_SAVE )
+
+
+
+
+
+
 /* sf2mdt - problem with scrolls */
 GAME( 1992,   sf2mdt,	  sf2ce,	sf2mdt,		sf2mdt,		sf2mdt,   ROT0,   "bootleg", "Street Fighter II': Magic Delta Turbo (bootleg)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE )
 /* sf2mdta - problem with background */
