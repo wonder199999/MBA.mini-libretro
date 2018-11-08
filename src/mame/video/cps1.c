@@ -1374,6 +1374,9 @@ static const struct CPS1config cps1_config_table[] =
 	{"kodb",	CPS_B_21_BT2,	mapper_KD29B,	0x36, 0, 0x34 },	/* bootleg, doesn't use multiply protection */
 	{"kodda",	CPS_B_21_DEF,	mapper_KD29B,	0x36, 0, 0x34 },
 	{"kodh",	CPS_B_21_DEF,	mapper_KD29B,	0x36, 0, 0x34 },
+	//
+	{"mbombrd",	CPS_B_21_QS5,	mapper_MB63B },
+	{"mbombrdj",	CPS_B_21_QS5,	mapper_MB63B },
 
 
 
@@ -1436,8 +1439,6 @@ static const struct CPS1config cps1_config_table[] =
 	{"qtono2j",	CPS_B_21_DEF, mapper_qtono2j,0x36, 0x38, 0x34 },	/* (ports 36, 38, 34 probably leftover input code from another game) */
 
 	{"mbomberj",	CPS_B_21_QS4, mapper_MB63B },
-	{"mbombrd",	CPS_B_21_QS5, mapper_MB63B },
-	{"mbombrdj",	CPS_B_21_QS5, mapper_MB63B },
 
 	{"sf2ce",	CPS_B_21_DEF, mapper_S9263B, 0x36 },
 	{"sf2ceua",	CPS_B_21_DEF, mapper_S9263B, 0x36 },
