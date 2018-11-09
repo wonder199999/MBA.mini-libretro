@@ -1385,7 +1385,12 @@ static const struct CPS1config cps1_config_table[] =
 	{"mercs",	CPS_B_12,	mapper_O224B,	0x36, 0, 0x34 },
 	{"mercsu",	CPS_B_12,	mapper_O224B,	0x36, 0, 0x34 },
 	{"mercsur1",	CPS_B_12,	mapper_O224B,	0x36, 0, 0x34 },
-	{"mercsj",	CPS_B_12,	mapper_O224B,	0x36, 0, 0x34 },	// wrong, this set uses O222B, still non dumped
+	{"mercsj",	CPS_B_12,	mapper_O224B,	0x36, 0, 0x34 },	/* wrong, this set uses O222B, still non dumped */
+	//
+	{"msword",	CPS_B_13,	mapper_MS24B },
+	{"mswordr1",	CPS_B_13,	mapper_MS24B },
+	{"mswordu",	CPS_B_13,	mapper_MS24B },
+	{"mswordj",	CPS_B_13,	mapper_MS24B },				/* wrong, this set uses MS22B, still non dumped */
 
 
 
@@ -1401,10 +1406,7 @@ static const struct CPS1config cps1_config_table[] =
 
 
 
-	{"msword",	CPS_B_13,     mapper_MS24B },
-	{"mswordr1",	CPS_B_13,     mapper_MS24B },
-	{"mswordu",	CPS_B_13,     mapper_MS24B },
-	{"mswordj",	CPS_B_13,     mapper_MS24B },	// wrong, this set uses MS22B, still non dumped
+
 
 	{"mtwins",	CPS_B_14,     mapper_CK24B },
 	{"chikij",	CPS_B_14,     mapper_CK24B },	// PAL used could be CK22B
