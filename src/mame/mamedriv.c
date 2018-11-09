@@ -201,7 +201,7 @@ const game_driver *const drivers[] =
 	DRIVER( mbombrdj )		/* 06/12/1993 (c) 1993 (Japan) (CPS1 + QSound) */
 	//
 	DRIVER( megaman )		/* 06/10/1995 (c) 1995 (Asia)  */
-//	DRIVER( megamana )
+	DRIVER( megamana )
 	DRIVER( rockmanj )		/* 22/09/1995 (c) 1995 (Japan) */
 	//
 	DRIVER( mercs )			/* 02/03/1990 (c) 1990 (World) */

@@ -1377,6 +1377,11 @@ static const struct CPS1config cps1_config_table[] =
 	//
 	{"mbombrd",	CPS_B_21_QS5,	mapper_MB63B },
 	{"mbombrdj",	CPS_B_21_QS5,	mapper_MB63B },
+	//
+	{"megaman",	CPS_B_21_DEF,	mapper_RCM63B },
+	{"megamana",	CPS_B_21_DEF,	mapper_RCM63B },
+	{"rockmanj",	CPS_B_21_DEF,	mapper_RCM63B },
+
 
 
 
@@ -1394,9 +1399,6 @@ static const struct CPS1config cps1_config_table[] =
 	{"mswordr1",	CPS_B_13,     mapper_MS24B },
 	{"mswordu",	CPS_B_13,     mapper_MS24B },
 	{"mswordj",	CPS_B_13,     mapper_MS24B },	// wrong, this set uses MS22B, still non dumped
-
-	{"megaman",	CPS_B_21_DEF, mapper_RCM63B },
-	{"rockmanj",	CPS_B_21_DEF, mapper_RCM63B },
 
 	{"mtwins",	CPS_B_14,     mapper_CK24B },
 	{"chikij",	CPS_B_14,     mapper_CK24B },	// PAL used could be CK22B
