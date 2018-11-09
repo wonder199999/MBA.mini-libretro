@@ -207,8 +207,7 @@ const game_driver *const drivers[] =
 	DRIVER( mercs )			/* 02/03/1990 (c) 1990 (World) */
 	DRIVER( mercsj )		/* 02/03/1990 (c) 1990 (Japan) */
 	DRIVER( mercsu )		/* 02/03/1990 (c) 1990 (US)    */
-/* obsolete */		DRIVER( mercsua )		/* 08/06/1990 (c) 1990 (US)    */
-//	DRIVER( mercsur1 )		/* 02/03/1990 (c) 1990 (US)    */
+	DRIVER( mercsur1 )		/* 02/03/1990 (c) 1990 (US)    */
 	//
 	DRIVER( msword )		/* 25/07/1990 (c) 1990 (World) */
 	DRIVER( mswordr1 )		/* 23/06/1990 (c) 1990 (World) */

@@ -1381,6 +1381,12 @@ static const struct CPS1config cps1_config_table[] =
 	{"megaman",	CPS_B_21_DEF,	mapper_RCM63B },
 	{"megamana",	CPS_B_21_DEF,	mapper_RCM63B },
 	{"rockmanj",	CPS_B_21_DEF,	mapper_RCM63B },
+	//
+	{"mercs",	CPS_B_12,	mapper_O224B,	0x36, 0, 0x34 },
+	{"mercsu",	CPS_B_12,	mapper_O224B,	0x36, 0, 0x34 },
+	{"mercsur1",	CPS_B_12,	mapper_O224B,	0x36, 0, 0x34 },
+	{"mercsj",	CPS_B_12,	mapper_O224B,	0x36, 0, 0x34 },	// wrong, this set uses O222B, still non dumped
+
 
 
 
@@ -1402,11 +1408,6 @@ static const struct CPS1config cps1_config_table[] =
 
 	{"mtwins",	CPS_B_14,     mapper_CK24B },
 	{"chikij",	CPS_B_14,     mapper_CK24B },	// PAL used could be CK22B
-
-	{"mercs",	CPS_B_12,     mapper_O224B,  0x36, 0, 0x34 },
-	{"mercsu",	CPS_B_12,     mapper_O224B,  0x36, 0, 0x34 },
-	{"mercsua",	CPS_B_12,     mapper_O224B,  0x36, 0, 0x34 },
-	{"mercsj",	CPS_B_12,     mapper_O224B,  0x36, 0, 0x34 },	// wrong, this set uses O222B, still non dumped
 
 	{"pnickj",	CPS_B_21_DEF, mapper_PKB10B },
 
