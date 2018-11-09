@@ -1391,6 +1391,15 @@ static const struct CPS1config cps1_config_table[] =
 	{"mswordr1",	CPS_B_13,	mapper_MS24B },
 	{"mswordu",	CPS_B_13,	mapper_MS24B },
 	{"mswordj",	CPS_B_13,	mapper_MS24B },				/* wrong, this set uses MS22B, still non dumped */
+	//
+	{"mtwins",	CPS_B_14,	mapper_CK24B },
+	{"chikij",	CPS_B_14,	mapper_CK24B },				/* PAL used could be CK22B */
+	//
+	{"nemo",	CPS_B_15,	mapper_NM24B },
+	{"nemoj",	CPS_B_15,	mapper_NM24B },				/* wrong, this set uses NM22B, still non dumped */
+	{"nemor1",	CPS_B_15,	mapper_NM24B },
+	//
+	{"pnickj",	CPS_B_21_DEF,	mapper_PKB10B },
 
 
 
@@ -1408,18 +1417,14 @@ static const struct CPS1config cps1_config_table[] =
 
 
 
-	{"mtwins",	CPS_B_14,     mapper_CK24B },
-	{"chikij",	CPS_B_14,     mapper_CK24B },	// PAL used could be CK22B
 
-	{"pnickj",	CPS_B_21_DEF, mapper_PKB10B },
+
+
+
 
 	{"slammast",	CPS_B_21_QS4, mapper_MB63B },
 	{"slammastu",	CPS_B_21_QS4, mapper_MB63B },
 	{"slampic",	CPS_B_21_QS4, mapper_MB63B },
-
-	{"nemo",	CPS_B_15,     mapper_NM24B },
-	{"nemoj",	CPS_B_15,     mapper_NM24B },	// wrong, this set uses NM22B, still non dumped
-	{"nemor1",	CPS_B_15,     mapper_NM24B },
 
 	{"pang3",	CPS_B_21_DEF, mapper_pang3 },	/* EEPROM port is among the CPS registers (handled by DRIVER_INIT) */	// should use one of these three CP1B1F,CP1B8K,CP1B9KA still not dumped
 	{"pang3n",	CPS_B_21_DEF, mapper_pang3 },	/* EEPROM port is among the CPS registers (handled by DRIVER_INIT) */	// should use one of these three CP1B1F,CP1B8K,CP1B9KA still not dumped
