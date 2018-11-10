@@ -237,10 +237,10 @@ const game_driver *const drivers[] =
 	DRIVER( qadjr )			/* 21/09/1994 - Quiz & Dragons (Japan Resale Ver.) */
 	//
 	DRIVER( punisher )		/* 22/04/1993 (c) 1993 (World) (CPS1 + QSound) */
+//	DRIVER( punisherb )		/* bootleg */
 	DRIVER( punipic )		/* bootleg set 1 */
 	DRIVER( punipic2 )		/* bootleg set 2 */
 	DRIVER( punipic3 )		/* bootleg set 3 */
-//	DRIVER( punisherb )		/* bootleg */
 	DRIVER( punisherbz )		/* chinese bootleg */
 	DRIVER( punisherh )		/* 22/04/1993 (c) The Punisher (Hispanic) */
 	DRIVER( punisherj )		/* 22/04/1993 (c) 1993 (Japan) (CPS1 + QSound) */

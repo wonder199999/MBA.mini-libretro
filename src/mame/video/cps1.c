@@ -1289,6 +1289,10 @@ static const struct CPS1config cps1_config_table[] =
 	{"3wondersb",	CPS_B_21_BT1,	mapper_RT24B,	0x36, 0, 0, 0x88 },	/* same as 3wonders except some registers are hard wired rather than written to */
 	{"3wondersh",	HACK_B_2,	mapper_RT24B },				/* one port is changed from 3wonders, and no protection */
 	//
+	{"unsquad",	CPS_B_11,	mapper_AR24B },
+	{"area88",	CPS_B_11,	mapper_AR22B },				/* equivalent to AR24B */
+	{"area88r",	CPS_B_21_DEF,	mapper_AR22B },
+	//
 	{"captcomm",	CPS_B_21_BT3,	mapper_CC63B,	0x36, 0x38, 0x34 },
 	{"captcommr1",	CPS_B_21_BT3,	mapper_CC63B,	0x36, 0x38, 0x34 },
 	{"captcommu",	CPS_B_21_BT3,	mapper_CC63B,	0x36, 0x38, 0x34 },
@@ -1413,6 +1417,16 @@ static const struct CPS1config cps1_config_table[] =
 	//
 	{"qad",		CPS_B_21_BT7,	mapper_QD22B,	0x36 },			/* TODO: layer enable (port 36 probably leftover input code from another game) */
 	{"qadjr",	CPS_B_21_DEF,	mapper_qadj,	0x36, 0x38, 0x34 },	/* (ports 36, 38, 34 probably leftover input code from another game) */
+	//
+	{"punisher",	CPS_B_21_QS3,	mapper_PS63B },
+	{"punisheru",	CPS_B_21_QS3,	mapper_PS63B },
+	{"punisherh",	CPS_B_21_QS3,	mapper_PS63B },
+	{"punisherj",	CPS_B_21_QS3,	mapper_PS63B },
+	{"punisherbz",	CPS_B_21_DEF,	mapper_PS63B },				/* Chinese bootleg */
+	{"punipic",	CPS_B_21_QS3,	mapper_PS63B },
+	{"punipic2",	CPS_B_21_QS3,	mapper_PS63B },
+	{"punipic3",	CPS_B_21_QS3,	mapper_PS63B },
+
 
 
 
@@ -1436,16 +1450,6 @@ static const struct CPS1config cps1_config_table[] =
 	{"slammast",	CPS_B_21_QS4, mapper_MB63B },
 	{"slammastu",	CPS_B_21_QS4, mapper_MB63B },
 	{"slampic",	CPS_B_21_QS4, mapper_MB63B },
-
-	{"punisher",	CPS_B_21_QS3, mapper_PS63B },
-	{"punisheru",	CPS_B_21_QS3, mapper_PS63B },
-	{"punisherj",	CPS_B_21_QS3, mapper_PS63B },
-	{"punipic",	CPS_B_21_QS3, mapper_PS63B },
-	{"punipic2",	CPS_B_21_QS3, mapper_PS63B },
-	{"punipic3",	CPS_B_21_QS3, mapper_PS63B },
-	{"punisherbz",	CPS_B_21_DEF, mapper_PS63B },	/* Chinese bootleg */
-	{"punisherh",	CPS_B_21_QS3, mapper_PS63B },
-
 	{"mbomberj",	CPS_B_21_QS4, mapper_MB63B },
 
 	{"sf2ce",	CPS_B_21_DEF, mapper_S9263B, 0x36 },
@@ -1500,10 +1504,6 @@ static const struct CPS1config cps1_config_table[] =
 	{"striderj",	CPS_B_01,     mapper_ST22B },	// equivalent to ST24M1
 	{"striderjr",	CPS_B_01,     mapper_ST24M1 },	// wrong, PAL used could be STH63B, check CPS_B
 	{"strideruc",	CPS_B_17,     mapper_ST24M1 },
-
-	{"unsquad",	CPS_B_11,     mapper_AR24B },
-	{"area88",	CPS_B_11,     mapper_AR22B },	// equivalent to AR24B
-	{"area88r",	CPS_B_21_DEF, mapper_AR22B },
 
 	{"varth",	CPS_B_04,     mapper_VA63B },	/* CPSB test has been patched out (60=0008) register is also written to, possibly leftover from development */	// wrong, this set uses VA24B, still non dumped
 	{"varthr1",	CPS_B_04,     mapper_VA63B },	/* CPSB test has been patched out (60=0008) register is also written to, possibly leftover from development */	// wrong, this set uses VA24B, still non dumped
