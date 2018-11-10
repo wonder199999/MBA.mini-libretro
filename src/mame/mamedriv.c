@@ -231,6 +231,11 @@ const game_driver *const drivers[] =
 	//
 	DRIVER( pnickj )		/* 08/06/1994 (c) 1994 Compile + Capcom license (Japan) not listed on Capcom's site */
 	//
+	DRIVER( qtono2j )		/* 23/01/1995 (c) 1995 (Japan) */
+	//
+	DRIVER( qad )			/* 01/07/1992 (c) 1992 (US)    */
+	DRIVER( qadjr )			/* 21/09/1994 - Quiz & Dragons (Japan Resale Ver.) */
+	//
 	DRIVER( punisher )		/* 22/04/1993 (c) 1993 (World) (CPS1 + QSound) */
 	DRIVER( punipic )		/* bootleg set 1 */
 	DRIVER( punipic2 )		/* bootleg set 2 */
@@ -240,12 +245,6 @@ const game_driver *const drivers[] =
 	DRIVER( punisherh )		/* 22/04/1993 (c) The Punisher (Hispanic) */
 	DRIVER( punisherj )		/* 22/04/1993 (c) 1993 (Japan) (CPS1 + QSound) */
 	DRIVER( punisheru )		/* 22/04/1993 (c) 1993 (US)    (CPS1 + QSound) */
-	//
-	DRIVER( qad )			/* 01/07/1992 (c) 1992 (US)    */
-/* obsolete */			DRIVER( qadj )			/* 21/09/1994 (c) 1994 (Japan) */
-//	DRIVER( qadjr )			/* 21/09/1994 - Quiz & Dragons (Japan Resale Ver.) */
-	//
-	DRIVER( qtono2j )		/* 23/01/1995 (c) 1995 (Japan) */
 	//
 	DRIVER( sfzch )			/* 20/10/1995 (c) CPS Changer version - Street Fighter Zero(Japan) */
 	//

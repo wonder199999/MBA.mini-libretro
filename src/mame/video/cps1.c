@@ -1401,16 +1401,18 @@ static const struct CPS1config cps1_config_table[] =
 	//
 	{"pnickj",	CPS_B_21_DEF,	mapper_PKB10B },
 	//
-	{"pang3",	CPS_B_21_DEF,	mapper_pang3 },	/* EEPROM port is among the CPS registers (handled by DRIVER_INIT) */	// should use one of these three CP1B1F,CP1B8K,CP1B9KA still not dumped
+	{"qtono2j",	CPS_B_21_DEF,	mapper_qtono2j,	0x36, 0x38, 0x34 },	/* (ports 36, 38, 34 probably leftover input code from another game) */
+	//
+	{"pang3",	CPS_B_21_DEF,	mapper_pang3 },				/* EEPROM port is among the CPS registers (handled by DRIVER_INIT) */	// should use one of these three CP1B1F,CP1B8K,CP1B9KA still not dumped
 	{"pang3r1",	CPS_B_21_DEF,	mapper_pang3 },
-	{"pang3r1a",	CPS_B_21_DEF,	mapper_pang3 },	/* EEPROM port is among the CPS registers (handled by DRIVER_INIT) */	// should use one of these three CP1B1F,CP1B8K,CP1B9KA still not dumped
-	{"pang3j",	CPS_B_21_DEF,	mapper_pang3 },	/* EEPROM port is among the CPS registers (handled by DRIVER_INIT) */	// should use one of these three CP1B1F,CP1B8K,CP1B9KA still not dumped
+	{"pang3r1a",	CPS_B_21_DEF,	mapper_pang3 },				/* EEPROM port is among the CPS registers (handled by DRIVER_INIT) */	// should use one of these three CP1B1F,CP1B8K,CP1B9KA still not dumped
+	{"pang3j",	CPS_B_21_DEF,	mapper_pang3 },				/* EEPROM port is among the CPS registers (handled by DRIVER_INIT) */	// should use one of these three CP1B1F,CP1B8K,CP1B9KA still not dumped
 	{"pang3b",	CPS_B_21_DEF,	mapper_pang3 },
 	{"pang3b2",	CPS_B_04,	mapper_pang3 },
 	{"pang3b3",	CPS_B_04,	mapper_pang3 },
-
-
-
+	//
+	{"qad",		CPS_B_21_BT7,	mapper_QD22B,	0x36 },			/* TODO: layer enable (port 36 probably leftover input code from another game) */
+	{"qadjr",	CPS_B_21_DEF,	mapper_qadj,	0x36, 0x38, 0x34 },	/* (ports 36, 38, 34 probably leftover input code from another game) */
 
 
 
@@ -1443,11 +1445,6 @@ static const struct CPS1config cps1_config_table[] =
 	{"punipic3",	CPS_B_21_QS3, mapper_PS63B },
 	{"punisherbz",	CPS_B_21_DEF, mapper_PS63B },	/* Chinese bootleg */
 	{"punisherh",	CPS_B_21_QS3, mapper_PS63B },
-
-	{"qad",		CPS_B_21_BT7, mapper_QD22B,  0x36 },	/* TODO: layer enable (port 36 probably leftover input code from another game) */
-	{"qadj",	CPS_B_21_DEF, mapper_qadj,   0x36, 0x38, 0x34 },	/* (ports 36, 38, 34 probably leftover input code from another game) */
-
-	{"qtono2j",	CPS_B_21_DEF, mapper_qtono2j,0x36, 0x38, 0x34 },	/* (ports 36, 38, 34 probably leftover input code from another game) */
 
 	{"mbomberj",	CPS_B_21_QS4, mapper_MB63B },
 
