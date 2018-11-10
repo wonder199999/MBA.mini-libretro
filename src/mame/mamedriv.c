@@ -225,10 +225,9 @@ const game_driver *const drivers[] =
 	DRIVER( pang3b )		/* bootleg set 1, based on Euro 950511 */
 	DRIVER( pang3b2 )		/* bootleg set 2, based on Euro 950511 */
 	DRIVER( pang3b3 )		/* bootleg set 3, based on Euro 950601 */
-/* obsolete */			DRIVER( pang3n )	/* 11/05/1995 (c) 1995 Mitchell (Euro) not listed on Capcom's site */
 	DRIVER( pang3j )		/* 11/05/1995 (c) 1995 Mitchell (Japan) not listed on Capcom's site */
 	DRIVER( pang3r1 )		/* 11/05/1995 (c) 1995 Mitchell (Euro) */
-//	DRIVER( pang3r1a )		/* 11/05/1995 (c) 1995 Mitchell (Euro, alt) */
+	DRIVER( pang3r1a )		/* 11/05/1995 (c) 1995 Mitchell (Euro, alt) */
 	//
 	DRIVER( pnickj )		/* 08/06/1994 (c) 1994 Compile + Capcom license (Japan) not listed on Capcom's site */
 	//
