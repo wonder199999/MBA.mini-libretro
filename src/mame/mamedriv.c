@@ -408,8 +408,6 @@ const game_driver *const drivers[] =
 /* obsolete */	DRIVER( sf2m7 )			/* hack */
 /* obsolete */	DRIVER( sf2m1 )			/* hack */
 /* obsolete */	DRIVER( sf2m3 )			/* hack */
-/* obsolete */	DRIVER( sfach )			/* 27/07/1995 (c) CPS Changer version - Street Fighter Alpha: Warriors' Dreams(USA) */
-/* obsolete */	DRIVER( sfzbch )		/* 27/07/1995 (c) CPS Changer version - Street Fighter Zero (Brazil) */
 
 
 	/* ************************* */

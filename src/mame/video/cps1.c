@@ -1426,6 +1426,13 @@ static const struct CPS1config cps1_config_table[] =
 	{"punipic",	CPS_B_21_QS3,	mapper_PS63B },
 	{"punipic2",	CPS_B_21_QS3,	mapper_PS63B },
 	{"punipic3",	CPS_B_21_QS3,	mapper_PS63B },
+	//
+	{"slammast",	CPS_B_21_QS4,	mapper_MB63B },
+	{"slammastu",	CPS_B_21_QS4,	mapper_MB63B },
+	{"mbomberj",	CPS_B_21_QS4,	mapper_MB63B },
+	{"slampic",	CPS_B_21_QS4,	mapper_MB63B },
+	//
+	{"sfzch",	CPS_B_21_DEF,	mapper_sfzch },
 
 
 
@@ -1444,13 +1451,6 @@ static const struct CPS1config cps1_config_table[] =
 
 
 
-
-
-
-	{"slammast",	CPS_B_21_QS4, mapper_MB63B },
-	{"slammastu",	CPS_B_21_QS4, mapper_MB63B },
-	{"slampic",	CPS_B_21_QS4, mapper_MB63B },
-	{"mbomberj",	CPS_B_21_QS4, mapper_MB63B },
 
 	{"sf2ce",	CPS_B_21_DEF, mapper_S9263B, 0x36 },
 	{"sf2ceua",	CPS_B_21_DEF, mapper_S9263B, 0x36 },
@@ -1523,9 +1523,6 @@ static const struct CPS1config cps1_config_table[] =
 	{"willowuo",	CPS_B_03,     mapper_WL24B },
 
 	/* New added */
-	{"sfzch",	CPS_B_21_DEF, mapper_sfzch },
-	{"sfach",	CPS_B_21_DEF, mapper_sfzch },	/* wrong ??? */
-	{"sfzbch",	CPS_B_21_DEF, mapper_sfzch },	/* wrong ??? */
 	{"wofch",	CPS_B_21_DEF, mapper_TK263B },
 	{"wofchdx",	CPS_B_21_DEF, mapper_TK263B },
 	{"wofhfh",	CPS_B_21_DEF, mapper_TK263B, 0x36 },
