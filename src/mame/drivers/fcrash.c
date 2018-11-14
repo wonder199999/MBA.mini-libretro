@@ -2079,6 +2079,39 @@ ROM_START( slampic )
 	ROM_LOAD( "mb_qa.5k",   0x00000, 0x20000, CRC(e21a03c4) SHA1(98c03fd2c9b6bf8a4fc25a4edca87fff7c3c3819) )
 ROM_END
 
+ROM_START( varthb )
+	ROM_REGION( CODE_SIZE, "maincpu", 0 )		/* 68000 code */
+	ROM_LOAD16_BYTE( "2",   0x000000, 0x80000, CRC(2f010023) SHA1(bf4b6c0cd82cf1b86e17d6ea2670110c06e6eabe) )
+	ROM_LOAD16_BYTE( "1",   0x000001, 0x80000, CRC(0861dff3) SHA1(bf6dfe18ecaeaa1bbea09267014891c4a4a07943) )
+	ROM_LOAD16_BYTE( "4",   0x100000, 0x10000, CRC(aa51e43b) SHA1(46b9dab844c55b50a47d048e5bb114911773699c) )
+	ROM_LOAD16_BYTE( "3",   0x100001, 0x10000, CRC(f7e4f2f0) SHA1(2ce4eadb2d6a0e0d5745323eff2c899950ad4d3b) )
+
+	ROM_REGION( 0x200000, "gfx", 0 )
+	ROMX_LOAD( "14",  0x000000, 0x40000, CRC(7ca73780) SHA1(26909db32f84157cd05719e5d1e715e76636d292) , ROM_SKIP(7) )
+	ROMX_LOAD( "13",  0x000001, 0x40000, CRC(9fb11869) SHA1(a434fb0b588f934aaa68139495e1212a63ccf162) , ROM_SKIP(7) )
+	ROMX_LOAD( "12",  0x000002, 0x40000, CRC(afeba416) SHA1(e722c65ea2e2bac3251c32208899484aa5ef6ad2) , ROM_SKIP(7) )
+	ROMX_LOAD( "11",  0x000003, 0x40000, CRC(9eef3507) SHA1(ae03064ca5681fbdc43a34c54aaac11c8467428b) , ROM_SKIP(7) )
+	ROMX_LOAD( "10",  0x000004, 0x40000, CRC(eeec6183) SHA1(40dc9c86e90d7c1a2ad600c195fe387180d95fd4) , ROM_SKIP(7) )
+	ROMX_LOAD( "9",   0x000005, 0x40000, CRC(0e94f718) SHA1(249534f2323abcdb24099d0abc24c229c699ba94) , ROM_SKIP(7) )
+	ROMX_LOAD( "8",   0x000006, 0x40000, CRC(c4ddc5b4) SHA1(79c2a42a664e387932b7804e7a80f5753338c3b0) , ROM_SKIP(7) )
+	ROMX_LOAD( "7",   0x000007, 0x40000, CRC(8941ca12) SHA1(5ad5d47b8614c2899d05c65dc3b74947d4bac561) , ROM_SKIP(7) )
+
+	ROM_REGION( 0x18000, "audiocpu", 0 )		/* 64k for the audio CPU (+banks) */
+	ROM_LOAD( "6",    0x00000, 0x08000, CRC(7a99446e) SHA1(ca027f41e3e58be5abc33ad7380746658cb5380a) )
+	ROM_CONTINUE(           0x10000, 0x08000 )
+
+	ROM_REGION( 0x40000, "oki", 0 )			/* Samples */
+	ROM_LOAD( "5",    0x00000, 0x40000, CRC(1547e595) SHA1(27f47b1afd9700afd9e8167d7e4e2888be34a9e5) )
+
+	ROM_REGION( 0x1000, "pals", 0 )
+	ROM_LOAD_OPTIONAL( "varth1.bin",    0x00000, 0x157, CRC(4c6a0d99) SHA1(081a307ef38675de178dd6221e6c4e55a5bfbd87) )
+	ROM_LOAD_OPTIONAL( "varth2.bin",    0x00200, 0x157, NO_DUMP )		// Registered
+	ROM_LOAD_OPTIONAL( "varth3.bin",    0x00400, 0x157, NO_DUMP )		// Registered
+//	ROM_LOAD_OPTIONAL( "varth4.bin",    0x00600, 0x117, CRC(53317bf6) SHA1(f7b8f8b2c40429a517e3be63e5aed9573972ddfb) )
+	ROM_LOAD_OPTIONAL( "varth4.bin",    0x00600, 0x117, NO_DUMP )
+	ROM_LOAD_OPTIONAL( "varth5.bin",    0x00800, 0x157, NO_DUMP )		// Registered
+	ROM_LOAD_OPTIONAL( "varth6.bin",    0x00a00, 0x157, NO_DUMP )		// Registered
+ROM_END
 
 
 
@@ -2274,39 +2307,6 @@ ROM_START( punipic3 )
 	ROM_REGION( 0x200000, "oki", ROMREGION_ERASE00 )
 ROM_END
 
-ROM_START( varthb )
-	ROM_REGION( CODE_SIZE, "maincpu", 0 )		/* 68000 code */
-	ROM_LOAD16_BYTE( "2",   0x000000, 0x80000, CRC(2f010023) SHA1(bf4b6c0cd82cf1b86e17d6ea2670110c06e6eabe) )
-	ROM_LOAD16_BYTE( "1",   0x000001, 0x80000, CRC(0861dff3) SHA1(bf6dfe18ecaeaa1bbea09267014891c4a4a07943) )
-	ROM_LOAD16_BYTE( "4",   0x100000, 0x10000, CRC(aa51e43b) SHA1(46b9dab844c55b50a47d048e5bb114911773699c) )
-	ROM_LOAD16_BYTE( "3",   0x100001, 0x10000, CRC(f7e4f2f0) SHA1(2ce4eadb2d6a0e0d5745323eff2c899950ad4d3b) )
-
-	ROM_REGION( 0x200000, "gfx", 0 )
-	ROMX_LOAD( "14",  0x000000, 0x40000, CRC(7ca73780) SHA1(26909db32f84157cd05719e5d1e715e76636d292) , ROM_SKIP(7) )
-	ROMX_LOAD( "13",  0x000001, 0x40000, CRC(9fb11869) SHA1(a434fb0b588f934aaa68139495e1212a63ccf162) , ROM_SKIP(7) )
-	ROMX_LOAD( "12",  0x000002, 0x40000, CRC(afeba416) SHA1(e722c65ea2e2bac3251c32208899484aa5ef6ad2) , ROM_SKIP(7) )
-	ROMX_LOAD( "11",  0x000003, 0x40000, CRC(9eef3507) SHA1(ae03064ca5681fbdc43a34c54aaac11c8467428b) , ROM_SKIP(7) )
-	ROMX_LOAD( "10",  0x000004, 0x40000, CRC(eeec6183) SHA1(40dc9c86e90d7c1a2ad600c195fe387180d95fd4) , ROM_SKIP(7) )
-	ROMX_LOAD( "9",   0x000005, 0x40000, CRC(0e94f718) SHA1(249534f2323abcdb24099d0abc24c229c699ba94) , ROM_SKIP(7) )
-	ROMX_LOAD( "8",   0x000006, 0x40000, CRC(c4ddc5b4) SHA1(79c2a42a664e387932b7804e7a80f5753338c3b0) , ROM_SKIP(7) )
-	ROMX_LOAD( "7",   0x000007, 0x40000, CRC(8941ca12) SHA1(5ad5d47b8614c2899d05c65dc3b74947d4bac561) , ROM_SKIP(7) )
-
-	ROM_REGION( 0x18000, "audiocpu", 0 )		/* 64k for the audio CPU (+banks) */
-	ROM_LOAD( "6",    0x00000, 0x08000, CRC(7a99446e) SHA1(ca027f41e3e58be5abc33ad7380746658cb5380a) )
-	ROM_CONTINUE(           0x10000, 0x08000 )
-
-	ROM_REGION( 0x40000, "oki", 0 )			/* Samples */
-	ROM_LOAD( "5",    0x00000, 0x40000, CRC(1547e595) SHA1(27f47b1afd9700afd9e8167d7e4e2888be34a9e5) )
-
-	ROM_REGION( 0x1000, "pals", 0 )
-	ROM_LOAD_OPTIONAL( "varth1.bin",    0x00000, 0x157, CRC(4c6a0d99) SHA1(081a307ef38675de178dd6221e6c4e55a5bfbd87) )
-	ROM_LOAD_OPTIONAL( "varth2.bin",    0x00200, 0x157, NO_DUMP )		// Registered
-	ROM_LOAD_OPTIONAL( "varth3.bin",    0x00400, 0x157, NO_DUMP )		// Registered
-	ROM_LOAD_OPTIONAL( "varth4.bin",    0x00600, 0x117, CRC(53317bf6) SHA1(f7b8f8b2c40429a517e3be63e5aed9573972ddfb) )
-	ROM_LOAD_OPTIONAL( "varth5.bin",    0x00800, 0x157, NO_DUMP )		// Registered
-	ROM_LOAD_OPTIONAL( "varth6.bin",    0x00a00, 0x157, NO_DUMP )		// Registered
-ROM_END
-
 
 
 /*
@@ -2337,7 +2337,9 @@ GAME( 1991,	knightsb4,	knights,	knightsb,	knights,	dinopic,	ROT0,	"bootleg",	"Kn
 /* kodb - ok */
 GAME( 1991,	kodb,		kod,		kodb,		kod,		kodb,		ROT0,	"bootleg (Playmark)",	"The King of Dragons (bootleg, 910731 etc)", GAME_SUPPORTS_SAVE )
 /* slampic - no sound. A priority problem between sprites and crowd. */
-GAME( 1993,	slampic,	slammast,	slampic,	slammast,	dinopic,	ROT0,	"bootleg", "Saturday Night Slam Masters (bootleg with PIC16c57)", GAME_IMPERFECT_GRAPHICS | GAME_NO_SOUND | GAME_SUPPORTS_SAVE )
+GAME( 1993,	slampic,	slammast,	slampic,	slammast,	dinopic,	ROT0,	"bootleg",	"Saturday Night Slam Masters (bootleg with PIC16c57)", GAME_IMPERFECT_GRAPHICS | GAME_NO_SOUND | GAME_SUPPORTS_SAVE )
+/* varthb - lost bit sprites */
+GAME( 1992,	varthb,		varth,		varthb,		varth,		dinopic,	ROT270,	"bootleg",	"Varth: Operation Thunderstorm (bootleg)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )
 
 
 
@@ -2358,7 +2360,5 @@ GAME( 1993,   punipic,    punisher,	punipic,	punisher,	punipic,  ROT0,   "bootle
 GAME( 1993,   punipic2,   punisher,	punipic,	punisher,	punipic,  ROT0,   "bootleg", "The Punisher (bootleg with PIC16c57, set 2)", GAME_NO_SOUND | GAME_SUPPORTS_SAVE )
 /* punipic3 - same as punipic, and doors are missing. */
 GAME( 1993,   punipic3,   punisher,	punipic,	punisher,	punipic3, ROT0,   "bootleg", "The Punisher (bootleg with PIC16c57, set 3)", GAME_IMPERFECT_GRAPHICS | GAME_NO_SOUND | GAME_SUPPORTS_SAVE )
-/* varthb - good */
-GAME( 1992,   varthb,	  varth,	varthb,		varth,		dinopic,  ROT270, "bootleg", "Varth: Operation Thunderstorm (bootleg)", GAME_SUPPORTS_SAVE )
 
 
