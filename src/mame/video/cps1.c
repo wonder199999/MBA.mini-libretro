@@ -1439,7 +1439,11 @@ static const struct CPS1config cps1_config_table[] =
 	{"striderj",	CPS_B_01,	mapper_ST22B },				/* equivalent to ST24M1 */
 	{"striderjr",	CPS_B_01,	mapper_ST24M1 },			/* wrong, PAL used could be STH63B, check CPS_B */
 	{"strideruc",	CPS_B_17,	mapper_ST24M1 },
-
+	//
+	{"willow",	CPS_B_03,	mapper_WL24B },
+	{"willowj",	CPS_B_03,	mapper_WL24B },				/* wrong, this set uses WL22B, still non dumped */
+	{"willowu",	CPS_B_03,	mapper_WL24B },
+	{"willowuo",	CPS_B_03,	mapper_WL24B },
 
 
 
@@ -1515,11 +1519,6 @@ static const struct CPS1config cps1_config_table[] =
 	{"wofu",	CPS_B_21_QS1, mapper_TK263B },
 	{"wofj",	CPS_B_21_QS1, mapper_TK263B },
 	{"wofhfb",	CPS_B_21_DEF, mapper_TK263B, 0x36 },	/* Chinese bootleg */
-
-	{"willow",	CPS_B_03,     mapper_WL24B },
-	{"willowj",	CPS_B_03,     mapper_WL24B },	// wrong, this set uses WL22B, still non dumped
-	{"willowu",	CPS_B_03,     mapper_WL24B },
-	{"willowuo",	CPS_B_03,     mapper_WL24B },
 
 	/* New added */
 	{"wofch",	CPS_B_21_DEF, mapper_TK263B },
