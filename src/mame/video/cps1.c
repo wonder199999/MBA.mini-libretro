@@ -1433,7 +1433,12 @@ static const struct CPS1config cps1_config_table[] =
 	{"slampic",	CPS_B_21_QS4,	mapper_MB63B },
 	//
 	{"sfzch",	CPS_B_21_DEF,	mapper_sfzch },
-
+	//
+	{"strider",	CPS_B_01,	mapper_ST24M1 },
+	{"striderua",	CPS_B_01,	mapper_ST24M1 },			/* wrong, this set uses ST24B2, still non dumped */
+	{"striderj",	CPS_B_01,	mapper_ST22B },				/* equivalent to ST24M1 */
+	{"striderjr",	CPS_B_01,	mapper_ST24M1 },			/* wrong, PAL used could be STH63B, check CPS_B */
+	{"strideruc",	CPS_B_17,	mapper_ST24M1 },
 
 
 
@@ -1498,12 +1503,6 @@ static const struct CPS1config cps1_config_table[] =
 	{"sf2jc",	CPS_B_12,     mapper_STF29,  0x36 },
 	{"sf2qp1",	CPS_B_17,     mapper_STF29,  0x36 },
 	{"sf2thndr",	CPS_B_17,     mapper_STF29,  0x36 },
-
-	{"strider",	CPS_B_01,     mapper_ST24M1 },
-	{"striderua",	CPS_B_01,     mapper_ST24M1 },	// wrong, this set uses ST24B2, still non dumped
-	{"striderj",	CPS_B_01,     mapper_ST22B },	// equivalent to ST24M1
-	{"striderjr",	CPS_B_01,     mapper_ST24M1 },	// wrong, PAL used could be STH63B, check CPS_B
-	{"strideruc",	CPS_B_17,     mapper_ST24M1 },
 
 	{"varth",	CPS_B_04,     mapper_VA63B },	/* CPSB test has been patched out (60=0008) register is also written to, possibly leftover from development */	// wrong, this set uses VA24B, still non dumped
 	{"varthr1",	CPS_B_04,     mapper_VA63B },	/* CPSB test has been patched out (60=0008) register is also written to, possibly leftover from development */	// wrong, this set uses VA24B, still non dumped
