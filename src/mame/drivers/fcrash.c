@@ -333,6 +333,22 @@ static WRITE16_HANDLER( varthb_layer_w )
 		state->cps_a_regs[0x06 / 2] = data;
 }
 
+static WRITE16_HANDLER( varthb_layer2_w )
+{
+	cps_state *state = space->machine->driver_data<cps_state>();
+	switch (offset)
+	{
+		case 0x00: state->cps_a_regs[0x0e / 2] = data; break;
+		case 0x01: state->cps_a_regs[0x0c / 2] = data; break;
+		case 0x02: state->cps_a_regs[0x12 / 2] = data; break;
+		case 0x03: state->cps_a_regs[0x10 / 2] = data; break;
+		case 0x04: state->cps_a_regs[0x16 / 2] = data; break;
+		case 0x05: state->cps_a_regs[0x14 / 2] = data; break;
+		case 0x06: break;
+		default: logerror("Unknown layer cmd %X\n", offset << 1);
+	}
+}
+
 
 /* ---  RENDER HANDLER  --- */
 static void bootleg_update_transmasks( running_machine *machine )
@@ -660,7 +676,7 @@ static ADDRESS_MAP_START( varthb_map, ADDRESS_SPACE_PROGRAM, 16 )
 	AM_RANGE(0x800100, 0x80013f) AM_WRITE(cps1_cps_a_w) AM_BASE_MEMBER(cps_state, cps_a_regs)
 	AM_RANGE(0x800140, 0x80017f) AM_READWRITE(cps1_cps_b_r, cps1_cps_b_w) AM_BASE_MEMBER(cps_state, cps_b_regs)
 	AM_RANGE(0x800188, 0x800189) AM_WRITE(varthb_layer_w)
-	AM_RANGE(0x980000, 0x98000b) AM_WRITE(dinopic_layer_w)
+	AM_RANGE(0x980000, 0x98000f) AM_WRITE(varthb_layer2_w)
 	AM_RANGE(0x900000, 0x92ffff) AM_RAM_WRITE(cps1_gfxram_w) AM_BASE_SIZE_MEMBER(cps_state, gfxram, gfxram_size)
 	AM_RANGE(0xff0000, 0xffffff) AM_RAM
 ADDRESS_MAP_END
@@ -1065,18 +1081,6 @@ static MACHINE_START( varthb )
 
 	UINT8 *src = memory_region(machine, "audiocpu");
 	memory_configure_bank(machine, "bank1", 0, 8, &src[0x10000], 0x4000);
-
-	state->layer_enable_reg = 0x2e;
-	state->layer_mask_reg[0] = 0x26;
-	state->layer_mask_reg[1] = 0x30;
-	state->layer_mask_reg[2] = 0x28;
-	state->layer_mask_reg[3] = 0x32;
-	state->layer_scroll1x_offset = 0x40;
-	state->layer_scroll2x_offset = 0x40;
-	state->layer_scroll3x_offset = 0x40;
-	state->sprite_base = 0x1000;
-	state->sprite_list_end_marker = 0x8000;
-	state->sprite_x_offset = 0x00;
 }
 
 /* *********************************************** FCRASH */
@@ -1470,7 +1474,7 @@ static MACHINE_DRIVER_START( varthb )
 	MDRV_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
 	MDRV_SCREEN_SIZE(64*8, 32*8)
 	MDRV_SCREEN_VISIBLE_AREA(8*8, (64-8)*8-1, 2*8, 30*8-1 )
-	MDRV_VIDEO_UPDATE(bootleg_updatescreen)
+	MDRV_VIDEO_UPDATE(cps1)
 	MDRV_VIDEO_EOF(cps1)
 	MDRV_GFXDECODE(cps1)
 	MDRV_PALETTE_LENGTH(0xc00)
@@ -2098,21 +2102,14 @@ ROM_START( varthb )
 
 	ROM_REGION( 0x18000, "audiocpu", 0 )		/* 64k for the audio CPU (+banks) */
 	ROM_LOAD( "6",    0x00000, 0x08000, CRC(7a99446e) SHA1(ca027f41e3e58be5abc33ad7380746658cb5380a) )
-	ROM_CONTINUE(           0x10000, 0x08000 )
+	ROM_CONTINUE(	  0x10000, 0x08000 )
 
 	ROM_REGION( 0x40000, "oki", 0 )			/* Samples */
 	ROM_LOAD( "5",    0x00000, 0x40000, CRC(1547e595) SHA1(27f47b1afd9700afd9e8167d7e4e2888be34a9e5) )
 
-	ROM_REGION( 0x1000, "pals", 0 )
+	ROM_REGION( 0x200, "pals", 0 )
 	ROM_LOAD_OPTIONAL( "varth1.bin",    0x00000, 0x157, CRC(4c6a0d99) SHA1(081a307ef38675de178dd6221e6c4e55a5bfbd87) )
-	ROM_LOAD_OPTIONAL( "varth2.bin",    0x00200, 0x157, NO_DUMP )		// Registered
-	ROM_LOAD_OPTIONAL( "varth3.bin",    0x00400, 0x157, NO_DUMP )		// Registered
-//	ROM_LOAD_OPTIONAL( "varth4.bin",    0x00600, 0x117, CRC(53317bf6) SHA1(f7b8f8b2c40429a517e3be63e5aed9573972ddfb) )
-	ROM_LOAD_OPTIONAL( "varth4.bin",    0x00600, 0x117, NO_DUMP )
-	ROM_LOAD_OPTIONAL( "varth5.bin",    0x00800, 0x157, NO_DUMP )		// Registered
-	ROM_LOAD_OPTIONAL( "varth6.bin",    0x00a00, 0x157, NO_DUMP )		// Registered
 ROM_END
-
 
 
 
@@ -2338,8 +2335,8 @@ GAME( 1991,	knightsb4,	knights,	knightsb,	knights,	dinopic,	ROT0,	"bootleg",	"Kn
 GAME( 1991,	kodb,		kod,		kodb,		kod,		kodb,		ROT0,	"bootleg (Playmark)",	"The King of Dragons (bootleg, 910731 etc)", GAME_SUPPORTS_SAVE )
 /* slampic - no sound. A priority problem between sprites and crowd. */
 GAME( 1993,	slampic,	slammast,	slampic,	slammast,	dinopic,	ROT0,	"bootleg",	"Saturday Night Slam Masters (bootleg with PIC16c57)", GAME_IMPERFECT_GRAPHICS | GAME_NO_SOUND | GAME_SUPPORTS_SAVE )
-/* varthb - lost bit sprites */
-GAME( 1992,	varthb,		varth,		varthb,		varth,		dinopic,	ROT270,	"bootleg",	"Varth: Operation Thunderstorm (bootleg)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )
+/* varthb - OK */
+GAME( 1992,	varthb,		varth,		varthb,		varth,		dinopic,	ROT270,	"bootleg",	"Varth: Operation Thunderstorm (bootleg)", GAME_SUPPORTS_SAVE )
 
 
 

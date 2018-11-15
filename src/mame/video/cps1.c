@@ -1322,7 +1322,7 @@ static const struct CPS1config cps1_config_table[] =
 	{"dinopic3",	CPS_B_21_QS2,	mapper_CD63B },
 	{"dinopic4",	CPS_B_21_QS2,	mapper_CD63B },
 	{"dinot",	CPS_B_21_DEF,	mapper_CD63B,	0x36 },
-	{"dinotpic",	CPS_B_21_QS2,	mapper_CD63B,	0, 0, 0, 0x0F },
+	{"dinotpic",	CPS_B_21_QS2,	mapper_CD63B,	0, 0, 0, 0x0D },
 	//
 	{"dynwar",	CPS_B_02,	mapper_TK22B },				/* wrong, this set uses TK24B1, dumped but equations still not added */
 	{"dynwara",	CPS_B_02,	mapper_TK22B },
@@ -1450,6 +1450,7 @@ static const struct CPS1config cps1_config_table[] =
 	{"varthu",	CPS_B_04,	mapper_VA63B },				/* CPSB test has been patched out (60=0008) register is also written to, possibly leftover from development */
 	{"varthj",	CPS_B_21_BT5,	mapper_VA22B },				/* CPSB test has been patched out (72=0001) register is also written to, possibly leftover from development */
 	{"varthjr",	CPS_B_21_BT5,	mapper_VA22B },
+	{"varthb",	CPS_B_04,	mapper_VA63B,	0, 0, 0, 0x0F },
 
 
 
@@ -1894,10 +1895,15 @@ void cps1_get_video_base( running_machine *machine )
 			scroll2xoff = -0x0b;
 			scroll3xoff = -0x0c;
 		break;
-		case 0x0F:
+		case 0x0D:
 			scroll1xoff = -0x40;
 			scroll2xoff = -0x40;
 			scroll3xoff = -0x40;
+		break;
+		case 0x0F:
+			scroll1xoff = 0xffc0;
+			scroll2xoff = 0xffc0;
+			scroll3xoff = 0xffc0;
 		break;
 		case 0x88:
 			scroll1xoff = 0x04;
@@ -2773,7 +2779,6 @@ VIDEO_UPDATE( cps1 )
 
 	if (state->cps_version == 1)
 	{
-//		if ((state->game_config->bootleg_kludge >> 7) & 0x01)			/* - fixed 3wondersb */
 		if (state->game_config->bootleg_kludge == 0x88)				/* - fixed 3wondersb */
 			cps1_build_palette(screen->machine, cps1_base(screen->machine, CPS1_PALETTE_BASE, state->palette_align));
 
