@@ -479,7 +479,7 @@ The games seem to use them to mark platforms, kill zones and no-go areas.
 #define HACK_B_1      	  -1,     -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,	0x14, {0x12, 0x10, 0x0e, 0x0c}, 0x0a, {0x0e, 0x0e, 0x0e, 0x30, 0x30}
 #define	HACK_B_2	  -1,	  -1, 0x0e, 0x0c, 0x0a, 0x08, 0x06, 0x04, 0x02, 0x28, {0x26, 0x24, 0x22, 0x20}, 0x22, {0x20, 0x04, 0x08, 0x12, 0x12}
 #define HACK_H_5	  -1, 0x0000,		__not_applicable__,		0x26, {0x28, 0x2a, 0x2c, 0x2e}, 0x30, {0x40, 0x40, 0x40, 0x00, 0x00}	/* for daimakaib */
-
+#define HACK_SF_JB     	  -1,     -1,		__not_applicable__,		0x30, {0x2e, 0x2c, 0x2a, 0x28}, 0x26, {0x02, 0x04, 0x08, 0x00, 0x00}
 
 
 /*	CPS_B_21_DEF is CPS-B-21 at default settings (no battery)
@@ -1454,6 +1454,12 @@ static const struct CPS1config cps1_config_table[] =
 	//
 	{"wofch",	CPS_B_21_DEF,	mapper_TK263B },
 	{"wofchdx",	CPS_B_21_DEF,	mapper_TK263B },
+	//
+	{"sf2hf",	CPS_B_21_DEF,	mapper_S9263B,	0x36 },
+	{"sf2hfu",	CPS_B_21_DEF,	mapper_S9263B,	0x36 },
+	{"sf2hfj",	CPS_B_21_DEF,	mapper_S9263B,	0x36 },
+	{"sf2hfjb",	HACK_SF_JB,	mapper_S9263B,	0x36, 0, 0, 1 },
+	{"sf2hfjb2",	HACK_SF_JB,	mapper_S9263B,	0x36, 0, 0, 1 },
 
 
 
@@ -1495,10 +1501,6 @@ static const struct CPS1config cps1_config_table[] =
 	{"sf2m3",	HACK_B_1,     mapper_S9263B, 0x00, 0, 0, 2 },
 	{"sf2amf",	CPS_B_21_DEF, mapper_S9263B, 0x36, 0, 0, 1 },
 	{"sf2ceuab3",	HACK_B_1,     mapper_S9263B, 0x00, 0, 0, 2 },
-
-	{"sf2hf",	CPS_B_21_DEF, mapper_S9263B, 0x36 },
-	{"sf2hfu",	CPS_B_21_DEF, mapper_S9263B, 0x36 },
-	{"sf2hfj",	CPS_B_21_DEF, mapper_S9263B, 0x36 },
 
 	{"sf2",		CPS_B_11,     mapper_STF29,  0x36 },
 	{"sf2eb",	CPS_B_17,     mapper_STF29,  0x36 },

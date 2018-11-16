@@ -303,8 +303,8 @@ const game_driver *const drivers[] =
 	//
 	DRIVER( sf2hf )			/* 09/12/1992 (c) 1992 (World) */
 	DRIVER( sf2hfj )		/* 09/12/1992 (c) 1992 (Japan) */
-//	DRIVER( sf2hfjb )		/* 09/12/1992 (c) 1992 (Japan) */
-//	DRIVER( sf2hfjb2 )		/* 09/12/1992 (c) 1992 (Japan) */
+	DRIVER( sf2hfjb )		/* 09/12/1992 (c) 1992 (Japan) */
+	DRIVER( sf2hfjb2 )		/* 09/12/1992 (c) 1992 (Japan) */
 	DRIVER( sf2hfu )		/* 09/12/1992 (c) 1992 (US)    */
 	//
 	DRIVER( sf2ce )			/* 13/03/1992 (c) 1992 (World) */
