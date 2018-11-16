@@ -1077,7 +1077,6 @@ static MACHINE_START( slampic )
 static MACHINE_START( varthb )
 {
 	MACHINE_START_CALL( common );
-	cps_state *state = machine->driver_data<cps_state>();
 
 	UINT8 *src = memory_region(machine, "audiocpu");
 	memory_configure_bank(machine, "bank1", 0, 8, &src[0x10000], 0x4000);

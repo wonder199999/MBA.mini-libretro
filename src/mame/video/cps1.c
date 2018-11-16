@@ -1451,6 +1451,9 @@ static const struct CPS1config cps1_config_table[] =
 	{"varthj",	CPS_B_21_BT5,	mapper_VA22B },				/* CPSB test has been patched out (72=0001) register is also written to, possibly leftover from development */
 	{"varthjr",	CPS_B_21_BT5,	mapper_VA22B },
 	{"varthb",	CPS_B_04,	mapper_VA63B,	0, 0, 0, 0x0F },
+	//
+	{"wofch",	CPS_B_21_DEF,	mapper_TK263B },
+	{"wofchdx",	CPS_B_21_DEF,	mapper_TK263B },
 
 
 
@@ -1520,10 +1523,7 @@ static const struct CPS1config cps1_config_table[] =
 	{"wofhfb",	CPS_B_21_DEF, mapper_TK263B, 0x36 },	/* Chinese bootleg */
 
 	/* New added */
-	{"wofch",	CPS_B_21_DEF, mapper_TK263B },
-	{"wofchdx",	CPS_B_21_DEF, mapper_TK263B },
 	{"wofhfh",	CPS_B_21_DEF, mapper_TK263B, 0x36 },
-	{"wofches",	CPS_B_21_DEF, mapper_TK263B },
 
 
 	/* CPS2 games */

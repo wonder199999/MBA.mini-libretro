@@ -248,6 +248,9 @@ const game_driver *const drivers[] =
 	//
 	DRIVER( sfzch )			/* 20/10/1995 (c) CPS Changer version - Street Fighter Zero(Japan) */
 	//
+	DRIVER( wofch )			/* 31/10/1992 (c) CPS Changer version - Tenchi Wo Kurau II */
+	DRIVER( wofchdx )		/* hackrom, bootleg, CPS Changer version -Sangokushi III Gaiden: Kakou-On's Revenge DX, based by wofch */
+	//
 	DRIVER( slammast )		/* 13/07/1993 (c) 1993 (World) (CPS1 + QSound) */
 	DRIVER( slammastu )		/* 13/07/1993 (c) 1993 (US)    (CPS1 + QSound) */
 	DRIVER( mbomberj )		/* 13/07/1993 (c) 1993 (Japan) (CPS1 + QSound) */
@@ -274,10 +277,6 @@ const game_driver *const drivers[] =
 	DRIVER( willowj )		/* 06/1989 (c) 1989 (Japan) */
 	DRIVER( willowu )		/* 06/1989 (c) 1989 (USA) */
 	DRIVER( willowuo )		/* 06/1989 (c) 1989 (USA old version) */
-	//
-	DRIVER( wofch )			/* 31/10/1992 (c) CPS Changer version - Tenchi Wo Kurau II */
-/* obsolete */				DRIVER( wofches )	/* hackrom, based by wofch */
-	DRIVER( wofchdx )		/* hackrom, bootleg, CPS Changer version -Sangokushi III Gaiden: Kakou-On's Revenge DX, based by wofch */
 	//
 	DRIVER( wof )			/* 02/10/1992 (c) 1992 (World) (CPS1 + QSound) */
 	DRIVER( sgyxz )			/* bootleg of wof */

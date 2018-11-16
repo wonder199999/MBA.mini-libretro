@@ -3015,6 +3015,16 @@ INPUT_PORTS_END
 static INPUT_PORTS_START( wofch )
 	PORT_INCLUDE( sfzch)
 
+	PORT_MODIFY("IN2")
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT ) PORT_8WAY PORT_PLAYER(3)
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT ) PORT_8WAY PORT_PLAYER(3)
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN ) PORT_8WAY PORT_PLAYER(3)
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_UP ) PORT_8WAY PORT_PLAYER(3)
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_BUTTON1 ) PORT_PLAYER(3)
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_BUTTON2 ) PORT_PLAYER(3)
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_START3 )
+
 	PORT_START( "EEPROMIN" )
 	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_READ_LINE_DEVICE("eeprom", eeprom_read_bit)
 
@@ -9202,6 +9212,102 @@ ROM_START( varthjr )
 	ROM_LOAD( "ioc1.ic1",     0x0000, 0x0117, CRC(0d182081) SHA1(475b3d417785da4bc512cce2b274bb00d4cc6792) )
 ROM_END
 
+/* B-Board 91635B-2 */
+ROM_START( wofch )
+	ROM_REGION( CODE_SIZE, "maincpu", 0 )      /* 68000 code */
+	ROM_LOAD16_WORD_SWAP( "tk2(ch)_23.8f", 0x000000, 0x80000, CRC(4e0b8dee) SHA1(d2fb716d62b7a259f46bbc74c1976a18d56696ea) )
+	ROM_LOAD16_WORD_SWAP( "tk2(ch)_22.7f", 0x080000, 0x80000, CRC(d0937a8d) SHA1(01d7be446e2e3ef8ca767f59c178240dfd52dd93) )
+
+	ROM_REGION( 0x400000, "gfx", 0 )
+	ROMX_LOAD( "tk2-1m.3a",      0x000000, 0x80000, CRC(0d9cb9bf) SHA1(cc7140e9a01a14b252cb1090bcea32b0de461928) , ROM_GROUPWORD | ROM_SKIP(6) )
+	ROMX_LOAD( "tk2-3m.5a",      0x000002, 0x80000, CRC(45227027) SHA1(b21afc593f0d4d8909dfa621d659cbb40507d1b2) , ROM_GROUPWORD | ROM_SKIP(6) )
+	ROMX_LOAD( "tk2-2m.4a",      0x000004, 0x80000, CRC(c5ca2460) SHA1(cbe14867f7b94b638ca80db7c8e0c60881183469) , ROM_GROUPWORD | ROM_SKIP(6) )
+	ROMX_LOAD( "tk2-4m.6a",      0x000006, 0x80000, CRC(e349551c) SHA1(1d977bdf256accf750ad9930ec4a0a19bbf86964) , ROM_GROUPWORD | ROM_SKIP(6) )
+	ROMX_LOAD( "tk2(ch)_05.7a",  0x200000, 0x80000, CRC(e4a44d53) SHA1(b747679f4d63e5e62d9fd81b3120fba0401fadfb) , ROM_GROUPWORD | ROM_SKIP(6) )    // == tk2_05.7a
+	ROMX_LOAD( "tk2(ch)_06.8a",  0x200002, 0x80000, CRC(58066ba8) SHA1(c93af968e21094d020e4b2002e0c6fc0d746af0b) , ROM_GROUPWORD | ROM_SKIP(6) )    // == tk2_06.8a
+	ROMX_LOAD( "tk2(ch)_07.9a",  0x200004, 0x80000, CRC(cc9006c9) SHA1(cfcbec3a67052268a7739538aa28a6391fe5400e) , ROM_GROUPWORD | ROM_SKIP(6) )    /* 1 byte different from wofj, pcb verified */
+	ROMX_LOAD( "tk2(ch)_08.10a", 0x200006, 0x80000, CRC(d4a19a02) SHA1(ff396b1d33d9b4842140f2c6d085fe05748e3244) , ROM_GROUPWORD | ROM_SKIP(6) )    // == tk2_08.10a
+
+	ROM_REGION( 0x28000, "audiocpu", 0 ) /* QSound Z80 code */
+	ROM_LOAD( "tk2_qa.5k",       0x00000, 0x08000, CRC(c9183a0d) SHA1(d8b1d41c572f08581f8ab9eb878de77d6ea8615d) )
+	ROM_CONTINUE(                0x10000, 0x18000 )
+
+	ROM_REGION( 0x200000, "qsound", 0 ) /* QSound samples */
+	ROM_LOAD( "tk2-q1.1k",       0x000000, 0x80000, CRC(611268cf) SHA1(83ab059f2110fb25fdcff928d56b790fc1f5c975) )
+	ROM_LOAD( "tk2-q2.2k",       0x080000, 0x80000, CRC(20f55ca9) SHA1(90134e9a9c4749bb65c728b66ea4dac1fd4d88a4) )
+	ROM_LOAD( "tk2-q3.3k",       0x100000, 0x80000, CRC(bfcf6f52) SHA1(2a85ff3fc89b4cbabd20779ec12da2e116333c7c) )
+	ROM_LOAD( "tk2-q4.4k",       0x180000, 0x80000, CRC(36642e88) SHA1(8ab25b19e2b67215a5cb1f3aa81b9d26009cfeb8) )
+
+	ROM_REGION( 0x0200, "aboardplds", 0 )
+	ROM_LOAD( "buf1",         0x0000, 0x0117, CRC(eb122de7) SHA1(b26b5bfe258e3e184f069719f9fd008d6b8f6b9b) )
+	ROM_LOAD( "ioa1",         0x0000, 0x0117, CRC(59c7ee3b) SHA1(fbb887c5b4f5cb8df77cec710eaac2985bc482a6) )
+	ROM_LOAD( "prg2",         0x0000, 0x0117, CRC(4386879a) SHA1(c36896d169d8c78393609acbbe4397931292a033) )
+	ROM_LOAD( "rom1",         0x0000, 0x0117, CRC(41dc73b9) SHA1(7d4c9f1693c821fbf84e32dd6ef62ddf14967845) )
+	ROM_LOAD( "sou1",         0x0000, 0x0117, CRC(84f4b2fe) SHA1(dcc9e86cc36316fe42eace02d6df75d08bc8bb6d) )
+
+	ROM_REGION( 0x0200, "bboardplds", 0 )
+	ROM_LOAD( "tk263b.1a",    0x0000, 0x0117, CRC(c4b0349b) SHA1(b4873dd5ad8735048deb3475222dde3c0b67eaaf) )
+	ROM_LOAD( "iob1.12d",     0x0000, 0x0117, CRC(3abc0700) SHA1(973043aa46ec6d5d1db20dc9d5937005a0f9f6ae) )
+	ROM_LOAD( "bprg1.11d",    0x0000, 0x0117, CRC(31793da7) SHA1(400fa7ac517421c978c1ee7773c30b9ed0c5d3f3) )
+
+	ROM_REGION( 0x0200, "cboardplds", 0 )
+	ROM_LOAD( "ioc1.ic7",     0x0000, 0x0117, CRC(0d182081) SHA1(475b3d417785da4bc512cce2b274bb00d4cc6792) )
+	ROM_LOAD( "c632.ic1",     0x0000, 0x0117, CRC(0fbd9270) SHA1(d7e737b20c44d41e29ca94be56114b31934dde81) )
+
+	ROM_REGION( 0x0200, "dboardplds", 0 )
+	ROM_LOAD( "d7l1.7l",      0x0000, 0x0117, CRC(27b7410d) SHA1(06d0cba0226850f100ff1f539bd7d5db0f90c730) )
+	ROM_LOAD( "d8l1.8l",      0x0000, 0x0117, CRC(539fc7da) SHA1(cad5c91629c6247e49ccbbcbfe6b08229eafae07) )
+	ROM_LOAD( "d9k1.9k",      0x0000, 0x0117, NO_DUMP )
+	ROM_LOAD( "d10f1.10f",    0x0000, 0x0117, CRC(6619c494) SHA1(3aef656c07182a2186f810f30e0d854dd5bd8d18) )
+ROM_END
+
+ROM_START( wofchdx )
+	ROM_REGION( CODE_SIZE, "maincpu", 0 )	/* 68000 code */
+	ROM_LOAD16_WORD_SWAP( "tk2(ch)dx_23.8f",  0x000000, 0x080000, CRC(29389b7d) SHA1(ccc4a7c4cb43abe9e8f9fd0d1a813f722473784f) )
+	ROM_LOAD16_WORD_SWAP( "tk2(ch)dx_22.7f",  0x080000, 0x080000, CRC(a959df0c) SHA1(ec6d9f1f9363dee08ea267fab28d313e0b46d3da) )
+
+	ROM_REGION( 0x400000, "gfx", 0 )
+	ROMX_LOAD( "tk2-1m.3a",      0x000000, 0x80000, CRC(0d9cb9bf) SHA1(cc7140e9a01a14b252cb1090bcea32b0de461928) , ROM_GROUPWORD | ROM_SKIP(6) )
+	ROMX_LOAD( "tk2-3m.5a",      0x000002, 0x80000, CRC(45227027) SHA1(b21afc593f0d4d8909dfa621d659cbb40507d1b2) , ROM_GROUPWORD | ROM_SKIP(6) )
+	ROMX_LOAD( "tk2-2m.4a",      0x000004, 0x80000, CRC(c5ca2460) SHA1(cbe14867f7b94b638ca80db7c8e0c60881183469) , ROM_GROUPWORD | ROM_SKIP(6) )
+	ROMX_LOAD( "tk2-4m.6a",      0x000006, 0x80000, CRC(e349551c) SHA1(1d977bdf256accf750ad9930ec4a0a19bbf86964) , ROM_GROUPWORD | ROM_SKIP(6) )
+	ROMX_LOAD( "tk2(ch)_05.7a",  0x200000, 0x80000, CRC(e4a44d53) SHA1(b747679f4d63e5e62d9fd81b3120fba0401fadfb) , ROM_GROUPWORD | ROM_SKIP(6) )
+	ROMX_LOAD( "tk2(ch)_06.8a",  0x200002, 0x80000, CRC(58066ba8) SHA1(c93af968e21094d020e4b2002e0c6fc0d746af0b) , ROM_GROUPWORD | ROM_SKIP(6) )
+	ROMX_LOAD( "tk2(ch)_07.9a",  0x200004, 0x80000, CRC(cc9006c9) SHA1(cfcbec3a67052268a7739538aa28a6391fe5400e) , ROM_GROUPWORD | ROM_SKIP(6) )
+	ROMX_LOAD( "tk2(ch)_08.10a", 0x200006, 0x80000, CRC(d4a19a02) SHA1(ff396b1d33d9b4842140f2c6d085fe05748e3244) , ROM_GROUPWORD | ROM_SKIP(6) )
+
+	ROM_REGION( 0x28000, "audiocpu", 0 )	/* QSound Z80 code */
+	ROM_LOAD( "tk2_qa.5k",       0x00000, 0x08000, CRC(c9183a0d) SHA1(d8b1d41c572f08581f8ab9eb878de77d6ea8615d) )
+	ROM_CONTINUE(                0x10000, 0x18000 )
+
+	ROM_REGION( 0x200000, "qsound", 0 )	/* QSound samples */
+	ROM_LOAD( "tk2-q1.1k",       0x000000, 0x80000, CRC(611268cf) SHA1(83ab059f2110fb25fdcff928d56b790fc1f5c975) )
+	ROM_LOAD( "tk2-q2.2k",       0x080000, 0x80000, CRC(20f55ca9) SHA1(90134e9a9c4749bb65c728b66ea4dac1fd4d88a4) )
+	ROM_LOAD( "tk2-q3.3k",       0x100000, 0x80000, CRC(bfcf6f52) SHA1(2a85ff3fc89b4cbabd20779ec12da2e116333c7c) )
+	ROM_LOAD( "tk2-q4.4k",       0x180000, 0x80000, CRC(36642e88) SHA1(8ab25b19e2b67215a5cb1f3aa81b9d26009cfeb8) )
+
+	ROM_REGION( 0x0200, "aboardplds", 0 )
+	ROM_LOAD( "buf1",         0x0000, 0x0117, CRC(eb122de7) SHA1(b26b5bfe258e3e184f069719f9fd008d6b8f6b9b) )
+	ROM_LOAD( "ioa1",         0x0000, 0x0117, CRC(59c7ee3b) SHA1(fbb887c5b4f5cb8df77cec710eaac2985bc482a6) )
+	ROM_LOAD( "prg2",         0x0000, 0x0117, CRC(4386879a) SHA1(c36896d169d8c78393609acbbe4397931292a033) )
+	ROM_LOAD( "rom1",         0x0000, 0x0117, CRC(41dc73b9) SHA1(7d4c9f1693c821fbf84e32dd6ef62ddf14967845) )
+	ROM_LOAD( "sou1",         0x0000, 0x0117, CRC(84f4b2fe) SHA1(dcc9e86cc36316fe42eace02d6df75d08bc8bb6d) )
+
+	ROM_REGION( 0x0200, "bboardplds", 0 )
+	ROM_LOAD( "tk263b.1a",    0x0000, 0x0117, CRC(c4b0349b) SHA1(b4873dd5ad8735048deb3475222dde3c0b67eaaf) )
+	ROM_LOAD( "iob1.12d",     0x0000, 0x0117, CRC(3abc0700) SHA1(973043aa46ec6d5d1db20dc9d5937005a0f9f6ae) )
+	ROM_LOAD( "bprg1.11d",    0x0000, 0x0117, CRC(31793da7) SHA1(400fa7ac517421c978c1ee7773c30b9ed0c5d3f3) )
+
+	ROM_REGION( 0x0200, "cboardplds", 0 )
+	ROM_LOAD( "ioc1.ic7",     0x0000, 0x0117, CRC(0d182081) SHA1(475b3d417785da4bc512cce2b274bb00d4cc6792) )
+	ROM_LOAD( "c632.ic1",     0x0000, 0x0117, CRC(0fbd9270) SHA1(d7e737b20c44d41e29ca94be56114b31934dde81) )
+
+	ROM_REGION( 0x0200, "dboardplds", 0 )
+	ROM_LOAD( "d7l1.7l",      0x0000, 0x0117, CRC(27b7410d) SHA1(06d0cba0226850f100ff1f539bd7d5db0f90c730) )
+	ROM_LOAD( "d8l1.8l",      0x0000, 0x0117, CRC(539fc7da) SHA1(cad5c91629c6247e49ccbbcbfe6b08229eafae07) )
+	ROM_LOAD( "d9k1.9k",      0x0000, 0x0117, NO_DUMP )
+	ROM_LOAD( "d10f1.10f",    0x0000, 0x0117, CRC(6619c494) SHA1(3aef656c07182a2186f810f30e0d854dd5bd8d18) )
+ROM_END
 
 
 
@@ -10974,150 +11080,6 @@ ROM_START( sf2hfj )
 	ROM_LOAD( "c632.ic1",     0x0000, 0x0117, CRC(0fbd9270) SHA1(d7e737b20c44d41e29ca94be56114b31934dde81) )
 ROM_END
 
-ROM_START( wofch )		/* Tenchi wo Kurau II: Sekiheki no Tatakai (CPS Changer, Japan 921031) */
-	ROM_REGION( CODE_SIZE, "maincpu", 0 )		/* 68000 code */
-	ROM_LOAD16_WORD_SWAP( "tk2(ch)_23.8f",  0x000000, 0x080000, VERIFY_OFF )
-	ROM_LOAD16_WORD_SWAP( "tk2(ch)_22.7f",  0x080000, 0x080000, VERIFY_OFF )
-
-	ROM_REGION( 0x400000, "gfx", 0 )
-	ROMX_LOAD( "tk2-1m.3a",     	0x000000, 0x080000, VERIFY_OFF, ROM_GROUPWORD | ROM_SKIP(6) )
-	ROMX_LOAD( "tk2-3m.5a",     	0x000002, 0x080000, VERIFY_OFF, ROM_GROUPWORD | ROM_SKIP(6) )
-	ROMX_LOAD( "tk2-2m.4a",     	0x000004, 0x080000, VERIFY_OFF, ROM_GROUPWORD | ROM_SKIP(6) )
-	ROMX_LOAD( "tk2-4m.6a",     	0x000006, 0x080000, VERIFY_OFF, ROM_GROUPWORD | ROM_SKIP(6) )
-	ROMX_LOAD( "tk2(ch)_05.7a",	0x200000, 0x080000, VERIFY_OFF, ROM_GROUPWORD | ROM_SKIP(6) )
-	ROMX_LOAD( "tk2(ch)_06.8a",     0x200002, 0x080000, VERIFY_OFF, ROM_GROUPWORD | ROM_SKIP(6) )
-	ROMX_LOAD( "tk2(ch)_07.9a",    	0x200004, 0x080000, VERIFY_OFF, ROM_GROUPWORD | ROM_SKIP(6) )
-	ROMX_LOAD( "tk2(ch)_08.10a",   	0x200006, 0x080000, VERIFY_OFF, ROM_GROUPWORD | ROM_SKIP(6) )
-
-	ROM_REGION( 0x028000, "audiocpu", 0 ) /* 64k for the audio CPU (+bank) */
-	ROM_LOAD( "tk2_qa.5k",  0x000000, 0x08000, VERIFY_OFF )
-	ROM_CONTINUE(	 	0x010000, 0x18000 )
-
-	ROM_REGION( 0x200000, "qsound", 0 )	 /* QSound Samples */
-	ROM_LOAD( "tk2-q1.1k", 0x000000, 0x080000, VERIFY_OFF )
-	ROM_LOAD( "tk2-q2.2k", 0x080000, 0x080000, VERIFY_OFF )
-	ROM_LOAD( "tk2-q3.3k", 0x100000, 0x080000, VERIFY_OFF )
-	ROM_LOAD( "tk2-q4.4k", 0x180000, 0x080000, VERIFY_OFF )
-
-	ROM_REGION( 0x0200, "aboardplds", 0 )
-	ROM_LOAD( "buf1", 	0x0000, 0x0117, VERIFY_OFF )
-	ROM_LOAD( "ioa1", 	0x0000, 0x0117, VERIFY_OFF )
-	ROM_LOAD( "prg2", 	0x0000, 0x0117, VERIFY_OFF )
-	ROM_LOAD( "rom1", 	0x0000, 0x0117, VERIFY_OFF )
-	ROM_LOAD( "sou1", 	0x0000, 0x0117, VERIFY_OFF )
-
-	ROM_REGION( 0x0200, "bboardplds", 0 )
-	ROM_LOAD( "tk263b.1a", 	0x0000, 0x0117, VERIFY_OFF )
-	ROM_LOAD( "iob1.12d",	0x0000, 0x0117, VERIFY_OFF )
-	ROM_LOAD( "bprg1.11d",	0x0000, 0x0117, VERIFY_OFF )
-
-	ROM_REGION( 0x0200, "cboardplds", 0 )
-	ROM_LOAD( "ioc1.ic7",	0x0000, 0x0117, VERIFY_OFF )
-	ROM_LOAD( "c632.ic1",	0x0000, 0x0117, VERIFY_OFF )
-
-	ROM_REGION( 0x0200, "dboardplds", 0 )
-	ROM_LOAD( "d7l1.7l",	0x0000, 0x0117, VERIFY_OFF )
-	ROM_LOAD( "d8l1.8l",	0x0000, 0x0117, VERIFY_OFF )
-	ROM_LOAD( "d9k1.9k",	0x0000, 0x0117, NO_DUMP )
-	ROM_LOAD( "d10f1.10f",	0x0000, 0x0117, VERIFY_OFF )
-ROM_END
-
-ROM_START( wofches )		/* Tenchi wo Kurau II: Sekiheki no Tatakai (hackrom)(CPS Changer, Japan 921031) */
-	ROM_REGION( CODE_SIZE, "maincpu", 0 )		/* 68000 code */
-	ROM_LOAD16_WORD_SWAP( "tk2(ch)_23.bin",  0x000000, 0x080000, VERIFY_OFF )
-	ROM_LOAD16_WORD_SWAP( "tk2(ch)_22.bin",  0x080000, 0x080000, VERIFY_OFF )
-
-	ROM_REGION( 0x400000, "gfx", 0 )
-	ROMX_LOAD( "tk2-1m.3a",     	0x000000, 0x080000, VERIFY_OFF, ROM_GROUPWORD | ROM_SKIP(6) )
-	ROMX_LOAD( "tk2-3m.5a",     	0x000002, 0x080000, VERIFY_OFF, ROM_GROUPWORD | ROM_SKIP(6) )
-	ROMX_LOAD( "tk2-2m.4a",     	0x000004, 0x080000, VERIFY_OFF, ROM_GROUPWORD | ROM_SKIP(6) )
-	ROMX_LOAD( "tk2-4m.6a",     	0x000006, 0x080000, VERIFY_OFF, ROM_GROUPWORD | ROM_SKIP(6) )
-	ROMX_LOAD( "tk2(ch)_05.7a",	0x200000, 0x080000, VERIFY_OFF, ROM_GROUPWORD | ROM_SKIP(6) )
-	ROMX_LOAD( "tk2(ch)_06.8a",     0x200002, 0x080000, VERIFY_OFF, ROM_GROUPWORD | ROM_SKIP(6) )
-	ROMX_LOAD( "tk2(ch)_07.9a",    	0x200004, 0x080000, VERIFY_OFF, ROM_GROUPWORD | ROM_SKIP(6) )
-	ROMX_LOAD( "tk2(ch)_08.10a",   	0x200006, 0x080000, VERIFY_OFF, ROM_GROUPWORD | ROM_SKIP(6) )
-
-	ROM_REGION( 0x028000, "audiocpu", 0 )		/* 64k for the audio CPU (+bank) */
-	ROM_LOAD( "tk2_qa.5k",  0x000000, 0x08000, VERIFY_OFF )
-	ROM_CONTINUE(	 	0x010000, 0x18000 )
-
-	ROM_REGION( 0x200000, "qsound", 0 )		/* QSound Samples */
-	ROM_LOAD( "tk2-q1.1k", 0x000000, 0x080000, VERIFY_OFF )
-	ROM_LOAD( "tk2-q2.2k", 0x080000, 0x080000, VERIFY_OFF )
-	ROM_LOAD( "tk2-q3.3k", 0x100000, 0x080000, VERIFY_OFF )
-	ROM_LOAD( "tk2-q4.4k", 0x180000, 0x080000, VERIFY_OFF )
-
-	ROM_REGION( 0x0200, "aboardplds", 0 )
-	ROM_LOAD( "buf1", 	0x0000, 0x0117, VERIFY_OFF )
-	ROM_LOAD( "ioa1", 	0x0000, 0x0117, VERIFY_OFF )
-	ROM_LOAD( "prg2", 	0x0000, 0x0117, VERIFY_OFF )
-	ROM_LOAD( "rom1", 	0x0000, 0x0117, VERIFY_OFF )
-	ROM_LOAD( "sou1", 	0x0000, 0x0117, VERIFY_OFF )
-
-	ROM_REGION( 0x0200, "bboardplds", 0 )
-	ROM_LOAD( "tk263b.1a", 	0x0000, 0x0117, VERIFY_OFF )
-	ROM_LOAD( "iob1.12d",	0x0000, 0x0117, VERIFY_OFF )
-	ROM_LOAD( "bprg1.11d",	0x0000, 0x0117, VERIFY_OFF )
-
-	ROM_REGION( 0x0200, "cboardplds", 0 )
-	ROM_LOAD( "ioc1.ic7",	0x0000, 0x0117, VERIFY_OFF )
-	ROM_LOAD( "c632.ic1",	0x0000, 0x0117, VERIFY_OFF )
-
-	ROM_REGION( 0x0200, "dboardplds", 0 )
-	ROM_LOAD( "d7l1.7l",	0x0000, 0x0117, VERIFY_OFF )
-	ROM_LOAD( "d8l1.8l",	0x0000, 0x0117, VERIFY_OFF )
-	ROM_LOAD( "d9k1.9k",	0x0000, 0x0117, NO_DUMP )
-	ROM_LOAD( "d10f1.10f",	0x0000, 0x0117, VERIFY_OFF )
-ROM_END
-
-ROM_START( wofchdx )
-	ROM_REGION( CODE_SIZE, "maincpu", 0 )      /* 68000 code */
-	ROM_LOAD16_WORD_SWAP( "tk2(ch)dx_23.8f",  0x000000, 0x080000, VERIFY_OFF )
-	ROM_LOAD16_WORD_SWAP( "tk2(ch)dx_22.7f",  0x080000, 0x080000, VERIFY_OFF )
-
-	ROM_REGION( 0x400000, "gfx", 0 )
-	ROMX_LOAD( "tk2-1m.3a",     	0x000000, 0x080000, VERIFY_OFF, ROM_GROUPWORD | ROM_SKIP(6) )
-	ROMX_LOAD( "tk2-3m.5a",     	0x000002, 0x080000, VERIFY_OFF, ROM_GROUPWORD | ROM_SKIP(6) )
-	ROMX_LOAD( "tk2-2m.4a",     	0x000004, 0x080000, VERIFY_OFF, ROM_GROUPWORD | ROM_SKIP(6) )
-	ROMX_LOAD( "tk2-4m.6a",     	0x000006, 0x080000, VERIFY_OFF, ROM_GROUPWORD | ROM_SKIP(6) )
-	ROMX_LOAD( "tk2(ch)_05.7a",	0x200000, 0x080000, VERIFY_OFF, ROM_GROUPWORD | ROM_SKIP(6) )
-	ROMX_LOAD( "tk2(ch)_06.8a",     0x200002, 0x080000, VERIFY_OFF, ROM_GROUPWORD | ROM_SKIP(6) )
-	ROMX_LOAD( "tk2(ch)_07.9a",    	0x200004, 0x080000, VERIFY_OFF, ROM_GROUPWORD | ROM_SKIP(6) )
-	ROMX_LOAD( "tk2(ch)_08.10a",   	0x200006, 0x080000, VERIFY_OFF, ROM_GROUPWORD | ROM_SKIP(6) )
-
-	ROM_REGION( 0x028000, "audiocpu", 0 ) /* 64k for the audio CPU (+bank) */
-	ROM_LOAD( "tk2_qa.5k",  0x000000, 0x08000, VERIFY_OFF )
-	ROM_CONTINUE(	 	0x010000, 0x18000 )
-
-	ROM_REGION( 0x200000, "qsound", 0 )	 /* QSound Samples */
-	ROM_LOAD( "tk2-q1.1k", 0x000000, 0x080000, VERIFY_OFF )
-	ROM_LOAD( "tk2-q2.2k", 0x080000, 0x080000, VERIFY_OFF )
-	ROM_LOAD( "tk2-q3.3k", 0x100000, 0x080000, VERIFY_OFF )
-	ROM_LOAD( "tk2-q4.4k", 0x180000, 0x080000, VERIFY_OFF )
-
-	ROM_REGION( 0x0200, "aboardplds", 0 )
-	ROM_LOAD( "buf1", 	0x0000, 0x0117, VERIFY_OFF )
-	ROM_LOAD( "ioa1", 	0x0000, 0x0117, VERIFY_OFF )
-	ROM_LOAD( "prg2", 	0x0000, 0x0117, VERIFY_OFF )
-	ROM_LOAD( "rom1", 	0x0000, 0x0117, VERIFY_OFF )
-	ROM_LOAD( "sou1", 	0x0000, 0x0117, VERIFY_OFF )
-
-	ROM_REGION( 0x0200, "bboardplds", 0 )
-	ROM_LOAD( "tk263b.1a", 	0x0000, 0x0117, VERIFY_OFF )
-	ROM_LOAD( "iob1.12d",	0x0000, 0x0117, VERIFY_OFF )
-	ROM_LOAD( "bprg1.11d",	0x0000, 0x0117, VERIFY_OFF )
-
-	ROM_REGION( 0x0200, "cboardplds", 0 )
-	ROM_LOAD( "ioc1.ic7",	0x0000, 0x0117, VERIFY_OFF )
-	ROM_LOAD( "c632.ic1",	0x0000, 0x0117, VERIFY_OFF )
-
-	ROM_REGION( 0x0200, "dboardplds", 0 )
-	ROM_LOAD( "d7l1.7l",	0x0000, 0x0117, VERIFY_OFF )
-	ROM_LOAD( "d8l1.8l",	0x0000, 0x0117, VERIFY_OFF )
-	ROM_LOAD( "d9k1.9k",	0x0000, 0x0117, NO_DUMP )
-	ROM_LOAD( "d10f1.10f",	0x0000, 0x0117, VERIFY_OFF )
-ROM_END
-
 ROM_START( wofhfh )
 	ROM_REGION( CODE_SIZE, "maincpu", 0 )      /* 68000 code */
 	ROM_LOAD16_WORD_SWAP( "23",  0x000000, 0x080000, VERIFY_OFF )
@@ -11626,7 +11588,9 @@ GAME( 1992,	varthr1,	varth,		cps1_12MHz,	varth,		cps1,		ROT270,	"Capcom",	"Varth
 GAME( 1992,	varthu,		varth,		cps1_12MHz,	varth,		cps1,		ROT270,	"Capcom(Romstar license)",	"Varth: Operation Thunderstorm (USA 920612)", GAME_SUPPORTS_SAVE )
 GAME( 1992,	varthj,		varth,		cps1_12MHz,	varth,		cps1,		ROT270,	"Capcom",	"Varth: Operation Thunderstorm (Japan 920714)", GAME_SUPPORTS_SAVE )
 GAME( 1992,	varthjr,	varth,		cps1_12MHz,	varth,		cps1,		ROT270,	"Capcom",	"Varth: Operation Thunderstorm (Japan Resale Ver. 920714)", GAME_SUPPORTS_SAVE )
-
+//
+GAME( 1995,	wofch,		0,		qsound,		wofch,		wof,		ROT0,	"Capcom",	"Tenchi wo Kurau II: Sekiheki no Tatakai (CPS Changer, Japan 921031)", GAME_SUPPORTS_SAVE )
+GAME( 2010,	wofchdx,	wofch,		qsound,		wofch,		wof,		ROT0,	"hack",		"Sangokushi III Gaiden: Kakou-On's Revenge DX (hack)", GAME_SUPPORTS_SAVE )
 
 
 
@@ -11681,11 +11645,9 @@ GAME( 1992, sf2hf,      0,        cps1_12MHz, sf2,        cps1,     ROT0,   "Cap
 GAME( 1992, sf2hfu,     sf2hf,    cps1_12MHz, sf2,        cps1,     ROT0,   "Capcom", "Street Fighter II': Hyper Fighting (USA 921209)", GAME_SUPPORTS_SAVE )
 GAME( 1992, sf2hfj,     sf2hf,    cps1_12MHz, sf2j,       cps1,     ROT0,   "Capcom", "Street Fighter II' Turbo: Hyper Fighting (Japan 921209)", GAME_SUPPORTS_SAVE )
 //
-GAME( 1995, wofch,	0,	  qsound,	wofch,	   wof,        ROT0,   "Capcom",   "CPS Changer - Tenchi Wo Kurau II (Japan 921031)", GAME_SUPPORTS_SAVE )
-GAME( 2010, wofchdx,	wofch,	  qsound,	wofch,	   wof,        ROT0,   "Capcom",   "CPS Changer - Sangokushi III Gaiden: Kakou-On's Revenge DX (hack)", GAME_SUPPORTS_SAVE )
-GAME( 1995, wofches,	wofch,	  qsound,	wofch,	   wof,        ROT0,   "Capcom",   "CPS Changer - Tenchi Wo Kurau II (Blue title, enabled the skill-enhanced mode)", GAME_SUPPORTS_SAVE )
 GAME( 1992, sf2m3,	sf2ce,	  sf2m3,	sf2,	   cps1,       ROT0,   "bootleg",  "Street Fighter II': Champion Edition (M3, bootleg)", GAME_SUPPORTS_SAVE )
 GAME( 1992, sf2ceuab3,	sf2ce,	  sf2m3,	sf2,	   sf2m8,      ROT0,   "bootleg",  "Street Fighter II': Champion Edition (In MAME, the game's name is sf2m8a, bootleg)", GAME_SUPPORTS_SAVE )
 GAME( 1992, sf2amf,	sf2ce,	  cps1_12MHz,	sf2amf,	   sf2hack,    ROT0,   "bootleg",  "Street Fighter II': Champion Edition (Alpha Magic-F, bootleg)", GAME_SUPPORTS_SAVE )
 GAME( 1999, wofhfh,	0,	  wofhfb,	wofhfb,	   cps1,       ROT0,   "bootleg",  "Huo Feng Huang , Chinese bootleg", GAME_SUPPORTS_SAVE )
+
 
