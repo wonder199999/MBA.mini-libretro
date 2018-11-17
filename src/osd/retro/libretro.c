@@ -1265,6 +1265,8 @@ void osd_update(running_machine *machine, int skip_redraw)
 					/* RAM access waitstates etc. aren't emulated - slow the CPU to compensate */
 					if (strcmp(machine->gamedrv->source_file, "src/mame/drivers/cps2.c") == 0)
 						arroffset[3] *= 0.7375f;
+					else if (strcmp(machine->gamedrv->name, "sf2hf") == 0 || strcmp(machine->gamedrv->name, "sf2hfu") == 0 || strcmp(machine->gamedrv->name, "sf2hfj") == 0)
+						arroffset[3] *= (float)(8.7 / 12.0);
 
 					machine->device("maincpu")->set_clock_scale(arroffset[3]);
 					/*
