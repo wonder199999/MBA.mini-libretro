@@ -271,24 +271,17 @@ static READ16_HANDLER( dinohunt_sound_r )
 
 static WRITE16_HANDLER( dinopic4_decryption_w )
 {
-	if (offset == 0x62b0 / 2)
-	{
-		cps_state *state = space->machine->driver_data<cps_state>();
-		state->dinopic4protectvalue = data;
-	}
+	cps_state *state = space->machine->driver_data<cps_state>();
+	state->dinopic4protectvalue = data;
 }
 
 static READ16_HANDLER( dinopic4_decryption_r )
 {
-	if (offset == 0xa2b0 / 2)
-	{
-		cps_state *state = space->machine->driver_data<cps_state>();
+	cps_state *state = space->machine->driver_data<cps_state>();
 
-		if (state->dinopic4protectvalue == 0x04)
-			return 0x0404;
-		return 0xffff;
-	}
-	return 0;
+	if (state->dinopic4protectvalue == 0x04)
+		return 0x0404;
+	return 0xffff;
 }
 
 static WRITE16_HANDLER( sf2m3_layer_w )
@@ -3231,7 +3224,7 @@ static MACHINE_DRIVER_START( cps1_10MHz )
 	MDRV_SOUND_ROUTE(0, "mono", 0.35)
 	MDRV_SOUND_ROUTE(1, "mono", 0.35)
 
-	/* CPS PPU is fed by a 16mhz clock,pin 117 outputs a 4mhz clock which is divided by 4 using 2 74ls74 */
+	/* CPS PPU is fed by a 16mhz clock, pin 117 outputs a 4mhz clock which is divided by 4 using 2 74ls74 */
 	MDRV_OKIM6295_ADD("oki", XTAL_16MHz/4/4, OKIM6295_PIN7_HIGH)	/* pin 7 can be changed by the game code, see f006 on z80 */
 	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.30)
 MACHINE_DRIVER_END
@@ -3242,13 +3235,6 @@ static MACHINE_DRIVER_START( cps1_12MHz )
 
 	MDRV_CPU_MODIFY("maincpu")
 	MDRV_CPU_CLOCK( XTAL_12MHz )				/* verified on pcb */
-MACHINE_DRIVER_END
-
-static MACHINE_DRIVER_START( pang3 )
-	/* basic machine hardware */
-	MDRV_IMPORT_FROM(cps1_12MHz)
-
-	MDRV_EEPROM_ADD("eeprom", pang3_eeprom_interface)
 MACHINE_DRIVER_END
 
 static MACHINE_DRIVER_START( qsound )
@@ -3277,6 +3263,8 @@ static MACHINE_DRIVER_START( qsound )
 	MDRV_SOUND_ROUTE(1, "rspeaker", 1.0)
 MACHINE_DRIVER_END
 
+/* --------------- Machine Driver for game-specific --------------- */
+
 static MACHINE_DRIVER_START( wofhfb )
 	/* basic machine hardware */
 	MDRV_IMPORT_FROM(cps1_12MHz)
@@ -3300,6 +3288,13 @@ static MACHINE_DRIVER_START( ganbare )
 	MDRV_TIMER_ADD_SCANLINE("scantimer", ganbare_interrupt, "screen", 0, 1)
 
 	MDRV_M48T35_ADD( "m48t35" )
+MACHINE_DRIVER_END
+
+static MACHINE_DRIVER_START( pang3 )
+	/* basic machine hardware */
+	MDRV_IMPORT_FROM(cps1_12MHz)
+
+	MDRV_EEPROM_ADD("eeprom", pang3_eeprom_interface)
 MACHINE_DRIVER_END
 
 static MACHINE_DRIVER_START( daimakaib )
@@ -11480,7 +11475,9 @@ static DRIVER_INIT( dinopic4 )
 	cps_state *state = machine->driver_data<cps_state>();
 
 	state->dinopic4protectvalue = 0;
-	memory_install_readwrite16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x570000, 0x57ffff, 0, 0, dinopic4_decryption_r, dinopic4_decryption_w);
+	memory_install_read16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x57a2b0, 0x57a2b1, 0, 0, dinopic4_decryption_r);
+	memory_install_write16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x5762b0, 0x5762b1, 0, 0, dinopic4_decryption_w);
+
 	DRIVER_INIT_CALL(dinohunt);
 }
 
