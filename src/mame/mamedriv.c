@@ -285,17 +285,17 @@ const game_driver *const drivers[] =
 	DRIVER( wofj )			/* 31/10/1992 (c) 1992 (Japan) (CPS1 + QSound) */
 	DRIVER( wofhfh )		/* hackrom, Huo Feng Huang, Chinese bootleg */
 	DRIVER( sgyxz )			/* bootleg of wof */
+	DRIVER( wofah )
+	DRIVER( wofaha )
+	DRIVER( wofahb )
+	DRIVER( wofjh )
 //	DRIVER( wof3js )
 //	DRIVER( wof3jsa )
 //	DRIVER( wof3sj )
 //	DRIVER( wof3sja )
-//	DRIVER( wofah )
-//	DRIVER( wofaha )
-//	DRIVER( wofahb )
 //	DRIVER( wofb )
 //	DRIVER( wofh )
 //	DRIVER( wofha )
-//	DRIVER( wofjh )
 //	DRIVER( wofsj )
 //	DRIVER( wofsja )
 //	DRIVER( wofsjb )
