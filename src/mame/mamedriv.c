@@ -279,27 +279,26 @@ const game_driver *const drivers[] =
 	DRIVER( willowuo )		/* 06/1989 (c) 1989 (USA old version) */
 	//
 	DRIVER( wof )			/* 02/10/1992 (c) 1992 (World) (CPS1 + QSound) */
+	DRIVER( wofr1 )
+	DRIVER( wofa )			/* 05/10/1992 (c) 1992 (Asia)  (CPS1 + QSound) */
+	DRIVER( wofu )			/* 31/10/1992 (c) 1992 (US) (CPS1 + QSound) */
+	DRIVER( wofj )			/* 31/10/1992 (c) 1992 (Japan) (CPS1 + QSound) */
+	DRIVER( wofhfh )		/* hackrom, Huo Feng Huang, Chinese bootleg */
 	DRIVER( sgyxz )			/* bootleg of wof */
 //	DRIVER( wof3js )
 //	DRIVER( wof3jsa )
 //	DRIVER( wof3sj )
 //	DRIVER( wof3sja )
-	DRIVER( wofa )			/* 05/10/1992 (c) 1992 (Asia)  (CPS1 + QSound) */
 //	DRIVER( wofah )
 //	DRIVER( wofaha )
 //	DRIVER( wofahb )
 //	DRIVER( wofb )
 //	DRIVER( wofh )
 //	DRIVER( wofha )
-	DRIVER( wofhfh )		/* hackrom, Huo Feng Huang, Chinese bootleg */
-	DRIVER( wofj )			/* 31/10/1992 (c) 1992 (Japan) (CPS1 + QSound) */
 //	DRIVER( wofjh )
-//	DRIVER( wofr1 )
 //	DRIVER( wofsj )
 //	DRIVER( wofsja )
 //	DRIVER( wofsjb )
-/* obsolete */			DRIVER( wofhfb )	/* bootleg */
-	DRIVER( wofu )			/* 31/10/1992 (c) 1992 (US) (CPS1 + QSound) */
 	//
 	DRIVER( sf2hf )			/* 09/12/1992 (c) 1992 (World) */
 	DRIVER( sf2hfj )		/* 09/12/1992 (c) 1992 (Japan) */

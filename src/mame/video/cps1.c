@@ -1419,6 +1419,7 @@ static const struct CPS1config cps1_config_table[] =
 	{"qadjr",	CPS_B_21_DEF,	mapper_qadj,	0x36, 0x38, 0x34 },	/* (ports 36, 38, 34 probably leftover input code from another game) */
 	//
 	{"punisher",	CPS_B_21_QS3,	mapper_PS63B },
+	{"punisherb",	CPS_B_21_QS3,	mapper_PS63B },
 	{"punisheru",	CPS_B_21_QS3,	mapper_PS63B },
 	{"punisherh",	CPS_B_21_QS3,	mapper_PS63B },
 	{"punisherj",	CPS_B_21_QS3,	mapper_PS63B },
@@ -1460,9 +1461,13 @@ static const struct CPS1config cps1_config_table[] =
 	{"sf2hfj",	CPS_B_21_DEF,	mapper_S9263B,	0x36 },
 	{"sf2hfjb",	HACK_SF_JB,	mapper_S9263B,	0x36, 0, 0, 1 },
 	{"sf2hfjb2",	HACK_SF_JB,	mapper_S9263B,	0x36, 0, 0, 1 },
-
-
-
+	//
+	{"wof",		CPS_B_21_QS1,	mapper_TK263B },
+	{"wofr1",	CPS_B_21_DEF,	mapper_TK263B },			/* patched set coming from a desuicided board? */
+	{"wofa",	CPS_B_21_DEF,	mapper_TK263B },			/* patched set coming from a desuicided board? */
+	{"wofu",	CPS_B_21_QS1,	mapper_TK263B },
+	{"wofj",	CPS_B_21_QS1,	mapper_TK263B },
+	{"wofhfh",	CPS_B_21_DEF,	mapper_TK263B,	0x36 },			/* Chinese bootleg */
 
 
 
@@ -1517,16 +1522,6 @@ static const struct CPS1config cps1_config_table[] =
 	{"sf2jc",	CPS_B_12,     mapper_STF29,  0x36 },
 	{"sf2qp1",	CPS_B_17,     mapper_STF29,  0x36 },
 	{"sf2thndr",	CPS_B_17,     mapper_STF29,  0x36 },
-
-	{"wof",		CPS_B_21_DEF, mapper_TK263B },
-	{"wofa",	CPS_B_21_DEF, mapper_TK263B },
-	{"wofu",	CPS_B_21_QS1, mapper_TK263B },
-	{"wofj",	CPS_B_21_QS1, mapper_TK263B },
-	{"wofhfb",	CPS_B_21_DEF, mapper_TK263B, 0x36 },	/* Chinese bootleg */
-
-	/* New added */
-	{"wofhfh",	CPS_B_21_DEF, mapper_TK263B, 0x36 },
-
 
 	/* CPS2 games */
 	{"cps2",	CPS_B_21_DEF, mapper_cps2 },
