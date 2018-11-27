@@ -224,9 +224,53 @@ static WRITE16_HANDLER( punipic_layer_w )
 	}
 }
 
+static WRITE16_HANDLER( punipic3_layer_w )
+{
+	cps_state *state = space->machine->driver_data<cps_state>();
+	switch (offset)
+	{
+		case 0x00: state->cps_a_regs[0x0e / 2] = data; break;
+		case 0x01: state->cps_a_regs[0x0c / 2] = data; break;
+		case 0x02: state->cps_a_regs[0x12 / 2] = state->cps_a_regs[CPS1_ROWSCROLL_OFFS] = data; break;
+		case 0x03: state->cps_a_regs[0x10 / 2] = data + 0xffc0; break;
+		case 0x04: state->cps_a_regs[0x16 / 2] = data; break;
+		case 0x05: state->cps_a_regs[0x14 / 2] = data; break;
+		case 0x06: state->punipic3_parampass = data; break;
+		case 0x07:
+		{
+			if (data == 0x0000)
+			{
+				switch (state->punipic3_parampass)
+				{
+					case 0x24: data = 0x1380; break;
+					case 0x54:
+					case 0x64: data = 0x12c0; break;
+					case 0x7c: data = 0x4780; break;
+				}
+			}
+			if (data == 0xffff)
+			{
+				switch (state->punipic3_parampass)
+				{
+					case 0x24: data = 0x10c0; break;
+					case 0x54:
+					case 0x64: data = 0x1200; break;
+				}
+			}
+			state->cps_a_regs[0x08 / 2] = state->mainram[0xdb90 / 2];
+			state->cps_b_regs[state->layer_enable_reg / 2] = data; break;
+		}
+		default: logerror ("Unknown layer cmd %X\n", data);
+	}
+}
+
 static WRITE16_HANDLER( knightsb_layer_w )
 {
 	cps_state *state = space->machine->driver_data<cps_state>();
+	UINT8 j;
+	const static UINT16 maskcode[6][3] = { { 0x0000, 0x0000, 0x0000 }, { 0x03ff, 0x003f, 0x01ff }, { 0x7fff, 0x7ff8, 0x00ff },
+					       { 0x001f, 0x00ff, 0x07ff }, { 0xffee, 0x01ff, 0x7800 }, { 0x03ff, 0x7e00, 0x7f00 } };
+
 	switch (offset)
 	{
 		case 0x00: state->cps_a_regs[0x0e / 2] = data; break;
@@ -237,28 +281,25 @@ static WRITE16_HANDLER( knightsb_layer_w )
 		case 0x05: state->cps_a_regs[0x14 / 2] = data; break;
 		case 0x06:
 		{
-			UINT16 draw_mask[4] = { 0, 0, 0, 0 };
-
 			switch (data)
 			{
-				case 0x0000: data = 0x12c0; break;
-				case 0x001f: data = 0x12c0; draw_mask[1] = 0x03ff; draw_mask[2] = 0x003f; draw_mask[3] = 0x01ff; break;
-				case 0x00ff: data = 0x12c0; draw_mask[1] = 0x7fff; draw_mask[2] = 0x7ff8; draw_mask[3] = 0x00ff; break;
-				case 0x07ff: data = 0x12c0; draw_mask[1] = 0x001f; draw_mask[2] = 0x00ff; draw_mask[3] = 0x07ff; break;
-				case 0x2000: data = 0x06c0; break;
-				case 0x5800: data = 0x12c0; draw_mask[1] = 0xffee; draw_mask[2] = 0x01ff; draw_mask[3] = 0x7800; break;
-				case 0x5f00: data = 0x12c0; draw_mask[1] = 0x03ff; draw_mask[2] = 0x7e00; draw_mask[3] = 0x7f00; break;
-				case 0x80ff: data = 0x1380; draw_mask[1] = 0x7fff; draw_mask[2] = 0x7ff8; draw_mask[3] = 0x00ff; break;
-				case 0x87ff: data = 0x1380; draw_mask[1] = 0x001f; draw_mask[2] = 0x00ff; draw_mask[3] = 0x07ff; break;
-				case 0xa000: data = 0x24c0; break;
-				case 0xd800: data = 0x1380; draw_mask[1] = 0xffee; draw_mask[2] = 0x01ff; draw_mask[3] = 0x7800; break;
-				default: logerror ("Unknown control word = %X\n", data); data = 0x12c0; break;
+				case 0x0000: data = 0x12c0; j = 0; break;
+				case 0x001f: data = 0x12c0; j = 1; break;
+				case 0x00ff: data = 0x12c0; j = 2; break;
+				case 0x07ff: data = 0x12c0; j = 3; break;
+				case 0x2000: data = 0x06c0; j = 0; break;
+				case 0x5800: data = 0x12c0; j = 4; break;
+				case 0x5f00: data = 0x12c0; j = 5; break;
+				case 0x80ff: data = 0x1380; j = 2; break;
+				case 0x87ff: data = 0x1380; j = 3; break;
+				case 0xa000: data = 0x24c0; j = 0; break;
+				case 0xd800: data = 0x1380; j = 4; break;
+				default: logerror ("Unknown control word = %X\n", data); data = 0x12c0; j = 0; break;
 			}
-			state->cps_b_regs[state->layer_mask_reg[0] / 2] = draw_mask[0];
-			state->cps_b_regs[state->layer_mask_reg[1] / 2] = draw_mask[1];
-			state->cps_b_regs[state->layer_mask_reg[2] / 2] = draw_mask[2];
-			state->cps_b_regs[state->layer_mask_reg[3] / 2] = draw_mask[3];
-
+			state->cps_b_regs[state->layer_mask_reg[0] / 2] = 0x00;
+			state->cps_b_regs[state->layer_mask_reg[1] / 2] = maskcode[j][0];
+			state->cps_b_regs[state->layer_mask_reg[2] / 2] = maskcode[j][1];
+			state->cps_b_regs[state->layer_mask_reg[3] / 2] = maskcode[j][2];
 			state->cps_b_regs[state->layer_enable_reg / 2] = data; break;
 		}
 	}
@@ -533,7 +574,7 @@ static ADDRESS_MAP_START( knightsb_map, ADDRESS_SPACE_PROGRAM, 16 )
 	AM_RANGE(0x800180, 0x800181) AM_WRITENOP
 	AM_RANGE(0x880000, 0x880001) AM_WRITENOP
 	AM_RANGE(0x900000, 0x93ffff) AM_RAM_WRITE(cps1_gfxram_w) AM_BASE_SIZE_MEMBER(cps_state, gfxram, gfxram_size)
-	AM_RANGE(0x980000, 0x98002f) AM_WRITE(knightsb_layer_w)
+	AM_RANGE(0x980000, 0x98000d) AM_WRITE(knightsb_layer_w)
 	AM_RANGE(0x990000, 0x990001) AM_WRITENOP
 	AM_RANGE(0xff0000, 0xffffff) AM_RAM
 ADDRESS_MAP_END
@@ -608,7 +649,6 @@ static ADDRESS_MAP_START( punipic_map, ADDRESS_SPACE_PROGRAM, 16 )
 	AM_RANGE(0x800140, 0x80017f) AM_READWRITE(cps1_cps_b_r, cps1_cps_b_w) AM_BASE_MEMBER(cps_state, cps_b_regs)
 	AM_RANGE(0x880000, 0x880001) AM_WRITENOP
 	AM_RANGE(0x900000, 0x92ffff) AM_RAM_WRITE(cps1_gfxram_w) AM_BASE_SIZE_MEMBER(cps_state, gfxram, gfxram_size)
-	AM_RANGE(0x980000, 0x98000f) AM_WRITE(punipic_layer_w)
 	AM_RANGE(0x990000, 0x990001) AM_WRITENOP
 	AM_RANGE(0x991000, 0x991017) AM_WRITENOP
 	AM_RANGE(0xf18000, 0xf19fff) AM_RAM
@@ -1555,15 +1595,20 @@ static DRIVER_INIT( punipic )
 	src[0x4df8 / 2] = 0x4e75;
 
 	DRIVER_INIT_CALL(dinopic);
+	memory_install_write16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x980000, 0x98001f, 0, 0, punipic_layer_w);
 }
 
 static DRIVER_INIT( punipic3 )
 {
+	cps_state *state = machine->driver_data<cps_state>();
+	state->punipic3_parampass = 0;
+
 	UINT16 *src = (UINT16 *)memory_region( machine, "maincpu" );
 	src[0x05a6 / 2] = 0x4e71;
 	src[0x05a8 / 2] = 0x4e71;
 
 	DRIVER_INIT_CALL(dinopic);
+	memory_install_write16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x980000, 0x98000f, 0, 0, punipic3_layer_w);
 }
 
 static DRIVER_INIT( cawingbl )
@@ -2110,6 +2155,83 @@ ROM_START( varthb )
 	ROM_LOAD_OPTIONAL( "varth1.bin",    0x00000, 0x157, CRC(4c6a0d99) SHA1(081a307ef38675de178dd6221e6c4e55a5bfbd87) )
 ROM_END
 
+ROM_START( punipic )
+	ROM_REGION( CODE_SIZE, "maincpu", 0 )		/* 68000 code */
+	ROM_LOAD16_BYTE( "cpu5.bin",       0x000000, 0x80000, CRC(c3151563) SHA1(61d3a20c25fea8a94ae6e473a87c21968867cba0) )
+	ROM_LOAD16_BYTE( "cpu3.bin",       0x000001, 0x80000, CRC(8c2593ac) SHA1(4261bc72b96c3a5690df35c5d8b71524765693d9) )
+	ROM_LOAD16_BYTE( "cpu4.bin",       0x100000, 0x80000, CRC(665a5485) SHA1(c07920d110ca9c35f6cbff94a6a889c17300f994) )
+	ROM_LOAD16_BYTE( "cpu2.bin",       0x100001, 0x80000, CRC(d7b13f39) SHA1(eb7cd92b44fdef3b72672b0be6786c526421b627) )
+
+	ROM_REGION( 0x400000, "gfx", 0 )
+	ROMX_LOAD( "gfx9.bin",    0x000000, 0x40000, CRC(9b9a887a) SHA1(8805b36fc18837bd7c64c751b435d72b763b2235), ROM_SKIP(7) )
+	ROM_CONTINUE(             0x000004, 0x40000)
+	ROMX_LOAD( "gfx8.bin",    0x000001, 0x40000, CRC(2b94287a) SHA1(815d88e66f537e17550fc0483616f02f7126bfb1), ROM_SKIP(7) )
+	ROM_CONTINUE(             0x000005, 0x40000)
+	ROMX_LOAD( "gfx7.bin",    0x000002, 0x40000, CRC(e9bd74f5) SHA1(8ed7098c69d1c70093c99956bf82e532bd6fc7ac), ROM_SKIP(7) )
+	ROM_CONTINUE(             0x000006, 0x40000)
+	ROMX_LOAD( "gfx6.bin",    0x000003, 0x40000, CRC(a5e1c8a4) SHA1(3596265a45cf6bbf16c623f0fce7cdc65f9338ad), ROM_SKIP(7) )
+	ROM_CONTINUE(             0x000007, 0x40000)
+	ROMX_LOAD( "gfx13.bin",   0x200000, 0x40000, CRC(6d75a193) SHA1(6c5a89517926d7ba4a925a3df800d4bdb8a6938d), ROM_SKIP(7) )
+	ROM_CONTINUE(             0x200004, 0x40000)
+	ROMX_LOAD( "gfx12.bin",   0x200001, 0x40000, CRC(a3c205c1) SHA1(6317cc49434dbbb9a249ddd4b50bd791803b3ebe), ROM_SKIP(7) )
+	ROM_CONTINUE(             0x200005, 0x40000)
+	ROMX_LOAD( "gfx11.bin",   0x200002, 0x40000, CRC(22f2ec92) SHA1(9186bfc5db71dc5b099c9a985e8fdd5710772d1c), ROM_SKIP(7) )
+	ROM_CONTINUE(             0x200006, 0x40000)
+	ROMX_LOAD( "gfx10.bin",   0x200003, 0x40000, CRC(763974c9) SHA1(f9b93c7cf0cb8c212fc21c57c85459b7d2e4e2fd), ROM_SKIP(7) )
+	ROM_CONTINUE(             0x200007, 0x40000)
+
+	ROM_REGION( 0x28000, "audiocpu", 0 )		/* PIC16c57 - protected */
+	ROM_LOAD( "pic16c57", 0x00000, 0x04000, NO_DUMP )
+	ROM_REGION( 0x200000, "oki", 0 )		/* OKI6295 */
+	ROM_LOAD( "sound.bin",      0x000000, 0x80000, CRC(aeec9dc6) SHA1(56fd62e8db8aa96cdd242d8c705849a413567780) )
+ROM_END
+
+ROM_START( punipic2 )
+	ROM_REGION( CODE_SIZE, "maincpu", 0 )		/* 68000 code */
+	ROM_LOAD16_BYTE( "prg4.bin",       0x000000, 0x80000, CRC(c3151563) SHA1(61d3a20c25fea8a94ae6e473a87c21968867cba0) )
+	ROM_LOAD16_BYTE( "prg3.bin",       0x000001, 0x80000, CRC(8c2593ac) SHA1(4261bc72b96c3a5690df35c5d8b71524765693d9) )
+	ROM_LOAD16_BYTE( "prg2.bin",       0x100000, 0x80000, CRC(665a5485) SHA1(c07920d110ca9c35f6cbff94a6a889c17300f994) )
+	ROM_LOAD16_BYTE( "prg1.bin",       0x100001, 0x80000, CRC(d7b13f39) SHA1(eb7cd92b44fdef3b72672b0be6786c526421b627) )
+
+	ROM_REGION( 0x400000, "gfx", 0 )
+	ROMX_LOAD( "pu11256.bin",   0x000000, 0x80000, CRC(6581faea) SHA1(2b0e96998002a1df96c7869ec965257d2ecfb531), ROM_GROUPWORD | ROM_SKIP(6) )
+	ROM_CONTINUE(               0x200000, 0x80000 )
+	ROM_CONTINUE(               0x000004, 0x80000 )
+	ROM_CONTINUE(               0x200004, 0x80000 )
+	ROMX_LOAD( "pu13478.bin",   0x000002, 0x80000, CRC(61613de4) SHA1(8f8c46ce907be2b4c4715ad88bfd1456818bdd2c), ROM_GROUPWORD | ROM_SKIP(6) )
+	ROM_CONTINUE(               0x200002, 0x80000 )
+	ROM_CONTINUE(               0x000006, 0x80000 )
+	ROM_CONTINUE(               0x200006, 0x80000 )
+
+	ROM_REGION( 0x28000, "audiocpu", 0 )		/* PIC16c57 - protected */
+	ROM_LOAD( "pic16c57", 0x00000, 0x04000, NO_DUMP )
+	ROM_REGION( 0x200000, "oki", 0 )		/* OKI6295 */
+	ROM_LOAD( "sound.bin",      0x000000, 0x80000, CRC(aeec9dc6) SHA1(56fd62e8db8aa96cdd242d8c705849a413567780) )
+
+	ROM_REGION( 0x200000, "user1", 0 )		/* other */
+	ROM_LOAD( "93c46.bin",      0x0000, 0x0080, CRC(36ab4e7d) SHA1(60bea43051d86d9aefcbb7a390cf0c7d8b905a4b) )
+ROM_END
+
+ROM_START( punipic3 )
+	ROM_REGION( CODE_SIZE, "maincpu", 0 )		/* 68000 code */
+	ROM_LOAD16_BYTE( "psb5b.rom",       0x000000, 0x80000, CRC(58f42c05) SHA1(e243928f0bbecdf2a8d07cf4a6fdea4440e46c01) )
+	ROM_LOAD16_BYTE( "psb3b.rom",       0x000001, 0x80000, CRC(90113db4) SHA1(4decc203ae3ee4abcb2e017f11cd20eae2abf3f3) )
+	ROM_LOAD16_BYTE( "psb4a.rom",       0x100000, 0x80000, CRC(665a5485) SHA1(c07920d110ca9c35f6cbff94a6a889c17300f994) )
+	ROM_LOAD16_BYTE( "psb2a.rom",       0x100001, 0x80000, CRC(d7b13f39) SHA1(eb7cd92b44fdef3b72672b0be6786c526421b627) )
+
+	ROM_REGION( 0x400000, "gfx", 0 )
+	ROMX_LOAD( "psb-a.rom",     0x000000, 0x80000, CRC(57f0f5e3) SHA1(130b6e92181994bbe874261e0895db65d4f3d5d1), ROM_GROUPWORD | ROM_SKIP(6) )
+	ROM_CONTINUE(               0x000004, 0x80000 )
+	ROM_CONTINUE(               0x200000, 0x80000 )
+	ROM_CONTINUE(               0x200004, 0x80000 )
+	ROMX_LOAD( "psb-b.rom",     0x000002, 0x80000, CRC(d9eb867e) SHA1(9b6eaa4a780da5c9cf09658fcab3a1a6f632c2f4), ROM_GROUPWORD | ROM_SKIP(6) )
+	ROM_CONTINUE(               0x000006, 0x80000 )
+	ROM_CONTINUE(               0x200002, 0x80000 )
+	ROM_CONTINUE(               0x200006, 0x80000 )
+
+	ROM_REGION( 0x28000, "audiocpu", ROMREGION_ERASE00 )
+	ROM_REGION( 0x200000, "oki", ROMREGION_ERASE00 )
+ROM_END
 
 
 
@@ -2225,84 +2347,6 @@ ROM_START( sgyxz )
 	ROM_LOAD( "sgyxz_snd1.bin", 0x00000, 0x40000,  CRC(c15ac0f2) SHA1(8d9e5519d9820e4ac4f70555088c80e64d052c9d) )
 ROM_END
 
-ROM_START( punipic )
-	ROM_REGION( CODE_SIZE, "maincpu", 0 )		/* 68000 code */
-	ROM_LOAD16_BYTE( "cpu5.bin",       0x000000, 0x80000, CRC(c3151563) SHA1(61d3a20c25fea8a94ae6e473a87c21968867cba0) )
-	ROM_LOAD16_BYTE( "cpu3.bin",       0x000001, 0x80000, CRC(8c2593ac) SHA1(4261bc72b96c3a5690df35c5d8b71524765693d9) )
-	ROM_LOAD16_BYTE( "cpu4.bin",       0x100000, 0x80000, CRC(665a5485) SHA1(c07920d110ca9c35f6cbff94a6a889c17300f994) )
-	ROM_LOAD16_BYTE( "cpu2.bin",       0x100001, 0x80000, CRC(d7b13f39) SHA1(eb7cd92b44fdef3b72672b0be6786c526421b627) )
-
-	ROM_REGION( 0x400000, "gfx", 0 )
-	ROMX_LOAD( "gfx9.bin",    0x000000, 0x40000, CRC(9b9a887a) SHA1(8805b36fc18837bd7c64c751b435d72b763b2235), ROM_SKIP(7) )
-	ROM_CONTINUE(             0x000004, 0x40000)
-	ROMX_LOAD( "gfx8.bin",    0x000001, 0x40000, CRC(2b94287a) SHA1(815d88e66f537e17550fc0483616f02f7126bfb1), ROM_SKIP(7) )
-	ROM_CONTINUE(             0x000005, 0x40000)
-	ROMX_LOAD( "gfx7.bin",    0x000002, 0x40000, CRC(e9bd74f5) SHA1(8ed7098c69d1c70093c99956bf82e532bd6fc7ac), ROM_SKIP(7) )
-	ROM_CONTINUE(             0x000006, 0x40000)
-	ROMX_LOAD( "gfx6.bin",    0x000003, 0x40000, CRC(a5e1c8a4) SHA1(3596265a45cf6bbf16c623f0fce7cdc65f9338ad), ROM_SKIP(7) )
-	ROM_CONTINUE(             0x000007, 0x40000)
-	ROMX_LOAD( "gfx13.bin",   0x200000, 0x40000, CRC(6d75a193) SHA1(6c5a89517926d7ba4a925a3df800d4bdb8a6938d), ROM_SKIP(7) )
-	ROM_CONTINUE(             0x200004, 0x40000)
-	ROMX_LOAD( "gfx12.bin",   0x200001, 0x40000, CRC(a3c205c1) SHA1(6317cc49434dbbb9a249ddd4b50bd791803b3ebe), ROM_SKIP(7) )
-	ROM_CONTINUE(             0x200005, 0x40000)
-	ROMX_LOAD( "gfx11.bin",   0x200002, 0x40000, CRC(22f2ec92) SHA1(9186bfc5db71dc5b099c9a985e8fdd5710772d1c), ROM_SKIP(7) )
-	ROM_CONTINUE(             0x200006, 0x40000)
-	ROMX_LOAD( "gfx10.bin",   0x200003, 0x40000, CRC(763974c9) SHA1(f9b93c7cf0cb8c212fc21c57c85459b7d2e4e2fd), ROM_SKIP(7) )
-	ROM_CONTINUE(             0x200007, 0x40000)
-
-	ROM_REGION( 0x28000, "audiocpu", 0 )		/* PIC16c57 - protected */
-	ROM_LOAD( "pic16c57", 0x00000, 0x04000, NO_DUMP )
-	ROM_REGION( 0x200000, "oki", 0 )		/* OKI6295 */
-	ROM_LOAD( "sound.bin",      0x000000, 0x80000, CRC(aeec9dc6) SHA1(56fd62e8db8aa96cdd242d8c705849a413567780) )
-ROM_END
-
-ROM_START( punipic2 )
-	ROM_REGION( CODE_SIZE, "maincpu", 0 )		/* 68000 code */
-	ROM_LOAD16_BYTE( "prg4.bin",       0x000000, 0x80000, CRC(c3151563) SHA1(61d3a20c25fea8a94ae6e473a87c21968867cba0) )
-	ROM_LOAD16_BYTE( "prg3.bin",       0x000001, 0x80000, CRC(8c2593ac) SHA1(4261bc72b96c3a5690df35c5d8b71524765693d9) )
-	ROM_LOAD16_BYTE( "prg2.bin",       0x100000, 0x80000, CRC(665a5485) SHA1(c07920d110ca9c35f6cbff94a6a889c17300f994) )
-	ROM_LOAD16_BYTE( "prg1.bin",       0x100001, 0x80000, CRC(d7b13f39) SHA1(eb7cd92b44fdef3b72672b0be6786c526421b627) )
-
-	ROM_REGION( 0x400000, "gfx", 0 )
-	ROMX_LOAD( "pu11256.bin",   0x000000, 0x80000, CRC(6581faea) SHA1(2b0e96998002a1df96c7869ec965257d2ecfb531), ROM_GROUPWORD | ROM_SKIP(6) )
-	ROM_CONTINUE(               0x200000, 0x80000 )
-	ROM_CONTINUE(               0x000004, 0x80000 )
-	ROM_CONTINUE(               0x200004, 0x80000 )
-	ROMX_LOAD( "pu13478.bin",   0x000002, 0x80000, CRC(61613de4) SHA1(8f8c46ce907be2b4c4715ad88bfd1456818bdd2c), ROM_GROUPWORD | ROM_SKIP(6) )
-	ROM_CONTINUE(               0x200002, 0x80000 )
-	ROM_CONTINUE(               0x000006, 0x80000 )
-	ROM_CONTINUE(               0x200006, 0x80000 )
-
-	ROM_REGION( 0x28000, "audiocpu", 0 )		/* PIC16c57 - protected */
-	ROM_LOAD( "pic16c57", 0x00000, 0x04000, NO_DUMP )
-	ROM_REGION( 0x200000, "oki", 0 )		/* OKI6295 */
-	ROM_LOAD( "sound.bin",      0x000000, 0x80000, CRC(aeec9dc6) SHA1(56fd62e8db8aa96cdd242d8c705849a413567780) )
-
-	ROM_REGION( 0x200000, "user1", 0 )		/* other */
-	ROM_LOAD( "93c46.bin",      0x0000, 0x0080, CRC(36ab4e7d) SHA1(60bea43051d86d9aefcbb7a390cf0c7d8b905a4b) )
-ROM_END
-
-ROM_START( punipic3 )
-	ROM_REGION( CODE_SIZE, "maincpu", 0 )		/* 68000 code */
-	ROM_LOAD16_BYTE( "psb5b.rom",       0x000000, 0x80000, CRC(58f42c05) SHA1(e243928f0bbecdf2a8d07cf4a6fdea4440e46c01) )
-	ROM_LOAD16_BYTE( "psb3b.rom",       0x000001, 0x80000, CRC(90113db4) SHA1(4decc203ae3ee4abcb2e017f11cd20eae2abf3f3) )
-	ROM_LOAD16_BYTE( "psb4a.rom",       0x100000, 0x80000, CRC(665a5485) SHA1(c07920d110ca9c35f6cbff94a6a889c17300f994) )
-	ROM_LOAD16_BYTE( "psb2a.rom",       0x100001, 0x80000, CRC(d7b13f39) SHA1(eb7cd92b44fdef3b72672b0be6786c526421b627) )
-
-	ROM_REGION( 0x400000, "gfx", 0 )
-	ROMX_LOAD( "psb-a.rom",     0x000000, 0x80000, CRC(57f0f5e3) SHA1(130b6e92181994bbe874261e0895db65d4f3d5d1), ROM_GROUPWORD | ROM_SKIP(6) )
-	ROM_CONTINUE(               0x000004, 0x80000 )
-	ROM_CONTINUE(               0x200000, 0x80000 )
-	ROM_CONTINUE(               0x200004, 0x80000 )
-	ROMX_LOAD( "psb-b.rom",     0x000002, 0x80000, CRC(d9eb867e) SHA1(9b6eaa4a780da5c9cf09658fcab3a1a6f632c2f4), ROM_GROUPWORD | ROM_SKIP(6) )
-	ROM_CONTINUE(               0x000006, 0x80000 )
-	ROM_CONTINUE(               0x200002, 0x80000 )
-	ROM_CONTINUE(               0x200006, 0x80000 )
-
-	ROM_REGION( 0x28000, "audiocpu", ROMREGION_ERASE00 )
-	ROM_REGION( 0x200000, "oki", ROMREGION_ERASE00 )
-ROM_END
-
 
 
 /*
@@ -2336,6 +2380,12 @@ GAME( 1991,	kodb,		kod,		kodb,		kod,		kodb,		ROT0,	"bootleg (Playmark)",	"The Ki
 GAME( 1993,	slampic,	slammast,	slampic,	slammast,	dinopic,	ROT0,	"bootleg",	"Saturday Night Slam Masters (bootleg with PIC16c57)", GAME_IMPERFECT_GRAPHICS | GAME_NO_SOUND | GAME_SUPPORTS_SAVE )
 /* varthb - OK */
 GAME( 1992,	varthb,		varth,		varthb,		varth,		dinopic,	ROT270,	"bootleg",	"Varth: Operation Thunderstorm (bootleg)", GAME_SUPPORTS_SAVE )
+/* punipic - no sound. Problems in Central Park. Patches used. */
+GAME( 1993,	punipic,	punisher,	punipic,	punisher,	punipic,	ROT0,	"bootleg",	"The Punisher (bootleg with PIC16c57, set 1)", GAME_NO_SOUND | GAME_SUPPORTS_SAVE )
+/* punipic2 - no sound. Problems in Central Park. Patches used. */
+GAME( 1993,	punipic2,	punisher,	punipic,	punisher,	punipic,	ROT0,	"bootleg",	"The Punisher (bootleg with PIC16c57, set 2)", GAME_NO_SOUND | GAME_SUPPORTS_SAVE )
+/* punipic3 - same as punipic */
+GAME( 1993,	punipic3,	punisher,	punipic,	punisher,	punipic3,	ROT0,	"bootleg",	"The Punisher (bootleg with PIC16c57, set 3)", GAME_IMPERFECT_GRAPHICS | GAME_NO_SOUND | GAME_SUPPORTS_SAVE )
 
 
 
@@ -2350,11 +2400,4 @@ GAME( 1992,   sf2mdta,	  sf2ce,	sf2mdt,		sf2mdt,		sf2mdta,  ROT0,   "bootleg", "
 GAME( 1992,   sf2m1,	  sf2ce,	sf2m1,		sf2,		sf2m1,    ROT0,   "bootleg", "Street Fighter II': Champion Edition (M1, bootleg)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )
 /* sgyxz - garbage left behind. A priority problem can be seen in 3rd demo where the fighters walk through the crowd instead of behind. */
 GAME( 1999,   sgyxz,	  wof,		sgyxz,		sgyxz,		cps1,     ROT0,   "bootleg (All-In Electronic)", "SanGuo YingXiongZhuan (Chinese bootleg of Sangokushi II, set 3)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )
-/* punipic - no sound. Problems in Central Park. Patches used. */
-GAME( 1993,   punipic,    punisher,	punipic,	punisher,	punipic,  ROT0,   "bootleg", "The Punisher (bootleg with PIC16c57, set 1)", GAME_NO_SOUND | GAME_SUPPORTS_SAVE )
-/* punipic2 - no sound. Problems in Central Park. Patches used. */
-GAME( 1993,   punipic2,   punisher,	punipic,	punisher,	punipic,  ROT0,   "bootleg", "The Punisher (bootleg with PIC16c57, set 2)", GAME_NO_SOUND | GAME_SUPPORTS_SAVE )
-/* punipic3 - same as punipic, and doors are missing. */
-GAME( 1993,   punipic3,   punisher,	punipic,	punisher,	punipic3, ROT0,   "bootleg", "The Punisher (bootleg with PIC16c57, set 3)", GAME_IMPERFECT_GRAPHICS | GAME_NO_SOUND | GAME_SUPPORTS_SAVE )
-
 
