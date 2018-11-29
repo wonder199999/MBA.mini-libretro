@@ -248,7 +248,7 @@ static WRITE16_HANDLER( punipic3_layer_w )
 					case 0x7c: data = 0x4780; break;
 				}
 			}
-			if (data == 0xffff)
+			else
 			{
 				switch (state->punipic3_parampass)
 				{
@@ -267,9 +267,11 @@ static WRITE16_HANDLER( punipic3_layer_w )
 static WRITE16_HANDLER( knightsb_layer_w )
 {
 	cps_state *state = space->machine->driver_data<cps_state>();
+	const static UINT16 maskcode[6][3] = {
+		{ 0x0000, 0x0000, 0x0000 }, { 0x03ff, 0x003f, 0x01ff }, { 0x7fff, 0x7ff8, 0x00ff },
+		{ 0x001f, 0x00ff, 0x07ff }, { 0xffee, 0x01ff, 0x7800 }, { 0x03ff, 0x7e00, 0x7f00 }
+	};
 	UINT8 j;
-	const static UINT16 maskcode[6][3] = { { 0x0000, 0x0000, 0x0000 }, { 0x03ff, 0x003f, 0x01ff }, { 0x7fff, 0x7ff8, 0x00ff },
-					       { 0x001f, 0x00ff, 0x07ff }, { 0xffee, 0x01ff, 0x7800 }, { 0x03ff, 0x7e00, 0x7f00 } };
 
 	switch (offset)
 	{
@@ -413,11 +415,8 @@ static void bootleg_render_sprites( running_machine *machine, bitmap_t *bitmap, 
 	INT32 pos, base = state->sprite_base / 2;
 	INT32 last_sprite_offset = 0x1ffc;
 	INT32 num_sprites = machine->gfx[2]->total_elements;
-	UINT16 *sprite_ram = state->gfxram;
+	UINT16 *sprite_ram = state->bootleg_sprite_ram ? state->bootleg_sprite_ram : state->gfxram;	/* if we have separate sprite ram, use it */
 	UINT16 tileno, color, xpos, ypos, flipx, flipy;
-
-	if (state->bootleg_sprite_ram)							/* if we have separate sprite ram, use it */
-		sprite_ram = state->bootleg_sprite_ram;
 
 	for ( pos = 0x1ffc - base; pos >= 0x0000; pos -= 4)				/* get end of sprite list marker */
 		if (sprite_ram[base + pos - 1] == state->sprite_list_end_marker)
@@ -561,10 +560,10 @@ static VIDEO_UPDATE( bootleg_updatescreen )
 }
 
 /* --------------------- CPU PROGRAM_MAP --------------------- */
-static ADDRESS_MAP_START( knightsb_map, ADDRESS_SPACE_PROGRAM, 16 )
+static ADDRESS_MAP_START( knightsb_map, ADDRESS_SPACE_PROGRAM, 16 )		/* knightsb, knightsb4 */
 	AM_RANGE(0x000000, 0x3fffff) AM_ROM
 	AM_RANGE(0x800000, 0x800001) AM_READ_PORT("IN1")
-	AM_RANGE(0x800002, 0x800003) AM_READ_PORT("IN2")            	/* Player 3 controls */
+	AM_RANGE(0x800002, 0x800003) AM_READ_PORT("IN2")			/* Player 3 controls */
 	AM_RANGE(0x800004, 0x800005) AM_WRITENOP
 	AM_RANGE(0x800006, 0x800007) AM_WRITE(fcrash_soundlatch_w)
 	AM_RANGE(0x800018, 0x80001f) AM_READ(cps1_dsw_r)
@@ -1326,6 +1325,8 @@ static MACHINE_DRIVER_START( sgyxz )
 	MDRV_CPU_PROGRAM_MAP(sf2m1_soundmap)
 	MDRV_MACHINE_START(sgyxz)
 
+	MDRV_EEPROM_ADD("eeprom", bootleg_eeprom_interface)
+
 	/* video hardware */
 	MDRV_SCREEN_ADD("screen", RASTER)
 	MDRV_SCREEN_REFRESH_RATE(60)
@@ -1339,7 +1340,6 @@ static MACHINE_DRIVER_START( sgyxz )
 	MDRV_PALETTE_LENGTH(0xc00)
 	MDRV_VIDEO_START(cps1)
 
-	MDRV_EEPROM_ADD("eeprom", bootleg_eeprom_interface)
 	/* sound hardware */
 	MDRV_SPEAKER_STANDARD_MONO("mono")
 	MDRV_SOUND_ADD("2151", YM2151, XTAL_3_579545MHz)
@@ -1624,6 +1624,32 @@ static DRIVER_INIT( fcrash )
 {
 	UINT8 *src = (UINT8 *)memory_region( machine, "maincpu" );
 	src[0x2611] = 0x07;	/* This fixes sprite ram clearing */
+
+	DRIVER_INIT_CALL(cps1);
+}
+
+static DRIVER_INIT( sgyxz )
+{
+	UINT8 *src = (UINT8 *)memory_region(machine, "maincpu");
+	src[0x00008] = 0xa2;
+	src[0x02449] = 0x07;
+	src[0x072a6] = 0x00;
+	src[0x708db] = 0xff;
+	src[0x708dc] = 0xff;
+	src[0x708dd] = 0xff;
+	src[0x708de] = 0xff;
+	src[0xf11eb] = 0x60;
+
+	DRIVER_INIT_CALL(cps1);
+}
+
+static DRIVER_INIT( wofh )
+{
+	UINT8 *src = (UINT8 *)memory_region(machine, "maincpu");
+
+	src[0x072a6] = 0x00;
+	src[0xf11ec] = 0x71;
+	src[0xf11ed] = 0x4e;
 
 	DRIVER_INIT_CALL(cps1);
 }
@@ -2230,9 +2256,82 @@ ROM_START( punipic3 )
 	ROM_CONTINUE(               0x200006, 0x80000 )
 
 	ROM_REGION( 0x28000, "audiocpu", ROMREGION_ERASE00 )
-	ROM_REGION( 0x200000, "oki", ROMREGION_ERASE00 )
+	ROM_REGION( 0x200000, "oki",	 ROMREGION_ERASE00 )
 ROM_END
 
+ROM_START( sgyxz )
+	ROM_REGION( CODE_SIZE, "maincpu", 0 )		/* 68000 Code */
+	ROM_LOAD16_BYTE( "sgyxz_prg2.bin", 0x000000, 0x20000, CRC(95429c83) SHA1(e981624d018132e5625a66113b6ac4fc44e55cf7) )
+	ROM_CONTINUE( 0x80000, 0x20000 )
+	ROM_CONTINUE( 0x40000, 0x20000 )
+	ROM_CONTINUE( 0xc0000, 0x20000 )
+	ROM_LOAD16_BYTE( "sgyxz_prg1.bin", 0x000001, 0x20000, CRC(d8511929) SHA1(4de9263778f327693f4d1e21b48e43806f673487) )
+	ROM_CONTINUE( 0x80001, 0x20000 )
+	ROM_CONTINUE( 0x40001, 0x20000 )
+	ROM_CONTINUE( 0xc0001, 0x20000 )
+
+	ROM_REGION( 0x400000, "gfx", 0 )
+	ROMX_LOAD("sgyxz_gfx1.bin", 0x000000, 0x80000, CRC(a60be9f6) SHA1(2298a4b6a2c83b76dc106a1efa19606b298d378a), ROM_GROUPWORD | ROM_SKIP(6) )
+	ROM_CONTINUE(		    0x000004, 0x80000 )
+	ROM_CONTINUE(		    0x200000, 0x80000 )
+	ROM_CONTINUE(		    0x200004, 0x80000 )
+	ROMX_LOAD("sgyxz_gfx2.bin", 0x000002, 0x80000, CRC(6ad9d048) SHA1(d47212d28d0a1ce349e4c59e5d0d99c541b3458e), ROM_GROUPWORD | ROM_SKIP(6) )
+	ROM_CONTINUE(		    0x000006, 0x80000 )
+	ROM_CONTINUE(		    0x200002, 0x80000 )
+	ROM_CONTINUE(		    0x200006, 0x80000 )
+
+	ROM_REGION( 0x20000, "audiocpu", 0 )		/* Z80 code */
+	ROM_LOAD( "sgyxz_snd2.bin", 0x00000, 0x10000,  CRC(210c376f) SHA1(0d937c86078d0a106f5636b7daf5fc0266c2c2ec) )
+	ROM_RELOAD(		    0x08000, 0x10000 )
+	ROM_REGION( 0x040000, "oki", 0 )		/* Samples */
+	ROM_LOAD( "sgyxz_snd1.bin", 0x00000, 0x40000,  CRC(c15ac0f2) SHA1(8d9e5519d9820e4ac4f70555088c80e64d052c9d) )
+ROM_END
+
+ROM_START( wofh )
+	ROM_REGION( CODE_SIZE, "maincpu", 0 )		/* 68K code */
+	ROM_LOAD16_WORD_SWAP( "sgyx.800",  0x000000, 0x100000, CRC(3703a650) SHA1(6cb8d6f99df5e2e5cf04aee8737bb585f9328ffd) )
+
+	ROM_REGION( 0x400000, "gfx", 0 )
+	ROMX_LOAD("sgyx-1.160",  0x000000, 0x080000, CRC(a60be9f6) SHA1(2298a4b6a2c83b76dc106a1efa19606b298d378a), ROM_GROUPWORD | ROM_SKIP(6) )
+	ROM_CONTINUE(            0x000004, 0x080000 )
+	ROM_CONTINUE(            0x200000, 0x080000 )
+	ROM_CONTINUE(            0x200004, 0x080000 )
+	ROMX_LOAD("sgyx-2.160",  0x000002, 0x080000, CRC(6ad9d048) SHA1(d47212d28d0a1ce349e4c59e5d0d99c541b3458e), ROM_GROUPWORD | ROM_SKIP(6) )
+	ROM_CONTINUE(            0x000006, 0x080000 )
+	ROM_CONTINUE(            0x200002, 0x080000 )
+	ROM_CONTINUE(            0x200006, 0x080000 )
+
+	/* These sound roms are taken from sgyxz */
+	ROM_REGION( 0x18000, "audiocpu", 0 )		/* Z80 code */
+	ROM_LOAD( "sgyxz_snd2.bin", 0x00000, 0x010000,  CRC(210c376f) SHA1(0d937c86078d0a106f5636b7daf5fc0266c2c2ec) )
+	ROM_RELOAD(		    0x08000, 0x010000 )
+
+	ROM_REGION( 0x40000, "oki", 0 )			/* Samples */
+	ROM_LOAD( "sgyxz_snd1.bin", 0x00000, 0x040000,  CRC(c15ac0f2) SHA1(8d9e5519d9820e4ac4f70555088c80e64d052c9d) )
+ROM_END
+
+ROM_START( wofha )
+	ROM_REGION( CODE_SIZE, "maincpu", 0 )		/* 68K code */
+	ROM_LOAD16_BYTE( "fg-c.040",  0x000000, 0x80000, CRC(d046fc86) SHA1(0ae0b9310e3a122cb69df4bb23672149794242f0) )
+	ROM_LOAD16_BYTE( "fg-a.040",  0x000001, 0x80000, CRC(f176ee8f) SHA1(fba357c31774aeecef88f70df4294514585df3a0) )
+
+	ROM_REGION( 0x400000, "gfx", 0 )
+	ROMX_LOAD("sgyx-1.160",    0x000000, 0x080000, CRC(a60be9f6) SHA1(2298a4b6a2c83b76dc106a1efa19606b298d378a), ROM_GROUPWORD | ROM_SKIP(6) )
+	ROM_CONTINUE(              0x000004, 0x080000 )
+	ROM_CONTINUE(              0x200000, 0x080000 )
+	ROM_CONTINUE(              0x200004, 0x080000 )
+	ROMX_LOAD("sgyx-2.160",    0x000002, 0x080000, CRC(6ad9d048) SHA1(d47212d28d0a1ce349e4c59e5d0d99c541b3458e), ROM_GROUPWORD | ROM_SKIP(6) )
+	ROM_CONTINUE(              0x000006, 0x080000 )
+	ROM_CONTINUE(              0x200002, 0x080000 )
+	ROM_CONTINUE(              0x200006, 0x080000 )
+
+	ROM_REGION( 0x18000, "audiocpu", 0 )		/* Z80 code */
+	ROM_LOAD( "sgyxz_snd2.bin", 0x00000, 0x010000,  CRC(210c376f) SHA1(0d937c86078d0a106f5636b7daf5fc0266c2c2ec) )
+	ROM_RELOAD(		    0x08000, 0x010000 )
+
+	ROM_REGION( 0x40000, "oki", 0 )			/* Samples */
+	ROM_LOAD( "sgyxz_snd1.bin", 0x00000, 0x040000,  CRC(c15ac0f2) SHA1(8d9e5519d9820e4ac4f70555088c80e64d052c9d) )
+ROM_END
 
 
 
@@ -2315,39 +2414,6 @@ ROM_START( sf2m1 )
 	ROM_LOAD( "s92_19.bin",    0x20000, 0x20000, CRC(beade53f) SHA1(277c397dc12752719ec6b47d2224750bd1c07f79) )
 ROM_END
 
-ROM_START( sgyxz )
-	ROM_REGION( CODE_SIZE, "maincpu", 0 )		/* 68000 Code */
-	ROM_LOAD16_BYTE( "sgyxz_prg1.bin", 0x000001, 0x20000, CRC(d8511929) SHA1(4de9263778f327693f4d1e21b48e43806f673487) )
-	ROM_CONTINUE( 0x80001, 0x20000 )
-	ROM_CONTINUE( 0x40001, 0x20000 )
-	ROM_CONTINUE( 0xc0001, 0x20000 )
-	ROM_LOAD16_BYTE( "sgyxz_prg2.bin", 0x000000, 0x20000, CRC(95429c83) SHA1(e981624d018132e5625a66113b6ac4fc44e55cf7) )
-	ROM_CONTINUE( 0x80000, 0x20000 )
-	ROM_CONTINUE( 0x40000, 0x20000 )
-	ROM_CONTINUE( 0xc0000, 0x20000 )
-	ROM_FILL(0x708da, 4, 0xff)			/* patch out protections */
-	ROM_FILL(0xf11ea, 1, 0x60)
-	ROM_FILL(0x00007, 1, 0xa2)			/* start address */
-	ROM_FILL(0x02448, 1, 0x07)			/* transitions */
-
-	ROM_REGION( 0x400000, "gfx", 0 )
-	ROMX_LOAD("sgyxz_gfx1.bin", 0x000000, 0x80000, CRC(a60be9f6) SHA1(2298a4b6a2c83b76dc106a1efa19606b298d378a), ROM_GROUPWORD | ROM_SKIP(6) )
-	ROM_CONTINUE(		    0x000004, 0x80000 )
-	ROM_CONTINUE(		    0x200000, 0x80000 )
-	ROM_CONTINUE(		    0x200004, 0x80000 )
-	ROMX_LOAD("sgyxz_gfx2.bin", 0x000002, 0x80000, CRC(6ad9d048) SHA1(d47212d28d0a1ce349e4c59e5d0d99c541b3458e), ROM_GROUPWORD | ROM_SKIP(6) )
-	ROM_CONTINUE(		    0x000006, 0x80000 )
-	ROM_CONTINUE(		    0x200002, 0x80000 )
-	ROM_CONTINUE(		    0x200006, 0x80000 )
-
-	ROM_REGION( 0x20000, "audiocpu", 0 )		/* Z80 code */
-	ROM_LOAD( "sgyxz_snd2.bin", 0x00000, 0x10000,  CRC(210c376f) SHA1(0d937c86078d0a106f5636b7daf5fc0266c2c2ec) )
-	ROM_RELOAD(		    0x08000, 0x10000 )
-	ROM_REGION( 0x040000, "oki", 0 )		/* Samples */
-	ROM_LOAD( "sgyxz_snd1.bin", 0x00000, 0x40000,  CRC(c15ac0f2) SHA1(8d9e5519d9820e4ac4f70555088c80e64d052c9d) )
-ROM_END
-
-
 
 /*
 GAME( year,  archives name,  parent name,  MACHINE_DRIVER_START, INPUT_PORTS,  DRIVER_INIT,	flip,  producer name,	title information,	status )
@@ -2386,8 +2452,12 @@ GAME( 1993,	punipic,	punisher,	punipic,	punisher,	punipic,	ROT0,	"bootleg",	"The
 GAME( 1993,	punipic2,	punisher,	punipic,	punisher,	punipic,	ROT0,	"bootleg",	"The Punisher (bootleg with PIC16c57, set 2)", GAME_NO_SOUND | GAME_SUPPORTS_SAVE )
 /* punipic3 - same as punipic */
 GAME( 1993,	punipic3,	punisher,	punipic,	punisher,	punipic3,	ROT0,	"bootleg",	"The Punisher (bootleg with PIC16c57, set 3)", GAME_IMPERFECT_GRAPHICS | GAME_NO_SOUND | GAME_SUPPORTS_SAVE )
-
-
+/* sgyxz - garbage left behind. A priority problem can be seen in 3rd demo where the fighters walk through the crowd instead of behind. */
+GAME( 1999,	sgyxz,		wof,		sgyxz,		sgyxz,		sgyxz,		ROT0,	"bootleg(All-In Electronic)", "Sangokushi II: SanGuo YingXiong Zhuan (Chinese bootleg set 3, 921005 Asia)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )
+/* */
+GAME( 1999,	wofh,		wof,		sgyxz,		sgyxz,		wofh,		ROT0,	"bootleg(All-In Electronic)", "Sangokushi II: Sanguo Yingxiong Zhuan (Chinese bootleg set 1, 921005 Asia)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )
+/* */
+GAME( 1999,	wofha,		wof,		sgyxz,		sgyxz,		wofh,		ROT0,	"bootleg(All-In Electronic)", "Sangokushi II: Sanguo Yingxiong Zhuan (Chinese bootleg set 2, 921005 Asia)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )
 
 
 
@@ -2398,6 +2468,4 @@ GAME( 1992,   sf2mdt,	  sf2ce,	sf2mdt,		sf2mdt,		sf2mdt,   ROT0,   "bootleg", "S
 GAME( 1992,   sf2mdta,	  sf2ce,	sf2mdt,		sf2mdt,		sf2mdta,  ROT0,   "bootleg", "Street Fighter II': Magic Delta Turbo (bootleg, set 2)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE )
 /* sf2m1 - crowd is missing. Plane's tail comes off a bit. Patch used. */
 GAME( 1992,   sf2m1,	  sf2ce,	sf2m1,		sf2,		sf2m1,    ROT0,   "bootleg", "Street Fighter II': Champion Edition (M1, bootleg)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )
-/* sgyxz - garbage left behind. A priority problem can be seen in 3rd demo where the fighters walk through the crowd instead of behind. */
-GAME( 1999,   sgyxz,	  wof,		sgyxz,		sgyxz,		cps1,     ROT0,   "bootleg (All-In Electronic)", "SanGuo YingXiongZhuan (Chinese bootleg of Sangokushi II, set 3)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )
 
