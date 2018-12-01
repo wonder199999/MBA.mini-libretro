@@ -11487,32 +11487,6 @@ static DRIVER_INIT( slammast )
 	DRIVER_INIT_CALL(cps1);
 }
 
-static DRIVER_INIT( sf2ue )
-{
-	/* This specific version of SF2 has the CPS-B custom mapped at a different address. */
-	/* The mapping is handled by a PAL on the B-board */
-	memory_unmap_readwrite(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x800140, 0x80017f, 0, 0);
-	memory_install_readwrite16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x8001c0, 0x8001ff, 0, 0, cps1_cps_b_r, cps1_cps_b_w);
-
-	DRIVER_INIT_CALL(cps1);
-}
-
-static DRIVER_INIT( sf2thndr )
-{
-	/* This particular hack uses a modified B-board PAL which mirrors the CPS-B registers at an alternate address */
-	memory_install_readwrite16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x8001c0, 0x8001ff, 0, 0, cps1_cps_b_r, cps1_cps_b_w);
-
-	DRIVER_INIT_CALL(cps1);
-}
-
-static DRIVER_INIT( sf2hack )
-{
-	/* some SF2 hacks have some inputs wired to the LSB instead of MSB */
-	memory_install_read16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x800018, 0x80001f, 0, 0, cps1_hack_dsw_r);
-
-	DRIVER_INIT_CALL(cps1);
-}
-
 static DRIVER_INIT( pang3b )
 {
 	/* Pang 3 is the only non-QSound game to have an EEPROM. it is mapped in the CPS-B address range so probably is on the C-board. */
@@ -11544,10 +11518,28 @@ static DRIVER_INIT( pang3 )
 	DRIVER_INIT_CALL(pang3b);
 }
 
-static DRIVER_INIT( dinohunt )
+static DRIVER_INIT( sf2ue )
 {
-	memory_install_read16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0xf18000, 0xf19fff, 0, 0, dinohunt_sound_r);
-	memory_install_read_port(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0xfc0000, 0xfc0001, 0, 0, "IN2");
+	/* This specific version of SF2 has the CPS-B custom mapped at a different address. */
+	/* The mapping is handled by a PAL on the B-board */
+	memory_unmap_readwrite(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x800140, 0x80017f, 0, 0);
+	memory_install_readwrite16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x8001c0, 0x8001ff, 0, 0, cps1_cps_b_r, cps1_cps_b_w);
+
+	DRIVER_INIT_CALL(cps1);
+}
+
+static DRIVER_INIT( sf2thndr )
+{
+	/* This particular hack uses a modified B-board PAL which mirrors the CPS-B registers at an alternate address */
+	memory_install_readwrite16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x8001c0, 0x8001ff, 0, 0, cps1_cps_b_r, cps1_cps_b_w);
+
+	DRIVER_INIT_CALL(cps1);
+}
+
+static DRIVER_INIT( sf2hack )
+{
+	/* some SF2 hacks have some inputs wired to the LSB instead of MSB */
+	memory_install_read16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x800018, 0x80001f, 0, 0, cps1_hack_dsw_r);
 
 	DRIVER_INIT_CALL(cps1);
 }
@@ -11579,6 +11571,14 @@ static DRIVER_INIT( ganbare )
 	DRIVER_INIT_CALL(cps1);
 
 	memory_install_readwrite16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0xff0000, 0xffffff, 0, 0, ganbare_ram_r, ganbare_ram_w);
+}
+
+static DRIVER_INIT( dinohunt )
+{
+	memory_install_read16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0xf18000, 0xf19fff, 0, 0, dinohunt_sound_r);
+	memory_install_read_port(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0xf1c000, 0xf1c001, 0, 0, "IN2");
+
+	DRIVER_INIT_CALL(cps1);
 }
 
 static DRIVER_INIT( dinoeh )
@@ -11664,8 +11664,8 @@ GAME( 1991,	3wonders,	0,		cps1_10MHz,	3wonders,	cps1,		ROT0,	"Capcom",	"Three Wo
 GAME( 1991,	3wondersr1,	3wonders,	cps1_10MHz,	3wonders,	cps1,		ROT0,	"Capcom",	"Three Wonders (World 910513)", GAME_SUPPORTS_SAVE )  // "ETC"
 GAME( 1991,	3wondersu,	3wonders,	cps1_10MHz,	3wonders,	cps1,		ROT0,	"Capcom",	"Three Wonders (USA 910520)", GAME_SUPPORTS_SAVE )
 GAME( 1991,	wonder3,	3wonders,	cps1_10MHz,	3wonders,	cps1,		ROT0,	"Capcom",	"Wonder 3 (Japan 910520)", GAME_SUPPORTS_SAVE )
-GAME( 1991,	3wondersb,	3wonders,	cps1_10MHz,	3wonders,	cps1,		ROT0,	"bootleg",	"Three Wonders (bootleg)", GAME_SUPPORTS_SAVE )   // 910520 - based on World version
-GAME( 1991,	3wondersh,	3wonders,	cps1_10MHz,	3wonders,	cps1,		ROT0,	"bootleg",	"Three Wonders (hack)", GAME_SUPPORTS_SAVE ) // 910520 - based on World version
+GAME( 1991,	3wondersb,	3wonders,	cps1_10MHz,	3wonders,	cps1,		ROT0,	"bootleg",	"Three Wonders (bootleg)", GAME_SUPPORTS_SAVE )	// 910520 - based on World version
+GAME( 1991,	3wondersh,	3wonders,	cps1_10MHz,	3wonders,	cps1,		ROT0,	"hack",		"Three Wonders (hack)", GAME_SUPPORTS_SAVE )	// 910520 - based on World version
 //
 GAME( 1991,	captcomm,	0,		cps1_10MHz,	captcomm,	cps1,		ROT0,	"Capcom",	"Captain Commando (World 911202)", GAME_SUPPORTS_SAVE )	// "OTHER COUNTRY"
 GAME( 1991,	captcommr1,	captcomm,	cps1_10MHz,	captcomm,	cps1,		ROT0,	"Capcom",	"Captain Commando (World 911014)", GAME_SUPPORTS_SAVE )	// "OTHER COUNTRY"
@@ -11687,13 +11687,12 @@ GAME( 1993,	dino,		0,		qsound,		dino,		dino,		ROT0,	"Capcom",	"Cadillacs and Din
 GAME( 1993,	dinou,		dino,		qsound,		dino,		dino,		ROT0,	"Capcom",	"Cadillacs and Dinosaurs (USA 930201)", GAME_SUPPORTS_SAVE )
 GAME( 1993,	dinoj,		dino,		qsound,		dino,		dino,		ROT0,	"Capcom",	"Cadillacs: Kyouryuu Shin Seiki (Japan 930201)", GAME_SUPPORTS_SAVE )
 GAME( 1993,	dinohunt,	dino,		wofhfh,		dinoh,		dinohunt,	ROT0,	"bootleg",	"Dinosaur Hunter (Chinese bootleg of Cadillacs and Dinosaurs)", GAME_SUPPORTS_SAVE )
-GAME( 1993,	dinoeh,		dino,		qsound,		dino,		dinoeh,		ROT0,	"Ydmis(hack)",	"Cadillacs and Dinosaurs (Select Characters)(World 930201)", GAME_SUPPORTS_SAVE )
-GAME( 1993,	dinoh,		dino,		qsound,		dino,		dinoh,		ROT0,	"Unknown(hack)","Cadillacs and Dinosaurs (Hack set 1)(Asia TW 930223)" , GAME_SUPPORTS_SAVE )
-GAME( 1993,	dinot,		dino,		qsound,		dino,		dinoh,		ROT0,	"Unknown",	"Cadillacs and Dinosaurs Turbo (bootleg set 1, 930223 Asia TW)", GAME_SUPPORTS_SAVE )
-GAME( 1993,	dinohc,		dino,		wofhfh,		dino,		dinohunt,	ROT0,	"Unknown(hack)","Cadillacs and Dinosaurs (Chinese bootleg, 930223 Asia TW)", GAME_SUPPORTS_SAVE )
-GAME( 1993,	dinotpic,	dino,		qsound,		dino,		dinotpic,	ROT0,	"Unknown",	"Cadillacs and Dinosaurs Turbo (bootleg set 1 with PIC, 930223 Asia TW)", GAME_SUPPORTS_SAVE )
-/* dinopic4 - TODO: hook the sound */
-GAME( 1993,	dinopic4,	dino,		wofhfh,		dino,		dinopic4,	ROT0,	"bootleg",	"Cadillacs and Dinosaurs (bootleg set 4 (with PIC16c57), 930223 Asia TW)", GAME_NO_SOUND | GAME_SUPPORTS_SAVE )
+GAME( 1993,	dinoeh,		dino,		qsound,		dino,		dinoeh,		ROT0,	"hack",		"Cadillacs and Dinosaurs (Select Characters)(World 930201)", GAME_SUPPORTS_SAVE )
+GAME( 1993,	dinoh,		dino,		qsound,		dino,		dinoh,		ROT0,	"hack",		"Cadillacs and Dinosaurs (Hack set 1)(Asia TW 930223)" , GAME_SUPPORTS_SAVE )
+GAME( 1993,	dinot,		dino,		qsound,		dino,		dinoh,		ROT0,	"bootleg",	"Cadillacs and Dinosaurs Turbo (bootleg set 1, 930223 Asia TW)", GAME_SUPPORTS_SAVE )
+GAME( 1993,	dinohc,		dino,		wofhfh,		dino,		dinohunt,	ROT0,	"bootleg",	"Cadillacs and Dinosaurs (Chinese bootleg, 930223 Asia TW)", GAME_SUPPORTS_SAVE )
+GAME( 1993,	dinotpic,	dino,		qsound,		dino,		dinotpic,	ROT0,	"bootleg",	"Cadillacs and Dinosaurs Turbo (bootleg set 1 with PIC, 930223 Asia TW)", GAME_SUPPORTS_SAVE )
+GAME( 1993,	dinopic4,	dino,		wofhfh,		dino,		dinopic4,	ROT0,	"bootleg",	"Cadillacs and Dinosaurs (bootleg set 4 (with PIC16c57), 930223 Asia TW)", GAME_NO_SOUND | GAME_SUPPORTS_SAVE )	/* dinopic4 - TODO: hook the sound */
 //
 GAME( 1989,	unsquad,	0,		cps1_10MHz,	unsquad,	cps1,		ROT0,	"Capcom / Daipro", "U.N. Squadron (USA)", GAME_SUPPORTS_SAVE )
 GAME( 1989,	area88,		unsquad,	cps1_10MHz,	unsquad,	cps1,		ROT0,	"Capcom / Daipro", "Area 88 (Japan)", GAME_SUPPORTS_SAVE )
@@ -11710,7 +11709,7 @@ GAME( 1989,	ffightj,	ffight,		cps1_10MHz,	ffight,		cps1,		ROT0,	"Capcom",	"Final
 GAME( 1989,	ffightj1,	ffight,		cps1_10MHz,	ffight,		cps1,		ROT0,	"Capcom",	"Final Fight (Japan 900112)", GAME_SUPPORTS_SAVE )
 GAME( 1989,	ffightj2,	ffight,		cps1_10MHz,	ffight,		cps1,		ROT0,	"Capcom",	"Final Fight (Japan 900305)", GAME_SUPPORTS_SAVE )
 GAME( 1989,	ffightj3,	ffight,		cps1_10MHz,	ffight,		cps1,		ROT0,	"Capcom",	"Final Fight (Japan 900613)", GAME_SUPPORTS_SAVE )
-GAME( 1989,	ffightjh,	ffight,		cps1_10MHz,	ffight,		cps1,		ROT0,	"bootleg",	"Street Smart / Final Fight (Japan, hack)", GAME_SUPPORTS_SAVE )
+GAME( 1989,	ffightjh,	ffight,		cps1_10MHz,	ffight,		cps1,		ROT0,	"hack",		"Street Smart / Final Fight (Japan, hack)", GAME_SUPPORTS_SAVE )
 GAME( 1989,	ffightu,	ffight,		cps1_10MHz,	ffight,		cps1,		ROT0,	"Capcom",	"Final Fight (USA, set 1)", GAME_SUPPORTS_SAVE )
 GAME( 1989,	ffightu1,	ffight,		cps1_10MHz,	ffight,		cps1,		ROT0,	"Capcom",	"Final Fight (USA, set 2)", GAME_SUPPORTS_SAVE )
 GAME( 1989,	ffightu2,	ffight,		cps1_10MHz,	ffight,		cps1,		ROT0,	"Capcom",	"Final Fight (USA, set 3)", GAME_SUPPORTS_SAVE )
@@ -11750,7 +11749,7 @@ GAME( 1991,	kodu,		kod,		cps1_10MHz,	kod,		cps1,		ROT0,	"Capcom",	"The King of D
 GAME( 1991,	kodj,		kod,		cps1_10MHz,	kod,		cps1,		ROT0,	"Capcom",	"The King of Dragons (Japan 910805, B-Board 90629B-3)", GAME_SUPPORTS_SAVE )
 GAME( 1991,	kodja,		kod,		cps1_10MHz,	kod,		cps1,		ROT0,	"Capcom",	"The King of Dragons (Japan 910805, B-Board 89625B-1)", GAME_SUPPORTS_SAVE )
 GAME( 1991,	kodda,		kod,		cps1_10MHz,	kod,		cps1,		ROT0,	"bootleg",	"The King of Dragons (Phoenix bootleg, ETC 910731)", GAME_SUPPORTS_SAVE )
-GAME( 2002,	kodh,		kod,		cps1_10MHz,	kod,		cps1,		ROT0,	"bootleg",	"The King of Dragons (hack)", GAME_SUPPORTS_SAVE )
+GAME( 2002,	kodh,		kod,		cps1_10MHz,	kod,		cps1,		ROT0,	"hack",		"The King of Dragons (hack)", GAME_SUPPORTS_SAVE )
 //
 GAME( 1993,	mbombrd,	0,		qsound,		slammast,	slammast,	ROT0,	"Capcom",	"Muscle Bomber Duo: Ultimate Team Battle (World 931206)", GAME_SUPPORTS_SAVE )	// "ETC"
 GAME( 1993,	mbombrdj,	mbombrd,	qsound,		slammast,	slammast,	ROT0,	"Capcom",	"Muscle Bomber Duo: Heat Up Warriors (Japan 931206)", GAME_SUPPORTS_SAVE )
@@ -11806,7 +11805,7 @@ GAME( 1995,	sfzch,		0,		cps1_12MHz,	sfzch,		cps1,		ROT0,	"Capcom",	"Street Fight
 //
 GAME( 1989,	strider,	0,		cps1_10MHz,	strider,	cps1,		ROT0,	"Capcom",	"Strider (USA, B-Board 89624B-2)", GAME_SUPPORTS_SAVE )
 GAME( 1989,	striderua,	strider,	cps1_10MHz,	stridrua,	cps1,		ROT0,	"Capcom",	"Strider (USA, B-Board 89624B-3)", GAME_SUPPORTS_SAVE )
-GAME( 1989,	strideruc,	strider,	cps1_10MHz,	stridrua,	cps1,		ROT0,	"bootleg (Capcom)",	"Strider (USA, B-Board 90629B-3, buggy Street Fighter II conversion)", GAME_SUPPORTS_SAVE ) // various bugs even on PCB, see rom load
+GAME( 1989,	strideruc,	strider,	cps1_10MHz,	stridrua,	cps1,		ROT0,	"bootleg",	"Strider (USA, B-Board 90629B-3, buggy Street Fighter II conversion)", GAME_SUPPORTS_SAVE ) // various bugs even on PCB, see rom load
 GAME( 1989,	striderj,	strider,	cps1_10MHz,	strider,	cps1,		ROT0,	"Capcom",	"Strider Hiryu (Japan)", GAME_SUPPORTS_SAVE )
 GAME( 1989,	striderjr,	strider,	cps1_12MHz,	strider,	cps1,		ROT0,	"Capcom",	"Strider Hiryu (Japan Resale Ver.)", GAME_SUPPORTS_SAVE ) // 12MHz verified
 //
@@ -11826,20 +11825,20 @@ GAME( 2010,	wofchdx,	wofch,		qsound,		wofch,		wof,		ROT0,	"hack",		"Sangokushi I
 //
 GAME( 1992,	sf2hf,		0,		cps1_12MHz,	sf2,		cps1,		ROT0,	"Capcom",	"Street Fighter II': Hyper Fighting (World 921209)", GAME_SUPPORTS_SAVE )	// "ETC"
 GAME( 1992,	sf2hfu,		sf2hf,		cps1_12MHz,	sf2,		cps1,		ROT0,	"Capcom",	"Street Fighter II': Hyper Fighting (USA 921209)", GAME_SUPPORTS_SAVE )
-GAME( 1992,	sf2hfj,		sf2hf,		cps1_12MHz,	sf2j,		cps1,		ROT0,	"Capcom",	"Street Fighter II' Turbo: Hyper Fighting (Japan 921209)", GAME_SUPPORTS_SAVE )
-GAME( 1992,	sf2hfjb,	sf2hf,		cps1_12MHz,	sf2m4,		sf2hfjb,	ROT0,	"bootleg",	"Street Fighter II' Turbo: Hyper Fighting (Japan, bootleg set 1)", GAME_SUPPORTS_SAVE )
-GAME( 1992,	sf2hfjb2,	sf2hf,		cps1_12MHz,	sf2m4,		sf2hfjb,	ROT0,	"bootleg",	"Street Fighter II' Turbo: Hyper Fighting (Japan, bootleg set 2)", GAME_SUPPORTS_SAVE )
+GAME( 1992,	sf2hfj,		sf2hf,		cps1_12MHz,	sf2j,		cps1,		ROT0,	"Capcom",	"Street Fighter II': Turbo: Hyper Fighting (Japan 921209)", GAME_SUPPORTS_SAVE )
+GAME( 1992,	sf2hfjb,	sf2hf,		cps1_12MHz,	sf2m4,		sf2hfjb,	ROT0,	"bootleg",	"Street Fighter II': Turbo: Hyper Fighting (Japan, bootleg set 1)", GAME_SUPPORTS_SAVE )
+GAME( 1992,	sf2hfjb2,	sf2hf,		cps1_12MHz,	sf2m4,		sf2hfjb,	ROT0,	"bootleg",	"Street Fighter II': Turbo: Hyper Fighting (Japan, bootleg set 2)", GAME_SUPPORTS_SAVE )
 //
 GAME( 1992,	wof,		0,		qsound,		wof,		wof,		ROT0,	"Capcom",	"Warriors of Fate (World 921031)", GAME_SUPPORTS_SAVE )	// "ETC"
-GAME( 1992,	wofr1,		wof,		qsound,		wof,		wof,		ROT0,	"Capcom",	"Warriors of Fate (World 921002)", GAME_SUPPORTS_SAVE )   // "ETC"
+GAME( 1992,	wofr1,		wof,		qsound,		wof,		wof,		ROT0,	"Capcom",	"Warriors of Fate (World 921002)", GAME_SUPPORTS_SAVE )	// "ETC"
 GAME( 1992,	wofu,		wof,		qsound,		wof,		wof,		ROT0,	"Capcom",	"Warriors of Fate (USA 921031)", GAME_SUPPORTS_SAVE )	// World "warning"
 GAME( 1992,	wofa,		wof,		qsound,		wof,		wof,		ROT0,	"Capcom",	"Sangokushi II (Asia 921005)", GAME_SUPPORTS_SAVE )	// World "warning"
 GAME( 1992,	wofj,		wof,		qsound,		wof,		wof,		ROT0,	"Capcom",	"Tenchi wo Kurau II: Sekiheki no Tatakai (Japan 921031)", GAME_SUPPORTS_SAVE )
 GAME( 1999,	wofhfh,		wof,		wofhfh,		wofhfh,		cps1,		ROT0,	"bootleg",	"Huo Feng Huang (Chinese bootleg of Sangokushi II)", GAME_SUPPORTS_SAVE )   // 921005 - based on Asia version
 GAME( 1992,	wofjh,		wof,		qsound,		wof,		wof,		ROT0,	"Capcom",	"Tenchi wo Kurau II - Sekiheki no Tatakai (hack, 921031 japan)", GAME_SUPPORTS_SAVE )
-GAME( 1992,	wofah,		wof,		qsound,		wof,		wof,		ROT0,	"Capcom",	"Sangokushi II (hack set 1, 921005 Asia)", GAME_SUPPORTS_SAVE )
-GAME( 1992,	wofaha,		wof,		qsound,		wof,		wof,		ROT0,	"Capcom",	"Sangokushi II (hack set 2, 921005 Asia)", GAME_SUPPORTS_SAVE )
-GAME( 1992,	wofahb,		wof,		qsound,		wof,		wof,		ROT0,	"Capcom",	"Sangokushi II (hack set 3, 921005 Asia)", GAME_SUPPORTS_SAVE )
+GAME( 1992,	wofah,		wof,		qsound,		wof,		wof,		ROT0,	"hack",		"Sangokushi II (hack set 1, 921005 Asia)", GAME_SUPPORTS_SAVE )
+GAME( 1992,	wofaha,		wof,		qsound,		wof,		wof,		ROT0,	"hack",		"Sangokushi II (hack set 2, 921005 Asia)", GAME_SUPPORTS_SAVE )
+GAME( 1992,	wofahb,		wof,		qsound,		wof,		wof,		ROT0,	"hack",		"Sangokushi II (hack set 3, 921005 Asia)", GAME_SUPPORTS_SAVE )
 
 
 

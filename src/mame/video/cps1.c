@@ -1879,6 +1879,12 @@ void cps1_get_video_base( running_machine *machine )
 	/* Some of the sf2 hacks use only sprite port 0x9100 and the scroll layers are offset */
 	switch ( state->game_config->bootleg_kludge )
 	{
+		default:
+		case 0x00:
+			scroll1xoff = 0x00;
+			scroll2xoff = 0x00;
+			scroll3xoff = 0x00;
+		break;
 		case 0x01:
 			state->cps_a_regs[CPS1_OBJ_BASE] = 0x9100;
 			scroll1xoff = -0x0c;
@@ -1916,10 +1922,6 @@ void cps1_get_video_base( running_machine *machine )
 			state->cps_a_regs[CPS1_SCROLL3_BASE] = 0x9100;
 			state->cps_a_regs[CPS1_PALETTE_BASE] = 0x9140;
 		break;
-		default:
-			scroll1xoff = 0x00;
-			scroll2xoff = 0x00;
-			scroll3xoff = 0x00;
 	}
 	state->obj = cps1_base(machine, CPS1_OBJ_BASE, state->obj_size);
 	state->other = cps1_base(machine, CPS1_OTHER_BASE, state->other_size);
@@ -2364,8 +2366,7 @@ static void cps1_render_sprites( running_machine *machine, bitmap_t *bitmap, con
 				CODE, COLOR, !(FLIPX), !(FLIPY),					 \
 				511 - 16 - (SX), 255 - 16 - (SY), machine->priority_bitmap, 0x02, 0x0f); \
 	else												 \
-		pdrawgfx_transpen( bitmap,								 \
-				cliprect, machine->gfx[2], 						 \
+		pdrawgfx_transpen( bitmap, cliprect, machine->gfx[2],					 \
 				CODE, COLOR, FLIPX, FLIPY,						 \
 				SX, SY,				  machine->priority_bitmap, 0x02, 0x0f); \
 }

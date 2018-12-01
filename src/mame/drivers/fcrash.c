@@ -412,23 +412,22 @@ static void bootleg_render_sprites( running_machine *machine, bitmap_t *bitmap, 
 {
 	cps_state *state = machine->driver_data<cps_state>();
 
-	INT32 pos, base = state->sprite_base / 2;
+	INT32 base = state->sprite_base / 2;
 	INT32 last_sprite_offset = 0x1ffc;
-	INT32 num_sprites = machine->gfx[2]->total_elements;
-	UINT16 *sprite_ram = state->bootleg_sprite_ram ? state->bootleg_sprite_ram : state->gfxram;	/* if we have separate sprite ram, use it */
+	UINT16 *sprite_ram = state->bootleg_sprite_ram ? state->bootleg_sprite_ram : state->gfxram; /* if we have separate sprite ram, use it */
 	UINT16 tileno, color, xpos, ypos, flipx, flipy;
 
-	for ( pos = 0x1ffc - base; pos >= 0x0000; pos -= 4)				/* get end of sprite list marker */
+	for (INT32 pos = 0x1ffc - base; pos >= 0x0000; pos -= 4)				    /* get end of sprite list marker */
 		if (sprite_ram[base + pos - 1] == state->sprite_list_end_marker)
 			last_sprite_offset = pos;
 
-	if ( ((base + last_sprite_offset) < 0x2000) || (!state->bootleg_sprite_ram) )	/* if we are using bootleg sprite ram, the index must be less than 0x2000 */
+	if ( (!state->bootleg_sprite_ram) || ((base + last_sprite_offset) < 0x2000) )		    /* if we are using bootleg sprite ram, the index must be less than 0x2000 */
 	{
-		for (pos = last_sprite_offset; pos >= 0x0000; pos -= 4)
+		for (INT32 pos = last_sprite_offset; pos >= 0x0000; pos -= 4)
 		{
 			INT32 temp = base + pos + 1;
 			tileno = sprite_ram[temp - 1];
-			if (tileno >= num_sprites) continue;
+			if (tileno >= machine->gfx[2]->total_elements) continue;
 			xpos   = sprite_ram[temp + 1] & 0x01ff;
 			ypos   = sprite_ram[temp - 2] & 0x01ff;
 			flipx  = sprite_ram[temp] & 0x20;
@@ -1037,14 +1036,22 @@ static MACHINE_START( kodb )
 
 static MACHINE_START( sgyxz )
 {
-	MACHINE_START_CALL(kodb);
+	MACHINE_START_CALL(common);
+	memory_configure_bank(machine, "bank1", 0, 2, memory_region(machine, "audiocpu") + 0x10000, 0x4000);
+
 	cps_state *state = machine->driver_data<cps_state>();
 
+	state->layer_enable_reg = 0x20;
+	state->layer_mask_reg[0] = 0x26;
+	state->layer_mask_reg[1] = 0x28;
+	state->layer_mask_reg[2] = 0x2c;
+	state->layer_mask_reg[3] = 0x2e;
 	state->layer_scroll1x_offset = 0x40;
 	state->layer_scroll2x_offset = 0x40;
 	state->layer_scroll3x_offset = 0x40;
-
-	memory_configure_bank(machine, "bank1", 0, 2, memory_region(machine, "audiocpu") + 0x10000, 0x4000);
+	state->sprite_base = 0x1000;
+	state->sprite_list_end_marker = 0x8000;
+	state->sprite_x_offset = 0x00;
 }
 
 static MACHINE_START( punipic )
@@ -1530,133 +1537,7 @@ static MACHINE_DRIVER_START( varthb )
 MACHINE_DRIVER_END
 
 
-/* --- DRIVER INIT --- */
-static DRIVER_INIT( sf2mdta )
-{
-	cps_state *state = machine->driver_data<cps_state>();
-
-	state->bootleg_sprite_ram = (UINT16 *)memory_install_ram(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x700000, 0x703fff, 0, 0, NULL);
-	memory_install_ram(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x704000, 0x707fff, 0, 0, state->bootleg_sprite_ram);
-	state->bootleg_work_ram = (UINT16 *)memory_install_ram(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0xfc0000, 0xfcffff, 0, 0, NULL);
-
-	DRIVER_INIT_CALL(cps1);
-}
-
-static DRIVER_INIT( sf2mdt )
-{
-	memory_install_write16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x708100, 0x7081ff, 0, 0, sf2mdt_layer_w);
-
-	DRIVER_INIT_CALL(sf2mdta);
-}
-
-static DRIVER_INIT( kodb )
-{
-	cps_state *state = machine->driver_data<cps_state>();
-	UINT8 *src = (UINT8 *)memory_region( machine, "maincpu" );
-
-	memory_install_read_port(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x800000, 0x800007, 0, 0, "IN1");
-	memory_install_read16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x800018, 0x80001f, 0, 0, cps1_dsw_r);
-	memory_install_write16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x800180, 0x800187, 0, 0, cps1_soundlatch_w);
-	memory_install_write16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x980000, 0x98002f, 0, 0, kodb_layer_w);
-	/* the original game alternates between 2 sprite ram areas to achieve flashing sprites - the bootleg doesn't do the write to the register to achieve this
-	mapping both sprite ram areas to the same bootleg sprite ram - similar to how sf2mdt works */
-	state->bootleg_sprite_ram = (UINT16 *)memory_install_ram(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x900000, 0x903fff, 0, 0, NULL);
-	memory_install_ram(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x904000, 0x907fff, 0, 0, state->bootleg_sprite_ram);	/* both of these need to be mapped */
-
-	src[0x0953] = 0x07;	/* fixes sprite ram clearing issue. */
-
-	DRIVER_INIT_CALL(cps1);
-}
-
-static DRIVER_INIT( dinopic )
-{
-	cps_state *state = machine->driver_data<cps_state>();
-	state->bootleg_sprite_ram = (UINT16 *)memory_install_ram(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x990000, 0x993fff, 0, 0, NULL);
-
-	DRIVER_INIT_CALL(cps1);
-}
-
-static DRIVER_INIT( sf2m1 )
-{
-	UINT16 *src = (UINT16 *)memory_region( machine, "maincpu" );
-	src[0x064e / 2] = 0x6046;
-
-	DRIVER_INIT_CALL(dinopic);
-}
-
-static DRIVER_INIT( punipic )
-{
-	UINT16 *src = (UINT16 *)memory_region( machine, "maincpu" );
-	src[0x05a8 / 2] = 0x4e71;
-	src[0x4df0 / 2] = 0x33ed;
-	src[0x4df2 / 2] = 0xdb2e;
-	src[0x4df4 / 2] = 0x0080;
-	src[0x4df6 / 2] = 0x0152;
-	src[0x4df8 / 2] = 0x4e75;
-
-	DRIVER_INIT_CALL(dinopic);
-	memory_install_write16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x980000, 0x98001f, 0, 0, punipic_layer_w);
-}
-
-static DRIVER_INIT( punipic3 )
-{
-	cps_state *state = machine->driver_data<cps_state>();
-	state->punipic3_parampass = 0;
-
-	UINT16 *src = (UINT16 *)memory_region( machine, "maincpu" );
-	src[0x05a6 / 2] = 0x4e71;
-	src[0x05a8 / 2] = 0x4e71;
-
-	DRIVER_INIT_CALL(dinopic);
-	memory_install_write16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x980000, 0x98000f, 0, 0, punipic3_layer_w);
-}
-
-static DRIVER_INIT( cawingbl )
-{
-	memory_install_read_port(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x882000, 0x882001, 0, 0, "IN1");
-	memory_install_write16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x882006, 0x882007, 0, 0, sf2mdt_soundlatch_w);
-	memory_install_read16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x882008, 0x88200f, 0, 0, cps1_dsw_r);
-
-	DRIVER_INIT_CALL(cps1);
-}
-
-static DRIVER_INIT( fcrash )
-{
-	UINT8 *src = (UINT8 *)memory_region( machine, "maincpu" );
-	src[0x2611] = 0x07;	/* This fixes sprite ram clearing */
-
-	DRIVER_INIT_CALL(cps1);
-}
-
-static DRIVER_INIT( sgyxz )
-{
-	UINT8 *src = (UINT8 *)memory_region(machine, "maincpu");
-	src[0x00008] = 0xa2;
-	src[0x02449] = 0x07;
-	src[0x072a6] = 0x00;
-	src[0x708db] = 0xff;
-	src[0x708dc] = 0xff;
-	src[0x708dd] = 0xff;
-	src[0x708de] = 0xff;
-	src[0xf11eb] = 0x60;
-
-	DRIVER_INIT_CALL(cps1);
-}
-
-static DRIVER_INIT( wofh )
-{
-	UINT8 *src = (UINT8 *)memory_region(machine, "maincpu");
-
-	src[0x072a6] = 0x00;
-	src[0xf11ec] = 0x71;
-	src[0xf11ed] = 0x4e;
-
-	DRIVER_INIT_CALL(cps1);
-}
-
-
 /* --- LOAD ROM --- */
-
 ROM_START( captcommb2 )
 	ROM_REGION( CODE_SIZE, "maincpu", 0 )      /* 68000 code */
 	ROM_LOAD16_BYTE( "5.bin",   0x000000, 0x80000, CRC(c3a6ed28) SHA1(f79fed35f7b0dc383837a2ead846acc686dd3487) )
@@ -2413,6 +2294,130 @@ ROM_START( sf2m1 )
 	ROM_LOAD( "s92_18.bin",    0x00000, 0x20000, CRC(7f162009) SHA1(346bf42992b4c36c593e21901e22c87ae4a7d86d) )
 	ROM_LOAD( "s92_19.bin",    0x20000, 0x20000, CRC(beade53f) SHA1(277c397dc12752719ec6b47d2224750bd1c07f79) )
 ROM_END
+
+/* --- DRIVER INIT --- */
+static DRIVER_INIT( sf2mdta )
+{
+	cps_state *state = machine->driver_data<cps_state>();
+
+	state->bootleg_sprite_ram = (UINT16 *)memory_install_ram(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x700000, 0x703fff, 0, 0, NULL);
+	memory_install_ram(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x704000, 0x707fff, 0, 0, state->bootleg_sprite_ram);
+	state->bootleg_work_ram = (UINT16 *)memory_install_ram(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0xfc0000, 0xfcffff, 0, 0, NULL);
+
+	DRIVER_INIT_CALL(cps1);
+}
+
+static DRIVER_INIT( sf2mdt )
+{
+	memory_install_write16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x708100, 0x7081ff, 0, 0, sf2mdt_layer_w);
+
+	DRIVER_INIT_CALL(sf2mdta);
+}
+
+static DRIVER_INIT( kodb )
+{
+	cps_state *state = machine->driver_data<cps_state>();
+	UINT8 *src = (UINT8 *)memory_region( machine, "maincpu" );
+
+	memory_install_read_port(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x800000, 0x800007, 0, 0, "IN1");
+	memory_install_read16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x800018, 0x80001f, 0, 0, cps1_dsw_r);
+	memory_install_write16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x800180, 0x800187, 0, 0, cps1_soundlatch_w);
+	memory_install_write16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x980000, 0x98002f, 0, 0, kodb_layer_w);
+	/* the original game alternates between 2 sprite ram areas to achieve flashing sprites - the bootleg doesn't do the write to the register to achieve this
+	mapping both sprite ram areas to the same bootleg sprite ram - similar to how sf2mdt works */
+	state->bootleg_sprite_ram = (UINT16 *)memory_install_ram(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x900000, 0x903fff, 0, 0, NULL);
+	memory_install_ram(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x904000, 0x907fff, 0, 0, state->bootleg_sprite_ram);	/* both of these need to be mapped */
+
+	src[0x0953] = 0x07;	/* fixes sprite ram clearing issue. */
+
+	DRIVER_INIT_CALL(cps1);
+}
+
+static DRIVER_INIT( dinopic )
+{
+	cps_state *state = machine->driver_data<cps_state>();
+	state->bootleg_sprite_ram = (UINT16 *)memory_install_ram(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x990000, 0x993fff, 0, 0, NULL);
+
+	DRIVER_INIT_CALL(cps1);
+}
+
+static DRIVER_INIT( sf2m1 )
+{
+	UINT16 *src = (UINT16 *)memory_region( machine, "maincpu" );
+	src[0x064e / 2] = 0x6046;
+
+	DRIVER_INIT_CALL(dinopic);
+}
+
+static DRIVER_INIT( punipic )
+{
+	UINT16 *src = (UINT16 *)memory_region( machine, "maincpu" );
+	src[0x05a8 / 2] = 0x4e71;
+	src[0x4df0 / 2] = 0x33ed;
+	src[0x4df2 / 2] = 0xdb2e;
+	src[0x4df4 / 2] = 0x0080;
+	src[0x4df6 / 2] = 0x0152;
+	src[0x4df8 / 2] = 0x4e75;
+
+	DRIVER_INIT_CALL(dinopic);
+	memory_install_write16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x980000, 0x98001f, 0, 0, punipic_layer_w);
+}
+
+static DRIVER_INIT( punipic3 )
+{
+	cps_state *state = machine->driver_data<cps_state>();
+	state->punipic3_parampass = 0;
+
+	UINT16 *src = (UINT16 *)memory_region( machine, "maincpu" );
+	src[0x05a6 / 2] = 0x4e71;
+	src[0x05a8 / 2] = 0x4e71;
+
+	DRIVER_INIT_CALL(dinopic);
+	memory_install_write16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x980000, 0x98000f, 0, 0, punipic3_layer_w);
+}
+
+static DRIVER_INIT( cawingbl )
+{
+	memory_install_read_port(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x882000, 0x882001, 0, 0, "IN1");
+	memory_install_write16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x882006, 0x882007, 0, 0, sf2mdt_soundlatch_w);
+	memory_install_read16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x882008, 0x88200f, 0, 0, cps1_dsw_r);
+
+	DRIVER_INIT_CALL(cps1);
+}
+
+static DRIVER_INIT( fcrash )
+{
+	UINT8 *src = (UINT8 *)memory_region( machine, "maincpu" );
+	src[0x2611] = 0x07;	/* This fixes sprite ram clearing */
+
+	DRIVER_INIT_CALL(cps1);
+}
+
+static DRIVER_INIT( sgyxz )
+{
+	UINT8 *src = (UINT8 *)memory_region(machine, "maincpu");
+	src[0x00008] = 0xa2;
+	src[0x02449] = 0x07;
+	src[0x072a6] = 0x00;
+	src[0x708db] = 0xff;
+	src[0x708dc] = 0xff;
+	src[0x708dd] = 0xff;
+	src[0x708de] = 0xff;
+	src[0xf11eb] = 0x60;
+
+	DRIVER_INIT_CALL(cps1);
+}
+
+static DRIVER_INIT( wofh )
+{
+	UINT8 *src = (UINT8 *)memory_region(machine, "maincpu");
+
+	src[0x072a6] = 0x00;
+	src[0xf11ec] = 0x71;
+	src[0xf11ed] = 0x4e;
+
+	DRIVER_INIT_CALL(cps1);
+}
 
 
 /*
