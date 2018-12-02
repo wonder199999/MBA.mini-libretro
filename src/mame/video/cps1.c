@@ -1473,6 +1473,7 @@ static const struct CPS1config cps1_config_table[] =
 	{"wofaha",	CPS_B_21_DEF,	mapper_TK263B },
 	{"wofahb",	CPS_B_21_DEF,	mapper_TK263B },
 	{"wofjh",	CPS_B_21_QS1,	mapper_TK263B },
+	{"wofb",	CPS_B_21_DEF,	mapper_TK263B },
 
 
 

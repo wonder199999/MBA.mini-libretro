@@ -9878,6 +9878,41 @@ ROM_START( wofahb )
 	ROM_LOAD( "tk2_q4.rom",  0x180000, 0x80000, CRC(36642e88) SHA1(8ab25b19e2b67215a5cb1f3aa81b9d26009cfeb8) )
 ROM_END
 
+ROM_START( wofb )
+	ROM_REGION( CODE_SIZE, "maincpu", 0 )		/* 68000 code */
+	ROM_LOAD16_BYTE( "3-f2ab.040",  0x000000, 0x80000, CRC(61fd0a01) SHA1(a7b5bdddd7b31645e33314c1d3649e1506cecfea) )
+	ROM_LOAD16_BYTE( "1-9207.040",  0x000001, 0x80000, CRC(7f59e24c) SHA1(34c294328d00c65086622bd15e17210f07f37237) )
+	ROM_LOAD16_BYTE( "4-d4d2.010",  0x100000, 0x20000, CRC(fe5eee87) SHA1(be1230f64c1e59ae3ff3e58593070613966ac79d) )
+	ROM_LOAD16_BYTE( "2-6c41.010",  0x100001, 0x20000, CRC(739379be) SHA1(897f61527213902fda04bc28339f1f4278bf5ae9) )
+
+	ROM_REGION( 0x400000, "gfx", 0 )
+	ROMX_LOAD( "5-caf3.040",   0x000000, 0x40000, CRC(c8dcaa95) SHA1(bcaeaefd40ffa1b32e80457cffcc1ceab461af1d), ROM_SKIP(7) )
+	ROM_CONTINUE(              0x000004, 0x40000 )
+	ROMX_LOAD( "6-034f.040",   0x000001, 0x40000, CRC(1ab0000c) SHA1(0d0004cc1725c38d140ecb8dc9666361b2d3e607), ROM_SKIP(7) )
+	ROM_CONTINUE(              0x000005, 0x40000 )
+	ROMX_LOAD( "7-b0fa.040",   0x000002, 0x40000, CRC(8425ff6b) SHA1(9a051089c2a492b8c63484582f95c578704b6820), ROM_SKIP(7) )
+	ROM_CONTINUE(              0x000006, 0x40000 )
+	ROMX_LOAD( "8-a6b7.040",   0x000003, 0x40000, CRC(24ce197b) SHA1(0ccdbd6f6a30e6d1479f8702c3e8561b16303550), ROM_SKIP(7) )
+	ROM_CONTINUE(              0x000007, 0x40000 )
+	ROMX_LOAD( "9-8a2c.040",   0x200000, 0x40000, CRC(9d20ef9b) SHA1(cbf3cb6bd7a73312e5061082554f2e17aae08621), ROM_SKIP(7) )
+	ROM_CONTINUE(              0x200004, 0x40000 )
+	ROMX_LOAD( "10-7d24.040",  0x200001, 0x40000, CRC(90c93dd2) SHA1(d3d2b0bcbcbb21a41f986eb752ab114697eb9402), ROM_SKIP(7) )
+	ROM_CONTINUE(              0x200005, 0x40000 )
+	ROMX_LOAD( "11-4171.040",  0x200002, 0x40000, CRC(219fd7e2) SHA1(af765eb7b275ed541c08e243b22b5c9f54c1a8ec), ROM_SKIP(7) )
+	ROM_CONTINUE(              0x200006, 0x40000 )
+	ROMX_LOAD( "12-f56b.040",  0x200003, 0x40000, CRC(efc17c9a) SHA1(26429a9039bb249e17945508c16645c82f7f412a), ROM_SKIP(7) )
+	ROM_CONTINUE(              0x200007, 0x40000 )
+
+	ROM_REGION( 0x28000, "audiocpu", 0 )
+	ROM_LOAD( "tk2_qa.5k",     0x00000, 0x08000, CRC(c9183a0d) SHA1(d8b1d41c572f08581f8ab9eb878de77d6ea8615d) )
+	ROM_CONTINUE(		   0x10000, 0x18000 )
+
+	ROM_REGION( 0x200000, "qsound", 0 )
+	ROM_LOAD( "tk2-q1.1k",     0x000000, 0x80000, CRC(611268cf) SHA1(83ab059f2110fb25fdcff928d56b790fc1f5c975) )
+	ROM_LOAD( "tk2-q2.2k",     0x080000, 0x80000, CRC(20f55ca9) SHA1(90134e9a9c4749bb65c728b66ea4dac1fd4d88a4) )
+	ROM_LOAD( "tk2-q3.3k",     0x100000, 0x80000, CRC(bfcf6f52) SHA1(2a85ff3fc89b4cbabd20779ec12da2e116333c7c) )
+	ROM_LOAD( "tk2-q4.4k",     0x180000, 0x80000, CRC(36642e88) SHA1(8ab25b19e2b67215a5cb1f3aa81b9d26009cfeb8) )
+ROM_END
 
 
 
@@ -11589,9 +11624,9 @@ static DRIVER_INIT( dinoeh )
 
 static DRIVER_INIT( dinoh )
 {
-	UINT16 *rom = (UINT16 *)memory_region(machine, "maincpu");
+	UINT16 *ram = (UINT16 *)memory_region(machine, "maincpu");
 
-	rom[0xAACF4 / 2] = 0x4e71;	/* Patch out Q-Sound test */
+	ram[0xaacf4 / 2] = 0x4e71;	/* Patch out Q-Sound test */
 
 	DRIVER_INIT_CALL(dinoeh);
 }
@@ -11613,10 +11648,10 @@ static DRIVER_INIT( dinotpic )
 		{ 0xaaa6c, 0xD8 }, { 0xaaa6d, 0x00 },	{ -1, -1 }
 	};
 
-	UINT8 *src = (UINT8 *)memory_region(machine, "maincpu");
+	UINT8 *ram = (UINT8 *)memory_region(machine, "maincpu");
 
 	for (int i = 0; patch_table[i][0] >= 0; i++)
-		src[patch_table[i][0]] = patch_table[i][1];
+		ram[patch_table[i][0]] = patch_table[i][1];
 
 	DRIVER_INIT_CALL(dino);
 }
@@ -11640,13 +11675,29 @@ static DRIVER_INIT( sf2hfjb )
 		{ 0x10e8d, 0x822c }, { 0x10e8e, 0x823c }, { 0x10e95, 0x822d }, { -1, -1 }
 	};
 
-	UINT16 *src = (UINT16 *)memory_region(machine, "maincpu");
+	UINT16 *ram = (UINT16 *)memory_region(machine, "maincpu");
 
 	for (int i = 0; fix_gfx_table[i][0] > 0; i++)
-		src[fix_gfx_table[i][0]] = fix_gfx_table[i][1];
+		ram[fix_gfx_table[i][0]] = fix_gfx_table[i][1];
 
 	memory_install_write16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x800124, 0x800125, 0, 0, sf2hfjb_layer_w);
 	DRIVER_INIT_CALL(sf2hack);
+}
+
+static DRIVER_INIT( wofb )
+{
+	const int patch_table[][2] = {
+		{ 0x00506, 0xe7 }, { 0x00507, 0x48 }, { 0x00508, 0xfe }, { 0x00509, 0xff }, { 0x0050a, 0xf8 },
+		{ 0x0050b, 0x4b }, { 0x06abc, 0x06 }, { 0x06abd, 0x01 }, { 0x0764e, 0x71 }, { 0x07650, 0x71 },
+		{ 0x07651, 0x4e }, { 0x5d236, 0xfc }, { 0x5d237, 0x28 }, { 0x5d238, 0x00 }, { 0x5d23b, 0x01 }, { -1, -1 }
+	};
+
+	UINT8 *ram = (UINT8 *)memory_region(machine, "maincpu");
+
+	for (int i = 0; patch_table[i][0] >= 0; i++)
+		ram[patch_table[i][0]] = patch_table[i][1];
+
+	DRIVER_INIT_CALL(wof);
 }
 
 
@@ -11839,6 +11890,7 @@ GAME( 1992,	wofjh,		wof,		qsound,		wof,		wof,		ROT0,	"Capcom",	"Tenchi wo Kurau 
 GAME( 1992,	wofah,		wof,		qsound,		wof,		wof,		ROT0,	"hack",		"Sangokushi II (hack set 1, 921005 Asia)", GAME_SUPPORTS_SAVE )
 GAME( 1992,	wofaha,		wof,		qsound,		wof,		wof,		ROT0,	"hack",		"Sangokushi II (hack set 2, 921005 Asia)", GAME_SUPPORTS_SAVE )
 GAME( 1992,	wofahb,		wof,		qsound,		wof,		wof,		ROT0,	"hack",		"Sangokushi II (hack set 3, 921005 Asia)", GAME_SUPPORTS_SAVE )
+GAME( 1992,	wofb,		wof,		qsound,		wof,		wofb,		ROT0,	"bootleg",	"Warriors of Fate (bootleg, 921002 etc)", GAME_SUPPORTS_SAVE )
 
 
 
