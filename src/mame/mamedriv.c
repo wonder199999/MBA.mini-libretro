@@ -292,13 +292,13 @@ const game_driver *const drivers[] =
 	DRIVER( wofahb )
 	DRIVER( wofjh )
 	DRIVER( wofb )
+	DRIVER( wofsjb )
 //	DRIVER( wof3js )
 //	DRIVER( wof3jsa )
 //	DRIVER( wof3sj )
 //	DRIVER( wof3sja )
 //	DRIVER( wofsj )
 //	DRIVER( wofsja )
-//	DRIVER( wofsjb )
 	//
 	DRIVER( sf2hf )			/* 09/12/1992 (c) 1992 (World) */
 	DRIVER( sf2hfj )		/* 09/12/1992 (c) 1992 (Japan) */

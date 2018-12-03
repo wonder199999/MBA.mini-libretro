@@ -719,6 +719,7 @@ static ADDRESS_MAP_START( qsound_main_map, ADDRESS_SPACE_PROGRAM, 16 )
 ADDRESS_MAP_END
 
 /* --------------- Game-specific CPU PROGRAM_MAP --------------- */
+
 static ADDRESS_MAP_START( sf2m3_map, ADDRESS_SPACE_PROGRAM, 16 )
 	AM_RANGE(0x000000, 0x3fffff) AM_ROM
 	AM_RANGE(0x800010, 0x800011) AM_READ_PORT("IN1")
@@ -749,6 +750,27 @@ static ADDRESS_MAP_START( daimakaib_map, ADDRESS_SPACE_PROGRAM, 16 )
 	AM_RANGE(0x980000, 0x98000d) AM_WRITE( daimakaib_layer_w )
 	AM_RANGE(0x990000, 0x993fff) AM_WRITENOP
 	AM_RANGE(0xff0000, 0xffffff) AM_RAM
+ADDRESS_MAP_END
+
+static ADDRESS_MAP_START( wofsjb_map, ADDRESS_SPACE_PROGRAM, 16 )
+	AM_RANGE(0x000000, 0x1fffff) AM_ROM
+	AM_RANGE(0x800000, 0x800001) AM_READ_PORT("IN1")
+	AM_RANGE(0x800018, 0x800019) AM_READ(cps1_in0_r)
+	AM_RANGE(0x80001a, 0x80001b) AM_READ(cps1_in1_r)
+	AM_RANGE(0x80001c, 0x80001f) AM_READ(wof_hack_dsw_r)
+	AM_RANGE(0x800030, 0x800037) AM_WRITE(cps1_coinctrl_w)
+	AM_RANGE(0x800100, 0x80013f) AM_WRITE(cps1_cps_a_w) AM_BASE_MEMBER(cps_state, cps_a_regs)
+	AM_RANGE(0x800140, 0x80017f) AM_READWRITE(cps1_cps_b_r, cps1_cps_b_w) AM_BASE_MEMBER(cps_state, cps_b_regs)
+	AM_RANGE(0x900000, 0x92ffff) AM_RAM_WRITE(cps1_gfxram_w) AM_BASE_SIZE_MEMBER(cps_state, gfxram, gfxram_size)
+	/* unknown addresses (all write): 930008-930807. No 3rd player controls. NVRAM doesn't work */
+	AM_RANGE(0xf00000, 0xf0ffff) AM_READ(qsound_rom_r)
+	AM_RANGE(0xf18000, 0xf19fff) AM_READWRITE(qsound_sharedram1_r, qsound_sharedram1_w)
+	AM_RANGE(0xf1c000, 0xf1c001) AM_READ_PORT("IN2")
+	AM_RANGE(0xf1c004, 0xf1c005) AM_WRITE(cpsq_coinctrl2_w)
+	AM_RANGE(0xf1c006, 0xf1c007) AM_READ_PORT("EEPROMIN") AM_WRITE_PORT("EEPROMOUT")
+	AM_RANGE(0xf1ce74, 0xf1ce75) AM_WRITENOP
+	AM_RANGE(0xf1e000, 0xf1ffff) AM_READWRITE(qsound_sharedram2_r, qsound_sharedram2_w)
+	AM_RANGE(0xff0000, 0xffffff) AM_RAM AM_BASE_MEMBER(cps_state, mainram)
 ADDRESS_MAP_END
 
 /*
@@ -3302,6 +3324,14 @@ static MACHINE_DRIVER_START( daimakaib )
 
 	MDRV_CPU_MODIFY("maincpu")
 	MDRV_CPU_PROGRAM_MAP(daimakaib_map)
+MACHINE_DRIVER_END
+
+static MACHINE_DRIVER_START( wofsjb )
+	/* basic machine hardware */
+	MDRV_IMPORT_FROM(qsound)
+
+	MDRV_CPU_MODIFY("maincpu")
+	MDRV_CPU_PROGRAM_MAP(wofsjb_map)
 MACHINE_DRIVER_END
 
 
@@ -9914,6 +9944,31 @@ ROM_START( wofb )
 	ROM_LOAD( "tk2-q4.4k",     0x180000, 0x80000, CRC(36642e88) SHA1(8ab25b19e2b67215a5cb1f3aa81b9d26009cfeb8) )
 ROM_END
 
+ROM_START( wofsjb )
+	ROM_REGION( CODE_SIZE, "maincpu", 0 )		/* 68000 code */
+	ROM_LOAD16_BYTE( "c-d140.040",  0x000000, 0x80000, CRC(e6d933a6) SHA1(c1f08bbbfc855bbc96b844eed7b1e4f9a0a07fbf) )
+	ROM_LOAD16_BYTE( "a-0050.040",  0x000001, 0x80000, CRC(403eaead) SHA1(ce6d061e5ee91de779c8d0c19bed273dc4769900) )
+
+	ROM_REGION( 0x400000, "gfx", 0 )
+	ROMX_LOAD( "tk2_gfx1.rom",  0x000000, 0x80000, CRC(0d9cb9bf) SHA1(cc7140e9a01a14b252cb1090bcea32b0de461928) , ROM_GROUPWORD | ROM_SKIP(6) )
+	ROMX_LOAD( "tk2_gfx3.rom",  0x000002, 0x80000, CRC(45227027) SHA1(b21afc593f0d4d8909dfa621d659cbb40507d1b2) , ROM_GROUPWORD | ROM_SKIP(6) )
+	ROMX_LOAD( "tk2_gfx2.rom",  0x000004, 0x80000, CRC(c5ca2460) SHA1(cbe14867f7b94b638ca80db7c8e0c60881183469) , ROM_GROUPWORD | ROM_SKIP(6) )
+	ROMX_LOAD( "tk2_gfx4.rom",  0x000006, 0x80000, CRC(e349551c) SHA1(1d977bdf256accf750ad9930ec4a0a19bbf86964) , ROM_GROUPWORD | ROM_SKIP(6) )
+	ROMX_LOAD( "tk2_gfx5.rom",  0x200000, 0x80000, CRC(291f0f0b) SHA1(094baf0f960f25fc2525b3b1cc378a49d9a0955d) , ROM_GROUPWORD | ROM_SKIP(6) )
+	ROMX_LOAD( "tk2_gfx7.rom",  0x200002, 0x80000, CRC(3edeb949) SHA1(c155698dd9ee9eb24bbc97a21118ef2e897ea82f) , ROM_GROUPWORD | ROM_SKIP(6) )
+	ROMX_LOAD( "tk2_gfx6.rom",  0x200004, 0x80000, CRC(1abd14d6) SHA1(dffff3126f102b4ec028a81405fc5b9bd7bb65b3) , ROM_GROUPWORD | ROM_SKIP(6) )
+	ROMX_LOAD( "tk2_gfx8.rom",  0x200006, 0x80000, CRC(b27948e3) SHA1(870d5d23f56798831c641e877ea94217058b2ddc) , ROM_GROUPWORD | ROM_SKIP(6) )
+
+	ROM_REGION( 0x28000, "audiocpu", 0 )		/* QSound Z80 code */
+	ROM_LOAD( "tk2_qa.5k",   0x00000, 0x08000, CRC(c9183a0d) SHA1(d8b1d41c572f08581f8ab9eb878de77d6ea8615d) )
+	ROM_CONTINUE(            0x10000, 0x18000 )
+
+	ROM_REGION( 0x200000, "qsound", 0 )		/* QSound samples */
+	ROM_LOAD( "tk2-q1.1k",   0x000000, 0x80000, CRC(611268cf) SHA1(83ab059f2110fb25fdcff928d56b790fc1f5c975) )
+	ROM_LOAD( "tk2-q2.2k",   0x080000, 0x80000, CRC(20f55ca9) SHA1(90134e9a9c4749bb65c728b66ea4dac1fd4d88a4) )
+	ROM_LOAD( "tk2-q3.3k",   0x100000, 0x80000, CRC(bfcf6f52) SHA1(2a85ff3fc89b4cbabd20779ec12da2e116333c7c) )
+	ROM_LOAD( "tk2-q4.4k",   0x180000, 0x80000, CRC(36642e88) SHA1(8ab25b19e2b67215a5cb1f3aa81b9d26009cfeb8) )
+ROM_END
 
 
 
@@ -11700,6 +11755,32 @@ static DRIVER_INIT( wofb )
 	DRIVER_INIT_CALL(wof);
 }
 
+static DRIVER_INIT( wofsjb )
+{
+	const int wofsjb_qspatch_table[][2] = {
+		{ 0x5a1a, 0x00 }, { 0x5a1b, 0x67 }, { 0x5a1c, 0x56 }, { 0x5a1d, 0x00 }, { 0x5a1e, 0x7c },
+		{ 0x5a1f, 0x20 }, { 0x5a20, 0xf1 }, { 0x5a21, 0x00 }, { 0x5a22, 0x00 }, { 0x5a23, 0x80 },
+		{ 0x5a24, 0x28 }, { 0x5a25, 0x4a }, { 0x5a26, 0x1f }, { 0x5a27, 0x00 }, { 0x5a28, 0x00 },
+		{ 0x5a29, 0x6a }, { 0x5a40, 0x5c }, { 0x5a41, 0x11 }, { 0x5a42, 0x01 }, { 0x5a43, 0x00 },
+		{ 0x5a44, 0x5c }, { 0x5a45, 0x11 }, { 0x5a46, 0x03 }, { 0x5a47, 0x00 }, { 0x5a4a, 0x07 },
+		{ 0x5a4b, 0x00 }, { 0x5a4c, 0x5c }, { 0x5a4d, 0x11 }, { 0x5a4e, 0x09 }, { 0x5a4f, 0x00 },
+		{ 0x5a50, 0x5c }, { 0x5a51, 0x31 }, { 0x5a52, 0x0c }, { 0x5a53, 0x00 }, { 0x5a54, 0x5c },
+		{ 0x5a55, 0x11 }, { 0x5a56, 0x0f }, { 0x5a57, 0x00 }, { 0x5a58, 0x5c }, { 0x5a59, 0x11 },
+		{ 0x71bc, 0x0c }, { 0x72a6, 0x71 }, { 0x72a7, 0x4e }, { 0x72a8, 0x71 }, { 0x72a9, 0x4e },
+		{ 0x72aa, 0x71 }, { 0x72ab, 0x4e }, { 0x72ac, 0x71 }, { 0x72ad, 0x4e }, { 0x72ae, 0x71 },
+		{ 0x72af, 0x4e }, { 0x72b0, 0x71 }, { 0x72b1, 0x4e }, { 0x72b2, 0x39 }, { 0x72b3, 0x30 },
+		{ 0x72b4, 0xf1 }, { 0x72b5, 0x00 }, { 0x72b6, 0xfe }, { 0x72b7, 0x9f }, { 0x72b8, 0x00 },
+		{ 0x72b9, 0x0c }, { -1, -1 }
+	};
+
+	UINT8 *ram = (UINT8 *)memory_region(machine, "maincpu");
+
+	for (int i = 0; wofsjb_qspatch_table[i][0] >= 0; i++)
+		ram[wofsjb_qspatch_table[i][0]] = wofsjb_qspatch_table[i][1];
+
+	DRIVER_INIT_CALL(wof);
+}
+
 
 
 /* ------ DRIVER INIT end ------ */
@@ -11891,6 +11972,7 @@ GAME( 1992,	wofah,		wof,		qsound,		wof,		wof,		ROT0,	"hack",		"Sangokushi II (ha
 GAME( 1992,	wofaha,		wof,		qsound,		wof,		wof,		ROT0,	"hack",		"Sangokushi II (hack set 2, 921005 Asia)", GAME_SUPPORTS_SAVE )
 GAME( 1992,	wofahb,		wof,		qsound,		wof,		wof,		ROT0,	"hack",		"Sangokushi II (hack set 3, 921005 Asia)", GAME_SUPPORTS_SAVE )
 GAME( 1992,	wofb,		wof,		qsound,		wof,		wofb,		ROT0,	"bootleg",	"Warriors of Fate (bootleg, 921002 etc)", GAME_SUPPORTS_SAVE )
+GAME( 1995,	wofsjb,		wof,		wofsjb,		wof,		wofsjb,		ROT0,	"bootleg",	"Sangokushi II: Sheng Jian Sanguo (Chinese bootleg set 3, 921005 Asia)", GAME_SUPPORTS_SAVE )
 
 
 
