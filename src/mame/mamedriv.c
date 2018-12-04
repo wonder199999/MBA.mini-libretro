@@ -293,7 +293,7 @@ const game_driver *const drivers[] =
 	DRIVER( wofjh )
 	DRIVER( wofb )
 	DRIVER( wofsjb )
-//	DRIVER( wof3js )
+	DRIVER( wof3js )
 //	DRIVER( wof3jsa )
 //	DRIVER( wof3sj )
 //	DRIVER( wof3sja )

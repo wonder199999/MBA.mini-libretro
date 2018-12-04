@@ -3148,6 +3148,50 @@ static INPUT_PORTS_START( ganbare )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 INPUT_PORTS_END
 
+static INPUT_PORTS_START( wof3js )
+	PORT_INCLUDE( wof )
+
+	PORT_MODIFY("DSWA")
+	PORT_DIPNAME( 0x03, 0x03, DEF_STR( Coinage ) )		PORT_DIPLOCATION("SW(A):1,2")
+	PORT_DIPSETTING(    0x02, DEF_STR( 2C_1C ) )
+	PORT_DIPSETTING(    0x03, DEF_STR( 1C_1C ) )
+	PORT_DIPSETTING(    0x01, DEF_STR( 1C_2C ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( 1C_3C ) )
+	PORT_BIT( 0xfc, IP_ACTIVE_LOW, IPT_UNKNOWN )
+
+	PORT_MODIFY("DSWB")
+	PORT_DIPNAME( 0x03, 0x03, "Coin Slots" )		PORT_DIPLOCATION("SW(B):1,2")
+	PORT_DIPSETTING(    0x00, "3 Players 1 Shooter" )
+	PORT_DIPSETTING(    0x03, "3 Players 3 Shooters" )
+	PORT_DIPUNUSED_DIPLOC( 0x04, 0x04, "SW(B):3" )
+	PORT_DIPUNUSED_DIPLOC( 0x08, 0x08, "SW(B):4" )
+	PORT_DIPNAME( 0x10, 0x10, DEF_STR( Flip_Screen ) )	PORT_DIPLOCATION("SW(B):5")
+	PORT_DIPSETTING(    0x10, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_BIT( 0xe0, IP_ACTIVE_LOW, IPT_UNKNOWN )
+
+	PORT_MODIFY("DSWC")
+	PORT_DIPUNUSED_DIPLOC( 0x01, 0x01, "SW(C):1" )
+	PORT_DIPUNUSED_DIPLOC( 0x02, 0x02, "SW(C):2" )
+	PORT_DIPUNUSED_DIPLOC( 0x04, 0x04, "SW(C):3" )
+	PORT_DIPUNUSED_DIPLOC( 0x08, 0x08, "SW(C):4" )
+	PORT_DIPNAME( 0x70, 0x70, DEF_STR( Lives ) )		PORT_DIPLOCATION("SW(C):5,6,7")
+	PORT_DIPSETTING(    0x00, "1" )
+	PORT_DIPSETTING(    0x50, "4" )
+	PORT_DIPSETTING(    0x60, "3" )
+	PORT_DIPSETTING(    0x70, "2" )
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNKNOWN )
+
+	PORT_MODIFY("IN1")
+	PORT_BIT( 0x0040, IP_ACTIVE_LOW, IPT_BUTTON3 ) PORT_PLAYER(1)
+	PORT_BIT( 0x4000, IP_ACTIVE_LOW, IPT_BUTTON3 ) PORT_PLAYER(2)
+
+	PORT_MODIFY("IN2")      /* Player 3 */
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_COIN3 ) PORT_NAME("Coin 3 (P3 Button 3 in-game)")
+INPUT_PORTS_END
+
+
+
 /*
 	A Final Fight board with mismatched USA and Japan GFX proves that the columns
 	of the 8x8 tilemap alternate between sides of the 16x16 tile resulting
@@ -9970,6 +10014,31 @@ ROM_START( wofsjb )
 	ROM_LOAD( "tk2-q4.4k",   0x180000, 0x80000, CRC(36642e88) SHA1(8ab25b19e2b67215a5cb1f3aa81b9d26009cfeb8) )
 ROM_END
 
+ROM_START( wof3js )
+	ROM_REGION( CODE_SIZE, "maincpu", 0 )		/* 68000 code */
+	ROM_LOAD16_WORD_SWAP( "3js_23.rom", 0x000000, 0x80000, CRC(1ebb76da) SHA1(a3d9643a03e964477abd5164202566fe4a11b902) )
+	ROM_LOAD16_WORD_SWAP( "3js_22.rom", 0x080000, 0x80000, CRC(f41d6153) SHA1(a2cafea8402ab58e8022020242397e7cdce57aff) )
+	ROM_LOAD16_BYTE( "3js_24.rom",      0x0c0000, 0x20000, CRC(06ead409) SHA1(7289afd15fecd185350d2705476d74baa6909782) )
+	ROM_LOAD16_BYTE( "3js_28.rom",      0x0c0001, 0x20000, CRC(8ba934e6) SHA1(b9fb1d000a90cf2dbe2113130939c146f16a776e) )
+
+	ROM_REGION( 0x400000, "gfx", 0 )
+	ROMX_LOAD( "tk2_gfx1.rom",  0x000000, 0x80000, CRC(0d9cb9bf) SHA1(cc7140e9a01a14b252cb1090bcea32b0de461928) , ROM_GROUPWORD | ROM_SKIP(6) )
+	ROMX_LOAD( "tk2_gfx3.rom",  0x000002, 0x80000, CRC(45227027) SHA1(b21afc593f0d4d8909dfa621d659cbb40507d1b2) , ROM_GROUPWORD | ROM_SKIP(6) )
+	ROMX_LOAD( "tk2_gfx2.rom",  0x000004, 0x80000, CRC(c5ca2460) SHA1(cbe14867f7b94b638ca80db7c8e0c60881183469) , ROM_GROUPWORD | ROM_SKIP(6) )
+	ROMX_LOAD( "tk2_gfx4.rom",  0x000006, 0x80000, CRC(e349551c) SHA1(1d977bdf256accf750ad9930ec4a0a19bbf86964) , ROM_GROUPWORD | ROM_SKIP(6) )
+	ROMX_LOAD( "3js_gfx5.rom",  0x200000, 0x80000, CRC(94b58f82) SHA1(937e7bb74e47f7ed670f63cdf7e502cf6ffe09c8) , ROM_GROUPWORD | ROM_SKIP(6) )
+	ROMX_LOAD( "3js_gfx7.rom",  0x200002, 0x80000, CRC(df4fb386) SHA1(4eece42595084dbab1fa2c603f231fc67efb292d) , ROM_GROUPWORD | ROM_SKIP(6) )
+	ROMX_LOAD( "3js_gfx6.rom",  0x200004, 0x80000, CRC(c22c5bd8) SHA1(4dd3598ca9cbbceabfb28b1b0d8a4879fcdb9a13) , ROM_GROUPWORD | ROM_SKIP(6) )
+	ROMX_LOAD( "3js_gfx8.rom",  0x200006, 0x80000, CRC(f9cfd08b) SHA1(cd55ef014705d8b07c3eb9dafdbf2a831ea25b7c) , ROM_GROUPWORD | ROM_SKIP(6) )
+
+	ROM_REGION( 0x18000, "audiocpu", 0 )		/* Z80 code */
+	ROM_LOAD( "3js_09.rom",     0x00000, 0x08000, CRC(21ce044c) SHA1(425fd8d33d54f35ef90d68a7530db7a0eafb600d) )
+	ROM_CONTINUE(               0x10000, 0x08000 )
+
+	ROM_REGION( 0x40000, "oki", 0 )			/* Samples */
+	ROM_LOAD( "3js_18.rom",     0x00000, 0x20000, CRC(ac6e307d) SHA1(b490ce625bb7ce0904b0fd121fbfbd5252790f7a) )
+	ROM_LOAD( "3js_19.rom",     0x20000, 0x20000, CRC(068741db) SHA1(ab48aff639a7ac218b7d5304145e10e92d61fd9f) )
+ROM_END
 
 
 
@@ -11781,6 +11850,12 @@ static DRIVER_INIT( wofsjb )
 	DRIVER_INIT_CALL(wof);
 }
 
+static DRIVER_INIT( wof3js )
+{
+	memory_install_read16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x800176, 0x800177, 0, 0, cps1_in2_r);
+	DRIVER_INIT_CALL(cps1);
+}
+
 
 
 /* ------ DRIVER INIT end ------ */
@@ -11973,6 +12048,7 @@ GAME( 1992,	wofaha,		wof,		qsound,		wof,		wof,		ROT0,	"hack",		"Sangokushi II (h
 GAME( 1992,	wofahb,		wof,		qsound,		wof,		wof,		ROT0,	"hack",		"Sangokushi II (hack set 3, 921005 Asia)", GAME_SUPPORTS_SAVE )
 GAME( 1992,	wofb,		wof,		qsound,		wof,		wofb,		ROT0,	"bootleg",	"Warriors of Fate (bootleg, 921002 etc)", GAME_SUPPORTS_SAVE )
 GAME( 1995,	wofsjb,		wof,		wofsjb,		wof,		wofsjb,		ROT0,	"bootleg",	"Sangokushi II: Sheng Jian Sanguo (Chinese bootleg set 3, 921005 Asia)", GAME_SUPPORTS_SAVE )
+GAME( 1997,	wof3js,		wof,		wofhfh,		wof3js,		wof3js,		ROT0,	"bootleg",	"Sangokushi II: San Jian Sheng (Chinese bootleg set 1, 921005 Asia)", GAME_SUPPORTS_SAVE )
 
 
 
@@ -12019,4 +12095,3 @@ GAME( 1992, sf2koryu,   sf2ce,    cps1_12MHz, sf2hack,    sf2hack,  ROT0,   "boo
 GAME( 1992, sf2m3,	sf2ce,	  sf2m3,	sf2,	   cps1,       ROT0,   "bootleg",  "Street Fighter II': Champion Edition (M3, bootleg)", GAME_SUPPORTS_SAVE )
 GAME( 1992, sf2ceuab3,	sf2ce,	  sf2m3,	sf2,	   sf2m8,      ROT0,   "bootleg",  "Street Fighter II': Champion Edition (In MAME, the game's name is sf2m8a, bootleg)", GAME_SUPPORTS_SAVE )
 GAME( 1992, sf2amf,	sf2ce,	  cps1_12MHz,	sf2amf,	   sf2hack,    ROT0,   "bootleg",  "Street Fighter II': Champion Edition (Alpha Magic-F, bootleg)", GAME_SUPPORTS_SAVE )
-
