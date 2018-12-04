@@ -608,12 +608,13 @@ static ADDRESS_MAP_START( sgyxz_map, ADDRESS_SPACE_PROGRAM, 16 )
 	AM_RANGE(0x000000, 0x3fffff) AM_ROM
 	AM_RANGE(0x800030, 0x800031) AM_WRITE(cps1_coinctrl_w)
 	AM_RANGE(0x800100, 0x80013f) AM_RAM AM_BASE_MEMBER(cps_state, cps_a_regs)
-	AM_RANGE(0x800140, 0x80017f) AM_RAM AM_BASE_MEMBER(cps_state, cps_b_regs)
+	AM_RANGE(0x800140, 0x80017f) AM_READWRITE(cps1_cps_b_r, cps1_cps_b_w) AM_BASE_MEMBER(cps_state, cps_b_regs)
 	AM_RANGE(0x880000, 0x880001) AM_READ_PORT("IN1")
 	AM_RANGE(0x880006, 0x88000d) AM_READ(cps1_dsw_r)
 	AM_RANGE(0x88000e, 0x88000f) AM_WRITE(cps1_soundlatch_w)
 	AM_RANGE(0x880e78, 0x880e79) AM_READ(cps1_in2_r)
-	AM_RANGE(0x890000, 0x890001) AM_WRITE(cps1_soundlatch2_w)
+	AM_RANGE(0x890000, 0x890001) AM_WRITENOP
+	AM_RANGE(0x8bfff6, 0x8bfff9) AM_READNOP
 	AM_RANGE(0x900000, 0x92ffff) AM_RAM_WRITE(cps1_gfxram_w) AM_BASE_SIZE_MEMBER(cps_state, gfxram, gfxram_size)
 	AM_RANGE(0xf1c004, 0xf1c005) AM_WRITE(cpsq_coinctrl2_w)
 	AM_RANGE(0xf1c006, 0xf1c007) AM_READ_PORT("EEPROMIN") AM_WRITE_PORT("EEPROMOUT")
@@ -842,6 +843,7 @@ static INPUT_PORTS_START( sf2mdt )		/* for sf2/sf2ce hackrom */
 	PORT_DIPSETTING(    0x00, DEF_STR( Test ) )
 INPUT_PORTS_END
 
+
 static INPUT_PORTS_START( sgyxz )
 	PORT_INCLUDE( cps1_3players )
 
@@ -849,13 +851,14 @@ static INPUT_PORTS_START( sgyxz )
 	PORT_SERVICE_NO_TOGGLE( 0x40, IP_ACTIVE_LOW )
 
 	PORT_START ("DSWA")
-	PORT_DIPNAME( 0x03, 0x00, "Play Mode" )
-	PORT_DIPSETTING(    0x00, DEF_STR( Normal ) )
-	PORT_DIPSETTING(    0x03, "Tournament" )
+	PORT_DIPNAME( 0x03, 0x03, "Coin Slots" )                PORT_DIPLOCATION("SW(A):1,2")
+	PORT_DIPSETTING(    0x01, "2 Players 1 Shooter" )
+	PORT_DIPSETTING(    0x02, "3 Players 1 Shooter" )
+	PORT_DIPSETTING(    0x03, "3 Players 3 Shooters" )
 	PORT_BIT( 0xfc, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
 	PORT_START ("DSWB")
-	PORT_DIPNAME( 0x03, 0x03, DEF_STR( Coinage ) )
+	PORT_DIPNAME( 0x03, 0x03, DEF_STR( Coin_A ) )           PORT_DIPLOCATION("SW(B):1,2")
 	PORT_DIPSETTING(    0x03, DEF_STR( 1C_1C ) )
 	PORT_DIPSETTING(    0x02, DEF_STR( 1C_2C ) )
 	PORT_DIPSETTING(    0x01, DEF_STR( 1C_3C ) )
@@ -863,7 +866,25 @@ static INPUT_PORTS_START( sgyxz )
 	PORT_BIT( 0xfc, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
 	PORT_START ("DSWC")
-	PORT_BIT( 0xff, IP_ACTIVE_HIGH, IPT_UNKNOWN )
+	PORT_DIPNAME( 0x07, 0x04, DEF_STR( Difficulty ) )       PORT_DIPLOCATION("SW(C):1,2,3")
+	PORT_DIPSETTING(    0x07, "Extra Easy" )
+	PORT_DIPSETTING(    0x06, DEF_STR( Very_Easy) )
+	PORT_DIPSETTING(    0x05, DEF_STR( Easy) )
+	PORT_DIPSETTING(    0x04, DEF_STR( Normal) )
+	PORT_DIPSETTING(    0x03, DEF_STR( Hard) )
+	PORT_DIPSETTING(    0x02, DEF_STR( Very_Hard) )
+	PORT_DIPSETTING(    0x01, "Extra Hard" )
+	PORT_DIPSETTING(    0x00, DEF_STR( Hardest) )
+	PORT_DIPNAME( 0x70, 0x60, DEF_STR( Lives ) )            PORT_DIPLOCATION("SW(C):4,5,6")
+	PORT_DIPSETTING(    0x00, "Start 4 Continue 5" )
+	PORT_DIPSETTING(    0x10, "Start 3 Continue 4" )
+	PORT_DIPSETTING(    0x20, "Start 2 Continue 3" )
+	PORT_DIPSETTING(    0x30, "Start 1 Continue 2" )
+	PORT_DIPSETTING(    0x40, "Start 4 Continue 4" )
+	PORT_DIPSETTING(    0x50, "Start 3 Continue 3" )
+	PORT_DIPSETTING(    0x60, "Start 2 Continue 2" )
+	PORT_DIPSETTING(    0x70, "Start 1 Continue 1" )
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
 	PORT_START( "EEPROMIN" )
 	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_READ_LINE_DEVICE("eeprom", eeprom_read_bit)
@@ -915,9 +936,7 @@ static MACHINE_START( fcrash )
 {
 	MACHINE_START_CALL( msm5205snd );
 	cps_state *state = machine->driver_data<cps_state>();
-
-	UINT8 *src = memory_region(machine, "audiocpu");
-	memory_configure_bank(machine, "bank1", 0, 8, &src[0x10000], 0x4000);
+	memory_configure_bank(machine, "bank1", 0, 8, memory_region(machine, "audiocpu") + 0x10000, 0x4000);
 
 	state->layer_enable_reg = 0x20;
 	state->layer_mask_reg[0] = 0x26;
@@ -941,9 +960,7 @@ static MACHINE_START( captcommb2 )
 {
 	MACHINE_START_CALL( msm5205snd );
 	cps_state *state = machine->driver_data<cps_state>();
-
-	UINT8 *src = memory_region(machine, "audiocpu");
-	memory_configure_bank(machine, "bank1", 0, 16, &src[0x10000], 0x4000);
+	memory_configure_bank(machine, "bank1", 0, 16, memory_region(machine, "audiocpu") + 0x10000, 0x4000);
 
 	state_save_register_global(machine, state->sample_buffer1);
 	state_save_register_global(machine, state->sample_buffer2);
@@ -955,9 +972,7 @@ static MACHINE_START( sf2mdt )
 {
 	MACHINE_START_CALL( msm5205snd );
 	cps_state *state = machine->driver_data<cps_state>();
-
-	UINT8 *src = memory_region(machine, "audiocpu");
-	memory_configure_bank(machine, "bank1", 0, 8, &src[0x10000], 0x4000);
+	memory_configure_bank(machine, "bank1", 0, 8, memory_region(machine, "audiocpu") + 0x10000, 0x4000);
 
 	state->layer_enable_reg = 0x26;
 	state->layer_mask_reg[0] = 0x28;
@@ -999,9 +1014,7 @@ static MACHINE_START( sf2m1 )
 {
 	MACHINE_START_CALL( common );
 	cps_state *state = machine->driver_data<cps_state>();
-
-	UINT8 *src = memory_region(machine, "audiocpu");
-	memory_configure_bank(machine, "bank1", 0, 8, &src[0x10000], 0x4000);
+	memory_configure_bank(machine, "bank1", 0, 8, memory_region(machine, "audiocpu") + 0x10000, 0x4000);
 
 	state->layer_enable_reg = 0x26;
 	state->layer_mask_reg[0] = 0x28;
@@ -1123,9 +1136,7 @@ static MACHINE_START( slampic )
 static MACHINE_START( varthb )
 {
 	MACHINE_START_CALL( common );
-
-	UINT8 *src = memory_region(machine, "audiocpu");
-	memory_configure_bank(machine, "bank1", 0, 8, &src[0x10000], 0x4000);
+	memory_configure_bank(machine, "bank1", 0, 8, memory_region(machine, "audiocpu") + 0x10000, 0x4000);
 }
 
 /* *********************************************** FCRASH */
@@ -2214,6 +2225,36 @@ ROM_START( wofha )
 	ROM_LOAD( "sgyxz_snd1.bin", 0x00000, 0x040000,  CRC(c15ac0f2) SHA1(8d9e5519d9820e4ac4f70555088c80e64d052c9d) )
 ROM_END
 
+ROM_START( wof3jsa )
+	ROM_REGION( CODE_SIZE, "maincpu", 0 )		/* 68000 code */
+	ROM_LOAD16_BYTE( "cx2.040", 0x00000, 0x20000, CRC(c01a6d2f) SHA1(c1e69e075bb01141c026bf0722a64659e1802184) )
+	ROM_CONTINUE(               0x80000, 0x20000 )
+	ROM_CONTINUE(               0x40000, 0x20000 )
+	ROM_CONTINUE(               0xc0000, 0x20000 )
+	ROM_LOAD16_BYTE( "cx1.040", 0x00001, 0x20000, CRC(fd95e677) SHA1(42a10e73bd30498dc39cd66abf73680799ebe8b0) )
+	ROM_CONTINUE(               0x80001, 0x20000 )
+	ROM_CONTINUE(               0x40001, 0x20000 )
+	ROM_CONTINUE(               0xc0001, 0x20000 )
+
+	ROM_REGION( 0x400000, "gfx", 0 )
+	ROMX_LOAD( "tx-a.160", 0x000000, 0x80000, CRC(ae348da2) SHA1(e86ab38e75c46ff2a4fa974fbbd3c2d2f67cef36), ROM_GROUPWORD | ROM_SKIP(6) )
+	ROM_CONTINUE(          0x000004, 0x80000 )
+	ROM_CONTINUE(          0x200000, 0x80000 )
+	ROM_CONTINUE(          0x200004, 0x80000 )
+	ROMX_LOAD( "tx-b.160", 0x000002, 0x80000, CRC(384a6db0) SHA1(57273edce545a7fb4026cb4c705d97d71f24ea6f), ROM_GROUPWORD | ROM_SKIP(6) )
+	ROM_CONTINUE(          0x000006, 0x80000 )
+	ROM_CONTINUE(          0x200002, 0x80000 )
+	ROM_CONTINUE(          0x200006, 0x80000 )
+
+	ROM_REGION( 0x28000, "audiocpu", 0 )		/* Z80 code */
+	ROM_LOAD( "9",              0x00000, 0x08000, CRC(86fe8a97) SHA1(cab82bcd0f49bcb40201b439cfdd10266f46752a) )
+	ROM_CONTINUE(               0x10000, 0x18000 )
+
+	ROM_REGION( 0x40000, "oki", 0 )			/* Samples */
+	ROM_LOAD( "18",             0x00000, 0x20000, CRC(c04be720) SHA1(2e544e0a0358b6afbdf826d35d9c4c59e4787a93) )
+	ROM_LOAD( "19",             0x20000, 0x20000, CRC(fbb8d8c1) SHA1(8a7689bb7ed56243333133cbacf01a0ae825201e) )
+ROM_END
+
 
 
 
@@ -2317,7 +2358,7 @@ static DRIVER_INIT( sf2mdt )
 static DRIVER_INIT( kodb )
 {
 	cps_state *state = machine->driver_data<cps_state>();
-	UINT8 *src = (UINT8 *)memory_region( machine, "maincpu" );
+	UINT8 *ram = (UINT8 *)memory_region( machine, "maincpu" );
 
 	memory_install_read_port(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x800000, 0x800007, 0, 0, "IN1");
 	memory_install_read16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x800018, 0x80001f, 0, 0, cps1_dsw_r);
@@ -2328,7 +2369,7 @@ static DRIVER_INIT( kodb )
 	state->bootleg_sprite_ram = (UINT16 *)memory_install_ram(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x900000, 0x903fff, 0, 0, NULL);
 	memory_install_ram(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x904000, 0x907fff, 0, 0, state->bootleg_sprite_ram);	/* both of these need to be mapped */
 
-	src[0x0953] = 0x07;	/* fixes sprite ram clearing issue. */
+	ram[0x0953] = 0x07;	/* fixes sprite ram clearing issue. */
 
 	DRIVER_INIT_CALL(cps1);
 }
@@ -2343,21 +2384,21 @@ static DRIVER_INIT( dinopic )
 
 static DRIVER_INIT( sf2m1 )
 {
-	UINT16 *src = (UINT16 *)memory_region( machine, "maincpu" );
-	src[0x064e / 2] = 0x6046;
+	UINT16 *ram = (UINT16 *)memory_region( machine, "maincpu" );
+	ram[0x064e / 2] = 0x6046;
 
 	DRIVER_INIT_CALL(dinopic);
 }
 
 static DRIVER_INIT( punipic )
 {
-	UINT16 *src = (UINT16 *)memory_region( machine, "maincpu" );
-	src[0x05a8 / 2] = 0x4e71;
-	src[0x4df0 / 2] = 0x33ed;
-	src[0x4df2 / 2] = 0xdb2e;
-	src[0x4df4 / 2] = 0x0080;
-	src[0x4df6 / 2] = 0x0152;
-	src[0x4df8 / 2] = 0x4e75;
+	UINT16 *ram = (UINT16 *)memory_region( machine, "maincpu" );
+	ram[0x05a8 / 2] = 0x4e71;
+	ram[0x4df0 / 2] = 0x33ed;
+	ram[0x4df2 / 2] = 0xdb2e;
+	ram[0x4df4 / 2] = 0x0080;
+	ram[0x4df6 / 2] = 0x0152;
+	ram[0x4df8 / 2] = 0x4e75;
 
 	DRIVER_INIT_CALL(dinopic);
 	memory_install_write16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x980000, 0x98001f, 0, 0, punipic_layer_w);
@@ -2368,9 +2409,9 @@ static DRIVER_INIT( punipic3 )
 	cps_state *state = machine->driver_data<cps_state>();
 	state->punipic3_parampass = 0;
 
-	UINT16 *src = (UINT16 *)memory_region( machine, "maincpu" );
-	src[0x05a6 / 2] = 0x4e71;
-	src[0x05a8 / 2] = 0x4e71;
+	UINT16 *ram = (UINT16 *)memory_region( machine, "maincpu" );
+	ram[0x05a6 / 2] = 0x4e71;
+	ram[0x05a8 / 2] = 0x4e71;
 
 	DRIVER_INIT_CALL(dinopic);
 	memory_install_write16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x980000, 0x98000f, 0, 0, punipic3_layer_w);
@@ -2387,37 +2428,46 @@ static DRIVER_INIT( cawingbl )
 
 static DRIVER_INIT( fcrash )
 {
-	UINT8 *src = (UINT8 *)memory_region( machine, "maincpu" );
-	src[0x2611] = 0x07;	/* This fixes sprite ram clearing */
+	UINT8 *ram = (UINT8 *)memory_region( machine, "maincpu" );
+	ram[0x2611] = 0x07;	/* This fixes sprite ram clearing */
 
 	DRIVER_INIT_CALL(cps1);
 }
 
 static DRIVER_INIT( sgyxz )
 {
-	UINT8 *src = (UINT8 *)memory_region(machine, "maincpu");
-	src[0x00008] = 0xa2;
-	src[0x02449] = 0x07;
-	src[0x072a6] = 0x00;
-	src[0x708db] = 0xff;
-	src[0x708dc] = 0xff;
-	src[0x708dd] = 0xff;
-	src[0x708de] = 0xff;
-	src[0xf11eb] = 0x60;
+	UINT8 *ram = (UINT8 *)memory_region(machine, "maincpu");
+	ram[0x00008] = 0xa2;
+	ram[0x02449] = 0x07;
+	ram[0x072a6] = 0x00;
+	ram[0x708db] = 0xff;
+	ram[0x708dc] = 0xff;
+	ram[0x708dd] = 0xff;
+	ram[0x708de] = 0xff;
+	ram[0xf11eb] = 0x60;
 
 	DRIVER_INIT_CALL(cps1);
 }
 
 static DRIVER_INIT( wofh )
 {
-	UINT8 *src = (UINT8 *)memory_region(machine, "maincpu");
-
-	src[0x072a6] = 0x00;
-	src[0xf11ec] = 0x71;
-	src[0xf11ed] = 0x4e;
+	UINT8 *ram = (UINT8 *)memory_region(machine, "maincpu");
+	ram[0x072a6] = 0x00;
+	ram[0xf11ec] = 0x71;
+	ram[0xf11ed] = 0x4e;
 
 	DRIVER_INIT_CALL(cps1);
 }
+
+static DRIVER_INIT( wof3jsa )
+{
+	UINT8 *ram = (UINT8 *)memory_region(machine, "maincpu");
+	ram[0xe7ad0] = 0x71;
+	ram[0xe7ad1] = 0x4e;
+
+	DRIVER_INIT_CALL(cps1);
+}
+
 
 
 /*
@@ -2463,6 +2513,8 @@ GAME( 1999,	sgyxz,		wof,		sgyxz,		sgyxz,		sgyxz,		ROT0,	"bootleg(All-In Electron
 GAME( 1999,	wofh,		wof,		sgyxz,		sgyxz,		wofh,		ROT0,	"bootleg(All-In Electronic)", "Sangokushi II: Sanguo Yingxiong Zhuan (Chinese bootleg set 1, 921005 Asia)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )
 /* */
 GAME( 1999,	wofha,		wof,		sgyxz,		sgyxz,		wofh,		ROT0,	"bootleg(All-In Electronic)", "Sangokushi II: Sanguo Yingxiong Zhuan (Chinese bootleg set 2, 921005 Asia)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )
+/* */
+GAME( 1997,	wof3jsa,	wof,		sgyxz,		sgyxz,		wof3jsa,	ROT0,	"bootleg",	"Sangokushi II: San Jian Sheng (Chinese bootleg set 2, 921005 Asia)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )
 
 
 

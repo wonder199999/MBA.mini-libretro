@@ -1476,6 +1476,7 @@ static const struct CPS1config cps1_config_table[] =
 	{"wofb",	CPS_B_21_DEF,	mapper_TK263B },
 	{"wofsjb",	CPS_B_21_DEF,	mapper_TK263B,	0x36 },
 	{"wof3js",	CPS_B_21_DEF,	mapper_TK263B },
+	{"wof3jsa",	CPS_B_21_DEF,	mapper_TK263B },
 
 
 
