@@ -306,6 +306,35 @@ const game_driver *const drivers[] =
 	DRIVER( sf2hfjb2 )		/* 09/12/1992 (c) 1992 (Japan) */
 	DRIVER( sf2hfu )		/* 09/12/1992 (c) 1992 (US)    */
 	//
+	DRIVER( sf2 )			/* 22/05/1991 (c) 1991 (World) */
+//	DRIVER( sf2b )
+//	DRIVER( sf2b2 )
+//	DRIVER( sf2b3 )
+	DRIVER( sf2eb )			/* 14/02/1991 (c) 1991 (World) */
+	DRIVER( sf2ebbl )		/* 14/02/1991 (c) 1991 (World, bootleg) */
+//	DRIVER( sf2ebbl2 )
+//	DRIVER( sf2ebbl3 )
+	DRIVER( sf2ed )
+	DRIVER( sf2ee )
+	DRIVER( sf2j )			/* 10/12/1991 (c) 1991 (Japan) */
+	DRIVER( sf2ja )			/* 14/02/1991 (c) 1991 (Japan) */
+	DRIVER( sf2jc )			/* 06/03/1991 (c) 1991 (Japan) */
+	DRIVER( sf2jf )
+	DRIVER( sf2jh )
+	DRIVER( sf2jl )
+	DRIVER( sf2qp1 )		/* hack */
+//	DRIVER( sf2stt )
+	DRIVER( sf2thndr )		/* hack */
+	DRIVER( sf2ua )			/* 06/02/1991 (c) 1991 (US)    */
+	DRIVER( sf2ub )			/* 14/02/1991 (c) 1991 (US)    */
+	DRIVER( sf2uc )
+	DRIVER( sf2ud )			/* 18/03/1991 (c) 1991 (US)    */
+	DRIVER( sf2ue )			/* 28/02/1991 (c) 1991 (US)    */
+	DRIVER( sf2uf )			/* 11/04/1991 (c) 1991 (US)    */
+	DRIVER( sf2ug )
+	DRIVER( sf2ui )			/* 22/05/1991 (c) 1991 (US)    */
+	DRIVER( sf2uk )			/* 01/11/1991 (c) 1991 (US)    */
+	//
 	DRIVER( sf2ce )			/* 13/03/1992 (c) 1992 (World) */
 	DRIVER( sf2acc )		/* hack */
 //	DRIVER( sf2acca )
@@ -367,36 +396,7 @@ const game_driver *const drivers[] =
 //	DRIVER( sf2v0043 )
 	DRIVER( sf2yyc )		/* hack */
 //	DRIVER( sf2yyc2 )
-	//
-	DRIVER( sf2 )			/* 22/05/1991 (c) 1991 (World) */
-//	DRIVER( sf2b )
-//	DRIVER( sf2b2 )
-//	DRIVER( sf2b3 )
-	DRIVER( sf2eb )			/* 14/02/1991 (c) 1991 (World) */
-	DRIVER( sf2ebbl )		/* 14/02/1991 (c) 1991 (World, bootleg) */
-//	DRIVER( sf2ebbl2 )
-//	DRIVER( sf2ebbl3 )
-//	DRIVER( sf2ed )
-//	DRIVER( sf2ee )
-	DRIVER( sf2j )			/* 10/12/1991 (c) 1991 (Japan) */
-	DRIVER( sf2ja )			/* 14/02/1991 (c) 1991 (Japan) */
-	DRIVER( sf2jc )			/* 06/03/1991 (c) 1991 (Japan) */
-//	DRIVER( sf2jf )
-//	DRIVER( sf2jh )
-//	DRIVER( sf2jl )
-	DRIVER( sf2qp1 )		/* hack */
-//	DRIVER( sf2stt )
-	DRIVER( sf2thndr )		/* hack */
-	DRIVER( sf2ua )			/* 06/02/1991 (c) 1991 (US)    */
-	DRIVER( sf2ub )			/* 14/02/1991 (c) 1991 (US)    */
-//	DRIVER( sf2uc )
-	DRIVER( sf2ud )			/* 18/03/1991 (c) 1991 (US)    */
-	DRIVER( sf2ue )			/* 28/02/1991 (c) 1991 (US)    */
-	DRIVER( sf2uf )			/* 11/04/1991 (c) 1991 (US)    */
-//	DRIVER( sf2ug )
-	DRIVER( sf2ui )			/* 22/05/1991 (c) 1991 (US)    */
-	DRIVER( sf2uk )			/* 01/11/1991 (c) 1991 (US)    */
-	//
+//
 
 /* obsolete */	DRIVER( sf2cej )		/* 13/05/1992 (c) 1992 (Japan) */
 /* obsolete */	DRIVER( sf2m2 )			/* hack */

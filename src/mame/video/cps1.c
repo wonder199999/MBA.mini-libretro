@@ -1487,11 +1487,26 @@ static const struct CPS1config cps1_config_table[] =
 	{"wofsja",	HACK_WOF_H,	mapper_TK263B },
 	{"wof3sj",	HACK_WOF_H,	mapper_TK263B },
 	{"wof3sja",	HACK_WOF_H,	mapper_TK263B },
-
-
-
-
-
+	//
+	{"sf2",		CPS_B_11,	mapper_STF29,	0x36 },
+	{"sf2eb",	CPS_B_17,	mapper_STF29,	0x36 },
+	{"sf2ed",	CPS_B_05,	mapper_STF29,	0x36 },
+	{"sf2ee",	CPS_B_18,	mapper_STF29,	0x3c },
+	{"sf2ua",	CPS_B_17,	mapper_STF29,	0x36 },
+	{"sf2ub",	CPS_B_17,	mapper_STF29,	0x36 },
+	{"sf2uc",	CPS_B_12,	mapper_STF29,	0x36 },
+	{"sf2ud",	CPS_B_05,	mapper_STF29,	0x36 },
+	{"sf2ue",	CPS_B_18,	mapper_STF29,	0x3c },
+	{"sf2uf",	CPS_B_15,	mapper_STF29,	0x36 },
+	{"sf2ug",	CPS_B_11,	mapper_STF29,	0x36 },
+	{"sf2ui",	CPS_B_14,	mapper_STF29,	0x36 },
+	{"sf2uk",	CPS_B_17,	mapper_STF29,	0x36 },
+	{"sf2j",	CPS_B_13,	mapper_STF29,	0x36 },
+	{"sf2ja",	CPS_B_17,	mapper_STF29,	0x36 },
+	{"sf2jc",	CPS_B_12,	mapper_STF29,	0x36 },
+	{"sf2jf",	CPS_B_15,	mapper_STF29,	0x36 },
+	{"sf2jh",	CPS_B_13,	mapper_STF29,	0x36 },
+	{"sf2jl",	CPS_B_17,	mapper_STF29,	0x36 },
 
 
 
@@ -1523,19 +1538,7 @@ static const struct CPS1config cps1_config_table[] =
 	{"sf2amf",	CPS_B_21_DEF, mapper_S9263B, 0x36, 0, 0, 1 },
 	{"sf2ceuab3",	HACK_B_1,     mapper_S9263B, 0x00, 0, 0, 2 },
 
-	{"sf2",		CPS_B_11,     mapper_STF29,  0x36 },
-	{"sf2eb",	CPS_B_17,     mapper_STF29,  0x36 },
 	{"sf2ebbl",	CPS_B_17,     mapper_STF29,  0x36, 0, 0, 1 },
-	{"sf2ua",	CPS_B_17,     mapper_STF29,  0x36 },
-	{"sf2ub",	CPS_B_17,     mapper_STF29,  0x36 },
-	{"sf2ud",	CPS_B_05,     mapper_STF29,  0x36 },
-	{"sf2ue",	CPS_B_18,     mapper_STF29,  0x3c },
-	{"sf2uf",	CPS_B_15,     mapper_STF29,  0x36 },
-	{"sf2ui",	CPS_B_14,     mapper_STF29,  0x36 },
-	{"sf2uk",	CPS_B_17,     mapper_STF29,  0x36 },	// check CPS_B
-	{"sf2j",	CPS_B_13,     mapper_STF29,  0x36 },
-	{"sf2ja",	CPS_B_17,     mapper_STF29,  0x36 },
-	{"sf2jc",	CPS_B_12,     mapper_STF29,  0x36 },
 	{"sf2qp1",	CPS_B_17,     mapper_STF29,  0x36 },
 	{"sf2thndr",	CPS_B_17,     mapper_STF29,  0x36 },
 
