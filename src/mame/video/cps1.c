@@ -481,6 +481,8 @@ The games seem to use them to mark platforms, kill zones and no-go areas.
 #define	HACK_B_2	  -1,		 -1,	 0x0e,	      0x0c,	    0x0a,	 0x08,	      0x06,	0x04,	  0x02,	      0x28,	{0x26, 0x24, 0x22, 0x20},   0x22,    {0x20, 0x04, 0x08, 0x12, 0x12}
 #define HACK_H_5	  -1,	     0x0000,		__not_applicable__,							      0x26,	{0x28, 0x2a, 0x2c, 0x2e},   0x30,    {0x40, 0x40, 0x40, 0x00, 0x00}  /* for daimakaib */
 #define HACK_SF_JB     	  -1,		 -1,		__not_applicable__,							      0x30,	{0x2e, 0x2c, 0x2a, 0x28},   0x26,    {0x02, 0x04, 0x08, 0x00, 0x00}
+#define HACK_WOF_H     	  -1,		 -1,		__not_applicable__,							      0x20,	{0x26, 0x28, 0x2c, 0x2e},   0x2a,    {0x02, 0x04, 0x08, 0x30, 0x30}
+
 
 
 /*	CPS_B_21_DEF is CPS-B-21 at default settings (no battery)
@@ -1367,6 +1369,7 @@ static const struct CPS1config cps1_config_table[] =
 	{"knightsja",	CPS_B_21_BT4,	mapper_KR63B,	0x36, 0, 0x34 },
 	{"knightsh",	CPS_B_21_DEF,	mapper_KR63B,	0x36, 0, 0x34 },
 	{"knightsh2",	CPS_B_21_DEF,	mapper_KR63B,	0x36, 0, 0x34 },
+	{"knightsb",	CPS_B_21_BT4,	mapper_KR63B,	0x36, 0, 0x34 },
 	{"knightsb2",	CPS_B_21_BT4,	mapper_KR63B,	0x36, 0, 0x34, 4 },
 	{"knightsb3",	CPS_B_21_DEF,	mapper_KR63B,	0x36, 0, 0x34 },
 	{"knightsb4",	CPS_B_21_BT4,	mapper_KR63B,	0x36, 0, 0x34 },
@@ -1476,9 +1479,14 @@ static const struct CPS1config cps1_config_table[] =
 	{"wofb",	CPS_B_21_DEF,	mapper_TK263B },
 	{"wofsjb",	CPS_B_21_DEF,	mapper_TK263B,	0x36 },
 	{"wof3js",	CPS_B_21_DEF,	mapper_TK263B },
-	{"wof3jsa",	CPS_B_21_DEF,	mapper_TK263B },
-
-
+	{"wofh",	HACK_WOF_H,	mapper_TK263B },
+	{"wofha",	HACK_WOF_H,	mapper_TK263B },
+	{"sgyxz",	HACK_WOF_H,	mapper_TK263B },
+	{"wof3jsa",	HACK_WOF_H,	mapper_TK263B },
+	{"wofsj",	HACK_WOF_H,	mapper_TK263B },
+	{"wofsja",	HACK_WOF_H,	mapper_TK263B },
+	{"wof3sj",	HACK_WOF_H,	mapper_TK263B },
+	{"wof3sja",	HACK_WOF_H,	mapper_TK263B },
 
 
 
