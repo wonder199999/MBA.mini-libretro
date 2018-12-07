@@ -312,8 +312,8 @@ const game_driver *const drivers[] =
 //	DRIVER( sf2b3 )
 	DRIVER( sf2eb )			/* 14/02/1991 (c) 1991 (World) */
 	DRIVER( sf2ebbl )		/* 14/02/1991 (c) 1991 (World, bootleg) */
-//	DRIVER( sf2ebbl2 )
-//	DRIVER( sf2ebbl3 )
+	DRIVER( sf2ebbl2 )
+	DRIVER( sf2ebbl3 )
 	DRIVER( sf2ed )
 	DRIVER( sf2ee )
 	DRIVER( sf2j )			/* 10/12/1991 (c) 1991 (Japan) */
@@ -323,7 +323,7 @@ const game_driver *const drivers[] =
 	DRIVER( sf2jh )
 	DRIVER( sf2jl )
 	DRIVER( sf2qp1 )		/* hack */
-//	DRIVER( sf2stt )
+	DRIVER( sf2stt )
 	DRIVER( sf2thndr )		/* hack */
 	DRIVER( sf2ua )			/* 06/02/1991 (c) 1991 (US)    */
 	DRIVER( sf2ub )			/* 14/02/1991 (c) 1991 (US)    */

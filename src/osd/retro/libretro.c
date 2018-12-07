@@ -1349,7 +1349,6 @@ void osd_customize_input_type_list(input_type_desc *typelist)
 
 static const char *xargv[] = {
 	"-joystick",
-	"-noautoframeskip",
 	"-sound",
 	"-rompath",
 	NULL, NULL,
