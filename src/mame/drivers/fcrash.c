@@ -307,6 +307,23 @@ static WRITE16_HANDLER( knightsb_layer_w )
 	}
 }
 
+static WRITE16_HANDLER( sf2b_layer_w )
+{
+	cps_state *state = space->machine->driver_data<cps_state>();
+	switch (offset)
+	{
+		case 0x00: state->cps_a_regs[0x0c / 2] = data + 0xffbe; break;			/* scroll1 X */
+		case 0x01: state->cps_a_regs[0x0e / 2] = data; break;				/* scroll1 Y */
+		case 0x02: state->cps_a_regs[0x10 / 2] = data + 0xffc0; break;			/* scroll2 X */
+		case 0x03: state->cps_a_regs[0x12 / 2] = state->cps_a_regs[CPS1_ROWSCROLL_OFFS] = data;
+			   state->cps_a_regs[0x08 / 2] = state->mainram[0x8032 / 2]; break;	/* scroll2 Y / fetch the rowscroll table address */
+		case 0x04: state->cps_a_regs[0x14 / 2] = data + 0xffbe; break;			/* scroll3 X */
+		case 0x05: state->cps_a_regs[0x16 / 2] = data; break;				/* scroll3 Y */
+		case 0x20: state->cps_b_regs[state->layer_enable_reg / 2] = data; break;
+		default: logerror("Unknown layer cmd - %X %X\n", offset << 1, data);
+	}
+}
+
 static WRITE16_HANDLER( sf2m1_layer_w )
 {
 	cps_state *state = space->machine->driver_data<cps_state>();
@@ -602,6 +619,20 @@ static ADDRESS_MAP_START( sf2mdt_map, ADDRESS_SPACE_PROGRAM, 16 )
 	AM_RANGE(0x800140, 0x80017f) AM_RAM AM_BASE_MEMBER(cps_state, cps_b_regs)
 	AM_RANGE(0x900000, 0x92ffff) AM_RAM_WRITE(cps1_gfxram_w) AM_BASE_SIZE_MEMBER(cps_state, gfxram, gfxram_size)
 	AM_RANGE(0xff0000, 0xffffff) AM_RAM
+ADDRESS_MAP_END
+
+static ADDRESS_MAP_START( sf2b_map, ADDRESS_SPACE_PROGRAM, 16 )
+	AM_RANGE(0x000000, 0x3fffff) AM_ROM
+	AM_RANGE(0x70810c, 0x70814f) AM_WRITE(sf2b_layer_w)
+	AM_RANGE(0x70c000, 0x70c001) AM_READ_PORT("IN1")
+	AM_RANGE(0x70c008, 0x70c009) AM_READ_PORT("IN2")
+	AM_RANGE(0x70c018, 0x70c01f) AM_READ(cps1_hack_dsw_r)
+	AM_RANGE(0x70c106, 0x70c107) AM_WRITE(sf2mdt_soundlatch_w)
+	AM_RANGE(0x70d000, 0x70d001) AM_WRITENOP
+	AM_RANGE(0x800100, 0x80013f) AM_RAM AM_BASE_MEMBER(cps_state, cps_a_regs)
+	AM_RANGE(0x800140, 0x80017f) AM_READWRITE(cps1_cps_b_r, cps1_cps_b_w) AM_BASE_MEMBER(cps_state, cps_b_regs)
+	AM_RANGE(0x900000, 0x92ffff) AM_RAM_WRITE(cps1_gfxram_w) AM_BASE_SIZE_MEMBER(cps_state, gfxram, gfxram_size)
+	AM_RANGE(0xff0000, 0xffffff) AM_RAM AM_BASE_MEMBER(cps_state, mainram)
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( sgyxz_map, ADDRESS_SPACE_PROGRAM, 16 )
@@ -1025,6 +1056,11 @@ static MACHINE_START( msm5205snd )
 
 	state->msm_1 = machine->device("msm1");
 	state->msm_2 = machine->device("msm2");
+
+	state_save_register_global(machine, state->sample_buffer1);
+	state_save_register_global(machine, state->sample_buffer2);
+	state_save_register_global(machine, state->sample_select1);
+	state_save_register_global(machine, state->sample_select2);
 }
 
 static MACHINE_START( fcrash )
@@ -1044,11 +1080,6 @@ static MACHINE_START( fcrash )
 	state->sprite_base = 0x50c8;
 	state->sprite_list_end_marker = 0x8000;
 	state->sprite_x_offset = 0x00;
-
-	state_save_register_global(machine, state->sample_buffer1);
-	state_save_register_global(machine, state->sample_buffer2);
-	state_save_register_global(machine, state->sample_select1);
-	state_save_register_global(machine, state->sample_select2);
 }
 
 static MACHINE_START( captcommb2 )
@@ -1056,11 +1087,6 @@ static MACHINE_START( captcommb2 )
 	MACHINE_START_CALL( msm5205snd );
 	cps_state *state = machine->driver_data<cps_state>();
 	memory_configure_bank(machine, "bank1", 0, 16, memory_region(machine, "audiocpu") + 0x10000, 0x4000);
-
-	state_save_register_global(machine, state->sample_buffer1);
-	state_save_register_global(machine, state->sample_buffer2);
-	state_save_register_global(machine, state->sample_select1);
-	state_save_register_global(machine, state->sample_select2);
 }
 
 static MACHINE_START( sf2mdt )
@@ -1080,11 +1106,6 @@ static MACHINE_START( sf2mdt )
 	state->sprite_base = 0x1000;
 	state->sprite_list_end_marker = 0x8000;
 	state->sprite_x_offset = 0x02;
-
-	state_save_register_global(machine, state->sample_buffer1);
-	state_save_register_global(machine, state->sample_buffer2);
-	state_save_register_global(machine, state->sample_select1);
-	state_save_register_global(machine, state->sample_select2);
 }
 
 static MACHINE_START( knightsb )
@@ -1352,6 +1373,16 @@ static MACHINE_DRIVER_START( sf2mdt )
 	MDRV_SOUND_ADD("msm2", MSM5205, XTAL_375KHz)
 	MDRV_SOUND_CONFIG(msm5205_interface2)
 	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.25)
+MACHINE_DRIVER_END
+
+/* ******************************************* SF2B */
+
+static MACHINE_DRIVER_START( sf2b )
+	/* basic machine hardware */
+	MDRV_IMPORT_FROM(sf2mdt)
+
+	MDRV_CPU_MODIFY("maincpu")
+	MDRV_CPU_PROGRAM_MAP(sf2b_map)
 MACHINE_DRIVER_END
 
 /* ******************************************* KNIGHTSB */
@@ -2455,6 +2486,23 @@ ROM_START( wof3sja )
 	ROM_LOAD( "19",             0x20000, 0x20000, CRC(fbb8d8c1) SHA1(8a7689bb7ed56243333133cbacf01a0ae825201e) )
 ROM_END
 
+ROM_START( sf2b )
+	ROM_REGION( CODE_SIZE, "maincpu", 0 )		/* 68000 code */
+	ROM_LOAD16_WORD_SWAP( "pf1-2-sg076.bin",  0x000000, 0x100000, CRC(1d15bc7a) SHA1(834627545f191f39de6beb008c89623f2b88c13b) )
+
+	ROM_REGION( 0x600000, "gfx", 0 )
+	ROMX_LOAD( "pf4-sg072.bin", 0x000000, 0x100000, CRC(16289710) SHA1(4f3236712b979a1eb2fa97740e32d7913cee0d0d), ROM_GROUPWORD | ROM_SKIP(2) )
+	ROMX_LOAD( "pf7-sg103.bin", 0x000002, 0x100000, CRC(fb78022e) SHA1(b8974387056dd52db96b01cc4648edc814398c7e), ROM_GROUPWORD | ROM_SKIP(2) )
+	ROMX_LOAD( "pf5-sg095.bin", 0x200000, 0x100000, CRC(0a6be48b) SHA1(b7e72c94d4e3eb4a6bba6608d9b9a093c8901ad9), ROM_GROUPWORD | ROM_SKIP(2) )
+	ROMX_LOAD( "pf8-sg101.bin", 0x200002, 0x100000, CRC(6258c7cf) SHA1(4cd7519245c0aa816934a43e6743160f715d7dc2), ROM_GROUPWORD | ROM_SKIP(2) )
+	ROMX_LOAD( "pf6-sg068.bin", 0x400000, 0x100000, CRC(9b5b09d7) SHA1(698a6aab41e495bd0c37a19aee16a84f04d15797), ROM_GROUPWORD | ROM_SKIP(2) )
+	ROMX_LOAD( "pf9-sh001.bin", 0x400002, 0x100000, CRC(9f25090e) SHA1(12ff0431ef6550db446985c8914ac7d78eec6b6d), ROM_GROUPWORD | ROM_SKIP(2) )
+
+	ROM_REGION( 0x30000, "audiocpu", 0 )		/* Sound program + samples  */
+	ROM_LOAD( "3snd.ic28",	0x00000, 0x20000, CRC(d5bee9cc) SHA1(e638cb5ce7a22c18b60296a7defe8b03418da56c) )
+	ROM_RELOAD(		0x10000, 0x20000 )
+ROM_END
+
 
 
 
@@ -2678,6 +2726,15 @@ static DRIVER_INIT( wof3jsa )
 	DRIVER_INIT_CALL(cps1);
 }
 
+static DRIVER_INIT( sf2b )
+{
+	cps_state *state = machine->driver_data<cps_state>();
+
+	state->bootleg_sprite_ram = (UINT16 *)memory_install_ram(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x700000, 0x703fff, 0, 0, NULL);
+	memory_install_ram(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x704000, 0x707fff, 0, 0, state->bootleg_sprite_ram);
+
+	DRIVER_INIT_CALL(cps1);
+}
 
 
 /*
@@ -2712,12 +2769,12 @@ GAME( 1993,	slampic,	slammast,	slampic,	slammast,	dinopic,	ROT0,	"bootleg",	"Sat
 /* varthb - OK */
 GAME( 1992,	varthb,		varth,		varthb,		varth,		dinopic,	ROT270,	"bootleg",	"Varth: Operation Thunderstorm (bootleg)", GAME_SUPPORTS_SAVE )
 /* punipic - no sound. Problems in Central Park. Patches used. */
-GAME( 1993,	punipic,	punisher,	punipic,	punisher,	punipic,	ROT0,	"bootleg",	"The Punisher (bootleg with PIC16c57, set 1)", GAME_NO_SOUND | GAME_SUPPORTS_SAVE )
+GAME( 1993,	punipic,	punisher,	punipic,	punisher,	punipic,	ROT0,	"bootleg",	"The Punisher (bootleg with PIC16c57, set 1)", GAME_IMPERFECT_GRAPHICS | GAME_NO_SOUND | GAME_SUPPORTS_SAVE )
 /* punipic2 - no sound. Problems in Central Park. Patches used. */
-GAME( 1993,	punipic2,	punisher,	punipic,	punisher,	punipic,	ROT0,	"bootleg",	"The Punisher (bootleg with PIC16c57, set 2)", GAME_NO_SOUND | GAME_SUPPORTS_SAVE )
+GAME( 1993,	punipic2,	punisher,	punipic,	punisher,	punipic,	ROT0,	"bootleg",	"The Punisher (bootleg with PIC16c57, set 2)", GAME_IMPERFECT_GRAPHICS | GAME_NO_SOUND | GAME_SUPPORTS_SAVE )
 /* punipic3 - same as punipic */
 GAME( 1993,	punipic3,	punisher,	punipic,	punisher,	punipic3,	ROT0,	"bootleg",	"The Punisher (bootleg with PIC16c57, set 3)", GAME_IMPERFECT_GRAPHICS | GAME_NO_SOUND | GAME_SUPPORTS_SAVE )
-/* sgyxz - garbage left behind. A priority problem can be seen in 3rd demo where the fighters walk through the crowd instead of behind. */
+/* sgyxz and the following wof clones: there is a bit a priority problem between the sprites and layers. */
 GAME( 1999,	sgyxz,		wof,		sgyxz,		sgyxz,		sgyxz,		ROT0,	"bootleg(All-In Electronic)", "Sangokushi II: SanGuo YingXiong Zhuan (Chinese bootleg set 3, 921005 Asia)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )
 GAME( 1999,	wofh,		wof,		sgyxz,		sgyxz,		wofh,		ROT0,	"bootleg(All-In Electronic)", "Sangokushi II: Sanguo Yingxiong Zhuan (Chinese bootleg set 1, 921005 Asia)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )
 GAME( 1999,	wofha,		wof,		sgyxz,		sgyxz,		wofh,		ROT0,	"bootleg(All-In Electronic)", "Sangokushi II: Sanguo Yingxiong Zhuan (Chinese bootleg set 2, 921005 Asia)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )
@@ -2726,7 +2783,8 @@ GAME( 1995,	wofsj,		wof,		wofsj,		wofsj,		wofsj,		ROT0,	"bootleg",	"Sangokushi I
 GAME( 1995,	wofsja,		wof,		wofsj,		wofsj,		wofsj,		ROT0,	"bootleg",	"Sangokushi II: Sheng Jian Sanguo (Chinese bootleg set 2, 921005 Asia)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )
 GAME( 1997,	wof3sj,		wof,		wofsj,		wofsj,		wofsj,		ROT0,	"bootleg",	"Sangokushi II: San Sheng Jian (Chinese bootleg set 1, 921005 Asia)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )
 GAME( 1997,	wof3sja,	wof,		wofsj,		wofsj,		wofsj,		ROT0,	"bootleg",	"Sangokushi II: San Sheng Jian (Chinese bootleg set 2, 921005 Asia)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )
-
+/* sf2b - rowscroll still has problem */
+GAME( 1992,	sf2b,		sf2,		sf2b,		sf2mdt,		sf2b,		ROT0,	"bootleg(Playmark)",	"Street Fighter II: The World Warrior (bootleg set 1 with YM2151 + 2xMSM5205, 920214 etc)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE ) //910204 - based on World version
 
 
 
@@ -2736,5 +2794,4 @@ GAME( 1992,   sf2mdt,	  sf2ce,	sf2mdt,		sf2mdt,		sf2mdt,   ROT0,   "bootleg", "S
 GAME( 1992,   sf2mdta,	  sf2ce,	sf2mdt,		sf2mdt,		sf2mdta,  ROT0,   "bootleg", "Street Fighter II': Magic Delta Turbo (bootleg, set 2)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE )
 /* sf2m1 - crowd is missing. Plane's tail comes off a bit. Patch used. */
 GAME( 1992,   sf2m1,	  sf2ce,	sf2m1,		sf2,		sf2m1,    ROT0,   "bootleg", "Street Fighter II': Champion Edition (M1, bootleg)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )
-
 
