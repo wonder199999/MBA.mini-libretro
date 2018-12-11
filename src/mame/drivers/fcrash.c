@@ -267,12 +267,6 @@ static WRITE16_HANDLER( punipic3_layer_w )
 static WRITE16_HANDLER( knightsb_layer_w )
 {
 	cps_state *state = space->machine->driver_data<cps_state>();
-	const static UINT16 maskcode[6][3] = {
-		{ 0x0000, 0x0000, 0x0000 }, { 0x03ff, 0x003f, 0x01ff }, { 0x7fff, 0x7ff8, 0x00ff },
-		{ 0x001f, 0x00ff, 0x07ff }, { 0xffee, 0x01ff, 0x7800 }, { 0x03ff, 0x7e00, 0x7f00 }
-	};
-	UINT8 j;
-
 	switch (offset)
 	{
 		case 0x00: state->cps_a_regs[0x0e / 2] = data; break;
@@ -285,25 +279,25 @@ static WRITE16_HANDLER( knightsb_layer_w )
 		{
 			switch (data)
 			{
-				case 0x0000: data = 0x12c0; j = 0; break;
-				case 0x001f: data = 0x12c0; j = 1; break;
-				case 0x00ff: data = 0x12c0; j = 2; break;
-				case 0x07ff: data = 0x12c0; j = 3; break;
-				case 0x2000: data = 0x06c0; j = 0; break;
-				case 0x5800: data = 0x12c0; j = 4; break;
-				case 0x5f00: data = 0x12c0; j = 5; break;
-				case 0x80ff: data = 0x1380; j = 2; break;
-				case 0x87ff: data = 0x1380; j = 3; break;
-				case 0xa000: data = 0x24c0; j = 0; break;
-				case 0xd800: data = 0x1380; j = 4; break;
-				default: logerror ("Unknown control word = %X\n", data); data = 0x12c0; j = 0; break;
+				case 0x0000:
+				case 0x001f:
+				case 0x00ff:
+				case 0x07ff: data = 0x12c0; break;
+				case 0x2000: data = 0x06c0; break;
+				case 0x5800:
+				case 0x5f00: data = 0x12c0; break;
+				case 0x80ff:
+				case 0x87ff: data = 0x1380; break;
+				case 0xa000: data = 0x24c0; break;
+				case 0xd800: data = 0x1380; break;
+				default: logerror ("Unknown control word = %X\n", data); data = 0x12c0; break;
 			}
-			state->cps_b_regs[state->layer_mask_reg[0] / 2] = 0x00;
-			state->cps_b_regs[state->layer_mask_reg[1] / 2] = maskcode[j][0];
-			state->cps_b_regs[state->layer_mask_reg[2] / 2] = maskcode[j][1];
-			state->cps_b_regs[state->layer_mask_reg[3] / 2] = maskcode[j][2];
 			state->cps_b_regs[state->layer_enable_reg / 2] = data; break;
 		}
+		case 0x10: state->cps_b_regs[state->layer_mask_reg[1] / 2] = data; break;
+		case 0x11: state->cps_b_regs[state->layer_mask_reg[2] / 2] = data; break;
+		case 0x12: state->cps_b_regs[state->layer_mask_reg[3] / 2] = data; break;
+		default: logerror ("Unknown layer command! %X\n", offset); break;
 	}
 }
 
@@ -589,7 +583,7 @@ static ADDRESS_MAP_START( knightsb_map, ADDRESS_SPACE_PROGRAM, 16 )		/* knightsb
 	AM_RANGE(0x800180, 0x800181) AM_WRITENOP
 	AM_RANGE(0x880000, 0x880001) AM_WRITENOP
 	AM_RANGE(0x900000, 0x93ffff) AM_RAM_WRITE(cps1_gfxram_w) AM_BASE_SIZE_MEMBER(cps_state, gfxram, gfxram_size)
-	AM_RANGE(0x980000, 0x98000d) AM_WRITE(knightsb_layer_w)
+	AM_RANGE(0x980000, 0x980025) AM_WRITE(knightsb_layer_w)
 	AM_RANGE(0x990000, 0x990001) AM_WRITENOP
 	AM_RANGE(0xff0000, 0xffffff) AM_RAM
 ADDRESS_MAP_END
@@ -1113,11 +1107,11 @@ static MACHINE_START( knightsb )
 	MACHINE_START_CALL( captcommb2 );
 	cps_state *state = machine->driver_data<cps_state>();
 
-	state->layer_enable_reg = 0x30;
-	state->layer_mask_reg[0] = 0x28;
-	state->layer_mask_reg[1] = 0x2a;
-	state->layer_mask_reg[2] = 0x2c;
-	state->layer_mask_reg[3] = 0x2e;
+	state->layer_enable_reg = 0x28;
+	state->layer_mask_reg[0] = 0x26;
+	state->layer_mask_reg[1] = 0x24;
+	state->layer_mask_reg[2] = 0x22;
+	state->layer_mask_reg[3] = 0x20;
 	state->layer_scroll1x_offset = 0x3e;
 	state->layer_scroll2x_offset = 0x3c;
 	state->layer_scroll3x_offset = 0x40;
