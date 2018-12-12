@@ -336,6 +336,14 @@ const game_driver *const drivers[] =
 	DRIVER( sf2uk )			/* 01/11/1991 (c) 1991 (US)    */
 	//
 	DRIVER( sf2ce )			/* 13/03/1992 (c) 1992 (World) */
+	DRIVER( sf2ceea )
+	DRIVER( sf2ceua )		/* 13/03/1992 (c) 1992 (US)    */
+	DRIVER( sf2ceub )		/* 13/05/1992 (c) 1992 (US)    */
+	DRIVER( sf2ceuc )		/* 03/08/1992 (c) 1992 (US)    */
+	DRIVER( sf2ceja )
+	DRIVER( sf2cejb )
+	DRIVER( sf2cejc )
+
 	DRIVER( sf2acc )		/* hack */
 //	DRIVER( sf2acca )
 	DRIVER( sf2accp2 )		/* hack */
@@ -349,15 +357,10 @@ const game_driver *const drivers[] =
 //	DRIVER( sf2amf8 )
 //	DRIVER( sf2bhh )
 //	DRIVER( sf2cebltw )
-//	DRIVER( sf2ceea )
 //	DRIVER( sf2ceeab2 )
 //	DRIVER( sf2ceeabl )
-//	DRIVER( sf2ceja )
 //	DRIVER( sf2cejab2 )
 //	DRIVER( sf2cejabl )
-//	DRIVER( sf2cejb )
-//	DRIVER( sf2cejc )
-	DRIVER( sf2ceua )		/* 13/03/1992 (c) 1992 (US)    */
 //	DRIVER( sf2ceuab2 )
 	DRIVER( sf2ceuab3 )		/* bootleg of SF2CE, in FBA it's name is sf2ceuab3, in MAME it's name is sf2m8a */
 //	DRIVER( sf2ceuab4 )
@@ -365,8 +368,6 @@ const game_driver *const drivers[] =
 //	DRIVER( sf2ceuab6 )
 //	DRIVER( sf2ceuab7 )
 //	DRIVER( sf2ceuabl )
-	DRIVER( sf2ceub )		/* 13/05/1992 (c) 1992 (US)    */
-	DRIVER( sf2ceuc )		/* 03/08/1992 (c) 1992 (US)    */
 //	DRIVER( sf2ceucbl )
 	DRIVER( sf2dkot2 )		/* hack */
 //	DRIVER( sf2dongb )
@@ -398,7 +399,6 @@ const game_driver *const drivers[] =
 //	DRIVER( sf2yyc2 )
 //
 
-/* obsolete */	DRIVER( sf2cej )		/* 13/05/1992 (c) 1992 (Japan) */
 /* obsolete */	DRIVER( sf2m2 )			/* hack */
 /* obsolete */	DRIVER( sf2m4 )			/* hack */
 /* obsolete */	DRIVER( sf2m5 )			/* hack */
