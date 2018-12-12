@@ -1525,15 +1525,17 @@ static const struct CPS1config cps1_config_table[] =
 	{"sf2ceja",	CPS_B_21_DEF,	mapper_S9263B,	0x36 },
 	{"sf2cejb",	CPS_B_21_DEF,	mapper_S9263B,	0x36 },
 	{"sf2cejc",	CPS_B_21_DEF,	mapper_S9263B,	0x36 },
+	{"sf2bhh",	CPS_B_21_DEF,	mapper_S9263B,	0x36 },
+	{"sf2rb",	CPS_B_21_DEF,	mapper_S9263B,	0x36 },
+	{"sf2rb2",	CPS_B_21_DEF,	mapper_S9263B,	0x36 },
+	{"sf2rb3",	CPS_B_21_DEF,	mapper_S9263B,	0x36 },
 
 
 
 
 
 
-	{"sf2rb",	CPS_B_21_DEF, mapper_S9263B, 0x36 },
-	{"sf2rb2",	CPS_B_21_DEF, mapper_S9263B, 0x36 },
-	{"sf2rb3",	CPS_B_21_DEF, mapper_S9263B, 0x36 },
+
 	{"sf2red",	CPS_B_21_DEF, mapper_S9263B, 0x36 },
 	{"sf2v004",	CPS_B_21_DEF, mapper_S9263B, 0x36 },
 	{"sf2acc",	CPS_B_21_DEF, mapper_S9263B, 0x36 },
@@ -1625,6 +1627,7 @@ static MACHINE_RESET( cps )
 
 	/* specific game_init */
 	state->force_screen_flip_flag = 0;
+	state->bootleg_sf2rb2 = 0;
 
 	if (strcmp(gamename, "dinopic4") == 0)
 		state->force_screen_flip_flag = 1;
@@ -1641,6 +1644,8 @@ static MACHINE_RESET( cps )
 		/* Patch out protection check */
 		UINT16 *rom = (UINT16 *)memory_region(machine, "maincpu");
 		rom[0xe5332 / 2] = 0x6014;
+
+		state->bootleg_sf2rb2 = 1;
 	}
 }
 

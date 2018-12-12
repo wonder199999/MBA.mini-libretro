@@ -260,10 +260,11 @@ public:
 	INT32		layer_scroll2x_offset;
 	INT32		layer_scroll3x_offset;
 	UINT16		dinopic4protectvalue;			/* for dinopic4(bootleg) */
-	UINT16		punipic3_parampass;			/* for punipic3(bootleg) */
+	UINT16		punipic3_sub_lcc;			/* for punipic3(bootleg) */
 	UINT8		layer_mask_reg[4];
 	UINT8		layer_enable_reg;
 	UINT8		force_screen_flip_flag;			/* used on some bootleg or hack roms */
+	UINT8		bootleg_sf2rb2;				/* for sf2rb && sf2rb2 && sf2bhh */
 };
 
 

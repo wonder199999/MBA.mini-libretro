@@ -235,12 +235,12 @@ static WRITE16_HANDLER( punipic3_layer_w )
 		case 0x03: state->cps_a_regs[0x10 / 2] = data + 0xffc0; break;
 		case 0x04: state->cps_a_regs[0x16 / 2] = data; break;
 		case 0x05: state->cps_a_regs[0x14 / 2] = data; break;
-		case 0x06: state->punipic3_parampass = data; break;
+		case 0x06: state->punipic3_sub_lcc = data; break;
 		case 0x07:
 		{
 			if (data == 0x0000)
 			{
-				switch (state->punipic3_parampass)
+				switch (state->punipic3_sub_lcc)
 				{
 					case 0x24: data = 0x1380; break;
 					case 0x54:
@@ -250,7 +250,7 @@ static WRITE16_HANDLER( punipic3_layer_w )
 			}
 			else
 			{
-				switch (state->punipic3_parampass)
+				switch (state->punipic3_sub_lcc)
 				{
 					case 0x24: data = 0x10c0; break;
 					case 0x54:
@@ -2648,7 +2648,7 @@ static DRIVER_INIT( punipic )
 static DRIVER_INIT( punipic3 )
 {
 	cps_state *state = machine->driver_data<cps_state>();
-	state->punipic3_parampass = 0;
+	state->punipic3_sub_lcc = 0;
 
 	UINT16 *ram = (UINT16 *)memory_region( machine, "maincpu" );
 	ram[0x05a6 / 2] = 0x4e71;
