@@ -264,7 +264,7 @@ public:
 	UINT8		layer_mask_reg[4];
 	UINT8		layer_enable_reg;
 	UINT8		force_screen_flip_flag;			/* used on some bootleg or hack roms */
-	UINT8		bootleg_sf2rb2;				/* for sf2rb && sf2rb2 && sf2bhh */
+	UINT8		bootleg_sf2rb2;				/* for sf2rb && sf2rb2 */
 };
 
 

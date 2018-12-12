@@ -347,10 +347,11 @@ const game_driver *const drivers[] =
 	DRIVER( sf2rb )			/* hack */
 	DRIVER( sf2rb2 )		/* hack */
 	DRIVER( sf2rb3 )		/* hack */
-
 	DRIVER( sf2acc )		/* hack */
-//	DRIVER( sf2acca )
+	DRIVER( sf2acca )
 	DRIVER( sf2accp2 )		/* hack */
+	DRIVER( sf2cebltw )
+
 	DRIVER( sf2amf )		/* hackrom, SF2 Alpha Magic-F */
 //	DRIVER( sf2amf2 )
 //	DRIVER( sf2amf3 )
@@ -359,7 +360,6 @@ const game_driver *const drivers[] =
 //	DRIVER( sf2amf6 )
 //	DRIVER( sf2amf7 )
 //	DRIVER( sf2amf8 )
-//	DRIVER( sf2cebltw )
 //	DRIVER( sf2ceeab2 )
 //	DRIVER( sf2ceeabl )
 //	DRIVER( sf2cejab2 )
