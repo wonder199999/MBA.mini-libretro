@@ -11065,12 +11065,11 @@ ROM_START( sf2ebbl2 )
 	ROMX_LOAD( "f-sf001.bin", 0x400002, 0x80000, CRC(5b585071) SHA1(ad3371b1ba0441c67d9fcbb23b09464710e4e28a) , ROM_GROUPWORD | ROM_SKIP(6) )
 	ROM_CONTINUE(		  0x400006, 0x80000)
 
-	// These map over the MASK roms on this bootleg why? isn't it a waste of eprom?
-	ROMX_LOAD( "27c1024.10",  0x400000, 0x20000, CRC(84427d1b) SHA1(f988a2b53c8cc46eeb8032084f24966a539b3734) , ROM_GROUPWORD | ROM_SKIP(6) )//e-sf004.bin [1/8]      IDENTICAL
-	ROMX_LOAD( "27c1024.12",  0x400002, 0x20000, CRC(55bc790c) SHA1(a1114b89f6fa4487210477676984c77ad94b5ef8) , ROM_GROUPWORD | ROM_SKIP(6) )//f-sf001.bin [1/8]      IDENTICAL
-	ROMX_LOAD( "27c1024.9",   0x400004, 0x20000, CRC(f8725add) SHA1(fa3fcf6637ee4dd7667bd89766074b3c6ba4f166) , ROM_GROUPWORD | ROM_SKIP(6) )//e-sf004.bin [5/8]      IDENTICAL
-	ROMX_LOAD( "27c1024.11",  0x400006, 0x20000, CRC(c2a5373e) SHA1(602b32e5ecc7007efe9ad30751040ee52b81f59a) , ROM_GROUPWORD | ROM_SKIP(6) )//f-sf001.bin [5/8]      IDENTICAL
-
+	/* These map over the MASK roms on this bootleg why? isn't it a waste of eprom? */
+	ROMX_LOAD( "27c1024.10",  0x400000, 0x20000, CRC(84427d1b) SHA1(f988a2b53c8cc46eeb8032084f24966a539b3734) , ROM_GROUPWORD | ROM_SKIP(6) )	// e-sf004.bin [1/8]      IDENTICAL
+	ROMX_LOAD( "27c1024.12",  0x400002, 0x20000, CRC(55bc790c) SHA1(a1114b89f6fa4487210477676984c77ad94b5ef8) , ROM_GROUPWORD | ROM_SKIP(6) )	// f-sf001.bin [1/8]      IDENTICAL
+	ROMX_LOAD( "27c1024.9",   0x400004, 0x20000, CRC(f8725add) SHA1(fa3fcf6637ee4dd7667bd89766074b3c6ba4f166) , ROM_GROUPWORD | ROM_SKIP(6) )	// e-sf004.bin [5/8]      IDENTICAL
+	ROMX_LOAD( "27c1024.11",  0x400006, 0x20000, CRC(c2a5373e) SHA1(602b32e5ecc7007efe9ad30751040ee52b81f59a) , ROM_GROUPWORD | ROM_SKIP(6) )	// f-sf001.bin [5/8]      IDENTICAL
 
 	ROM_REGION( 0x18000, "audiocpu", 0 )		/* 64k for the audio CPU (+banks) */
 	ROM_LOAD( "27c512.3",    0x00000, 0x08000, CRC(a4823a1b) SHA1(7b6bf59dfd578bfbbdb64c27988796783442d659) )
@@ -11256,7 +11255,6 @@ ROM_START( sf2stt )
 	ROM_LOAD( "1.stt", 0x20000, 0x20000, CRC(beade53f) SHA1(277c397dc12752719ec6b47d2224750bd1c07f79) )
 ROM_END
 
-
 ROM_START( sf2b2 )
 	ROM_REGION( CODE_SIZE, "maincpu", 0 )	/* 68000 code */
 	ROM_LOAD16_BYTE( "sf2e_30b.11e", 0x00000, 0x20000, CRC(57bd7051) SHA1(5e211e75b1649b07723cabc03cf15636dbbae595) )
@@ -11279,6 +11277,7 @@ ROM_START( sf2b2 )
 	ROM_CONTINUE(		 0x400000, 0x80000)
 	ROMX_LOAD( "bdst-6.u18", 0x400006, 0x80000, CRC(84f9354f) SHA1(ecc190950b1f45b268da380c17859a8d0715b58f), ROM_GROUPWORD | ROM_SKIP(6) )
 	ROM_CONTINUE(		 0x400002, 0x80000)
+	/* loaded over the extra gfx roms */
 	ROMX_LOAD( "grp1.u31",   0x400004, 0x10000, CRC(6de44671) SHA1(dc6abba639e0c27033e391c7438d88dc89a93351), ROM_SKIP(7) )
 	ROM_CONTINUE(		 0x400000, 0x10000 )
 	ROMX_LOAD( "grp3.u29",   0x400006, 0x10000, CRC(e8f14362) SHA1(a20eb75e322011e2a8d8bf2acebe713bef3d3941), ROM_SKIP(7) )
@@ -11290,7 +11289,7 @@ ROM_START( sf2b2 )
 
 	ROM_REGION( 0x18000, "audiocpu", 0 )	/* 64k for the audio CPU (+banks) */
 	ROM_LOAD( "sound.u191", 0x00000, 0x08000, CRC(a4823a1b) SHA1(7b6bf59dfd578bfbbdb64c27988796783442d659) )
-	ROM_CONTINUE(      0x10000, 0x08000 )
+	ROM_CONTINUE(		0x10000, 0x08000 )
 
 	ROM_REGION( 0x40000, "oki", 0 )		/* Samples */
 	ROM_LOAD( "voice.u210", 0x00000, 0x40000, CRC(6cfffb11) SHA1(995526183ffd35f92e9096500a3fe6237faaa2dd) )
@@ -11299,6 +11298,77 @@ ROM_START( sf2b2 )
 	ROM_LOAD_OPTIONAL( "u133",    0x00000, 0x10000, CRC(13ea1c44) SHA1(5b05fe4c3920e33d94fac5f59e09ff14b3e427fe) )
 ROM_END
 
+/*Street Fighter 2 bootleg
+
+
+This game runs on a single bootleg PCB.
+It uses 2 square PLCC custom graphics chips by Altera
+On chips are written ...
+ALTERA EP1810LC
+I have seen a similar ALTERA chip on a Killer Instinct PCB
+
+
+CPU: 68000-10, Z8400 (Z80A)
+SND: YM2151, OKI6295, YM3012A
+OSC: 16.000Mhz, 10.000Mhz, 3.5795Mhz
+
+Developers:
+This PCB also has some 42 Pin Mask roms which are not dumped 
+as my reader will only accept up to 40 pin roms.
+Hopefully, the existing dumped gfx roms will be the same.
+
+If you need more info, contact me.
+
+theguru@emuunlim.com*/
+
+ROM_START( sf2b3 )
+	ROM_REGION( CODE_SIZE, "maincpu", 0 )	/* 68000 code */
+	ROM_LOAD16_BYTE( "sf2e_30b.11e", 0x00000, 0x20000, CRC(57bd7051) SHA1(5e211e75b1649b07723cabc03cf15636dbbae595) )
+	ROM_LOAD16_BYTE( "sf2e_37b.11f", 0x00001, 0x20000, CRC(62691cdd) SHA1(328703c3e737ada544e67c36119eeb4a100ca740) )
+	ROM_LOAD16_BYTE( "sf2e_31b.12e", 0x40000, 0x20000, CRC(a673143d) SHA1(e565f0ec23d6deb543c72af5a83f070c07319477) )
+	ROM_LOAD16_BYTE( "sf2e_38b.12f", 0x40001, 0x20000, CRC(4c2ccef7) SHA1(77b119c70c255622b023de25d9af3b3aac52ea47) )
+	ROM_LOAD16_BYTE( "u6.bin",	 0x80000, 0x20000, CRC(5cfc3f39) SHA1(532341ebbf3353a5fe1ddbed338690cbc32fd4db) )
+	ROM_LOAD16_BYTE( "u5.bin",	 0x80001, 0x20000, CRC(47dd24b6) SHA1(2d8b8f5ff9a6f4859d568d4a70d97c069b452d8a) )
+	ROM_LOAD16_BYTE( "sf2_29b.10e",  0xc0000, 0x20000, CRC(bb4af315) SHA1(75f0827f4f7e9f292add46467f8d4fe19b2514c9) )
+	ROM_LOAD16_BYTE( "sf2_36b.10f",  0xc0001, 0x20000, CRC(c02a13eb) SHA1(b807cc495bff3f95d03b061fc629c95f965cb6d8) )
+
+	ROM_REGION( 0x600000, "gfx", 0 )
+	ROMX_LOAD( "sf2_06.bin",  0x000000, 0x80000, CRC(22c9cc8e) SHA1(b9194fb337b30502c1c9501cd6c64ae4035544d4) , ROM_GROUPWORD | ROM_SKIP(6) )
+	ROMX_LOAD( "sf2_08.bin",  0x000002, 0x80000, CRC(57213be8) SHA1(3759b851ac0904ec79cbb67a2264d384b6f2f9f9) , ROM_GROUPWORD | ROM_SKIP(6) )
+	ROMX_LOAD( "sf2_05.bin",  0x000004, 0x80000, CRC(ba529b4f) SHA1(520840d727161cf09ca784919fa37bc9b54cc3ce) , ROM_GROUPWORD | ROM_SKIP(6) )
+	ROMX_LOAD( "sf2_07.bin",  0x000006, 0x80000, CRC(4b1b33a8) SHA1(2360cff890551f76775739e2d6563858bff80e41) , ROM_GROUPWORD | ROM_SKIP(6) )
+	ROMX_LOAD( "sf2_15.bin",  0x200000, 0x80000, CRC(2c7e2229) SHA1(357c2275af9133fd0bd6fbb1fa9ad5e0b490b3a2) , ROM_GROUPWORD | ROM_SKIP(6) )
+	ROMX_LOAD( "sf2_17.bin",  0x200002, 0x80000, CRC(b5548f17) SHA1(baa92b91cf616bc9e2a8a66adc777ffbf962a51b) , ROM_GROUPWORD | ROM_SKIP(6) )
+	ROMX_LOAD( "sf2_14.bin",  0x200004, 0x80000, CRC(14b84312) SHA1(2eea16673e60ba7a10bd4d8f6c217bb2441a5b0e) , ROM_GROUPWORD | ROM_SKIP(6) )
+	ROMX_LOAD( "sf2_16.bin",  0x200006, 0x80000, CRC(5e9cd89a) SHA1(f787aab98668d4c2c54fc4ba677c0cb808e4f31e) , ROM_GROUPWORD | ROM_SKIP(6) )
+	ROMX_LOAD( "sf2_25.bin",  0x400000, 0x80000, CRC(994bfa58) SHA1(5669b845f624b10e7be56bfc89b76592258ce48b) , ROM_GROUPWORD | ROM_SKIP(6) )
+	ROMX_LOAD( "sf2_27.bin",  0x400002, 0x80000, CRC(3e66ad9d) SHA1(9af9df0826988872662753e9717c48d46f2974b0) , ROM_GROUPWORD | ROM_SKIP(6) )
+	ROMX_LOAD( "sf2_24.bin",  0x400004, 0x80000, CRC(c1befaa8) SHA1(a6a7f4725e52678cbd8d557285c01cdccb2c2602) , ROM_GROUPWORD | ROM_SKIP(6) )
+	ROMX_LOAD( "sf2_26.bin",  0x400006, 0x80000, CRC(0627c831) SHA1(f9a92d614e8877d648449de2612fc8b43c85e4c2) , ROM_GROUPWORD | ROM_SKIP(6) )
+	/* loaded extra gfx roms */
+	ROMX_LOAD( "sf2-1.bin",   0x400004, 0x10000, CRC(6de44671) SHA1(dc6abba639e0c27033e391c7438d88dc89a93351), ROM_SKIP(7) )
+	ROM_CONTINUE(		  0x400000, 0x10000 )
+	ROMX_LOAD( "sf2-3.bin",   0x400006, 0x10000, CRC(e8f14362) SHA1(a20eb75e322011e2a8d8bf2acebe713bef3d3941), ROM_SKIP(7) )
+	ROM_CONTINUE(		  0x400002, 0x10000 )
+	ROMX_LOAD( "sf2-2.bin",   0x400005, 0x10000, CRC(bf0cd819) SHA1(f04a098fce07949277268327871c5e5520e3bb3c), ROM_SKIP(7) )
+	ROM_CONTINUE(		  0x400001, 0x10000 )
+	ROMX_LOAD( "sf2-4.bin",   0x400007, 0x10000, CRC(76f9f91f) SHA1(58a34062d2c8378558a7f1629140330279af9a43), ROM_SKIP(7) )
+	ROM_CONTINUE(		  0x400003, 0x10000 )
+
+	ROM_REGION( 0x18000, "audiocpu", 0 )	/* 64k for the audio CPU (+banks) */
+	ROM_LOAD( "u7.bin", 0x00000, 0x08000, CRC(a4823a1b) SHA1(7b6bf59dfd578bfbbdb64c27988796783442d659) )
+	ROM_CONTINUE(	    0x10000, 0x08000 )
+
+	ROM_REGION( 0x40000, "oki", 0 )		/* Samples */
+	ROM_LOAD( "u8.bin", 0x00000, 0x40000, CRC(6cfffb11) SHA1(995526183ffd35f92e9096500a3fe6237faaa2dd) )
+
+	ROM_REGION( 0x10000, "user1", 0 )
+	ROM_LOAD_OPTIONAL( "sf2-5.bin",  0x00000, 0x10000, CRC(13ea1c44) SHA1(5b05fe4c3920e33d94fac5f59e09ff14b3e427fe) )
+
+	ROM_REGION( 0x20000, "user2", 0 )
+	ROM_LOAD_OPTIONAL( "u3.bin",  0x00000, 0x10000, CRC(13ea1c44) SHA1(5b05fe4c3920e33d94fac5f59e09ff14b3e427fe) )
+	ROM_LOAD_OPTIONAL( "u4.bin",  0x10000, 0x10000, CRC(13ea1c44) SHA1(5b05fe4c3920e33d94fac5f59e09ff14b3e427fe) )
+ROM_END
 
 
 
@@ -12595,12 +12665,13 @@ GAME( 1991,	sf2jf,		sf2,		cps1_10MHz,	sf2j,		cps1,		ROT0,	"Capcom",	"Street Figh
 GAME( 1991,	sf2jh,		sf2,		cps1_10MHz,	sf2j,		cps1,		ROT0,	"Capcom",	"Street Fighter II: The World Warrior (Japan 910522)", GAME_SUPPORTS_SAVE )
 GAME( 1991,	sf2jl,		sf2,		cps1_10MHz,	sf2j,		cps1,		ROT0,	"Capcom",	"Street Fighter II: The World Warrior (Japan 920312)", GAME_SUPPORTS_SAVE )
 GAME( 1992,	sf2ebbl,	sf2,		cps1_10MHz,	sf2hack,	sf2hack,	ROT0,	"bootleg",	"Street Fighter II: The World Warrior (TAB Austria, bootleg, set 1)", GAME_SUPPORTS_SAVE ) //Extra Tiles Type: SF2EBBL
-GAME( 1992,	sf2ebbl2,	sf2,		cps1_10MHz,	sf2hack,	sf2hack,	ROT0,	"bootleg",	"Street Fighter II: The World Warrior (TAB Austria, bootleg, set 3)", GAME_SUPPORTS_SAVE ) // 910214 - based on World version
-GAME( 1992,	sf2ebbl3,	sf2,		cps1_10MHz,	sf2hack,	sf2hack,	ROT0,	"bootleg",	"Street Fighter II: The World Warrior (TAB Austria, bootleg, set 4)", GAME_SUPPORTS_SAVE ) // 910214 - based on World version
-GAME( 1992,	sf2stt,		sf2,		cps1_10MHz,	sf2hack,	sf2hack,	ROT0,	"bootleg",	"Street Fighter II: The World Warrior (TAB Austria, bootleg, set 2)", GAME_SUPPORTS_SAVE ) // 910214 - based on World version
+GAME( 1992,	sf2ebbl2,	sf2,		cps1_10MHz,	sf2hack,	sf2hack,	ROT0,	"bootleg",	"Street Fighter II: The World Warrior (TAB Austria, bootleg, set 3)", GAME_SUPPORTS_SAVE ) // Same as SF2EBBL
+GAME( 1992,	sf2ebbl3,	sf2,		cps1_10MHz,	sf2hack,	sf2hack,	ROT0,	"bootleg",	"Street Fighter II: The World Warrior (TAB Austria, bootleg, set 4)", GAME_SUPPORTS_SAVE ) // Same as SF2EBBL
+GAME( 1992,	sf2stt,		sf2,		cps1_10MHz,	sf2hack,	sf2hack,	ROT0,	"bootleg",	"Street Fighter II: The World Warrior (TAB Austria, bootleg, set 2)", GAME_SUPPORTS_SAVE ) // Same as SF2EBBl
 GAME( 1991,	sf2qp1,		sf2,		cps1_10MHz,	sf2,		cps1,		ROT0,	"bootleg",	"Street Fighter II: The World Warrior (Quicken Pt-I, bootleg)", GAME_SUPPORTS_SAVE )	   // 910214 - based on World version
 GAME( 1991,	sf2thndr,	sf2,		cps1_10MHz,	sf2,		sf2thndr,	ROT0,	"bootleg",	"Street Fighter II: The World Warrior (Thunder Edition, bootleg)", GAME_SUPPORTS_SAVE )	   // 910214 - based on World version
 GAME( 1991,	sf2b2,		sf2,		cps1_10MHz,	sf2,		cps1,		ROT0,	"bootleg",	"Street Fighter II: The World Warrior (bootleg set 2, 910214 etc)", GAME_SUPPORTS_SAVE )  //Extra Tiles Type: SF2B
+GAME( 1991,	sf2b3,		sf2,		cps1_10MHz,	sf2,		cps1,		ROT0,	"bootleg",	"Street Fighter II: The World Warrior (bootleg set 3, 910214 etc)", GAME_SUPPORTS_SAVE )  //Extra Tiles Type: SF2B
 
 
 
@@ -12632,4 +12703,5 @@ GAME( 1992, sf2koryu,   sf2ce,    cps1_12MHz, sf2hack,    sf2hack,  ROT0,   "boo
 GAME( 1992, sf2m3,	sf2ce,	  sf2m3,	sf2,	   cps1,       ROT0,   "bootleg",  "Street Fighter II': Champion Edition (M3, bootleg)", GAME_SUPPORTS_SAVE )
 GAME( 1992, sf2ceuab3,	sf2ce,	  sf2m3,	sf2,	   sf2m8,      ROT0,   "bootleg",  "Street Fighter II': Champion Edition (In MAME, the game's name is sf2m8a, bootleg)", GAME_SUPPORTS_SAVE )
 GAME( 1992, sf2amf,	sf2ce,	  cps1_12MHz,	sf2amf,	   sf2hack,    ROT0,   "bootleg",  "Street Fighter II': Champion Edition (Alpha Magic-F, bootleg)", GAME_SUPPORTS_SAVE )
+
 

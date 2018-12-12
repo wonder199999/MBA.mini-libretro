@@ -1079,7 +1079,6 @@ static MACHINE_START( fcrash )
 static MACHINE_START( captcommb2 )
 {
 	MACHINE_START_CALL( msm5205snd );
-	cps_state *state = machine->driver_data<cps_state>();
 	memory_configure_bank(machine, "bank1", 0, 16, memory_region(machine, "audiocpu") + 0x10000, 0x4000);
 }
 

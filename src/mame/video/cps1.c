@@ -1515,6 +1515,7 @@ static const struct CPS1config cps1_config_table[] =
 	{"sf2thndr",	CPS_B_17,	mapper_STF29,	0x36 },
 	{"sf2b",	CPS_B_17,	mapper_STF29,	0x36 },
 	{"sf2b2",	CPS_B_17,	mapper_STF29,	0x36 },
+	{"sf2b3",	CPS_B_17,	mapper_STF29,	0x36 },
 
 
 
