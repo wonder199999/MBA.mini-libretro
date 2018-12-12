@@ -11257,6 +11257,49 @@ ROM_START( sf2stt )
 ROM_END
 
 
+ROM_START( sf2b2 )
+	ROM_REGION( CODE_SIZE, "maincpu", 0 )	/* 68000 code */
+	ROM_LOAD16_BYTE( "sf2e_30b.11e", 0x00000, 0x20000, CRC(57bd7051) SHA1(5e211e75b1649b07723cabc03cf15636dbbae595) )
+	ROM_LOAD16_BYTE( "sf2e_37b.11f", 0x00001, 0x20000, CRC(62691cdd) SHA1(328703c3e737ada544e67c36119eeb4a100ca740) )
+	ROM_LOAD16_BYTE( "sf2e_31b.12e", 0x40000, 0x20000, CRC(a673143d) SHA1(e565f0ec23d6deb543c72af5a83f070c07319477) )
+	ROM_LOAD16_BYTE( "sf2e_38b.12f", 0x40001, 0x20000, CRC(4c2ccef7) SHA1(77b119c70c255622b023de25d9af3b3aac52ea47) )
+	ROM_LOAD16_BYTE( "prh2.u222",	 0x80000, 0x40000, CRC(6d0f77b8) SHA1(d1c2440a6b43fd9a4ea51646383e1f9ddd6326c0) )
+	ROM_LOAD16_BYTE( "prl1.u196",	 0x80001, 0x40000, CRC(9b96ee64) SHA1(920dce423d8193a9456e2d83c884e092f101dc58) )
+
+	ROM_REGION( 0x600000, "gfx", 0 )
+	ROMX_LOAD( "bdst-1.u70", 0x000004, 0x80000, CRC(a94a8b19) SHA1(49ba9e6032a0b33d7db9fe609710575f2f75e695), ROM_GROUPWORD | ROM_SKIP(6) )
+	ROM_CONTINUE(		 0x000000, 0x80000)
+	ROMX_LOAD( "bdst-4.u68", 0x000006, 0x80000, CRC(0405f21f) SHA1(dbebd2c2c46d5aae8db905f2eb51abd4a5c4ea97), ROM_GROUPWORD | ROM_SKIP(6) )
+	ROM_CONTINUE(		 0x000002, 0x80000)
+	ROMX_LOAD( "bdst-2.u69", 0x200004, 0x80000, CRC(05dc2043) SHA1(d16b89a48d2dd7cdfafc79567ce1e230d4bd41c1), ROM_GROUPWORD | ROM_SKIP(6) )
+	ROM_CONTINUE(		 0x200000, 0x80000)
+	ROMX_LOAD( "bdst-5.u64", 0x200006, 0x80000, CRC(055b64f1) SHA1(3dd68f52b81ed1b300b65c900ef6bfe435d41e4b), ROM_GROUPWORD | ROM_SKIP(6) )
+	ROM_CONTINUE(		 0x200002, 0x80000)
+	ROMX_LOAD( "bdst-3.u19", 0x400004, 0x80000, CRC(1a518609) SHA1(18ffca70d6cefb399ba6e3008e5c29dc37de52a0), ROM_GROUPWORD | ROM_SKIP(6) )
+	ROM_CONTINUE(		 0x400000, 0x80000)
+	ROMX_LOAD( "bdst-6.u18", 0x400006, 0x80000, CRC(84f9354f) SHA1(ecc190950b1f45b268da380c17859a8d0715b58f), ROM_GROUPWORD | ROM_SKIP(6) )
+	ROM_CONTINUE(		 0x400002, 0x80000)
+	ROMX_LOAD( "grp1.u31",   0x400004, 0x10000, CRC(6de44671) SHA1(dc6abba639e0c27033e391c7438d88dc89a93351), ROM_SKIP(7) )
+	ROM_CONTINUE(		 0x400000, 0x10000 )
+	ROMX_LOAD( "grp3.u29",   0x400006, 0x10000, CRC(e8f14362) SHA1(a20eb75e322011e2a8d8bf2acebe713bef3d3941), ROM_SKIP(7) )
+	ROM_CONTINUE(		 0x400002, 0x10000 )
+	ROMX_LOAD( "grp2.u30",   0x400005, 0x10000, CRC(bf0cd819) SHA1(f04a098fce07949277268327871c5e5520e3bb3c), ROM_SKIP(7) )
+	ROM_CONTINUE(		 0x400001, 0x10000 )
+	ROMX_LOAD( "grp4.u28",   0x400007, 0x10000, CRC(76f9f91f) SHA1(58a34062d2c8378558a7f1629140330279af9a43), ROM_SKIP(7) )
+	ROM_CONTINUE(		 0x400003, 0x10000 )
+
+	ROM_REGION( 0x18000, "audiocpu", 0 )	/* 64k for the audio CPU (+banks) */
+	ROM_LOAD( "sound.u191", 0x00000, 0x08000, CRC(a4823a1b) SHA1(7b6bf59dfd578bfbbdb64c27988796783442d659) )
+	ROM_CONTINUE(      0x10000, 0x08000 )
+
+	ROM_REGION( 0x40000, "oki", 0 )		/* Samples */
+	ROM_LOAD( "voice.u210", 0x00000, 0x40000, CRC(6cfffb11) SHA1(995526183ffd35f92e9096500a3fe6237faaa2dd) )
+
+	ROM_REGION( 0x10000, "user1", 0 )
+	ROM_LOAD_OPTIONAL( "u133",    0x00000, 0x10000, CRC(13ea1c44) SHA1(5b05fe4c3920e33d94fac5f59e09ff14b3e427fe) )
+ROM_END
+
+
 
 
 
@@ -12551,12 +12594,13 @@ GAME( 1991,	sf2jc,		sf2,		cps1_10MHz,	sf2j,		cps1,		ROT0,	"Capcom",	"Street Figh
 GAME( 1991,	sf2jf,		sf2,		cps1_10MHz,	sf2j,		cps1,		ROT0,	"Capcom",	"Street Fighter II: The World Warrior (Japan 910411)", GAME_SUPPORTS_SAVE )
 GAME( 1991,	sf2jh,		sf2,		cps1_10MHz,	sf2j,		cps1,		ROT0,	"Capcom",	"Street Fighter II: The World Warrior (Japan 910522)", GAME_SUPPORTS_SAVE )
 GAME( 1991,	sf2jl,		sf2,		cps1_10MHz,	sf2j,		cps1,		ROT0,	"Capcom",	"Street Fighter II: The World Warrior (Japan 920312)", GAME_SUPPORTS_SAVE )
-GAME( 1992,	sf2ebbl,	sf2,		cps1_10MHz,	sf2hack,	sf2hack,	ROT0,	"bootleg",	"Street Fighter II: The World Warrior (TAB Austria, bootleg, set 1)", GAME_SUPPORTS_SAVE ) // 910214 - based on World version
+GAME( 1992,	sf2ebbl,	sf2,		cps1_10MHz,	sf2hack,	sf2hack,	ROT0,	"bootleg",	"Street Fighter II: The World Warrior (TAB Austria, bootleg, set 1)", GAME_SUPPORTS_SAVE ) //Extra Tiles Type: SF2EBBL
 GAME( 1992,	sf2ebbl2,	sf2,		cps1_10MHz,	sf2hack,	sf2hack,	ROT0,	"bootleg",	"Street Fighter II: The World Warrior (TAB Austria, bootleg, set 3)", GAME_SUPPORTS_SAVE ) // 910214 - based on World version
 GAME( 1992,	sf2ebbl3,	sf2,		cps1_10MHz,	sf2hack,	sf2hack,	ROT0,	"bootleg",	"Street Fighter II: The World Warrior (TAB Austria, bootleg, set 4)", GAME_SUPPORTS_SAVE ) // 910214 - based on World version
 GAME( 1992,	sf2stt,		sf2,		cps1_10MHz,	sf2hack,	sf2hack,	ROT0,	"bootleg",	"Street Fighter II: The World Warrior (TAB Austria, bootleg, set 2)", GAME_SUPPORTS_SAVE ) // 910214 - based on World version
 GAME( 1991,	sf2qp1,		sf2,		cps1_10MHz,	sf2,		cps1,		ROT0,	"bootleg",	"Street Fighter II: The World Warrior (Quicken Pt-I, bootleg)", GAME_SUPPORTS_SAVE )	   // 910214 - based on World version
 GAME( 1991,	sf2thndr,	sf2,		cps1_10MHz,	sf2,		sf2thndr,	ROT0,	"bootleg",	"Street Fighter II: The World Warrior (Thunder Edition, bootleg)", GAME_SUPPORTS_SAVE )	   // 910214 - based on World version
+GAME( 1991,	sf2b2,		sf2,		cps1_10MHz,	sf2,		cps1,		ROT0,	"bootleg",	"Street Fighter II: The World Warrior (bootleg set 2, 910214 etc)", GAME_SUPPORTS_SAVE )  //Extra Tiles Type: SF2B
 
 
 

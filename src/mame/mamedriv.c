@@ -308,7 +308,7 @@ const game_driver *const drivers[] =
 	//
 	DRIVER( sf2 )			/* 22/05/1991 (c) 1991 (World) */
 	DRIVER( sf2b )
-//	DRIVER( sf2b2 )
+	DRIVER( sf2b2 )
 //	DRIVER( sf2b3 )
 	DRIVER( sf2eb )			/* 14/02/1991 (c) 1991 (World) */
 	DRIVER( sf2ebbl )		/* 14/02/1991 (c) 1991 (World, bootleg) */
