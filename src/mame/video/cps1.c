@@ -1535,12 +1535,18 @@ static const struct CPS1config cps1_config_table[] =
 	{"sf2cebltw",	CPS_B_21_DEF,	mapper_S9263B,	0x36 },
 	{"sf2red",	CPS_B_21_DEF,	mapper_S9263B,	0x36 },
 	{"sf2v004",	CPS_B_21_DEF,	mapper_S9263B,	0x36 },
-	{"sf2amf",	CPS_B_21_DEF,	mapper_S9263B,	0x36, 0, 0, 1 },	/* probably wrong but this set is not completely dumped anyway */
-	{"sf2amf2",	CPS_B_21_DEF,	mapper_S9263B,	0x36, 0, 0, 1 },
 	{"sf2dkot2",	CPS_B_21_DEF,	mapper_S9263B,	0x36 },
 	{"sf2dongb",	CPS_B_21_DEF,	mapper_S9263B,	0x36 },
 	{"sf2koryu",	CPS_B_21_DEF,	mapper_S9263B,	0x36, 0, 0, 1 },
 	{"sf2yyc",	CPS_B_21_DEF,	mapper_S9263B,	0x36, 0, 0, 1 },
+	{"sf2amf",	CPS_B_21_DEF,	mapper_S9263B,	0x36, 0, 0, 1 },	/* probably wrong but this set is not completely dumped anyway */
+	{"sf2amf2",	CPS_B_21_DEF,	mapper_S9263B,	0x36, 0, 0, 1 },
+	{"sf2amf3",	CPS_B_21_DEF,	mapper_S9263B,	0x36, 0, 0, 1 },
+	{"sf2amf4",	CPS_B_21_DEF,	mapper_S9263B,	0x36, 0, 0, 1 },
+	{"sf2amf5",	CPS_B_21_DEF,	mapper_S9263B,	0x36, 0, 0, 1 },
+	{"sf2amf6",	CPS_B_21_DEF,	mapper_S9263B,	0x36, 0, 0, 1 },
+	{"sf2amf7",	CPS_B_21_DEF,	mapper_S9263B,	0x36, 0, 0, 1 },
+	{"sf2amf8",	CPS_B_21_DEF,	mapper_S9263B,	0x36, 0, 0, 1 },
 
 
 
@@ -1548,21 +1554,13 @@ static const struct CPS1config cps1_config_table[] =
 
 
 
-	{"sf2red",	CPS_B_21_DEF, mapper_S9263B, 0x36 },
-	{"sf2v004",	CPS_B_21_DEF, mapper_S9263B, 0x36 },
-	{"sf2dkot2",	CPS_B_21_DEF, mapper_S9263B, 0x36 },
-	{"sf2m1",	CPS_B_21_DEF, mapper_S9263B, 0x36 },
-	{"sf2m2",	CPS_B_21_DEF, mapper_S9263B, 0x36, 0, 0, 1 },
-	{"sf2m4",	HACK_B_1,     mapper_S9263B, 0x36, 0, 0, 1 },
-	{"sf2m5",	CPS_B_21_DEF, mapper_S9263B, 0x36, 0, 0, 1 },
-	{"sf2m6",	CPS_B_21_DEF, mapper_S9263B, 0x36, 0, 0, 1 },
-	{"sf2m7",	CPS_B_21_DEF, mapper_S9263B, 0x36, 0, 0, 1 },
-	{"sf2yyc",	CPS_B_21_DEF, mapper_S9263B, 0x36, 0, 0, 1 },
-	{"sf2koryu",	CPS_B_21_DEF, mapper_S9263B, 0x36, 0, 0, 1 },
 	{"sf2mdt",	CPS_B_21_DEF, mapper_S9263B, 0x36, 0, 0, 1 },
 	{"sf2mdta",	CPS_B_21_DEF, mapper_S9263B, 0x36, 0, 0, 1 },
+	{"sf2m1",	CPS_B_21_DEF, mapper_S9263B, 0x36 },
+	{"sf2m2",	CPS_B_21_DEF, mapper_S9263B, 0x36, 0, 0, 1 },
 	{"sf2m3",	HACK_B_1,     mapper_S9263B, 0x00, 0, 0, 2 },
-	{"sf2amf",	CPS_B_21_DEF, mapper_S9263B, 0x36, 0, 0, 1 },
+	{"sf2m4",	HACK_B_1,     mapper_S9263B, 0x36, 0, 0, 1 },
+	{"sf2m6",	CPS_B_21_DEF, mapper_S9263B, 0x36, 0, 0, 1 },
 	{"sf2ceuab3",	HACK_B_1,     mapper_S9263B, 0x00, 0, 0, 2 },
 
 
