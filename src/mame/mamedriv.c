@@ -354,7 +354,6 @@ const game_driver *const drivers[] =
 	DRIVER( sf2dkot2 )		/* hack */
 	DRIVER( sf2koryu )		/* hack */
 	DRIVER( sf2dongb )
-	DRIVER( sf2red )		/* hack */
 	DRIVER( sf2v004 )		/* hack */
 	DRIVER( sf2yyc )		/* hack */
 	DRIVER( sf2amf )		/* hackrom, SF2 Alpha Magic-F */
@@ -365,18 +364,23 @@ const game_driver *const drivers[] =
 	DRIVER( sf2amf6 )
 	DRIVER( sf2amf7 )
 	DRIVER( sf2amf8 )
+	DRIVER( sf2cejabl )
+	DRIVER( sf2cejab2 )
+	DRIVER( sf2red )		/* hack */
+	DRIVER( sf2red2 )
+	DRIVER( sf2rb4 )
+	DRIVER( sf2rb5 )
+	DRIVER( sf2rb6 )
 
-//	DRIVER( sf2ceeab2 )
 //	DRIVER( sf2ceeabl )
-//	DRIVER( sf2cejab2 )
-//	DRIVER( sf2cejabl )
+//	DRIVER( sf2ceeab2 )
+//	DRIVER( sf2ceuabl )
 //	DRIVER( sf2ceuab2 )
 	DRIVER( sf2ceuab3 )		/* bootleg of SF2CE, in FBA it's name is sf2ceuab3, in MAME it's name is sf2m8a */
 //	DRIVER( sf2ceuab4 )
 //	DRIVER( sf2ceuab5 )
 //	DRIVER( sf2ceuab6 )
 //	DRIVER( sf2ceuab7 )
-//	DRIVER( sf2ceuabl )
 //	DRIVER( sf2ceucbl )
 //	DRIVER( sf2koryu2 )
 //	DRIVER( sf2koryu3 )
@@ -386,10 +390,6 @@ const game_driver *const drivers[] =
 //	DRIVER( sf2mdtb )
 //	DRIVER( sf2mega )
 //	DRIVER( sf2mega2 )
-//	DRIVER( sf2rb4 )
-//	DRIVER( sf2rb5 )
-//	DRIVER( sf2rb6 )
-//	DRIVER( sf2red2 )
 //	DRIVER( sf2sl73a )
 //	DRIVER( sf2tlona )
 //	DRIVER( sf2tlonb )
@@ -402,7 +402,6 @@ const game_driver *const drivers[] =
 /* obsolete */	DRIVER( sf2m1 )			/* hack */
 /* obsolete */	DRIVER( sf2m2 )			/* hack */
 /* obsolete */	DRIVER( sf2m3 )			/* hack */
-/* obsolete */	DRIVER( sf2m4 )			/* hack */
 /* obsolete */	DRIVER( sf2m6 )			/* hack */
 
 
