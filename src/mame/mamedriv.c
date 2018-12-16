@@ -347,6 +347,9 @@ const game_driver *const drivers[] =
 	DRIVER( sf2rb )			/* hack */
 	DRIVER( sf2rb2 )		/* hack */
 	DRIVER( sf2rb3 )		/* hack */
+	DRIVER( sf2rb4 )
+	DRIVER( sf2rb5 )
+	DRIVER( sf2rb6 )
 	DRIVER( sf2acc )		/* hack */
 	DRIVER( sf2acca )
 	DRIVER( sf2accp2 )		/* hack */
@@ -373,9 +376,12 @@ const game_driver *const drivers[] =
 	DRIVER( sf2cejab2 )
 	DRIVER( sf2red )		/* hack */
 	DRIVER( sf2red2 )
-	DRIVER( sf2rb4 )
-	DRIVER( sf2rb5 )
-	DRIVER( sf2rb6 )
+	DRIVER( sf2mega )
+	DRIVER( sf2mega2 )
+	DRIVER( sf2sl73a )
+	DRIVER( sf2tlona )
+	DRIVER( sf2tlonb )
+	DRIVER( sf2tlonc )
 
 //	DRIVER( sf2ceeabl )
 //	DRIVER( sf2ceeab2 )
@@ -391,16 +397,9 @@ const game_driver *const drivers[] =
 	DRIVER( sf2mdt )		/* bootleg of SF2CE, set 1 */
 	DRIVER( sf2mdta )		/* bootleg of SF2CE, set 2 */
 //	DRIVER( sf2mdtb )
-//	DRIVER( sf2mega )
-//	DRIVER( sf2mega2 )
-//	DRIVER( sf2sl73a )
-//	DRIVER( sf2tlona )
-//	DRIVER( sf2tlonb )
-//	DRIVER( sf2tlonc )
 //
 
 /* obsolete */	DRIVER( sf2m1 )			/* hack */
-/* obsolete */	DRIVER( sf2m2 )			/* hack */
 /* obsolete */	DRIVER( sf2m3 )			/* hack */
 
 

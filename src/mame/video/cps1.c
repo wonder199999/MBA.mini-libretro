@@ -1558,6 +1558,12 @@ static const struct CPS1config cps1_config_table[] =
 	{"sf2rb4",	HACK_B_1,	mapper_S9263B,	0x36, 0, 0, 1 },
 	{"sf2rb5",	HACK_B_1,	mapper_S9263B,	0x36, 0, 0, 1 },
 	{"sf2rb6",	CPS_B_21_DEF,	mapper_S9263B,	0x36 },
+	{"sf2mega",	CPS_B_21_DEF,	mapper_S9263B,	0x36, 0, 0, 1 },
+	{"sf2mega2",	CPS_B_21_DEF,	mapper_S9263B,	0x36, 0, 0, 1 },
+	{"sf2sl73a",	CPS_B_21_DEF,	mapper_S9263B,	0x36 },
+	{"sf2tlona",	CPS_B_21_DEF,	mapper_S9263B,	0x36, 0, 0, 1 },
+	{"sf2tlonb",	CPS_B_21_DEF,	mapper_S9263B,	0x36, 0, 0, 1 },
+	{"sf2tlonc",	CPS_B_21_DEF,	mapper_S9263B,	0x36, 0, 0, 1 },
 
 
 
@@ -1567,9 +1573,7 @@ static const struct CPS1config cps1_config_table[] =
 	{"sf2mdt",	CPS_B_21_DEF, mapper_S9263B, 0x36, 0, 0, 1 },
 	{"sf2mdta",	CPS_B_21_DEF, mapper_S9263B, 0x36, 0, 0, 1 },
 	{"sf2m1",	CPS_B_21_DEF, mapper_S9263B, 0x36 },
-	{"sf2m2",	CPS_B_21_DEF, mapper_S9263B, 0x36, 0, 0, 1 },
 	{"sf2m3",	HACK_B_1,     mapper_S9263B, 0x00, 0, 0, 2 },
-	{"sf2m6",	CPS_B_21_DEF, mapper_S9263B, 0x36, 0, 0, 1 },
 	{"sf2ceuab3",	HACK_B_1,     mapper_S9263B, 0x00, 0, 0, 2 },
 
 
