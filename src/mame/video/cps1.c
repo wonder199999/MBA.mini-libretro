@@ -1565,6 +1565,8 @@ static const struct CPS1config cps1_config_table[] =
 	{"sf2tlonb",	CPS_B_21_DEF,	mapper_S9263B,	0x36, 0, 0, 1 },
 	{"sf2tlonc",	CPS_B_21_DEF,	mapper_S9263B,	0x36, 0, 0, 1 },
 	{"sf2ceucbl",	CPS_B_21_DEF,	mapper_S9263B,	0x36 },
+	{"sf2ceeabl",	CPS_B_21_DEF,	mapper_S9263B,	0x36 },
+	{"sf2ceeab2",	CPS_B_21_DEF,	mapper_S9263B,	0x36 },
 
 
 
@@ -1573,7 +1575,6 @@ static const struct CPS1config cps1_config_table[] =
 
 	{"sf2mdt",	CPS_B_21_DEF, mapper_S9263B, 0x36, 0, 0, 1 },
 	{"sf2mdta",	CPS_B_21_DEF, mapper_S9263B, 0x36, 0, 0, 1 },
-	{"sf2m1",	CPS_B_21_DEF, mapper_S9263B, 0x36 },
 	{"sf2m3",	HACK_B_1,     mapper_S9263B, 0x00, 0, 0, 2 },
 	{"sf2ceuab3",	HACK_B_1,     mapper_S9263B, 0x00, 0, 0, 2 },
 

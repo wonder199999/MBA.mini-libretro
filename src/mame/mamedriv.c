@@ -383,9 +383,9 @@ const game_driver *const drivers[] =
 	DRIVER( sf2tlonb )
 	DRIVER( sf2tlonc )
 	DRIVER( sf2ceucbl )
+	DRIVER( sf2ceeabl )
+	DRIVER( sf2ceeab2 )
 
-//	DRIVER( sf2ceeabl )
-//	DRIVER( sf2ceeab2 )
 //	DRIVER( sf2ceuabl )
 //	DRIVER( sf2ceuab2 )
 	DRIVER( sf2ceuab3 )		/* bootleg of SF2CE, in FBA it's name is sf2ceuab3, in MAME it's name is sf2m8a */
@@ -399,7 +399,6 @@ const game_driver *const drivers[] =
 //	DRIVER( sf2mdtb )
 //
 
-/* obsolete */	DRIVER( sf2m1 )			/* hack */
 /* obsolete */	DRIVER( sf2m3 )			/* hack */
 
 

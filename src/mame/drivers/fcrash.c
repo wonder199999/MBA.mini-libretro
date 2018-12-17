@@ -318,7 +318,7 @@ static WRITE16_HANDLER( sf2b_layer_w )
 	}
 }
 
-static WRITE16_HANDLER( sf2m1_layer_w )
+static WRITE16_HANDLER( sf2ceeabl_layer_w )
 {
 	cps_state *state = space->machine->driver_data<cps_state>();
 	switch (offset)
@@ -329,22 +329,9 @@ static WRITE16_HANDLER( sf2m1_layer_w )
 		case 0x03: state->cps_a_regs[0x10 / 2] = data; break;
 		case 0x04: state->cps_a_regs[0x16 / 2] = data; break;
 		case 0x05: state->cps_a_regs[0x14 / 2] = data; break;
-		case 0x06:
-		{
-			switch (data)
-			{
-				case 0x00: data = 0x078e; break;
-				case 0x01: data = 0x12c0; break;
-				case 0x02: data = 0x06ce; break;
-				case 0x03: data = 0x09ce; break;
-				case 0x04: data = 0x12ce; break;
-				case 0x05: data = 0x0b4e; break;
-			}
-			state->cps_b_regs[state->layer_enable_reg / 2] = data; break;
-		}
+		case 0x06: state->cps_b_regs[state->layer_enable_reg / 2] = (data >> 4) << 4; break;
 		case 0x0b:
 		case 0x1b: state->cps_a_regs[0x06 / 2] = data; break;
-		case 0xb3: state->cps_b_regs[state->layer_enable_reg / 2] = data; break;
 		default: logerror(" Unknown layer cmd\n");
 	}
 }
@@ -615,6 +602,23 @@ static ADDRESS_MAP_START( sf2mdt_map, ADDRESS_SPACE_PROGRAM, 16 )
 	AM_RANGE(0xff0000, 0xffffff) AM_RAM
 ADDRESS_MAP_END
 
+static ADDRESS_MAP_START( sf2ceeabl_map, ADDRESS_SPACE_PROGRAM, 16 )
+	AM_RANGE(0x000000, 0x3fffff) AM_ROM
+	AM_RANGE(0x800000, 0x800007) AM_READ_PORT("IN1")
+	AM_RANGE(0x800006, 0x800007) AM_WRITE(cps1_soundlatch_w)
+	AM_RANGE(0x800012, 0x800013) AM_READ(cps1_in2_r)
+	AM_RANGE(0x800018, 0x80001f) AM_READ(cps1_dsw_r)
+	AM_RANGE(0x800100, 0x80013f) AM_WRITE(cps1_cps_a_w) AM_BASE_MEMBER(cps_state, cps_a_regs)
+	AM_RANGE(0x800140, 0x80017f) AM_READWRITE(cps1_cps_b_r, cps1_cps_b_w) AM_BASE_MEMBER(cps_state, cps_b_regs)
+	AM_RANGE(0x800180, 0x800181) AM_WRITENOP
+	AM_RANGE(0x800188, 0x80018f) AM_WRITE(cps1_soundlatch2_w)
+	AM_RANGE(0x880000, 0x880001) AM_WRITENOP
+	AM_RANGE(0x900000, 0x93ffff) AM_RAM_WRITE(cps1_gfxram_w) AM_BASE_SIZE_MEMBER(cps_state, gfxram, gfxram_size)
+	AM_RANGE(0x980000, 0x9800ff) AM_WRITE(sf2ceeabl_layer_w)
+	AM_RANGE(0x990000, 0x990001) AM_WRITENOP
+	AM_RANGE(0xff0000, 0xffffff) AM_RAM
+ADDRESS_MAP_END
+
 static ADDRESS_MAP_START( sf2b_map, ADDRESS_SPACE_PROGRAM, 16 )
 	AM_RANGE(0x000000, 0x3fffff) AM_ROM
 	AM_RANGE(0x70810c, 0x70814f) AM_WRITE(sf2b_layer_w)
@@ -657,23 +661,6 @@ static ADDRESS_MAP_START( wofsj_map, ADDRESS_SPACE_PROGRAM, 16 )
 	AM_RANGE(0x88000a, 0x88000f) AM_READ(wof_hack_dsw_r)
 	AM_RANGE(0x900000, 0x92ffff) AM_RAM_WRITE(cps1_gfxram_w) AM_BASE_SIZE_MEMBER(cps_state, gfxram, gfxram_size)
 	AM_RANGE(0xf1c006, 0xf1c007) AM_READ_PORT("EEPROMIN") AM_WRITE_PORT("EEPROMOUT")
-	AM_RANGE(0xff0000, 0xffffff) AM_RAM
-ADDRESS_MAP_END
-
-static ADDRESS_MAP_START( sf2m1_map, ADDRESS_SPACE_PROGRAM, 16 )
-	AM_RANGE(0x000000, 0x3fffff) AM_ROM
-	AM_RANGE(0x800000, 0x800007) AM_READ_PORT("IN1")
-	AM_RANGE(0x800006, 0x800007) AM_WRITE(cps1_soundlatch_w)
-	AM_RANGE(0x800012, 0x800013) AM_READ(cps1_in2_r)
-	AM_RANGE(0x800018, 0x80001f) AM_READ(cps1_dsw_r)
-	AM_RANGE(0x800100, 0x80013f) AM_WRITE(cps1_cps_a_w) AM_BASE_MEMBER(cps_state, cps_a_regs)
-	AM_RANGE(0x800140, 0x80017f) AM_READWRITE(cps1_cps_b_r, cps1_cps_b_w) AM_BASE_MEMBER(cps_state, cps_b_regs)
-	AM_RANGE(0x800180, 0x800181) AM_WRITENOP
-	AM_RANGE(0x800188, 0x80018f) AM_WRITE(cps1_soundlatch2_w)
-	AM_RANGE(0x880000, 0x880001) AM_WRITENOP
-	AM_RANGE(0x900000, 0x93ffff) AM_RAM_WRITE(cps1_gfxram_w) AM_BASE_SIZE_MEMBER(cps_state, gfxram, gfxram_size)
-	AM_RANGE(0x980000, 0x9801ff) AM_WRITE(sf2m1_layer_w)
-	AM_RANGE(0x990000, 0x990001) AM_WRITENOP
 	AM_RANGE(0xff0000, 0xffffff) AM_RAM
 ADDRESS_MAP_END
 
@@ -805,7 +792,7 @@ static ADDRESS_MAP_START( kodb_soundmap, ADDRESS_SPACE_PROGRAM, 8 )
 	AM_RANGE(0xe800, 0xe800) AM_READ(soundlatch_r)
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( sf2m1_soundmap, ADDRESS_SPACE_PROGRAM, 8 )	/* The define will also be used for 'sgyxz' */
+static ADDRESS_MAP_START( sf2ceeabl_soundmap, ADDRESS_SPACE_PROGRAM, 8 )	/* The define will also be used for 'sgyxz' */
 	AM_RANGE(0x0000, 0x7fff) AM_ROM
 	AM_RANGE(0x8000, 0xbfff) AM_ROMBANK("bank1")
 	AM_RANGE(0xd000, 0xd7ff) AM_RAM
@@ -1119,7 +1106,7 @@ static MACHINE_START( knightsb )
 	state->sprite_x_offset = 0x00;
 }
 
-static MACHINE_START( sf2m1 )
+static MACHINE_START( sf2ceeabl )
 {
 	MACHINE_START_CALL( common );
 	cps_state *state = machine->driver_data<cps_state>();
@@ -1130,7 +1117,7 @@ static MACHINE_START( sf2m1 )
 	state->layer_mask_reg[1] = 0x2a;
 	state->layer_mask_reg[2] = 0x2c;
 	state->layer_mask_reg[3] = 0x2e;
-	state->layer_scroll1x_offset = 0x3e;
+	state->layer_scroll1x_offset = 0x40;
 	state->layer_scroll2x_offset = 0x3c;
 	state->layer_scroll3x_offset = 0x40;
 	state->sprite_base = 0x1000;
@@ -1418,17 +1405,17 @@ static MACHINE_DRIVER_START( knightsb )
 	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.25)
 MACHINE_DRIVER_END
 
-/* *********************************************** SF2M1 */
-static MACHINE_DRIVER_START( sf2m1 )
+/* *********************************************** SF2CEEABL / SF2CEEAB2 */
+static MACHINE_DRIVER_START( sf2ceeabl )
 	MDRV_DRIVER_DATA(cps_state)
 
 	/* basic machine hardware */
 	MDRV_CPU_ADD("maincpu", M68000, XTAL_12MHz )
-	MDRV_CPU_PROGRAM_MAP(sf2m1_map)
+	MDRV_CPU_PROGRAM_MAP(sf2ceeabl_map)
 	MDRV_CPU_VBLANK_INT("screen", cps1_interrupt)
 	MDRV_CPU_ADD("audiocpu", Z80, XTAL_3_579545MHz)
-	MDRV_CPU_PROGRAM_MAP(sf2m1_soundmap)
-	MDRV_MACHINE_START(sf2m1)
+	MDRV_CPU_PROGRAM_MAP(sf2ceeabl_soundmap)
+	MDRV_MACHINE_START(sf2ceeabl)
 
 	/* video hardware */
 	MDRV_SCREEN_ADD("screen", RASTER)
@@ -1459,7 +1446,7 @@ static MACHINE_DRIVER_START( sgyxz )
 	MDRV_CPU_PROGRAM_MAP(sgyxz_map)
 	MDRV_CPU_VBLANK_INT("screen", cps1_interrupt)
 	MDRV_CPU_ADD("audiocpu", Z80, XTAL_3_579545MHz)
-	MDRV_CPU_PROGRAM_MAP(sf2m1_soundmap)
+	MDRV_CPU_PROGRAM_MAP(sf2ceeabl_soundmap)
 	MDRV_MACHINE_START(sgyxz)
 
 	MDRV_EEPROM_ADD("eeprom", bootleg_eeprom_interface)
@@ -1650,7 +1637,7 @@ static MACHINE_DRIVER_START( varthb )
 	MDRV_CPU_PROGRAM_MAP(varthb_map)
 	MDRV_CPU_VBLANK_INT("screen", cps1_interrupt)
 	MDRV_CPU_ADD("audiocpu", Z80, XTAL_3_579545MHz)
-	MDRV_CPU_PROGRAM_MAP(sf2m1_soundmap)
+	MDRV_CPU_PROGRAM_MAP(sf2ceeabl_soundmap)
 	MDRV_MACHINE_START(varthb)
 
 	/* video hardware */
@@ -2496,6 +2483,75 @@ ROM_START( sf2b )
 	ROM_RELOAD(		0x10000, 0x20000 )
 ROM_END
 
+ROM_START( sf2ceeabl )
+	ROM_REGION( CODE_SIZE, "maincpu", 0 )	/* 68000 code */
+	ROM_LOAD16_BYTE( "joe-922",	 0x000000, 0x80000, CRC(e927556c) SHA1(3878ed3cfb10888a3c99001c3d6076c54d61999f) )
+	ROM_LOAD16_BYTE( "joe-921",	 0x000001, 0x80000, CRC(8632e786) SHA1(56d4faf986a4791ae608b066659bd365d47bbe01) )
+	ROM_LOAD16_BYTE( "sf2m16_4.bin", 0x100000, 0x20000, CRC(1073b7b6) SHA1(81ca1eab65ceac69520584bb23a684ccb9d92f89) )
+	ROM_LOAD16_BYTE( "sf2m16_3.bin", 0x100001, 0x20000, CRC(924c6ce2) SHA1(676a912652bd75da5087f0c7eae047b7681a993c) )
+
+	ROM_REGION( 0x600000, "gfx", 0 )
+	ROMX_LOAD( "tat-01.bin", 0x000000, 0x40000, CRC(a887f7d4) SHA1(d7e0c46b3ab1c6352f45033cb9e610d9c34d51fb), ROM_SKIP(7) )
+	ROM_CONTINUE(		 0x000004, 0x40000 )
+	ROMX_LOAD( "tat-05.bin", 0x000001, 0x40000, CRC(9390ff23) SHA1(b234169615aa952e3b15c7b0dfb495e499ba49ef), ROM_SKIP(7) )
+	ROM_CONTINUE(		 0x000005, 0x40000 )
+	ROMX_LOAD( "tat-02.bin", 0x000002, 0x40000, CRC(afb3b589) SHA1(9721fa705d62814e416c38a6c3e698efb9385a98), ROM_SKIP(7) )
+	ROM_CONTINUE(		 0x000006, 0x40000 )
+	ROMX_LOAD( "tat-06.bin", 0x000003, 0x40000, CRC(90f2053e) SHA1(a78710421e702b410650c45c3dec21bf16799fb4), ROM_SKIP(7) )
+	ROM_CONTINUE(		 0x000007, 0x40000 )
+	ROMX_LOAD( "tat-03.bin", 0x200000, 0x40000, CRC(79fa8bf0) SHA1(9f8f7b8dc54a75226beb017b9ca9fd62a9e42f6b), ROM_SKIP(7) )
+	ROM_CONTINUE(		 0x200004, 0x40000 )
+	ROMX_LOAD( "tat-07.bin", 0x200001, 0x40000, CRC(6a5f153c) SHA1(f3d82ad01e2e4bdb2039815747fa14399c69753a), ROM_SKIP(7) )
+	ROM_CONTINUE(		 0x200005, 0x40000 )
+	ROMX_LOAD( "tat-04.bin", 0x200002, 0x40000, CRC(32518120) SHA1(56ffa5fffb714cff8be8be5a3675b8a5fa29b2bc), ROM_SKIP(7) )
+	ROM_CONTINUE(		 0x200006, 0x40000 )
+	ROMX_LOAD( "tat-08.bin", 0x200003, 0x40000, CRC(c16579ae) SHA1(42c9d6df9f3b015f5d1ad4fa2b34ea90bb37bcae), ROM_SKIP(7) )
+	ROM_CONTINUE(		 0x200007, 0x40000 )
+	ROMX_LOAD( "tat-09.bin", 0x400000, 0x40000, CRC(169d85a6) SHA1(dd98c8807e80465858b2eac10825e598c37e1a93), ROM_SKIP(7) )
+	ROM_CONTINUE(		 0x400004, 0x40000)
+	ROMX_LOAD( "tat-11.bin", 0x400001, 0x40000, CRC(32a3a841) SHA1(6f9a13b8828998d194dd3933b032c75efed9cab3), ROM_SKIP(7) )
+	ROM_CONTINUE(		 0x400005, 0x40000)
+	ROMX_LOAD( "tat-10.bin", 0x400002, 0x40000, CRC(0c638630) SHA1(709d183d181a0509c7ed839c59214851468d2bb8), ROM_SKIP(7) )
+	ROM_CONTINUE(		 0x400006, 0x40000)
+	ROMX_LOAD( "tat-12.bin", 0x400003, 0x40000, CRC(6ee19b94) SHA1(c45119d04879b6ca23a3f7749175c56b381b43f2), ROM_SKIP(7) )
+	ROM_CONTINUE(		 0x400007, 0x40000)
+
+	ROM_REGION( 0x18000, "audiocpu", 0 )	/* 64k for the audio CPU (+banks) */
+	ROM_LOAD( "sf2m16_1.bin", 0x00000, 0x08000, CRC(08f6b60e) SHA1(8258fcaca4ac419312531eec67079b97f471179c) )
+	ROM_CONTINUE(		  0x10000, 0x08000 )
+
+	ROM_REGION( 0x40000, "oki", 0 )		/* Samples */
+	ROM_LOAD( "sf2m16_2.bin", 0x00000, 0x40000, CRC(6cfffb11) SHA1(995526183ffd35f92e9096500a3fe6237faaa2dd) )
+ROM_END
+
+ROM_START( sf2ceeab2 )		// this set was previously known as sf2m1
+	ROM_REGION( CODE_SIZE, "maincpu", 0 )		/* 68000 code */
+	ROM_LOAD16_BYTE( "222e",              0x000000, 0x80000, CRC(1e20d0a3) SHA1(5e05b52fd938aff5190bca7e178705d7236aef66) )
+	ROM_LOAD16_BYTE( "196e",              0x000001, 0x80000, CRC(88cc38a3) SHA1(6049962f943bd37748a9531cc3254e8b59326eac) )
+	ROM_LOAD16_WORD_SWAP( "s92_21a.bin",  0x100000, 0x80000, CRC(925a7877) SHA1(1960dca35f0ca6f2b399a9fccfbc0132ac6425d1) )
+
+	ROM_REGION( 0x600000, "gfx", 0 )
+	ROMX_LOAD( "s92_01.bin",   0x000000, 0x80000, CRC(03b0d852) SHA1(f370f25c96ad2b94f8c53d6b7139100285a25bef) , ROM_GROUPWORD | ROM_SKIP(6) )
+	ROMX_LOAD( "s92_02.bin",   0x000002, 0x80000, CRC(840289ec) SHA1(2fb42a242f60ba7e74009b5a90eb26e035ba1e82) , ROM_GROUPWORD | ROM_SKIP(6) )
+	ROMX_LOAD( "s92_03.bin",   0x000004, 0x80000, CRC(cdb5f027) SHA1(4c7d944fef200fdfcaf57758b901b5511188ed2e) , ROM_GROUPWORD | ROM_SKIP(6) )
+	ROMX_LOAD( "s92_04.bin",   0x000006, 0x80000, CRC(e2799472) SHA1(27d3796429338d82a8de246a0ea06dd487a87768) , ROM_GROUPWORD | ROM_SKIP(6) )
+	ROMX_LOAD( "s92_05.bin",   0x200000, 0x80000, CRC(ba8a2761) SHA1(4b696d66c51611e43522bed752654314e76d33b6) , ROM_GROUPWORD | ROM_SKIP(6) )
+	ROMX_LOAD( "s92_06.bin",   0x200002, 0x80000, CRC(e584bfb5) SHA1(ebdf1f5e2638eed3a65dda82b1ed9151a355f4c9) , ROM_GROUPWORD | ROM_SKIP(6) )
+	ROMX_LOAD( "s92_07.bin",   0x200004, 0x80000, CRC(21e3f87d) SHA1(4a4961bb68c3a1ce15f9d393d9c03ecb2466cc29) , ROM_GROUPWORD | ROM_SKIP(6) )
+	ROMX_LOAD( "s92_08.bin",   0x200006, 0x80000, CRC(befc47df) SHA1(520390420da3a0271ba90b0a933e65143265e5cf) , ROM_GROUPWORD | ROM_SKIP(6) )
+	ROMX_LOAD( "s92_10.bin",   0x400000, 0x80000, CRC(960687d5) SHA1(2868c31121b1c7564e9767b9a19cdbf655c7ed1d) , ROM_GROUPWORD | ROM_SKIP(6) )
+	ROMX_LOAD( "s92_11.bin",   0x400002, 0x80000, CRC(978ecd18) SHA1(648a59706b93c84b4206a968ecbdc3e834c476f6) , ROM_GROUPWORD | ROM_SKIP(6) )
+	ROMX_LOAD( "s92_12.bin",   0x400004, 0x80000, CRC(d6ec9a0a) SHA1(ed6143f8737013b6ef1684e37c05e037e7a80dae) , ROM_GROUPWORD | ROM_SKIP(6) )
+	ROMX_LOAD( "s92_13.bin",   0x400006, 0x80000, CRC(ed2c67f6) SHA1(0083c0ffaf6fe7659ff0cf822be4346cd6e61329) , ROM_GROUPWORD | ROM_SKIP(6) )
+
+	ROM_REGION( 0x18000, "audiocpu", 0 )		/* 64k for the audio CPU (+banks) */
+	ROM_LOAD( "s92_09.bin",    0x00000, 0x08000, CRC(08f6b60e) SHA1(8258fcaca4ac419312531eec67079b97f471179c) )
+	ROM_CONTINUE(              0x10000, 0x08000 )
+
+	ROM_REGION( 0x40000, "oki", 0 )			/* Samples */
+	ROM_LOAD( "s92_18.bin",    0x00000, 0x20000, CRC(7f162009) SHA1(346bf42992b4c36c593e21901e22c87ae4a7d86d) )
+	ROM_LOAD( "s92_19.bin",    0x20000, 0x20000, CRC(beade53f) SHA1(277c397dc12752719ec6b47d2224750bd1c07f79) )
+ROM_END
 
 
 
@@ -2548,53 +2604,8 @@ ROM_START( sf2mdta )
 	ROM_RELOAD(            0x10000, 0x20000 )
 ROM_END
 
-ROM_START( sf2m1 )
-	ROM_REGION( CODE_SIZE, "maincpu", 0 )		/* 68000 code */
-	ROM_LOAD16_BYTE( "222e",              0x000000, 0x80000, CRC(1e20d0a3) SHA1(5e05b52fd938aff5190bca7e178705d7236aef66) )
-	ROM_LOAD16_BYTE( "196e",              0x000001, 0x80000, CRC(88cc38a3) SHA1(6049962f943bd37748a9531cc3254e8b59326eac) )
-	ROM_LOAD16_WORD_SWAP( "s92_21a.bin",  0x100000, 0x80000, CRC(925a7877) SHA1(1960dca35f0ca6f2b399a9fccfbc0132ac6425d1) )
-
-	ROM_REGION( 0x600000, "gfx", 0 )
-	ROMX_LOAD( "s92_01.bin",   0x000000, 0x80000, CRC(03b0d852) SHA1(f370f25c96ad2b94f8c53d6b7139100285a25bef) , ROM_GROUPWORD | ROM_SKIP(6) )
-	ROMX_LOAD( "s92_02.bin",   0x000002, 0x80000, CRC(840289ec) SHA1(2fb42a242f60ba7e74009b5a90eb26e035ba1e82) , ROM_GROUPWORD | ROM_SKIP(6) )
-	ROMX_LOAD( "s92_03.bin",   0x000004, 0x80000, CRC(cdb5f027) SHA1(4c7d944fef200fdfcaf57758b901b5511188ed2e) , ROM_GROUPWORD | ROM_SKIP(6) )
-	ROMX_LOAD( "s92_04.bin",   0x000006, 0x80000, CRC(e2799472) SHA1(27d3796429338d82a8de246a0ea06dd487a87768) , ROM_GROUPWORD | ROM_SKIP(6) )
-	ROMX_LOAD( "s92_05.bin",   0x200000, 0x80000, CRC(ba8a2761) SHA1(4b696d66c51611e43522bed752654314e76d33b6) , ROM_GROUPWORD | ROM_SKIP(6) )
-	ROMX_LOAD( "s92_06.bin",   0x200002, 0x80000, CRC(e584bfb5) SHA1(ebdf1f5e2638eed3a65dda82b1ed9151a355f4c9) , ROM_GROUPWORD | ROM_SKIP(6) )
-	ROMX_LOAD( "s92_07.bin",   0x200004, 0x80000, CRC(21e3f87d) SHA1(4a4961bb68c3a1ce15f9d393d9c03ecb2466cc29) , ROM_GROUPWORD | ROM_SKIP(6) )
-	ROMX_LOAD( "s92_08.bin",   0x200006, 0x80000, CRC(befc47df) SHA1(520390420da3a0271ba90b0a933e65143265e5cf) , ROM_GROUPWORD | ROM_SKIP(6) )
-	ROMX_LOAD( "s92_10.bin",   0x400000, 0x80000, CRC(960687d5) SHA1(2868c31121b1c7564e9767b9a19cdbf655c7ed1d) , ROM_GROUPWORD | ROM_SKIP(6) )
-	ROMX_LOAD( "s92_11.bin",   0x400002, 0x80000, CRC(978ecd18) SHA1(648a59706b93c84b4206a968ecbdc3e834c476f6) , ROM_GROUPWORD | ROM_SKIP(6) )
-	ROMX_LOAD( "s92_12.bin",   0x400004, 0x80000, CRC(d6ec9a0a) SHA1(ed6143f8737013b6ef1684e37c05e037e7a80dae) , ROM_GROUPWORD | ROM_SKIP(6) )
-	ROMX_LOAD( "s92_13.bin",   0x400006, 0x80000, CRC(ed2c67f6) SHA1(0083c0ffaf6fe7659ff0cf822be4346cd6e61329) , ROM_GROUPWORD | ROM_SKIP(6) )
-
-	ROM_REGION( 0x18000, "audiocpu", 0 )		/* 64k for the audio CPU (+banks) */
-	ROM_LOAD( "s92_09.bin",    0x00000, 0x08000, CRC(08f6b60e) SHA1(8258fcaca4ac419312531eec67079b97f471179c) )
-	ROM_CONTINUE(              0x10000, 0x08000 )
-
-	ROM_REGION( 0x40000, "oki", 0 )			/* Samples */
-	ROM_LOAD( "s92_18.bin",    0x00000, 0x20000, CRC(7f162009) SHA1(346bf42992b4c36c593e21901e22c87ae4a7d86d) )
-	ROM_LOAD( "s92_19.bin",    0x20000, 0x20000, CRC(beade53f) SHA1(277c397dc12752719ec6b47d2224750bd1c07f79) )
-ROM_END
 
 /* --- DRIVER INIT --- */
-static DRIVER_INIT( sf2mdta )
-{
-	cps_state *state = machine->driver_data<cps_state>();
-
-	state->bootleg_sprite_ram = (UINT16 *)memory_install_ram(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x700000, 0x703fff, 0, 0, NULL);
-	memory_install_ram(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x704000, 0x707fff, 0, 0, state->bootleg_sprite_ram);
-	state->bootleg_work_ram = (UINT16 *)memory_install_ram(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0xfc0000, 0xfcffff, 0, 0, NULL);
-
-	DRIVER_INIT_CALL(cps1);
-}
-
-static DRIVER_INIT( sf2mdt )
-{
-	memory_install_write16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x708100, 0x7081ff, 0, 0, sf2mdt_layer_w);
-
-	DRIVER_INIT_CALL(sf2mdta);
-}
 
 static DRIVER_INIT( kodb )
 {
@@ -2621,14 +2632,6 @@ static DRIVER_INIT( dinopic )
 	state->bootleg_sprite_ram = (UINT16 *)memory_install_ram(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x990000, 0x993fff, 0, 0, NULL);
 
 	DRIVER_INIT_CALL(cps1);
-}
-
-static DRIVER_INIT( sf2m1 )
-{
-	UINT16 *ram = (UINT16 *)memory_region( machine, "maincpu" );
-	ram[0x064e / 2] = 0x6046;
-
-	DRIVER_INIT_CALL(dinopic);
 }
 
 static DRIVER_INIT( punipic )
@@ -2729,6 +2732,32 @@ static DRIVER_INIT( sf2b )
 	DRIVER_INIT_CALL(cps1);
 }
 
+static DRIVER_INIT( sf2mdta )
+{
+	cps_state *state = machine->driver_data<cps_state>();
+
+	state->bootleg_sprite_ram = (UINT16 *)memory_install_ram(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x700000, 0x703fff, 0, 0, NULL);
+	memory_install_ram(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x704000, 0x707fff, 0, 0, state->bootleg_sprite_ram);
+	state->bootleg_work_ram = (UINT16 *)memory_install_ram(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0xfc0000, 0xfcffff, 0, 0, NULL);
+
+	DRIVER_INIT_CALL(cps1);
+}
+
+static DRIVER_INIT( sf2mdt )
+{
+	memory_install_write16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x708100, 0x7081ff, 0, 0, sf2mdt_layer_w);
+
+	DRIVER_INIT_CALL(sf2mdta);
+}
+
+static DRIVER_INIT( sf2ceeabl )
+{
+	UINT16 *ram = (UINT16 *)memory_region( machine, "maincpu" );
+	ram[0x064e / 2] = 0x6046;
+
+	DRIVER_INIT_CALL(dinopic);
+}
+
 
 /*
 GAME( year,  archives name,  parent name,  MACHINE_DRIVER_START, INPUT_PORTS,  DRIVER_INIT,	flip,  producer name,	title information,	status )
@@ -2778,6 +2807,9 @@ GAME( 1997,	wof3sj,		wof,		wofsj,		wofsj,		wofsj,		ROT0,	"bootleg",	"Sangokushi 
 GAME( 1997,	wof3sja,	wof,		wofsj,		wofsj,		wofsj,		ROT0,	"bootleg",	"Sangokushi II: San Sheng Jian (Chinese bootleg set 2, 921005 Asia)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )
 /* sf2b - rowscroll still has problem */
 GAME( 1992,	sf2b,		sf2,		sf2b,		sf2mdt,		sf2b,		ROT0,	"bootleg(Playmark)",	"Street Fighter II: The World Warrior (bootleg set 1 with YM2151 + 2xMSM5205, 920214 etc)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE ) //910204 - based on World version
+/* sf2ceeabl - crowd is missing. Plane's tail comes off a bit. Patch used. */
+GAME( 1992,	sf2ceeabl,	sf2ce,		sf2ceeabl,	sf2,		sf2ceeabl,	ROT0,	"bootleg",	"Street Fighter II': Champion Edition (920313 etc bootleg set 1)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )
+GAME( 1992,	sf2ceeab2,	sf2ce,		sf2ceeabl,	sf2,		sf2ceeabl,	ROT0,	"bootleg",	"Street Fighter II': Champion Edition (920313 etc bootleg set 2)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )
 
 
 
@@ -2785,6 +2817,3 @@ GAME( 1992,	sf2b,		sf2,		sf2b,		sf2mdt,		sf2b,		ROT0,	"bootleg(Playmark)",	"Stre
 GAME( 1992,   sf2mdt,	  sf2ce,	sf2mdt,		sf2mdt,		sf2mdt,   ROT0,   "bootleg", "Street Fighter II': Magic Delta Turbo (bootleg)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE )
 /* sf2mdta - problem with background */
 GAME( 1992,   sf2mdta,	  sf2ce,	sf2mdt,		sf2mdt,		sf2mdta,  ROT0,   "bootleg", "Street Fighter II': Magic Delta Turbo (bootleg, set 2)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE )
-/* sf2m1 - crowd is missing. Plane's tail comes off a bit. Patch used. */
-GAME( 1992,   sf2m1,	  sf2ce,	sf2m1,		sf2,		sf2m1,    ROT0,   "bootleg", "Street Fighter II': Champion Edition (M1, bootleg)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )
-
