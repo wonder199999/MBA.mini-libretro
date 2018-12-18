@@ -356,13 +356,14 @@ static WRITE16_HANDLER( sf2mdt_layer_w )
 	cps_state *state = space->machine->driver_data<cps_state>();
 	switch (offset)
 	{
-		case 0x06: state->cps_a_regs[0x14 / 2] = data + 0xffce; break;
-		case 0x07: state->cps_a_regs[0x16 / 2] = data; break;
-		case 0x08: state->cps_a_regs[0x10 / 2] = data + 0xffce;	break;
-		case 0x09: state->cps_a_regs[0x0c / 2] = data + 0xffca;	break;
-		case 0x0a: state->cps_a_regs[0x12 / 2] = state->cps_a_regs[CPS1_ROWSCROLL_OFFS] = data; break;
-		case 0x0b: state->cps_a_regs[0x0e / 2] = data; break;
-		case 0x26: state->cps_b_regs[state->layer_enable_reg / 2] = data;
+		case 0x00: state->cps_a_regs[0x14 / 2] = data + 0xffce; break;
+		case 0x01: state->cps_a_regs[0x16 / 2] = data; break;
+		case 0x02: state->cps_a_regs[0x10 / 2] = data + 0xffce;	break;
+		case 0x03: state->cps_a_regs[0x0c / 2] = data + 0xffca;	break;
+		case 0x04: state->cps_a_regs[0x12 / 2] = state->cps_a_regs[CPS1_ROWSCROLL_OFFS] = data;
+			   state->cps_a_regs[0x08 / 2] = state->mainram[0x802e / 2]; break;	/* fetch the rowscroll table address */
+		case 0x05: state->cps_a_regs[0x0e / 2] = data; break;
+		case 0x20: state->cps_b_regs[state->layer_enable_reg / 2] = data; break;
 	}
 }
 
@@ -590,7 +591,6 @@ ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( sf2mdt_map, ADDRESS_SPACE_PROGRAM, 16 )
 	AM_RANGE(0x000000, 0x3fffff) AM_ROM
-	AM_RANGE(0x708100, 0x7081ff) AM_WRITE(sf2mdta_layer_w)
 	AM_RANGE(0x70c000, 0x70c001) AM_READ_PORT("IN1")
 	AM_RANGE(0x70c008, 0x70c009) AM_READ_PORT("IN2")
 	AM_RANGE(0x70c018, 0x70c01f) AM_READ(cps1_hack_dsw_r)
@@ -599,7 +599,7 @@ static ADDRESS_MAP_START( sf2mdt_map, ADDRESS_SPACE_PROGRAM, 16 )
 	AM_RANGE(0x800100, 0x80013f) AM_RAM AM_BASE_MEMBER(cps_state, cps_a_regs)
 	AM_RANGE(0x800140, 0x80017f) AM_RAM AM_BASE_MEMBER(cps_state, cps_b_regs)
 	AM_RANGE(0x900000, 0x92ffff) AM_RAM_WRITE(cps1_gfxram_w) AM_BASE_SIZE_MEMBER(cps_state, gfxram, gfxram_size)
-	AM_RANGE(0xff0000, 0xffffff) AM_RAM
+	AM_RANGE(0xff0000, 0xffffff) AM_RAM AM_BASE_MEMBER(cps_state, mainram)
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( sf2ceeabl_map, ADDRESS_SPACE_PROGRAM, 16 )
@@ -1422,7 +1422,6 @@ static MACHINE_DRIVER_START( sf2ceeabl )
 	MDRV_SCREEN_REFRESH_RATE(60)
 	MDRV_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MDRV_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
-//	MDRV_SCREEN_RAW_PARAMS(CPS_PIXEL_CLOCK, CPS1_HTOTAL, CPS_HBEND, CPS_HBSTART, CPS1_VTOTAL, CPS_VBEND, CPS_VBSTART)
 	MDRV_SCREEN_SIZE(64*8, 32*8)
 	MDRV_SCREEN_VISIBLE_AREA( 8*8, (64-8)*8-1, 2*8, 30*8-1 )
 	MDRV_VIDEO_UPDATE(bootleg_updatescreen)
@@ -2601,9 +2600,6 @@ ROM_START( sf2md )
 	ROM_LOAD_OPTIONAL( "gal20v8.68kadd",    0x00000, 0x157, CRC(b7fbcc26) SHA1(d163e767582b9e54a123ec1a7733eb8f1167c0b2) )
 ROM_END
 
-
-
-
 ROM_START( sf2mdt )
 	ROM_REGION( CODE_SIZE, "maincpu", 0 )		/* 68000 code */
 	ROM_LOAD16_BYTE( "3.ic172",   0x000000, 0x80000, CRC(5301b41f) SHA1(6855a57b21e8c5d74e5cb18f9ce6af650d7fb422) )
@@ -2629,6 +2625,9 @@ ROM_START( sf2mdt )
 	ROM_LOAD( "5.ic26",    0x00000, 0x20000, CRC(17d5ba8a) SHA1(6ff3b8860d7e1fdee3561846f645eb4d3a8965ec) )
 	ROM_RELOAD(            0x10000, 0x20000 )
 ROM_END
+
+
+
 
 ROM_START( sf2mdta )
 	ROM_REGION( CODE_SIZE, "maincpu", 0 )		/* 68000 code */
@@ -2800,9 +2799,13 @@ static DRIVER_INIT( sf2mdta )
 
 static DRIVER_INIT( sf2mdt )
 {
-	memory_install_write16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x708100, 0x7081ff, 0, 0, sf2mdt_layer_w);
+	cps_state *state = machine->driver_data<cps_state>();
 
-	DRIVER_INIT_CALL(sf2mdta);
+	state->bootleg_sprite_ram = (UINT16 *)memory_install_ram(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x700000, 0x703fff, 0, 0, NULL);
+	memory_install_ram(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x704000, 0x707fff, 0, 0, state->bootleg_sprite_ram);
+	memory_install_write16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x70810C, 0x70814D, 0, 0, sf2mdt_layer_w);
+
+	DRIVER_INIT_CALL(cps1);
 }
 
 
@@ -2858,11 +2861,8 @@ GAME( 1992,	sf2b,		sf2,		sf2b,		sf2mdt,		sf2b,		ROT0,	"bootleg(Playmark)",	"Stre
 GAME( 1992,	sf2ceeabl,	sf2ce,		sf2ceeabl,	sf2,		sf2ceeabl,	ROT0,	"bootleg",	"Street Fighter II': Champion Edition (920313 etc bootleg set 1)", GAME_SUPPORTS_SAVE )
 GAME( 1992,	sf2ceeab2,	sf2ce,		sf2ceeabl,	sf2,		sf2ceeabl,	ROT0,	"bootleg",	"Street Fighter II': Champion Edition (920313 etc bootleg set 2)", GAME_SUPPORTS_SAVE )
 GAME( 1992,	sf2md,		sf2ce,		sf2ceeabl,	sf2,		sf2ceeabl,	ROT0,	"bootleg",	"Street Fighter II': Champion Edition (Magic Delta, bootleg, 920313 etc)", GAME_SUPPORTS_SAVE )
-
-
-
-/* sf2mdt - problem with scrolls */
-GAME( 1992,   sf2mdt,	  sf2ce,	sf2mdt,		sf2mdt,		sf2mdt,   ROT0,   "bootleg", "Street Fighter II': Magic Delta Turbo (bootleg)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE )
+/* sf2mdt - OK */
+GAME( 1992,	sf2mdt,		sf2ce,		sf2mdt,		sf2mdt,		sf2mdt,		ROT0,	"bootleg",	"Street Fighter II': Magic Delta Turbo (bootleg set 1 (with YM2151 + 2xMSM5205), 920313 etc)", GAME_SUPPORTS_SAVE )
 /* sf2mdta - problem with background */
-GAME( 1992,   sf2mdta,	  sf2ce,	sf2mdt,		sf2mdt,		sf2mdta,  ROT0,   "bootleg", "Street Fighter II': Magic Delta Turbo (bootleg, set 2)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE )
+GAME( 1992,	sf2mdta,	sf2ce,		sf2mdt,		sf2mdt,		sf2mdta,	ROT0,	"bootleg",	"Street Fighter II': Magic Delta Turbo (bootleg set 2 (with YM2151 + 2xMSM5205), 920313 etc)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE )
 

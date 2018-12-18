@@ -386,6 +386,9 @@ const game_driver *const drivers[] =
 	DRIVER( sf2ceeabl )
 	DRIVER( sf2ceeab2 )
 	DRIVER( sf2md )
+	DRIVER( sf2mdt )		/* bootleg of SF2CE, set 1 */
+	DRIVER( sf2mdta )		/* bootleg of SF2CE, set 2 */
+
 
 //	DRIVER( sf2ceuabl )
 //	DRIVER( sf2ceuab2 )
@@ -394,8 +397,6 @@ const game_driver *const drivers[] =
 //	DRIVER( sf2ceuab5 )
 //	DRIVER( sf2ceuab6 )
 //	DRIVER( sf2ceuab7 )
-	DRIVER( sf2mdt )		/* bootleg of SF2CE, set 1 */
-	DRIVER( sf2mdta )		/* bootleg of SF2CE, set 2 */
 //	DRIVER( sf2mdtb )
 //
 
