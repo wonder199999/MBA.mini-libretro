@@ -301,6 +301,30 @@ static WRITE16_HANDLER( knightsb_layer_w )
 	}
 }
 
+static WRITE16_HANDLER( varthb_layer_w )
+{
+	cps_state *state = space->machine->driver_data<cps_state>();
+
+	if (data > 0x9000)
+		state->cps_a_regs[0x06 / 2] = data;
+}
+
+static WRITE16_HANDLER( varthb_layer2_w )
+{
+	cps_state *state = space->machine->driver_data<cps_state>();
+	switch (offset)
+	{
+		case 0x00: state->cps_a_regs[0x0e / 2] = data; break;
+		case 0x01: state->cps_a_regs[0x0c / 2] = data; break;
+		case 0x02: state->cps_a_regs[0x12 / 2] = data; break;
+		case 0x03: state->cps_a_regs[0x10 / 2] = data; break;
+		case 0x04: state->cps_a_regs[0x16 / 2] = data; break;
+		case 0x05: state->cps_a_regs[0x14 / 2] = data; break;
+		case 0x06: break;
+		default: logerror("Unknown layer cmd %X\n", offset << 1);
+	}
+}
+
 static WRITE16_HANDLER( sf2b_layer_w )
 {
 	cps_state *state = space->machine->driver_data<cps_state>();
@@ -336,21 +360,6 @@ static WRITE16_HANDLER( sf2ceeabl_layer_w )
 	}
 }
 
-static WRITE16_HANDLER( sf2mdta_layer_w )
-{
-	cps_state *state = space->machine->driver_data<cps_state>();
-	switch (offset)
-	{
-		case 0x06: state->cps_a_regs[0x0c / 2] = data + 0xffbe;	break;
-		case 0x07: state->cps_a_regs[0x0e / 2] = data; break;
-		case 0x08: state->cps_a_regs[0x14 / 2] = data + 0xffce;	break;
-		case 0x09: state->cps_a_regs[0x12 / 2] = state->cps_a_regs[CPS1_ROWSCROLL_OFFS] = data; break;
-		case 0x0a: state->cps_a_regs[0x10 / 2] = data + 0xffce;	break;
-		case 0x0b: state->cps_a_regs[0x16 / 2] = data;	break;
-		case 0x26: state->cps_b_regs[state->layer_enable_reg / 2] = data;
-	}
-}
-
 static WRITE16_HANDLER( sf2mdt_layer_w )
 {
 	cps_state *state = space->machine->driver_data<cps_state>();
@@ -367,29 +376,22 @@ static WRITE16_HANDLER( sf2mdt_layer_w )
 	}
 }
 
-static WRITE16_HANDLER( varthb_layer_w )
-{
-	cps_state *state = space->machine->driver_data<cps_state>();
-
-	if (data > 0x9000)
-		state->cps_a_regs[0x06 / 2] = data;
-}
-
-static WRITE16_HANDLER( varthb_layer2_w )
+static WRITE16_HANDLER( sf2mdta_layer_w )
 {
 	cps_state *state = space->machine->driver_data<cps_state>();
 	switch (offset)
 	{
-		case 0x00: state->cps_a_regs[0x0e / 2] = data; break;
-		case 0x01: state->cps_a_regs[0x0c / 2] = data; break;
-		case 0x02: state->cps_a_regs[0x12 / 2] = data; break;
-		case 0x03: state->cps_a_regs[0x10 / 2] = data; break;
-		case 0x04: state->cps_a_regs[0x16 / 2] = data; break;
-		case 0x05: state->cps_a_regs[0x14 / 2] = data; break;
-		case 0x06: break;
-		default: logerror("Unknown layer cmd %X\n", offset << 1);
+		case 0x00: state->cps_a_regs[0x0c / 2] = data + 0xffbe; break;	// SCROLL 1X
+		case 0x01: state->cps_a_regs[0x0e / 2] = data; break;
+		case 0x02: state->cps_a_regs[0x14 / 2] = data + 0xffbe; break;	// SCROLL 3X
+		case 0x03: state->cps_a_regs[0x12 / 2] = state->cps_a_regs[CPS1_ROWSCROLL_OFFS] = data;
+			   state->cps_a_regs[0x08 / 2] = state->mainram[0x802e / 2]; break;
+		case 0x04: state->cps_a_regs[0x10 / 2] = 0xffc0; break;		// SCROLL 2X
+		case 0x05: state->cps_a_regs[0x16 / 2] = data; break;
+		case 0x20: state->cps_b_regs[state->layer_enable_reg / 2] = data; break;
 	}
 }
+
 
 
 /* ---  RENDER HANDLER  --- */
@@ -424,14 +426,14 @@ static void bootleg_render_sprites( running_machine *machine, bitmap_t *bitmap, 
 	{
 		for (INT32 pos = last_sprite_offset; pos >= 0x0000; pos -= 4)
 		{
-			INT32 temp = base + pos + 1;
-			tileno = sprite_ram[temp - 1];
+			INT32 var = base + pos + 1;
+			tileno = sprite_ram[var - 1];
 			if (tileno >= machine->gfx[2]->total_elements) continue;
-			xpos   = sprite_ram[temp + 1] & 0x01ff;
-			ypos   = sprite_ram[temp - 2] & 0x01ff;
-			flipx  = sprite_ram[temp] & 0x20;
-			flipy  = sprite_ram[temp] & 0x40;
-			color  = sprite_ram[temp] & 0x1f;
+			xpos   = sprite_ram[var + 1] & 0x01ff;
+			ypos   = sprite_ram[var - 2] & 0x01ff;
+			flipx  = sprite_ram[var] & 0x20;
+			flipy  = sprite_ram[var] & 0x40;
+			color  = sprite_ram[var] & 0x1f;
 			ypos   = 256 - 16 - ypos;
 			xpos   += state->sprite_x_offset + 49;
 
@@ -469,7 +471,7 @@ static void bootleg_build_palette( running_machine *machine )
 {
 	cps_state *state = machine->driver_data<cps_state>();
 
-	UINT32 r, g, b, bright, palette, value;
+	UINT32 r, g, b, bright, palette, var;
 	UINT32 palettebase = (state->cps_a_regs[0x0a / 2] << 8) & 0x01ffff;	/* all the bootlegs seem to write the palette offset as usual */
 
 	for (UINT32 offset = 0; offset < 32 * 6 * 16; offset++)
@@ -477,11 +479,11 @@ static void bootleg_build_palette( running_machine *machine )
 		palette = state->gfxram[palettebase / 2 + offset];
 		/* from my understanding of the schematics, when the 'brightness' component is set to 0 it should reduce brightness to 1/3 */
 		bright = ((palette >> 12) << 1) + 0x0f;
-		value = bright * 0x11 / 0x2d;
+		var = bright * 0x11 / 0x2d;
 
-		r = ((palette >> 8) & 0x0f) * value;
-		g = ((palette >> 4) & 0x0f) * value;
-		b = ((palette >> 0) & 0x0f) * value;
+		r = ((palette >> 8) & 0x0f) * var;
+		g = ((palette >> 4) & 0x0f) * var;
+		b = ((palette >> 0) & 0x0f) * var;
 
 		palette_set_color( machine, offset, MAKE_RGB(r, g, b) );
 	}
@@ -2626,9 +2628,6 @@ ROM_START( sf2mdt )
 	ROM_RELOAD(            0x10000, 0x20000 )
 ROM_END
 
-
-
-
 ROM_START( sf2mdta )
 	ROM_REGION( CODE_SIZE, "maincpu", 0 )		/* 68000 code */
 	ROM_LOAD16_BYTE( "3.mdta", 0x000000, 0x80000, CRC(9f544ef4) SHA1(f784809e59a5fcabd6d15d3f1c36250a5528c9f8) )
@@ -2638,7 +2637,7 @@ ROM_START( sf2mdta )
 
 	ROM_REGION( 0x600000, "gfx", 0 )
 	/* unconfirmed if working on real hardware, pf4 is a bad dump (bad pin) */
-	ROMX_LOAD( "pf4 sh058.ic89", 0x000000, 0x100000, VERIFY_OFF, ROM_GROUPWORD | ROM_SKIP(2) )
+	ROMX_LOAD( "pf4 sh058.ic89", 0x000000, 0x100000, CRC(16289710) SHA1(4f3236712b979a1eb2fa97740e32d7913cee0d0d), ROM_GROUPWORD | ROM_SKIP(2) )
 	ROMX_LOAD( "pf7 sh072.ic92", 0x000002, 0x100000, CRC(fb78022e) SHA1(b8974387056dd52db96b01cc4648edc814398c7e), ROM_GROUPWORD | ROM_SKIP(2) )
 	ROMX_LOAD( "pf5 sh036.ic90", 0x200000, 0x100000, CRC(0a6be48b) SHA1(b7e72c94d4e3eb4a6bba6608d9b9a093c8901ad9), ROM_GROUPWORD | ROM_SKIP(2) )
 	ROMX_LOAD( "pf8 sh074.ic93", 0x200002, 0x100000, CRC(6258c7cf) SHA1(4cd7519245c0aa816934a43e6743160f715d7dc2), ROM_GROUPWORD | ROM_SKIP(2) )
@@ -2649,6 +2648,7 @@ ROM_START( sf2mdta )
 	ROM_LOAD( "1.ic28",    0x00000, 0x20000, CRC(d5bee9cc) SHA1(e638cb5ce7a22c18b60296a7defe8b03418da56c) )
 	ROM_RELOAD(            0x10000, 0x20000 )
 ROM_END
+
 
 
 /* --- DRIVER INIT --- */
@@ -2793,6 +2793,7 @@ static DRIVER_INIT( sf2mdta )
 	state->bootleg_sprite_ram = (UINT16 *)memory_install_ram(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x700000, 0x703fff, 0, 0, NULL);
 	memory_install_ram(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x704000, 0x707fff, 0, 0, state->bootleg_sprite_ram);
 	state->bootleg_work_ram = (UINT16 *)memory_install_ram(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0xfc0000, 0xfcffff, 0, 0, NULL);
+	memory_install_write16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x70810c, 0x70814d, 0, 0, sf2mdta_layer_w);
 
 	DRIVER_INIT_CALL(cps1);
 }
@@ -2863,6 +2864,6 @@ GAME( 1992,	sf2ceeab2,	sf2ce,		sf2ceeabl,	sf2,		sf2ceeabl,	ROT0,	"bootleg",	"Str
 GAME( 1992,	sf2md,		sf2ce,		sf2ceeabl,	sf2,		sf2ceeabl,	ROT0,	"bootleg",	"Street Fighter II': Champion Edition (Magic Delta, bootleg, 920313 etc)", GAME_SUPPORTS_SAVE )
 /* sf2mdt - OK */
 GAME( 1992,	sf2mdt,		sf2ce,		sf2mdt,		sf2mdt,		sf2mdt,		ROT0,	"bootleg",	"Street Fighter II': Magic Delta Turbo (bootleg set 1 (with YM2151 + 2xMSM5205), 920313 etc)", GAME_SUPPORTS_SAVE )
-/* sf2mdta - problem with background */
-GAME( 1992,	sf2mdta,	sf2ce,		sf2mdt,		sf2mdt,		sf2mdta,	ROT0,	"bootleg",	"Street Fighter II': Magic Delta Turbo (bootleg set 2 (with YM2151 + 2xMSM5205), 920313 etc)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE )
+/* sf2mdta - OK */
+GAME( 1992,	sf2mdta,	sf2ce,		sf2mdt,		sf2mdt,		sf2mdta,	ROT0,	"bootleg",	"Street Fighter II': Magic Delta Turbo (bootleg set 2 (with YM2151 + 2xMSM5205), 920313 etc)", GAME_SUPPORTS_SAVE )
 

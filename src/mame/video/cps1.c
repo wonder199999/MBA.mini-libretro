@@ -1568,8 +1568,8 @@ static const struct CPS1config cps1_config_table[] =
 	{"sf2ceeabl",	CPS_B_21_DEF,	mapper_S9263B,	0x36 },
 	{"sf2ceeab2",	CPS_B_21_DEF,	mapper_S9263B,	0x36 },
 	{"sf2md",	CPS_B_21_DEF,	mapper_S9263B,	0x36 },
-	{"sf2mdt",	CPS_B_21_DEF, mapper_S9263B, 0x36, 0, 0, 1 },
-	{"sf2mdta",	CPS_B_21_DEF, mapper_S9263B, 0x36, 0, 0, 1 },
+	{"sf2mdt",	CPS_B_21_DEF,	mapper_S9263B,	0x36, 0, 0, 1 },
+	{"sf2mdta",	CPS_B_21_DEF,	mapper_S9263B,	0x36 },
 
 
 
@@ -2307,7 +2307,7 @@ static void cps1_build_palette(running_machine *machine, const UINT16* const pal
 /*	The palette is copied only for pages that are enabled in the ctrl
 	register. Note that if the first palette pages are skipped, all
 	the following pages are scaled down. */
-	UINT32 r, g, b, bright, palette, value;
+	UINT32 r, g, b, bright, palette, var;
 	for (UINT32 page = 0; page < 6; ++page)
 	{
 		if (BIT(ctrl, page))
@@ -2320,11 +2320,11 @@ static void cps1_build_palette(running_machine *machine, const UINT16* const pal
 				   component is set to 0 it should reduce brightness to 1/3 */
 
 				bright = 0x0f + ((palette >> 12) << 1);
-				value = bright * 0x11 / 0x2d;
+				var = bright * 0x11 / 0x2d;
 
-				r = ((palette >> 8) & 0x0f) * value;
-				g = ((palette >> 4) & 0x0f) * value;
-				b = ((palette >> 0) & 0x0f) * value;
+				r = ((palette >> 8) & 0x0f) * var;
+				g = ((palette >> 4) & 0x0f) * var;
+				b = ((palette >> 0) & 0x0f) * var;
 
 				palette_set_color (machine, 0x200 * page + offset, MAKE_RGB(r, g, b));
 			}
