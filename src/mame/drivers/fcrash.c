@@ -304,7 +304,6 @@ static WRITE16_HANDLER( knightsb_layer_w )
 static WRITE16_HANDLER( varthb_layer_w )
 {
 	cps_state *state = space->machine->driver_data<cps_state>();
-
 	if (data > 0x9000)
 		state->cps_a_regs[0x06 / 2] = data;
 }
@@ -1672,7 +1671,7 @@ MACHINE_DRIVER_END
 /*  	ROM definition		 */
 /* ----------------------------- */
 ROM_START( captcommb2 )
-	ROM_REGION( CODE_SIZE, "maincpu", 0 )      /* 68000 code */
+	ROM_REGION( CODE_SIZE, "maincpu", 0 )	/* 68000 code */
 	ROM_LOAD16_BYTE( "5.bin",   0x000000, 0x80000, CRC(c3a6ed28) SHA1(f79fed35f7b0dc383837a2ead846acc686dd3487) )
 	ROM_LOAD16_BYTE( "4.bin",   0x000001, 0x80000, CRC(28729335) SHA1(6dd23c2d41e4e182434fe80c03d5c90785e6c0ce) )
 	ROM_LOAD16_BYTE( "3.bin",   0x100000, 0x40000, CRC(1b526d73) SHA1(3dd8dec61db4f4f5546937602a8fb01c639d72f8) )
@@ -1688,13 +1687,13 @@ ROM_START( captcommb2 )
 	ROMX_LOAD( "cci.bin",     0x200004, 0x80000, CRC(0c69f151) SHA1(a170b8e568439e4a26d84376d53560e4248e4e2f) , ROM_GROUPWORD | ROM_SKIP(6) )	// == cc-2m.8a
 	ROMX_LOAD( "cdi.bin",     0x200006, 0x80000, CRC(1f9ebb97) SHA1(023d00cb7b6a52d1b29e2052abe08ef34cb0c55c) , ROM_GROUPWORD | ROM_SKIP(6) )	// == cc-4m.10a
 
-	ROM_REGION( 0x50000, "audiocpu", 0 ) /* Sound program + samples  */
+	ROM_REGION( 0x50000, "audiocpu", 0 )	/* Sound program + samples  */
 	ROM_LOAD( "1.bin",        0x00000, 0x40000, CRC(aed2f4bd) SHA1(3bd567dc350bf6ac3a349548790ad49eb5bd8307) )
 	ROM_RELOAD(               0x10000, 0x40000 )
 ROM_END
 
 ROM_START( cawingbl )
-	ROM_REGION( CODE_SIZE, "maincpu", 0 )      /* 68000 code */
+	ROM_REGION( CODE_SIZE, "maincpu", 0 )	/* 68000 code */
 	ROM_LOAD16_BYTE( "caw2.bin",    0x00000, 0x80000, CRC(8125d3f0) SHA1(a0e48c326c6164ca189c9372f5c38a7c103772c1) )
 	ROM_LOAD16_BYTE( "caw1.bin",    0x00001, 0x80000, CRC(b19b10ce) SHA1(3c71f1dc830d1e8b8ba26d8a71e12f477659480c) )
 
@@ -1704,13 +1703,13 @@ ROM_START( cawingbl )
 	ROMX_LOAD( "caw5.bin", 0x000002, 0x80000, CRC(30dd78db) SHA1(e0295001d6f5fb4a9276c432f971e88f73c5e39a) , ROM_SKIP(3) )
 	ROMX_LOAD( "caw4.bin", 0x000003, 0x80000, CRC(4937fc41) SHA1(dac179715be483a521df8e515afc1fb7a2cd8f13) , ROM_SKIP(3) )
 
-	ROM_REGION( 0x30000, "audiocpu", 0 ) /* 64k for the audio CPU (+banks) */
+	ROM_REGION( 0x30000, "audiocpu", 0 )	/* 64k for the audio CPU (+banks) */
 	ROM_LOAD( "caw3.bin",  0x00000, 0x20000, CRC(ffe16cdc) SHA1(8069ea69f0b89d61c35995c8040a4989d7be9c1f) )
 	ROM_RELOAD(            0x10000, 0x20000 )
 ROM_END
 
 ROM_START( cawingb2 )
-	ROM_REGION( CODE_SIZE, "maincpu", 0 )      /* 68000 code */
+	ROM_REGION( CODE_SIZE, "maincpu", 0 )	/* 68000 code */
 	ROM_LOAD16_BYTE( "8.8",    0x00000, 0x20000, CRC(f655708c) SHA1(9962a1c96ea08bc71b25d4f58e5d1fb1beebf0dc) )
 	ROM_LOAD16_BYTE( "4.4",    0x00001, 0x20000, CRC(a02fb5aa) SHA1(c9c064a83899c48f681ac803cfc5886503b9d992) )
 	ROM_LOAD16_BYTE( "7.7",    0x40000, 0x20000, CRC(8c6c7430) SHA1(3ed5713caf774b050b41a6adea026e1307b570df) )
@@ -1738,7 +1737,7 @@ ROM_START( cawingb2 )
 	ROMX_LOAD( "14.14",     0x180002, 0x20000, CRC(344a8270) SHA1(fdb588a7ba60783225e3b5c72446f79625de4f9c) , ROM_SKIP(3) )
 	ROMX_LOAD( "16.16",     0x180003, 0x20000, CRC(b991ad91) SHA1(5c59131ddf068cb54d23f8836293360fbc967d58) , ROM_SKIP(3) )
 
-	ROM_REGION( 0x30000, "audiocpu", 0 ) /* 64k for the audio CPU (+banks) */
+	ROM_REGION( 0x30000, "audiocpu", 0 )	/* 64k for the audio CPU (+banks) */
 	ROM_LOAD( "5.a",       0x00000, 0x20000, CRC(ffe16cdc) SHA1(8069ea69f0b89d61c35995c8040a4989d7be9c1f) )
 	ROM_RELOAD(            0x10000, 0x20000 )
 ROM_END
@@ -2649,6 +2648,31 @@ ROM_START( sf2mdta )
 	ROM_RELOAD(            0x10000, 0x20000 )
 ROM_END
 
+ROM_START( sf2mdtb )
+	ROM_REGION( CODE_SIZE, "maincpu", 0 )	/* 68000 code */
+	ROM_LOAD16_BYTE( "3.ic172", 0x000000, 0x80000, CRC(0bdb9da2) SHA1(5224ee81d94be70a84ffaa3a56b8093aa36d6b4f) ) // sldh
+	ROM_LOAD16_BYTE( "1.ic171", 0x000001, 0x80000, CRC(d88abbce) SHA1(57667a92710bb1d37daed09262c3064d09cbf4af) ) // sldh
+	ROM_LOAD16_BYTE( "4.ic176", 0x100000, 0x20000, CRC(74844192) SHA1(99cd546c78cce7f632007af454d8a55eddb6b19b) ) // sldh
+	ROM_LOAD16_BYTE( "2.ic175", 0x100001, 0x20000, CRC(bd98ff15) SHA1(ed902d949b0b5c5beaaea78a4b418ffa6db9e1df) ) // sldh
+
+	ROM_REGION( 0x600000, "gfx", 0 )	/* rearranged in init */
+	ROMX_LOAD( "7.ic90",    0x000000, 0x80000, CRC(896eaf48) SHA1(5a13ae8b554e05eed3d5749aaf5845d499bce45b) , ROM_SKIP(3) )
+	ROMX_LOAD( "13.ic89",   0x000001, 0x80000, CRC(305dd72a) SHA1(c373b517c23f3b019abb06e21f6b9ab6e1e47909) , ROM_SKIP(3) )
+	ROMX_LOAD( "10.ic88",   0x000002, 0x80000, CRC(ef3f5be8) SHA1(d4e1de7d7caf6977e48544d6701618ae70c717f9) , ROM_SKIP(3) )
+	ROMX_LOAD( "16.ic87",   0x000003, 0x80000, CRC(e57f6db9) SHA1(b37f95737804002ec0e237472eaacf0bc1e868e8) , ROM_SKIP(3) )
+	ROMX_LOAD( "6.ic91",    0x200000, 0x80000, CRC(054cd5c4) SHA1(07f275e118c141a84ca15a2e9edc81694af37cf2) , ROM_SKIP(3) )
+	ROMX_LOAD( "12.ic92",   0x200001, 0x80000, CRC(87e069e8) SHA1(cddd3be84f8379134590bfbbb080518f28120e49) , ROM_SKIP(3) )
+	ROMX_LOAD( "9.ic93",    0x200002, 0x80000, CRC(818ca33d) SHA1(dfb707e17c83216f8a62e905f8c7cd6d406b417b) , ROM_SKIP(3) )
+	ROMX_LOAD( "15.ic94",   0x200003, 0x80000, CRC(5dfb44d1) SHA1(08e44b8efc84f9cfc829aabf704155ddc700de76) , ROM_SKIP(3) )
+	ROMX_LOAD( "8.ic86",    0x400000, 0x80000, CRC(34bbb3fa) SHA1(7794e89258f12b17d38c3d302dc15c502a8c8eb6) , ROM_SKIP(3) )
+	ROMX_LOAD( "14.ic85",   0x400001, 0x80000, CRC(7d9f1a67) SHA1(6deb7fff867c42b13a32bb11eda798cfdb4cbaa8) , ROM_SKIP(3) )
+	ROMX_LOAD( "11.ic84",   0x400002, 0x80000, CRC(cea6d1d6) SHA1(9c953db42f0d877e43c0c239f69a00df39a18295) , ROM_SKIP(3) )
+	ROMX_LOAD( "17.ic83",   0x400003, 0x80000, CRC(91a9a05d) SHA1(5266ceddd2df925e79b4200843dec2f7aa9297b3) , ROM_SKIP(3) )
+
+	ROM_REGION( 0x30000, "audiocpu", 0 )	/* Sound program + samples  */
+	ROM_LOAD( "5.ic28",    0x00000, 0x20000, CRC(d5bee9cc) SHA1(e638cb5ce7a22c18b60296a7defe8b03418da56c) )
+	ROM_RELOAD(            0x10000, 0x20000 )
+ROM_END
 
 
 /* --- DRIVER INIT --- */
@@ -2864,6 +2888,7 @@ GAME( 1992,	sf2ceeab2,	sf2ce,		sf2ceeabl,	sf2,		sf2ceeabl,	ROT0,	"bootleg",	"Str
 GAME( 1992,	sf2md,		sf2ce,		sf2ceeabl,	sf2,		sf2ceeabl,	ROT0,	"bootleg",	"Street Fighter II': Champion Edition (Magic Delta, bootleg, 920313 etc)", GAME_SUPPORTS_SAVE )
 /* sf2mdt - OK */
 GAME( 1992,	sf2mdt,		sf2ce,		sf2mdt,		sf2mdt,		sf2mdt,		ROT0,	"bootleg",	"Street Fighter II': Magic Delta Turbo (bootleg set 1 (with YM2151 + 2xMSM5205), 920313 etc)", GAME_SUPPORTS_SAVE )
-/* sf2mdta - OK */
+/* sf2mdta / sf2mdtb - OK */
 GAME( 1992,	sf2mdta,	sf2ce,		sf2mdt,		sf2mdt,		sf2mdta,	ROT0,	"bootleg",	"Street Fighter II': Magic Delta Turbo (bootleg set 2 (with YM2151 + 2xMSM5205), 920313 etc)", GAME_SUPPORTS_SAVE )
+GAME( 1992,	sf2mdtb,	sf2ce,		sf2mdt,		sf2mdt,		sf2mdta,	ROT0,	"bootleg",	"Street Fighter II': Magic Delta Turbo (bootleg set 3 (with YM2151 + 2xMSM5205), 920313 etc)", GAME_SUPPORTS_SAVE )
 
