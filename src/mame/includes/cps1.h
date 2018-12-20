@@ -259,7 +259,7 @@ public:
 	INT32		layer_scroll1x_offset;
 	INT32		layer_scroll2x_offset;
 	INT32		layer_scroll3x_offset;
-	UINT16		dinopic4protectvalue;			/* for dinopic4(bootleg) */
+	UINT16		bootleg_prot_value;			/* for dinopic4 / sf2ceuab7 */
 	UINT16		punipic3_sub_lcc;			/* for punipic3(bootleg) */
 	UINT8		layer_mask_reg[4];
 	UINT8		layer_enable_reg;

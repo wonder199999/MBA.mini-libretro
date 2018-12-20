@@ -389,19 +389,13 @@ const game_driver *const drivers[] =
 	DRIVER( sf2mdt )		/* bootleg of SF2CE, set 1 */
 	DRIVER( sf2mdta )		/* bootleg of SF2CE, set 2 */
 	DRIVER( sf2mdtb )
-
-
-//	DRIVER( sf2ceuabl )
-//	DRIVER( sf2ceuab2 )
-	DRIVER( sf2ceuab3 )		/* bootleg of SF2CE, in FBA it's name is sf2ceuab3, in MAME it's name is sf2m8a */
-//	DRIVER( sf2ceuab4 )
-//	DRIVER( sf2ceuab5 )
-//	DRIVER( sf2ceuab6 )
-//	DRIVER( sf2ceuab7 )
-//
-
-/* obsolete */	DRIVER( sf2m3 )			/* hack */
-
+	DRIVER( sf2ceuabl )
+	DRIVER( sf2ceuab2 )
+	DRIVER( sf2ceuab3 )
+	DRIVER( sf2ceuab4 )
+	DRIVER( sf2ceuab5 )
+	DRIVER( sf2ceuab6 )
+	DRIVER( sf2ceuab7 )
 
 	/* ************************* */
 	/*  Part 3 - Capcom System 2 */
