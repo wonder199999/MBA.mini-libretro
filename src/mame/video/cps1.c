@@ -1263,6 +1263,14 @@ static const struct gfx_range mapper_sfzch_table[] =
 	{ 0 }
 };
 
+
+#define mapper_cps1frog	{ 0x020000, 0, 0, 0 }, mapper_cps1frog_table
+static const struct gfx_range mapper_cps1frog_table[] =
+{
+	{ GFXTYPE_SPRITES | GFXTYPE_SCROLL1 | GFXTYPE_SCROLL2 | GFXTYPE_SCROLL3, 0x000001, 0x01ffff, 0 },
+	{ 0 }
+};
+
 /*	I don't know if CPS2 ROM boards use PALs as well; since all games seem to be
 	well behaved, I'll just assume that there is no strong checking of gfx type.
 	(sprites are not listed here because they are addressed linearly by the CPS2
@@ -1275,6 +1283,7 @@ static const struct gfx_range mapper_cps2_table[] =
 	{ GFXTYPE_SCROLL1 | GFXTYPE_SCROLL2 | GFXTYPE_SCROLL3, 0x00000, 0x1ffff, 1 },	// 20000-3ffff physical
 	{ 0 }
 };
+
 
 static const struct CPS1config cps1_config_table[] =
 {
@@ -1578,7 +1587,7 @@ static const struct CPS1config cps1_config_table[] =
 	{"sf2ceuab5",	HACK_B_1,	mapper_S9263B,	0x00, 0, 0, 2 },
 	{"sf2ceuab6",	CPS_B_21_DEF,	mapper_S9263B,	0x36 },
 	{"sf2ceuab7",	CPS_B_21_DEF,	mapper_S9263B,	0x36 },
-
+	{"cps1frog",	CPS_B_04,	mapper_cps1frog,0x00, 0, 0, 0x89 },
 
 	/* CPS2 games */
 	{"cps2",	CPS_B_21_DEF, mapper_cps2 },
@@ -2837,7 +2846,7 @@ VIDEO_UPDATE( cps1 )
 
 	if (state->cps_version == 1)
 	{
-		if (state->game_config->bootleg_kludge == 0x88)				/* - fixed 3wondersb */
+		if (state->game_config->bootleg_kludge > 0x87)				/* - for cps1frog / fixed 3wondersb */
 			cps1_build_palette(screen->machine, cps1_base(screen->machine, CPS1_PALETTE_BASE, state->palette_align));
 
 		cps1_render_layer(screen->machine, bitmap, cliprect, l0, 0);

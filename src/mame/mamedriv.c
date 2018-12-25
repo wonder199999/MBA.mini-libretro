@@ -396,6 +396,8 @@ const game_driver *const drivers[] =
 	DRIVER( sf2ceuab5 )
 	DRIVER( sf2ceuab6 )
 	DRIVER( sf2ceuab7 )
+	//
+	DRIVER( cps1frog )		// Homebrew
 
 	/* ************************* */
 	/*  Part 3 - Capcom System 2 */
@@ -1024,7 +1026,6 @@ const game_driver *const drivers[] =
 	/* Neo Print */
 	DRIVER( 98best44 )
 
-	/* new added */
 	DRIVER( crswd2bl )		/* Crossed Sword 2, bootleg of NGCD version */
 	DRIVER( 3countba )		/* 3 Count Bout / Fire Suplex (NGM-043) */
 	DRIVER( fatfury2a )		/* Fatal Fury 2 / Garou Densetsu 2 - arata-naru tatakai (NGM-047) */
