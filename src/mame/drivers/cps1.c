@@ -3373,7 +3373,6 @@ GFXDECODE_END
 static MACHINE_START( common )
 {
 	cps_state *state = machine->driver_data<cps_state>();
-
 	state->maincpu = machine->device("maincpu");
 	state->audiocpu = machine->device("audiocpu");
 }
@@ -13883,6 +13882,12 @@ static DRIVER_INIT( wof3js )
 	DRIVER_INIT_CALL(cps1);
 }
 
+static DRIVER_INIT( kodh )
+{
+	memory_install_read16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0xf1c000, 0xf1c001, 0, 0, cps1_in2_r);
+	DRIVER_INIT_CALL(cps1);
+}
+
 static DRIVER_INIT( sf2rb )
 {
 	memory_install_read16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x201200, 0x201201, 0, 0, sf2rb_prot_lo_r);
@@ -13949,7 +13954,6 @@ static DRIVER_INIT( sf2ceuab7 )
 	memory_install_read16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x57a2b0, 0x57a2b1, 0, 0, sf2ceuab7_decryption_r);
 	DRIVER_INIT_CALL(cps1);
 }
-
 
 
 /* ------ DRIVER INIT end ------ */
@@ -14049,8 +14053,8 @@ GAME( 1991,	kodr1,		kod,		cps1_10MHz,	kodr1,		cps1,		ROT0,	"Capcom",	"The King o
 GAME( 1991,	kodu,		kod,		cps1_10MHz,	kod,		cps1,		ROT0,	"Capcom",	"The King of Dragons (USA 910910)", GAME_SUPPORTS_SAVE )
 GAME( 1991,	kodj,		kod,		cps1_10MHz,	kod,		cps1,		ROT0,	"Capcom",	"The King of Dragons (Japan 910805, B-Board 90629B-3)", GAME_SUPPORTS_SAVE )
 GAME( 1991,	kodja,		kod,		cps1_10MHz,	kod,		cps1,		ROT0,	"Capcom",	"The King of Dragons (Japan 910805, B-Board 89625B-1)", GAME_SUPPORTS_SAVE )
-GAME( 1991,	kodda,		kod,		cps1_10MHz,	kod,		cps1,		ROT0,	"bootleg",	"The King of Dragons (Phoenix bootleg, ETC 910731)", GAME_SUPPORTS_SAVE )
-GAME( 2002,	kodh,		kod,		cps1_10MHz,	kod,		cps1,		ROT0,	"hack",		"The King of Dragons (hack)", GAME_SUPPORTS_SAVE )
+GAME( 1991,	kodda,		kod,		cps1_10MHz,	kod,		cps1,		ROT0,	"bootleg",	"The King of Dragons (Phoenix bootleg, 910731 etc)", GAME_SUPPORTS_SAVE )
+GAME( 2002,	kodh,		kod,		cps1_10MHz,	kodr1,		kodh,		ROT0,	"hack",		"The King of Dragons (hack)", GAME_SUPPORTS_SAVE )
 //
 GAME( 1993,	mbombrd,	0,		qsound,		slammast,	slammast,	ROT0,	"Capcom",	"Muscle Bomber Duo: Ultimate Team Battle (World 931206)", GAME_SUPPORTS_SAVE )	// "ETC"
 GAME( 1993,	mbombrdj,	mbombrd,	qsound,		slammast,	slammast,	ROT0,	"Capcom",	"Muscle Bomber Duo: Heat Up Warriors (Japan 931206)", GAME_SUPPORTS_SAVE )
@@ -14229,3 +14233,50 @@ GAME( 1992,	sf2ceuab6,	sf2ce,		cps1_12MHz,	sf2,		sf2ceuab6,	ROT0,	"bootleg",	"St
 GAME( 1992,	sf2ceuab7,	sf2ce,		cps1_10MHz,	sf2,		sf2ceuab7,	ROT0,	"bootleg",	"Street Fighter II': Champion Edition (920313 USA bootleg set 7)", GAME_SUPPORTS_SAVE )
 //
 GAME( 2006,	cps1frog,	0,		cps1frog,	cps1frog,	cps1,		ROT0,   "Rastersoft (Homebrew)",	"Frog Feast (CPS-1)", GAME_SUPPORTS_SAVE )
+
+ROM_START( punisherb )
+	ROM_REGION( CODE_SIZE, "maincpu", 0 )
+	ROM_LOAD16_BYTE( "18.bin",	0x000000, 0x040000, CRC(2565ad20) SHA1(52a03ebfd0fa4e584e1d240f0b65e3cd43523b1a) )
+	ROM_LOAD16_BYTE( "19.bin",	0x000001, 0x040000, CRC(84bb4acf) SHA1(0cd46efa38f74bec7c510958a61fa72b84d5249b) )
+	ROM_LOAD16_BYTE( "16.bin",	0x080000, 0x040000, CRC(4568520f) SHA1(f76f4376d9cb2c0983f18b5ee23be66bd1f60696) )
+	ROM_LOAD16_BYTE( "17.bin",	0x080001, 0x040000, CRC(fda67fc1) SHA1(b92e167d224e0ab6f8e69cb4784b004d68136950) )
+	ROM_LOAD16_BYTE( "14.bin",	0x100000, 0x020000, CRC(1286d6ad) SHA1(445bd4a867f2f69531235a81c1555c67cdc31b70) )
+	ROM_LOAD16_BYTE( "15.bin",	0x100001, 0x020000, CRC(092538ac) SHA1(4f91e9e2998a15ebdf74dc17cbabea24b5eaf92a) )
+	ROM_LOAD16_BYTE( "12.bin",	0x140000, 0x020000, CRC(019744d4) SHA1(c2699592c2d79083ae8c5a7afdf58f598a1f6f9d) )
+	ROM_LOAD16_BYTE( "13.bin",	0x140001, 0x020000, CRC(8b88ae0d) SHA1(99a9d3e9e30dbf272565ccb77a738237e03397c1) )
+
+	ROM_REGION( 0x400000, "gfx", 0 )
+/*	ROMX_LOAD( "1.bin",	0x000000, 0x80000, CRC(35cb609a) SHA1(9553281af0df2d53e61d6a4a33f4412db0f870f3), ROM_SKIP(7) )
+	ROMX_LOAD( "2.bin",	0x000002, 0x80000, CRC(dcf61484) SHA1(f5cc5370ac73bb4f7e47f2ed397ce3ab8ac627b5), ROM_SKIP(7) )
+	ROMX_LOAD( "3.bin",	0x000004, 0x80000, CRC(3a76db83) SHA1(042a181595348d17f7cc5c9396a75a80eff417f1), ROM_SKIP(7) )
+	ROMX_LOAD( "4.bin",	0x000006, 0x80000, CRC(b099b669) SHA1(9efb0416e64697717e0abe94266cba76c8e51d90), ROM_SKIP(7) )
+	ROMX_LOAD( "5.bin",	0x000001, 0x80000, CRC(91365595) SHA1(7bec3849f09ede30a60e24dc308f2015895b5445), ROM_SKIP(7) )
+	ROMX_LOAD( "6.bin",	0x000003, 0x80000, CRC(b3cd4553) SHA1(d163f7cb7762660939875b407d622ec270e0b3a5), ROM_SKIP(7) )
+	ROMX_LOAD( "7.bin",	0x000005, 0x80000, CRC(3b940554) SHA1(d63500983b2eb11f360d19d23fff538766d66fa8), ROM_SKIP(7) )
+	ROMX_LOAD( "8.bin",	0x000007, 0x80000, CRC(43704b5a) SHA1(9038e584627cf4ea0221f924ae3ca70560a605bf), ROM_SKIP(7) )
+*/
+	ROMX_LOAD( "ps-1m.3a",  0x000000, 0x80000, CRC(77b7ccab) SHA1(e08e5d55a79e4c0c8ca819d6d7d2a14f753c6ec3) , ROM_GROUPWORD | ROM_SKIP(6) )
+	ROMX_LOAD( "ps-3m.5a",  0x000002, 0x80000, CRC(0122720b) SHA1(5f0d3097e097f64106048156fbb0d343fe78fffa) , ROM_GROUPWORD | ROM_SKIP(6) )
+	ROMX_LOAD( "ps-2m.4a",  0x000004, 0x80000, CRC(64fa58d4) SHA1(d4a774285ed15273195b6b26d2965ce370e54e73) , ROM_GROUPWORD | ROM_SKIP(6) )
+	ROMX_LOAD( "ps-4m.6a",  0x000006, 0x80000, CRC(60da42c8) SHA1(95eec4a58d9628a2d9764951dd8dc11e4860a899) , ROM_GROUPWORD | ROM_SKIP(6) )
+	ROMX_LOAD( "ps-5m.7a",  0x200000, 0x80000, CRC(c54ea839) SHA1(0733f37329edd9d0cace1319a7544b40aa7ecb0b) , ROM_GROUPWORD | ROM_SKIP(6) )
+	ROMX_LOAD( "ps-7m.9a",  0x200002, 0x80000, CRC(04c5acbd) SHA1(fddc94b0f36d4d22d7c357856ae15b7514c342d3) , ROM_GROUPWORD | ROM_SKIP(6) )
+	ROMX_LOAD( "ps-6m.8a",  0x200004, 0x80000, CRC(a544f4cc) SHA1(9552df8934ba25f19a22f2e07783712d8c8ef03c) , ROM_GROUPWORD | ROM_SKIP(6) )
+	ROMX_LOAD( "ps-8m.10a", 0x200006, 0x80000, CRC(8f02f436) SHA1(a2f0ebb7e9593469c7b843f8962a66f3d77f79e5) , ROM_GROUPWORD | ROM_SKIP(6) )
+
+	ROM_REGION( 0x18000, "audiocpu", 0 )
+	ROM_LOAD( "11.bin",	0x00000, 0x08000, CRC(d09d7c7a) SHA1(8e8532be08818c855d9c3ce45716eb07cfab5767) )
+	ROM_CONTINUE(		0x10000, 0x08000 )
+
+	ROM_REGION( 0x40000, "oki", 0 )
+	ROM_LOAD( "9.bin",	0x00000, 0x20000, CRC(bbea1643) SHA1(d43d68a120550067bf0b181f88687ad230cd7908) )
+	ROM_LOAD( "10.bin",	0x20000, 0x20000, CRC(ac58aa71) SHA1(93102272e358bc49d3936302efdc5bb68df84d68) )
+
+	ROM_REGION( 0x3300, "pals", 0 )
+	ROM_LOAD_OPTIONAL( "pal1.jed",	0x0000, 0xbd4, CRC(22a9ff9e) SHA1(b25f9976ecd4e8bc3f0df3437435be356a4b9750) )
+	ROM_LOAD_OPTIONAL( "pal2.jed",	0x0c00, 0xbd4, CRC(8c4a97ac) SHA1(75bee182d4b3fb526853f98ee084ef3e06344a86) )
+	ROM_LOAD_OPTIONAL( "pal3.jed",	0x1800, 0xbd4, CRC(0fdd5375) SHA1(de50bb405bc8cc11f54f6e6abab918b54afcfc97) )
+	ROM_LOAD_OPTIONAL( "pal4.jed",	0x2400, 0xe05, CRC(b2d16eac) SHA1(4b92b3a0b41304c9e094e48124c3bf650761302b) )
+ROM_END
+GAME( 1993,	punisherb,	punisher,	wofhfh,		punisher,	cps1,		ROT0,	"bootleg",	"The Punisher (bootleg, 930422 etc)", GAME_SUPPORTS_SAVE )
+
