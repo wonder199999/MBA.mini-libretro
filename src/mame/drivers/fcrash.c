@@ -636,7 +636,7 @@ static ADDRESS_MAP_START( sgyxz_map, ADDRESS_SPACE_PROGRAM, 16 )
 	AM_RANGE(0x900000, 0x92ffff) AM_RAM_WRITE(cps1_gfxram_w) AM_BASE_SIZE_MEMBER(cps_state, gfxram, gfxram_size)
 	AM_RANGE(0xf1c004, 0xf1c005) AM_WRITE(cpsq_coinctrl2_w)
 	AM_RANGE(0xf1c006, 0xf1c007) AM_READ_PORT("EEPROMIN") AM_WRITE_PORT("EEPROMOUT")
-	AM_RANGE(0xff0000, 0xffffff) AM_RAM
+	AM_RANGE(0xff0000, 0xffffff) AM_RAM AM_BASE_MEMBER(cps_state, mainram)
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( wofsj_map, ADDRESS_SPACE_PROGRAM, 16 )
@@ -650,7 +650,7 @@ static ADDRESS_MAP_START( wofsj_map, ADDRESS_SPACE_PROGRAM, 16 )
 	AM_RANGE(0x88000a, 0x88000f) AM_READ(wof_hack_dsw_r)
 	AM_RANGE(0x900000, 0x92ffff) AM_RAM_WRITE(cps1_gfxram_w) AM_BASE_SIZE_MEMBER(cps_state, gfxram, gfxram_size)
 	AM_RANGE(0xf1c006, 0xf1c007) AM_READ_PORT("EEPROMIN") AM_WRITE_PORT("EEPROMOUT")
-	AM_RANGE(0xff0000, 0xffffff) AM_RAM
+	AM_RANGE(0xff0000, 0xffffff) AM_RAM AM_BASE_MEMBER(cps_state, mainram)
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( punipic_map, ADDRESS_SPACE_PROGRAM, 16 )
@@ -1169,9 +1169,9 @@ static MACHINE_START( sgyxz )
 	state->layer_mask_reg[1] = 0x28;
 	state->layer_mask_reg[2] = 0x2c;
 	state->layer_mask_reg[3] = 0x2e;
-	state->layer_scroll1x_offset = 0x40;
-	state->layer_scroll2x_offset = 0x40;
-	state->layer_scroll3x_offset = 0x40;
+	state->layer_scroll1x_offset = 0x00;
+	state->layer_scroll2x_offset = 0x00;
+	state->layer_scroll3x_offset = 0x00;
 	state->sprite_base = 0x1000;
 	state->sprite_list_end_marker = 0x8000;
 	state->sprite_x_offset = 0x00;
@@ -2861,13 +2861,12 @@ GAME( 1991,	kodb,		kod,		kodb,		kod,		kodb,		ROT0,	"bootleg (Playmark)",	"The Ki
 GAME( 1993,	slampic,	slammast,	slampic,	slammast,	dinopic,	ROT0,	"bootleg",	"Saturday Night Slam Masters (bootleg with PIC16c57)", GAME_IMPERFECT_GRAPHICS | GAME_NO_SOUND | GAME_SUPPORTS_SAVE )
 /* varthb - OK */
 GAME( 1992,	varthb,		varth,		varthb,		varth,		dinopic,	ROT270,	"bootleg",	"Varth: Operation Thunderstorm (bootleg)", GAME_SUPPORTS_SAVE )
-/* punipic - no sound. Problems in Central Park. Patches used. */
+/* punipic / punipic2 - no sound. Problems in Central Park. Patches used. */
 GAME( 1993,	punipic,	punisher,	punipic,	punisher,	punipic,	ROT0,	"bootleg",	"The Punisher (bootleg with PIC16c57, set 1)", GAME_IMPERFECT_GRAPHICS | GAME_NO_SOUND | GAME_SUPPORTS_SAVE )
-/* punipic2 - no sound. Problems in Central Park. Patches used. */
 GAME( 1993,	punipic2,	punisher,	punipic,	punisher,	punipic,	ROT0,	"bootleg",	"The Punisher (bootleg with PIC16c57, set 2)", GAME_IMPERFECT_GRAPHICS | GAME_NO_SOUND | GAME_SUPPORTS_SAVE )
 /* punipic3 - no sound */
 GAME( 1993,	punipic3,	punisher,	punipic,	punisher,	punipic3,	ROT0,	"bootleg",	"The Punisher (bootleg with PIC16c57, set 3)", GAME_IMPERFECT_GRAPHICS | GAME_NO_SOUND | GAME_SUPPORTS_SAVE )
-/* sgyxz and the following wof clones: there is a bit a priority problem between the sprites and layers. */
+/* sgyxz and the following wof clones: has been fixed */
 GAME( 1999,	sgyxz,		wof,		sgyxz,		sgyxz,		sgyxz,		ROT0,	"bootleg(All-In Electronic)", "Sangokushi II: SanGuo YingXiong Zhuan (Chinese bootleg set 3, 921005 Asia)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )
 GAME( 1999,	wofh,		wof,		sgyxz,		sgyxz,		wofh,		ROT0,	"bootleg(All-In Electronic)", "Sangokushi II: Sanguo Yingxiong Zhuan (Chinese bootleg set 1, 921005 Asia)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )
 GAME( 1999,	wofha,		wof,		sgyxz,		sgyxz,		wofh,		ROT0,	"bootleg(All-In Electronic)", "Sangokushi II: Sanguo Yingxiong Zhuan (Chinese bootleg set 2, 921005 Asia)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )

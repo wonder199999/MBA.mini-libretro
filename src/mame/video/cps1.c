@@ -1488,14 +1488,14 @@ static const struct CPS1config cps1_config_table[] =
 	{"wofb",	CPS_B_21_DEF,	mapper_TK263B },
 	{"wofsjb",	CPS_B_21_DEF,	mapper_TK263B,	0x36 },
 	{"wof3js",	CPS_B_21_DEF,	mapper_TK263B },
-	{"wofh",	HACK_WOF_H,	mapper_TK263B },
-	{"wofha",	HACK_WOF_H,	mapper_TK263B },
-	{"sgyxz",	HACK_WOF_H,	mapper_TK263B },
-	{"wof3jsa",	HACK_WOF_H,	mapper_TK263B },
-	{"wofsj",	HACK_WOF_H,	mapper_TK263B },
-	{"wofsja",	HACK_WOF_H,	mapper_TK263B },
-	{"wof3sj",	HACK_WOF_H,	mapper_TK263B },
-	{"wof3sja",	HACK_WOF_H,	mapper_TK263B },
+	{"wofh",	HACK_WOF_H,	mapper_TK263B,	0x00, 0x00, 0x00, 0x64 },
+	{"wofha",	HACK_WOF_H,	mapper_TK263B,	0x00, 0x00, 0x00, 0x64 },
+	{"sgyxz",	HACK_WOF_H,	mapper_TK263B,	0x00, 0x00, 0x00, 0x64 },
+	{"wof3jsa",	HACK_WOF_H,	mapper_TK263B,	0x00, 0x00, 0x00, 0x64 },
+	{"wofsj",	HACK_WOF_H,	mapper_TK263B,	0x00, 0x00, 0x00, 0x64 },
+	{"wofsja",	HACK_WOF_H,	mapper_TK263B,	0x00, 0x00, 0x00, 0x64 },
+	{"wof3sj",	HACK_WOF_H,	mapper_TK263B,	0x00, 0x00, 0x00, 0x64 },
+	{"wof3sja",	HACK_WOF_H,	mapper_TK263B,	0x00, 0x00, 0x00, 0x64 },
 	//
 	{"sf2",		CPS_B_11,	mapper_STF29,	0x36 },
 	{"sf2eb",	CPS_B_17,	mapper_STF29,	0x36 },
@@ -1976,6 +1976,14 @@ void cps1_get_video_base( running_machine *machine )
 			scroll1xoff = 0xffc0;
 			scroll2xoff = 0xffc0;
 			scroll3xoff = 0xffc0;
+		break;
+		case 0x64:			// This kludge flag is only used for SGYXZ and it's similar roms
+			scroll1xoff = 0xffc0;
+			scroll2xoff = 0xffc0;
+			scroll3xoff = 0xffc0;	// layer_mask_reg is an array for bootleg video config, it will only be called by bootleg videoupdate.
+			state->cps_b_regs[state->layer_mask_reg[1] / 2] = state->mainram[0x639a / 2];
+			state->cps_b_regs[state->layer_mask_reg[2] / 2] = state->mainram[0x639c / 2];
+			state->cps_b_regs[state->layer_mask_reg[3] / 2] = state->mainram[0x639e / 2];
 		break;
 		case 0x88:
 			scroll1xoff = 0x04;
