@@ -2489,7 +2489,7 @@ static void cps1_render_sprites( running_machine *machine, bitmap_t *bitmap, con
 					if (colour & 0x20)
 					{
 						for (UINT32 nys = 0; nys < ny; nys++)
-							for (UINT32 nxs = 0; nxs<nx; nxs++)
+							for (UINT32 nxs = 0; nxs < nx; nxs++)
 								DRAWSPRITE( (code & ~0x0f) + ((code + nx - nxs - 1) & 0x0f) + 0x10 * nys,
 									    col, 0x01, 0x00, (x + nxs * 16) & 0x01ff, (y + nys * 16) & 0x01ff);
 					}

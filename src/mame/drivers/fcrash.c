@@ -230,12 +230,12 @@ static WRITE16_HANDLER( punipic3_layer_w )
 	cps_state *state = space->machine->driver_data<cps_state>();
 	switch (offset)
 	{
-		case 0x00: state->cps_a_regs[0x0e / 2] = data; break;
-		case 0x01: state->cps_a_regs[0x0c / 2] = data; break;
-		case 0x02: state->cps_a_regs[0x12 / 2] = state->cps_a_regs[CPS1_ROWSCROLL_OFFS] = data; break;
-		case 0x03: state->cps_a_regs[0x10 / 2] = data + 0xffc0; break;
-		case 0x04: state->cps_a_regs[0x16 / 2] = data; break;
-		case 0x05: state->cps_a_regs[0x14 / 2] = data; break;
+		case 0x00: state->cps_a_regs[0x0e / 2] = data; break;		// scroll1 Y
+		case 0x01: state->cps_a_regs[0x0c / 2] = data; break;		// scroll1 X
+		case 0x02: state->cps_a_regs[0x12 / 2] = state->cps_a_regs[CPS1_ROWSCROLL_OFFS] = data; break;	// scroll2 Y
+		case 0x03: state->cps_a_regs[0x10 / 2] = data + 0xffc0; break;	// scroll2 X
+		case 0x04: state->cps_a_regs[0x16 / 2] = data; break;		// scroll3 Y
+		case 0x05: state->cps_a_regs[0x14 / 2] = data; break;		// scroll3 X
 		case 0x06: state->punipic3_sub_lcc = data; break;
 		case 0x07:
 		{
@@ -249,7 +249,7 @@ static WRITE16_HANDLER( punipic3_layer_w )
 					case 0x7c: data = 0x4780; break;
 				}
 			}
-			else
+			else		/* still has layer problem in Central Park demo */
 			{
 				switch (state->punipic3_sub_lcc)
 				{
@@ -258,7 +258,10 @@ static WRITE16_HANDLER( punipic3_layer_w )
 					case 0x64: data = 0x1200; break;
 				}
 			}
-			state->cps_a_regs[0x08 / 2] = state->mainram[0xdb90 / 2];
+			state->cps_b_regs[state->layer_mask_reg[1] / 2] = state->mainram[0x5b30 / 2]; /* fetch the correct priority masks */
+			state->cps_b_regs[state->layer_mask_reg[2] / 2] = state->mainram[0x5b32 / 2];
+			state->cps_b_regs[state->layer_mask_reg[3] / 2] = state->mainram[0x5b34 / 2];
+			state->cps_a_regs[0x08 / 2] = state->mainram[0xdb90 / 2];	/* get the correct rowscroll table address */
 			state->cps_b_regs[state->layer_enable_reg / 2] = data; break;
 		}
 		default: logerror ("Unknown layer cmd %X\n", data);
@@ -2836,9 +2839,8 @@ GAME( year,  archives name,  parent name,  MACHINE_DRIVER_START, INPUT_PORTS,  D
 */
 /* captcommb2 - Okay */
 GAME( 1991,	captcommb2,	captcomm,	captcommb2,	captcomm,	cps1,		ROT0,	"bootleg",	"Captain Commando (bootleg with YM2151 + 2xMSM5205)", GAME_SUPPORTS_SAVE )
-/* cawingbl - that's ok */
+/* cawingbl / cawingb2 - that's ok */
 GAME( 1990,	cawingbl,	cawing,		cawingbl,	cawingbl,	cawingbl,	ROT0,	"bootleg",	"Carrier Air Wing (bootleg with 2xYM2203 + 2xMSM205 set 1)", GAME_SUPPORTS_SAVE )
-/* cawingb2 - ok */
 GAME( 1990,	cawingb2,	cawing,		cawingbl,	cawingbl,	cawingbl,	ROT0,	"bootleg",	"Carrier Air Wing (bootleg with 2xYM2203 + 2xMSM205 set 2)", GAME_SUPPORTS_SAVE )
 /* dinopic - no sound */
 GAME( 1993,	dinopic,	dino,		dinopic,	dino,		dinopic,	ROT0,	"bootleg",	"Cadillacs and Dinosaurs (bootleg set 1 (with PIC16c57), 930201 etc)", GAME_NO_SOUND | GAME_SUPPORTS_SAVE )
@@ -2846,15 +2848,12 @@ GAME( 1993,	dinopic,	dino,		dinopic,	dino,		dinopic,	ROT0,	"bootleg",	"Cadillacs
 GAME( 1993,	dinopic2,	dino,		dinopic,	dino,		dinopic,	ROT0,	"bootleg",	"Cadillacs and Dinosaurs (bootleg set 2 (with PIC16c57), 930201 etc)", GAME_NO_SOUND | GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )
 /* dinopic3 - no sound, no different from dinopic2 */
 GAME( 1993,	dinopic3,	dino,		dinopic,	dino,		dinopic,	ROT0,	"bootleg",	"Cadillacs and Dinosaurs (bootleg set 3 (with PIC16c57), 930201 etc)", GAME_NO_SOUND | GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )
-/* fcrash - ok */
+/* fcrash & ffightbl & ffightbla - ok */
 GAME( 1990,	fcrash,		ffight,		fcrash,		ffight,		fcrash,		ROT0,	"bootleg (Playmark)",	"Final Crash (bootleg with 2XYM2203 + 2XMSM5205)", GAME_SUPPORTS_SAVE )
-/* ffightbl - ok */
 GAME( 1990,	ffightbl,	ffight,		fcrash,		ffight,		fcrash,		ROT0,	"bootleg",	"Final Fight (bootleg set 1 with 2XYM2203 + 2XMSM5205, World)", GAME_SUPPORTS_SAVE )
-/* ffightbl - ok */
 GAME( 1990,	ffightbla,	ffight,		fcrash,		ffight,		fcrash,		ROT0,	"bootleg",	"Final Fight (bootleg set 2 with 2XYM2203 + 2XMSM5205, World)", GAME_SUPPORTS_SAVE )
-/* knightsb - ok */
+/* knightsb / knightsb4 - ok */
 GAME( 1991,	knightsb,	knights,	knightsb,	knights,	dinopic,	ROT0,	"bootleg",	"Knights of the Round (bootleg set 1 with YM2151 + 2xMSM5205, 911127 etc)", GAME_SUPPORTS_SAVE )
-/* knightsb4 - ok! */
 GAME( 1991,	knightsb4,	knights,	knightsb,	knights,	dinopic,	ROT0,	"bootleg",	"Knights of the Round (bootleg set 4 with YM2151 + 2xMSM5205, 911127 etc)", GAME_SUPPORTS_SAVE )
 /* kodb - ok */
 GAME( 1991,	kodb,		kod,		kodb,		kod,		kodb,		ROT0,	"bootleg (Playmark)",	"The King of Dragons (bootleg, 910731 etc)", GAME_SUPPORTS_SAVE )
@@ -2866,7 +2865,7 @@ GAME( 1992,	varthb,		varth,		varthb,		varth,		dinopic,	ROT270,	"bootleg",	"Varth
 GAME( 1993,	punipic,	punisher,	punipic,	punisher,	punipic,	ROT0,	"bootleg",	"The Punisher (bootleg with PIC16c57, set 1)", GAME_IMPERFECT_GRAPHICS | GAME_NO_SOUND | GAME_SUPPORTS_SAVE )
 /* punipic2 - no sound. Problems in Central Park. Patches used. */
 GAME( 1993,	punipic2,	punisher,	punipic,	punisher,	punipic,	ROT0,	"bootleg",	"The Punisher (bootleg with PIC16c57, set 2)", GAME_IMPERFECT_GRAPHICS | GAME_NO_SOUND | GAME_SUPPORTS_SAVE )
-/* punipic3 - same as punipic */
+/* punipic3 - no sound */
 GAME( 1993,	punipic3,	punisher,	punipic,	punisher,	punipic3,	ROT0,	"bootleg",	"The Punisher (bootleg with PIC16c57, set 3)", GAME_IMPERFECT_GRAPHICS | GAME_NO_SOUND | GAME_SUPPORTS_SAVE )
 /* sgyxz and the following wof clones: there is a bit a priority problem between the sprites and layers. */
 GAME( 1999,	sgyxz,		wof,		sgyxz,		sgyxz,		sgyxz,		ROT0,	"bootleg(All-In Electronic)", "Sangokushi II: SanGuo YingXiong Zhuan (Chinese bootleg set 3, 921005 Asia)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )
