@@ -1931,7 +1931,7 @@ static INPUT_PORTS_START( sf2v0043 )
 	PORT_DIPNAME( 0x30, 0x00, "Turbo Mode" )
 	PORT_DIPSETTING(    0x30, "Turbo" )
 	PORT_DIPSETTING(    0x20, "Fast" )
-	PORT_DIPSETTING(    0x00, "Normal" )
+	PORT_DIPSETTING(    0x00, DEF_STR( Normal ) )
 INPUT_PORTS_END
 
 static INPUT_PORTS_START( sf2accp2 )
@@ -1947,7 +1947,7 @@ static INPUT_PORTS_START( sf2accp2 )
 	PORT_DIPSETTING(    0x38, "Extremely fast" )		// loop counter 30
 	PORT_DIPSETTING(    0x30, "Very fast" )			// loop counter 70
 	PORT_DIPSETTING(    0x28, "Fast" )			// loop counter 90
-	PORT_DIPSETTING(    0x20, "Normal" )			// loop counter 150
+	PORT_DIPSETTING(    0x20, DEF_STR( Normal ) )		// loop counter 150
 	PORT_DIPSETTING(    0x18, "Slow" )			// loop counter 190
 	PORT_DIPSETTING(    0x10, "Very slow" )			// loop counter 230
 	PORT_DIPSETTING(    0x00, "Slowest" )			// loop counter 310
