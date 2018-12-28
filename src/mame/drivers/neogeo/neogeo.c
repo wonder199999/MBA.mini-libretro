@@ -198,7 +198,7 @@ NOTE: On CTRG2-B, The "A" lines start at "A1". If you trace this on an
 #include "cpu/z80/z80.h"
 #include "sound/2610intf.h"
 
-#include "../lh/neogeo.lh"
+#include "neogeo.lh"
 
 #define MEMCARD_SIZE	0x0800
 

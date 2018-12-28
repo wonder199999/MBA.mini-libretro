@@ -43,6 +43,9 @@ VIDEO   = $(MAMEOBJ)/video
 OBJDIRS += \
 	$(AUDIO) \
 	$(DRIVERS) \
+	$(DRIVERS)/capcom		\
+	$(DRIVERS)/irem			\
+	$(DRIVERS)/neogeo		\
 	$(MACHINE) \
 	$(VIDEO) \
 
@@ -93,23 +96,23 @@ DRVLIBS = \
 #-------------------------------------------------
 
 $(MAMEOBJ)/capcom.a: \
-	$(DRIVERS)/cps1.o $(VIDEO)/cps1.o \
-	$(DRIVERS)/cps2.o \
-	$(DRIVERS)/fcrash.o \
+	$(DRIVERS)/capcom/cps1.o $(VIDEO)/cps1.o \
+	$(DRIVERS)/capcom/cps2.o \
+	$(DRIVERS)/capcom/fcrash.o \
 	$(MACHINE)/cps2crpt.o \
 	$(MACHINE)/kabuki.o \
 
 $(MAMEOBJ)/irem.a: \
-	$(DRIVERS)/m92.o $(VIDEO)/m92.o \
+	$(DRIVERS)/irem/m92.o $(VIDEO)/m92.o \
 	$(MACHINE)/irem_cpu.o \
 
 $(MAMEOBJ)/neogeo.a: \
-	$(DRIVERS)/neogeo.o $(VIDEO)/neogeo.o \
+	$(DRIVERS)/neogeo/neogeo.o $(VIDEO)/neogeo.o \
 	$(MACHINE)/neoboot.o \
 	$(MACHINE)/neocrypt.o \
 	$(MACHINE)/neoprot.o \
 
-$(DRIVERS)/neogeo.o:	$(MAMESRC)/drivers/neogeo.inc
+$(DRIVERS)/neogeo.o:	$(MAMESRC)/drivers/neogeo/neogeo.inc
 
 #-------------------------------------------------
 # mame emulator core build
@@ -432,7 +435,6 @@ OBJDIRS += \
 	$(LIBOBJ)/util \
 	$(LIBOBJ)/expat \
 	$(LIBOBJ)/softfloat \
-	$(LIBOBJ)/zlib \
 
 
 #-------------------------------------------------

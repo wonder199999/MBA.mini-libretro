@@ -268,7 +268,7 @@ public:
 };
 
 
-/*----------- defined in drivers/cps1.c -----------*/
+/*----------- defined in drivers/capcom/cps1.c -----------*/
 
 void cps1_irq_handler_mus(running_device *device, int irq);
 
@@ -332,7 +332,7 @@ VIDEO_EOF( cps1 );
 
 DRIVER_INIT( cps2crpt );
 
-/*----------- defined in drivers/cps1.c -----------*/
+/*----------- defined in drivers/capcom/cps1.c -----------*/
 
 INPUT_PORTS_EXTERN( cps1_3b );
 INPUT_PORTS_EXTERN( cps1_2b );

@@ -743,7 +743,7 @@ void retro_get_system_av_info(struct retro_system_av_info *info)
    	info->timing.fps            = refresh_rate;
    	info->timing.sample_rate    = (double)sample_rate;
 
-#if 1	/* Test */
+#if 0	/* Test */
 	int common_factor = 1;
 	if (set_par)
 	{
@@ -982,7 +982,7 @@ static void initInput( running_machine *machine )
    	input_device_item_add(P4_device, "P4 JoyR",  &pad_state[3][KEY_JOYSTICK_R], ITEM_ID_6_PAD, iptdev_get_state);
 
 	/* Neo Geo buttons layout */
-	if (!core_stricmp(machine->gamedrv->source_file, "src/mame/drivers/neogeo.inc"))
+	if (!core_stricmp(machine->gamedrv->source_file, "src/mame/drivers/neogeo/neogeo.inc"))
 	{
       		input_device_item_add(P1_device, "P1 B1", &pad_state[0][KEY_BUTTON_1], ITEM_ID_LALT, 	 iptdev_get_state);
       		input_device_item_add(P1_device, "P1 B2", &pad_state[0][KEY_BUTTON_2], ITEM_ID_LCONTROL, iptdev_get_state);
@@ -1179,7 +1179,7 @@ void osd_init(running_machine *machine)
 	if (!macro_enable)
 		macro_state = 0;
 
-   	write_log("osd init done\n");
+/*   	write_log("osd init done\n");	*/
 }
 
 void osd_update(running_machine *machine, int skip_redraw)
@@ -1263,7 +1263,7 @@ void osd_update(running_machine *machine, int skip_redraw)
 				{
 					adjust_opt[6] = 0;
 					/* RAM access waitstates etc. aren't emulated - slow the CPU to compensate */
-					if (strcmp(machine->gamedrv->source_file, "src/mame/drivers/cps2.c") == 0)
+					if (strcmp(machine->gamedrv->source_file, "src/mame/drivers/capcom/cps2.c") == 0)
 						arroffset[3] *= 0.7375f;
 					else if (strcmp(machine->gamedrv->name, "sf2hf") == 0 || strcmp(machine->gamedrv->name, "sf2hfu") == 0 || strcmp(machine->gamedrv->name, "sf2hfj") == 0)
 						arroffset[3] *= (float)(8.7 / 12.0);
@@ -1386,7 +1386,7 @@ static int parsePath(char *path, char *gamePath, char *gameName)
 		strcpy(gamePath, ".\0");
 		strncpy(gameName, path, dotIndex);
 		gameName[dotIndex] = 0;
-		write_log("*gamePath=%s , *gameName=%s\n", gamePath, gameName);
+/*		write_log("*gamePath=%s , *gameName=%s\n", gamePath, gameName);	*/
 		return 1;
 	}
 
@@ -1417,7 +1417,7 @@ static int getGameInfo(char *gameName, int *rotation, int *driverIndex)
 			*driverIndex = drvindex;
 			*rotation = drivers[drvindex]->flags & 0x07;
 /*			write_log("%-18s\"%s\" rot=%i\n", drivers[drvindex]->name, drivers[drvindex]->description, *rotation); */
-			if (strcmp(drivers[drvindex]->source_file, "src/mame/drivers/neogeo.inc") == 0)
+			if (strcmp(drivers[drvindex]->source_file, "src/mame/drivers/neogeo/neogeo.inc") == 0)
 				is_neogeo = true;
 		}
 	}
@@ -1460,7 +1460,7 @@ static int executeGame(char *path)
 		}
 	}
 
-	write_log("creating frontend...\n");
+/*	write_log("creating frontend...\n");	*/
 
 	//find how many parameters we have
 	for (paramCount = 0; xargv[paramCount] != NULL; paramCount++) ;
@@ -1502,14 +1502,14 @@ static int executeGame(char *path)
 		write_log("Current loaded NEOGEO BIOS is < %s >\n", neogeo_bioses[set_neogeo_bios].bios);
 	}
 
-	write_log("executing frontend... params:%i\n", paramCount);
+/*	write_log("executing frontend... params:%i\n", paramCount);
 
 	for (int i = 0; xargv[i] != NULL; i++)
 	{
 		write_log("%s ", xargv[i]);
 		write_log("\n");
 	}
-
+*/
 	result = cli_execute(paramCount, (char**)xargv, NULL);
 	xargv[paramCount - 2] = NULL;
 

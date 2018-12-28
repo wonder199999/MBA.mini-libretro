@@ -104,7 +104,7 @@ public:
 };
 
 
-/*----------- defined in drivers/neogeo.c -----------*/
+/*----------- defined in drivers/neogeo/neogeo.c -----------*/
 
 void neogeo_set_display_position_interrupt_control(running_machine *machine, UINT16 data);
 void neogeo_set_display_counter_msb(address_space *space, UINT16 data);

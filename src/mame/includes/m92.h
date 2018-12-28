@@ -44,7 +44,7 @@ public:
 };
 
 
-/*----------- defined in drivers/m92.c -----------*/
+/*----------- defined in drivers/irem/m92.c -----------*/
 
 void m92_sprite_interrupt(running_machine *machine);
 

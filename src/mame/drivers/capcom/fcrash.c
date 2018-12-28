@@ -69,7 +69,7 @@ None of this is hooked up currently due to issues with row scroll on the scroll2
 
 /* -------------- Custom Functions ---------------- */
 
-static WRITE16_HANDLER( fcrash_soundlatch_w )
+static WRITE16_HANDLER( fcrash_soundlatch_w )	/* 'captcommb2' and 'knightsb' also uses it */
 {
 	if (ACCESSING_BITS_0_7)
 	{
@@ -86,7 +86,7 @@ static WRITE16_HANDLER( sf2mdt_soundlatch_w )	/* The function will also be used 
 		cps_state *state = space->machine->driver_data<cps_state>();
 		soundlatch_w(space, 0, data >> 8);
 		cpu_set_input_line(state->audiocpu, 0, HOLD_LINE);
-		cpuexec_boost_interleave( space->machine, attotime_zero, ATTOTIME_IN_USEC(50) );
+		cpuexec_boost_interleave( space->machine, attotime_zero, ATTOTIME_IN_USEC(50) );	/* boost the interleave or some voices dropped */
 	}
 }
 
@@ -149,16 +149,6 @@ static const msm5205_interface msm5205_interface1 = { m5205_int1, MSM5205_S96_4B
 static const msm5205_interface msm5205_interface2 = { m5205_int2, MSM5205_S96_4B };
 static const ym2151_interface ym2151_config = { cps1_irq_handler_mus };
 
-static WRITE16_HANDLER( kodb_layer_w )		/* The function will also be used for 'cawingbl' */
-{
-	cps_state *state = space->machine->driver_data<cps_state>();
-	switch (offset)
-	{
-		case 0x06: state->cps_b_regs[state->layer_enable_reg / 2] = data; break;
-		case 0x10: state->cps_b_regs[state->layer_mask_reg[1] / 2] = data; break;
-		case 0x11: state->cps_b_regs[state->layer_mask_reg[2] / 2] = data;
-	}
-}
 
 static WRITE16_HANDLER( dinopic_layer_w )
 {
@@ -171,7 +161,7 @@ static WRITE16_HANDLER( dinopic_layer_w )
 		case 0x03: state->cps_a_regs[0x10 / 2] = data; break;
 		case 0x04: state->cps_a_regs[0x16 / 2] = data; break;
 		case 0x05: state->cps_a_regs[0x14 / 2] = data; break;
-		default: logerror("Unknown layer cmd %X %X\n", offset << 1, data);
+		default: logerror("Unknown layer cmd %X %X\n", offset << 1, data); break;
 	}
 }
 
@@ -179,6 +169,54 @@ static WRITE16_HANDLER( dinopic_layer2_w )
 {
 	cps_state *state = space->machine->driver_data<cps_state>();
 	state->cps_a_regs[0x06 / 2] = data;
+}
+
+static WRITE16_HANDLER( kodb_layer_w )		/* The function will also be used for 'cawingbl' */
+{
+	cps_state *state = space->machine->driver_data<cps_state>();
+	switch (offset)
+	{
+		case 0x06: state->cps_b_regs[state->layer_enable_reg / 2] = data; break;
+		case 0x10: state->cps_b_regs[state->layer_mask_reg[1] / 2] = data; break;
+		case 0x11: state->cps_b_regs[state->layer_mask_reg[2] / 2] = data; break;
+	}
+}
+
+static WRITE16_HANDLER( knightsb_layer_w )
+{
+	cps_state *state = space->machine->driver_data<cps_state>();
+	switch (offset)
+	{
+		case 0x00: state->cps_a_regs[0x0e / 2] = data; break;
+		case 0x01: state->cps_a_regs[0x0c / 2] = data; break;
+		case 0x02: state->cps_a_regs[0x12 / 2] = state->cps_a_regs[CPS1_ROWSCROLL_OFFS] = data; break;
+		case 0x03: state->cps_a_regs[0x10 / 2] = data; break;
+		case 0x04: state->cps_a_regs[0x16 / 2] = data; break;
+		case 0x05: state->cps_a_regs[0x14 / 2] = data; break;
+		case 0x06:
+		{
+			switch (data)
+			{
+				case 0x0000:
+				case 0x001f:
+				case 0x00ff:
+				case 0x07ff: data = 0x12c0; break;
+				case 0x2000: data = 0x06c0; break;
+				case 0x5800:
+				case 0x5f00: data = 0x12c0; break;
+				case 0x80ff:
+				case 0x87ff: data = 0x1380; break;
+				case 0xa000: data = 0x24c0; break;
+				case 0xd800: data = 0x1380; break;
+				default: logerror ("Unknown control word = %X\n", data); data = 0x12c0; break;
+			}
+			state->cps_b_regs[state->layer_enable_reg / 2] = data; break;
+		}
+		case 0x10: state->cps_b_regs[state->layer_mask_reg[1] / 2] = data; break;
+		case 0x11: state->cps_b_regs[state->layer_mask_reg[2] / 2] = data; break;
+		case 0x12: state->cps_b_regs[state->layer_mask_reg[3] / 2] = data; break;
+		default: logerror ("Unknown layer command! %X\n", offset); break;
+	}
 }
 
 static WRITE16_HANDLER( slampic_layer_w )
@@ -268,43 +306,6 @@ static WRITE16_HANDLER( punipic3_layer_w )
 	}
 }
 
-static WRITE16_HANDLER( knightsb_layer_w )
-{
-	cps_state *state = space->machine->driver_data<cps_state>();
-	switch (offset)
-	{
-		case 0x00: state->cps_a_regs[0x0e / 2] = data; break;
-		case 0x01: state->cps_a_regs[0x0c / 2] = data; break;
-		case 0x02: state->cps_a_regs[0x12 / 2] = state->cps_a_regs[CPS1_ROWSCROLL_OFFS] = data; break;
-		case 0x03: state->cps_a_regs[0x10 / 2] = data; break;
-		case 0x04: state->cps_a_regs[0x16 / 2] = data; break;
-		case 0x05: state->cps_a_regs[0x14 / 2] = data; break;
-		case 0x06:
-		{
-			switch (data)
-			{
-				case 0x0000:
-				case 0x001f:
-				case 0x00ff:
-				case 0x07ff: data = 0x12c0; break;
-				case 0x2000: data = 0x06c0; break;
-				case 0x5800:
-				case 0x5f00: data = 0x12c0; break;
-				case 0x80ff:
-				case 0x87ff: data = 0x1380; break;
-				case 0xa000: data = 0x24c0; break;
-				case 0xd800: data = 0x1380; break;
-				default: logerror ("Unknown control word = %X\n", data); data = 0x12c0; break;
-			}
-			state->cps_b_regs[state->layer_enable_reg / 2] = data; break;
-		}
-		case 0x10: state->cps_b_regs[state->layer_mask_reg[1] / 2] = data; break;
-		case 0x11: state->cps_b_regs[state->layer_mask_reg[2] / 2] = data; break;
-		case 0x12: state->cps_b_regs[state->layer_mask_reg[3] / 2] = data; break;
-		default: logerror ("Unknown layer command! %X\n", offset); break;
-	}
-}
-
 static WRITE16_HANDLER( varthb_layer_w )
 {
 	cps_state *state = space->machine->driver_data<cps_state>();
@@ -388,7 +389,7 @@ static WRITE16_HANDLER( sf2mdta_layer_w )
 		case 0x02: state->cps_a_regs[0x14 / 2] = data + 0xffbe; break;	// SCROLL 3X
 		case 0x03: state->cps_a_regs[0x12 / 2] = state->cps_a_regs[CPS1_ROWSCROLL_OFFS] = data;
 			   state->cps_a_regs[0x08 / 2] = state->mainram[0x802e / 2]; break;
-		case 0x04: state->cps_a_regs[0x10 / 2] = 0xffc0; break;		// SCROLL 2X
+		case 0x04: state->cps_a_regs[0x10 / 2] = 0xffc0; break;		// SCROLL 2X - yes, 0xffc0 is key to solving the problem
 		case 0x05: state->cps_a_regs[0x16 / 2] = data; break;
 		case 0x20: state->cps_b_regs[state->layer_enable_reg / 2] = data; break;
 	}
@@ -2720,7 +2721,7 @@ static DRIVER_INIT( punipic )
 	ram[0x4df8 / 2] = 0x4e75;
 
 	DRIVER_INIT_CALL(dinopic);
-	memory_install_write16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x980000, 0x98001f, 0, 0, punipic_layer_w);
+	memory_install_write16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x980000, 0x98000f, 0, 0, punipic_layer_w);
 }
 
 static DRIVER_INIT( punipic3 )
@@ -2866,7 +2867,7 @@ GAME( 1993,	punipic,	punisher,	punipic,	punisher,	punipic,	ROT0,	"bootleg",	"The
 GAME( 1993,	punipic2,	punisher,	punipic,	punisher,	punipic,	ROT0,	"bootleg",	"The Punisher (bootleg with PIC16c57, set 2)", GAME_IMPERFECT_GRAPHICS | GAME_NO_SOUND | GAME_SUPPORTS_SAVE )
 /* punipic3 - no sound */
 GAME( 1993,	punipic3,	punisher,	punipic,	punisher,	punipic3,	ROT0,	"bootleg",	"The Punisher (bootleg with PIC16c57, set 3)", GAME_IMPERFECT_GRAPHICS | GAME_NO_SOUND | GAME_SUPPORTS_SAVE )
-/* sgyxz and the following wof clones: has been fixed */
+/* sgyxz and the following wof clones has been fixed */
 GAME( 1999,	sgyxz,		wof,		sgyxz,		sgyxz,		sgyxz,		ROT0,	"bootleg(All-In Electronic)", "Sangokushi II: SanGuo YingXiong Zhuan (Chinese bootleg set 3, 921005 Asia)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )
 GAME( 1999,	wofh,		wof,		sgyxz,		sgyxz,		wofh,		ROT0,	"bootleg(All-In Electronic)", "Sangokushi II: Sanguo Yingxiong Zhuan (Chinese bootleg set 1, 921005 Asia)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )
 GAME( 1999,	wofha,		wof,		sgyxz,		sgyxz,		wofh,		ROT0,	"bootleg(All-In Electronic)", "Sangokushi II: Sanguo Yingxiong Zhuan (Chinese bootleg set 2, 921005 Asia)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )
@@ -2886,4 +2887,3 @@ GAME( 1992,	sf2mdt,		sf2ce,		sf2mdt,		sf2mdt,		sf2mdt,		ROT0,	"bootleg",	"Street
 /* sf2mdta / sf2mdtb - OK */
 GAME( 1992,	sf2mdta,	sf2ce,		sf2mdt,		sf2mdt,		sf2mdta,	ROT0,	"bootleg",	"Street Fighter II': Magic Delta Turbo (bootleg set 2 with YM2151 + 2xMSM5205, 920313 etc)", GAME_SUPPORTS_SAVE )
 GAME( 1992,	sf2mdtb,	sf2ce,		sf2mdt,		sf2mdt,		sf2mdta,	ROT0,	"bootleg",	"Street Fighter II': Magic Delta Turbo (bootleg set 3 with YM2151 + 2xMSM5205, 920313 etc)", GAME_SUPPORTS_SAVE )
-
