@@ -12,7 +12,6 @@
 #include "emu.h"
 #include "emuopts.h"
 #include "video/vector.h"
-//#include "machine/laserdsc.h"
 #include "profiler.h"
 #include "render.h"
 #include "cheat.h"
@@ -154,14 +153,9 @@ static INT32 slider_xscale(running_machine *machine, void *arg, astring *string,
 static INT32 slider_yscale(running_machine *machine, void *arg, astring *string, INT32 newval);
 static INT32 slider_xoffset(running_machine *machine, void *arg, astring *string, INT32 newval);
 static INT32 slider_yoffset(running_machine *machine, void *arg, astring *string, INT32 newval);
-//static INT32 slider_overxscale(running_machine *machine, void *arg, astring *string, INT32 newval);
-//static INT32 slider_overyscale(running_machine *machine, void *arg, astring *string, INT32 newval);
-//static INT32 slider_overxoffset(running_machine *machine, void *arg, astring *string, INT32 newval);
-//static INT32 slider_overyoffset(running_machine *machine, void *arg, astring *string, INT32 newval);
 static INT32 slider_flicker(running_machine *machine, void *arg, astring *string, INT32 newval);
 static INT32 slider_beam(running_machine *machine, void *arg, astring *string, INT32 newval);
 static char *slider_get_screen_desc(screen_device &screen);
-//static char *slider_get_laserdisc_desc(device_t *screen);
 
 #ifdef MAME_DEBUG
 static INT32 slider_crossscale(running_machine *machine, void *arg, astring *string, INT32 newval);
@@ -278,15 +272,14 @@ static void ui_exit(running_machine &machine)
 
 int ui_display_startup_screens(running_machine *machine, int first_time, int show_disclaimer)
 {
-	const int maxstate = 3;
 	int str = options_get_int(machine->options(), OPTION_SECONDS_TO_RUN);
-	int show_gameinfo = !options_get_bool(machine->options(), OPTION_SKIP_GAMEINFO);
+	/* for non libco */
+	show_disclaimer = FALSE;
+	int show_gameinfo = FALSE; // !options_get_bool(machine->options(), OPTION_SKIP_GAMEINFO);
 	int show_warnings = !options_get_bool(machine->options(), OPTION_SKIP_WARNINGS);
-	int state;
-	show_gameinfo = show_warnings = show_disclaimer = FALSE;
 
 	/* disable everything if we are using -str for 300 or fewer seconds, or if we're the empty driver,
-       or if we are debugging */
+	   or if we are debugging */
 	if (!first_time || (str > 0 && str < 60*5) || machine->gamedrv == &GAME_NAME(empty) || (machine->debug_flags & DEBUG_FLAG_ENABLED) != 0)
 		show_gameinfo = show_warnings = show_disclaimer = FALSE;
 
@@ -295,7 +288,9 @@ int ui_display_startup_screens(running_machine *machine, int first_time, int sho
 
 	/* loop over states */
 	ui_set_handler(handler_ingame, 0);
-	for (state = 0; state < maxstate && !machine->scheduled_event_pending() && !ui_menu_is_force_game_select(); state++)
+
+	const int maxstate = 3;
+	for (int state = 0; state < maxstate && !machine->scheduled_event_pending() && !ui_menu_is_force_game_select(); state++)
 	{
 		/* default to standard colors */
 		messagebox_backcolor = UI_BACKGROUND_COLOR;
@@ -306,23 +301,32 @@ int ui_display_startup_screens(running_machine *machine, int first_time, int sho
 			case 0:
 				if (show_disclaimer && disclaimer_string(machine, messagebox_text).len() > 0)
 					ui_set_handler(handler_messagebox_ok, 0);
-				break;
-
+			break;
 			case 1:
-				if (show_warnings && warnings_string(machine, messagebox_text).len() > 0)
+				if (show_warnings)
 				{
-					ui_set_handler(handler_messagebox_ok, 0);
-					if (machine->gamedrv->flags & (GAME_WRONG_COLORS | GAME_IMPERFECT_COLORS | GAME_REQUIRES_ARTWORK | GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND | GAME_NO_SOUND))
-						messagebox_backcolor = UI_YELLOW_COLOR;
-					if (machine->gamedrv->flags & (GAME_NOT_WORKING | GAME_UNEMULATED_PROTECTION))
-						messagebox_backcolor = UI_RED_COLOR;
-				}
-				break;
+					UINT32 getflags = machine->gamedrv->flags;
 
+					if (getflags & (GAME_NOT_WORKING | GAME_UNEMULATED_PROTECTION))
+						ui_popup_time(0x0a, "WARNING: THIS GAME DOESN'T WORK.");
+					else if (getflags & (GAME_WRONG_COLORS | GAME_IMPERFECT_COLORS))
+						ui_popup_time(0x0a, "WARNING: The colors aren't 100%% accurate.");
+					else if ((getflags & GAME_IMPERFECT_GRAPHICS) && (getflags & GAME_NO_SOUND))
+						ui_popup_time(0x0a, "WARNING: The video emulation isn't 100%% accurate.\nWARNING: The game lacks sound.");
+					else if ((getflags & GAME_IMPERFECT_GRAPHICS) && (getflags & GAME_IMPERFECT_SOUND))
+						ui_popup_time(0x0a, "WARNING: The video emulation isn't 100%% accurate.\nWARNING: The sound emulation isn't 100%% accurate.");
+					else if (getflags & GAME_IMPERFECT_GRAPHICS)
+						ui_popup_time(0x0a, "WARNING: The video emulation isn't 100%% accurate.");
+					else if (getflags & GAME_NO_SOUND)
+						ui_popup_time(0x0a, "WARNING: The game lacks sound.");
+					else if (getflags & GAME_IMPERFECT_SOUND)
+						ui_popup_time(0x0a, "WARNING: The sound emulation isn't 100%% accurate.");
+				}
+			break;
 			case 2:
 				if (show_gameinfo && game_info_astring(machine, messagebox_text).len() > 0)
 					ui_set_handler(handler_messagebox_anykey, 0);
-				break;
+			break;
 		}
 
 		/* clear the input memory */
@@ -388,7 +392,7 @@ void ui_update_and_render(running_machine *machine, render_container *container)
 		if (alpha > 255)
 			alpha = 255;
 		if (alpha >= 0)
-			render_container_add_rect(container, 0.0f, 0.0f, 1.0f, 1.0f, MAKE_ARGB(alpha,0x00,0x00,0x00), PRIMFLAG_BLENDMODE(BLENDMODE_ALPHA));
+			render_container_add_rect(container, 0.0f, 0.0f, 1.0f, 1.0f, MAKE_ARGB(alpha, 0x00, 0x00, 0x00), PRIMFLAG_BLENDMODE(BLENDMODE_ALPHA));
 	}
 
 	/* render any cheat stuff at the bottom */
@@ -771,7 +775,7 @@ void CLIB_DECL ui_popup_time(int seconds, const char *text, ...)
 	va_list arg;
 
 	/* extract the text */
-	va_start(arg,text);
+	va_start(arg, text);
 	messagebox_text.vprintf(text, arg);
 	messagebox_backcolor = UI_BACKGROUND_COLOR;
 	va_end(arg);
@@ -1174,12 +1178,12 @@ static UINT32 handler_messagebox_anykey(running_machine *machine, render_contain
 
 int ui_use_newui( void )
 {
-	#ifdef MESS
+#ifdef MESS
 	#if (defined(WIN32) || defined(_MSC_VER)) && !defined(SDLMAME_WIN32)
 		if (options_get_bool(mame_options(), "newui"))
 			return TRUE;
 	#endif
-	#endif
+#endif
 	return FALSE;
 }
 
@@ -1695,33 +1699,6 @@ static slider_state *slider_init(running_machine *machine)
 		tailptr = &(*tailptr)->next;
 	}
 
-/*	for (device = machine->m_devicelist.first(LASERDISC); device != NULL; device = device->typenext())
-	{
-		const laserdisc_config *config = (const laserdisc_config *)downcast<const legacy_device_config_base &>(device->baseconfig()).inline_config();
-		if (config->overupdate != NULL)
-		{
-			int defxscale = floor(config->overscalex * 1000.0f + 0.5f);
-			int defyscale = floor(config->overscaley * 1000.0f + 0.5f);
-			int defxoffset = floor(config->overposx * 1000.0f + 0.5f);
-			int defyoffset = floor(config->overposy * 1000.0f + 0.5f);
-			void *param = (void *)device;
-
-			// add scale and offset controls per-overlay
-			string.printf("%s Horiz Stretch", slider_get_laserdisc_desc(device));
-			*tailptr = slider_alloc(machine, string, 500, (defxscale == 0) ? 1000 : defxscale, 1500, 2, slider_overxscale, param);
-			tailptr = &(*tailptr)->next;
-			string.printf("%s Horiz Position", slider_get_laserdisc_desc(device));
-			*tailptr = slider_alloc(machine, string, -500, defxoffset, 500, 2, slider_overxoffset, param);
-			tailptr = &(*tailptr)->next;
-			string.printf("%s Vert Stretch", slider_get_laserdisc_desc(device));
-			*tailptr = slider_alloc(machine, string, 500, (defyscale == 0) ? 1000 : defyscale, 1500, 2, slider_overyscale, param);
-			tailptr = &(*tailptr)->next;
-			string.printf("%s Vert Position", slider_get_laserdisc_desc(device));
-			*tailptr = slider_alloc(machine, string, -500, defyoffset, 500, 2, slider_overyoffset, param);
-			tailptr = &(*tailptr)->next;
-		}
-	}
-*/
 	for (screen_device *screen = screen_first(*machine); screen != NULL; screen = screen_next(screen))
 		if (screen->screen_type() == SCREEN_TYPE_VECTOR)
 		{
@@ -2006,94 +1983,6 @@ static INT32 slider_yoffset(running_machine *machine, void *arg, astring *string
 
 
 /*-------------------------------------------------
-    slider_overxscale - screen horizontal scale slider
-    callback
--------------------------------------------------
-
-static INT32 slider_overxscale(running_machine *machine, void *arg, astring *string, INT32 newval)
-{
-	device_t *laserdisc = (device_t *)arg;
-	laserdisc_config settings;
-
-	laserdisc_get_config(laserdisc, &settings);
-	if (newval != SLIDER_NOCHANGE)
-	{
-		settings.overscalex = (float)newval * 0.001f;
-		laserdisc_set_config(laserdisc, &settings);
-	}
-	if (string != NULL)
-		string->printf("%.3f", settings.overscalex);
-	return floor(settings.overscalex * 1000.0f + 0.5f);
-}
-*/
-
-/*-------------------------------------------------
-    slider_overyscale - screen vertical scale slider
-    callback
--------------------------------------------------
-
-static INT32 slider_overyscale(running_machine *machine, void *arg, astring *string, INT32 newval)
-{
-	device_t *laserdisc = (device_t *)arg;
-	laserdisc_config settings;
-
-	laserdisc_get_config(laserdisc, &settings);
-	if (newval != SLIDER_NOCHANGE)
-	{
-		settings.overscaley = (float)newval * 0.001f;
-		laserdisc_set_config(laserdisc, &settings);
-	}
-	if (string != NULL)
-		string->printf("%.3f", settings.overscaley);
-	return floor(settings.overscaley * 1000.0f + 0.5f);
-}
-*/
-
-/*-------------------------------------------------
-    slider_overxoffset - screen horizontal position
-    slider callback
--------------------------------------------------
-
-static INT32 slider_overxoffset(running_machine *machine, void *arg, astring *string, INT32 newval)
-{
-	device_t *laserdisc = (device_t *)arg;
-	laserdisc_config settings;
-
-	laserdisc_get_config(laserdisc, &settings);
-	if (newval != SLIDER_NOCHANGE)
-	{
-		settings.overposx = (float)newval * 0.001f;
-		laserdisc_set_config(laserdisc, &settings);
-	}
-	if (string != NULL)
-		string->printf("%.3f", settings.overposx);
-	return floor(settings.overposx * 1000.0f + 0.5f);
-}
-*/
-
-/*-------------------------------------------------
-    slider_overyoffset - screen vertical position
-    slider callback
--------------------------------------------------
-
-static INT32 slider_overyoffset(running_machine *machine, void *arg, astring *string, INT32 newval)
-{
-	device_t *laserdisc = (device_t *)arg;
-	laserdisc_config settings;
-
-	laserdisc_get_config(laserdisc, &settings);
-	if (newval != SLIDER_NOCHANGE)
-	{
-		settings.overposy = (float)newval * 0.001f;
-		laserdisc_set_config(laserdisc, &settings);
-	}
-	if (string != NULL)
-		string->printf("%.3f", settings.overposy);
-	return floor(settings.overposy * 1000.0f + 0.5f);
-}
-*/
-
-/*-------------------------------------------------
     slider_flicker - vector flicker slider
     callback
 -------------------------------------------------*/
@@ -2141,25 +2030,6 @@ static char *slider_get_screen_desc(screen_device &screen)
 	return descbuf;
 }
 
-
-/*-------------------------------------------------
-    slider_get_laserdisc_desc - returns the
-    description for a given laseridsc
--------------------------------------------------
-
-static char *slider_get_laserdisc_desc(device_t *laserdisc)
-{
-	int ldcount = laserdisc->machine->m_devicelist.count(LASERDISC);
-	static char descbuf[256];
-
-	if (ldcount > 1)
-		sprintf(descbuf, "Laserdisc '%s'", laserdisc->tag());
-	else
-		strcpy(descbuf, "Laserdisc");
-
-	return descbuf;
-}
-*/
 
 /*-------------------------------------------------
     slider_crossscale - crosshair scale slider
@@ -2221,4 +2091,3 @@ void ui_set_use_natural_keyboard(running_machine *machine, int use_natural_keybo
 	ui_use_natural_keyboard = use_natural_keyboard;
 	options_set_bool(machine->options(), OPTION_NATURAL_KEYBOARD, use_natural_keyboard, OPTION_PRIORITY_CMDLINE);
 }
-
