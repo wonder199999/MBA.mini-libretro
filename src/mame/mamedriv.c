@@ -921,7 +921,6 @@ const game_driver *const drivers[] =
 	DRIVER( kof97 )			/* 0232 (c) 1997 SNK */
 	DRIVER( kof97h )		/* 0232 (c) 1997 SNK */
 	DRIVER( kof97pls )		/* bootleg of kof97 */
-	DRIVER( kog )			/* bootleg of kof97 */
 	DRIVER( magdrop3 )		/* 0233 (c) 1997 Data East Corporation */
 	DRIVER( lastblad )		/* 0234 (c) 1997 SNK */
 	DRIVER( lastbladh )		/* 0234 (c) 1997 SNK */
@@ -1014,15 +1013,12 @@ const game_driver *const drivers[] =
 	DRIVER( kf2k3upl )		/* bootleg */
 	DRIVER( samsh5sp )		/* 0272 (c) 2004 Playmore */
 	DRIVER( samsh5sph )		/* 0272 (c) 2004 Playmore */
-
 	/* The BrezzaSoft games don't have proper ID codes */
 	DRIVER( jockeygp )
 	DRIVER( vliner )
 	DRIVER( vlinero )
-
 	/* Nor does Digger Man */
 	DRIVER( diggerma )		/* No Game ID (unlicensed), (c) 2000 Kyle Hodgetts, prototype */
-
 	/* Neo Print */
 	DRIVER( 98best44 )
 
@@ -1059,10 +1055,8 @@ const game_driver *const drivers[] =
 	DRIVER( kof97pla )		/* The King of Fighters' 97 Oroshi Plus 2003 set 1 (bootleg of kof97) */
 	DRIVER( kof97xt )		/* The King of Fighters' 97 - Final Battle (bootleg, hack) */
 	DRIVER( kof98a )		/* The King of Fighters' 98 (NGM-2420, alternate board) */
-	DRIVER( kof98ae )		/* (NOT_WORKING) The King of Fighters' 98 Anniversary Edition, EGHT hack  !!Note: It's very unstable. the graphics are flawed. these are said to be related to MAME's M68K CPU drivers. */
 	DRIVER( kof99h )		/* The King of Fighters' 99 (NGH-2510) */
 	DRIVER( kof99ae )		/* The King of Fighters' 99 15th Anniversary Edition, bootleg */
-	DRIVER( kogplus )		/* King of Giadiator (bootleg of kof97) */
 	DRIVER( kotm2p )		/* King of the Monsters 2 - The Next Thing (prototype) */
 	DRIVER( lresortp )		/* Last Resort (prototype) */
 	DRIVER( mslug2t )		/* Metal Slug 2 turbo (hack) */
@@ -1072,16 +1066,20 @@ const game_driver *const drivers[] =
 	DRIVER( wh2ja )			/* World Heroes 2 Jet (ADM-007) */
 	DRIVER( sengoku3s )		/* Sengoku 3 / Sengoku Densho 2001 , FCHT hack */
 	DRIVER( lhcdb )			/* Last Hope (bootleg of CD version) */
-	DRIVER( unkneo )		/* unkneo (Dragon's Heaven), development board */
 	DRIVER( totcarib )		/* Treasure of the Caribbean */
 	DRIVER( samsho5x )		/* Samurai Shodown V / Samurai Spirits Zero (XBOX version, hack) */
 	DRIVER( mslug5b )		/* Metal Slug 5 (bootleg) */
 	DRIVER( samsh5spho )		/* Samurai Shodown V Special / Samurai Spirits Zero Special (NGH-2720) (1st release, censored) */
 	DRIVER( zintrkcd )		/* Zintrick / Oshidashi Zentrix (NGCD Conversion) */
 	DRIVER( lastblada )		/* The Last Blade / Bakumatsu Roman - Gekka no Kenshi (NGM-2340, alternate board) */
+	DRIVER( unkneo )		/* unkneo (Dragon's Heaven), development board */
+
+	DRIVER( kof98ae )		/* (NOT_WORKING) The King of Fighters' 98 Anniversary Edition, EGHT hack  !!Note: It's very unstable. the graphics are flawed. these are said to be related to MAME's M68K CPU drivers. */
 	DRIVER( kof98ae2016 )		/* hackrom */
 	DRIVER( kof98cb )		/* hackrom */
 	DRIVER( kof98co )		/* hackrom */
+	DRIVER( kog )			/* bootleg of kof97 */
+	DRIVER( kogplus )		/* King of Giadiator (bootleg of kof97) */
 
 
 #endif	/* DRIVER_RECURSIVE */

@@ -215,8 +215,8 @@ static void set_m92_bank(running_machine *machine)
 {
 	m92_state *state = machine->driver_data<m92_state>();
 
-	UINT8 *ROM = memory_region(machine, "maincpu");
-	memory_set_bankptr(machine, "bank1", &ROM[state->bank_address]);
+	UINT8 *ram = memory_region(machine, "maincpu");
+	memory_set_bankptr(machine, "bank1", &ram[state->bank_address]);
 }
 
 static STATE_POSTLOAD( m92_postload )
@@ -316,7 +316,13 @@ void m92_sprite_interrupt(running_machine *machine)
 
 /*****************************************************************************/
 
-enum { VECTOR_INIT, YM2151_ASSERT, YM2151_CLEAR, V35_ASSERT, V35_CLEAR };
+enum {
+	VECTOR_INIT,
+	YM2151_ASSERT,
+	YM2151_CLEAR,
+	V35_ASSERT,
+	V35_CLEAR
+};
 
 static TIMER_CALLBACK( setvector_callback )
 {
@@ -397,28 +403,28 @@ static const ym2151_interface ym2151_config = { sound_irq };
 /*****************************************************************************/
 
 static ADDRESS_MAP_START( m92_map, ADDRESS_SPACE_PROGRAM, 16 )
-	AM_RANGE(0x00000, 0x9ffff) AM_ROM
-	AM_RANGE(0xa0000, 0xbffff) AM_ROMBANK("bank1")
-	AM_RANGE(0xc0000, 0xcffff) AM_ROMBANK("bank2")		/* Mirror of rom: Used by In The Hunt as protection */
-	AM_RANGE(0xd0000, 0xdffff) AM_RAM_WRITE(m92_vram_w) AM_BASE_MEMBER(m92_state, vram_data)
-	AM_RANGE(0xe0000, 0xeffff) AM_RAM			/* System ram */
-	AM_RANGE(0xf8000, 0xf87ff) AM_RAM AM_BASE_SIZE_GENERIC(spriteram)
-	AM_RANGE(0xf8800, 0xf8fff) AM_READWRITE(m92_paletteram_r, m92_paletteram_w)
-	AM_RANGE(0xf9000, 0xf900f) AM_WRITE(m92_spritecontrol_w) AM_BASE_MEMBER(m92_state, sprite_control)
-	AM_RANGE(0xf9800, 0xf9801) AM_WRITE(m92_videocontrol_w)
-	AM_RANGE(0xffff0, 0xfffff) AM_ROM
+	AM_RANGE(0x000000, 0x09ffff) AM_ROM
+	AM_RANGE(0x0a0000, 0x0bffff) AM_ROMBANK("bank1")
+	AM_RANGE(0x0c0000, 0x0cffff) AM_ROMBANK("bank2")	/* Mirror of rom: Used by In The Hunt as protection */
+	AM_RANGE(0x0d0000, 0x0dffff) AM_RAM_WRITE(m92_vram_w) AM_BASE_MEMBER(m92_state, vram_data)
+	AM_RANGE(0x0e0000, 0x0effff) AM_RAM			/* System ram */
+	AM_RANGE(0x0f8000, 0x0f87ff) AM_RAM AM_BASE_SIZE_GENERIC(spriteram)
+	AM_RANGE(0x0f8800, 0x0f8fff) AM_READWRITE(m92_paletteram_r, m92_paletteram_w)
+	AM_RANGE(0x0f9000, 0x0f900f) AM_WRITE(m92_spritecontrol_w) AM_BASE_MEMBER(m92_state, sprite_control)
+	AM_RANGE(0x0f9800, 0x0f9801) AM_WRITE(m92_videocontrol_w)
+	AM_RANGE(0x0ffff0, 0x0fffff) AM_ROM
 ADDRESS_MAP_END
 
 /* appears to be an earlier board */
 static ADDRESS_MAP_START( lethalth_map, ADDRESS_SPACE_PROGRAM, 16 )
-	AM_RANGE(0x00000, 0x7ffff) AM_ROM
-	AM_RANGE(0x80000, 0x8ffff) AM_RAM_WRITE(m92_vram_w) AM_BASE_MEMBER(m92_state, vram_data)
-	AM_RANGE(0xe0000, 0xeffff) AM_RAM			/* System ram */
-	AM_RANGE(0xf8000, 0xf87ff) AM_RAM AM_BASE_SIZE_GENERIC(spriteram)
-	AM_RANGE(0xf8800, 0xf8fff) AM_READWRITE(m92_paletteram_r, m92_paletteram_w)
-	AM_RANGE(0xf9000, 0xf900f) AM_WRITE(m92_spritecontrol_w) AM_BASE_MEMBER(m92_state, sprite_control)
-	AM_RANGE(0xf9800, 0xf9801) AM_WRITE(m92_videocontrol_w)
-	AM_RANGE(0xffff0, 0xfffff) AM_ROM
+	AM_RANGE(0x000000, 0x07ffff) AM_ROM
+	AM_RANGE(0x080000, 0x08ffff) AM_RAM_WRITE(m92_vram_w) AM_BASE_MEMBER(m92_state, vram_data)
+	AM_RANGE(0x0e0000, 0x0effff) AM_RAM			/* System ram */
+	AM_RANGE(0x0f8000, 0x0f87ff) AM_RAM AM_BASE_SIZE_GENERIC(spriteram)
+	AM_RANGE(0x0f8800, 0x0f8fff) AM_READWRITE(m92_paletteram_r, m92_paletteram_w)
+	AM_RANGE(0x0f9000, 0x0f900f) AM_WRITE(m92_spritecontrol_w) AM_BASE_MEMBER(m92_state, sprite_control)
+	AM_RANGE(0x0f9800, 0x0f9801) AM_WRITE(m92_videocontrol_w)
+	AM_RANGE(0x0ffff0, 0x0fffff) AM_ROM
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( m92_portmap, ADDRESS_SPACE_IO, 16 )
@@ -457,14 +463,14 @@ ADDRESS_MAP_END
 /******************************************************************************/
 
 static ADDRESS_MAP_START( sound_map, ADDRESS_SPACE_PROGRAM, 16 )
-	AM_RANGE(0x00000, 0x1ffff) AM_ROM
-	AM_RANGE(0x9ff00, 0x9ffff) AM_WRITENOP			/* Irq controller? */
-	AM_RANGE(0xa0000, 0xa3fff) AM_RAM
-	AM_RANGE(0xa8000, 0xa803f) AM_DEVREADWRITE8("irem", irem_ga20_r, irem_ga20_w, 0x00ff)
-	AM_RANGE(0xa8040, 0xa8043) AM_DEVREADWRITE8("ymsnd", ym2151_r, ym2151_w, 0x00ff)
-	AM_RANGE(0xa8044, 0xa8045) AM_READWRITE(m92_soundlatch_r, m92_sound_irq_ack_w)
-	AM_RANGE(0xa8046, 0xa8047) AM_WRITE(m92_sound_status_w)
-	AM_RANGE(0xffff0, 0xfffff) AM_ROM
+	AM_RANGE(0x000000, 0x01ffff) AM_ROM
+	AM_RANGE(0x09ff00, 0x09ffff) AM_WRITENOP		/* Irq controller? */
+	AM_RANGE(0x0a0000, 0x0a3fff) AM_RAM
+	AM_RANGE(0x0a8000, 0x0a803f) AM_DEVREADWRITE8("irem", irem_ga20_r, irem_ga20_w, 0x00ff)
+	AM_RANGE(0x0a8040, 0x0a8043) AM_DEVREADWRITE8("ymsnd", ym2151_r, ym2151_w, 0x00ff)
+	AM_RANGE(0x0a8044, 0x0a8045) AM_READWRITE(m92_soundlatch_r, m92_sound_irq_ack_w)
+	AM_RANGE(0x0a8046, 0x0a8047) AM_WRITE(m92_sound_status_w)
+	AM_RANGE(0x0ffff0, 0x0fffff) AM_ROM
 ADDRESS_MAP_END
 
 /******************************************************************************/
@@ -2113,10 +2119,10 @@ ROM_END
 
 ROM_START( majtitl2b )	/* Major Title 2 (World, set 2) */
 	ROM_REGION( 0x180000, "maincpu", 0 )
-	ROM_LOAD16_BYTE( "mt2-h0-e.ic34", 0x000001, 0x40000, VERIFY_OFF )
-	ROM_LOAD16_BYTE( "mt2-l0-e.ic31", 0x000000, 0x40000, VERIFY_OFF )
-	ROM_LOAD16_BYTE( "mt2-h1-.ic33",  0x100001, 0x40000, VERIFY_OFF )
-	ROM_LOAD16_BYTE( "mt2-l1-.ic32",  0x100000, 0x40000, VERIFY_OFF )
+	ROM_LOAD16_BYTE( "mt2-h0-e.ic34", 0x000001, 0x40000, CRC(f6c3a28c) SHA1(27ef76c120d27119830e6b17353d2a6412cbcbbe) )
+	ROM_LOAD16_BYTE( "mt2-l0-e.ic31", 0x000000, 0x40000, CRC(0a061384) SHA1(b033215bb99e645a00e7a364cebb895432917fd4) )
+	ROM_LOAD16_BYTE( "mt2-h1-.ic33",  0x100001, 0x40000, CRC(9ba8e1f2) SHA1(ae86697a97223d236e2e6dd33ddb8105b9f926cb) )
+	ROM_LOAD16_BYTE( "mt2-l1-.ic32",  0x100000, 0x40000, CRC(e4e00626) SHA1(e8c6c7ad6a367da4036915a155c8695ad90ae47b) )
 
 	ROM_REGION( 0x100000, "soundcpu", 0 )
 	ROM_LOAD16_BYTE( "mt2sh0",  0x000001, 0x10000, CRC(1ecbea43) SHA1(8d66ef419f75569f2c83a89c3985742b8a47914f) )

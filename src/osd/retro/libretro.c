@@ -805,7 +805,7 @@ void retro_run (void)
 
 void prep_retro_rotation(int rot)
 {
-	LOGI("Rotation:%d\n", rot);
+/*	LOGI("Rotation:%d\n", rot);	*/
    	environ_cb(RETRO_ENVIRONMENT_SET_ROTATION, &rot);
 }
 
