@@ -2839,51 +2839,51 @@ static DRIVER_INIT( sf2mdt )
 GAME( year,  archives name,  parent name,  MACHINE_DRIVER_START, INPUT_PORTS,  DRIVER_INIT,	flip,  producer name,	title information,	status )
 */
 /* captcommb2 - Okay */
-GAME( 1991,	captcommb2,	captcomm,	captcommb2,	captcomm,	cps1,		ROT0,	"bootleg",	"Captain Commando (bootleg with YM2151 + 2xMSM5205)", GAME_SUPPORTS_SAVE )
+GAME( 1991, captcommb2,	captcomm,  captcommb2,	captcomm,   cps1,	ROT0,	"bootleg",	"Captain Commando (bootleg set 2 (with YM2151 + 2xMSM5205), 911014 other country", GAME_SUPPORTS_SAVE )
 /* cawingbl / cawingb2 - that's ok */
-GAME( 1990,	cawingbl,	cawing,		cawingbl,	cawingbl,	cawingbl,	ROT0,	"bootleg",	"Carrier Air Wing (bootleg with 2xYM2203 + 2xMSM205 set 1)", GAME_SUPPORTS_SAVE )
-GAME( 1990,	cawingb2,	cawing,		cawingbl,	cawingbl,	cawingbl,	ROT0,	"bootleg",	"Carrier Air Wing (bootleg with 2xYM2203 + 2xMSM205 set 2)", GAME_SUPPORTS_SAVE )
+GAME( 1990, cawingbl,	cawing,	   cawingbl,	cawingbl,   cawingbl,	ROT0,	"bootleg",	"Carrier Air Wing (bootleg set 1 (with 2xYM2203 + 2xMSM205), U.S. navy 901012 etc", GAME_SUPPORTS_SAVE )
+GAME( 1990, cawingb2,	cawing,	   cawingbl,	cawingbl,   cawingbl,	ROT0,	"bootleg",	"Carrier Air Wing (bootleg set 2 (with 2xYM2203 + 2xMSM205), U.S. navy 901012 etc", GAME_SUPPORTS_SAVE )
 /* dinopic - no sound */
-GAME( 1993,	dinopic,	dino,		dinopic,	dino,		dinopic,	ROT0,	"bootleg",	"Cadillacs and Dinosaurs (bootleg set 1 (with PIC16c57), 930201 etc)", GAME_NO_SOUND | GAME_SUPPORTS_SAVE )
+GAME( 1993, dinopic,	dino,	   dinopic,	dino,	    dinopic,	ROT0,	"bootleg",	"Cadillacs and Dinosaurs (bootleg set 1 (with PIC16c57), 930201 etc)", GAME_NO_SOUND | GAME_SUPPORTS_SAVE )
 /* dinopic2 - no sound, one bad gfx rom. Copying 8.bin from dinopic fixes it. */
-GAME( 1993,	dinopic2,	dino,		dinopic,	dino,		dinopic,	ROT0,	"bootleg",	"Cadillacs and Dinosaurs (bootleg set 2 (with PIC16c57), 930201 etc)", GAME_NO_SOUND | GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )
+GAME( 1993, dinopic2,	dino,	   dinopic,	dino,	    dinopic,	ROT0,	"bootleg",	"Cadillacs and Dinosaurs (bootleg set 2 (with PIC16c57), 930201 etc)", GAME_NO_SOUND | GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )
 /* dinopic3 - no sound, no different from dinopic2 */
-GAME( 1993,	dinopic3,	dino,		dinopic,	dino,		dinopic,	ROT0,	"bootleg",	"Cadillacs and Dinosaurs (bootleg set 3 (with PIC16c57), 930201 etc)", GAME_NO_SOUND | GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )
+GAME( 1993, dinopic3,	dino,	   dinopic,	dino,	    dinopic,	ROT0,	"bootleg",	"Cadillacs and Dinosaurs (bootleg set 3 (with PIC16c57), 930201 etc)", GAME_NO_SOUND | GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )
 /* fcrash & ffightbl & ffightbla - ok */
-GAME( 1990,	fcrash,		ffight,		fcrash,		ffight,		fcrash,		ROT0,	"bootleg (Playmark)",	"Final Crash (bootleg with 2XYM2203 + 2XMSM5205)", GAME_SUPPORTS_SAVE )
-GAME( 1990,	ffightbl,	ffight,		fcrash,		ffight,		fcrash,		ROT0,	"bootleg",	"Final Fight (bootleg set 1 with 2XYM2203 + 2XMSM5205, World)", GAME_SUPPORTS_SAVE )
-GAME( 1990,	ffightbla,	ffight,		fcrash,		ffight,		fcrash,		ROT0,	"bootleg",	"Final Fight (bootleg set 2 with 2XYM2203 + 2XMSM5205, World)", GAME_SUPPORTS_SAVE )
+GAME( 1990, fcrash,	ffight,	   fcrash,	ffight,	    fcrash,	ROT0,	"bootleg (Playmark)", "Final Crash (bootleg with 2XYM2203 + 2XMSM5205)", GAME_SUPPORTS_SAVE )
+GAME( 1990, ffightbl,	ffight,	   fcrash,	ffight,	    fcrash,	ROT0,	"bootleg",	"Final Fight (bootleg set 1 with 2XYM2203 + 2XMSM5205, World)", GAME_SUPPORTS_SAVE )
+GAME( 1990, ffightbla,	ffight,	   fcrash,	ffight,	    fcrash,	ROT0,	"bootleg",	"Final Fight (bootleg set 2 with 2XYM2203 + 2XMSM5205, World)", GAME_SUPPORTS_SAVE )
 /* knightsb / knightsb4 - ok */
-GAME( 1991,	knightsb,	knights,	knightsb,	knights,	dinopic,	ROT0,	"bootleg",	"Knights of the Round (bootleg set 1 with YM2151 + 2xMSM5205, 911127 etc)", GAME_SUPPORTS_SAVE )
-GAME( 1991,	knightsb4,	knights,	knightsb,	knights,	dinopic,	ROT0,	"bootleg",	"Knights of the Round (bootleg set 4 with YM2151 + 2xMSM5205, 911127 etc)", GAME_SUPPORTS_SAVE )
+GAME( 1991, knightsb,	knights,   knightsb,	knights,    dinopic,	ROT0,	"bootleg",	"Knights of the Round (bootleg set 1 with YM2151 + 2xMSM5205, 911127 etc)", GAME_SUPPORTS_SAVE )
+GAME( 1991, knightsb4,	knights,   knightsb,	knights,    dinopic,	ROT0,	"bootleg",	"Knights of the Round (bootleg set 4 with YM2151 + 2xMSM5205, 911127 etc)", GAME_SUPPORTS_SAVE )
 /* kodb - ok */
-GAME( 1991,	kodb,		kod,		kodb,		kod,		kodb,		ROT0,	"bootleg (Playmark)",	"The King of Dragons (bootleg, 910731 etc)", GAME_SUPPORTS_SAVE )
+GAME( 1991, kodb,	kod,	   kodb,	kod,	    kodb,	ROT0,	"bootleg (Playmark)", "The King of Dragons (bootleg, 910731 etc)", GAME_SUPPORTS_SAVE )
 /* slampic - no sound. A priority problem between sprites and crowd. */
-GAME( 1993,	slampic,	slammast,	slampic,	slammast,	dinopic,	ROT0,	"bootleg",	"Saturday Night Slam Masters (bootleg with PIC16c57)", GAME_IMPERFECT_GRAPHICS | GAME_NO_SOUND | GAME_SUPPORTS_SAVE )
+GAME( 1993, slampic,	slammast,  slampic,	slammast,   dinopic,	ROT0,	"bootleg",	"Saturday Night Slam Masters (bootleg with PIC16c57, 930713 etc)", GAME_IMPERFECT_GRAPHICS | GAME_NO_SOUND | GAME_SUPPORTS_SAVE )
 /* varthb - OK */
-GAME( 1992,	varthb,		varth,		varthb,		varth,		dinopic,	ROT270,	"bootleg",	"Varth: Operation Thunderstorm (bootleg)", GAME_SUPPORTS_SAVE )
+GAME( 1992, varthb,	varth,	   varthb,	varth,	    dinopic,	ROT270,	"bootleg",	"Varth: Operation Thunderstorm (bootleg, 920612 etc)", GAME_SUPPORTS_SAVE )
 /* punipic / punipic2 - no sound. Problems in Central Park. Patches used. */
-GAME( 1993,	punipic,	punisher,	punipic,	punisher,	punipic,	ROT0,	"bootleg",	"The Punisher (bootleg with PIC16c57, set 1)", GAME_IMPERFECT_GRAPHICS | GAME_NO_SOUND | GAME_SUPPORTS_SAVE )
-GAME( 1993,	punipic2,	punisher,	punipic,	punisher,	punipic,	ROT0,	"bootleg",	"The Punisher (bootleg with PIC16c57, set 2)", GAME_IMPERFECT_GRAPHICS | GAME_NO_SOUND | GAME_SUPPORTS_SAVE )
+GAME( 1993, punipic,	punisher,  punipic,	punisher,   punipic,	ROT0,	"bootleg",	"The Punisher (bootleg set 1 with PIC16c57, 930422 etc)", GAME_IMPERFECT_GRAPHICS | GAME_NO_SOUND | GAME_SUPPORTS_SAVE )
+GAME( 1993, punipic2,	punisher,  punipic,	punisher,   punipic,	ROT0,	"bootleg",	"The Punisher (bootleg set 2 with PIC16c57, 930422 etc)", GAME_IMPERFECT_GRAPHICS | GAME_NO_SOUND | GAME_SUPPORTS_SAVE )
 /* punipic3 - no sound */
-GAME( 1993,	punipic3,	punisher,	punipic,	punisher,	punipic3,	ROT0,	"bootleg",	"The Punisher (bootleg with PIC16c57, set 3)", GAME_IMPERFECT_GRAPHICS | GAME_NO_SOUND | GAME_SUPPORTS_SAVE )
+GAME( 1993, punipic3,	punisher,  punipic,	punisher,   punipic3,	ROT0,	"bootleg",	"The Punisher (bootleg set 3 with PIC16c57, 930422 etc)", GAME_IMPERFECT_GRAPHICS | GAME_NO_SOUND | GAME_SUPPORTS_SAVE )
 /* sgyxz and the following wof clones has been fixed */
-GAME( 1999,	sgyxz,		wof,		sgyxz,		sgyxz,		sgyxz,		ROT0,	"bootleg(All-In Electronic)", "Sangokushi II: SanGuo YingXiong Zhuan (Chinese bootleg set 3, 921005 Asia)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )
-GAME( 1999,	wofh,		wof,		sgyxz,		sgyxz,		wofh,		ROT0,	"bootleg(All-In Electronic)", "Sangokushi II: Sanguo Yingxiong Zhuan (Chinese bootleg set 1, 921005 Asia)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )
-GAME( 1999,	wofha,		wof,		sgyxz,		sgyxz,		wofh,		ROT0,	"bootleg(All-In Electronic)", "Sangokushi II: Sanguo Yingxiong Zhuan (Chinese bootleg set 2, 921005 Asia)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )
-GAME( 1997,	wof3jsa,	wof,		sgyxz,		sgyxz,		wof3jsa,	ROT0,	"bootleg",	"Sangokushi II: San Jian Sheng (Chinese bootleg set 2, 921005 Asia)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )
-GAME( 1995,	wofsj,		wof,		wofsj,		wofsj,		wofsj,		ROT0,	"bootleg",	"Sangokushi II: Sheng Jian Sanguo (Chinese bootleg set 1, 921005 Asia)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )
-GAME( 1995,	wofsja,		wof,		wofsj,		wofsj,		wofsj,		ROT0,	"bootleg",	"Sangokushi II: Sheng Jian Sanguo (Chinese bootleg set 2, 921005 Asia)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )
-GAME( 1997,	wof3sj,		wof,		wofsj,		wofsj,		wofsj,		ROT0,	"bootleg",	"Sangokushi II: San Sheng Jian (Chinese bootleg set 1, 921005 Asia)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )
-GAME( 1997,	wof3sja,	wof,		wofsj,		wofsj,		wofsj,		ROT0,	"bootleg",	"Sangokushi II: San Sheng Jian (Chinese bootleg set 2, 921005 Asia)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )
+GAME( 1999, sgyxz,	wof,	   sgyxz,	sgyxz,	    sgyxz,	ROT0,	"bootleg(All-In Electronic)", "Sangokushi II: SanGuo YingXiong Zhuan (Chinese bootleg set 3, 921005 Asia)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )
+GAME( 1999, wofh,	wof,	   sgyxz,	sgyxz,	    wofh,	ROT0,	"bootleg(All-In Electronic)", "Sangokushi II: Sanguo Yingxiong Zhuan (Chinese bootleg set 1, 921005 Asia)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )
+GAME( 1999, wofha,	wof,	   sgyxz,	sgyxz,	    wofh,	ROT0,	"bootleg(All-In Electronic)", "Sangokushi II: Sanguo Yingxiong Zhuan (Chinese bootleg set 2, 921005 Asia)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )
+GAME( 1997, wof3jsa,	wof,	   sgyxz,	sgyxz,	    wof3jsa,	ROT0,	"bootleg",	"Sangokushi II: San Jian Sheng (Chinese bootleg set 2, 921005 Asia)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )
+GAME( 1995, wofsj,	wof,	   wofsj,	wofsj,	    wofsj,	ROT0,	"bootleg",	"Sangokushi II: Sheng Jian Sanguo (Chinese bootleg set 1, 921005 Asia)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )
+GAME( 1995, wofsja,	wof,	   wofsj,	wofsj,	    wofsj,	ROT0,	"bootleg",	"Sangokushi II: Sheng Jian Sanguo (Chinese bootleg set 2, 921005 Asia)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )
+GAME( 1997, wof3sj,	wof,	   wofsj,	wofsj,	    wofsj,	ROT0,	"bootleg",	"Sangokushi II: San Sheng Jian (Chinese bootleg set 1, 921005 Asia)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )
+GAME( 1997, wof3sja,	wof,	   wofsj,	wofsj,	    wofsj,	ROT0,	"bootleg",	"Sangokushi II: San Sheng Jian (Chinese bootleg set 2, 921005 Asia)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )
 /* sf2md / sf2ceeabl / sf2ceeab2 - ok */
-GAME( 1992,	sf2ceeabl,	sf2ce,		sf2ceeabl,	sf2,		sf2ceeabl,	ROT0,	"bootleg",	"Street Fighter II': Champion Edition (920313 etc bootleg set 1)", GAME_SUPPORTS_SAVE )
-GAME( 1992,	sf2ceeab2,	sf2ce,		sf2ceeabl,	sf2,		sf2ceeabl,	ROT0,	"bootleg",	"Street Fighter II': Champion Edition (920313 etc bootleg set 2)", GAME_SUPPORTS_SAVE )
-GAME( 1992,	sf2md,		sf2ce,		sf2ceeabl,	sf2,		sf2ceeabl,	ROT0,	"bootleg",	"Street Fighter II': Champion Edition (Magic Delta, bootleg, 920313 etc)", GAME_SUPPORTS_SAVE )
+GAME( 1992, sf2ceeabl,	sf2ce,	   sf2ceeabl,	sf2,	    sf2ceeabl,	ROT0,	"bootleg",	"Street Fighter II': Champion Edition (920313 etc bootleg set 1)", GAME_SUPPORTS_SAVE )
+GAME( 1992, sf2ceeab2,	sf2ce,	   sf2ceeabl,	sf2,	    sf2ceeabl,	ROT0,	"bootleg",	"Street Fighter II': Champion Edition (920313 etc bootleg set 2)", GAME_SUPPORTS_SAVE )
+GAME( 1992, sf2md,	sf2ce,	   sf2ceeabl,	sf2,	    sf2ceeabl,	ROT0,	"bootleg",	"Street Fighter II': Champion Edition (Magic Delta, bootleg, 920313 etc)", GAME_SUPPORTS_SAVE )
 /* sf2b - rowscroll still has problem */
-GAME( 1992,	sf2b,		sf2,		sf2b,		sf2mdt,		sf2b,		ROT0,	"bootleg(Playmark)",	"Street Fighter II: The World Warrior (bootleg set 1 with YM2151 + 2xMSM5205, 920214 etc)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE ) //910204 - based on World version
+GAME( 1992, sf2b,	sf2,	   sf2b,	sf2mdt,	    sf2b,	ROT0,	"bootleg(Playmark)", "Street Fighter II: The World Warrior (bootleg, 910214, set 1 (with YM2151 + 2xMSM5205))", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE ) //910204 - based on World version
 /* sf2mdt - OK */
-GAME( 1992,	sf2mdt,		sf2ce,		sf2mdt,		sf2mdt,		sf2mdt,		ROT0,	"bootleg",	"Street Fighter II': Magic Delta Turbo (bootleg set 1 with YM2151 + 2xMSM5205, 920313 etc)", GAME_SUPPORTS_SAVE )
+GAME( 1992, sf2mdt,	sf2ce,	   sf2mdt,	sf2mdt,	    sf2mdt,	ROT0,	"bootleg",	"Street Fighter II': Magic Delta Turbo (bootleg set 1 with YM2151 + 2xMSM5205, 920313 etc)", GAME_SUPPORTS_SAVE )
 /* sf2mdta / sf2mdtb - OK */
-GAME( 1992,	sf2mdta,	sf2ce,		sf2mdt,		sf2mdt,		sf2mdta,	ROT0,	"bootleg",	"Street Fighter II': Magic Delta Turbo (bootleg set 2 with YM2151 + 2xMSM5205, 920313 etc)", GAME_SUPPORTS_SAVE )
-GAME( 1992,	sf2mdtb,	sf2ce,		sf2mdt,		sf2mdt,		sf2mdta,	ROT0,	"bootleg",	"Street Fighter II': Magic Delta Turbo (bootleg set 3 with YM2151 + 2xMSM5205, 920313 etc)", GAME_SUPPORTS_SAVE )
+GAME( 1992, sf2mdta,	sf2ce,	   sf2mdt,	sf2mdt,	    sf2mdta,	ROT0,	"bootleg",	"Street Fighter II': Magic Delta Turbo (bootleg set 2 with YM2151 + 2xMSM5205, 920313 etc)", GAME_SUPPORTS_SAVE )
+GAME( 1992, sf2mdtb,	sf2ce,	   sf2mdt,	sf2mdt,	    sf2mdta,	ROT0,	"bootleg",	"Street Fighter II': Magic Delta Turbo (bootleg set 3 with YM2151 + 2xMSM5205, 920313 etc)", GAME_SUPPORTS_SAVE )
