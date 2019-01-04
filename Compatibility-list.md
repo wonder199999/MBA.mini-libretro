@@ -1175,5 +1175,3 @@
 		zintrkcd (clone of zintrckb): Zintrick ◦ 押し出しジントリック (Neo CD conversion)
 	
 	*zupapa: Zupapa!
-
-	*crswd2bl: Crossed Swords 2 (bootleg CD to cartridge conversion)- Note: From fbalpha 02.97.43 romsets.

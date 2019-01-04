@@ -1022,7 +1022,7 @@ const game_driver *const drivers[] =
 	/* Neo Print */
 	DRIVER( 98best44 )
 
-	DRIVER( crswd2bl )		/* Crossed Sword 2, bootleg of NGCD version */
+/*	DRIVER( crswd2bl )	*/	/* Crossed Sword 2, bootleg of NGCD version */
 	DRIVER( 3countba )		/* 3 Count Bout / Fire Suplex (NGM-043) */
 	DRIVER( fatfury2a )		/* Fatal Fury 2 / Garou Densetsu 2 - arata-naru tatakai (NGM-047) */
 	DRIVER( fatfury3a )		/* Fatal Fury 3 - Road to the Final Victory / Garou Densetsu 3 - arata-naru tatakai (NGM-069) (NGH-069) (alternate set) */
@@ -1077,7 +1077,6 @@ const game_driver *const drivers[] =
 	DRIVER( kof98ae )		/* (NOT_WORKING) The King of Fighters' 98 Anniversary Edition, EGHT hack  !!Note: It's very unstable. the graphics are flawed. these are said to be related to MAME's M68K CPU drivers. */
 	DRIVER( kof98ae2016 )		/* hackrom */
 	DRIVER( kof98cb )		/* hackrom */
-	DRIVER( kof98co )		/* hackrom */
 	DRIVER( kog )			/* bootleg of kof97 */
 	DRIVER( kogplus )		/* King of Giadiator (bootleg of kof97) */
 
