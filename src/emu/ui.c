@@ -129,7 +129,7 @@ static void ui_exit(running_machine &machine);
 
 /* text generators */
 static astring &disclaimer_string(running_machine *machine, astring &buffer);
-static astring &warnings_string(running_machine *machine, astring &buffer);
+/* static astring &warnings_string(running_machine *machine, astring &buffer); */
 
 /* UI handlers */
 static UINT32 handler_messagebox(running_machine *machine, render_container *container, UINT32 state);
@@ -889,7 +889,7 @@ static astring &disclaimer_string(running_machine *machine, astring &string)
     warnings_string - print the warning flags
     text to the given buffer
 -------------------------------------------------*/
-
+#if 0
 static astring &warnings_string(running_machine *machine, astring &string)
 {
 #define WARNING_FLAGS (	GAME_NOT_WORKING | \
@@ -987,7 +987,7 @@ static astring &warnings_string(running_machine *machine, astring &string)
 	string.cat("\n\nType OK or move the joystick left then right to continue");
 	return string;
 }
-
+#endif
 
 /*-------------------------------------------------
     game_info_astring - populate an allocated

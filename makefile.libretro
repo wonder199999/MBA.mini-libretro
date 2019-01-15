@@ -4,7 +4,7 @@ LIBRETRO_COMM_DIR = $(SRC_DIR)/osd/retro/libretro-common
 DEPS_DIR          = $(SRC_DIR)/lib
 
 INCFLAGS := \
-   -I$(LIBRETRO_COMM_DIR)/include \
+	-I$(LIBRETRO_COMM_DIR)/include \
 	-I$(SRC_DIR)/$(TARGET) \
 	-I$(SRC_DIR)/emu \
 	-I$(OBJ)/emu \
@@ -57,7 +57,6 @@ OBJDIRS += \
 
 CPUS += Z80
 CPUS += NEC
-CPUS += V30MZ
 CPUS += MCS48
 CPUS += M680X0
 
@@ -243,7 +242,6 @@ $(LIBEMU): $(LIBEMUOBJS)
 # CPU core objects
 #-------------------------------------------------
 
-
 CPUSRC = $(EMUSRC)/cpu
 CPUOBJ = $(EMUOBJ)/cpu
 
@@ -337,14 +335,12 @@ endif
 $(CPUOBJ)/z80/z80.o:	$(CPUSRC)/z80/z80.c \
 				$(CPUSRC)/z80/z80.h
 
-
 $(LIBCPU): $(CPUOBJS)
 $(LIBDASM): $(DASMOBJS)
 
 #-------------------------------------------------
 # sound core objects
 #-------------------------------------------------
-
 
 SOUNDSRC = $(EMUSRC)/sound
 SOUNDOBJ = $(EMUOBJ)/sound
@@ -355,7 +351,6 @@ SOUNDOBJ = $(EMUOBJ)/sound
 #-------------------------------------------------
 
 SOUNDOBJS += $(SOUNDOBJ)/samples.o
-
 
 #-------------------------------------------------
 # DACs
@@ -446,14 +441,12 @@ UTILOBJS = \
 	$(LIBOBJ)/util/avcomp.o \
 	$(LIBOBJ)/util/aviio.o \
 	$(LIBOBJ)/util/bitmap.o \
-	$(LIBOBJ)/util/cdrom.o \
 	$(LIBOBJ)/util/chd.o \
 	$(LIBOBJ)/util/corefile.o \
 	$(LIBOBJ)/util/corestr.o \
 	$(LIBOBJ)/util/coreutil.o \
 	$(LIBOBJ)/util/harddisk.o \
 	$(LIBOBJ)/util/huffman.o \
-	$(LIBOBJ)/util/imageutl.o \
 	$(LIBOBJ)/util/jedparse.o \
 	$(LIBOBJ)/util/md5.o \
 	$(LIBOBJ)/util/opresolv.o \
@@ -468,6 +461,9 @@ UTILOBJS = \
 	$(LIBOBJ)/util/vbiparse.o \
 	$(LIBOBJ)/util/xmlfile.o \
 	$(LIBOBJ)/util/zippath.o \
+
+#	$(LIBOBJ)/util/cdrom.o \
+#	$(LIBOBJ)/util/imageutl.o \
 
 $(OBJ)/libutil.a: $(UTILOBJS)
 

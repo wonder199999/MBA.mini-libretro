@@ -470,6 +470,7 @@ UINT32 core_fread(core_file *file, void *buffer, UINT32 length)
 				filerr = osd_or_zlib_read(file, (UINT8 *)buffer + bytes_read, file->offset + bytes_read, length - bytes_read, &new_bytes_read);
 				bytes_read += new_bytes_read;
 			}
+			if (filerr) ;
 		}
 	}
 
@@ -786,6 +787,8 @@ UINT32 core_fwrite(core_file *file, const void *buffer, UINT32 length)
 
 	/* do the write */
 	filerr = osd_or_zlib_write(file, buffer, file->offset, length, &bytes_written);
+
+	if (filerr) ;
 
 	/* return the number of bytes read */
 	file->offset += bytes_written;

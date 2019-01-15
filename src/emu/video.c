@@ -1053,6 +1053,8 @@ void screen_save_snapshot(running_machine *machine, device_t *screen, mame_file 
 	/* now do the actual work */
 	palette = (machine->palette != NULL) ? palette_entry_list_adjusted(machine->palette) : NULL;
 	error = png_write_bitmap(mame_core_file(fp), &pnginfo, global.snap_bitmap, machine->total_colors(), palette);
+//	printf("png error: %x\n", error);
+	if (error) ;
 
 	/* free any data allocated */
 	png_free(&pnginfo);
@@ -1249,6 +1251,8 @@ void video_mng_begin_recording(running_machine *machine, const char *name)
 	else
 		filerr = mame_fopen_next(machine, SEARCHPATH_MOVIE, "mng", &global.mngfile);
 
+	if (filerr) ;
+
 	/* start the capture */
 	rate = (machine->primary_screen != NULL) ? ATTOSECONDS_TO_HZ(machine->primary_screen->frame_period().attoseconds) : screen_device::k_default_frame_rate;
 	pngerr = mng_capture_start(mame_core_file(global.mngfile), global.snap_bitmap, rate);
@@ -1395,6 +1399,7 @@ void video_avi_begin_recording(running_machine *machine, const char *name)
 		/* create the file and free the string */
 		avierr = avi_create(fullname, &info, &global.avifile);
 	}
+	if (avierr) ;
 }
 
 
@@ -2471,6 +2476,7 @@ void screen_device::finalize_burnin()
 
 		// now do the actual work
 		pngerr = png_write_bitmap(mame_core_file(file), &pnginfo, finalmap, 0, NULL);
+		if (pngerr) ;
 
 		// free any data allocated
 		png_free(&pnginfo);

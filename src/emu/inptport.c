@@ -620,8 +620,8 @@ static TIMER_CALLBACK(inputx_timerproc);
 
 
 /*  Debugging commands and handlers. */
-static void execute_input(running_machine *machine, int ref, int params, const char *param[]);
-static void execute_dumpkbd(running_machine *machine, int ref, int params, const char *param[]);
+/* static void execute_input(running_machine *machine, int ref, int params, const char *param[]);
+   static void execute_dumpkbd(running_machine *machine, int ref, int params, const char *param[]);	*/
 
 /***************************************************************************
     COMMON SHARED STRINGS
@@ -5184,6 +5184,7 @@ int inputx_is_posting(running_machine *machine)
 ***************************************************************************/
 static void inputx_postc_rate(running_machine *machine, unicode_char ch, attotime rate);
 
+#if 0
 static void inputx_postn_coded_rate(running_machine *machine, const char *text, size_t text_len, attotime rate)
 {
 	size_t i, j, key_len, increment;
@@ -5252,7 +5253,7 @@ static void inputx_postn_coded_rate(running_machine *machine, const char *text, 
 		i += increment;
 	}
 }
-
+#endif
 
 
 /***************************************************************************
@@ -5491,6 +5492,7 @@ int input_category_active(running_machine *machine, int category)
     DEBUGGER SUPPORT
 ***************************************************************************/
 
+#if	0
 /*-------------------------------------------------
     execute_input - debugger command to enter
     natural keyboard input
@@ -5574,3 +5576,4 @@ static void execute_dumpkbd(running_machine *machine, int ref, int params, const
 		fclose(file);
 
 }
+#endif

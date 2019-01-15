@@ -27,10 +27,15 @@
 enum
 {
 	/* special codes */
-	SEQCODE_END = INTERNAL_CODE(0),
+/*	SEQCODE_END = INTERNAL_CODE(0),
 	SEQCODE_DEFAULT = INTERNAL_CODE(1),
 	SEQCODE_NOT = INTERNAL_CODE(2),
 	SEQCODE_OR = INTERNAL_CODE(3)
+*/
+	SEQCODE_END = 0x80000000,
+	SEQCODE_DEFAULT = 0x80000001,
+	SEQCODE_NOT = 0x80000002,
+	SEQCODE_OR = 0x80000003
 };
 
 
@@ -52,14 +57,14 @@ struct _input_seq
     MACROS
 ***************************************************************************/
 
-#define SEQ_DEF_7(a,b,c,d,e,f,g) {{ a, b, c, d, e, f, g, SEQCODE_END }}
-#define SEQ_DEF_6(a,b,c,d,e,f)	{{ a, b, c, d, e, f, SEQCODE_END }}
-#define SEQ_DEF_5(a,b,c,d,e)	{{ a, b, c, d, e, SEQCODE_END }}
+#define SEQ_DEF_7(a,b,c,d,e,f,g)	{{ a, b, c, d, e, f, g, SEQCODE_END }}
+#define SEQ_DEF_6(a,b,c,d,e,f)		{{ a, b, c, d, e, f, SEQCODE_END }}
+#define SEQ_DEF_5(a,b,c,d,e)		{{ a, b, c, d, e, SEQCODE_END }}
 #define SEQ_DEF_4(a,b,c,d)		{{ a, b, c, d, SEQCODE_END }}
 #define SEQ_DEF_3(a,b,c)		{{ a, b, c, SEQCODE_END }}
 #define SEQ_DEF_2(a,b)			{{ a, b, SEQCODE_END }}
 #define SEQ_DEF_1(a)			{{ a, SEQCODE_END }}
-#define SEQ_DEF_0				{{ SEQCODE_END }}
+#define SEQ_DEF_0			{{ SEQCODE_END }}
 
 
 
@@ -129,6 +134,7 @@ INLINE void input_seq_set_5(input_seq *seq, input_code code0, input_code code1, 
 	seq->code[2] = code2;
 	seq->code[3] = code3;
 	seq->code[4] = code4;
+
 	for (codenum = 5; codenum < ARRAY_LENGTH(seq->code); codenum++)
 		seq->code[codenum] = SEQCODE_END;
 }

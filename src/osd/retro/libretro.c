@@ -45,113 +45,113 @@ struct _keyboard_table
 
 static const _keyboard_table ktable[] = {
 	{"A",        RETROK_a,           ITEM_ID_A},
-/*   	{"B",        RETROK_b,           ITEM_ID_B}, */
-   	{"C",        RETROK_c,           ITEM_ID_C},
-   	{"D",        RETROK_d,           ITEM_ID_D},
-/*   	{"E",        RETROK_e,           ITEM_ID_E}, */
-   	{"F",        RETROK_f,           ITEM_ID_F},
-   	{"G",        RETROK_g,           ITEM_ID_G},
-/*   	{"H",        RETROK_h,           ITEM_ID_H}, */
-   	{"I",        RETROK_i,           ITEM_ID_I},
-   	{"J",        RETROK_j,           ITEM_ID_J},
-   	{"K",        RETROK_k,           ITEM_ID_K},
-   	{"L",        RETROK_l,           ITEM_ID_L},
-/*   	{"M",        RETROK_m,           ITEM_ID_M},
-   	{"N",        RETROK_n,           ITEM_ID_N},
-   	{"O",        RETROK_o,           ITEM_ID_O},
-   	{"P",        RETROK_p,           ITEM_ID_P}, */
-   	{"Q",        RETROK_q,           ITEM_ID_Q},
-   	{"R",        RETROK_r,           ITEM_ID_R},
-   	{"S",        RETROK_s,           ITEM_ID_S},
-/*   	{"T",        RETROK_t,           ITEM_ID_T},
-   	{"U",        RETROK_u,           ITEM_ID_U}, */
-   	{"V",        RETROK_v,           ITEM_ID_V},
-   	{"W",        RETROK_w,           ITEM_ID_W},
-   	{"X",        RETROK_x,           ITEM_ID_X},
-/*   	{"Y",        RETROK_y,           ITEM_ID_Y}, */
-   	{"Z",        RETROK_z,           ITEM_ID_Z},
-/*   	{"0",        RETROK_0,           ITEM_ID_0}, */
-   	{"1",        RETROK_1,           ITEM_ID_1},
-   	{"2",        RETROK_2,           ITEM_ID_2},
-   	{"3",        RETROK_3,           ITEM_ID_3},
-   	{"4",        RETROK_4,           ITEM_ID_4},
-   	{"5",        RETROK_5,           ITEM_ID_5},
-   	{"6",        RETROK_6,           ITEM_ID_6},
-   	{"7",        RETROK_7,           ITEM_ID_7},
-   	{"8",        RETROK_8,           ITEM_ID_8},
-/*   	{"9",        RETROK_9,           ITEM_ID_9},
-   	{"F1",       RETROK_F1,          ITEM_ID_F1}, */
-   	{"F2",       RETROK_F2,          ITEM_ID_F2},
-   	{"F3",       RETROK_F3,          ITEM_ID_F3},
-/*   	{"F4",       RETROK_F4,          ITEM_ID_F4},
-   	{"F5",       RETROK_F5,          ITEM_ID_F5},
-   	{"F6",       RETROK_F6,          ITEM_ID_F6},
-   	{"F7",       RETROK_F7,          ITEM_ID_F7},
-   	{"F8",       RETROK_F8,          ITEM_ID_F8},
-   	{"F9",       RETROK_F9,          ITEM_ID_F9},
-   	{"F10",      RETROK_F10,         ITEM_ID_F10}, */
-   	{"F11",      RETROK_F11,         ITEM_ID_F11},
-/*   	{"F12",      RETROK_F12,         ITEM_ID_F12},
-   	{"F13",      RETROK_F13,         ITEM_ID_F13},
-   	{"F14",      RETROK_F14,         ITEM_ID_F14},
-   	{"F15",      RETROK_F15,         ITEM_ID_F15},
-   	{"Esc",      RETROK_ESCAPE,      ITEM_ID_ESC},
-   	{"TILDE",    RETROK_BACKQUOTE,   ITEM_ID_TILDE},
-   	{"MINUS",    RETROK_MINUS,       ITEM_ID_MINUS},
-   	{"EQUALS",   RETROK_EQUALS,      ITEM_ID_EQUALS},
-   	{"BKCSPACE", RETROK_BACKSPACE,   ITEM_ID_BACKSPACE}, */
-   	{"TAB",      RETROK_TAB,         ITEM_ID_TAB},
-/*   	{"(",        RETROK_LEFTPAREN,   ITEM_ID_OPENBRACE},
-   	{")",        RETROK_RIGHTPAREN,  ITEM_ID_CLOSEBRACE}, */
-   	{"ENTER",    RETROK_RETURN,      ITEM_ID_ENTER},
-/*   	{"·",        RETROK_COLON,       ITEM_ID_COLON},
-   	{"\'",       RETROK_QUOTE,       ITEM_ID_QUOTE},
-   	{"BCKSLASH", RETROK_BACKSLASH,   ITEM_ID_BACKSLASH},
-   	{",",        RETROK_COMMA,       ITEM_ID_COMMA},
-   	{"/",        RETROK_SLASH,       ITEM_ID_SLASH}, */
-   	{"SPACE",    RETROK_SPACE,       ITEM_ID_SPACE},
-/*   	{"INS",      RETROK_INSERT,      ITEM_ID_INSERT},
-   	{"DEL",      RETROK_DELETE,      ITEM_ID_DEL},
-   	{"HOME",     RETROK_HOME,        ITEM_ID_HOME},
-   	{"END",      RETROK_END,         ITEM_ID_END},
-   	{"PGUP",     RETROK_PAGEUP,      ITEM_ID_PGUP},
-   	{"PGDW",     RETROK_PAGEDOWN,    ITEM_ID_PGDN}, */
-   	{"LEFT",     RETROK_LEFT,        ITEM_ID_LEFT},
-   	{"RIGHT",    RETROK_RIGHT,       ITEM_ID_RIGHT},
-   	{"UP",       RETROK_UP,          ITEM_ID_UP},
-   	{"DOWN",     RETROK_DOWN,        ITEM_ID_DOWN},
-   	{"KO",       RETROK_KP0,         ITEM_ID_0_PAD},
+/*	{"B",        RETROK_b,           ITEM_ID_B}, */
+	{"C",        RETROK_c,           ITEM_ID_C},
+	{"D",        RETROK_d,           ITEM_ID_D},
+/*	{"E",        RETROK_e,           ITEM_ID_E}, */
+	{"F",        RETROK_f,           ITEM_ID_F},
+	{"G",        RETROK_g,           ITEM_ID_G},
+/*	{"H",        RETROK_h,           ITEM_ID_H}, */
+	{"I",        RETROK_i,           ITEM_ID_I},
+	{"J",        RETROK_j,           ITEM_ID_J},
+	{"K",        RETROK_k,           ITEM_ID_K},
+	{"L",        RETROK_l,           ITEM_ID_L},
+/*	{"M",        RETROK_m,           ITEM_ID_M},
+	{"N",        RETROK_n,           ITEM_ID_N},
+	{"O",        RETROK_o,           ITEM_ID_O},
+	{"P",        RETROK_p,           ITEM_ID_P}, */
+	{"Q",        RETROK_q,           ITEM_ID_Q},
+	{"R",        RETROK_r,           ITEM_ID_R},
+	{"S",        RETROK_s,           ITEM_ID_S},
+/*	{"T",        RETROK_t,           ITEM_ID_T},
+	{"U",        RETROK_u,           ITEM_ID_U}, */
+	{"V",        RETROK_v,           ITEM_ID_V},
+	{"W",        RETROK_w,           ITEM_ID_W},
+	{"X",        RETROK_x,           ITEM_ID_X},
+/*	{"Y",        RETROK_y,           ITEM_ID_Y}, */
+	{"Z",        RETROK_z,           ITEM_ID_Z},
+/*	{"0",        RETROK_0,           ITEM_ID_0}, */
+	{"1",        RETROK_1,           ITEM_ID_1},
+	{"2",        RETROK_2,           ITEM_ID_2},
+	{"3",        RETROK_3,           ITEM_ID_3},
+	{"4",        RETROK_4,           ITEM_ID_4},
+	{"5",        RETROK_5,           ITEM_ID_5},
+	{"6",        RETROK_6,           ITEM_ID_6},
+	{"7",        RETROK_7,           ITEM_ID_7},
+	{"8",        RETROK_8,           ITEM_ID_8},
+/*	{"9",        RETROK_9,           ITEM_ID_9},
+	{"F1",       RETROK_F1,          ITEM_ID_F1}, */
+	{"F2",       RETROK_F2,          ITEM_ID_F2},
+	{"F3",       RETROK_F3,          ITEM_ID_F3},
+/*	{"F4",       RETROK_F4,          ITEM_ID_F4},
+	{"F5",       RETROK_F5,          ITEM_ID_F5},
+	{"F6",       RETROK_F6,          ITEM_ID_F6},
+	{"F7",       RETROK_F7,          ITEM_ID_F7},
+	{"F8",       RETROK_F8,          ITEM_ID_F8},
+	{"F9",       RETROK_F9,          ITEM_ID_F9},
+	{"F10",      RETROK_F10,         ITEM_ID_F10}, */
+	{"F11",      RETROK_F11,         ITEM_ID_F11},
+/*	{"F12",      RETROK_F12,         ITEM_ID_F12},
+	{"F13",      RETROK_F13,         ITEM_ID_F13},
+	{"F14",      RETROK_F14,         ITEM_ID_F14},
+	{"F15",      RETROK_F15,         ITEM_ID_F15},
+	{"Esc",      RETROK_ESCAPE,      ITEM_ID_ESC},
+	{"TILDE",    RETROK_BACKQUOTE,   ITEM_ID_TILDE},
+	{"MINUS",    RETROK_MINUS,       ITEM_ID_MINUS},
+	{"EQUALS",   RETROK_EQUALS,      ITEM_ID_EQUALS},
+	{"BKCSPACE", RETROK_BACKSPACE,   ITEM_ID_BACKSPACE}, */
+	{"TAB",      RETROK_TAB,         ITEM_ID_TAB},
+/*	{"(",        RETROK_LEFTPAREN,   ITEM_ID_OPENBRACE},
+	{")",        RETROK_RIGHTPAREN,  ITEM_ID_CLOSEBRACE}, */
+	{"ENTER",    RETROK_RETURN,      ITEM_ID_ENTER},
+/*	{"·",        RETROK_COLON,       ITEM_ID_COLON},
+	{"\'",       RETROK_QUOTE,       ITEM_ID_QUOTE},
+	{"BCKSLASH", RETROK_BACKSLASH,   ITEM_ID_BACKSLASH},
+	{",",        RETROK_COMMA,       ITEM_ID_COMMA},
+	{"/",        RETROK_SLASH,       ITEM_ID_SLASH}, */
+	{"SPACE",    RETROK_SPACE,       ITEM_ID_SPACE},
+/*	{"INS",      RETROK_INSERT,      ITEM_ID_INSERT},
+	{"DEL",      RETROK_DELETE,      ITEM_ID_DEL},
+	{"HOME",     RETROK_HOME,        ITEM_ID_HOME},
+	{"END",      RETROK_END,         ITEM_ID_END},
+	{"PGUP",     RETROK_PAGEUP,      ITEM_ID_PGUP},
+	{"PGDW",     RETROK_PAGEDOWN,    ITEM_ID_PGDN}, */
+	{"LEFT",     RETROK_LEFT,        ITEM_ID_LEFT},
+	{"RIGHT",    RETROK_RIGHT,       ITEM_ID_RIGHT},
+	{"UP",       RETROK_UP,          ITEM_ID_UP},
+	{"DOWN",     RETROK_DOWN,        ITEM_ID_DOWN},
+	{"KO",       RETROK_KP0,         ITEM_ID_0_PAD},
 /*	{"K1",       RETROK_KP1,         ITEM_ID_1_PAD}, */
-   	{"K2",       RETROK_KP2,         ITEM_ID_2_PAD},
-   	{"K3",       RETROK_KP3,         ITEM_ID_3_PAD},
-   	{"K4",       RETROK_KP4,         ITEM_ID_4_PAD},
-/*   	{"K5",       RETROK_KP5,         ITEM_ID_5_PAD}, */
-   	{"K6",       RETROK_KP6,         ITEM_ID_6_PAD},
-/*   	{"K7",       RETROK_KP7,         ITEM_ID_7_PAD}, */
-   	{"K8",       RETROK_KP8,         ITEM_ID_8_PAD},
-/*   	{"K9",       RETROK_KP9,         ITEM_ID_9_PAD},
-   	{"K/",       RETROK_KP_DIVIDE,   ITEM_ID_SLASH_PAD},
-   	{"K*",       RETROK_KP_MULTIPLY, ITEM_ID_ASTERISK},
-   	{"K-",       RETROK_KP_MINUS,    ITEM_ID_MINUS_PAD},
-   	{"K+",       RETROK_KP_PLUS,     ITEM_ID_PLUS_PAD}, */
-   	{"KDEL",     RETROK_KP_PERIOD,   ITEM_ID_DEL_PAD},
-   	{"KRTRN",    RETROK_KP_ENTER,    ITEM_ID_ENTER_PAD},
-/*   	{"PRINT",    RETROK_PRINT,       ITEM_ID_PRTSCR},
-   	{"PAUSE",    RETROK_PAUSE,       ITEM_ID_PAUSE}, */
-   	{"LSHFT",    RETROK_LSHIFT,      ITEM_ID_LSHIFT},
-   	{"RSHFT",    RETROK_RSHIFT,      ITEM_ID_RSHIFT},
-   	{"LCTRL",    RETROK_LCTRL,       ITEM_ID_LCONTROL},
-   	{"RCTRL",    RETROK_RCTRL,       ITEM_ID_RCONTROL},
-   	{"LALT",     RETROK_LALT,        ITEM_ID_LALT},
-   	{"RALT",     RETROK_RALT,        ITEM_ID_RALT},
-/*   	{"SCRLOCK",  RETROK_SCROLLOCK,   ITEM_ID_SCRLOCK},
-   	{"NUMLOCK",  RETROK_NUMLOCK,     ITEM_ID_NUMLOCK},
-   	{"CPSLOCK",  RETROK_CAPSLOCK,    ITEM_ID_CAPSLOCK},
-   	{"LMETA",    RETROK_LMETA,       ITEM_ID_LWIN},
-   	{"RMETA",    RETROK_RMETA,       ITEM_ID_RWIN},
-   	{"MENU",     RETROK_MENU,        ITEM_ID_MENU},
-   	{"BREAK",    RETROK_BREAK,       ITEM_ID_CANCEL}, */
-   	{"-1",       -1,                 ITEM_ID_INVALID}
+	{"K2",       RETROK_KP2,         ITEM_ID_2_PAD},
+	{"K3",       RETROK_KP3,         ITEM_ID_3_PAD},
+	{"K4",       RETROK_KP4,         ITEM_ID_4_PAD},
+/*	{"K5",       RETROK_KP5,         ITEM_ID_5_PAD}, */
+	{"K6",       RETROK_KP6,         ITEM_ID_6_PAD},
+/*	{"K7",       RETROK_KP7,         ITEM_ID_7_PAD}, */
+	{"K8",       RETROK_KP8,         ITEM_ID_8_PAD},
+/*	{"K9",       RETROK_KP9,         ITEM_ID_9_PAD},
+	{"K/",       RETROK_KP_DIVIDE,   ITEM_ID_SLASH_PAD},
+	{"K*",       RETROK_KP_MULTIPLY, ITEM_ID_ASTERISK},
+	{"K-",       RETROK_KP_MINUS,    ITEM_ID_MINUS_PAD},
+	{"K+",       RETROK_KP_PLUS,     ITEM_ID_PLUS_PAD}, */
+	{"KDEL",     RETROK_KP_PERIOD,   ITEM_ID_DEL_PAD},
+	{"KRTRN",    RETROK_KP_ENTER,    ITEM_ID_ENTER_PAD},
+/*	{"PRINT",    RETROK_PRINT,       ITEM_ID_PRTSCR},
+	{"PAUSE",    RETROK_PAUSE,       ITEM_ID_PAUSE}, */
+	{"LSHFT",    RETROK_LSHIFT,      ITEM_ID_LSHIFT},
+	{"RSHFT",    RETROK_RSHIFT,      ITEM_ID_RSHIFT},
+	{"LCTRL",    RETROK_LCTRL,       ITEM_ID_LCONTROL},
+	{"RCTRL",    RETROK_RCTRL,       ITEM_ID_RCONTROL},
+	{"LALT",     RETROK_LALT,        ITEM_ID_LALT},
+	{"RALT",     RETROK_RALT,        ITEM_ID_RALT},
+/*	{"SCRLOCK",  RETROK_SCROLLOCK,   ITEM_ID_SCRLOCK},
+	{"NUMLOCK",  RETROK_NUMLOCK,     ITEM_ID_NUMLOCK},
+	{"CPSLOCK",  RETROK_CAPSLOCK,    ITEM_ID_CAPSLOCK},
+	{"LMETA",    RETROK_LMETA,       ITEM_ID_LWIN},
+	{"RMETA",    RETROK_RMETA,       ITEM_ID_RWIN},
+	{"MENU",     RETROK_MENU,        ITEM_ID_MENU},
+	{"BREAK",    RETROK_BREAK,       ITEM_ID_CANCEL}, */
+	{"-1",       -1,                 ITEM_ID_INVALID}
 };
 
 struct _neogeo_bioses
@@ -409,36 +409,36 @@ static void extract_basename(char *buf, const char *path, size_t size)
 {
 	const char *base = strrchr(path, '/');
 
-   	if (!base)
-      		base = strrchr(path, '\\');
+	if (!base)
+		base = strrchr(path, '\\');
 
-   	if (!base)
-      		base = path;
+	if (!base)
+		base = path;
 
-   	if (*base == '\\' || *base == '/')
-      		base++;
+	if (*base == '\\' || *base == '/')
+		base++;
 
-   	strncpy(buf, base, size - 1);
-   	buf[size - 1] = '\0';
+	strncpy(buf, base, size - 1);
+	buf[size - 1] = '\0';
 
-   	char *ext = strrchr(buf, '.');
-   	if (ext)
-      		*ext = '\0';
+	char *ext = strrchr(buf, '.');
+	if (ext)
+		*ext = '\0';
 }
 
 static void extract_directory(char *buf, const char *path, size_t size)
 {
 	strncpy(buf, path, size - 1);
-   	buf[size - 1] = '\0';
+	buf[size - 1] = '\0';
 
-   	char *base = strrchr(buf, '/');
-   	if (!base)
-      		base = strrchr(buf, '\\');
+	char *base = strrchr(buf, '/');
+	if (!base)
+		base = strrchr(buf, '\\');
 
-   	if (base)
-      		*base = '\0';
-   	else
-      		buf[0] = '\0';
+	if (base)
+		*base = '\0';
+	else
+		buf[0] = '\0';
 }
 
 #if defined(HAVE_OPENGL) || defined(HAVE_OPENGLES)
@@ -450,33 +450,33 @@ static void extract_directory(char *buf, const char *path, size_t size)
 void retro_set_environment(retro_environment_t cb)
 {
 	static const struct retro_variable vars[] = {
-      	{ "mba_mini_cpu_overclock",	"Adjust CPU speed; disabled|110%|120%|130%|140%|150%|160%|170%|180%|190%|200%|50%|60%|70%|80%|90%" },
-      	{ "mba_mini_frame_skip", 	"Set frameskip; 0|1|2|3|4|automatic" },
+	{ "mba_mini_cpu_overclock",	"Adjust CPU speed; disabled|110%|120%|130%|140%|150%|160%|170%|180%|190%|200%|50%|60%|70%|80%|90%" },
+	{ "mba_mini_frame_skip", 	"Set frameskip; 0|1|2|3|4|automatic" },
 	{ "mba_mini_aspect_ratio",	"Core provided aspect ratio; DAR|PAR" },
-      	{ "mba_mini_turbo_button", 	"Enable autofire; disabled|button 1|button 2|R2 to button 1 mapping|R2 to button 2 mapping" },
-      	{ "mba_mini_turbo_delay", 	"Set autofire pulse speed; medium|slow|fast" },
-      	{ "mba_mini_kb_input",		"Keyboard input; enabled|disabled" },
-      	{ "mba_mini_macro_button", 	"Use macro button; disabled|assign A+B to L|assign A+B to R|assign C+D to L|assign C+D to R|assign A+B to L & C+D to R|assign A+B to R & C+D to L" },
-      	{ "mba_mini_tate_mode", 	"T.A.T.E mode(Restart); disabled|enabled" },
-      	{ "mba_mini_sample_rate", 	"Set sample rate (Restart); 48000Hz|44100Hz|32000Hz|22050Hz" },
+	{ "mba_mini_turbo_button", 	"Enable autofire; disabled|button 1|button 2|R2 to button 1 mapping|R2 to button 2 mapping" },
+	{ "mba_mini_turbo_delay", 	"Set autofire pulse speed; medium|slow|fast" },
+	{ "mba_mini_kb_input",		"Keyboard input; enabled|disabled" },
+	{ "mba_mini_macro_button", 	"Use macro button; disabled|assign A+B to L|assign A+B to R|assign C+D to L|assign C+D to R|assign A+B to L & C+D to R|assign A+B to R & C+D to L" },
+	{ "mba_mini_tate_mode", 	"T.A.T.E mode(Restart); disabled|enabled" },
+	{ "mba_mini_sample_rate", 	"Set sample rate (Restart); 48000Hz|44100Hz|32000Hz|22050Hz" },
 	{ "mba_mini_rom_hash",		"Forced off ROM CRC verfiy(Restart); No|Yes" },
-      	{ "mba_mini_neogeo_bios",
+	{ "mba_mini_neogeo_bios",
 #if defined(USE_FULLY)
-	   "Set NEOGEO BIOS(Restart); Default|Europe MVS(Ver. 2)|Europe MVS(Ver. 1)|USA MVS(Ver. 2?)|USA MVS(Ver. 1)|Asia MVS(Ver. 3)|Asia MVS(Latest)|Japan MVS(Ver. 3)|Japan MVS(Ver. 2)|Japan MVS(Ver. 1)|Japan MVS(J3)|Custom Japanese Hotel|UniBIOS(Ver. 3.2)|UniBIOS(Ver. 3.1)|UniBIOS(Ver. 3.0)|UniBIOS(Ver. 2.3)|UniBIOS(Ver. 2.3 older?)|UniBIOS(Ver. 2.2)|UniBIOS(Ver. 2.1)|UniBIOS(Ver. 2.0)|UniBIOS(Ver. 1.3)|UniBIOS(Ver. 1.2)|UniBIOS(Ver. 1.2 older)|UniBIOS(Ver. 1.1)|UniBIOS(Ver. 1.0)|Debug MVS|Asia AES|Japan AES" },
+	  "Set NEOGEO BIOS(Restart); Default|Europe MVS(Ver. 2)|Europe MVS(Ver. 1)|USA MVS(Ver. 2?)|USA MVS(Ver. 1)|Asia MVS(Ver. 3)|Asia MVS(Latest)|Japan MVS(Ver. 3)|Japan MVS(Ver. 2)|Japan MVS(Ver. 1)|Japan MVS(J3)|Custom Japanese Hotel|UniBIOS(Ver. 3.2)|UniBIOS(Ver. 3.1)|UniBIOS(Ver. 3.0)|UniBIOS(Ver. 2.3)|UniBIOS(Ver. 2.3 older?)|UniBIOS(Ver. 2.2)|UniBIOS(Ver. 2.1)|UniBIOS(Ver. 2.0)|UniBIOS(Ver. 1.3)|UniBIOS(Ver. 1.2)|UniBIOS(Ver. 1.2 older)|UniBIOS(Ver. 1.1)|UniBIOS(Ver. 1.0)|Debug MVS|Asia AES|Japan AES" },
 #else
-	   "Set NEOGEO BIOS(Restart); Default|Europe MVS(Ver. 2)|USA MVS(Ver. 2?)|Asia MVS(Ver. 3)|Japan MVS(Ver. 3)|UniBIOS(Ver. 3.2)" },
+	  "Set NEOGEO BIOS(Restart); Default|Europe MVS(Ver. 2)|USA MVS(Ver. 2?)|Asia MVS(Ver. 3)|Japan MVS(Ver. 3)|UniBIOS(Ver. 3.2)" },
 #endif
-      	{ "mba_mini_adj_brightness",
-	   "Set brightness; default|+1%|+2%|+3%|+4%|+5%|+6%|+7%|+8%|+9%|+10%|+11%|+12%|+13%|+14%|+15%|+16%|+17%|+18%|+19%|+20%|-20%|-19%|-18%|-17%|-16%|-15%|-14%|-13%|-12%|-11%|-10%|-9%|-8%|-7%|-6%|-5%|-4%|-3%|-2%|-1%" },
-      	{ "mba_mini_adj_contrast",
-	   "Set contrast; default|+1%|+2%|+3%|+4%|+5%|+6%|+7%|+8%|+9%|+10%|+11%|+12%|+13%|+14%|+15%|+16%|+17%|+18%|+19%|+20%|-20%|-19%|-18%|-17%|-16%|-15%|-14%|-13%|-12%|-11%|-10%|-9%|-8%|-7%|-6%|-5%|-4%|-3%|-2%|-1%" },
-      	{ "mba_mini_adj_gamma",
-	   "Set gamma; default|+1%|+2%|+3%|+4%|+5%|+6%|+7%|+8%|+9%|+10%|+11%|+12%|+13%|+14%|+15%|+16%|+17%|+18%|+19%|+20%|-20%|-19%|-18%|-17%|-16%|-15%|-14%|-13%|-12%|-11%|-10%|-9%|-8%|-7%|-6%|-5%|-4%|-3%|-2%|-1%" },
+	{ "mba_mini_adj_brightness",
+	  "Set brightness; default|+1%|+2%|+3%|+4%|+5%|+6%|+7%|+8%|+9%|+10%|+11%|+12%|+13%|+14%|+15%|+16%|+17%|+18%|+19%|+20%|-20%|-19%|-18%|-17%|-16%|-15%|-14%|-13%|-12%|-11%|-10%|-9%|-8%|-7%|-6%|-5%|-4%|-3%|-2%|-1%" },
+	{ "mba_mini_adj_contrast",
+	  "Set contrast; default|+1%|+2%|+3%|+4%|+5%|+6%|+7%|+8%|+9%|+10%|+11%|+12%|+13%|+14%|+15%|+16%|+17%|+18%|+19%|+20%|-20%|-19%|-18%|-17%|-16%|-15%|-14%|-13%|-12%|-11%|-10%|-9%|-8%|-7%|-6%|-5%|-4%|-3%|-2%|-1%" },
+	{ "mba_mini_adj_gamma",
+	  "Set gamma; default|+1%|+2%|+3%|+4%|+5%|+6%|+7%|+8%|+9%|+10%|+11%|+12%|+13%|+14%|+15%|+16%|+17%|+18%|+19%|+20%|-20%|-19%|-18%|-17%|-16%|-15%|-14%|-13%|-12%|-11%|-10%|-9%|-8%|-7%|-6%|-5%|-4%|-3%|-2%|-1%" },
+	{ NULL, NULL }
+	};
 
-      	{ NULL, NULL },	};
-
-   	environ_cb = cb;
-   	cb(RETRO_ENVIRONMENT_SET_VARIABLES, (void*)vars);
+	environ_cb = cb;
+	cb(RETRO_ENVIRONMENT_SET_VARIABLES, (void*)vars);
 }
 
 static void check_variables(void)
@@ -498,7 +498,8 @@ static void check_variables(void)
 			}
 		}
 	}
-	else set_neogeo_bios = -1;
+	else
+		set_neogeo_bios = -1;
 
 	var.key = "mba_mini_aspect_ratio";
 	var.value = NULL;
@@ -518,8 +519,9 @@ static void check_variables(void)
 			tate = 1;
 		else
 			tate = 0;
-   	}
-	else tate = 0;
+	}
+	else
+		tate = 0;
 
 	var.key = "mba_mini_kb_input";
 	var.value = NULL;
@@ -679,36 +681,36 @@ unsigned retro_api_version(void)
 static void update_geometry(void)
 {
 	struct retro_system_av_info av_info;
-   	retro_get_system_av_info(&av_info);
-   	environ_cb(RETRO_ENVIRONMENT_SET_GEOMETRY, &av_info);
+	retro_get_system_av_info(&av_info);
+	environ_cb(RETRO_ENVIRONMENT_SET_GEOMETRY, &av_info);
 }
 
 static void init_input_descriptors(void)
 {
 #define describe_buttons(INDEX) \
-		{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_UP,    	"Joystick Up" }, \
-   		{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_DOWN,  	"Joystick Down" }, \
-		{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_LEFT,	"Joystick Left" }, \
-   		{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_RIGHT, 	"Joystick Right" }, \
-   		{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_A,     	"Button 1" }, \
-   		{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_B,     	"Button 2" }, \
-   		{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_X,     	"Button 3" }, \
-   		{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_Y,     	"Button 4" }, \
-   		{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_L,     	"Button 5" }, \
-   		{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_R,     	"Button 6" }, \
-   		{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_R2,     "Turbo Button" }, \
-   		{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_SELECT,	"Insert Coin" }, \
-   		{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_START,	"Start" },
+		{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_UP,    	"Joystick Up" },	\
+		{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_DOWN,  	"Joystick Down" },	\
+		{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_LEFT,	"Joystick Left" },	\
+		{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_RIGHT, 	"Joystick Right" },	\
+		{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_A,     	"Button 1" },		\
+		{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_B,     	"Button 2" },		\
+		{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_X,     	"Button 3" },		\
+		{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_Y,     	"Button 4" },		\
+		{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_L,     	"Button 5" },		\
+		{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_R,     	"Button 6" },		\
+		{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_R2,     "Turbo Button" },	\
+		{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_SELECT,	"Insert Coin" },	\
+		{ INDEX, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_START,	"Start" }
 
 	struct retro_input_descriptor desc[] = {
-   		{ 0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_L2,     	"UI Menu" },
-   		{ 0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_L3,     	"Service" },
-   		{ 0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_R3,     	"Framerate" },
-      		describe_buttons(0)
-      		describe_buttons(1)
-      		describe_buttons(2)
-      		describe_buttons(3)
-      		{ 0, 0, 0, 0, NULL }
+		{ 0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_L2,     	"UI Menu" },
+		{ 0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_L3,     	"Service" },
+		{ 0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_R3,     	"Framerate" },
+		describe_buttons(0),
+		describe_buttons(1),
+		describe_buttons(2),
+		describe_buttons(3),
+		{ 0, 0, 0, 0, NULL }
    	};
    	environ_cb(RETRO_ENVIRONMENT_SET_INPUT_DESCRIPTORS, desc);
 }
@@ -716,14 +718,14 @@ static void init_input_descriptors(void)
 void retro_get_system_info(struct retro_system_info *info)
 {
 	memset(info, 0, sizeof(*info));
-   	info->library_name = "M.B.A mini";
+	info->library_name = "M.B.A mini";
 #ifndef GIT_VERSION
-	#define GIT_VERSION ""
+	#define GIT_VERSION "<test version>"
 #endif
-   	info->library_version = GIT_VERSION " (M.B.A = MAME's skeleton + FBA's romsets)";
-   	info->valid_extensions = "zip|chd|7z";
-   	info->need_fullpath = true;
-   	info->block_extract = true;
+	info->library_version = GIT_VERSION;
+	info->valid_extensions = "zip|chd|7z";
+	info->need_fullpath = true;
+	info->block_extract = true;
 }
 
 void retro_get_system_av_info(struct retro_system_av_info *info)
@@ -732,16 +734,16 @@ void retro_get_system_av_info(struct retro_system_av_info *info)
 	int height = (tate && vertical) ? rtwi : rthe;
 
 	info->geometry.base_width   = width;
-   	info->geometry.base_height  = height;
+	info->geometry.base_height  = height;
 
-   	info->geometry.max_width    = width * 2;
-   	info->geometry.max_height   = height * 2;
+	info->geometry.max_width    = width * 2;
+	info->geometry.max_height   = height * 2;
 
-   	float display_ratio = set_par ? (vertical && !tate) ? (float)height / (float)width : (float)width / (float)height : (vertical && !tate) ? 3.0f / 4.0f : 4.0f / 3.0f;
-   	info->geometry.aspect_ratio = display_ratio;
+	float display_ratio = set_par ? (vertical && !tate) ? (float)height / (float)width : (float)width / (float)height : (vertical && !tate) ? 3.0f / 4.0f : 4.0f / 3.0f;
+	info->geometry.aspect_ratio = display_ratio;
 
-   	info->timing.fps            = refresh_rate;
-   	info->timing.sample_rate    = (double)sample_rate;
+	info->timing.fps            = refresh_rate;
+	info->timing.sample_rate    = (double)sample_rate;
 
 #if 0	/* Test */
 	int common_factor = 1;
@@ -758,7 +760,7 @@ void retro_get_system_av_info(struct retro_system_av_info *info)
 		}
 		common_factor = temp_height;
 	}
-	write_log("Current aspect ratio = %d : %d , screen refresh rate = %f , sound sample rate = %.1f \n", set_par ? vertical ? height / common_factor : width / common_factor :
+	LOGI("Current aspect ratio = %d : %d , screen refresh rate = %f , sound sample rate = %.1f \n", set_par ? vertical ? height / common_factor : width / common_factor :
 			vertical ? 3 : 4, set_par ? vertical ? width / common_factor : height / common_factor : vertical ? 4 : 3, info->timing.fps, info->timing.sample_rate);
 #endif
 }
@@ -772,7 +774,7 @@ void retro_deinit(void)
 	if (retro_load_ok)
 		retro_finish();
 
-	LOGI("Retro DeInit\n");
+	LOGI("M.B.A_mini DeInit completed.\n");
 }
 
 void retro_reset (void)
@@ -783,7 +785,7 @@ void retro_reset (void)
 void retro_run (void)
 {
 	bool updated = false;
-   	if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE_UPDATE, &updated) && updated)
+	if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE_UPDATE, &updated) && updated)
       		check_variables();
 
 	turbo_state > turbo_delay ? turbo_state = 0 : turbo_state++;
@@ -797,16 +799,16 @@ void retro_run (void)
 	do_gl2d();
 #else
 	if (draw_this_frame)
-      		video_cb(videoBuffer, rtwi, rthe, topw << PITCH);
-   	else
-      		video_cb(	NULL, rtwi, rthe, topw << PITCH);
+		video_cb(videoBuffer, rtwi, rthe, topw << PITCH);
+	else
+		video_cb(	NULL, rtwi, rthe, topw << PITCH);
 #endif
 }
 
 void prep_retro_rotation(int rot)
 {
 /*	LOGI("Rotation:%d\n", rot);	*/
-   	environ_cb(RETRO_ENVIRONMENT_SET_ROTATION, &rot);
+	environ_cb(RETRO_ENVIRONMENT_SET_ROTATION, &rot);
 }
 
 bool retro_load_game(const struct retro_game_info *info)
@@ -816,19 +818,19 @@ bool retro_load_game(const struct retro_game_info *info)
 #ifdef M16B
 	enum retro_pixel_format fmt = RETRO_PIXEL_FORMAT_RGB565;
 #else
-   	enum retro_pixel_format fmt = RETRO_PIXEL_FORMAT_XRGB8888;
+	enum retro_pixel_format fmt = RETRO_PIXEL_FORMAT_XRGB8888;
 #endif
-   	if (!environ_cb(RETRO_ENVIRONMENT_SET_PIXEL_FORMAT, &fmt))
-   	{
-      		fprintf(stderr, "RGB pixel format is not supported.\n");
-      		exit(0);
+	if (!environ_cb(RETRO_ENVIRONMENT_SET_PIXEL_FORMAT, &fmt))
+	{
+		fprintf(stderr, "RGB pixel format is not supported.\n");
+		exit(0);
    	}
 #ifdef M16B
 	memset(videoBuffer, 0, 512 * 512 * 2);
 #else
-   	memset(videoBuffer, 0, 512 * 512 * 2 * 2);
+	memset(videoBuffer, 0, 512 * 512 * 2 * 2);
 #endif
-   	check_variables();
+	check_variables();
 
 #if defined(HAVE_OPENGL) || defined(HAVE_OPENGLES)
    #ifdef HAVE_OPENGLES
@@ -837,40 +839,40 @@ bool retro_load_game(const struct retro_game_info *info)
 	hw_render.context_type = RETRO_HW_CONTEXT_OPENGL;
    #endif
 	hw_render.context_reset = context_reset;
-   	hw_render.context_destroy = context_destroy;
+	hw_render.context_destroy = context_destroy;
 
-   	if (!environ_cb(RETRO_ENVIRONMENT_SET_HW_RENDER, &hw_render))
+	if (!environ_cb(RETRO_ENVIRONMENT_SET_HW_RENDER, &hw_render))
 		return false;
 #endif
 	init_input_descriptors();
 
 	basename[0] = '\0';
-   	extract_basename(basename, info->path, sizeof(basename));
-   	extract_directory(retro_content_dir, info->path, sizeof(retro_content_dir));
-   	strcpy(RETRO_GAME_PATH, info->path);
+	extract_basename(basename, info->path, sizeof(basename));
+	extract_directory(retro_content_dir, info->path, sizeof(retro_content_dir));
+	strcpy(RETRO_GAME_PATH, info->path);
 
 	int result = mmain(1, RETRO_GAME_PATH);
 
-   	if (result != 1)
+	if (result != 1)
 	{
-        	printf("Error: mame return an error\n");
+		printf("Error: mame return an error\n");
 		return 0;
-   	}
+	}
 
 	retro_load_ok = true;
 
-   	video_set_frameskip(set_frame_skip);
+	video_set_frameskip(set_frame_skip);
 
-   	for (int i = 0; i < 7; i++)
+	for (int i = 0; i < 7; i++)
 		adjust_opt[i] = 1;
 
-   	if (environ_cb(RETRO_ENVIRONMENT_GET_LOG_INTERFACE, &log))
+	if (environ_cb(RETRO_ENVIRONMENT_GET_LOG_INTERFACE, &log))
 		log_cb = log.log;
-   	else
+	else
 		log_cb = NULL;
 
-   	if (log_cb)
-      		log_cb(RETRO_LOG_INFO, "CONTENT_DIRECTORY: %s", retro_content_dir);
+	if (log_cb)
+		log_cb(RETRO_LOG_INFO, "CONTENT_DIRECTORY: %s", retro_content_dir);
 
 	return 1;
 }
@@ -880,7 +882,7 @@ void retro_unload_game(void)
 	if (!pauseg)
 		pauseg = 1;
 
-	LOGI("Retro unload_game \n");
+	LOGI("M.B.A_mini has unload the game.\n");
 }
 
 
@@ -889,7 +891,7 @@ void retro_unload_game(void)
 static int iptdev_get_state(void *device_internal, void *item_internal)
 {
 	UINT8 *itemdata = (UINT8 *)item_internal;
-   	return *itemdata;
+	return *itemdata;
 }
 
 static const char *specific_games_initinput_vs6b[] = {
@@ -912,20 +914,29 @@ static void initInput( running_machine *machine )
 {
 	UINT32 i;
 
-   	KB_device = input_device_add(machine, DEVICE_CLASS_KEYBOARD, "Retrokdb", NULL);
-   	if (KB_device == NULL) fatalerror("KBD Error creating keyboard device! \n");
-   	P1_device = input_device_add(machine, DEVICE_CLASS_KEYBOARD, "Pad1", NULL);
-   	if (P1_device == NULL) fatalerror("P1 Error creating keyboard device! \n");
-   	P2_device = input_device_add(machine, DEVICE_CLASS_KEYBOARD, "Pad2", NULL);
-   	if (P2_device == NULL) fatalerror("P2 Error creating keyboard device! \n");
-   	P3_device = input_device_add(machine, DEVICE_CLASS_KEYBOARD, "Pad3", NULL);
-   	if (P3_device == NULL) fatalerror("P3 Error creating keyboard device! \n");
-   	P4_device = input_device_add(machine, DEVICE_CLASS_KEYBOARD, "Pad4", NULL);
-   	if (P4_device == NULL) fatalerror("P4 Error creating keyboard device! \n");
+	KB_device = input_device_add(machine, DEVICE_CLASS_KEYBOARD, "Retrokdb", NULL);
+	if (KB_device == NULL)
+		fatalerror("KBD Error creating keyboard device! \n");
 
-   	/* our faux keyboard only has a couple of keys (corresponding to the common defaults) */
-   	for (i = 0; i < RETROK_LAST; i++)
-      		retrokbd_state[i] = retrokbd_state2[i] = 0;
+	P1_device = input_device_add(machine, DEVICE_CLASS_KEYBOARD, "Pad1", NULL);
+	if (P1_device == NULL)
+		fatalerror("P1 Error creating joypad device! \n");
+
+	P2_device = input_device_add(machine, DEVICE_CLASS_KEYBOARD, "Pad2", NULL);
+	if (P2_device == NULL)
+		fatalerror("P2 Error creating joypad device! \n");
+
+	P3_device = input_device_add(machine, DEVICE_CLASS_KEYBOARD, "Pad3", NULL);
+	if (P3_device == NULL)
+		fatalerror("P3 Error creating joypad device! \n");
+
+	P4_device = input_device_add(machine, DEVICE_CLASS_KEYBOARD, "Pad4", NULL);
+	if (P4_device == NULL)
+		fatalerror("P4 Error creating joypad device! \n");
+
+	/* our faux keyboard only has a couple of keys (corresponding to the common defaults) */
+	for (i = 0; i < RETROK_LAST; i++)
+		retrokbd_state[i] = retrokbd_state2[i] = 0;
 
 	for (i = 0; i < MAX_JOYPADS; i++)
 	{
@@ -936,76 +947,75 @@ static void initInput( running_machine *machine )
 		pad_state[i][KEY_JOYSTICK_D] = pad_state[i][KEY_JOYSTICK_L] = pad_state[i][KEY_JOYSTICK_R] = 0;
 	}
 
-   	fprintf(stderr, "SOURCE FILE: %s\n", machine->gamedrv->source_file);
-   	fprintf(stderr, "PARENT: %s\n", machine->gamedrv->parent);
-   	fprintf(stderr, "NAME: %s\n", machine->gamedrv->name);
-   	fprintf(stderr, "DESCRIPTION: %s\n", machine->gamedrv->description);
-   	fprintf(stderr, "YEAR: %s\n", machine->gamedrv->year);
-   	fprintf(stderr, "MANUFACTURER: %s\n", machine->gamedrv->manufacturer);
+	fprintf(stderr, "SOURCE FILE: %s\n", machine->gamedrv->source_file);
+	fprintf(stderr, "PARENT: %s\n", machine->gamedrv->parent);
+	fprintf(stderr, "NAME: %s\n", machine->gamedrv->name);
+	fprintf(stderr, "DESCRIPTION: %s\n", machine->gamedrv->description);
+	fprintf(stderr, "YEAR: %s\n", machine->gamedrv->year);
+	fprintf(stderr, "MANUFACTURER: %s\n", machine->gamedrv->manufacturer);
 
 	for (i = 0; ktable[i].retro_key_name != -1; i++)
-      		input_device_item_add(KB_device, ktable[i].mame_key_name,
-			&retrokbd_state[ktable[i].retro_key_name], ktable[i].mame_key, iptdev_get_state);
+      		input_device_item_add(KB_device, ktable[i].mame_key_name, &retrokbd_state[ktable[i].retro_key_name], ktable[i].mame_key, iptdev_get_state);
 
 	/* Only for P1 */
-   	input_device_item_add(P1_device, "F11",	     &pad_state[0][KEY_F11], 	    ITEM_ID_F11,   iptdev_get_state);	/* Bind display fps */
-   	input_device_item_add(P1_device, "Tab",      &pad_state[0][KEY_TAB], 	    ITEM_ID_TAB,   iptdev_get_state);	/* Bind UI menu */
-   	input_device_item_add(P1_device, "F3", 	     &pad_state[0][KEY_F3], 	    ITEM_ID_F3,    iptdev_get_state);	/* Bind reset */
-   	input_device_item_add(P1_device, "F2",	     &pad_state[0][KEY_F2], 	    ITEM_ID_F2,    iptdev_get_state);	/* Bind service */
+	input_device_item_add(P1_device, "F11",	     &pad_state[0][KEY_F11], 	    ITEM_ID_F11,   iptdev_get_state);	/* Bind display fps */
+	input_device_item_add(P1_device, "Tab",      &pad_state[0][KEY_TAB], 	    ITEM_ID_TAB,   iptdev_get_state);	/* Bind UI menu */
+	input_device_item_add(P1_device, "F3", 	     &pad_state[0][KEY_F3], 	    ITEM_ID_F3,    iptdev_get_state);	/* Bind reset */
+	input_device_item_add(P1_device, "F2",	     &pad_state[0][KEY_F2], 	    ITEM_ID_F2,    iptdev_get_state);	/* Bind service */
 	/* P1 init */
-   	input_device_item_add(P1_device, "P1 Start", &pad_state[0][KEY_START],	    ITEM_ID_1, 	   iptdev_get_state);
-   	input_device_item_add(P1_device, "COIN1",    &pad_state[0][KEY_COIN],	    ITEM_ID_5, 	   iptdev_get_state);
-   	input_device_item_add(P1_device, "P1 JoyU",  &pad_state[0][KEY_JOYSTICK_U], ITEM_ID_UP,    iptdev_get_state);
-   	input_device_item_add(P1_device, "P1 JoyD",  &pad_state[0][KEY_JOYSTICK_D], ITEM_ID_DOWN,  iptdev_get_state);
-   	input_device_item_add(P1_device, "P1 JoyL",  &pad_state[0][KEY_JOYSTICK_L], ITEM_ID_LEFT,  iptdev_get_state);
-   	input_device_item_add(P1_device, "P1 JoyR",  &pad_state[0][KEY_JOYSTICK_R], ITEM_ID_RIGHT, iptdev_get_state);
+	input_device_item_add(P1_device, "P1 Start", &pad_state[0][KEY_START],	    ITEM_ID_1, 	   iptdev_get_state);
+	input_device_item_add(P1_device, "COIN1",    &pad_state[0][KEY_COIN],	    ITEM_ID_5, 	   iptdev_get_state);
+	input_device_item_add(P1_device, "P1 JoyU",  &pad_state[0][KEY_JOYSTICK_U], ITEM_ID_UP,    iptdev_get_state);
+	input_device_item_add(P1_device, "P1 JoyD",  &pad_state[0][KEY_JOYSTICK_D], ITEM_ID_DOWN,  iptdev_get_state);
+	input_device_item_add(P1_device, "P1 JoyL",  &pad_state[0][KEY_JOYSTICK_L], ITEM_ID_LEFT,  iptdev_get_state);
+	input_device_item_add(P1_device, "P1 JoyR",  &pad_state[0][KEY_JOYSTICK_R], ITEM_ID_RIGHT, iptdev_get_state);
 	/* P2 init */
-   	input_device_item_add(P2_device, "P2 Start", &pad_state[1][KEY_START], 	    ITEM_ID_2, 	   iptdev_get_state);
-   	input_device_item_add(P2_device, "COIN2",    &pad_state[1][KEY_COIN], 	    ITEM_ID_6, 	   iptdev_get_state);
-   	input_device_item_add(P2_device, "P2 JoyU",  &pad_state[1][KEY_JOYSTICK_U], ITEM_ID_R, 	   iptdev_get_state);
-   	input_device_item_add(P2_device, "P2 JoyD",  &pad_state[1][KEY_JOYSTICK_D], ITEM_ID_F, 	   iptdev_get_state);
-   	input_device_item_add(P2_device, "P2 JoyL",  &pad_state[1][KEY_JOYSTICK_L], ITEM_ID_D, 	   iptdev_get_state);
-   	input_device_item_add(P2_device, "P2 JoyR",  &pad_state[1][KEY_JOYSTICK_R], ITEM_ID_G, 	   iptdev_get_state);
+	input_device_item_add(P2_device, "P2 Start", &pad_state[1][KEY_START], 	    ITEM_ID_2, 	   iptdev_get_state);
+	input_device_item_add(P2_device, "COIN2",    &pad_state[1][KEY_COIN], 	    ITEM_ID_6, 	   iptdev_get_state);
+	input_device_item_add(P2_device, "P2 JoyU",  &pad_state[1][KEY_JOYSTICK_U], ITEM_ID_R, 	   iptdev_get_state);
+	input_device_item_add(P2_device, "P2 JoyD",  &pad_state[1][KEY_JOYSTICK_D], ITEM_ID_F, 	   iptdev_get_state);
+	input_device_item_add(P2_device, "P2 JoyL",  &pad_state[1][KEY_JOYSTICK_L], ITEM_ID_D, 	   iptdev_get_state);
+	input_device_item_add(P2_device, "P2 JoyR",  &pad_state[1][KEY_JOYSTICK_R], ITEM_ID_G, 	   iptdev_get_state);
 	/* P3 init */
-   	input_device_item_add(P3_device, "P3 Start", &pad_state[2][KEY_START],	    ITEM_ID_3, 	   iptdev_get_state);
-   	input_device_item_add(P3_device, "COIN3",    &pad_state[2][KEY_COIN], 	    ITEM_ID_7, 	   iptdev_get_state);
-   	input_device_item_add(P3_device, "P3 JoyU",  &pad_state[2][KEY_JOYSTICK_U], ITEM_ID_I, 	   iptdev_get_state);
-   	input_device_item_add(P3_device, "P3 JoyD",  &pad_state[2][KEY_JOYSTICK_D], ITEM_ID_K, 	   iptdev_get_state);
-   	input_device_item_add(P3_device, "P3 JoyL",  &pad_state[2][KEY_JOYSTICK_L], ITEM_ID_J, 	   iptdev_get_state);
-   	input_device_item_add(P3_device, "P3 JoyR",  &pad_state[2][KEY_JOYSTICK_R], ITEM_ID_L, 	   iptdev_get_state);
+	input_device_item_add(P3_device, "P3 Start", &pad_state[2][KEY_START],	    ITEM_ID_3, 	   iptdev_get_state);
+	input_device_item_add(P3_device, "COIN3",    &pad_state[2][KEY_COIN], 	    ITEM_ID_7, 	   iptdev_get_state);
+	input_device_item_add(P3_device, "P3 JoyU",  &pad_state[2][KEY_JOYSTICK_U], ITEM_ID_I, 	   iptdev_get_state);
+	input_device_item_add(P3_device, "P3 JoyD",  &pad_state[2][KEY_JOYSTICK_D], ITEM_ID_K, 	   iptdev_get_state);
+	input_device_item_add(P3_device, "P3 JoyL",  &pad_state[2][KEY_JOYSTICK_L], ITEM_ID_J, 	   iptdev_get_state);
+	input_device_item_add(P3_device, "P3 JoyR",  &pad_state[2][KEY_JOYSTICK_R], ITEM_ID_L, 	   iptdev_get_state);
 	/* P4 init */
-   	input_device_item_add(P4_device, "P4 Start", &pad_state[3][KEY_START],	    ITEM_ID_4, 	   iptdev_get_state);
-   	input_device_item_add(P4_device, "COIN4",    &pad_state[3][KEY_COIN], 	    ITEM_ID_8, 	   iptdev_get_state);
-   	input_device_item_add(P4_device, "P4 JoyU",  &pad_state[3][KEY_JOYSTICK_U], ITEM_ID_8_PAD, iptdev_get_state);
-   	input_device_item_add(P4_device, "P4 JoyD",  &pad_state[3][KEY_JOYSTICK_D], ITEM_ID_2_PAD, iptdev_get_state);
-   	input_device_item_add(P4_device, "P4 JoyL",  &pad_state[3][KEY_JOYSTICK_L], ITEM_ID_4_PAD, iptdev_get_state);
-   	input_device_item_add(P4_device, "P4 JoyR",  &pad_state[3][KEY_JOYSTICK_R], ITEM_ID_6_PAD, iptdev_get_state);
+	input_device_item_add(P4_device, "P4 Start", &pad_state[3][KEY_START],	    ITEM_ID_4, 	   iptdev_get_state);
+	input_device_item_add(P4_device, "COIN4",    &pad_state[3][KEY_COIN], 	    ITEM_ID_8, 	   iptdev_get_state);
+	input_device_item_add(P4_device, "P4 JoyU",  &pad_state[3][KEY_JOYSTICK_U], ITEM_ID_8_PAD, iptdev_get_state);
+	input_device_item_add(P4_device, "P4 JoyD",  &pad_state[3][KEY_JOYSTICK_D], ITEM_ID_2_PAD, iptdev_get_state);
+	input_device_item_add(P4_device, "P4 JoyL",  &pad_state[3][KEY_JOYSTICK_L], ITEM_ID_4_PAD, iptdev_get_state);
+	input_device_item_add(P4_device, "P4 JoyR",  &pad_state[3][KEY_JOYSTICK_R], ITEM_ID_6_PAD, iptdev_get_state);
 
 	/* Neo Geo buttons layout */
 	if (!core_stricmp(machine->gamedrv->source_file, "src/mame/drivers/neogeo/neogeo.inc"))
 	{
-      		input_device_item_add(P1_device, "P1 B1", &pad_state[0][KEY_BUTTON_1], ITEM_ID_LALT, 	 iptdev_get_state);
-      		input_device_item_add(P1_device, "P1 B2", &pad_state[0][KEY_BUTTON_2], ITEM_ID_LCONTROL, iptdev_get_state);
-      		input_device_item_add(P1_device, "P1 B3", &pad_state[0][KEY_BUTTON_3], ITEM_ID_LSHIFT,   iptdev_get_state);
-      		input_device_item_add(P1_device, "P1 B4", &pad_state[0][KEY_BUTTON_4], ITEM_ID_SPACE,    iptdev_get_state);
+		input_device_item_add(P1_device, "P1 B1", &pad_state[0][KEY_BUTTON_1], ITEM_ID_LALT, 	 iptdev_get_state);
+		input_device_item_add(P1_device, "P1 B2", &pad_state[0][KEY_BUTTON_2], ITEM_ID_LCONTROL, iptdev_get_state);
+		input_device_item_add(P1_device, "P1 B3", &pad_state[0][KEY_BUTTON_3], ITEM_ID_LSHIFT,   iptdev_get_state);
+		input_device_item_add(P1_device, "P1 B4", &pad_state[0][KEY_BUTTON_4], ITEM_ID_SPACE,    iptdev_get_state);
 
-      		input_device_item_add(P2_device, "P2 B1", &pad_state[1][KEY_BUTTON_1], ITEM_ID_S, iptdev_get_state);
-      		input_device_item_add(P2_device, "P2 B2", &pad_state[1][KEY_BUTTON_2], ITEM_ID_A, iptdev_get_state);
-      		input_device_item_add(P2_device, "P2 B3", &pad_state[1][KEY_BUTTON_3], ITEM_ID_W, iptdev_get_state);
-      		input_device_item_add(P2_device, "P2 B4", &pad_state[1][KEY_BUTTON_4], ITEM_ID_Q, iptdev_get_state);
+		input_device_item_add(P2_device, "P2 B1", &pad_state[1][KEY_BUTTON_1], ITEM_ID_S, iptdev_get_state);
+		input_device_item_add(P2_device, "P2 B2", &pad_state[1][KEY_BUTTON_2], ITEM_ID_A, iptdev_get_state);
+		input_device_item_add(P2_device, "P2 B3", &pad_state[1][KEY_BUTTON_3], ITEM_ID_W, iptdev_get_state);
+		input_device_item_add(P2_device, "P2 B4", &pad_state[1][KEY_BUTTON_4], ITEM_ID_Q, iptdev_get_state);
 
 		goto FINISHED;
 	}
 	/* Capcom Eco Fighter , use L & R button to turn the weapon */
-   	if (!core_stricmp(machine->gamedrv->name, "ecofghtr") || !core_stricmp(machine->gamedrv->parent, "ecofghtr"))
-   	{
-      		input_device_item_add(P1_device, "P1 B1", &pad_state[0][KEY_BUTTON_5], ITEM_ID_LCONTROL, iptdev_get_state);
-      		input_device_item_add(P1_device, "P1 B2", &pad_state[0][KEY_BUTTON_2], ITEM_ID_LALT, 	 iptdev_get_state);
-      		input_device_item_add(P1_device, "P1 B3", &pad_state[0][KEY_BUTTON_6], ITEM_ID_SPACE, 	 iptdev_get_state);
+	if (!core_stricmp(machine->gamedrv->name, "ecofghtr") || !core_stricmp(machine->gamedrv->parent, "ecofghtr"))
+	{
+		input_device_item_add(P1_device, "P1 B1", &pad_state[0][KEY_BUTTON_5], ITEM_ID_LCONTROL, iptdev_get_state);
+		input_device_item_add(P1_device, "P1 B2", &pad_state[0][KEY_BUTTON_2], ITEM_ID_LALT, 	 iptdev_get_state);
+		input_device_item_add(P1_device, "P1 B3", &pad_state[0][KEY_BUTTON_6], ITEM_ID_SPACE, 	 iptdev_get_state);
 
-      		input_device_item_add(P2_device, "P2 B1", &pad_state[1][KEY_BUTTON_5], ITEM_ID_A, iptdev_get_state);
-      		input_device_item_add(P2_device, "P2 B2", &pad_state[1][KEY_BUTTON_2], ITEM_ID_S, iptdev_get_state);
-      		input_device_item_add(P2_device, "P2 B3", &pad_state[1][KEY_BUTTON_6], ITEM_ID_Q, iptdev_get_state);
+		input_device_item_add(P2_device, "P2 B1", &pad_state[1][KEY_BUTTON_5], ITEM_ID_A, iptdev_get_state);
+		input_device_item_add(P2_device, "P2 B2", &pad_state[1][KEY_BUTTON_2], ITEM_ID_S, iptdev_get_state);
+		input_device_item_add(P2_device, "P2 B3", &pad_state[1][KEY_BUTTON_6], ITEM_ID_Q, iptdev_get_state);
 
 		macro_enable = false;
 		goto FINISHED;
@@ -1013,13 +1023,13 @@ static void initInput( running_machine *machine )
 	/* Capcom Dynasty Wars layout */
 	if (!core_stricmp(machine->gamedrv->name, "dynwar") || !core_stricmp(machine->gamedrv->parent, "dynwar"))
 	{
-      		input_device_item_add(P1_device, "P1 B1", &pad_state[0][KEY_BUTTON_2], ITEM_ID_LCONTROL, iptdev_get_state);
-      		input_device_item_add(P1_device, "P1 B2", &pad_state[0][KEY_BUTTON_1], ITEM_ID_LALT, 	 iptdev_get_state);
-      		input_device_item_add(P1_device, "P1 B3", &pad_state[0][KEY_BUTTON_3], ITEM_ID_SPACE, 	 iptdev_get_state);
+		input_device_item_add(P1_device, "P1 B1", &pad_state[0][KEY_BUTTON_2], ITEM_ID_LCONTROL, iptdev_get_state);
+		input_device_item_add(P1_device, "P1 B2", &pad_state[0][KEY_BUTTON_1], ITEM_ID_LALT, 	 iptdev_get_state);
+		input_device_item_add(P1_device, "P1 B3", &pad_state[0][KEY_BUTTON_3], ITEM_ID_SPACE, 	 iptdev_get_state);
 
-      		input_device_item_add(P2_device, "P2 B1", &pad_state[1][KEY_BUTTON_2], ITEM_ID_A, iptdev_get_state);
-      		input_device_item_add(P2_device, "P2 B2", &pad_state[1][KEY_BUTTON_1], ITEM_ID_S, iptdev_get_state);
-      		input_device_item_add(P2_device, "P2 B3", &pad_state[1][KEY_BUTTON_3], ITEM_ID_Q, iptdev_get_state);
+		input_device_item_add(P2_device, "P2 B1", &pad_state[1][KEY_BUTTON_2], ITEM_ID_A, iptdev_get_state);
+		input_device_item_add(P2_device, "P2 B2", &pad_state[1][KEY_BUTTON_1], ITEM_ID_S, iptdev_get_state);
+		input_device_item_add(P2_device, "P2 B3", &pad_state[1][KEY_BUTTON_3], ITEM_ID_Q, iptdev_get_state);
 
 		macro_enable = false;
 		goto FINISHED;
@@ -1049,26 +1059,26 @@ static void initInput( running_machine *machine )
 	}
 	/* Default layout */
 	{
-      		input_device_item_add(P1_device, "P1 B1", &pad_state[0][KEY_BUTTON_1], ITEM_ID_LCONTROL, iptdev_get_state);
-      		input_device_item_add(P1_device, "P1 B2", &pad_state[0][KEY_BUTTON_2], ITEM_ID_LALT, 	 iptdev_get_state);
-      		input_device_item_add(P1_device, "P1 B3", &pad_state[0][KEY_BUTTON_3], ITEM_ID_SPACE, 	 iptdev_get_state);
-      		input_device_item_add(P1_device, "P1 B4", &pad_state[0][KEY_BUTTON_4], ITEM_ID_LSHIFT, 	 iptdev_get_state);
+		input_device_item_add(P1_device, "P1 B1", &pad_state[0][KEY_BUTTON_1], ITEM_ID_LCONTROL, iptdev_get_state);
+		input_device_item_add(P1_device, "P1 B2", &pad_state[0][KEY_BUTTON_2], ITEM_ID_LALT, 	 iptdev_get_state);
+		input_device_item_add(P1_device, "P1 B3", &pad_state[0][KEY_BUTTON_3], ITEM_ID_SPACE, 	 iptdev_get_state);
+		input_device_item_add(P1_device, "P1 B4", &pad_state[0][KEY_BUTTON_4], ITEM_ID_LSHIFT, 	 iptdev_get_state);
 
-      		input_device_item_add(P2_device, "P2 B1", &pad_state[1][KEY_BUTTON_1], ITEM_ID_A, iptdev_get_state);
-      		input_device_item_add(P2_device, "P2 B2", &pad_state[1][KEY_BUTTON_2], ITEM_ID_S, iptdev_get_state);
-      		input_device_item_add(P2_device, "P2 B3", &pad_state[1][KEY_BUTTON_3], ITEM_ID_Q, iptdev_get_state);
-      		input_device_item_add(P2_device, "P2 B4", &pad_state[1][KEY_BUTTON_4], ITEM_ID_W, iptdev_get_state);
+		input_device_item_add(P2_device, "P2 B1", &pad_state[1][KEY_BUTTON_1], ITEM_ID_A, iptdev_get_state);
+		input_device_item_add(P2_device, "P2 B2", &pad_state[1][KEY_BUTTON_2], ITEM_ID_S, iptdev_get_state);
+		input_device_item_add(P2_device, "P2 B3", &pad_state[1][KEY_BUTTON_3], ITEM_ID_Q, iptdev_get_state);
+		input_device_item_add(P2_device, "P2 B4", &pad_state[1][KEY_BUTTON_4], ITEM_ID_W, iptdev_get_state);
 
-      		input_device_item_add(P3_device, "P3 B1", &pad_state[2][KEY_BUTTON_1], ITEM_ID_RCONTROL, iptdev_get_state);
-      		input_device_item_add(P3_device, "P3 B2", &pad_state[2][KEY_BUTTON_2], ITEM_ID_RSHIFT, 	 iptdev_get_state);
-      		input_device_item_add(P3_device, "P3 B3", &pad_state[2][KEY_BUTTON_3], ITEM_ID_ENTER, 	 iptdev_get_state);
-      		input_device_item_add(P3_device, "P3 B4", &pad_state[2][KEY_BUTTON_4], ITEM_ID_RALT, 	 iptdev_get_state);
+		input_device_item_add(P3_device, "P3 B1", &pad_state[2][KEY_BUTTON_1], ITEM_ID_RCONTROL, iptdev_get_state);
+		input_device_item_add(P3_device, "P3 B2", &pad_state[2][KEY_BUTTON_2], ITEM_ID_RSHIFT, 	 iptdev_get_state);
+		input_device_item_add(P3_device, "P3 B3", &pad_state[2][KEY_BUTTON_3], ITEM_ID_ENTER, 	 iptdev_get_state);
+		input_device_item_add(P3_device, "P3 B4", &pad_state[2][KEY_BUTTON_4], ITEM_ID_RALT, 	 iptdev_get_state);
 
-      		input_device_item_add(P4_device, "P4 B1", &pad_state[3][KEY_BUTTON_1], ITEM_ID_0_PAD, 	  iptdev_get_state);
-      		input_device_item_add(P4_device, "P4 B2", &pad_state[3][KEY_BUTTON_2], ITEM_ID_DEL_PAD,   iptdev_get_state);
-      		input_device_item_add(P4_device, "P4 B3", &pad_state[3][KEY_BUTTON_3], ITEM_ID_ENTER_PAD, iptdev_get_state);
-      		input_device_item_add(P4_device, "P4 B4", &pad_state[3][KEY_BUTTON_4], ITEM_ID_3_PAD, 	  iptdev_get_state);
-   	}
+		input_device_item_add(P4_device, "P4 B1", &pad_state[3][KEY_BUTTON_1], ITEM_ID_0_PAD, 	  iptdev_get_state);
+		input_device_item_add(P4_device, "P4 B2", &pad_state[3][KEY_BUTTON_2], ITEM_ID_DEL_PAD,   iptdev_get_state);
+		input_device_item_add(P4_device, "P4 B3", &pad_state[3][KEY_BUTTON_3], ITEM_ID_ENTER_PAD, iptdev_get_state);
+		input_device_item_add(P4_device, "P4 B4", &pad_state[3][KEY_BUTTON_4], ITEM_ID_3_PAD, 	  iptdev_get_state);
+	}
 
 FINISHED: ;
 }
@@ -1083,16 +1093,16 @@ static inline void retro_poll_mame_input( void )
 	{
 		for (i = 0; ktable[i].retro_key_name != -1; i++)
 		{
-      			retrokbd_state[ktable[i].retro_key_name] = input_state_cb(0, RETRO_DEVICE_KEYBOARD, 0, ktable[i].retro_key_name) ? 0x80 : 0;
+			retrokbd_state[ktable[i].retro_key_name] = input_state_cb(0, RETRO_DEVICE_KEYBOARD, 0, ktable[i].retro_key_name) ? 0x80 : 0;
 
-      			if (retrokbd_state[ktable[i].retro_key_name] && !retrokbd_state2[ktable[i].retro_key_name])
-      			{
-         			ui_ipt_pushchar = ktable[i].retro_key_name;
-         			retrokbd_state2[ktable[i].retro_key_name] = 1;
-      			}
-      			else if (!retrokbd_state[ktable[i].retro_key_name] && retrokbd_state2[ktable[i].retro_key_name])
-         			retrokbd_state2[ktable[i].retro_key_name] = 0;
-   		}
+			if (retrokbd_state[ktable[i].retro_key_name] && !retrokbd_state2[ktable[i].retro_key_name])
+			{
+				ui_ipt_pushchar = ktable[i].retro_key_name;
+				retrokbd_state2[ktable[i].retro_key_name] = 1;
+			}
+			else if (!retrokbd_state[ktable[i].retro_key_name] && retrokbd_state2[ktable[i].retro_key_name])
+				retrokbd_state2[ktable[i].retro_key_name] = 0;
+		}
 	}
 
 	pad_state[0][KEY_F11] = input_state_cb(0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_R3);	/* Only */
@@ -1101,39 +1111,51 @@ static inline void retro_poll_mame_input( void )
 
 	for (i = 0; i < MAX_JOYPADS; i++)
 	{
-   		pad_state[i][KEY_JOYSTICK_U] = input_state_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_UP);
-   		pad_state[i][KEY_JOYSTICK_D] = input_state_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_DOWN);
-   		pad_state[i][KEY_JOYSTICK_L] = input_state_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_LEFT);
-   		pad_state[i][KEY_JOYSTICK_R] = input_state_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_RIGHT);
-   		pad_state[i][KEY_BUTTON_1]   = input_state_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_A);
-   		pad_state[i][KEY_BUTTON_2]   = input_state_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_B);
-   		pad_state[i][KEY_BUTTON_3]   = input_state_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_X);
-   		pad_state[i][KEY_BUTTON_4]   = input_state_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_Y);
-   		pad_state[i][KEY_BUTTON_5]   = input_state_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_L);
-   		pad_state[i][KEY_BUTTON_6]   = input_state_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_R);
-   		pad_state[i][KEY_START]      = input_state_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_START);
-   		pad_state[i][KEY_COIN]       = input_state_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_SELECT);
+		pad_state[i][KEY_JOYSTICK_U] = input_state_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_UP);
+		pad_state[i][KEY_JOYSTICK_D] = input_state_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_DOWN);
+		pad_state[i][KEY_JOYSTICK_L] = input_state_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_LEFT);
+		pad_state[i][KEY_JOYSTICK_R] = input_state_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_RIGHT);
+		pad_state[i][KEY_BUTTON_1]   = input_state_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_A);
+		pad_state[i][KEY_BUTTON_2]   = input_state_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_B);
+		pad_state[i][KEY_BUTTON_3]   = input_state_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_X);
+		pad_state[i][KEY_BUTTON_4]   = input_state_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_Y);
+		pad_state[i][KEY_BUTTON_5]   = input_state_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_L);
+		pad_state[i][KEY_BUTTON_6]   = input_state_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_R);
+		pad_state[i][KEY_START]      = input_state_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_START);
+		pad_state[i][KEY_COIN]       = input_state_cb(i, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_SELECT);
 
 		switch (turbo_enable)
-   		{
-      			case 0: break;
-      			case 1: if (PLAYER_PRESS(A))  pad_state[i][KEY_BUTTON_1] = turbo_state < turbo_delay ? FALSE : TRUE; break;
-      			case 2: if (PLAYER_PRESS(B))  pad_state[i][KEY_BUTTON_2] = turbo_state < turbo_delay ? FALSE : TRUE; break;
-      			case 3: if (PLAYER_PRESS(R2)) pad_state[i][KEY_BUTTON_1] = turbo_state < turbo_delay ? FALSE : TRUE; break;
-      			case 4: if (PLAYER_PRESS(R2)) pad_state[i][KEY_BUTTON_2] = turbo_state < turbo_delay ? FALSE : TRUE; break;
-   		}
+		{
+			case 0:
+				break;
+			case 1: if (PLAYER_PRESS(A))  pad_state[i][KEY_BUTTON_1] = turbo_state < turbo_delay ? FALSE : TRUE;
+				break;
+			case 2: if (PLAYER_PRESS(B))  pad_state[i][KEY_BUTTON_2] = turbo_state < turbo_delay ? FALSE : TRUE;
+				break;
+			case 3: if (PLAYER_PRESS(R2)) pad_state[i][KEY_BUTTON_1] = turbo_state < turbo_delay ? FALSE : TRUE;
+				break;
+			case 4: if (PLAYER_PRESS(R2)) pad_state[i][KEY_BUTTON_2] = turbo_state < turbo_delay ? FALSE : TRUE;
+				break;
+		}
 
 		switch (macro_state)
 		{
-			case 0: break;
-			case 1: if (PLAYER_PRESS(L)) pad_state[i][KEY_BUTTON_1] = pad_state[i][KEY_BUTTON_2] = TRUE; break;
-			case 2: if (PLAYER_PRESS(R)) pad_state[i][KEY_BUTTON_1] = pad_state[i][KEY_BUTTON_2] = TRUE; break;
-			case 3: if (PLAYER_PRESS(L)) pad_state[i][KEY_BUTTON_3] = pad_state[i][KEY_BUTTON_4] = TRUE; break;
-			case 4: if (PLAYER_PRESS(R)) pad_state[i][KEY_BUTTON_3] = pad_state[i][KEY_BUTTON_4] = TRUE; break;
+			case 0:
+				break;
+			case 1: if (PLAYER_PRESS(L)) pad_state[i][KEY_BUTTON_1] = pad_state[i][KEY_BUTTON_2] = TRUE;
+				break;
+			case 2: if (PLAYER_PRESS(R)) pad_state[i][KEY_BUTTON_1] = pad_state[i][KEY_BUTTON_2] = TRUE;
+				break;
+			case 3: if (PLAYER_PRESS(L)) pad_state[i][KEY_BUTTON_3] = pad_state[i][KEY_BUTTON_4] = TRUE;
+				break;
+			case 4: if (PLAYER_PRESS(R)) pad_state[i][KEY_BUTTON_3] = pad_state[i][KEY_BUTTON_4] = TRUE;
+				break;
 			case 5: if (PLAYER_PRESS(L)) pad_state[i][KEY_BUTTON_1] = pad_state[i][KEY_BUTTON_2] = TRUE;
-				if (PLAYER_PRESS(R)) pad_state[i][KEY_BUTTON_3] = pad_state[i][KEY_BUTTON_4] = TRUE; break;
+				if (PLAYER_PRESS(R)) pad_state[i][KEY_BUTTON_3] = pad_state[i][KEY_BUTTON_4] = TRUE;
+				break;
 			case 6: if (PLAYER_PRESS(L)) pad_state[i][KEY_BUTTON_3] = pad_state[i][KEY_BUTTON_4] = TRUE;
-				if (PLAYER_PRESS(R)) pad_state[i][KEY_BUTTON_1] = pad_state[i][KEY_BUTTON_2] = TRUE; break;
+				if (PLAYER_PRESS(R)) pad_state[i][KEY_BUTTON_1] = pad_state[i][KEY_BUTTON_2] = TRUE;
+				break;
 		}
 	}
 }
@@ -1142,85 +1164,85 @@ static inline void retro_poll_mame_input( void )
 
 void osd_exit(running_machine &machine)
 {
-	write_log("osd_exit called \n");
+	LOGI("osd_exit called \n");
 
-   	if (our_target != NULL)
-      		render_target_free(our_target);
+	if (our_target != NULL)
+		render_target_free(our_target);
 
-   	our_target = NULL;
+ 		our_target = NULL;
 
-   	global_free(KB_device);
-   	global_free(P4_device);
-  	global_free(P3_device);
-  	global_free(P2_device);
-  	global_free(P1_device);
+	global_free(KB_device);
+	global_free(P4_device);
+	global_free(P3_device);
+	global_free(P2_device);
+	global_free(P1_device);
 }
 
 void osd_init(running_machine *machine)
 {
-   	machine->add_notifier(MACHINE_NOTIFY_EXIT, osd_exit);
+	machine->add_notifier(MACHINE_NOTIFY_EXIT, osd_exit);
 
-   	our_target = render_target_alloc(machine, NULL, 0);
+	our_target = render_target_alloc(machine, NULL, 0);
 
-   	initInput(machine);
+	initInput(machine);
 
-   	write_log("machine screen orientation: %s \n", (machine->gamedrv->flags & ORIENTATION_SWAP_XY) ? "VERTICAL" : "HORIZONTAL");
-   	orient = (machine->gamedrv->flags & ORIENTATION_MASK);
-   	vertical = (machine->gamedrv->flags & ORIENTATION_SWAP_XY);
+	LOGI("machine screen orientation: %s\n", (machine->gamedrv->flags & ORIENTATION_SWAP_XY) ? "VERTICAL" : "HORIZONTAL");
+	orient = (machine->gamedrv->flags & ORIENTATION_MASK);
+	vertical = (machine->gamedrv->flags & ORIENTATION_SWAP_XY);
 
 	INT32 gameRot = 0;
-   	gameRot = (ROT270 == orient) ? 1 : gameRot;
-   	gameRot = (ROT180 == orient) ? 2 : gameRot;
-   	gameRot = (ROT90 == orient) ? 3 : gameRot;
+	gameRot = (ROT270 == orient) ? 1 : gameRot;
+	gameRot = (ROT180 == orient) ? 2 : gameRot;
+	gameRot = (ROT90 == orient) ? 3 : gameRot;
 
-   	prep_retro_rotation(gameRot);
-   	machine->sample_rate = sample_rate;	/* Override original value */
+	prep_retro_rotation(gameRot);
+	machine->sample_rate = sample_rate;	/* Override original value */
 
 	if (!macro_enable)
 		macro_state = 0;
 
-/*   	write_log("osd init done\n");	*/
+/*	LOGI("osd init done\n");	*/
 }
 
 void osd_update(running_machine *machine, int skip_redraw)
 {
-   	const render_primitive_list	*primlist;
-   	UINT8				*surfptr;
+	const render_primitive_list	*primlist;
+	UINT8				*surfptr;
 
-   	if (mame_reset)
-   	{
-      		mame_reset = 0;
-      		machine->schedule_soft_reset();
-   	}
-
-   	if (pauseg)
+	if (mame_reset)
 	{
-      		machine->schedule_exit();
-      		return;
-   	}
+		mame_reset = 0;
+		machine->schedule_soft_reset();
+	}
 
-   	if (FirstTimeUpdate)
-      		skip_redraw = 0;		/* force redraw to make sure the video texture is created */
+	if (pauseg)
+	{
+		machine->schedule_exit();
+		return;
+	}
 
-   	if (!skip_redraw)
-   	{
-      		draw_this_frame = true;
+	if (FirstTimeUpdate)
+		skip_redraw = 0;		/* force redraw to make sure the video texture is created */
+
+	if (!skip_redraw)
+	{
+		draw_this_frame = true;
 		INT32 minwidth, minheight;
 
-      		/* get the minimum width/height for the current layout */
+		/* get the minimum width/height for the current layout */
 		render_target_get_minimum_size(our_target, &minwidth, &minheight);
 
 		if (FirstTimeUpdate)
 		{
-         		FirstTimeUpdate = 0;
-         		write_log("Game screen: width=%i, height=%i, rowPixels=%i\n", minwidth, minheight, minwidth);
+			FirstTimeUpdate = 0;
+			LOGI("Game screen: width=%i, height=%i, rowPixels=%i\n", minwidth, minheight, minwidth);
 
-         		rtwi = topw = minwidth;
-         		rthe = minheight;
-      		}
+			rtwi = topw = minwidth;
+			rthe = minheight;
+		}
 
-      		if (adjust_opt[0])
-      		{
+		if (adjust_opt[0])
+		{
 			adjust_opt[0] = 0;
 			if (adjust_opt[1])
 			{
@@ -1262,46 +1284,49 @@ void osd_update(running_machine *machine, int skip_redraw)
 				if (adjust_opt[6])
 				{
 					adjust_opt[6] = 0;
-					/* RAM access waitstates etc. aren't emulated - slow the CPU to compensate */
-					if (strcmp(machine->gamedrv->source_file, "src/mame/drivers/capcom/cps2.c") == 0)
+					if (strcmp(machine->gamedrv->source_file, "src/mame/drivers/capcom/cps2.c") == 0)	/* RAM access waitstates etc. aren't emulated - slow the CPU to compensate */
 						arroffset[3] *= 0.7375f;
 					else if (strcmp(machine->gamedrv->name, "sf2hf") == 0 || strcmp(machine->gamedrv->name, "sf2hfu") == 0 || strcmp(machine->gamedrv->name, "sf2hfj") == 0)
 						arroffset[3] *= (float)(8.7 / 12.0);
+					else if (strcmp(machine->gamedrv->name, "kog") == 0 || strcmp(machine->gamedrv->name, "kogplus") == 0 || strcmp(machine->gamedrv->name, "cthd2003") == 0)  /* fix garbage on intro */
+						arroffset[3] *= ((float)(10.0 / 256.0) + 1.0f);
+					else if (strcmp(machine->gamedrv->name, "ct2k3sa") == 0 || strcmp(machine->gamedrv->name, "ct2k3sp") == 0)
+						arroffset[3] *= ((float)(13.0 / 256.0) + 1.0f);
 
 					machine->device("maincpu")->set_clock_scale(arroffset[3]);
-					/*
-					machine->device("slave")->set_clock_scale(1.0f);
-					machine->device("mcu")->set_clock_scale(1.0f);
-					*/
 				}
-      			}
+			}
 		}
-      		/* make that the size of our target */
-      		render_target_set_bounds(our_target, rtwi, rthe, 0);
-      		/* get the list of primitives for the target at the current size */
-      		primlist = render_target_get_primitives(our_target);
-      		/* lock them, and then render them */
-      		osd_lock_acquire(primlist->lock);
+		/* make that the size of our target */
+		render_target_set_bounds(our_target, rtwi, rthe, 0);
 
-      		surfptr = (UINT8 *) videoBuffer;
+		/* get the list of primitives for the target at the current size */
+		primlist = render_target_get_primitives(our_target);
+
+		/* lock them, and then render them */
+		osd_lock_acquire(primlist->lock);
+
+		surfptr = (UINT8 *)videoBuffer;
 #ifdef M16B
-      		rgb565_draw_primitives(primlist->head, surfptr, rtwi, rthe, rtwi);
+		rgb565_draw_primitives(primlist->head, surfptr, rtwi, rthe, rtwi);
 #else
-      		rgb888_draw_primitives(primlist->head, surfptr, rtwi, rthe, rtwi);
+		rgb888_draw_primitives(primlist->head, surfptr, rtwi, rthe, rtwi);
 #endif
-      		osd_lock_release(primlist->lock);
+		osd_lock_release(primlist->lock);
 	}
-   	else
-      		draw_this_frame = false;
+	else
+		draw_this_frame = false;
 
 	RETRO_LOOP = false;
 
-   	if (keyboard_input)
+	if (keyboard_input)
+	{
 		if (ui_ipt_pushchar != -1)
-   		{
-      			ui_ipt_pushchar = -1;
-      			ui_input_push_char_event(machine, our_target, (unicode_char)ui_ipt_pushchar);
-   		}
+		{
+			ui_ipt_pushchar = -1;
+			ui_input_push_char_event(machine, our_target, (unicode_char)ui_ipt_pushchar);
+		}
+	}
 }
 
 
@@ -1310,7 +1335,7 @@ void osd_update(running_machine *machine, int skip_redraw)
 //============================================================
 void osd_wait_for_debugger(running_device *device, int firststop)
 {
-   // we don't have a debugger, so we just return here
+	// we don't have a debugger, so we just return here
 }
 
 //============================================================
@@ -1327,8 +1352,8 @@ void osd_update_audio_stream(running_machine *machine, short *buffer, int sample
 //============================================================
 void osd_set_mastervolume(int attenuation)
 {
-   // if we had actual sound output, we would adjust the global
-   // volume in response to this function
+	// if we had actual sound output, we would adjust the global
+	// volume in response to this function
 }
 
 //============================================================
@@ -1386,7 +1411,7 @@ static int parsePath(char *path, char *gamePath, char *gameName)
 		strcpy(gamePath, ".\0");
 		strncpy(gameName, path, dotIndex);
 		gameName[dotIndex] = 0;
-/*		write_log("*gamePath=%s , *gameName=%s\n", gamePath, gameName);	*/
+/*		LOGI("*gamePath=%s , *gameName=%s\n", gamePath, gameName);	*/
 		return 1;
 	}
 
@@ -1416,7 +1441,7 @@ static int getGameInfo(char *gameName, int *rotation, int *driverIndex)
 			gameFound = 1;
 			*driverIndex = drvindex;
 			*rotation = drivers[drvindex]->flags & 0x07;
-/*			write_log("%-18s\"%s\" rot=%i\n", drivers[drvindex]->name, drivers[drvindex]->description, *rotation); */
+/*			LOGI("%-18s\"%s\" rot=%i\n", drivers[drvindex]->name, drivers[drvindex]->description, *rotation); */
 			if (strcmp(drivers[drvindex]->source_file, "src/mame/drivers/neogeo/neogeo.inc") == 0)
 				is_neogeo = true;
 		}
@@ -1439,14 +1464,14 @@ static int executeGame(char *path)
 
 	if (result == 0)
 	{
-		write_log("parse path failed! path=%s\n", path);
+		LOGI("parse path failed! path=%s\n", path);
 		strcpy(MAME_GAME_NAME, path);
 	}
 
 	//Find the game info. Exit if game driver was not found.
 	if (getGameInfo(MAME_GAME_NAME, &gameRot, &driverIndex) == 0)
 	{
-		write_log("game not found: %s\n", MAME_GAME_NAME);
+		LOGI("game not found: %s\n", MAME_GAME_NAME);
 		return -2;
 	}
 
@@ -1455,12 +1480,12 @@ static int executeGame(char *path)
 		screenRot = 1;
 		if (gameRot & ORIENTATION_FLIP_X)
 		{
-			write_log("*********** flip X \n");
+			LOGI("*********** flip X \n");
 			screenRot = 2;
 		}
 	}
 
-/*	write_log("creating frontend...\n");	*/
+/*	LOGI("creating frontend...\n");	*/
 
 	//find how many parameters we have
 	for (paramCount = 0; xargv[paramCount] != NULL; paramCount++) ;
@@ -1499,15 +1524,15 @@ static int executeGame(char *path)
 	{
 		xargv[paramCount++] = (char*)"-bios";
 		xargv[paramCount++] = (char*)neogeo_bioses[set_neogeo_bios].name;
-		write_log("Current loaded NEOGEO BIOS is < %s >\n", neogeo_bioses[set_neogeo_bios].bios);
+		LOGI("Current loaded NEOGEO BIOS is < %s >\n", neogeo_bioses[set_neogeo_bios].bios);
 	}
 
-/*	write_log("executing frontend... params:%i\n", paramCount);
+/*	LOGI("executing frontend... params:%i\n", paramCount);
 
 	for (int i = 0; xargv[i] != NULL; i++)
 	{
-		write_log("%s ", xargv[i]);
-		write_log("\n");
+		LOGI("%s ", xargv[i]);
+		LOGI("\n");
 	}
 */
 	result = cli_execute(paramCount, (char**)xargv, NULL);

@@ -1,47 +1,50 @@
+
 #ifndef _LARGEFILE64_SOURCE
-#define _LARGEFILE64_SOURCE
+   #define _LARGEFILE64_SOURCE
 #endif
 
 #ifdef SDLMAME_LINUX
-#define __USE_LARGEFILE64
-#endif
-#ifndef SDLMAME_BSD
-#ifdef _XOPEN_SOURCE
-#undef _XOPEN_SOURCE
-#endif
-#define _XOPEN_SOURCE 500
+   #define __USE_LARGEFILE64
 #endif
 
-//#include <sys/types.h>
+#ifndef SDLMAME_BSD
+   #ifdef _XOPEN_SOURCE
+	#undef _XOPEN_SOURCE
+   #endif
+   #define _XOPEN_SOURCE 500
+#endif
+
 #include <sys/stat.h>
 #include <fcntl.h>
-#ifndef __USE_BSD
-#define __USE_BSD   // to get DT_xxx on Linux
-#endif
-#undef _POSIX_C_SOURCE  // to get DT_xxx on OS X
-#include <dirent.h>
 
+#ifndef __USE_BSD
+#define __USE_BSD	// to get DT_xxx on Linux
+#endif
+
+#undef _POSIX_C_SOURCE	// to get DT_xxx on OS X
+
+#include <dirent.h>
 #include "osdcore.h"
 #include "retroos.h"
 
 #if defined(SDLMAME_WIN32) || defined(SDLMAME_OS2)
-#define PATHSEPCH '\\'
-#define INVPATHSEPCH '/'
+   #define PATHSEPCH '\\'
+   #define INVPATHSEPCH '/'
 #else
-#define PATHSEPCH '/'
-#define INVPATHSEPCH '\\'
+   #define PATHSEPCH '/'
+   #define INVPATHSEPCH '\\'
 #endif
 
 #if defined(__MACH__) || defined(WIN32) || defined(ANDROID) || defined(SDLMAME_NO64BITIO) || defined(SDLMAME_BSD) || defined(SDLMAME_OS2) || defined(SDLMAME_HAIKU)
-typedef struct dirent sdl_dirent;
-typedef struct stat sdl_stat;
-#define sdl_readdir readdir
-#define sdl_stat_fn stat
+   typedef struct dirent sdl_dirent;
+   typedef struct stat sdl_stat;
+   #define sdl_readdir readdir
+   #define sdl_stat_fn stat
 #else
-typedef struct dirent64 sdl_dirent;
-typedef struct stat64 sdl_stat;
-#define sdl_readdir readdir64
-#define sdl_stat_fn stat64
+   typedef struct dirent64 sdl_dirent;
+   typedef struct stat64 sdl_stat;
+   #define sdl_readdir readdir64
+   #define sdl_stat_fn stat64
 #endif
 
 #define HAS_DT_XXX defined(SDLMAME_LINUX) || defined(SDLMAME_BSD) || defined(__MACH__)
@@ -56,13 +59,14 @@ struct _osd_directory
 
 static char *build_full_path(const char *path, const char *file)
 {
-	char *ret = (char *) osd_malloc/*_array*/(strlen(path)+strlen(file)+2);
+	char *ret = (char *)osd_malloc/*_array*/(strlen(path) + strlen(file) + 2);
 	char *p = ret;
 
 	strcpy(p, path);
 	p += strlen(path);
 	*p++ = PATHSEPCH;
 	strcpy(p, file);
+
 	return ret;
 }
 
@@ -93,11 +97,10 @@ static osd_dir_entry_type get_attributes_enttype(int attributes, char *path)
 	}
 }
 #else
-
 static osd_dir_entry_type get_attributes_stat(const char *file)
 {
 	sdl_stat st;
-	if(sdl_stat_fn(file, &st))
+	if (sdl_stat_fn(file, &st))
 		return (osd_dir_entry_type) 0;
 
 	if (S_ISDIR(st.st_mode))
@@ -110,7 +113,7 @@ static osd_dir_entry_type get_attributes_stat(const char *file)
 static UINT64 osd_get_file_size(const char *file)
 {
 	sdl_stat st;
-	if(sdl_stat_fn(file, &st))
+	if (sdl_stat_fn(file, &st))
 		return 0;
 	return st.st_size;
 }
@@ -122,31 +125,30 @@ static UINT64 osd_get_file_size(const char *file)
 osd_directory *osd_opendir(const char *dirname)
 {
 	osd_directory *dir = NULL;
-	char *tmpstr, *envstr;
+	char *tmpstr;
+	char *envstr;
 	int i, j;
 
-	dir = (osd_directory *) osd_malloc(sizeof(osd_directory));
+	dir = (osd_directory *)osd_malloc(sizeof(osd_directory));
 	if (dir)
 	{
 		memset(dir, 0, sizeof(osd_directory));
 		dir->fd = NULL;
 	}
 
-	tmpstr = (char *) osd_malloc/*_array*/(strlen(dirname)+1);
+	tmpstr = (char *)osd_malloc/*_array*/(strlen(dirname) + 1);
 	strcpy(tmpstr, dirname);
 
 	if (tmpstr[0] == '$')
 	{
 		char *envval;
-		envstr = (char *) osd_malloc/*_array*/(strlen(tmpstr)+1);
+		envstr = (char *) osd_malloc/*_array*/(strlen(tmpstr) + 1);
 
 		strcpy(envstr, tmpstr);
 
 		i = 0;
 		while (envstr[i] != PATHSEPCH && envstr[i] != INVPATHSEPCH && envstr[i] != 0 && envstr[i] != '.')
-		{
 			i++;
-		}
 
 		envstr[i] = '\0';
 
@@ -155,7 +157,7 @@ osd_directory *osd_opendir(const char *dirname)
 		{
 			j = strlen(envval) + strlen(tmpstr) + 1;
 			osd_free(tmpstr);
-			tmpstr = (char *) osd_malloc/*_array*/(j);
+			tmpstr = (char *)osd_malloc/*_array*/(j);
 
 			// start with the value of $HOME
 			strcpy(tmpstr, envval);
@@ -197,13 +199,14 @@ const osd_directory_entry *osd_readdir(osd_directory *dir)
 
 	dir->ent.name = dir->data->d_name;
 	temp = build_full_path(dir->path, dir->data->d_name);
-	#if HAS_DT_XXX
+#if HAS_DT_XXX
 	dir->ent.type = get_attributes_enttype(dir->data->d_type, temp);
-	#else
+#else
 	dir->ent.type = get_attributes_stat(temp);
-	#endif
+#endif
 	dir->ent.size = osd_get_file_size(temp);
 	osd_free(temp);
+
 	return &dir->ent;
 }
 
@@ -216,6 +219,7 @@ void osd_closedir(osd_directory *dir)
 {
 	if (dir->fd != NULL)
 		closedir(dir->fd);
+
 	osd_free(dir->path);
 	osd_free(dir);
 }

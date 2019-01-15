@@ -135,13 +135,15 @@ struct _input_private
 ***************************************************************************/
 
 /* token strings for device classes */
+#define NULLNUM		((UINT32)(~0))
+
 static const code_string_table devclass_token_table[] =
 {
 	{ DEVICE_CLASS_KEYBOARD, "KEYCODE" },
 	{ DEVICE_CLASS_MOUSE,    "MOUSECODE" },
 	{ DEVICE_CLASS_LIGHTGUN, "GUNCODE" },
 	{ DEVICE_CLASS_JOYSTICK, "JOYCODE" },
-	{ ~0,                    "UNKCODE" }
+	{ NULLNUM,               "UNKCODE" }
 };
 
 /* friendly strings for device classes */
@@ -151,7 +153,7 @@ static const code_string_table devclass_string_table[] =
 	{ DEVICE_CLASS_MOUSE,    "Mouse" },
 	{ DEVICE_CLASS_LIGHTGUN, "Gun" },
 	{ DEVICE_CLASS_JOYSTICK, "Joy" },
-	{ ~0,                    "Unk" }
+	{ NULLNUM,               "Unk" }
 };
 
 /* token strings for item modifiers */
@@ -163,7 +165,7 @@ static const code_string_table modifier_token_table[] =
 	{ ITEM_MODIFIER_RIGHT,   "RIGHT" },
 	{ ITEM_MODIFIER_UP,      "UP" },
 	{ ITEM_MODIFIER_DOWN,    "DOWN" },
-	{ ~0,                    "" }
+	{ NULLNUM,               "" }
 };
 
 /* friendly strings for item modifiers */
@@ -175,7 +177,7 @@ static const code_string_table modifier_string_table[] =
 	{ ITEM_MODIFIER_RIGHT,   "Right" },
 	{ ITEM_MODIFIER_UP,      "Up" },
 	{ ITEM_MODIFIER_DOWN,    "Down" },
-	{ ~0,                    "" }
+	{ NULLNUM,               "" }
 };
 
 /* token strings for item classes */
@@ -184,7 +186,7 @@ static const code_string_table itemclass_token_table[] =
 	{ ITEM_CLASS_SWITCH,     "SWITCH" },
 	{ ITEM_CLASS_ABSOLUTE,   "ABSOLUTE" },
 	{ ITEM_CLASS_RELATIVE,   "RELATIVE" },
-	{ ~0,                    "" }
+	{ NULLNUM,               "" }
 };
 
 /* token strings for standard item ids */
@@ -397,8 +399,9 @@ static const code_string_table itemid_token_table[] =
 	{ ITEM_ID_ADD_RELATIVE15,"ADDREL15" },
 	{ ITEM_ID_ADD_RELATIVE16,"ADDREL16" },
 
-	{ ~0,                    NULL }
+	{ NULLNUM,                    NULL }
 };
+#undef	NULLNUM
 
 
 
