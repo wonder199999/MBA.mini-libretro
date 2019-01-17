@@ -1,14 +1,14 @@
-
 	Compatibility-list - Parent roms with the "*" :
 	#####################################################
 	#                       EXAMPLE:                    #
 	#  Parent name: Title name (date, version) - Note:  #
-	#  Clone name: Title name (date, version) - Note:   #
+	#   Clone name: Title name (date, version) - Note:  #
 	#####################################################
+
 
 	Support the following: 
 	/************************************************************/
-	/ * Capcom System 1 ( 269 parent+clone roms are supported) * /	/* Unfinished */
+	/ * Capcom System 1 ( 269 parent+clone roms are supported) * /
 	/************************************************************/
 
 	*1941: 1941 - Counter Attack (900227 World)
@@ -51,7 +51,7 @@
 		dinopic (clone of dino): Cadillacs and Dinosaurs (bootleg set 1 (with PIC16c57), 930201 etc)
 		dinopic2 (clone of dino): Cadillacs and Dinosaurs (bootleg set 2 (with PIC16c57), 930201 etc)
 		dinopic3 (clone of dino): Cadillacs and Dinosaurs (bootleg set 3 (with PIC16c57), 930201 etc)
-		dinopic4 (clone of dino): Cadillacs and Dinosaurs (bootleg set 4 (with PIC16c57), 930223 Asia TW)
+		dinopic4 (clone of dino): Cadillacs and Dinosaurs (bootleg set 4 (with PIC16c57), 930223 Asia TW) - Note: NOSOUND
 		dinot (clone of dino): Cadillacs and Dinosaurs Turbo (bootleg set 1, 930223 Asia TW)
 		dinotpic (clone of dino): Cadillacs and Dinosaurs Turbo (bootleg set 2 (with PIC16c57), 930201 etc)
 		dinou (clone of dino): Cadillacs & Dinosaurs (930201 USA)
@@ -165,7 +165,7 @@
 	*qtono2j: クイズ殿様の野望２ (とのさまのやぼう 2) ◦ Quiz Tonosama no Yabou 2 Zenkoku-ban (tonosama 2 950123 Japan)
 
 	*sf2: Street Fighter II - The World Warrior (910522 etc)
-		sf2b (clone of sf2): Street Fighter II - The World Warrior (bootleg, 910214 etc, set 1  (with YM2151 + 2xMSM5205))
+		sf2b (clone of sf2): Street Fighter II - The World Warrior (bootleg, 910214 etc, set 1  (with YM2151 + 2xMSM5205)) - NOTE: Imperfect Graphics
 		sf2b2 (clone of sf2): Street Fighter II - The World Warrior (bootleg, 910214 etc, set 2)
 		sf2b3 (clone of sf2): Street Fighter II - The World Warrior (bootleg, 910214 etc, set 3)
 		sf2eb (clone of sf2): Street Fighter II - The World Warrior (910214 etc)
@@ -704,9 +704,9 @@
 		gunhohki (clone of mysticri): Gun Hohki (Japan)
 		mysticrib (clone of mysticri): Mystic Riders (bootleg?)
 
-	*nbbatman: Ninja Baseball Batman (World) - Note: Imperfect graphics.
-		leaguemn (clone of nbbatman): Yakyuu Kakutou League-Man (Japan) - Note: Imperfect graphics.
-		nbbatmanu (clone of nbbatman): Ninja Baseball Batman (US) - Note: Imperfect graphics.
+	*nbbatman: Ninja Baseball Batman (World) - Note: Imperfect Graphics.
+		leaguemn (clone of nbbatman): Yakyuu Kakutou League-Man (Japan) - Note: Imperfect Graphics.
+		nbbatmanu (clone of nbbatman): Ninja Baseball Batman (US) - Note: Imperfect Graphics.
 
 	*rtypeleo: R-Type Leo (World)
 		rtypeleoj: R-Type Leo (Japan)
@@ -902,9 +902,9 @@
 	
 	*kof98: The King of Fighters '98 - The Slugfest / King of Fighters '98 - dream match never ends (NGM-2420)
 		kof98a (clone of kof98): The King of Fighters '98 - The Slugfest / King of Fighters '98 - dream match never ends (NGM-2420, alternate board)
-		kof98ae (clone of kof98): The King of Fighters '98 (Anniversary Edition, EGHT hack)
-		kof98ae2016 (clone of kof98): The King of Fighters '98 (Anniversary Edition 2016, EGHT hack)
-		kof98cb (clone of kof98): The King of Fighters '98 (Combo)
+		kof98ae (clone of kof98): The King of Fighters '98 (Anniversary Edition, EGHT hack) - NOTE:  NOT WORKING
+		kof98ae2016 (clone of kof98): The King of Fighters '98 (Anniversary Edition 2016, EGHT hack) - NOTE: NOT WORKING
+		kof98cb (clone of kof98): The King of Fighters '98 (Combo) - NOTE: NOT WORKING
 		kof98h (clone of kof98): The King of Fighters '98 - The Slugfest / King of Fighters '98 - dream match never ends (NGH-2420)
 		kof98k (clone of kof98): The King of Fighters '98 - The Slugfest / King of Fighters '98 - dream match never ends (Korean board)
 		kof98ka (clone of kof98): The King of Fighters '98 - The Slugfest / King of Fighters '98 - dream match never ends (Korean board 2)

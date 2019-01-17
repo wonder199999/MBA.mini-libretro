@@ -95,7 +95,7 @@
 #include "emuopts.h"
 #include "config.h"
 #include "xmlfile.h"
-#include "profiler.h"
+// #include "profiler.h"
 #include "ui.h"
 #include "uiinput.h"
 
@@ -125,11 +125,10 @@
 #define JOYDIR_LEFT_BIT		(1 << JOYDIR_LEFT)
 #define JOYDIR_RIGHT_BIT	(1 << JOYDIR_RIGHT)
 
-#define NUM_SIMUL_KEYS	(UCHAR_SHIFT_END - UCHAR_SHIFT_BEGIN + 1)
-#define LOG_INPUTX		0
+#define NUM_SIMUL_KEYS		(UCHAR_SHIFT_END - UCHAR_SHIFT_BEGIN + 1)
 #define SPACE_COUNT		3
-#define INVALID_CHAR	'?'
-#define IP_NAME_DEFAULT	NULL
+#define INVALID_CHAR			'?'
+#define IP_NAME_DEFAULT		NULL
 
 
 /***************************************************************************
@@ -140,46 +139,46 @@
 typedef struct _analog_field_state analog_field_state;
 struct _analog_field_state
 {
-	analog_field_state *		next;				/* link to the next analog state for this port */
-	const input_field_config *	field;				/* pointer to the input field referenced */
+	analog_field_state		*next;			/* link to the next analog state for this port */
+	const input_field_config	*field;			/* pointer to the input field referenced */
 
 	/* adjusted values (right-justified and tweaked) */
-	UINT8						shift;				/* shift to align final value in the port */
-	INT32						adjdefvalue;		/* adjusted default value from the config */
-	INT32						adjmin;				/* adjusted minimum value from the config */
-	INT32						adjmax;				/* adjusted maximum value from the config */
+	UINT8				shift;			/* shift to align final value in the port */
+	INT32				adjdefvalue;		/* adjusted default value from the config */
+	INT32				adjmin;			/* adjusted minimum value from the config */
+	INT32				adjmax;			/* adjusted maximum value from the config */
 
 	/* live values of configurable parameters */
-	INT32						sensitivity;		/* current live sensitivity (100=normal) */
-	UINT8						reverse;			/* current live reverse flag */
-	INT32						delta;				/* current live delta to apply each frame a digital inc/dec key is pressed */
-	INT32						centerdelta;		/* current live delta to apply each frame no digital inputs are pressed */
+	INT32				sensitivity;		/* current live sensitivity (100=normal) */
+	UINT8				reverse;		/* current live reverse flag */
+	INT32				delta;			/* current live delta to apply each frame a digital inc/dec key is pressed */
+	INT32				centerdelta;		/* current live delta to apply each frame no digital inputs are pressed */
 
 	/* live analog value tracking */
-	INT32						accum;				/* accumulated value (including relative adjustments) */
-	INT32						previous;			/* previous adjusted value */
-	INT32						previousanalog;		/* previous analog value */
+	INT32				accum;			/* accumulated value (including relative adjustments) */
+	INT32				previous;		/* previous adjusted value */
+	INT32				previousanalog;		/* previous analog value */
 
 	/* parameters for modifying live values */
-	INT32						minimum;			/* minimum adjusted value */
-	INT32						maximum;			/* maximum adjusted value */
-	INT32						center;				/* center adjusted value for autocentering */
-	INT32						reverse_val;		/* value where we subtract from to reverse directions */
+	INT32				minimum;		/* minimum adjusted value */
+	INT32				maximum;		/* maximum adjusted value */
+	INT32				center;			/* center adjusted value for autocentering */
+	INT32				reverse_val;		/* value where we subtract from to reverse directions */
 
 	/* scaling factors */
-	INT64						scalepos;			/* scale factor to apply to positive adjusted values */
-	INT64						scaleneg;			/* scale factor to apply to negative adjusted values */
-	INT64						keyscalepos;		/* scale factor to apply to the key delta field when pos */
-	INT64						keyscaleneg;		/* scale factor to apply to the key delta field when neg */
-	INT64						positionalscale;	/* scale factor to divide a joystick into positions */
+	INT64				scalepos;		/* scale factor to apply to positive adjusted values */
+	INT64				scaleneg;		/* scale factor to apply to negative adjusted values */
+	INT64				keyscalepos;		/* scale factor to apply to the key delta field when pos */
+	INT64				keyscaleneg;		/* scale factor to apply to the key delta field when neg */
+	INT64				positionalscale;	/* scale factor to divide a joystick into positions */
 
 	/* misc flags */
-	UINT8						absolute;			/* is this an absolute or relative input? */
-	UINT8						wraps;				/* does the control wrap around? */
-	UINT8						autocenter;			/* autocenter this input? */
-	UINT8						single_scale;		/* scale joystick differently if default is between min/max */
-	UINT8						interpolate;		/* should we do linear interpolation for mid-frame reads? */
-	UINT8						lastdigital;		/* was the last modification caused by a digital form? */
+	UINT8				absolute;		/* is this an absolute or relative input? */
+	UINT8				wraps;			/* does the control wrap around? */
+	UINT8				autocenter;		/* autocenter this input? */
+	UINT8				single_scale;		/* scale joystick differently if default is between min/max */
+	UINT8				interpolate;		/* should we do linear interpolation for mid-frame reads? */
+	UINT8				lastdigital;		/* was the last modification caused by a digital form? */
 };
 
 
@@ -187,11 +186,11 @@ struct _analog_field_state
 typedef struct _digital_joystick_state digital_joystick_state;
 struct _digital_joystick_state
 {
-	const input_field_config *	field[4];			/* input field for up, down, left, right respectively */
-	UINT8						inuse;				/* is this joystick used? */
-	UINT8						current;			/* current value */
-	UINT8						current4way;		/* current 4-way value */
-	UINT8						previous;			/* previous value */
+	const input_field_config	*field[4];		/* input field for up, down, left, right respectively */
+	UINT8				inuse;			/* is this joystick used? */
+	UINT8				current;		/* current value */
+	UINT8				current4way;		/* current 4-way value */
+	UINT8				previous;		/* previous value */
 };
 
 
@@ -199,38 +198,38 @@ struct _digital_joystick_state
 typedef struct _device_field_info device_field_info;
 struct _device_field_info
 {
-	device_field_info *			next;				/* linked list of info for this port */
-	const input_field_config *	field;				/* pointer to the input field referenced */
-	device_t *		device;				/* device */
-	UINT8						shift;				/* shift to apply to the final result */
-	input_port_value			oldval;				/* last value */
+	device_field_info		*next;			/* linked list of info for this port */
+	const input_field_config	*field;			/* pointer to the input field referenced */
+	device_t			*device;		/* device */
+	UINT8				shift;			/* shift to apply to the final result */
+	input_port_value		oldval;			/* last value */
 };
 
 
 /* internal live state of an input field */
 struct _input_field_state
 {
-	analog_field_state *		analog;				/* pointer to live analog data if this is an analog field */
-	digital_joystick_state *	joystick;			/* pointer to digital joystick information */
-	input_seq					seq[SEQ_TYPE_TOTAL];/* currently configured input sequences */
-	input_port_value			value;				/* current value of this port */
-	UINT8						impulse;			/* counter for impulse controls */
-	UINT8						last;				/* were we pressed last time? */
-	UINT8						joydir;				/* digital joystick direction index */
-	char *						name;				/* overridden name */
+	analog_field_state		*analog;		/* pointer to live analog data if this is an analog field */
+	digital_joystick_state		*joystick;		/* pointer to digital joystick information */
+	input_seq			seq[SEQ_TYPE_TOTAL];	/* currently configured input sequences */
+	input_port_value		value;			/* current value of this port */
+	UINT8				impulse;		/* counter for impulse controls */
+	UINT8				last;			/* were we pressed last time? */
+	UINT8				joydir;			/* digital joystick direction index */
+	char				*name;			/* overridden name */
 };
 
 
 /* internal live state of an input port */
 struct _input_port_state
 {
-	analog_field_state *		analoglist;			/* pointer to list of analog port info */
-	device_field_info *			readdevicelist;		/* pointer to list of input device info */
-	device_field_info *			writedevicelist;	/* pointer to list of output device info */
-	input_port_value			defvalue;			/* combined default value across the port */
-	input_port_value			digital;			/* current value from all digital inputs */
-	input_port_value			vblank;				/* value of all IPT_VBLANK bits */
-	input_port_value			outputvalue;		/* current value for outputs */
+	analog_field_state		*analoglist;		/* pointer to list of analog port info */
+	device_field_info		*readdevicelist;	/* pointer to list of input device info */
+	device_field_info		*writedevicelist;	/* pointer to list of output device info */
+	input_port_value		defvalue;		/* combined default value across the port */
+	input_port_value		digital;		/* current value from all digital inputs */
+	input_port_value		vblank;			/* value of all IPT_VBLANK bits */
+	input_port_value		outputvalue;		/* current value for outputs */
 };
 
 
@@ -238,9 +237,9 @@ struct _input_port_state
 typedef struct _input_type_state input_type_state;
 struct _input_type_state
 {
-	input_type_state *			next;				/* pointer to the next live state in the list */
-	input_type_desc				typedesc;			/* copy of the original description, modified by the OSD */
-	input_seq					seq[SEQ_TYPE_TOTAL];/* currently configured sequences */
+	input_type_state		*next;			/* pointer to the next live state in the list */
+	input_type_desc			typedesc;		/* copy of the original description, modified by the OSD */
+	input_seq			seq[SEQ_TYPE_TOTAL];	/* currently configured sequences */
 };
 
 
@@ -248,24 +247,24 @@ struct _input_type_state
 struct _input_port_private
 {
 	/* global state */
-	UINT8						safe_to_read;		/* clear at start; set after state is loaded */
+	UINT8				safe_to_read;			/* clear at start; set after state is loaded */
 
 	/* types */
-	input_type_state *			typestatelist;		/* list of live type states */
-	input_type_state *			type_to_typestate[__ipt_max][MAX_PLAYERS]; /* map from type/player to type state */
+	input_type_state		*typestatelist;			/* list of live type states */
+	input_type_state		*type_to_typestate[__ipt_max][MAX_PLAYERS];			/* map from type/player to type state */
 
 	/* specific special global input states */
-	digital_joystick_state		joystick_info[MAX_PLAYERS][DIGITAL_JOYSTICKS_PER_PLAYER]; /* joystick states */
+	digital_joystick_state		joystick_info[MAX_PLAYERS][DIGITAL_JOYSTICKS_PER_PLAYER];	/* joystick states */
 
 	/* frame time tracking */
-	attotime					last_frame_time;	/* time of the last frame callback */
-	attoseconds_t				last_delta_nsec;	/* nanoseconds that passed since the previous callback */
+	attotime			last_frame_time;		/* time of the last frame callback */
+	attoseconds_t			last_delta_nsec;		/* nanoseconds that passed since the previous callback */
 
 	/* playback/record information */
-	mame_file *					record_file;		/* recording file (NULL if not recording) */
-	mame_file *					playback_file;		/* playback file (NULL if not recording) */
-	UINT64						playback_accumulated_speed;/* accumulated speed during playback */
-	UINT32						playback_accumulated_frames;/* accumulated frames during playback */
+	mame_file			*record_file;			/* recording file (NULL if not recording) */
+	mame_file			*playback_file;			/* playback file (NULL if not recording) */
+	UINT64				playback_accumulated_speed;	/* accumulated speed during playback */
+	UINT32				playback_accumulated_frames;	/* accumulated frames during playback */
 };
 
 
@@ -273,7 +272,7 @@ typedef struct _inputx_code inputx_code;
 struct _inputx_code
 {
 	unicode_char ch;
-	const input_field_config * field[NUM_SIMUL_KEYS];
+	const input_field_config	*field[NUM_SIMUL_KEYS];
 };
 
 typedef struct _key_buffer key_buffer;
@@ -290,7 +289,7 @@ struct _char_info
 {
 	unicode_char ch;
 	const char *name;
-	const char *alternate;	/* alternative string, in UTF-8 */
+	const char *alternate;		/* alternative string, in UTF-8 */
 };
 
 /***************************************************************************
@@ -298,11 +297,11 @@ struct _char_info
 ***************************************************************************/
 
 #define APPLY_SENSITIVITY(x,s)		(((INT64)(x) * (s)) / 100)
-#define APPLY_INVERSE_SENSITIVITY(x,s) (((INT64)(x) * 100) / (s))
+#define APPLY_INVERSE_SENSITIVITY(x,s)	(((INT64)(x) * 100) / (s))
 
 #define COMPUTE_SCALE(num,den)		(((INT64)(num) << 24) / (den))
-#define RECIP_SCALE(s)				(((INT64)1 << 48) / (s))
-#define APPLY_SCALE(x,s)			(((INT64)(x) * (s)) >> 24)
+#define RECIP_SCALE(s)			(((INT64)1 << 48) / (s))
+#define APPLY_SCALE(x,s)		(((INT64)(x) * (s)) >> 24)
 
 
 
@@ -313,10 +312,9 @@ struct _char_info
 /* XML attributes for the different types */
 static const char *const seqtypestrings[] = { "standard", "decrement", "increment" };
 
-
 static const char_info charinfo[] =
 {
-	{ 0x0008,					"Backspace",	NULL },		/* Backspace */
+	{ 0x0008,					"Backspace",	NULL },			/* Backspace */
 	{ 0x0009,					"Tab",			"    " },	/* Tab */
 	{ 0x000c,					"Clear",		NULL },		/* Clear */
 	{ 0x000d,					"Enter",		NULL },		/* Enter */
@@ -500,7 +498,7 @@ static const char_info charinfo[] =
 	{ 0xff3a,					NULL,			"Z" },		/* fullwidth 'Z' */
 	{ 0xff3b,					NULL,			"[" },		/* fullwidth left bracket */
 	{ 0xff3c,					NULL,			"\\" },		/* fullwidth backslash */
-	{ 0xff3d,					NULL,			"]"	},		/* fullwidth right bracket */
+	{ 0xff3d,					NULL,			"]"  },		/* fullwidth right bracket */
 	{ 0xff3e,					NULL,			"^" },		/* fullwidth caret */
 	{ 0xff3f,					NULL,			"_" },		/* fullwidth underscore */
 	{ 0xff40,					NULL,			"`" },		/* fullwidth backquote */
@@ -547,8 +545,8 @@ static const char_info charinfo[] =
 	{ 0xffec,					NULL,			"\xE2\x86\x93" },	/* fullwidth down arrow */
 	{ 0xffed,					NULL,			"\xE2\x96\xAA" },	/* fullwidth solid box */
 	{ 0xffee,					NULL,			"\xE2\x97\xA6" },	/* fullwidth open circle */
-	{ UCHAR_SHIFT_1,			"Shift",		NULL },		/* Shift key */
-	{ UCHAR_SHIFT_2,			"Ctrl",			NULL },		/* Ctrl key */
+	{ UCHAR_SHIFT_1,		"Shift",		NULL },		/* Shift key */
+	{ UCHAR_SHIFT_2,		"Ctrl",			NULL },		/* Ctrl key */
 	{ UCHAR_MAMEKEY(F1),		"F1",			NULL },		/* F1 function key */
 	{ UCHAR_MAMEKEY(F2),		"F2",			NULL },		/* F2 function key */
 	{ UCHAR_MAMEKEY(F3),		"F3",			NULL },		/* F3 function key */
@@ -570,11 +568,11 @@ static const char_info charinfo[] =
 	{ UCHAR_MAMEKEY(HOME),		"Home",			"\014" },	/* Home key */
 	{ UCHAR_MAMEKEY(END),		"End",			NULL },		/* End key */
 	{ UCHAR_MAMEKEY(PGUP),		"Page Up",		NULL },		/* Page Up key */
-	{ UCHAR_MAMEKEY(PGDN),		"Page Down",	NULL },		/* Page Down key */
-	{ UCHAR_MAMEKEY(LEFT),		"Cursor Left",	NULL },		/* Cursor Left */
-	{ UCHAR_MAMEKEY(RIGHT),		"Cursor Right",	NULL },		/* Cursor Right */
-	{ UCHAR_MAMEKEY(UP),		"Cursor Up",	NULL },		/* Cursor Up */
-	{ UCHAR_MAMEKEY(DOWN),		"Cursor Down",	NULL },		/* Cursor Down */
+	{ UCHAR_MAMEKEY(PGDN),		"Page Down",		NULL },		/* Page Down key */
+	{ UCHAR_MAMEKEY(LEFT),		"Cursor Left",		NULL },		/* Cursor Left */
+	{ UCHAR_MAMEKEY(RIGHT),		"Cursor Right",		NULL },		/* Cursor Right */
+	{ UCHAR_MAMEKEY(UP),		"Cursor Up",		NULL },		/* Cursor Up */
+	{ UCHAR_MAMEKEY(DOWN),		"Cursor Down",		NULL },		/* Cursor Down */
 	{ UCHAR_MAMEKEY(0_PAD),		"Keypad 0",		NULL },		/* 0 on the numeric keypad */
 	{ UCHAR_MAMEKEY(1_PAD),		"Keypad 1",		NULL },		/* 1 on the numeric keypad */
 	{ UCHAR_MAMEKEY(2_PAD),		"Keypad 2",		NULL },		/* 2 on the numeric keypad */
@@ -590,20 +588,20 @@ static const char_info charinfo[] =
 	{ UCHAR_MAMEKEY(MINUS_PAD),	"Keypad -",		NULL },		/* - on the numeric Keypad */
 	{ UCHAR_MAMEKEY(PLUS_PAD),	"Keypad +",		NULL },		/* + on the numeric Keypad */
 	{ UCHAR_MAMEKEY(DEL_PAD),	"Keypad .",		NULL },		/* . on the numeric keypad */
-	{ UCHAR_MAMEKEY(ENTER_PAD),	"Keypad Enter",	NULL },		/* Enter on the numeric keypad */
-	{ UCHAR_MAMEKEY(PRTSCR),	"Print Screen",	NULL },		/* Print Screen key */
+	{ UCHAR_MAMEKEY(ENTER_PAD),	"Keypad Enter",		NULL },		/* Enter on the numeric keypad */
+	{ UCHAR_MAMEKEY(PRTSCR),	"Print Screen",		NULL },		/* Print Screen key */
 	{ UCHAR_MAMEKEY(PAUSE),		"Pause",		NULL },		/* Pause key */
-	{ UCHAR_MAMEKEY(LSHIFT),	"Left Shift",	NULL },		/* Left Shift key */
-	{ UCHAR_MAMEKEY(RSHIFT),	"Right Shift",	NULL },		/* Right Shift key */
-	{ UCHAR_MAMEKEY(LCONTROL),	"Left Ctrl",	NULL },		/* Left Control key */
-	{ UCHAR_MAMEKEY(RCONTROL),	"Right Ctrl",	NULL },		/* Right Control key */
+	{ UCHAR_MAMEKEY(LSHIFT),	"Left Shift",		NULL },		/* Left Shift key */
+	{ UCHAR_MAMEKEY(RSHIFT),	"Right Shift",		NULL },		/* Right Shift key */
+	{ UCHAR_MAMEKEY(LCONTROL),	"Left Ctrl",		NULL },		/* Left Control key */
+	{ UCHAR_MAMEKEY(RCONTROL),	"Right Ctrl",		NULL },		/* Right Control key */
 	{ UCHAR_MAMEKEY(LALT),		"Left Alt",		NULL },		/* Left Alt key */
-	{ UCHAR_MAMEKEY(RALT),		"Right Alt",	NULL },		/* Right Alt key */
-	{ UCHAR_MAMEKEY(SCRLOCK),	"Scroll Lock",	NULL },		/* Scroll Lock key */
+	{ UCHAR_MAMEKEY(RALT),		"Right Alt",		NULL },		/* Right Alt key */
+	{ UCHAR_MAMEKEY(SCRLOCK),	"Scroll Lock",		NULL },		/* Scroll Lock key */
 	{ UCHAR_MAMEKEY(NUMLOCK),	"Num Lock",		NULL },		/* Num Lock key */
-	{ UCHAR_MAMEKEY(CAPSLOCK),	"Caps Lock",	NULL },		/* Caps Lock key */
+	{ UCHAR_MAMEKEY(CAPSLOCK),	"Caps Lock",		NULL },		/* Caps Lock key */
 	{ UCHAR_MAMEKEY(LWIN),		"Left Win",		NULL },		/* Left Win key */
-	{ UCHAR_MAMEKEY(RWIN),		"Right Win",	NULL },		/* Right Win key */
+	{ UCHAR_MAMEKEY(RWIN),		"Right Win",		NULL },		/* Right Win key */
 	{ UCHAR_MAMEKEY(MENU),		"Menu",			NULL },		/* Menu key */
 	{ UCHAR_MAMEKEY(CANCEL),	"Break",		NULL }		/* Break/Pause key */
 };
@@ -620,8 +618,9 @@ static TIMER_CALLBACK(inputx_timerproc);
 
 
 /*  Debugging commands and handlers. */
-/* static void execute_input(running_machine *machine, int ref, int params, const char *param[]);
-   static void execute_dumpkbd(running_machine *machine, int ref, int params, const char *param[]);	*/
+/*
+static void execute_input(running_machine *machine, int ref, int params, const char *param[]);
+static void execute_dumpkbd(running_machine *machine, int ref, int params, const char *param[]);	*/
 
 /***************************************************************************
     COMMON SHARED STRINGS
@@ -814,15 +813,15 @@ static void save_game_inputs(running_machine *machine, xml_data_node *parentnode
 
 /* input playback */
 static time_t playback_init(running_machine *machine);
-static void playback_end(running_machine *machine, const char *message);
-static void playback_frame(running_machine *machine, attotime curtime);
-static void playback_port(const input_port_config *port);
+// static void playback_end(running_machine *machine, const char *message);
+// static void playback_frame(running_machine *machine, attotime curtime);
+// static void playback_port(const input_port_config *port);
 
 /* input recording */
 static void record_init(running_machine *machine);
-static void record_end(running_machine *machine, const char *message);
-static void record_frame(running_machine *machine, attotime curtime);
-static void record_port(const input_port_config *port);
+// static void record_end(running_machine *machine, const char *message);
+// static void record_frame(running_machine *machine, attotime curtime);
+// static void record_port(const input_port_config *port);
 
 
 
@@ -887,6 +886,7 @@ INLINE const char *get_port_tag(const input_port_config *port, char *tempbuffer)
 
 	if (port->tag != NULL)
 		return port->tag;
+
 	for (curport = port->machine->m_portlist.first(); curport != NULL; curport = curport->next())
 	{
 		if (curport == port)
@@ -978,7 +978,7 @@ time_t input_port_init(running_machine *machine, const input_port_token *tokens)
 
 	/* allocate memory for our data structure */
 	machine->input_port_data = auto_alloc_clear(machine, input_port_private);
-	//portdata = machine->input_port_data;
+//	portdata = machine->input_port_data;
 
 	/* add an exit callback and a frame callback */
 	machine->add_notifier(MACHINE_NOTIFY_EXIT, input_port_exit);
@@ -991,8 +991,10 @@ time_t input_port_init(running_machine *machine, const input_port_token *tokens)
 	if (tokens != NULL)
 	{
 		input_port_list_init(machine->m_portlist, tokens, errorbuf, sizeof(errorbuf), TRUE);
+
 		if (errorbuf[0] != 0)
 			mame_printf_error("Input port errors:\n%s", errorbuf);
+
 		init_port_state(machine);
 	}
 
@@ -1015,8 +1017,8 @@ time_t input_port_init(running_machine *machine, const input_port_token *tokens)
 static void input_port_exit(running_machine &machine)
 {
 	/* close any playback or recording files */
-	playback_end(&machine, NULL);
-	record_end(&machine, NULL);
+//	playback_end(&machine, NULL);
+//	record_end(&machine, NULL);
 }
 
 
@@ -1154,10 +1156,9 @@ void input_field_get_user_settings(const input_field_config *field, input_field_
 void input_field_set_user_settings(const input_field_config *field, const input_field_user_settings *settings)
 {
 	static const input_seq default_seq = SEQ_DEF_1(SEQCODE_DEFAULT);
-	int seqtype;
 
 	/* copy the basics */
-	for (seqtype = 0; seqtype < ARRAY_LENGTH(settings->seq); seqtype++)
+	for (int seqtype = 0; seqtype < ARRAY_LENGTH(settings->seq); seqtype++)
 	{
 		const input_seq *defseq = input_type_seq(field->port->machine, field->type, field->player, (input_seq_type)seqtype);
 		if (input_seq_cmp(defseq, &settings->seq[seqtype]) == 0)
@@ -1366,8 +1367,7 @@ const char *input_type_name(running_machine *machine, int type, int player)
 	/* if no machine, fall back to brute force searching */
 	else
 	{
-		int typenum;
-		for (typenum = 0; typenum < ARRAY_LENGTH(core_types); typenum++)
+		for (int typenum = 0; typenum < ARRAY_LENGTH(core_types); typenum++)
 			if (core_types[typenum].type == type && core_types[typenum].player == player)
 				return core_types[typenum].name;
 	}
@@ -1396,8 +1396,7 @@ int input_type_group(running_machine *machine, int type, int player)
 	/* if no machine, fall back to brute force searching */
 	else
 	{
-		int typenum;
-		for (typenum = 0; typenum < ARRAY_LENGTH(core_types); typenum++)
+		for (int typenum = 0; typenum < ARRAY_LENGTH(core_types); typenum++)
 			if (core_types[typenum].type == type && core_types[typenum].player == player)
 				return core_types[typenum].group;
 	}
@@ -1431,8 +1430,7 @@ const input_seq *input_type_seq(running_machine *machine, int type, int player, 
 	/* if no machine, fall back to brute force searching */
 	else
 	{
-		int typenum;
-		for (typenum = 0; typenum < ARRAY_LENGTH(core_types); typenum++)
+		for (int typenum = 0; typenum < ARRAY_LENGTH(core_types); typenum++)
 			if (core_types[typenum].type == type && core_types[typenum].player == player)
 				return &core_types[typenum].seq[seqtype];
 	}
@@ -1564,8 +1562,10 @@ input_port_value input_port_read_direct(const input_port_config *port)
 input_port_value input_port_read(running_machine *machine, const char *tag)
 {
 	const input_port_config *port = machine->port(tag);
+
 	if (port == NULL)
 		fatalerror("Unable to locate input port '%s'", tag);
+
 	return input_port_read_direct(port);
 }
 
@@ -1657,10 +1657,8 @@ int input_port_get_crosshair_position(running_machine *machine, int player, floa
 
 void input_port_update_defaults(running_machine *machine)
 {
-	int loopnum;
-
 	/* two passes to catch conditionals properly */
-	for (loopnum = 0; loopnum < 2; loopnum++)
+	for (int loopnum = 0; loopnum < 2; loopnum++)
 	{
 		const input_port_config *port;
 
@@ -1753,8 +1751,10 @@ void input_port_write_direct(const input_port_config *port, input_port_value dat
 void input_port_write(running_machine *machine, const char *tag, input_port_value value, input_port_value mask)
 {
 	const input_port_config *port = machine->port(tag);
+
 	if (port == NULL)
 		fatalerror("Unable to locate input port '%s'", tag);
+
 	input_port_write_direct(port, value, mask);
 }
 
@@ -1767,6 +1767,7 @@ void input_port_write(running_machine *machine, const char *tag, input_port_valu
 void input_port_write_safe(running_machine *machine, const char *tag, input_port_value value, input_port_value mask)
 {
 	const input_port_config *port = machine->port(tag);
+
 	if (port != NULL)
 		input_port_write_direct(port, value, mask);
 }
@@ -1825,8 +1826,6 @@ int input_condition_true(running_machine *machine, const input_condition *condit
 
 const char *input_port_string_from_token(const input_port_token token)
 {
-	int index;
-
 	/* 0 is an invalid index */
 	if (token.i == 0)
 		return NULL;
@@ -1836,9 +1835,10 @@ const char *input_port_string_from_token(const input_port_token token)
 		return token.stringptr;
 
 	/* otherwise, scan the list for a matching string and return it */
-	for (index = 0; index < ARRAY_LENGTH(input_port_default_strings); index++)
+	for (int index = 0; index < ARRAY_LENGTH(input_port_default_strings); index++)
 		if (input_port_default_strings[index].id == token.i)
 			return input_port_default_strings[index].string;
+
 	return "(Unknown Default)";
 }
 
@@ -1906,6 +1906,7 @@ static unicode_char get_keyboard_code(const input_field_config *field, int i)
 	/* special hack to allow for PORT_CODE('\xA3') */
 	if ((ch >= 0xFFFFFF80) && (ch <= 0xFFFFFFFF))
 		ch &= 0xFF;
+
 	return ch;
 }
 
@@ -1926,7 +1927,7 @@ static const char_info *find_charinfo(unicode_char target_char)
 	unicode_char ch;
 
 	/* perform a simple binary search to find the proper alternate */
-	while(high > low)
+	while (high > low)
 	{
 		i = (high + low) / 2;
 		ch = charinfo[i].ch;
@@ -1937,6 +1938,7 @@ static const char_info *find_charinfo(unicode_char target_char)
 		else
 			return &charinfo[i];
 	}
+
 	return NULL;
 }
 
@@ -1981,12 +1983,10 @@ static const char *inputx_key_name(unicode_char ch)
 static astring *get_keyboard_key_name(const input_field_config *field)
 {
 	astring *result = astring_alloc();
-	int i;
 	unicode_char ch;
 
-
 	/* loop through each character on the field*/
-	for (i = 0; i < ARRAY_LENGTH(field->chars) && (field->chars[i] != '\0'); i++)
+	for (int i = 0; i < ARRAY_LENGTH(field->chars) && (field->chars[i] != '\0'); i++)
 	{
 		ch = get_keyboard_code(field, i);
 		astring_printf(result, "%s%-*s ", astring_c(result), MAX(SPACE_COUNT - 1, 0), inputx_key_name(ch));
@@ -2158,11 +2158,8 @@ static void init_autoselect_devices(const ioport_list &portlist, int type1, int 
 	if (portlist.first() != NULL && !input_device_class_enabled(portlist.first()->machine, autoenable))
 		for (port = portlist.first(); port != NULL; port = port->next())
 			for (field = port->fieldlist; field != NULL; field = field->next)
-
 				/* if this port type is in use, apply the autoselect criteria */
-				if ((type1 != 0 && field->type == type1) ||
-					(type2 != 0 && field->type == type2) ||
-					(type3 != 0 && field->type == type3))
+				if ((type1 != 0 && field->type == type1) || (type2 != 0 && field->type == type2) || (type3 != 0 && field->type == type3))
 				{
 					mame_printf_verbose("Input: Autoenabling %s due to presence of a %s\n", autostring, ananame);
 					input_device_class_enable(port->machine, autoenable, TRUE);
@@ -2195,6 +2192,7 @@ static device_field_info *init_field_device_info(const input_field_config *field
 		info->device = (device_t *) info;
 
 	info->oldval = field->defvalue >> info->shift;
+
 	return info;
 }
 
@@ -2398,14 +2396,14 @@ static key_buffer *get_buffer(running_machine *machine)
 
 static const inputx_code *find_code(unicode_char ch)
 {
-	int i;
-
 	assert(codes);
-	for (i = 0; codes[i].ch; i++)
+
+	for (int i = 0; codes[i].ch; i++)
 	{
 		if (codes[i].ch == ch)
 			return &codes[i];
 	}
+
 	return NULL;
 }
 
@@ -2418,9 +2416,6 @@ static void input_port_update_hook(running_machine *machine, const input_port_co
 {
 	const key_buffer *keybuf;
 	const inputx_code *code;
-	unicode_char ch;
-	int i;
-	UINT32 value;
 
 	if (inputx_can_post(machine))
 	{
@@ -2430,17 +2425,17 @@ static void input_port_update_hook(running_machine *machine, const input_port_co
 		if (keybuf->status_keydown && (keybuf->begin_pos != keybuf->end_pos))
 		{
 			/* identify the character that is down right now, and its component codes */
-			ch = keybuf->buffer[keybuf->begin_pos];
+			unicode_char ch = keybuf->buffer[keybuf->begin_pos];
 			code = find_code(ch);
 
 			/* loop through this character's component codes */
 			if (code != NULL)
 			{
-				for (i = 0; i < ARRAY_LENGTH(code->field) && (code->field[i] != NULL); i++)
+				for (int i = 0; i < ARRAY_LENGTH(code->field) && (code->field[i] != NULL); i++)
 				{
 					if (code->field[i]->port == port)
 					{
-						value = code->field[i]->mask;
+						UINT32 value = code->field[i]->mask;
 						*digital |= value;
 					}
 				}
@@ -2462,16 +2457,16 @@ static void frame_update(running_machine *machine)
 	int ui_visible = ui_is_menu_active();
 	attotime curtime = timer_get_time(machine);
 	const input_port_config *port;
-	render_target *mouse_target;
+/*	render_target *mouse_target;
 	INT32 mouse_target_x;
 	INT32 mouse_target_y;
-	int mouse_button;
+	int mouse_button;	*/
 
-g_profiler.start(PROFILER_INPUT);
+// g_profiler.start(PROFILER_INPUT);
 
 	/* record/playback information about the current frame */
-	playback_frame(machine, curtime);
-	record_frame(machine, curtime);
+/*	playback_frame(machine, curtime);
+	record_frame(machine, curtime);	*/
 
 	/* track the duration of the previous frame */
 	portdata->last_delta_nsec = attotime_to_attoseconds(attotime_sub(curtime, portdata->last_frame_time)) / ATTOSECONDS_PER_NANOSECOND;
@@ -2484,6 +2479,7 @@ g_profiler.start(PROFILER_INPUT);
 	input_port_update_defaults(machine);
 
 	/* perform the mouse hit test */
+/*
 	mouse_target = ui_input_find_mouse(machine, &mouse_target_x, &mouse_target_y, &mouse_button);
 	if (mouse_button && mouse_target)
 	{
@@ -2492,7 +2488,7 @@ g_profiler.start(PROFILER_INPUT);
 		if (render_target_map_point_input(mouse_target, mouse_target_x, mouse_target_y, &tag, &mask, NULL, NULL))
 			mouse_field = input_field_by_tag_and_mask(machine->m_portlist, tag, mask);
 	}
-
+*/
 	/* loop over all input ports */
 	for (port = machine->m_portlist.first(); port != NULL; port = port->next())
 	{
@@ -2512,21 +2508,21 @@ g_profiler.start(PROFILER_INPUT);
 				if (field->type == IPT_VBLANK)
 					port->state->vblank ^= field->mask;
 
-				/* handle analog inputs */
-				else if (field->state->analog != NULL)
-					frame_update_analog_field(machine, field->state->analog);
-
 				/* handle non-analog types, but only when the UI isn't visible */
 				else if (!ui_visible && frame_get_digital_field_state(field, field == mouse_field))
 					port->state->digital |= field->mask;
+
+				/* handle analog inputs */
+				else if (field->state->analog != NULL)
+					frame_update_analog_field(machine, field->state->analog);
 			}
 
 		/* hook for MESS's natural keyboard support */
 		input_port_update_hook(machine, port, &port->state->digital);
 
 		/* handle playback/record */
-		playback_port(port);
-		record_port(port);
+/*		playback_port(port);
+		record_port(port);	*/
 
 		/* call device line changed handlers */
 		newvalue = input_port_read_direct(port);
@@ -2545,7 +2541,7 @@ g_profiler.start(PROFILER_INPUT);
 			}
 	}
 
-g_profiler.stop();
+// g_profiler.stop();
 }
 
 
@@ -2558,11 +2554,11 @@ g_profiler.stop();
 static void frame_update_digital_joysticks(running_machine *machine)
 {
 	input_port_private *portdata = machine->input_port_data;
-	int player, joyindex;
 
 	/* loop over all the joysticks */
-	for (player = 0; player < MAX_PLAYERS; player++)
-		for (joyindex = 0; joyindex < DIGITAL_JOYSTICKS_PER_PLAYER; joyindex++)
+	for (int player = 0; player < MAX_PLAYERS; player++)
+	{
+		for (int joyindex = 0; joyindex < DIGITAL_JOYSTICKS_PER_PLAYER; joyindex++)
 		{
 			digital_joystick_state *joystick = &portdata->joystick_info[player][joyindex];
 			if (joystick->inuse)
@@ -2581,7 +2577,7 @@ static void frame_update_digital_joysticks(running_machine *machine)
 					joystick->current |= JOYDIR_RIGHT_BIT;
 
 				/* lock out opposing directions (left + right or up + down) */
-				if ((joystick->current & (JOYDIR_UP_BIT | JOYDIR_DOWN_BIT)) == (JOYDIR_UP_BIT | JOYDIR_DOWN_BIT))
+				if ((joystick->current & (JOYDIR_UP_BIT | JOYDIR_DOWN_BIT)) == (JOYDIR_UP_BIT | JOYDIR_DOWN_BIT))	// Great, thoughtful design!
 					joystick->current &= ~(JOYDIR_UP_BIT | JOYDIR_DOWN_BIT);
 				if ((joystick->current & (JOYDIR_LEFT_BIT | JOYDIR_RIGHT_BIT)) == (JOYDIR_LEFT_BIT | JOYDIR_RIGHT_BIT))
 					joystick->current &= ~(JOYDIR_LEFT_BIT | JOYDIR_RIGHT_BIT);
@@ -2590,37 +2586,33 @@ static void frame_update_digital_joysticks(running_machine *machine)
 				if (joystick->current != joystick->previous)
 				{
 					joystick->current4way = joystick->current;
+/*
+				If joystick is pointing at a diagonal, acknowledge that the player moved
+				the joystick by favoring a direction change.  This minimizes frustration
+				when using a keyboard for input, and maximizes responsiveness.
 
-					/*
-                        If joystick is pointing at a diagonal, acknowledge that the player moved
-                        the joystick by favoring a direction change.  This minimizes frustration
-                        when using a keyboard for input, and maximizes responsiveness.
+				For example, if you are holding "left" then switch to "up" (where both left
+				and up are briefly pressed at the same time), we'll transition immediately
+				to "up."
 
-                        For example, if you are holding "left" then switch to "up" (where both left
-                        and up are briefly pressed at the same time), we'll transition immediately
-                        to "up."
-
-                        Zero any switches that didn't change from the previous to current state.
-                     */
-					if ((joystick->current4way & (JOYDIR_UP_BIT | JOYDIR_DOWN_BIT)) &&
-						(joystick->current4way & (JOYDIR_LEFT_BIT | JOYDIR_RIGHT_BIT)))
+				Zero any switches that didn't change from the previous to current state.
+*/
+					if ((joystick->current4way & (JOYDIR_UP_BIT | JOYDIR_DOWN_BIT)) && (joystick->current4way & (JOYDIR_LEFT_BIT | JOYDIR_RIGHT_BIT)))
 					{
 						joystick->current4way ^= joystick->current4way & joystick->previous;
 					}
+/*
+				If we are still pointing at a diagonal, we are in an indeterminant state.
 
-					/*
-                        If we are still pointing at a diagonal, we are in an indeterminant state.
+				This could happen if the player moved the joystick from the idle position directly
+				to a diagonal, or from one diagonal directly to an extreme diagonal.
 
-                        This could happen if the player moved the joystick from the idle position directly
-                        to a diagonal, or from one diagonal directly to an extreme diagonal.
+				The chances of this happening with a keyboard are slim, but we still need to
+				constrain this case.
 
-                        The chances of this happening with a keyboard are slim, but we still need to
-                        constrain this case.
-
-                        For now, just resolve randomly.
-                     */
-					if ((joystick->current4way & (JOYDIR_UP_BIT | JOYDIR_DOWN_BIT)) &&
-						(joystick->current4way & (JOYDIR_LEFT_BIT | JOYDIR_RIGHT_BIT)))
+				For now, just resolve randomly.
+*/
+					if ((joystick->current4way & (JOYDIR_UP_BIT | JOYDIR_DOWN_BIT)) && (joystick->current4way & (JOYDIR_LEFT_BIT | JOYDIR_RIGHT_BIT)))
 					{
 						if (mame_rand(machine) & 1)
 							joystick->current4way &= ~(JOYDIR_LEFT_BIT | JOYDIR_RIGHT_BIT);
@@ -2630,6 +2622,7 @@ static void frame_update_digital_joysticks(running_machine *machine)
 				}
 			}
 		}
+	}
 }
 
 
@@ -3544,7 +3537,6 @@ input_port_config::~input_port_config()
 static input_field_config *field_config_alloc(input_port_config *port, int type, input_port_value defvalue, input_port_value maskbits)
 {
 	input_field_config *config;
-	int seqtype;
 
 	/* allocate memory */
 	config = global_alloc_clear(input_field_config);
@@ -3555,7 +3547,8 @@ static input_field_config *field_config_alloc(input_port_config *port, int type,
 	config->mask = maskbits;
 	config->defvalue = defvalue & maskbits;
 	config->max = maskbits;
-	for (seqtype = 0; seqtype < ARRAY_LENGTH(config->seq); seqtype++)
+
+	for (int seqtype = 0; seqtype < ARRAY_LENGTH(config->seq); seqtype++)
 		input_seq_set_1(&config->seq[seqtype], SEQCODE_DEFAULT);
 
 	return config;
@@ -3865,10 +3858,8 @@ static const char *input_field_type_to_token(running_machine *machine, int type,
 
 static int token_to_seq_type(const char *string)
 {
-	int seqindex;
-
 	/* look up the string in the table of possible sequence types and return the index */
-	for (seqindex = 0; seqindex < ARRAY_LENGTH(seqtypestrings); seqindex++)
+	for (int seqindex = 0; seqindex < ARRAY_LENGTH(seqtypestrings); seqindex++)
 		if (!mame_stricmp(string, seqtypestrings[seqindex]))
 			return seqindex;
 
@@ -3966,10 +3957,9 @@ static void load_remap_table(running_machine *machine, xml_data_node *parentnode
 	input_port_private *portdata = machine->input_port_data;
 	input_code *oldtable, *newtable;
 	xml_data_node *remapnode;
-	int count;
 
 	/* count items first so we can allocate */
-	count = 0;
+	int count = 0;
 	for (remapnode = xml_get_sibling(parentnode->child, "remap"); remapnode != NULL; remapnode = xml_get_sibling(remapnode->next, "remap"))
 		count++;
 
@@ -4307,7 +4297,7 @@ static void save_game_inputs(running_machine *machine, xml_data_node *parentnode
     playback_read_uint8 - read an 8-bit value
     from the playback file
 -------------------------------------------------*/
-
+#if 0
 static UINT8 playback_read_uint8(running_machine *machine)
 {
 	input_port_private *portdata = machine->input_port_data;
@@ -4379,7 +4369,7 @@ static UINT64 playback_read_uint64(running_machine *machine)
 	/* return the appropriate value */
 	return LITTLE_ENDIANIZE_INT64(result);
 }
-
+#endif
 
 /*-------------------------------------------------
     playback_init - initialize INP playback
@@ -4431,6 +4421,7 @@ static time_t playback_init(running_machine *machine)
 /*-------------------------------------------------
     playback_end - end INP playback
 -------------------------------------------------*/
+#if	0
 
 static void playback_end(running_machine *machine, const char *message)
 {
@@ -4514,7 +4505,6 @@ static void playback_port(const input_port_config *port)
 }
 
 
-
 /***************************************************************************
     INPUT RECORDING
 ***************************************************************************/
@@ -4577,7 +4567,7 @@ static void record_write_uint64(running_machine *machine, UINT64 data)
 	if (mame_fwrite(portdata->record_file, &result, sizeof(result)) != sizeof(result))
 		record_end(machine, "Out of space");
 }
-
+#endif
 
 /*-------------------------------------------------
     record_init - initialize INP recording
@@ -4629,7 +4619,7 @@ static void record_init(running_machine *machine)
 /*-------------------------------------------------
     record_end - end INP recording
 -------------------------------------------------*/
-
+#if 0
 static void record_end(running_machine *machine, const char *message)
 {
 	input_port_private *portdata = machine->input_port_data;
@@ -4700,6 +4690,7 @@ static void record_port(const input_port_config *port)
 		}
 	}
 }
+#endif
 
 int input_machine_has_keyboard(running_machine *machine)
 {
@@ -4730,7 +4721,9 @@ int input_machine_has_keyboard(running_machine *machine)
 /*-------------------------------------------------
     code_point_string - obtain a string representation of a
     given code; used for logging and debugging
+
 -------------------------------------------------*/
+#if 0
 
 static const char *code_point_string(running_machine *machine, unicode_char ch)
 {
@@ -4772,7 +4765,7 @@ static const char *code_point_string(running_machine *machine, unicode_char ch)
 	}
 	return result;
 }
-
+#endif
 
 /*-------------------------------------------------
     scan_keys - scans through input ports and
@@ -4822,9 +4815,6 @@ static int scan_keys(running_machine *machine, const input_port_config *portconf
 
 						/* increment the count */
 						code_count++;
-
-						if (LOG_INPUTX)
-							logerror("inputx: code=%i (%s) port=%p field->name='%s'\n", (int) code, code_point_string(machine, code), port, field->name);
 					}
 				}
 			}
@@ -4846,10 +4836,9 @@ static inputx_code *build_codes(running_machine *machine, const input_port_confi
 	inputx_code *codes = NULL;
 	const input_port_config *ports[NUM_SIMUL_KEYS];
 	const input_field_config *fields[NUM_SIMUL_KEYS];
-	int code_count;
 
 	/* first count the number of codes */
-	code_count = scan_keys(machine, portconfig, NULL, ports, fields, 0, 0);
+	int code_count = scan_keys(machine, portconfig, NULL, ports, fields, 0, 0);
 	if (code_count > 0)
 	{
 		/* allocate the codes */
@@ -4858,6 +4847,7 @@ static inputx_code *build_codes(running_machine *machine, const input_port_confi
 		/* and populate them */
 		scan_keys(machine, portconfig, codes, ports, fields, 0, 0);
 	}
+
 	return codes;
 }
 
@@ -4952,10 +4942,8 @@ void inputx_init(running_machine *machine)
 
 
 
-void inputx_setup_natural_keyboard(
-	int (*queue_chars_)(const unicode_char *text, size_t text_len),
-	int (*accept_char_)(unicode_char ch),
-	int (*charqueue_empty_)(void))
+void inputx_setup_natural_keyboard(int (*queue_chars_)(const unicode_char *text, size_t text_len),
+					int (*accept_char_)(unicode_char ch), int (*charqueue_empty_)(void))
 {
 	queue_chars = queue_chars_;
 	accept_char = accept_char_;
@@ -5020,25 +5008,13 @@ static attotime choose_delay(unicode_char ch)
 		return current_rate;
 
 	if (queue_chars)
-	{
-		/* systems with queue_chars can afford a much smaller delay */
+	/* systems with queue_chars can afford a much smaller delay */
 		delay = DOUBLE_TO_ATTOSECONDS(0.01);
-	}
 	else
-	{
-		switch(ch) {
-		case '\r':
-			delay = DOUBLE_TO_ATTOSECONDS(0.2);
-			break;
+		delay = DOUBLE_TO_ATTOSECONDS((ch == '\r') ? 0.2 : 0.05);
 
-		default:
-			delay = DOUBLE_TO_ATTOSECONDS(0.05);
-			break;
-		}
-	}
 	return attotime_make(0, delay);
 }
-
 
 
 static void internal_post_key(running_machine *machine, unicode_char ch)
@@ -5075,13 +5051,13 @@ static void inputx_postn_rate(running_machine *machine, const unicode_char *text
 	unicode_char ch;
 	const char *s;
 	const char_info *ci;
-	const inputx_code *code;
+//	const inputx_code *code;
 
 	current_rate = rate;
 
 	if (inputx_can_post(machine))
 	{
-		while((text_len > 0) && !buffer_full(machine))
+		while ((text_len > 0) && !buffer_full(machine))
 		{
 			ch = *(text++);
 			text_len--;
@@ -5094,12 +5070,6 @@ static void inputx_postn_rate(running_machine *machine, const unicode_char *text
 				else
 					last_cr = (ch == '\r');
 
-				if (LOG_INPUTX)
-				{
-					code = find_code(ch);
-					logerror("inputx_postn(): code=%i (%s) field->name='%s'\n", (int) ch, code_point_string(machine, ch), (code && code->field[0]) ? code->field[0]->name : "<null>");
-				}
-
 				if (can_post_key_directly(ch))
 				{
 					/* we can post this key in the queue directly */
@@ -5111,7 +5081,7 @@ static void inputx_postn_rate(running_machine *machine, const unicode_char *text
 					ci = find_charinfo(ch);
 					assert(ci && ci->alternate);
 					s = ci->alternate;
-					while(*s)
+					while (*s)
 					{
 						s += uchar_from_utf8(&ch, s, strlen(s));
 						internal_post_key(machine, ch);
@@ -5138,7 +5108,7 @@ static TIMER_CALLBACK(inputx_timerproc)
 	if (queue_chars)
 	{
 		/* the driver has a queue_chars handler */
-		while((keybuf->begin_pos != keybuf->end_pos) && queue_chars(&keybuf->buffer[keybuf->begin_pos], 1))
+		while ((keybuf->begin_pos != keybuf->end_pos) && queue_chars(&keybuf->buffer[keybuf->begin_pos], 1))
 		{
 			keybuf->begin_pos++;
 			keybuf->begin_pos %= ARRAY_LENGTH(keybuf->buffer);
@@ -5184,7 +5154,7 @@ int inputx_is_posting(running_machine *machine)
 ***************************************************************************/
 static void inputx_postc_rate(running_machine *machine, unicode_char ch, attotime rate);
 
-#if 0
+/*
 static void inputx_postn_coded_rate(running_machine *machine, const char *text, size_t text_len, attotime rate)
 {
 	size_t i, j, key_len, increment;
@@ -5253,8 +5223,7 @@ static void inputx_postn_coded_rate(running_machine *machine, const char *text, 
 		i += increment;
 	}
 }
-#endif
-
+*/
 
 /***************************************************************************
 
@@ -5279,7 +5248,7 @@ static void inputx_postn_utf8_rate(running_machine *machine, const char *text, s
 	unicode_char c;
 	int rc;
 
-	while(text_len > 0)
+	while (text_len > 0)
 	{
 		if (len == ARRAY_LENGTH(buf))
 		{
@@ -5416,6 +5385,7 @@ int input_has_input_class(running_machine *machine, int inputclass)
 				return TRUE;
 		}
 	}
+
 	return FALSE;
 }
 
@@ -5430,9 +5400,8 @@ int input_count_players(running_machine *machine)
 {
 	const input_port_config *port;
 	const input_field_config *field;
-	int joystick_count;
+	int joystick_count = 0;
 
-	joystick_count = 0;
 	for (port = machine->m_portlist.first(); port != NULL; port = port->next())
 	{
 		for (field = port->fieldlist;  field != NULL; field = field->next)
@@ -5444,6 +5413,7 @@ int input_count_players(running_machine *machine)
 			}
 		}
 	}
+
 	return joystick_count;
 }
 
@@ -5483,6 +5453,7 @@ int input_category_active(running_machine *machine, int category)
 			}
 		}
 	}
+
 	return FALSE;
 }
 
@@ -5544,7 +5515,7 @@ static void execute_dumpkbd(running_machine *machine, int ref, int params, const
 			/* describe the character code */
 			pos += snprintf(&buffer[pos], ARRAY_LENGTH(buffer) - pos, "%08X (%s) ",
 				code->ch,
-				code_point_string(machine, code->ch));
+//				code_point_string(machine, code->ch));
 
 			/* pad with spaces */
 			while(pos < left_column_width)

@@ -20,8 +20,6 @@
 
 #include "emu.h"
 #include "emuopts.h"
-//#include "profiler.h"
-
 
 
 /***************************************************************************
@@ -29,7 +27,7 @@
 ***************************************************************************/
 
 /* joystick mapping codes */
-#define JOYSTICK_MAP_NEUTRAL	0x00
+#define JOYSTICK_MAP_NEUTRAL		0x00
 #define JOYSTICK_MAP_LEFT		0x01
 #define JOYSTICK_MAP_RIGHT		0x02
 #define JOYSTICK_MAP_UP			0x04
@@ -37,7 +35,7 @@
 #define JOYSTICK_MAP_STICKY		0x0f
 
 /* the largest number of tracked pressed switches for memory */
-#define MAX_PRESSED_SWITCHES	64
+#define MAX_PRESSED_SWITCHES		64
 
 /* invalid memory value for axis polling */
 #define INVALID_AXIS_VALUE		0x7fffffff
@@ -52,20 +50,20 @@ typedef struct _input_device_item input_device_item;
 struct _input_device_item
 {
 	input_device_class		devclass;				/* device class of parent item */
-	int						devindex;				/* device index of parent item */
-	astring					name;					/* string name of item */
-	astring					token;					/* tokenized name for non-standard items */
-	void *					internal;				/* internal callback pointer */
+	int				devindex;				/* device index of parent item */
+	astring				name;					/* string name of item */
+	astring				token;					/* tokenized name for non-standard items */
+	void				*internal;				/* internal callback pointer */
 	input_item_class		itemclass;				/* class of the item */
 	input_item_id			itemid;					/* originally specified item id */
 	item_get_state_func		getstate;				/* get state callback */
-	INT32					current;				/* current raw value */
-	INT32					memory;					/* "memory" value, to remember where we started during polling */
-	INT32					oncelatch;				/* latched "once" value, cleared after each read  */
+	INT32				current;				/* current raw value */
+	INT32				memory;					/* "memory" value, to remember where we started during polling */
+	INT32				oncelatch;				/* latched "once" value, cleared after each read  */
 
 	/* keyboard information */
-	INT32					steadykey;				/* the live steadykey state */
-	INT32					oldkey;					/* old live state */
+	INT32				steadykey;				/* the live steadykey state */
+	INT32				oldkey;					/* old live state */
 };
 
 
@@ -73,24 +71,24 @@ struct _input_device_item
 typedef struct _joystick_map joystick_map;
 struct _joystick_map
 {
-	UINT8					map[9][9];				/* 9x9 grid */
+	UINT8				map[9][9];				/* 9x9 grid */
 };
 
 
 /* a single input device */
 struct _input_device
 {
-	running_machine *		machine;				/* machine we are attached to */
-	astring					name;					/* string name of device */
+	running_machine			*machine;				/* machine we are attached to */
+	astring				name;					/* string name of device */
 	input_device_class		devclass;				/* class of this device */
-	int						devindex;				/* device index of this device */
-	input_device_item *		item[ITEM_ID_ABSOLUTE_MAXIMUM];	/* array of pointers to items */
+	int				devindex;				/* device index of this device */
+	input_device_item		*item[ITEM_ID_ABSOLUTE_MAXIMUM];	/* array of pointers to items */
 	input_item_id			maxitem;				/* maximum item index */
-	void *					internal;				/* internal callback pointer */
+	void				*internal;				/* internal callback pointer */
 
 	/* joystick information */
 	joystick_map			joymap;					/* joystick map for this device */
-	UINT8					lastmap;				/* last joystick map value for this device */
+	UINT8				lastmap;				/* last joystick map value for this device */
 };
 
 
@@ -98,10 +96,10 @@ struct _input_device
 typedef struct _input_device_list input_device_list;
 struct _input_device_list
 {
-	input_device **			list;					/* the array */
-	int						count;					/* elements in the array */
-	UINT8					enabled;				/* is this class enabled? */
-	UINT8					multi;					/* are multiple instances of this class allowed? */
+	input_device			**list;					/* the array */
+	int				count;					/* elements in the array */
+	UINT8				enabled;				/* is this class enabled? */
+	UINT8				multi;					/* are multiple instances of this class allowed? */
 };
 
 
@@ -109,21 +107,21 @@ struct _input_device_list
 typedef struct _code_string_table code_string_table;
 struct _code_string_table
 {
-	UINT32					code;
-	const char *			string;
+	UINT32				code;
+	const char			*string;
 };
 
 
 struct _input_private
 {
 	/* array of devices for each class */
-	input_device_list	device_list[DEVICE_CLASS_MAXIMUM];
+	input_device_list		device_list[DEVICE_CLASS_MAXIMUM];
 	input_code			code_pressed_memory[MAX_PRESSED_SWITCHES];
 
 	/* device configuration */
 	UINT8				steadykey_enabled;
 	UINT8				lightgun_reload_button;
-	const char *		joystick_map_default;
+	const char			*joystick_map_default;
 	INT32				joystick_deadzone;
 	INT32				joystick_saturation;
 };
@@ -135,58 +133,58 @@ struct _input_private
 ***************************************************************************/
 
 /* token strings for device classes */
-#define NULLNUM		((UINT32)(~0))
+#define COMPLEMENT	((UINT32)(~0))
 
 static const code_string_table devclass_token_table[] =
 {
-	{ DEVICE_CLASS_KEYBOARD, "KEYCODE" },
+	{ DEVICE_CLASS_KEYBOARD,   "KEYCODE" },
 	{ DEVICE_CLASS_MOUSE,    "MOUSECODE" },
-	{ DEVICE_CLASS_LIGHTGUN, "GUNCODE" },
-	{ DEVICE_CLASS_JOYSTICK, "JOYCODE" },
-	{ NULLNUM,               "UNKCODE" }
+	{ DEVICE_CLASS_LIGHTGUN,   "GUNCODE" },
+	{ DEVICE_CLASS_JOYSTICK,   "JOYCODE" },
+	{ COMPLEMENT,		   "UNKCODE" }
 };
 
 /* friendly strings for device classes */
 static const code_string_table devclass_string_table[] =
 {
-	{ DEVICE_CLASS_KEYBOARD, "Kbd" },
+	{ DEVICE_CLASS_KEYBOARD,   "Kbd" },
 	{ DEVICE_CLASS_MOUSE,    "Mouse" },
-	{ DEVICE_CLASS_LIGHTGUN, "Gun" },
-	{ DEVICE_CLASS_JOYSTICK, "Joy" },
-	{ NULLNUM,               "Unk" }
+	{ DEVICE_CLASS_LIGHTGUN,   "Gun" },
+	{ DEVICE_CLASS_JOYSTICK,   "Joy" },
+	{ COMPLEMENT,		   "Unk" }
 };
 
 /* token strings for item modifiers */
 static const code_string_table modifier_token_table[] =
 {
-	{ ITEM_MODIFIER_POS,     "POS" },
-	{ ITEM_MODIFIER_NEG,     "NEG" },
-	{ ITEM_MODIFIER_LEFT,    "LEFT" },
-	{ ITEM_MODIFIER_RIGHT,   "RIGHT" },
-	{ ITEM_MODIFIER_UP,      "UP" },
-	{ ITEM_MODIFIER_DOWN,    "DOWN" },
-	{ NULLNUM,               "" }
+	{ ITEM_MODIFIER_POS,	  "POS" },
+	{ ITEM_MODIFIER_NEG,	  "NEG" },
+	{ ITEM_MODIFIER_LEFT,	 "LEFT" },
+	{ ITEM_MODIFIER_RIGHT,	"RIGHT" },
+	{ ITEM_MODIFIER_UP,	   "UP" },
+	{ ITEM_MODIFIER_DOWN,	 "DOWN" },
+	{ COMPLEMENT,		     "" }
 };
 
 /* friendly strings for item modifiers */
 static const code_string_table modifier_string_table[] =
 {
-	{ ITEM_MODIFIER_POS,     "+" },
-	{ ITEM_MODIFIER_NEG,     "-" },
-	{ ITEM_MODIFIER_LEFT,    "Left" },
-	{ ITEM_MODIFIER_RIGHT,   "Right" },
-	{ ITEM_MODIFIER_UP,      "Up" },
-	{ ITEM_MODIFIER_DOWN,    "Down" },
-	{ NULLNUM,               "" }
+	{ ITEM_MODIFIER_POS,	   "+" },
+	{ ITEM_MODIFIER_NEG,	   "-" },
+	{ ITEM_MODIFIER_LEFT,	"Left" },
+	{ ITEM_MODIFIER_RIGHT, "Right" },
+	{ ITEM_MODIFIER_UP,	  "Up" },
+	{ ITEM_MODIFIER_DOWN,	"Down" },
+	{ COMPLEMENT,		    "" }
 };
 
 /* token strings for item classes */
 static const code_string_table itemclass_token_table[] =
 {
-	{ ITEM_CLASS_SWITCH,     "SWITCH" },
-	{ ITEM_CLASS_ABSOLUTE,   "ABSOLUTE" },
-	{ ITEM_CLASS_RELATIVE,   "RELATIVE" },
-	{ NULLNUM,               "" }
+	{ ITEM_CLASS_SWITCH,	 "SWITCH" },
+	{ ITEM_CLASS_ABSOLUTE, "ABSOLUTE" },
+	{ ITEM_CLASS_RELATIVE, "RELATIVE" },
+	{ COMPLEMENT,		       "" }
 };
 
 /* token strings for standard item ids */
@@ -398,11 +396,9 @@ static const code_string_table itemid_token_table[] =
 	{ ITEM_ID_ADD_RELATIVE14,"ADDREL14" },
 	{ ITEM_ID_ADD_RELATIVE15,"ADDREL15" },
 	{ ITEM_ID_ADD_RELATIVE16,"ADDREL16" },
-
-	{ NULLNUM,                    NULL }
+	{ COMPLEMENT,		       NULL }
 };
-#undef	NULLNUM
-
+#undef COMPLEMENT
 
 
 /***************************************************************************
@@ -523,9 +519,8 @@ INLINE void input_item_update_value(running_machine *machine, input_device_item 
 INLINE void code_pressed_memory_reset(running_machine *machine)
 {
 	input_code *code_pressed_memory = machine->input_data->code_pressed_memory;
-	int memnum;
 
-	for (memnum = 0; memnum < MAX_PRESSED_SWITCHES; memnum++)
+	for (int memnum = 0; memnum < MAX_PRESSED_SWITCHES; memnum++)
 		code_pressed_memory[memnum] = INPUT_CODE_INVALID;
 }
 
@@ -681,6 +676,7 @@ int input_device_set_joystick_map(running_machine *machine, int devindex, const 
 	/* iterate over joysticks and set the map */
 	for (joynum = startindex; joynum <= stopindex; joynum++)
 		device_list[DEVICE_CLASS_JOYSTICK].list[joynum]->joymap = map;
+
 	return TRUE;
 }
 
@@ -698,10 +694,9 @@ static void input_frame(running_machine &machine)
 	if (state->steadykey_enabled)
 	{
 		input_device_list *device_list = state->device_list;
-		int devnum;
 
 		/* iterate over keyboards */
-		for (devnum = 0; devnum < device_list[DEVICE_CLASS_KEYBOARD].count; devnum++)
+		for (int devnum = 0; devnum < device_list[DEVICE_CLASS_KEYBOARD].count; devnum++)
 		{
 			input_device *device = device_list[DEVICE_CLASS_KEYBOARD].list[devnum];
 			input_item_id itemid;
@@ -714,17 +709,22 @@ static void input_frame(running_machine &machine)
 				if (item != NULL && item->itemclass == ITEM_CLASS_SWITCH)
 				{
 					input_item_update_value(&machine, item);
-					if ((item->current ^ item->oldkey) & 1)
+					if ((item->current ^ item->oldkey) & 0x01)
 					{
 						changed = TRUE;
 
 						/* if the keypress was missed, turn it on for one frame */
-						if (((item->current | item->steadykey) & 1) == 0)
+						if (((item->current | item->steadykey) & 0x01) == 0)
 							item->steadykey = 1;
+
 					}
+//					***
+					if (!changed)
+						item->steadykey = item->current;
+					item->oldkey = item->current;
 				}
 			}
-
+#if 0
 			/* if the keyboard state is stable, copy it over */
 			for (itemid = ITEM_ID_FIRST_VALID; itemid <= device->maxitem; itemid++)
 			{
@@ -736,6 +736,7 @@ static void input_frame(running_machine &machine)
 					item->oldkey = item->current;
 				}
 			}
+#endif
 		}
 	}
 }
@@ -807,6 +808,7 @@ void input_device_item_add(input_device *device, const char *name, void *interna
 		for (itemid = (input_item_id)(ITEM_ID_MAXIMUM + 1); itemid <= ITEM_ID_ABSOLUTE_MAXIMUM; itemid++)
 			if (device->item[itemid] == NULL)
 				break;
+
 	assert(itemid <= ITEM_ID_ABSOLUTE_MAXIMUM);
 
 	/* make sure we don't have any overlap */
@@ -858,9 +860,8 @@ INT32 input_code_value(running_machine *machine, input_code code)
 	int startindex = INPUT_CODE_DEVINDEX(code);
 	int stopindex = startindex;
 	INT32 result = 0;
-	int curindex;
 
-//	g_profiler.start(PROFILER_INPUT);
+// g_profiler.start(PROFILER_INPUT);
 
 	/* return 0 for any disabled or invalid device classes */
 	if (devclass <= DEVICE_CLASS_INVALID || devclass >= DEVICE_CLASS_MAXIMUM || !device_list[devclass].enabled)
@@ -880,7 +881,7 @@ INT32 input_code_value(running_machine *machine, input_code code)
 	}
 
 	/* iterate over all indices */
-	for (curindex = startindex; curindex <= stopindex; curindex++)
+	for (int curindex = startindex; curindex <= stopindex; curindex++)
 	{
 		/* lookup the item for the appropriate index */
 		input_device_item *item = input_code_item(machine, INPUT_CODE_SET_DEVINDEX(code, curindex));
@@ -909,9 +910,8 @@ INT32 input_code_value(running_machine *machine, input_code code)
 				break;
 		}
 	}
-
 exit:
-//	g_profiler.stop();
+// g_profiler.stop();
 	return result;
 }
 
@@ -937,10 +937,10 @@ int input_code_pressed_once(running_machine *machine, input_code code)
 {
 	input_code *code_pressed_memory = machine->input_data->code_pressed_memory;
 	int curvalue = input_code_pressed(machine, code);
-	int memnum, empty = -1;
+	int empty = -1;
 
 	/* look for the code in the memory */
-	for (memnum = 0; memnum < MAX_PRESSED_SWITCHES; memnum++)
+	for (int memnum = 0; memnum < MAX_PRESSED_SWITCHES; memnum++)
 	{
 		/* were we previous pressed on the last time through here? */
 		if (code_pressed_memory[memnum] == code)
@@ -964,8 +964,10 @@ int input_code_pressed_once(running_machine *machine, input_code code)
 
 	/* otherwise, add ourself to the memory and return 1 */
 	assert(empty != -1);
+
 	if (empty != -1)
 		code_pressed_memory[empty] = code;
+
 	return 1;
 }
 
@@ -984,16 +986,16 @@ input_code input_code_from_input_item_id(running_machine *machine, input_item_id
 	for (devclass = DEVICE_CLASS_FIRST_VALID; devclass < DEVICE_CLASS_MAXIMUM; devclass++)
 	{
 		input_device_list *devlist = &device_list[devclass];
-		int devnum;
 
 		/* iterate over devices within each class */
-		for (devnum = 0; devnum < devlist->count; devnum++)
+		for (int devnum = 0; devnum < devlist->count; devnum++)
 		{
 			input_device *device = devlist->list[devnum];
 			if (device->item[itemid] != NULL)
 				return device_item_to_code(device, itemid);
 		}
 	}
+
 	return 0;
 }
 
@@ -1018,10 +1020,9 @@ input_code input_code_poll_switches(running_machine *machine, int reset)
 	for (devclass = DEVICE_CLASS_FIRST_VALID; devclass < DEVICE_CLASS_MAXIMUM; devclass++)
 	{
 		input_device_list *devlist = &device_list[devclass];
-		int devnum;
 
 		/* iterate over devices within each class */
-		for (devnum = 0; devnum < devlist->count; devnum++)
+		for (int devnum = 0; devnum < devlist->count; devnum++)
 		{
 			input_device *device = devlist->list[devnum];
 			input_item_id itemid;
@@ -1100,14 +1101,13 @@ input_code input_code_poll_switches(running_machine *machine, int reset)
 input_code input_code_poll_keyboard_switches(running_machine *machine, int reset)
 {
 	input_device_list *devlist = &machine->input_data->device_list[DEVICE_CLASS_KEYBOARD];
-	int devnum;
 
 	/* if resetting memory, do it now */
 	if (reset)
 		code_pressed_memory_reset(machine);
 
 	/* iterate over devices within each class */
-	for (devnum = 0; devnum < devlist->count; devnum++)
+	for (int devnum = 0; devnum < devlist->count; devnum++)
 	{
 		input_device *device = devlist->list[devnum];
 		input_item_id itemid;
@@ -1146,11 +1146,11 @@ static int input_code_check_axis(running_machine *machine, input_device_item *it
 	if (item->memory == INVALID_AXIS_VALUE)
 		return FALSE;
 
-    /* ignore min/max for lightguns */
-    /* so the selection will not be affected by a gun going out of range */
-    if ((INPUT_CODE_DEVCLASS(code) == DEVICE_CLASS_LIGHTGUN)
-        && (INPUT_CODE_ITEMID(code) == ITEM_ID_XAXIS || INPUT_CODE_ITEMID(code) == ITEM_ID_YAXIS)
-        && (curval == INPUT_ABSOLUTE_MAX || curval == INPUT_ABSOLUTE_MIN))
+	/* ignore min/max for lightguns */
+	/* so the selection will not be affected by a gun going out of range */
+	if ((INPUT_CODE_DEVCLASS(code) == DEVICE_CLASS_LIGHTGUN) &&
+		(INPUT_CODE_ITEMID(code) == ITEM_ID_XAXIS || INPUT_CODE_ITEMID(code) == ITEM_ID_YAXIS) &&
+		(curval == INPUT_ABSOLUTE_MAX || curval == INPUT_ABSOLUTE_MIN))
         return FALSE;
 
 	/* compute the diff against memory */
@@ -1172,7 +1172,7 @@ static int input_code_check_axis(running_machine *machine, input_device_item *it
 		return TRUE;
 	}
 
-    return FALSE;
+	return FALSE;
 }
 
 
@@ -1189,10 +1189,9 @@ static void input_code_reset_axes(running_machine *machine)
 	for (devclass = DEVICE_CLASS_FIRST_VALID; devclass < DEVICE_CLASS_MAXIMUM; devclass++)
 	{
 		input_device_list *devlist = &device_list[devclass];
-		int devnum;
 
 		/* iterate over devices within each class */
-		for (devnum = 0; devnum < devlist->count; devnum++)
+		for (int devnum = 0; devnum < devlist->count; devnum++)
 		{
 			input_device *device = devlist->list[devnum];
 			input_item_id itemid;
@@ -1235,10 +1234,9 @@ input_code input_code_poll_axes(running_machine *machine, int reset)
 	for (devclass = DEVICE_CLASS_FIRST_VALID; devclass < DEVICE_CLASS_MAXIMUM; devclass++)
 	{
 		input_device_list *devlist = &device_list[devclass];
-		int devnum;
 
 		/* iterate over devices within each class */
-		for (devnum = 0; devnum < devlist->count; devnum++)
+		for (int devnum = 0; devnum < devlist->count; devnum++)
 		{
 			input_device *device = devlist->list[devnum];
 			input_item_id itemid;
@@ -1384,6 +1382,7 @@ astring &input_code_to_token(running_machine *machine, astring &string, input_co
 		string.cat("_").cat(modifier);
 	if (itemclass[0] != 0)
 		string.cat("_").cat(itemclass);
+
 	return string;
 }
 
@@ -1515,6 +1514,7 @@ INT32 debug_global_input_code_pressed(input_code code)
 {
 	if (!mame_is_valid_machine(stashed_machine))
 		return 0;
+
 	return input_code_pressed(stashed_machine, code);
 }
 
@@ -1522,8 +1522,10 @@ INT32 debug_global_input_code_pressed_once(input_code code)
 {
 	if (!mame_is_valid_machine(stashed_machine))
 		return 0;
+
 	return input_code_pressed_once(stashed_machine, code);
 }
+
 
 /***************************************************************************
     INTERNAL FUNCTIONS
