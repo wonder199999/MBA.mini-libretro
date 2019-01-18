@@ -63,8 +63,8 @@
 /* render primitive types */
 enum
 {
-	RENDER_PRIMITIVE_LINE,							/* a single line */
-	RENDER_PRIMITIVE_QUAD							/* a rectilinear quad */
+	RENDER_PRIMITIVE_LINE,					/* a single line */
+	RENDER_PRIMITIVE_QUAD					/* a rectilinear quad */
 };
 
 
@@ -74,36 +74,36 @@ enum
 #define RENDER_CREATE_HIDDEN		0x04			/* don't make this target visible */
 
 /* layer config masks */
-#define LAYER_CONFIG_ENABLE_BACKDROP 0x01			/* enable backdrop layers */
-#define LAYER_CONFIG_ENABLE_OVERLAY	0x02			/* enable overlay layers */
-#define LAYER_CONFIG_ENABLE_BEZEL	0x04			/* enable bezel layers */
-#define LAYER_CONFIG_ZOOM_TO_SCREEN	0x08			/* zoom to screen area by default */
-#define LAYER_CONFIG_ENABLE_SCREEN_OVERLAY 0x10		/* enable screen overlays */
+#define LAYER_CONFIG_ENABLE_BACKDROP		0x01		/* enable backdrop layers */
+#define LAYER_CONFIG_ENABLE_OVERLAY		0x02		/* enable overlay layers */
+#define LAYER_CONFIG_ENABLE_BEZEL		0x04		/* enable bezel layers */
+#define LAYER_CONFIG_ZOOM_TO_SCREEN		0x08		/* zoom to screen area by default */
+#define LAYER_CONFIG_ENABLE_SCREEN_OVERLAY	0x10		/* enable screen overlays */
 
-#define LAYER_CONFIG_DEFAULT		(LAYER_CONFIG_ENABLE_BACKDROP | \
-									 LAYER_CONFIG_ENABLE_OVERLAY | \
-									 LAYER_CONFIG_ENABLE_BEZEL | \
-									 LAYER_CONFIG_ENABLE_SCREEN_OVERLAY)
+#define LAYER_CONFIG_DEFAULT	(LAYER_CONFIG_ENABLE_BACKDROP | \
+					 LAYER_CONFIG_ENABLE_OVERLAY | \
+						 LAYER_CONFIG_ENABLE_BEZEL | \
+							 LAYER_CONFIG_ENABLE_SCREEN_OVERLAY)
 
 /* texture formats */
 enum
 {
-	TEXFORMAT_UNDEFINED = 0,						/* require a format to be specified */
-	TEXFORMAT_PALETTE16,							/* 16bpp palettized, alpha ignored */
-	TEXFORMAT_PALETTEA16,							/* 16bpp palettized, alpha respected */
-	TEXFORMAT_RGB15,								/* 16bpp 5-5-5 RGB */
-	TEXFORMAT_RGB32,								/* 32bpp 8-8-8 RGB */
-	TEXFORMAT_ARGB32,								/* 32bpp 8-8-8-8 ARGB */
-	TEXFORMAT_YUY16									/* 16bpp 8-8 Y/Cb, Y/Cr in sequence */
+	TEXFORMAT_UNDEFINED = 0,				/* require a format to be specified */
+	TEXFORMAT_PALETTE16,					/* 16bpp palettized, alpha ignored */
+	TEXFORMAT_PALETTEA16,					/* 16bpp palettized, alpha respected */
+	TEXFORMAT_RGB15,					/* 16bpp 5-5-5 RGB */
+	TEXFORMAT_RGB32,					/* 32bpp 8-8-8 RGB */
+	TEXFORMAT_ARGB32,					/* 32bpp 8-8-8-8 ARGB */
+	TEXFORMAT_YUY16						/* 16bpp 8-8 Y/Cb, Y/Cr in sequence */
 };
 
 /* blending modes */
 enum
 {
-	BLENDMODE_NONE = 0,								/* no blending */
-	BLENDMODE_ALPHA,								/* standard alpha blend */
-	BLENDMODE_RGB_MULTIPLY,							/* apply source alpha to source pix, then multiply RGB values */
-	BLENDMODE_ADD									/* apply source alpha to source pix, then add to destination */
+	BLENDMODE_NONE = 0,					/* no blending */
+	BLENDMODE_ALPHA,					/* standard alpha blend */
+	BLENDMODE_RGB_MULTIPLY,					/* apply source alpha to source pix, then multiply RGB values */
+	BLENDMODE_ADD						/* apply source alpha to source pix, then add to destination */
 };
 
 
@@ -135,7 +135,7 @@ enum
 
 #define PRIMFLAG_TEXWRAP_SHIFT		14
 #define PRIMFLAG_TEXWRAP_MASK		(1 << PRIMFLAG_TEXWRAP_SHIFT)
-#define PRIMFLAG_TEXWRAP(x)			((x) << PRIMFLAG_TEXWRAP_SHIFT)
+#define PRIMFLAG_TEXWRAP(x)		((x) << PRIMFLAG_TEXWRAP_SHIFT)
 #define PRIMFLAG_GET_TEXWRAP(x)		(((x) & PRIMFLAG_TEXWRAP_MASK) >> PRIMFLAG_TEXWRAP_SHIFT)
 
 
@@ -145,15 +145,15 @@ enum
 ***************************************************************************/
 
 /* convenience macros for adding items to the UI container */
-#define render_container_add_point(c, x0,y0,diam,argb,flags)	render_container_add_line(c, x0, y0, x0, y0, diam, argb, flags)
-#define render_container_add_rect(c, x0,y0,x1,y1,argb,flags)	render_container_add_quad(c, x0, y0, x1, y1, argb, NULL, flags)
+#define render_container_add_point(c,x0,y0,diam,argb,flags)		render_container_add_line(c, x0, y0, x0, y0, diam, argb, flags)
+#define render_container_add_rect(c,x0,y0,x1,y1,argb,flags)		render_container_add_quad(c, x0, y0, x1, y1, argb, NULL, flags)
 
 /* convenience macros for adding items to a screen container */
 #define render_screen_add_point(scr,x0,y0,diam,argb,flags)		render_container_add_line(render_container_get_screen(scr), x0, y0, x0, y0, diam, argb, flags)
-#define render_screen_add_line(scr,x0,y0,x1,y1,diam,argb,flags)	render_container_add_line(render_container_get_screen(scr), x0, y0, x1, y1, diam, argb, flags)
+#define render_screen_add_line(scr,x0,y0,x1,y1,diam,argb,flags)		render_container_add_line(render_container_get_screen(scr), x0, y0, x1, y1, diam, argb, flags)
 #define render_screen_add_rect(scr,x0,y0,x1,y1,argb,flags)		render_container_add_quad(render_container_get_screen(scr), x0, y0, x1, y1, argb, NULL, flags)
-#define render_screen_add_quad(scr,x0,y0,x1,y1,argb,tex,flags)	render_container_add_quad(render_container_get_screen(scr), x0, y0, x1, y1, argb, tex, flags)
-#define render_screen_add_char(scr,x0,y0,ht,asp,argb,font,ch)	render_container_add_char(render_container_get_screen(scr), x0, y0, ht, asp, argb, font, ch)
+#define render_screen_add_quad(scr,x0,y0,x1,y1,argb,tex,flags)		render_container_add_quad(render_container_get_screen(scr), x0, y0, x1, y1, argb, tex, flags)
+#define render_screen_add_char(scr,x0,y0,ht,asp,argb,font,ch)		render_container_add_char(render_container_get_screen(scr), x0, y0, ht, asp, argb, font, ch)
 
 
 
@@ -196,10 +196,10 @@ typedef struct _render_ref render_ref;
 typedef struct _render_bounds render_bounds;
 struct _render_bounds
 {
-	float				x0;					/* leftmost X coordinate */
-	float				y0;					/* topmost Y coordinate */
-	float				x1;					/* rightmost X coordinate */
-	float				y1;					/* bottommost Y coordinate */
+	float				x0;			/* leftmost X coordinate */
+	float				y0;			/* topmost Y coordinate */
+	float				x1;			/* rightmost X coordinate */
+	float				y1;			/* bottommost Y coordinate */
 };
 
 
@@ -211,10 +211,10 @@ struct _render_bounds
 typedef struct _render_color render_color;
 struct _render_color
 {
-	float				a;					/* alpha component (0.0 = transparent, 1.0 = opaque) */
-	float				r;					/* red component (0.0 = none, 1.0 = max) */
-	float				g;					/* green component (0.0 = none, 1.0 = max) */
-	float				b;					/* blue component (0.0 = none, 1.0 = max) */
+	float				a;			/* alpha component (0.0 = transparent, 1.0 = opaque) */
+	float				r;			/* red component (0.0 = none, 1.0 = max) */
+	float				g;			/* green component (0.0 = none, 1.0 = max) */
+	float				b;			/* blue component (0.0 = none, 1.0 = max) */
 };
 
 
@@ -226,8 +226,8 @@ struct _render_color
 typedef struct _render_texuv render_texuv;
 struct _render_texuv
 {
-	float				u;					/* U coodinate (0.0-1.0) */
-	float				v;					/* V coordinate (0.0-1.0) */
+	float				u;			/* U coodinate (0.0-1.0) */
+	float				v;			/* V coordinate (0.0-1.0) */
 };
 
 
@@ -239,10 +239,10 @@ struct _render_texuv
 typedef struct _render_quad_texuv render_quad_texuv;
 struct _render_quad_texuv
 {
-	render_texuv		tl;					/* top-left UV coordinate */
-	render_texuv		tr;					/* top-right UV coordinate */
-	render_texuv		bl;					/* bottom-left UV coordinate */
-	render_texuv		br;					/* bottom-right UV coordinate */
+	render_texuv		tl;				/* top-left UV coordinate */
+	render_texuv		tr;				/* top-right UV coordinate */
+	render_texuv		bl;				/* bottom-left UV coordinate */
+	render_texuv		br;				/* bottom-right UV coordinate */
 };
 
 
@@ -253,12 +253,12 @@ struct _render_quad_texuv
 typedef struct _render_texinfo render_texinfo;
 struct _render_texinfo
 {
-	void *				base;				/* base of the data */
-	UINT32				rowpixels;			/* pixels per row */
-	UINT32				width;				/* width of the image */
-	UINT32				height;				/* height of the image */
-	const rgb_t *		palette;			/* palette for PALETTE16 textures, LUTs for RGB15/RGB32 */
-	UINT32				seqid;				/* sequence ID */
+	void			*base;				/* base of the data */
+	UINT32				rowpixels;		/* pixels per row */
+	UINT32				width;			/* width of the image */
+	UINT32				height;			/* height of the image */
+	const rgb_t		*palette;			/* palette for PALETTE16 textures, LUTs for RGB15/RGB32 */
+	UINT32				seqid;			/* sequence ID */
 };
 
 
@@ -270,14 +270,14 @@ struct _render_texinfo
 typedef struct _render_primitive render_primitive;
 struct _render_primitive
 {
-	render_primitive *	next;				/* pointer to next element */
-	int					type;				/* type of primitive */
-	render_bounds		bounds;				/* bounds or positions */
-	render_color		color;				/* RGBA values */
-	UINT32				flags;				/* flags */
-	float				width;				/* width (for line primitives) */
-	render_texinfo		texture;			/* texture info (for quad primitives) */
-	render_quad_texuv	texcoords;			/* texture coordinates (for quad primitives) */
+	render_primitive	*next;				/* pointer to next element */
+	int				type;			/* type of primitive */
+	render_bounds			bounds;			/* bounds or positions */
+	render_color			color;			/* RGBA values */
+	UINT32				flags;			/* flags */
+	float				width;			/* width (for line primitives) */
+	render_texinfo			texture;		/* texture info (for quad primitives) */
+	render_quad_texuv		texcoords;		/* texture coordinates (for quad primitives) */
 };
 
 
@@ -289,10 +289,10 @@ struct _render_primitive
 typedef struct _render_primitive_list render_primitive_list;
 struct _render_primitive_list
 {
-	render_primitive *	head;				/* head of the list */
-	render_primitive **	nextptr;			/* pointer to the next tail pointer */
-	osd_lock *			lock;				/* should only should be accessed under this lock */
-	render_ref *		reflist;			/* list of references */
+	render_primitive	*head;				/* head of the list */
+	render_primitive	**nextptr;			/* pointer to the next tail pointer */
+	osd_lock		*lock;				/* should only should be accessed under this lock */
+	render_ref		*reflist;			/* list of references */
 };
 
 
@@ -305,16 +305,15 @@ struct _render_primitive_list
 typedef struct _render_container_user_settings render_container_user_settings;
 struct _render_container_user_settings
 {
-	int					orientation;		/* orientation */
-	float				brightness;			/* brightness */
-	float				contrast;			/* contrast */
-	float				gamma;				/* gamma */
-	float				xscale;				/* horizontal scale factor */
-	float				yscale;				/* vertical scale factor */
-	float				xoffset;			/* horizontal offset */
-	float				yoffset;			/* vertical offset */
+	int				orientation;		/* orientation */
+	float				brightness;		/* brightness */
+	float				contrast;		/* contrast */
+	float				gamma;			/* gamma */
+	float				xscale;			/* horizontal scale factor */
+	float				yscale;			/* vertical scale factor */
+	float				xoffset;		/* horizontal offset */
+	float				yoffset;		/* vertical offset */
 };
-
 
 
 /***************************************************************************

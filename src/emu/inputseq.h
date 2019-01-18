@@ -27,11 +27,12 @@
 enum
 {
 	/* special codes */
+
 /*	SEQCODE_END = INTERNAL_CODE(0),
 	SEQCODE_DEFAULT = INTERNAL_CODE(1),
 	SEQCODE_NOT = INTERNAL_CODE(2),
-	SEQCODE_OR = INTERNAL_CODE(3)
-*/
+	SEQCODE_OR = INTERNAL_CODE(3)		*/
+
 	SEQCODE_END = 0x80000000,
 	SEQCODE_DEFAULT = 0x80000001,
 	SEQCODE_NOT = 0x80000002,
@@ -128,14 +129,13 @@ INLINE input_code input_seq_get_1(const input_seq *seq)
 
 INLINE void input_seq_set_5(input_seq *seq, input_code code0, input_code code1, input_code code2, input_code code3, input_code code4)
 {
-	int codenum;
 	seq->code[0] = code0;
 	seq->code[1] = code1;
 	seq->code[2] = code2;
 	seq->code[3] = code3;
 	seq->code[4] = code4;
 
-	for (codenum = 5; codenum < ARRAY_LENGTH(seq->code); codenum++)
+	for (int codenum = 5; codenum < ARRAY_LENGTH(seq->code); codenum++)
 		seq->code[codenum] = SEQCODE_END;
 }
 
@@ -171,14 +171,15 @@ INLINE void input_seq_set_0(input_seq *seq)
 
 INLINE int input_seq_cmp(const input_seq *seqa, const input_seq *seqb)
 {
-	int codenum;
-	for (codenum = 0; codenum < ARRAY_LENGTH(seqa->code); codenum++)
+	for (int codenum = 0; codenum < ARRAY_LENGTH(seqa->code); codenum++)
 	{
 		if (seqa->code[codenum] != seqb->code[codenum])
 			return -1;
+
 		if (seqa->code[codenum] == SEQCODE_END)
 			break;
 	}
+
 	return 0;
 }
 
@@ -191,7 +192,6 @@ INLINE int input_seq_cmp(const input_seq *seqa, const input_seq *seqb)
 
 INLINE void input_seq_append_or(input_seq *seq, input_code code)
 {
-	int codenum;
 	if (seq->code[0] == SEQCODE_END || seq->code[0] == SEQCODE_DEFAULT)
 	{
 		seq->code[0] = code;
@@ -199,13 +199,15 @@ INLINE void input_seq_append_or(input_seq *seq, input_code code)
 	}
 	else
 	{
-		for (codenum = 0; codenum < ARRAY_LENGTH(seq->code) - 2; codenum++)
+		for (int codenum = 0; codenum < ARRAY_LENGTH(seq->code) - 2; codenum++)
+		{
 			if (seq->code[codenum] == SEQCODE_END)
 			{
 				seq->code[codenum++] = SEQCODE_OR;
 				seq->code[codenum++] = code;
 				seq->code[codenum++] = SEQCODE_END;
 			}
+		}
 	}
 }
 

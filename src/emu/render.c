@@ -83,8 +83,8 @@ enum
     MACROS
 ***************************************************************************/
 
-#define ISWAP(var1, var2) do { int temp = var1; var1 = var2; var2 = temp; } while (0)
-#define FSWAP(var1, var2) do { float temp = var1; var1 = var2; var2 = temp; } while (0)
+#define ISWAP(var1, var2)	do { int temp = var1; var1 = var2; var2 = temp; } while (0)
+#define FSWAP(var1, var2)	do { float temp = var1; var1 = var2; var2 = temp; } while (0)
 
 
 
@@ -101,8 +101,8 @@ typedef struct _container_item container_item;
 /* a render_ref is an abstract reference to an internal object of some sort */
 struct _render_ref
 {
-	render_ref *		next;				/* link to the next reference */
-	void *				refptr;				/* reference pointer */
+	render_ref		*next;				/* link to the next reference */
+	void			*refptr;			/* reference pointer */
 };
 
 
@@ -111,35 +111,35 @@ struct _object_transform
 {
 	float				xoffs, yoffs;		/* offset transforms */
 	float				xscale, yscale;		/* scale transforms */
-	render_color		color;				/* color transform */
-	int					orientation;		/* orientation transform */
-	int					no_center;			/* center the container? */
+	render_color			color;			/* color transform */
+	int				orientation;		/* orientation transform */
+	int				no_center;		/* center the container? */
 };
 
 
 /* a scaled_texture contains a single scaled entry for a texture */
 struct _scaled_texture
 {
-	bitmap_t *			bitmap;				/* final bitmap */
-	UINT32				seqid;				/* sequence number */
+	bitmap_t		*bitmap;			/* final bitmap */
+	UINT32				seqid;			/* sequence number */
 };
 
 
 /* a render_texture is used to track transformations when building an object list */
 struct render_texture
 {
-	render_texture *	next;				/* next texture (for free list) */
-	render_texture *	base;				/* pointer to base of texture group */
-	bitmap_t *			bitmap;				/* pointer to the original bitmap */
+	render_texture		*next;					/* next texture (for free list) */
+	render_texture		*base;					/* pointer to base of texture group */
+	bitmap_t		*bitmap;				/* pointer to the original bitmap */
 	rectangle			sbounds;			/* source bounds within the bitmap */
-	palette_t *			palette;			/* palette associated with the texture */
-	int					format;				/* format of the texture data */
-	texture_scaler_func	scaler;				/* scaling callback */
-	void *				param;				/* scaling callback parameter */
+	palette_t		*palette;				/* palette associated with the texture */
+	int				format;				/* format of the texture data */
+	texture_scaler_func		scaler;				/* scaling callback */
+	void			*param;					/* scaling callback parameter */
 	UINT32				curseq;				/* current sequence number */
-	scaled_texture		scaled[MAX_TEXTURE_SCALES];	/* array of scaled variants of this texture */
-	rgb_t *				bcglookup;			/* dynamically allocated B/C/G lookup table */
-	UINT32				bcglookup_entries;	/* number of B/C/G lookup entries allocated */
+	scaled_texture			scaled[MAX_TEXTURE_SCALES];	/* array of scaled variants of this texture */
+	rgb_t			*bcglookup;				/* dynamically allocated B/C/G lookup table */
+	UINT32				bcglookup_entries;		/* number of B/C/G lookup entries allocated */
 };
 
 
@@ -147,62 +147,62 @@ struct render_texture
 class render_target
 {
 public:
-	render_target *		next;				/* keep a linked list of targets */
-	running_machine *	machine;			/* pointer to the machine we are connected with */
-	layout_view *		curview;			/* current view */
-	layout_file *		filelist;			/* list of layout files */
+	render_target		*next;					/* keep a linked list of targets */
+	running_machine		*machine;				/* pointer to the machine we are connected with */
+	layout_view		*curview;				/* current view */
+	layout_file		*filelist;				/* list of layout files */
 	UINT32				flags;				/* creation flags */
-	render_primitive_list primlist[NUM_PRIMLISTS];/* list of primitives */
-	int					listindex;			/* index of next primlist to use */
+	render_primitive_list		primlist[NUM_PRIMLISTS];	/* list of primitives */
+	int				listindex;			/* index of next primlist to use */
 	INT32				width;				/* width in pixels */
 	INT32				height;				/* height in pixels */
-	render_bounds		bounds;				/* bounds of the target */
-	float				pixel_aspect;		/* aspect ratio of individual pixels */
-	float				max_refresh;		/* maximum refresh rate, 0 or if none */
-	int					orientation;		/* orientation */
-	int					layerconfig;		/* layer configuration */
-	layout_view *		base_view;			/* the view at the time of first frame */
-	int					base_orientation;	/* the orientation at the time of first frame */
-	int					base_layerconfig;	/* the layer configuration at the time of first frame */
-	int					maxtexwidth;		/* maximum width of a texture */
-	int					maxtexheight;		/* maximum height of a texture */
-	render_container *	debug_containers;
+	render_bounds			bounds;				/* bounds of the target */
+	float				pixel_aspect;			/* aspect ratio of individual pixels */
+	float				max_refresh;			/* maximum refresh rate, 0 or if none */
+	int				orientation;			/* orientation */
+	int				layerconfig;			/* layer configuration */
+	layout_view		*base_view;				/* the view at the time of first frame */
+	int				base_orientation;		/* the orientation at the time of first frame */
+	int				base_layerconfig;		/* the layer configuration at the time of first frame */
+	int				maxtexwidth;			/* maximum width of a texture */
+	int				maxtexheight;			/* maximum height of a texture */
+	render_container	*debug_containers;
 };
 
 
 /* a container_item describes a high level primitive that is added to a container */
 struct _container_item
 {
-	container_item *	next;				/* pointer to the next element in the list */
+	container_item		*next;					/* pointer to the next element in the list */
 	UINT8				type;				/* type of element */
-	render_bounds		bounds;				/* bounds of the element */
-	render_color		color;				/* RGBA factors */
+	render_bounds			bounds;				/* bounds of the element */
+	render_color			color;				/* RGBA factors */
 	UINT32				flags;				/* option flags */
 	UINT32				internal;			/* internal flags */
 	float				width;				/* width of the line (lines only) */
-	render_texture *	texture;			/* pointer to the source texture (quads only) */
+	render_texture		*texture;				/* pointer to the source texture (quads only) */
 };
 
 
 /* a render_container holds a list of items and an orientation for the entire collection */
 struct _render_container
 {
-	render_container *	next;				/* the next container in the list */
-	container_item *	itemlist;			/* head of the item list */
-	container_item **	nextitem;			/* pointer to the next item to add */
-	screen_device *screen;			/* the screen device */
-	int					orientation;		/* orientation of the container */
-	float				brightness;			/* brightness of the container */
-	float				contrast;			/* contrast of the container */
-	float				gamma;				/* gamma of the container */
-	float				xscale;				/* X scale factor of the container */
-	float				yscale;				/* Y scale factor of the container */
-	float				xoffset;			/* X offset of the container */
-	float				yoffset;			/* Y offset of the container */
-	bitmap_t *			overlaybitmap;		/* overlay bitmap */
-	render_texture *	overlaytexture;		/* overlay texture */
-	palette_client *	palclient;			/* client to the system palette */
-	rgb_t				bcglookup256[0x400];/* lookup table for brightness/contrast/gamma */
+	render_container	*next;				/* the next container in the list */
+	container_item		*itemlist;			/* head of the item list */
+	container_item		**nextitem;			/* pointer to the next item to add */
+	screen_device		*screen;			/* the screen device */
+	int				orientation;		/* orientation of the container */
+	float				brightness;		/* brightness of the container */
+	float				contrast;		/* contrast of the container */
+	float				gamma;			/* gamma of the container */
+	float				xscale;			/* X scale factor of the container */
+	float				yscale;			/* Y scale factor of the container */
+	float				xoffset;		/* X offset of the container */
+	float				yoffset;		/* Y offset of the container */
+	bitmap_t		*overlaybitmap;			/* overlay bitmap */
+	render_texture		*overlaytexture;		/* overlay texture */
+	palette_client		*palclient;			/* client to the system palette */
+	rgb_t				bcglookup256[0x400];	/* lookup table for brightness/contrast/gamma */
 	rgb_t				bcglookup32[0x80];	/* lookup table for brightness/contrast/gamma */
 	rgb_t				bcglookup[0x10000];	/* full palette lookup with bcg adjustements */
 };
@@ -246,9 +246,19 @@ static const render_quad_texuv oriented_texcoords[8] =
 };
 
 /* layer orders */
-static const int layer_order_standard[] = { ITEM_LAYER_SCREEN, ITEM_LAYER_OVERLAY, ITEM_LAYER_BACKDROP, ITEM_LAYER_BEZEL };
-static const int layer_order_alternate[] = { ITEM_LAYER_BACKDROP, ITEM_LAYER_SCREEN, ITEM_LAYER_OVERLAY, ITEM_LAYER_BEZEL };
+static const int layer_order_standard[] = {
+		ITEM_LAYER_SCREEN,
+		ITEM_LAYER_OVERLAY,
+		ITEM_LAYER_BACKDROP,
+		ITEM_LAYER_BEZEL
+};
 
+static const int layer_order_alternate[] = {
+		ITEM_LAYER_BACKDROP,
+		ITEM_LAYER_SCREEN,
+		ITEM_LAYER_OVERLAY,
+		ITEM_LAYER_BEZEL
+};
 
 
 /***************************************************************************
@@ -301,16 +311,14 @@ INLINE void apply_orientation(render_bounds *bounds, int orientation)
 		FSWAP(bounds->x0, bounds->y0);
 		FSWAP(bounds->x1, bounds->y1);
 	}
-
 	/* apply X flip */
-	if (orientation & ORIENTATION_FLIP_X)
+	else if (orientation & ORIENTATION_FLIP_X)
 	{
 		bounds->x0 = 1.0f - bounds->x0;
 		bounds->x1 = 1.0f - bounds->x1;
 	}
-
 	/* apply Y flip */
-	if (orientation & ORIENTATION_FLIP_Y)
+	else if (orientation & ORIENTATION_FLIP_Y)
 	{
 		bounds->y0 = 1.0f - bounds->y0;
 		bounds->y1 = 1.0f - bounds->y1;
@@ -327,6 +335,7 @@ INLINE void normalize_bounds(render_bounds *bounds)
 {
 	if (bounds->x0 > bounds->x1)
 		FSWAP(bounds->x0, bounds->x1);
+
 	if (bounds->y0 > bounds->y1)
 		FSWAP(bounds->y0, bounds->y1);
 }
@@ -348,6 +357,7 @@ INLINE container_item *alloc_container_item(void)
 		result = global_alloc(container_item);
 
 	memset(result, 0, sizeof(*result));
+
 	return result;
 }
 
@@ -382,6 +392,7 @@ INLINE render_primitive *alloc_render_primitive(int type)
 	/* clear to 0 */
 	memset(result, 0, sizeof(*result));
 	result->type = type;
+
 	return result;
 }
 
@@ -425,6 +436,7 @@ INLINE void add_render_ref(render_ref **list, void *refptr)
 
 	/* allocate from the free list if we can; otherwise, malloc a new item */
 	ref = render_ref_free_list;
+
 	if (ref != NULL)
 		render_ref_free_list = ref->next;
 	else
@@ -450,6 +462,7 @@ INLINE int has_render_ref(render_ref *list, void *refptr)
 	for (ref = list; ref != NULL; ref = ref->next)
 		if (ref->refptr == refptr)
 			return TRUE;
+
 	return FALSE;
 }
 
@@ -473,17 +486,17 @@ INLINE void free_render_ref(render_ref *ref)
 
 INLINE int get_layer_and_blendmode(const layout_view *view, int index, int *blendmode)
 {
-    const int *layer_order = layer_order_standard;
-    int layer;
-
-	/*
-        if we have multiple backdrop pieces and no overlays, render:
-            backdrop (add) + screens (add) + bezels (alpha)
-        else render:
-            screens (add) + overlays (RGB multiply) + backdrop (add) + bezels (alpha)
-    */
-	if (view->itemlist[ITEM_LAYER_BACKDROP] != NULL && view->itemlist[ITEM_LAYER_BACKDROP]->next != NULL && view->itemlist[ITEM_LAYER_OVERLAY] == NULL)
-		layer_order = layer_order_alternate;
+	const int *layer_order = layer_order_standard;
+	int layer;
+/*
+	if we have multiple backdrop pieces and no overlays, render:
+		backdrop (add) + screens (add) + bezels (alpha)
+	else render:
+		screens (add) + overlays (RGB multiply) + backdrop (add) + bezels (alpha)
+*/
+	if (view->itemlist[ITEM_LAYER_BACKDROP] != NULL)
+		if (view->itemlist[ITEM_LAYER_BACKDROP]->next != NULL && view->itemlist[ITEM_LAYER_OVERLAY] == NULL)
+			layer_order = layer_order_alternate;
 
 	/* select the layer */
 	layer = layer_order[index];
@@ -501,6 +514,7 @@ INLINE int get_layer_and_blendmode(const layout_view *view, int index, int *blen
 		else
 			*blendmode = BLENDMODE_ALPHA;
 	}
+
 	return layer;
 }
 
@@ -617,13 +631,13 @@ static void render_exit(running_machine &machine)
 		}
 	}
 	/* free the targets; this must be done before freeing the texture groups
-       as that will forcefully free everything, and if it goes first, we may
-       end up double-freeing textures of the render targets */
+	   as that will forcefully free everything, and if it goes first, we may
+	   end up double-freeing textures of the render targets */
 	while (targetlist != NULL)
 		render_target_free(targetlist);
 
 	/* free the screen overlay; similarly, do this before any of the following
-       calls to avoid double-frees */
+	   calls to avoid double-frees */
 	global_free(screen_overlay);
 	screen_overlay = NULL;
 
@@ -697,11 +711,11 @@ static void render_load(running_machine *machine, int config_type, xml_data_node
 		if (target != NULL)
 		{
 			const char *viewname = xml_get_attribute_string(targetnode, "view", NULL);
-			int viewnum;
 
 			/* find the view */
 			if (viewname != NULL)
-				for (viewnum = 0; viewnum < 1000; viewnum++)
+			{
+				for (int viewnum = 0; viewnum < 1000; viewnum++)
 				{
 					const char *testname = render_target_get_view_name(target, viewnum);
 					if (testname == NULL)
@@ -712,6 +726,7 @@ static void render_load(running_machine *machine, int config_type, xml_data_node
 						break;
 					}
 				}
+			}
 
 			/* modify the artwork config */
 			tmpint = xml_get_attribute_int(targetnode, "backdrops", -1);
@@ -956,17 +971,15 @@ static void render_save(running_machine *machine, int config_type, xml_data_node
 
 int render_is_live_screen(device_t *screen)
 {
-	render_target *target;
-	int screen_index;
-	UINT32 bitmask = 0;
-
 	assert(screen != NULL);
 	assert(screen->machine != NULL);
 	assert(screen->machine->config != NULL);
 
-	screen_index = screen->machine->m_devicelist.index(SCREEN, screen->tag());
-
+	int screen_index = screen->machine->m_devicelist.index(SCREEN, screen->tag());
 	assert(screen_index != -1);
+
+	UINT32 bitmask = 0;
+	render_target *target;
 
 	/* iterate over all live targets and or together their screen masks */
 	for (target = targetlist; target != NULL; target = target->next)
@@ -988,6 +1001,7 @@ float render_get_max_update_rate(void)
 
 	/* iterate over all live targets and or together their screen masks */
 	for (target = targetlist; target != NULL; target = target->next)
+	{
 		if (target->max_refresh != 0)
 		{
 			if (minimum == 0)
@@ -995,6 +1009,7 @@ float render_get_max_update_rate(void)
 			else
 				minimum = MIN(target->max_refresh, minimum);
 		}
+	}
 
 	return minimum;
 }
@@ -1050,6 +1065,7 @@ float render_get_ui_aspect(void)
 			aspect = 0.66f;
 		if (aspect > 1.5f)
 			aspect = 1.5f;
+
 		return aspect;
 	}
 
@@ -1071,7 +1087,6 @@ render_target *render_target_alloc(running_machine *machine, const char *layoutf
 {
 	render_target *target;
 	render_target **nextptr;
-	int listnum;
 
 	/* allocate memory for the target */
 	target = global_alloc_clear(render_target);
@@ -1093,10 +1108,14 @@ render_target *render_target_alloc(running_machine *machine, const char *layoutf
 
 	/* determine the base layer configuration based on options */
 	target->base_layerconfig = LAYER_CONFIG_DEFAULT;
-	if (!options_get_bool(machine->options(), OPTION_USE_BACKDROPS)) target->base_layerconfig &= ~LAYER_CONFIG_ENABLE_BACKDROP;
-	if (!options_get_bool(machine->options(), OPTION_USE_OVERLAYS)) target->base_layerconfig &= ~LAYER_CONFIG_ENABLE_OVERLAY;
-	if (!options_get_bool(machine->options(), OPTION_USE_BEZELS)) target->base_layerconfig &= ~LAYER_CONFIG_ENABLE_BEZEL;
-	if (options_get_bool(machine->options(), OPTION_ARTWORK_CROP)) target->base_layerconfig |= LAYER_CONFIG_ZOOM_TO_SCREEN;
+	if (!options_get_bool(machine->options(), OPTION_USE_BACKDROPS))
+		target->base_layerconfig &= ~LAYER_CONFIG_ENABLE_BACKDROP;
+	if (!options_get_bool(machine->options(), OPTION_USE_OVERLAYS))
+		target->base_layerconfig &= ~LAYER_CONFIG_ENABLE_OVERLAY;
+	if (!options_get_bool(machine->options(), OPTION_USE_BEZELS))
+		target->base_layerconfig &= ~LAYER_CONFIG_ENABLE_BEZEL;
+	if (options_get_bool(machine->options(), OPTION_ARTWORK_CROP))
+		target->base_layerconfig |= LAYER_CONFIG_ZOOM_TO_SCREEN;
 
 	/* determine the base orientation based on options */
 	target->orientation = ROT0;
@@ -1120,7 +1139,7 @@ render_target *render_target_alloc(running_machine *machine, const char *layoutf
 	target->layerconfig = target->base_layerconfig;
 
 	/* allocate a lock for the primitive list */
-	for (listnum = 0; listnum < ARRAY_LENGTH(target->primlist); listnum++)
+	for (int listnum = 0; listnum < ARRAY_LENGTH(target->primlist); listnum++)
 		target->primlist[listnum].lock = osd_lock_alloc();
 
 	/* load the layout files */
@@ -1136,6 +1155,7 @@ render_target *render_target_alloc(running_machine *machine, const char *layoutf
 	/* make us the UI target if there is none */
 	if (ui_target == NULL && !(flags & RENDER_CREATE_HIDDEN))
 		render_set_ui_target(target);
+
 	return target;
 }
 
@@ -1148,14 +1168,13 @@ render_target *render_target_alloc(running_machine *machine, const char *layoutf
 void render_target_free(render_target *target)
 {
 	render_target **curr;
-	int listnum;
 
 	/* remove us from the list */
 	for (curr = &targetlist; *curr != target; curr = &(*curr)->next) ;
 	*curr = target->next;
 
 	/* free any primitives */
-	for (listnum = 0; listnum < ARRAY_LENGTH(target->primlist); listnum++)
+	for (int listnum = 0; listnum < ARRAY_LENGTH(target->primlist); listnum++)
 	{
 		release_render_list(&target->primlist[listnum]);
 		osd_lock_free(target->primlist[listnum].lock);
@@ -1188,6 +1207,7 @@ render_target *render_target_get_indexed(int index)
 		if (!(target->flags & RENDER_CREATE_HIDDEN))
 			if (index-- == 0)
 				return target;
+
 	return NULL;
 }
 
@@ -1359,6 +1379,7 @@ int render_target_get_view(render_target *target)
 					return index;
 				index++;
 			}
+
 	return 0;
 }
 
@@ -1441,6 +1462,7 @@ void render_target_compute_visible_area(render_target *target, INT32 target_widt
 	/* set the final width/height */
 	if (visible_width != NULL)
 		*visible_width = render_round_nearest(width * scale);
+
 	if (visible_height != NULL)
 		*visible_height = render_round_nearest(height * scale);
 }
@@ -1458,10 +1480,9 @@ void render_target_get_minimum_size(render_target *target, INT32 *minwidth, INT3
 {
 	float maxxscale = 1.0f, maxyscale = 1.0f;
 	int screens_considered = 0;
-	int layer;
 
 	/* scan the current view for all screens */
-	for (layer = 0; layer < ITEM_LAYER_MAX; layer++)
+	for (int layer = 0; layer < ITEM_LAYER_MAX; layer++)
 	{
 		view_item *item;
 
@@ -1519,6 +1540,7 @@ void render_target_get_minimum_size(render_target *target, INT32 *minwidth, INT3
 	/* round up */
 	if (minwidth != NULL)
 		*minwidth = render_round_nearest(maxxscale);
+
 	if (minheight != NULL)
 		*minheight = render_round_nearest(maxyscale);
 }
@@ -1534,14 +1556,13 @@ const render_primitive_list *render_target_get_primitives(render_target *target)
 	object_transform root_xform, ui_xform;
 	int itemcount[ITEM_LAYER_MAX];
 	INT32 viswidth, visheight;
-	int layernum, listnum;
 
 	/* remember the base values if this is the first frame */
 	if (target->base_view == NULL)
 		target->base_view = target->curview;
 
 	/* switch to the next primitive list */
-	listnum = target->listindex;
+	int listnum = target->listindex;
 	target->listindex = (target->listindex + 1) % ARRAY_LENGTH(target->primlist);
 	osd_lock_acquire(target->primlist[listnum].lock);
 
@@ -1552,17 +1573,18 @@ const render_primitive_list *render_target_get_primitives(render_target *target)
 	render_target_compute_visible_area(target, target->width, target->height, target->pixel_aspect, target->orientation, &viswidth, &visheight);
 
 	/* create a root transform for the target */
-	root_xform.xoffs = (float) (target->width - viswidth) / 2;
-	root_xform.yoffs = (float) (target->height - visheight) / 2;
-	root_xform.xscale = (float) viswidth;
-	root_xform.yscale = (float) visheight;
+	root_xform.xoffs = (float)(target->width - viswidth) / 2;
+	root_xform.yoffs = (float)(target->height - visheight) / 2;
+	root_xform.xscale = (float)viswidth;
+	root_xform.yscale = (float)visheight;
 	root_xform.color.r = root_xform.color.g = root_xform.color.b = root_xform.color.a = 1.0f;
 	root_xform.orientation = target->orientation;
-    root_xform.no_center = FALSE;
+	root_xform.no_center = FALSE;
 
 	/* iterate over layers back-to-front, but only if we're running */
 	if (target->machine->phase() >= MACHINE_PHASE_RESET)
-		for (layernum = 0; layernum < ITEM_LAYER_MAX; layernum++)
+	{
+		for (int layernum = 0; layernum < ITEM_LAYER_MAX; layernum++)
 		{
 			int blendmode;
 			int layer = get_layer_and_blendmode(target->curview, layernum, &blendmode);
@@ -1593,7 +1615,7 @@ const render_primitive_list *render_target_get_primitives(render_target *target)
 					item_xform.color.b = item->color.b * root_xform.color.b;
 					item_xform.color.a = item->color.a * root_xform.color.a;
 					item_xform.orientation = orientation_add(item->orientation, root_xform.orientation);
-                    item_xform.no_center = FALSE;
+					item_xform.no_center = FALSE;
 
 					/* if there is no associated element, it must be a screen element */
 					if (item->element != NULL)
@@ -1620,6 +1642,7 @@ const render_primitive_list *render_target_get_primitives(render_target *target)
 				}
 			}
 		}
+	}
 
 	/* if we are not in the running stage, draw an outer box */
 	else
@@ -1643,7 +1666,7 @@ const render_primitive_list *render_target_get_primitives(render_target *target)
 			append_render_primitive(&target->primlist[listnum], prim);
 		}
 	}
-
+#if 0
 	/* process the debug containers */
 	for (render_container *debug = target->debug_containers; debug != NULL; debug = debug->next)
 	{
@@ -1659,7 +1682,7 @@ const render_primitive_list *render_target_get_primitives(render_target *target)
 		/* add UI elements */
 		add_container_primitives(target, &target->primlist[listnum], &ui_xform, debug, BLENDMODE_ALPHA);
 	}
-
+#endif
 	/* process the UI if we are the UI target */
 	if (target == render_get_ui_target())
 	{
@@ -1679,6 +1702,7 @@ const render_primitive_list *render_target_get_primitives(render_target *target)
 	/* optimize the list before handing it off */
 	add_clear_and_optimize_primitive_list(target, &target->primlist[listnum]);
 	osd_lock_release(target->primlist[listnum].lock);
+
 	return &target->primlist[listnum];
 }
 
@@ -1692,7 +1716,6 @@ static int render_target_map_point_internal(render_target *target, INT32 target_
 {
 	float target_fx, target_fy;
 	view_item *item;
-	int layernum;
 	float dummy;
 
 	/* sanity check */
@@ -1725,7 +1748,7 @@ static int render_target_map_point_internal(render_target *target, INT32 target_
 	}
 
 	/* loop through each layer */
-	for (layernum = 0; layernum < ITEM_LAYER_MAX; layernum++)
+	for (int layernum = 0; layernum < ITEM_LAYER_MAX; layernum++)
 	{
 		int layer = get_layer_and_blendmode(target->curview, layernum, NULL);
 		if (target->curview->layenabled[layer])
@@ -1755,6 +1778,7 @@ static int render_target_map_point_internal(render_target *target, INT32 target_
 			}
 		}
 	}
+
 	return FALSE;
 }
 
@@ -1781,14 +1805,14 @@ int render_target_map_point_container(render_target *target, INT32 target_x, INT
 int render_target_map_point_input(render_target *target, INT32 target_x, INT32 target_y, const char **input_tag, UINT32 *input_mask, float *input_x, float *input_y)
 {
 	view_item *item = NULL;
-	int result;
 
-	result = render_target_map_point_internal(target, target_x, target_y, NULL, input_x, input_y, &item);
+	int result = render_target_map_point_internal(target, target_x, target_y, NULL, input_x, input_y, &item);
 	if (result && item != NULL)
 	{
 		*input_tag = item->input_tag;
 		*input_mask = item->input_mask;
 	}
+
 	return result;
 }
 
@@ -1861,6 +1885,7 @@ static int load_layout_files(render_target *target, const char *layoutfile, int 
 		assert_always(*nextfile != NULL, "Couldn't parse default layout??");
 		nextfile = &(*nextfile)->next;
 	}
+
 	return 0;
 }
 
@@ -1926,10 +1951,15 @@ static void add_container_primitives(render_target *target, render_primitive_lis
 		float yscale = (container_xform.orientation & ORIENTATION_SWAP_XY) ? container->xscale : container->yscale;
 		float xoffs = (container_xform.orientation & ORIENTATION_SWAP_XY) ? container->yoffset : container->xoffset;
 		float yoffs = (container_xform.orientation & ORIENTATION_SWAP_XY) ? container->xoffset : container->yoffset;
-		if (container_xform.orientation & ORIENTATION_FLIP_X) xoffs = -xoffs;
-		if (container_xform.orientation & ORIENTATION_FLIP_Y) yoffs = -yoffs;
+
+		if (container_xform.orientation & ORIENTATION_FLIP_X)
+			xoffs = -xoffs;
+		if (container_xform.orientation & ORIENTATION_FLIP_Y)
+			yoffs = -yoffs;
+
 		container_xform.xscale = xform->xscale * xscale;
 		container_xform.yscale = xform->yscale * yscale;
+
 		if (xform->no_center)
 		{
 			container_xform.xoffs = xform->xscale * (xoffs) + xform->xoffs;
@@ -1958,6 +1988,7 @@ static void add_container_primitives(render_target *target, render_primitive_lis
 		prim = alloc_render_primitive(0);
 		prim->bounds.x0 = render_round_nearest(container_xform.xoffs + bounds.x0 * container_xform.xscale);
 		prim->bounds.y0 = render_round_nearest(container_xform.yoffs + bounds.y0 * container_xform.yscale);
+
 		if (item->internal & INTERNAL_FLAG_CHAR)
 		{
 			prim->bounds.x1 = prim->bounds.x0 + render_round_nearest((bounds.x1 - bounds.x0) * container_xform.xscale);
@@ -1979,6 +2010,7 @@ static void add_container_primitives(render_target *target, render_primitive_lis
 		switch (item->type)
 		{
 			case CONTAINER_ITEM_LINE:
+			{
 				/* adjust the color for brightness/contrast/gamma */
 				prim->color.a = apply_brightness_contrast_gamma_fp(prim->color.a, container->brightness, container->contrast, container->gamma);
 				prim->color.r = apply_brightness_contrast_gamma_fp(prim->color.r, container->brightness, container->contrast, container->gamma);
@@ -1995,8 +2027,9 @@ static void add_container_primitives(render_target *target, render_primitive_lis
 				/* clip the primitive */
 				clipped = render_clip_line(&prim->bounds, &cliprect);
 				break;
-
+			}
 			case CONTAINER_ITEM_QUAD:
+			{
 				/* set the quad type */
 				prim->type = RENDER_PRIMITIVE_QUAD;
 
@@ -2012,8 +2045,10 @@ static void add_container_primitives(render_target *target, render_primitive_lis
 					/* based on the swap values, get the scaled final texture */
 					width = (finalorient & ORIENTATION_SWAP_XY) ? (prim->bounds.y1 - prim->bounds.y0) : (prim->bounds.x1 - prim->bounds.x0);
 					height = (finalorient & ORIENTATION_SWAP_XY) ? (prim->bounds.x1 - prim->bounds.x0) : (prim->bounds.y1 - prim->bounds.y0);
+
 					width = MIN(width, target->maxtexwidth);
 					height = MIN(height, target->maxtexheight);
+
 					if (texture_get_scaled(item->texture, width, height, &prim->texture, &list->reflist))
 					{
 						/* set the palette */
@@ -2025,8 +2060,8 @@ static void add_container_primitives(render_target *target, render_primitive_lis
 
 						/* apply the final orientation from the quad flags and then build up the final flags */
 						prim->flags = (item->flags & ~(PRIMFLAG_TEXORIENT_MASK | PRIMFLAG_BLENDMODE_MASK | PRIMFLAG_TEXFORMAT_MASK)) |
-										PRIMFLAG_TEXORIENT(finalorient) |
-										PRIMFLAG_TEXFORMAT(item->texture->format);
+										PRIMFLAG_TEXORIENT(finalorient) | PRIMFLAG_TEXFORMAT(item->texture->format);
+
 						if (blendmode != -1)
 							prim->flags |= PRIMFLAG_BLENDMODE(blendmode);
 						else
@@ -2048,6 +2083,7 @@ static void add_container_primitives(render_target *target, render_primitive_lis
 					clipped = render_clip_quad(&prim->bounds, &cliprect, NULL);
 				}
 				break;
+			}
 		}
 
 		/* add to the list or free if we're clipped out */
@@ -2060,14 +2096,14 @@ static void add_container_primitives(render_target *target, render_primitive_lis
 	/* add the overlay if it exists */
 	if (container->overlaytexture != NULL && (target->layerconfig & LAYER_CONFIG_ENABLE_SCREEN_OVERLAY))
 	{
-		INT32 width, height;
-
 		/* allocate a primitive */
 		prim = alloc_render_primitive(RENDER_PRIMITIVE_QUAD);
 		set_render_bounds_wh(&prim->bounds, xform->xoffs, xform->yoffs, xform->xscale, xform->yscale);
 		prim->color = container_xform.color;
-		width = render_round_nearest(prim->bounds.x1) - render_round_nearest(prim->bounds.x0);
-		height = render_round_nearest(prim->bounds.y1) - render_round_nearest(prim->bounds.y0);
+
+		int width = render_round_nearest(prim->bounds.x1) - render_round_nearest(prim->bounds.x0);
+		int height = render_round_nearest(prim->bounds.y1) - render_round_nearest(prim->bounds.y0);
+
 		if (texture_get_scaled(container->overlaytexture,
 				(container_xform.orientation & ORIENTATION_SWAP_XY) ? height : width,
 				(container_xform.orientation & ORIENTATION_SWAP_XY) ? width : height, &prim->texture, &list->reflist))
@@ -2076,9 +2112,7 @@ static void add_container_primitives(render_target *target, render_primitive_lis
 			prim->texcoords = oriented_texcoords[container_xform.orientation];
 
 			/* set the flags and add it to the list */
-			prim->flags = PRIMFLAG_TEXORIENT(container_xform.orientation) |
-							PRIMFLAG_BLENDMODE(BLENDMODE_RGB_MULTIPLY) |
-							PRIMFLAG_TEXFORMAT(container->overlaytexture->format);
+			prim->flags = PRIMFLAG_TEXORIENT(container_xform.orientation) | PRIMFLAG_BLENDMODE(BLENDMODE_RGB_MULTIPLY) | PRIMFLAG_TEXFORMAT(container->overlaytexture->format);
 			append_render_primitive(list, prim);
 		}
 		else
@@ -2117,9 +2151,10 @@ static void add_element_primitives(render_target *target, render_primitive_list 
 		prim->flags = PRIMFLAG_TEXORIENT(xform->orientation) | PRIMFLAG_BLENDMODE(blendmode) | PRIMFLAG_TEXFORMAT(texture->format);
 
 		/* compute the bounds */
-		set_render_bounds_wh(&prim->bounds, render_round_nearest(xform->xoffs), render_round_nearest(xform->yoffs), (float) width, (float) height);
+		set_render_bounds_wh(&prim->bounds, render_round_nearest(xform->xoffs), render_round_nearest(xform->yoffs), (float)width, (float)height);
 		if (xform->orientation & ORIENTATION_SWAP_XY)
 			ISWAP(width, height);
+
 		width = MIN(width, target->maxtexwidth);
 		height = MIN(height, target->maxtexheight);
 
@@ -2428,16 +2463,17 @@ done:
 static void invalidate_all_render_ref(void *refptr)
 {
 	render_target *target;
-	int listnum;
 
 	/* loop over targets */
 	for (target = targetlist; target != NULL; target = target->next)
-		for (listnum = 0; listnum < ARRAY_LENGTH(target->primlist); listnum++)
+		for (int listnum = 0; listnum < ARRAY_LENGTH(target->primlist); listnum++)
 		{
 			render_primitive_list *list = &target->primlist[listnum];
 			osd_lock_acquire(list->lock);
+
 			if (has_render_ref(list->reflist, refptr))
 				release_render_list(list);
+
 			osd_lock_release(list->lock);
 		}
 }
@@ -2459,13 +2495,11 @@ render_texture *render_texture_alloc(texture_scaler_func scaler, void *param)
 	/* if nothing on the free list, add some more */
 	if (render_texture_free_list == NULL)
 	{
-		int texnum;
-
 		/* allocate a new group */
 		texture = global_alloc_array_clear(render_texture, TEXTURE_GROUP_SIZE);
 
 		/* add them to the list */
-		for (texnum = 0; texnum < TEXTURE_GROUP_SIZE; texnum++)
+		for (int texnum = 0; texnum < TEXTURE_GROUP_SIZE; texnum++)
 		{
 			texture[texnum].base = texture;
 			texture[texnum].next = render_texture_free_list;
@@ -2481,6 +2515,7 @@ render_texture *render_texture_alloc(texture_scaler_func scaler, void *param)
 	texture->scaler = scaler;
 	texture->param = param;
 	texture->format = TEXFORMAT_ARGB32;
+
 	return texture;
 }
 
@@ -2493,15 +2528,16 @@ render_texture *render_texture_alloc(texture_scaler_func scaler, void *param)
 void render_texture_free(render_texture *texture)
 {
 	render_texture *base_save;
-	int scalenum;
 
 	/* free all scaled versions */
-	for (scalenum = 0; scalenum < ARRAY_LENGTH(texture->scaled); scalenum++)
+	for (int scalenum = 0; scalenum < ARRAY_LENGTH(texture->scaled); scalenum++)
+	{
 		if (texture->scaled[scalenum].bitmap != NULL)
 		{
 			invalidate_all_render_ref(texture->scaled[scalenum].bitmap);
 			global_free(texture->scaled[scalenum].bitmap);
 		}
+	}
 
 	/* invalidate references to the original bitmap as well */
 	if (texture->bitmap != NULL)
@@ -2531,8 +2567,6 @@ void render_texture_free(render_texture *texture)
 
 void render_texture_set_bitmap(render_texture *texture, bitmap_t *bitmap, const rectangle *sbounds, int format, palette_t *palette)
 {
-	int scalenum;
-
 	/* ensure we have a valid palette for palettized modes */
 	if (format == TEXFORMAT_PALETTE16 || format == TEXFORMAT_PALETTEA16)
 		assert(palette != NULL);
@@ -2560,7 +2594,7 @@ void render_texture_set_bitmap(render_texture *texture, bitmap_t *bitmap, const 
 	texture->format = format;
 
 	/* invalidate all scaled versions */
-	for (scalenum = 0; scalenum < ARRAY_LENGTH(texture->scaled); scalenum++)
+	for (int scalenum = 0; scalenum < ARRAY_LENGTH(texture->scaled); scalenum++)
 	{
 		if (texture->scaled[scalenum].bitmap != NULL)
 		{
@@ -2583,16 +2617,16 @@ static int texture_get_scaled(render_texture *texture, UINT32 dwidth, UINT32 dhe
 	UINT8 bpp = (texture->format == TEXFORMAT_PALETTE16 || texture->format == TEXFORMAT_PALETTEA16 || texture->format == TEXFORMAT_RGB15 || texture->format == TEXFORMAT_YUY16) ? 16 : 32;
 	const rgb_t *palbase = (texture->format == TEXFORMAT_PALETTE16 || texture->format == TEXFORMAT_PALETTEA16) ? palette_entry_list_adjusted(texture->palette) : NULL;
 	scaled_texture *scaled = NULL;
-	int swidth, sheight;
-	int scalenum;
 
 	/* source width/height come from the source bounds */
-	swidth = texture->sbounds.max_x - texture->sbounds.min_x;
-	sheight = texture->sbounds.max_y - texture->sbounds.min_y;
+	int swidth = texture->sbounds.max_x - texture->sbounds.min_x;
+	int sheight = texture->sbounds.max_y - texture->sbounds.min_y;
 
 	/* ensure height/width are non-zero */
-	if (dwidth < 1) dwidth = 1;
-	if (dheight < 1) dheight = 1;
+	if (dwidth < 1)
+		dwidth = 1;
+	if (dheight < 1)
+		dheight = 1;
 
 	/* are we scaler-free? if so, just return the source bitmap */
 	if (texture->scaler == NULL || (texture->bitmap != NULL && swidth == dwidth && sheight == dheight))
@@ -2605,9 +2639,11 @@ static int texture_get_scaled(render_texture *texture, UINT32 dwidth, UINT32 dhe
 		texinfo->height = sheight;
 		texinfo->palette = palbase;
 		texinfo->seqid = ++texture->curseq;
+
 		return TRUE;
 	}
 
+	int scalenum;
 	/* is it a size we already have? */
 	for (scalenum = 0; scalenum < ARRAY_LENGTH(texture->scaled); scalenum++)
 	{
@@ -2627,6 +2663,7 @@ static int texture_get_scaled(render_texture *texture, UINT32 dwidth, UINT32 dhe
 		for (scalenum = 0; scalenum < ARRAY_LENGTH(texture->scaled); scalenum++)
 			if ((lowest == -1 || texture->scaled[scalenum].seqid < texture->scaled[lowest].seqid) && !has_render_ref(*reflist, texture->scaled[scalenum].bitmap))
 				lowest = scalenum;
+
 		assert_always(lowest != -1, "Too many live texture instances!");
 
 		/* throw out any existing entries */
@@ -2653,6 +2690,7 @@ static int texture_get_scaled(render_texture *texture, UINT32 dwidth, UINT32 dhe
 	texinfo->height = dheight;
 	texinfo->palette = palbase;
 	texinfo->seqid = scaled->seqid;
+
 	return TRUE;
 }
 
@@ -2685,7 +2723,7 @@ static const rgb_t *texture_get_adjusted_palette(render_texture *texture, render
 	{
 		case TEXFORMAT_PALETTE16:
 		case TEXFORMAT_PALETTEA16:
-
+		{
 			/* if no adjustment necessary, return the raw palette */
 			assert(texture->palette != NULL);
 			adjusted = palette_entry_list_adjusted(texture->palette);
@@ -2713,10 +2751,11 @@ static const rgb_t *texture_get_adjusted_palette(render_texture *texture, render
 				UINT8 b = apply_brightness_contrast_gamma(RGB_BLUE(adjusted[index]), container->brightness, container->contrast, container->gamma);
 				texture->bcglookup[index] = MAKE_ARGB(RGB_ALPHA(adjusted[index]), r, g, b);
 			}
+
 			return texture->bcglookup;
-
+		}
 		case TEXFORMAT_RGB15:
-
+		{
 			/* if no adjustment necessary, return NULL */
 			if (container->brightness == 1.0f && container->contrast == 1.0f && container->gamma == 1.0f && texture->palette == NULL)
 				return NULL;
@@ -2746,12 +2785,13 @@ static const rgb_t *texture_get_adjusted_palette(render_texture *texture, render
 				texture->bcglookup[0x40 + index] = val << 16;
 				texture->bcglookup[0x60 + index] = val << 24;
 			}
-			return texture->bcglookup;
 
+			return texture->bcglookup;
+		}
 		case TEXFORMAT_RGB32:
 		case TEXFORMAT_ARGB32:
 		case TEXFORMAT_YUY16:
-
+		{
 			/* if no adjustment necessary, return NULL */
 			if (container->brightness == 1.0f && container->contrast == 1.0f && container->gamma == 1.0f && texture->palette == NULL)
 				return NULL;
@@ -2781,8 +2821,9 @@ static const rgb_t *texture_get_adjusted_palette(render_texture *texture, render
 				texture->bcglookup[0x200 + index] = val << 16;
 				texture->bcglookup[0x300 + index] = val << 24;
 			}
-			return texture->bcglookup;
 
+			return texture->bcglookup;
+		}
 		default:
 			assert(FALSE);
 	}
@@ -2804,7 +2845,6 @@ static const rgb_t *texture_get_adjusted_palette(render_texture *texture, render
 static render_container *render_container_alloc(running_machine *machine)
 {
 	render_container *container;
-	int color;
 
 	/* allocate and clear memory */
 	container = global_alloc_clear(render_container);
@@ -2817,8 +2857,8 @@ static render_container *render_container_alloc(running_machine *machine)
 	container->yscale = 1.0f;
 
 	/* all palette entries are opaque by default */
-	for (color = 0; color < ARRAY_LENGTH(container->bcglookup); color++)
-		container->bcglookup[color] = MAKE_ARGB(0xff,0x00,0x00,0x00);
+	for (int color = 0; color < ARRAY_LENGTH(container->bcglookup); color++)
+		container->bcglookup[color] = MAKE_ARGB(0xff, 0x00, 0x00, 0x00);
 
 	/* make sure it is empty */
 	render_container_empty(container);
@@ -2827,6 +2867,7 @@ static render_container *render_container_alloc(running_machine *machine)
 	if (machine->palette != NULL)
 		container->palclient = palette_client_alloc(machine->palette);
 	render_container_recompute_lookups(container);
+
 	return container;
 }
 
@@ -3063,17 +3104,15 @@ void render_container_add_char(render_container *container, float x0, float y0, 
 
 static void render_container_overlay_scale(bitmap_t *dest, const bitmap_t *source, const rectangle *sbounds, void *param)
 {
-	int x, y;
-
 	/* simply replicate the source bitmap over the target */
-	for (y = 0; y < dest->height; y++)
+	for (int y = 0; y < dest->height; y++)
 	{
 		UINT32 *src = (UINT32 *)source->base + (y % source->height) * source->rowpixels;
 		UINT32 *dst = (UINT32 *)dest->base + y * dest->rowpixels;
 		int sx = 0;
 
 		/* loop over columns */
-		for (x = 0; x < dest->width; x++)
+		for (int x = 0; x < dest->width; x++)
 		{
 			*dst++ = src[sx++];
 			if (sx >= source->width)
@@ -3138,40 +3177,40 @@ static void render_container_recompute_lookups(render_container *container)
 
 static void render_container_update_palette(render_container *container)
 {
-	UINT32 mindirty, maxdirty;
-	const UINT32 *dirty;
-
 	/* skip if no client */
 	if (container->palclient == NULL)
 		return;
 
+	UINT32 mindirty, maxdirty;
 	/* get the dirty list */
-	dirty = palette_client_get_dirty_list(container->palclient, &mindirty, &maxdirty);
+	const UINT32 *dirty = palette_client_get_dirty_list(container->palclient, &mindirty, &maxdirty);
 
 	/* iterate over dirty items and update them */
 	if (dirty != NULL)
 	{
 		palette_t *palette = palette_client_get_palette(container->palclient);
 		const pen_t *adjusted_palette = palette_entry_list_adjusted(palette);
-		UINT32 entry32, entry;
 
 		/* loop over chunks of 32 entries, since we can quickly examine 32 at a time */
-		for (entry32 = mindirty / 32; entry32 <= maxdirty / 32; entry32++)
+		for (UINT32 entry32 = mindirty / 32; entry32 <= maxdirty / 32; entry32++)
 		{
 			UINT32 dirtybits = dirty[entry32];
 			if (dirtybits != 0)
-
+			{
 				/* this chunk of 32 has dirty entries; fix them up */
-				for (entry = 0; entry < 32; entry++)
+				for (UINT32 entry = 0; entry < 32; entry++)
+				{
 					if (dirtybits & (1 << entry))
 					{
 						UINT32 finalentry = entry32 * 32 + entry;
 						rgb_t newval = adjusted_palette[finalentry];
 						container->bcglookup[finalentry] = (newval & 0xff000000) |
-													  container->bcglookup256[0x200 + RGB_RED(newval)] |
-													  container->bcglookup256[0x100 + RGB_GREEN(newval)] |
-													  container->bcglookup256[0x000 + RGB_BLUE(newval)];
+											container->bcglookup256[0x200 + RGB_RED(newval)] |
+											container->bcglookup256[0x100 + RGB_GREEN(newval)] |
+											container->bcglookup256[0x000 + RGB_BLUE(newval)];
 					}
+				}
+			}
 		}
 	}
 }
@@ -3203,6 +3242,7 @@ void render_debug_free(render_target *target, render_container *container)
 				break;
 		c->next = container->next;
 	}
+
 	render_container_free(container);
 }
 
@@ -3237,5 +3277,4 @@ void render_debug_top(render_target *target, render_container *container)
 	}
 	container->next = NULL;
 }
-
 

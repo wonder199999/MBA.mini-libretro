@@ -136,58 +136,60 @@ extern bool RETRO_ENDEXEC;
 //-------------------------------------------------
 
 running_machine::running_machine(const game_driver &driver, const machine_config &_config, core_options &options, bool exit_to_game_select)
-	: m_regionlist( m_respool ),
-	  m_devicelist( m_respool ),
-	  config(&_config),
-	  m_config(_config),
-	  firstcpu(NULL),
-	  gamedrv(&driver),
-	  m_game(driver),
-	  primary_screen(NULL),
-	  palette(NULL),
-	  pens(NULL),
-	  colortable(NULL),
-	  shadow_table(NULL),
-	  priority_bitmap(NULL),
-	  sample_rate(options_get_int(&options, OPTION_SAMPLERATE)),
-	  debug_flags(0),
-	  ui_active(false),
-	  mame_data(NULL),
-	  timer_data(NULL),
-	  state_data(NULL),
-	  memory_data(NULL),
-	  palette_data(NULL),
-	  tilemap_data(NULL),
-	  streams_data(NULL),
-	  devices_data(NULL),
-	  romload_data(NULL),
-	  sound_data(NULL),
-	  input_data(NULL),
-	  input_port_data(NULL),
-	  ui_input_data(NULL),
-	  cheat_data(NULL),
-	  debugcpu_data(NULL),
-	  generic_machine_data(NULL),
-	  generic_video_data(NULL),
-	  generic_audio_data(NULL),
-	  m_debug_view(NULL),
-	  m_logerror_list(NULL),
-	  m_scheduler(*this),
-	  m_options(options),
-	  m_basename(driver.name),
-	  m_current_phase(MACHINE_PHASE_PREINIT),
-	  m_paused(false),
-	  m_hard_reset_pending(false),
-	  m_exit_pending(false),
-	  m_exit_to_game_select(exit_to_game_select),
-	  m_new_driver_pending(NULL),
-	  m_soft_reset_timer(NULL),
-	  m_logfile(NULL),
-	  m_saveload_schedule(SLS_NONE),
-	  m_saveload_schedule_time(attotime_zero),
-	  m_saveload_searchpath(NULL),
-	  m_rand_seed(0x9d14abd7),
-	  m_driver_data(NULL)
+	:
+	m_regionlist( m_respool ),
+	m_devicelist( m_respool ),
+	config(&_config),
+	m_config(_config),
+	firstcpu(NULL),
+	gamedrv(&driver),
+	m_game(driver),
+	primary_screen(NULL),
+	palette(NULL),
+	pens(NULL),
+	colortable(NULL),
+	shadow_table(NULL),
+	priority_bitmap(NULL),
+	sample_rate(options_get_int(&options, OPTION_SAMPLERATE)),
+	debug_flags(0),
+	ui_active(false),
+	mame_data(NULL),
+	timer_data(NULL),
+	state_data(NULL),
+	memory_data(NULL),
+	palette_data(NULL),
+	tilemap_data(NULL),
+	streams_data(NULL),
+	devices_data(NULL),
+	romload_data(NULL),
+	sound_data(NULL),
+	input_data(NULL),
+	input_port_data(NULL),
+	ui_input_data(NULL),
+	cheat_data(NULL),
+	debugcpu_data(NULL),
+	generic_machine_data(NULL),
+	generic_video_data(NULL),
+	generic_audio_data(NULL),
+	m_debug_view(NULL),
+	m_logerror_list(NULL),
+	m_scheduler(*this),
+	m_options(options),
+	m_basename(driver.name),
+	m_current_phase(MACHINE_PHASE_PREINIT),
+	m_paused(false),
+	m_hard_reset_pending(false),
+	m_exit_pending(false),
+	m_exit_to_game_select(exit_to_game_select),
+	m_new_driver_pending(NULL),
+	m_soft_reset_timer(NULL),
+	m_logfile(NULL),
+	m_saveload_schedule(SLS_NONE),
+	m_saveload_schedule_time(attotime_zero),
+	m_saveload_searchpath(NULL),
+	m_rand_seed(0x9d14abd7),
+	m_driver_data(NULL)
+
 {
 	memset(gfx, 0, sizeof(gfx));
 	memset(&generic, 0, sizeof(generic));
@@ -206,11 +208,13 @@ running_machine::running_machine(const game_driver &driver, const machine_config
 	// find devices
 	primary_screen = screen_first(*this);
 	for (device_t *device = m_devicelist.first(); device != NULL; device = device->next())
+	{
 		if (dynamic_cast<cpu_device *>(device) != NULL)
 		{
 			firstcpu = downcast<cpu_device *>(device);
 			break;
 		}
+	}
 
 	// fetch core options
 	if (options_get_bool(&m_options, OPTION_DEBUG))
@@ -370,12 +374,13 @@ int running_machine::run(bool firstrun)
 	m_current_phase = MACHINE_PHASE_INIT;
 
 	// if we have a logfile, set up the callback
-	if (options_get_bool(&m_options, OPTION_LOG))
+/*	if (options_get_bool(&m_options, OPTION_LOG))
 	{
 		file_error filerr = mame_fopen(SEARCHPATH_DEBUGLOG, "error.log", OPEN_FLAG_WRITE | OPEN_FLAG_CREATE | OPEN_FLAG_CREATE_PATHS, &m_logfile);
 		assert_always(filerr == FILERR_NONE, "unable to open log file");
 		add_logerror_callback(logfile_callback);
 	}
+*/
 
 	// then finish setting up our local machine
 	start();
@@ -386,14 +391,14 @@ int running_machine::run(bool firstrun)
 	sound_mute(this, FALSE);
 
 	// display the startup screens
-	ui_display_startup_screens(this, firstrun, !options_get_bool(&m_options, OPTION_SKIP_NAGSCREEN));
+	ui_display_startup_screens(this, firstrun, !options_get_bool(&m_options, OPTION_SKIP_NAGSCREEN));	/* Invalid */
 
 	// perform a soft reset -- this takes us to the running phase
 	soft_reset();
 
 	// run the CPUs until a reset or exit
 	m_hard_reset_pending = false;
-	while ( (!m_hard_reset_pending && !m_exit_pending) || m_saveload_schedule != SLS_NONE )
+	while ( (!m_hard_reset_pending && !m_exit_pending) /* || m_saveload_schedule != SLS_NONE */ )
 		return 0;
 
 	// and out via the exit phase
@@ -607,6 +612,7 @@ void running_machine::pause()
 	// ignore if nothing has changed
 	if (m_paused)
 		return;
+
 	m_paused = true;
 
 	// call the callbacks
@@ -623,6 +629,7 @@ void running_machine::resume()
 	// ignore if nothing has changed
 	if (!m_paused)
 		return;
+
 	m_paused = false;
 
 	// call the callbacks
@@ -724,7 +731,7 @@ void CLIB_DECL running_machine::vlogerror(const char *format, va_list args)
 	// process only if there is a target
 	if (m_logerror_list != NULL)
 	{
-//		g_profiler.start(PROFILER_LOGERROR);
+// g_profiler.start(PROFILER_LOGERROR);
 
 		// dump to the buffer
 		vsnprintf(giant_string_buffer, ARRAY_LENGTH(giant_string_buffer), format, args);
@@ -733,7 +740,7 @@ void CLIB_DECL running_machine::vlogerror(const char *format, va_list args)
 		for (logerror_callback_item *cb = m_logerror_list; cb != NULL; cb = cb->m_next)
 			(*cb->m_func)(*this, giant_string_buffer);
 
-//		g_profiler.stop();
+// g_profiler.stop();
 	}
 }
 
@@ -897,7 +904,10 @@ STATE_POSTLOAD( running_machine::post_load_static )
 //	of the system
 //-----------------------------------------------------
 
-TIMER_CALLBACK( running_machine::static_soft_reset ) { machine->soft_reset(); }
+TIMER_CALLBACK( running_machine::static_soft_reset )
+{
+	machine->soft_reset();
+}
 
 void running_machine::soft_reset()
 {
@@ -943,11 +953,12 @@ void running_machine::logfile_callback(running_machine &machine, const char *buf
 //-------------------------------------------------
 
 region_info::region_info(running_machine &machine, const char *name, UINT32 length, UINT32 flags)
-	: m_machine(machine),
-	  m_next(NULL),
-	  m_name(name),
-	  m_length(length),
-	  m_flags(flags)
+	:
+	m_machine(machine),
+	m_next(NULL),
+	m_name(name),
+	m_length(length),
+	m_flags(flags)
 {
 	m_base.u8 = auto_alloc_array(&machine, UINT8, length);
 }
@@ -972,8 +983,9 @@ region_info::~region_info()
 //-------------------------------------------------
 
 running_machine::notifier_callback_item::notifier_callback_item(notify_callback func)
-	: m_next(NULL),
-	  m_func(func)
+	:
+	m_next(NULL),
+	m_func(func)
 {
 }
 
@@ -983,8 +995,9 @@ running_machine::notifier_callback_item::notifier_callback_item(notify_callback 
 //-------------------------------------------------
 
 running_machine::logerror_callback_item::logerror_callback_item(logerror_callback func)
-	: m_next(NULL),
-	  m_func(func)
+	:
+	m_next(NULL),
+	m_func(func)
 {
 }
 
@@ -998,7 +1011,8 @@ running_machine::logerror_callback_item::logerror_callback_item(logerror_callbac
 //-------------------------------------------------
 
 driver_data_t::driver_data_t( running_machine &machine )
-	: m_machine( machine )
+	:
+	m_machine( machine )
 {
 }
 
@@ -1103,6 +1117,7 @@ bool driver_data_t::video_update(screen_device &screen, bitmap_t &bitmap, const 
 {
 	if (m_machine.m_config.m_video_update != NULL)
 		return (*m_machine.m_config.m_video_update)(&screen, &bitmap, &cliprect);
+
 	return 0;
 }
 

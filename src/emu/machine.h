@@ -162,7 +162,7 @@ class driver_data_t : public bindable_object
 	friend class running_machine;
 
 public:
-	driver_data_t( running_machine &machine);
+	driver_data_t(running_machine &machine);
 	virtual ~driver_data_t();
 
 	virtual void machine_start();
@@ -229,31 +229,31 @@ public:
 
 private:
 	// internal data
-	running_machine &		m_machine;
-	region_info *			m_next;
-	astring					m_name;
-	generic_ptr				m_base;
-	UINT32					m_length;
-	UINT32					m_flags;
+	running_machine		&m_machine;
+	region_info		*m_next;
+	astring				m_name;
+	generic_ptr			m_base;
+	UINT32				m_length;
+	UINT32				m_flags;
 };
 
 
 // this structure holds generic pointers that are commonly used
 struct generic_pointers
 {
-	generic_ptr				nvram;			// generic NVRAM
-	UINT32					nvram_size;
-	generic_ptr				videoram;		// videoram
-	UINT32					videoram_size;
-	generic_ptr				spriteram;		// spriteram
-	UINT32					spriteram_size;
-	generic_ptr				spriteram2;		// secondary spriteram
-	UINT32					spriteram2_size;
-	generic_ptr				buffered_spriteram;	// buffered spriteram
-	generic_ptr				buffered_spriteram2;	// secondary buffered spriteram
-	generic_ptr				paletteram;		// palette RAM
-	generic_ptr				paletteram2;		// secondary palette RAM
-	bitmap_t *				tmpbitmap;		// temporary bitmap
+	generic_ptr			nvram;			// generic NVRAM
+	UINT32				nvram_size;
+	generic_ptr			videoram;		// videoram
+	UINT32				videoram_size;
+	generic_ptr			spriteram;		// spriteram
+	UINT32				spriteram_size;
+	generic_ptr			spriteram2;		// secondary spriteram
+	UINT32				spriteram2_size;
+	generic_ptr			buffered_spriteram;	// buffered spriteram
+	generic_ptr			buffered_spriteram2;	// secondary buffered spriteram
+	generic_ptr			paletteram;		// palette RAM
+	generic_ptr			paletteram2;		// secondary palette RAM
+	bitmap_t		*tmpbitmap;			// temporary bitmap
 };
 
 // system time description, both local and UTC
@@ -319,8 +319,8 @@ public:
 	device_scheduler &scheduler() { return m_scheduler; }
 
 	// immediate operations
-   void retro_machineexit();
-   void retro_loop();
+	void retro_machineexit();
+	void retro_loop();
 	int run(bool firstrun);
 	void pause();
 	void resume();
@@ -352,66 +352,66 @@ public:
 
 	// internals
 	resource_pool			m_respool;			// pool of resources for this machine
-	region_list				m_regionlist;		// list of memory regions
-	device_list				m_devicelist;		// list of running devices
+	region_list			m_regionlist;		// list of memory regions
+	device_list			m_devicelist;		// list of running devices
 
 	// configuration data
-	const machine_config *	config;				// points to the constructed machine_config
-	const machine_config &	m_config;			// points to the constructed machine_config
-	ioport_list				m_portlist;		// points to a list of input port configurations
+	const machine_config	*config;				// points to the constructed machine_config
+	const machine_config	&m_config;			// points to the constructed machine_config
+	ioport_list			m_portlist;		// points to a list of input port configurations
 
 	// CPU information
 	cpu_device *			firstcpu;			// first CPU (allows for quick iteration via typenext)
 	address_space *			m_nonspecific_space;		// a dummy address_space used for legacy compatibility
 
 	// game-related information
-	const game_driver *		gamedrv;			// points to the definition of the game machine
-	const game_driver &		m_game;				// points to the definition of the game machine
+	const game_driver	*gamedrv;			// points to the definition of the game machine
+	const game_driver	&m_game;				// points to the definition of the game machine
 
 	// video-related information
-	gfx_element			*gfx[MAX_GFX_ELEMENTS];		// array of pointers to graphic sets (chars, sprites)
-	screen_device *			primary_screen;			// the primary screen device, or NULL if screenless
-	palette_t *			palette;			// global palette object
+	gfx_element		*gfx[MAX_GFX_ELEMENTS];		// array of pointers to graphic sets (chars, sprites)
+	screen_device		*primary_screen;			// the primary screen device, or NULL if screenless
+	palette_t		*palette;			// global palette object
 
 	// palette-related information
-	const pen_t 			*pens;				// remapped palette pen numbers
-	colortable_t *			colortable;			// global colortable for remapping
-	pen_t *					shadow_table;		// table for looking up a shadowed pen
-	bitmap_t *				priority_bitmap;	// priority bitmap
+	const pen_t 		*pens;				// remapped palette pen numbers
+	colortable_t		*colortable;			// global colortable for remapping
+	pen_t			*shadow_table;		// table for looking up a shadowed pen
+	bitmap_t		*priority_bitmap;	// priority bitmap
 
 	// audio-related information
-	int					sample_rate;		// the digital audio sample rate
+	int				sample_rate;		// the digital audio sample rate
 
 	// debugger-related information
-	UINT32					debug_flags;		// the current debug flags
+	UINT32				debug_flags;		// the current debug flags
 
 	// UI-related
-	bool					ui_active;			// ui active or not (useful for games / systems with keyboard inputs)
+	bool				ui_active;			// ui active or not (useful for games / systems with keyboard inputs)
 
 	// generic pointers
 	generic_pointers		generic;			// generic pointers
 
 	// internal core information
-	mame_private *			mame_data;			// internal data from mame.c
-	timer_private *			timer_data;			// internal data from timer.c
-	state_private *			state_data;			// internal data from state.c
-	memory_private *		memory_data;		// internal data from memory.c
-	palette_private *		palette_data;		// internal data from palette.c
-	tilemap_private *		tilemap_data;		// internal data from tilemap.c
-	streams_private *		streams_data;		// internal data from streams.c
-	devices_private *		devices_data;		// internal data from devices.c
-	romload_private *		romload_data;		// internal data from romload.c
-	sound_private *			sound_data;			// internal data from sound.c
-	input_private *			input_data;			// internal data from input.c
-	input_port_private *	input_port_data;		// internal data from inptport.c
-	ui_input_private *		ui_input_data;		// internal data from uiinput.c
-	cheat_private *			cheat_data;			// internal data from cheat.c
-	debugcpu_private *		debugcpu_data;		// internal data from debugcpu.c
-	generic_machine_private 	*generic_machine_data;	// internal data from machine/generic.c
-	generic_video_private *	generic_video_data;		// internal data from video/generic.c
-	generic_audio_private *	generic_audio_data;		// internal data from audio/generic.c
+	mame_private		*mame_data;		// internal data from mame.c
+	timer_private		*timer_data;		// internal data from timer.c
+	state_private		*state_data;		// internal data from state.c
+	memory_private		*memory_data;		// internal data from memory.c
+	palette_private		*palette_data;		// internal data from palette.c
+	tilemap_private		*tilemap_data;		// internal data from tilemap.c
+	streams_private		*streams_data;		// internal data from streams.c
+	devices_private		*devices_data;		// internal data from devices.c
+	romload_private		*romload_data;		// internal data from romload.c
+	sound_private		*sound_data;		// internal data from sound.c
+	input_private		*input_data;		// internal data from input.c
+	input_port_private	*input_port_data;	// internal data from inptport.c
+	ui_input_private	*ui_input_data;		// internal data from uiinput.c
+	cheat_private		*cheat_data;		// internal data from cheat.c
+	debugcpu_private	*debugcpu_data;		// internal data from debugcpu.c
+	generic_machine_private *generic_machine_data;	// internal data from machine/generic.c
+	generic_video_private	*generic_video_data;	// internal data from video/generic.c
+	generic_audio_private	*generic_audio_data;	// internal data from audio/generic.c
 
-	debug_view_manager *	m_debug_view;		// internal data from debugvw.c
+	debug_view_manager	*m_debug_view;		// internal data from debugvw.c
 
 	// driver-specific information
 	template<class T>
@@ -435,8 +435,8 @@ private:
 	struct notifier_callback_item
 	{
 		notifier_callback_item(notify_callback func);
-		notifier_callback_item *	m_next;
-		notify_callback				m_func;
+		notifier_callback_item	*m_next;
+		notify_callback			m_func;
 	};
 	notifier_callback_item *m_notifier_list[MACHINE_NOTIFY_COUNT];
 
@@ -444,25 +444,25 @@ private:
 	struct logerror_callback_item
 	{
 		logerror_callback_item(logerror_callback func);
-		logerror_callback_item *	m_next;
-		logerror_callback			m_func;
+		logerror_callback_item	*m_next;
+		logerror_callback		m_func;
 	};
 	logerror_callback_item *m_logerror_list;
 
-	device_scheduler		m_scheduler;		// scheduler object
-	core_options 			&m_options;
+	device_scheduler			m_scheduler;		// scheduler object
+	core_options			&m_options;
 
-	astring					m_context;			// context string
-	astring					m_basename;			// basename used for game-related paths
+	astring					m_context;		// context string
+	astring					m_basename;		// basename used for game-related paths
 
-	machine_phase			m_current_phase;
+	machine_phase				m_current_phase;
 	bool					m_paused;
 	bool					m_hard_reset_pending;
 	bool					m_exit_pending;
 	bool					m_exit_to_game_select;
-	const game_driver *		m_new_driver_pending;
-	emu_timer *				m_soft_reset_timer;
-	mame_file *				m_logfile;
+	const game_driver		*m_new_driver_pending;
+	emu_timer			*m_soft_reset_timer;
+	mame_file			*m_logfile;
 
 	// load/save
 	enum saveload_schedule
@@ -471,17 +471,17 @@ private:
 		SLS_SAVE,
 		SLS_LOAD
 	};
-	saveload_schedule		m_saveload_schedule;
+	saveload_schedule			m_saveload_schedule;
 	attotime				m_saveload_schedule_time;
 	astring					m_saveload_pending_file;
-	const char *			m_saveload_searchpath;
+	const char			*m_saveload_searchpath;
 
 	// random number seed
-	UINT32					m_rand_seed;
+	UINT32				m_rand_seed;
 
 	// base time
 	time_t					m_base_time;
-	driver_data_t			*m_driver_data;		// drivers can hang data off of here instead of using globals
+	driver_data_t			*m_driver_data;			// drivers can hang data off of here instead of using globals
 };
 
 

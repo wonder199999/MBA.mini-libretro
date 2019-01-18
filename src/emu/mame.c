@@ -218,8 +218,8 @@ void retro_main_loop(void)
 			firstrun = true;
 		}
 
-		if (retro_global_machine->exit_pending());
-			//exit_pending = true;
+//		if (retro_global_machine->exit_pending());
+//			exit_pending = true;
 
 		// destroy the machine and the config
 		global_free(retro_global_machine);

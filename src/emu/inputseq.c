@@ -19,7 +19,7 @@
 ***************************************************************************/
 
 /* max time between key presses */
-#define RECORD_TIME					(osd_ticks_per_second() * 2 / 3)
+#define RECORD_TIME			(osd_ticks_per_second() * 2 / 3)
 
 
 
@@ -30,7 +30,7 @@
 /* information about the current sequence being recorded */
 static input_seq		record_seq;
 static osd_ticks_t		record_last;
-static input_item_class	record_class;
+static input_item_class		record_class;
 
 
 
@@ -54,12 +54,11 @@ static int input_seq_is_valid(const input_seq *seq);
 
 INLINE int input_seq_length(const input_seq *seq)
 {
-	int seqnum;
-
 	/* find the end token; error if none found */
-	for (seqnum = 0; seqnum < ARRAY_LENGTH(seq->code); seqnum++)
+	for (int seqnum = 0; seqnum < ARRAY_LENGTH(seq->code); seqnum++)
 		if (seq->code[seqnum] == SEQCODE_END)
 			return seqnum;
+
 	return ARRAY_LENGTH(seq->code);
 }
 
@@ -80,6 +79,7 @@ INLINE int input_seq_append(input_seq *seq, input_code code)
 	/* otherwise, append the code and add a new end */
 	seq->code[length++] = code;
 	seq->code[length] = SEQCODE_END;
+
 	return TRUE;
 }
 
@@ -137,10 +137,9 @@ int input_seq_pressed(running_machine *machine, const input_seq *seq)
 	int result = FALSE;
 	int invert = FALSE;
 	int first = TRUE;
-	int codenum;
 
 	/* iterate over all of the codes */
-	for (codenum = 0; codenum < ARRAY_LENGTH(seq->code); codenum++)
+	for (int codenum = 0; codenum < ARRAY_LENGTH(seq->code); codenum++)
 	{
 		input_code code = seq->code[codenum];
 
@@ -194,10 +193,9 @@ INT32 input_seq_axis_value(running_machine *machine, const input_seq *seq, input
 	int result = 0;
 	int invert = FALSE;
 	int enable = TRUE;
-	int codenum;
 
 	/* iterate over all of the codes */
-	for (codenum = 0; codenum < ARRAY_LENGTH(seq->code); codenum++)
+	for (int codenum = 0; codenum < ARRAY_LENGTH(seq->code); codenum++)
 	{
 		input_code code = seq->code[codenum];
 
@@ -264,6 +262,7 @@ INT32 input_seq_axis_value(running_machine *machine, const input_seq *seq, input
 	/* if the caller wants to know the type, provide it */
 	if (itemclass_ptr != NULL)
 		*itemclass_ptr = (result == 0) ? itemclasszero : itemclass;
+
 	return result;
 }
 
@@ -467,13 +466,12 @@ astring &input_seq_name(running_machine *machine, astring &string, const input_s
 astring &input_seq_to_tokens(running_machine *machine, astring &string, const input_seq *seq)
 {
 	astring codestr;
-	int codenum;
 
 	/* start with an empty buffer */
 	string.reset();
 
 	/* loop until we hit the end */
-	for (codenum = 0; codenum < ARRAY_LENGTH(seq->code) && seq->code[codenum] != SEQCODE_END; codenum++)
+	for (int codenum = 0; codenum < ARRAY_LENGTH(seq->code) && seq->code[codenum] != SEQCODE_END; codenum++)
 	{
 		input_code code = seq->code[codenum];
 
@@ -558,8 +556,8 @@ int input_seq_from_tokens(running_machine *machine, const char *string, input_se
 		}
 		str = strtemp + 1;
 	}
-
 	auto_free(machine, strcopy);
+
 	return result;
 }
 
@@ -579,10 +577,9 @@ static int input_seq_is_valid(const input_seq *seq)
 	input_item_class lastclass = ITEM_CLASS_INVALID;
 	input_code lastcode = INPUT_CODE_INVALID;
 	int positive_code_count = 0;
-	int seqnum;
 
 	/* scan the sequence for valid codes */
-	for (seqnum = 0; seqnum < ARRAY_LENGTH(seq->code); seqnum++)
+	for (int seqnum = 0; seqnum < ARRAY_LENGTH(seq->code); seqnum++)
 	{
 		input_code code = seq->code[seqnum];
 
