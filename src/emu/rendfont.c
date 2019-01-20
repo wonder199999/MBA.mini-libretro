@@ -27,7 +27,7 @@
 
 #define CACHED_CHAR_SIZE		12
 #define CACHED_HEADER_SIZE		16
-#define CACHED_BDF_HASH_SIZE	1024
+#define CACHED_BDF_HASH_SIZE		1024
 
 
 
@@ -39,12 +39,12 @@
 typedef struct _render_font_char render_font_char;
 struct _render_font_char
 {
-	INT32				width;				/* width from this character to the next */
+	INT32				width;			/* width from this character to the next */
 	INT32				xoffs, yoffs;		/* X and Y offset from baseline to top,left of bitmap */
 	INT32				bmwidth, bmheight;	/* width and height of bitmap */
-	const char *		rawdata;			/* pointer to the raw data for this one */
-	bitmap_t *			bitmap;				/* pointer to the bitmap containing the raw data */
-	render_texture *	texture;			/* pointer to a texture for rendering and sizing */
+	const char 		*rawdata;			/* pointer to the raw data for this one */
+	bitmap_t 		*bitmap;			/* pointer to the bitmap containing the raw data */
+	render_texture		*texture;			/* pointer to a texture for rendering and sizing */
 };
 
 
@@ -52,13 +52,13 @@ struct _render_font_char
 /*typedef struct _render_font render_font; -- defined in rendfont.h */
 struct _render_font
 {
-	int					format;				/* format of font data */
-	int					height;				/* height of the font, from ascent to descent */
-	int					yoffs;				/* y offset from baseline to descent */
-	float				scale;				/* 1 / height precomputed */
-	render_font_char *	chars[256];			/* array of character subtables */
-	const char *		rawdata;			/* pointer to the raw data for the font */
-	UINT64				rawsize;			/* size of the raw font data */
+	int				format;			/* format of font data */
+	int				height;			/* height of the font, from ascent to descent */
+	int				yoffs;			/* y offset from baseline to descent */
+	float				scale;			/* 1 / height precomputed */
+	render_font_char	*chars[256];			/* array of character subtables */
+	const char		*rawdata;			/* pointer to the raw data for the font */
+	UINT64				rawsize;		/* size of the raw font data */
 };
 
 
@@ -87,7 +87,8 @@ static int render_font_save_cached(render_font *font, const char *filename, UINT
 INLINE const char *next_line(const char *ptr)
 {
 	/* scan forward until we hit the end or a carriage return */
-	while (*ptr != 13 && *ptr != 10 && *ptr != 0) ptr++;
+	while (*ptr != 13 && *ptr != 10 && *ptr != 0)
+		ptr++;
 
 	/* if we hit the end, return NULL */
 	if (*ptr == 0)
@@ -96,6 +97,7 @@ INLINE const char *next_line(const char *ptr)
 	/* eat the trailing linefeed if present */
 	if (*++ptr == 10)
 		ptr++;
+
 	return ptr;
 }
 
@@ -160,6 +162,7 @@ render_font *render_font_alloc(const char *filename)
 		render_font_load_cached(font, ramfile, 0);
 		mame_fclose(ramfile);
 	}
+
 	return font;
 }
 
@@ -171,10 +174,9 @@ render_font *render_font_alloc(const char *filename)
 
 void render_font_free(render_font *font)
 {
-	int tablenum;
-
 	/* free all the subtables */
-	for (tablenum = 0; tablenum < 256; tablenum++)
+	for (int tablenum = 0; tablenum < 256; tablenum++)
+	{
 		if (font->chars[tablenum] != NULL)
 		{
 			int charnum;
@@ -191,10 +193,12 @@ void render_font_free(render_font *font)
 			/* free the subtable itself */
 			global_free(font->chars[tablenum]);
 		}
+	}
 
 	/* free the raw data and the size itself */
 	if (font->rawdata != NULL)
 		global_free((void *)font->rawdata);
+
 	global_free(font);
 }
 
@@ -208,7 +212,6 @@ static void render_font_char_expand(render_font *font, render_font_char *ch)
 {
 	const char *ptr = ch->rawdata;
 	UINT8 accum = 0, accumbit = 7;
-	int x, y;
 
 	/* punt if nothing there */
 	if (ch->bmwidth == 0 || ch->bmheight == 0 || ch->rawdata == NULL)
@@ -219,7 +222,7 @@ static void render_font_char_expand(render_font *font, render_font_char *ch)
 	bitmap_fill(ch->bitmap, NULL, 0);
 
 	/* extract the data */
-	for (y = 0; y < ch->bmheight; y++)
+	for (int y = 0; y < ch->bmheight; y++)
 	{
 		int desty = y + font->height + font->yoffs - ch->yoffs - ch->bmheight;
 		UINT32 *dest = (desty >= 0 && desty < font->height) ? BITMAP_ADDR32(ch->bitmap, desty, 0) : NULL;
@@ -228,7 +231,7 @@ static void render_font_char_expand(render_font *font, render_font_char *ch)
 		if (font->format == FONT_FORMAT_TEXT)
 		{
 			/* loop over bytes */
-			for (x = 0; x < ch->bmwidth; x += 4)
+			for (int x = 0; x < ch->bmwidth; x += 4)
 			{
 				int bits = -1;
 
@@ -262,7 +265,7 @@ static void render_font_char_expand(render_font *font, render_font_char *ch)
 		/* cached format */
 		else if (font->format == FONT_FORMAT_CACHED)
 		{
-			for (x = 0; x < ch->bmwidth; x++)
+			for (int x = 0; x < ch->bmwidth; x++)
 			{
 				if (accumbit == 7)
 					accum = *ptr++;
@@ -323,7 +326,6 @@ void render_font_get_scaled_bitmap_and_bounds(render_font *font, bitmap_t *dest,
 {
 	render_font_char *ch = get_char(font, chnum);
 	float scale = font->scale * height;
-	INT32 origwidth, origheight;
 
 	/* on entry, assume x0,y0 are the top,left coordinate of the cell and add */
 	/* the character bounding box to that position */
@@ -339,11 +341,13 @@ void render_font_get_scaled_bitmap_and_bounds(render_font *font, bitmap_t *dest,
 		return;
 
 	/* scale the font */
-	origwidth = dest->width;
-	origheight = dest->height;
+	int origwidth = dest->width;
+	int origheight = dest->height;
+
 	dest->width = bounds->max_x - bounds->min_x;
 	dest->height = bounds->max_y - bounds->min_y;
 	render_texture_hq_scale(dest, ch->bitmap, NULL, NULL);
+
 	dest->width = origwidth;
 	dest->height = origheight;
 }
@@ -391,10 +395,9 @@ float render_font_get_utf8string_width(render_font *font, float height, float as
 	unicode_char uchar;
 	int totwidth = 0;
 	int count = 0;
-	int offset;
 
 	/* loop over the string and accumulate widths */
-	for (offset = 0; offset < length; offset += count)
+	for (int offset = 0; offset < length; offset += count)
 	{
 		count = uchar_from_utf8(&uchar, utf8string + offset, length - offset);
 		if (count == -1)
@@ -607,6 +610,7 @@ static int render_font_load_bdf(render_font *font)
 		for (int ch = '0'; ch <= '9'; ch++)
 			if (font->chars[0][ch].bmwidth > maxwidth)
 				maxwidth = font->chars[0][ch].width;
+
 		for (int ch = '0'; ch <= '9'; ch++)
 			font->chars[0][ch].width = maxwidth;
 	}

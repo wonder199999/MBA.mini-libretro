@@ -128,17 +128,17 @@ enum
 /* an element_component represents an image, rectangle, or disk in an element */
 struct _element_component
 {
-	element_component *	next;				/* link to next component */
-	int					type;				/* type of component */
-	int					state;				/* state where this component is visible (-1 means all states) */
-	render_bounds		bounds;				/* bounds of the element */
-	render_color		color;				/* color of the element */
-	const char *		string;				/* string for text components */
-	bitmap_t *			bitmap;				/* source bitmap for images */
-	const char *		dirname;			/* directory name of image file (for lazy loading) */
-	const char *		imagefile;			/* name of the image file (for lazy loading) */
-	const char *		alphafile;			/* name of the alpha file (for lazy loading) */
-	int					hasalpha;			/* is there any alpha component present? */
+	element_component	*next;				/* link to next component */
+	int				type;			/* type of component */
+	int				state;			/* state where this component is visible (-1 means all states) */
+	render_bounds			bounds;			/* bounds of the element */
+	render_color			color;			/* color of the element */
+	const char		*string;			/* string for text components */
+	bitmap_t		*bitmap;			/* source bitmap for images */
+	const char		*dirname;			/* directory name of image file (for lazy loading) */
+	const char		*imagefile;			/* name of the image file (for lazy loading) */
+	const char		*alphafile;			/* name of the alpha file (for lazy loading) */
+	int				hasalpha;		/* is there any alpha component present? */
 };
 
 
@@ -189,6 +189,7 @@ INLINE int gcd(int a, int b)
 		b = a % b;
 		a = t;
 	}
+
 	return a;
 }
 
@@ -222,6 +223,7 @@ INLINE const char *copy_string(const char *string)
 {
 	char *newstring = global_alloc_array(char, strlen(string) + 1);
 	strcpy(newstring, string);
+
 	return newstring;
 }
 
@@ -271,6 +273,7 @@ void layout_view_recompute(layout_view *view, int layerconfig)
 					view->bounds = item->rawbounds;
 				else
 					union_render_bounds(&view->bounds, &item->rawbounds);
+
 				first = FALSE;
 
 				/* accumulate screen bounds */
@@ -280,6 +283,7 @@ void layout_view_recompute(layout_view *view, int layerconfig)
 						view->scrbounds = item->rawbounds;
 					else
 						union_render_bounds(&view->scrbounds, &item->rawbounds);
+
 					scrfirst = FALSE;
 
 					/* accumulate the screens in use while we're scanning */
@@ -356,6 +360,7 @@ static void layout_element_scale(bitmap_t *dest, const bitmap_t *source, const r
 
 	/* iterate over components that are part of the current state */
 	for (component = elemtex->element->complist; component != NULL; component = component->next)
+	{
 		if (component->state == -1 || component->state == elemtex->state)
 		{
 			rectangle bounds;
@@ -413,6 +418,7 @@ static void layout_element_scale(bitmap_t *dest, const bitmap_t *source, const r
 					break;
 			}
 		}
+	}
 }
 
 
@@ -423,18 +429,17 @@ static void layout_element_scale(bitmap_t *dest, const bitmap_t *source, const r
 
 static void layout_element_draw_rect(bitmap_t *dest, const rectangle *bounds, const render_color *color)
 {
-	UINT32 r, g, b, inva;
-	UINT32 x, y;
-
 	/* compute premultiplied colors */
-	r = color->r * color->a * 255.0;
-	g = color->g * color->a * 255.0;
-	b = color->b * color->a * 255.0;
-	inva = (1.0f - color->a) * 255.0;
+	float alphavar = 255.0f * color->a;
+	UINT32 r = color->r * alphavar;
+	UINT32 g = color->g * alphavar;
+	UINT32 b = color->b * alphavar;
+	UINT32 inva = 255.0f - alphavar;
 
 	/* iterate over X and Y */
-	for (y = bounds->min_y; y < bounds->max_y; y++)
-		for (x = bounds->min_x; x < bounds->max_x; x++)
+	for (UINT32 y = bounds->min_y; y < bounds->max_y; y++)
+	{
+		for (UINT32 x = bounds->min_x; x < bounds->max_x; x++)
 		{
 			UINT32 finalr = r;
 			UINT32 finalg = g;
@@ -452,6 +457,7 @@ static void layout_element_draw_rect(bitmap_t *dest, const rectangle *bounds, co
 			/* store the target pixel, dividing the RGBA values by the overall scale factor */
 			*BITMAP_ADDR32(dest, y, x) = MAKE_ARGB(0xff, finalr, finalg, finalb);
 		}
+	}
 }
 
 
@@ -462,26 +468,22 @@ static void layout_element_draw_rect(bitmap_t *dest, const rectangle *bounds, co
 
 static void layout_element_draw_disk(bitmap_t *dest, const rectangle *bounds, const render_color *color)
 {
-	float xcenter, ycenter;
-	float xradius, yradius, ooyradius2;
-	UINT32 r, g, b, inva;
-	UINT32 x, y;
-
 	/* compute premultiplied colors */
-	r = color->r * color->a * 255.0;
-	g = color->g * color->a * 255.0;
-	b = color->b * color->a * 255.0;
-	inva = (1.0f - color->a) * 255.0;
+	float alphavar = 255.0f * color->a;
+	UINT32 r = color->r * alphavar;
+	UINT32 g = color->g * alphavar;
+	UINT32 b = color->b * alphavar;
+	UINT32 inva = 255.0f - alphavar;
 
 	/* find the center */
-	xcenter = (float)(bounds->min_x + bounds->max_x) * 0.5f;
-	ycenter = (float)(bounds->min_y + bounds->max_y) * 0.5f;
-	xradius = (float)(bounds->max_x - bounds->min_x) * 0.5f;
-	yradius = (float)(bounds->max_y - bounds->min_y) * 0.5f;
-	ooyradius2 = 1.0f / (yradius * yradius);
+	float xcenter = (float)(bounds->min_x + bounds->max_x) * 0.5f;
+	float ycenter = (float)(bounds->min_y + bounds->max_y) * 0.5f;
+	float xradius = (float)(bounds->max_x - bounds->min_x) * 0.5f;
+	float yradius = (float)(bounds->max_y - bounds->min_y) * 0.5f;
+	float ooyradius2 = 1.0f / (yradius * yradius);
 
 	/* iterate over y */
-	for (y = bounds->min_y; y < bounds->max_y; y++)
+	for (UINT32 y = bounds->min_y; y < bounds->max_y; y++)
 	{
 		float ycoord = ycenter - ((float)y + 0.5f);
 		float xval = xradius * sqrt(1.0f - (ycoord * ycoord) * ooyradius2);
@@ -492,7 +494,7 @@ static void layout_element_draw_disk(bitmap_t *dest, const rectangle *bounds, co
 		right = (INT32)(xcenter + xval + 0.5f);
 
 		/* draw this scanline */
-		for (x = left; x < right; x++)
+		for (UINT32 x = left; x < right; x++)
 		{
 			UINT32 finalr = r;
 			UINT32 finalg = g;
@@ -551,20 +553,19 @@ static void layout_element_draw_text(bitmap_t *dest, const rectangle *bounds, co
 	for (s = string; *s != 0; s++)
 	{
 		rectangle chbounds;
-		int x, y;
 
 		/* get the font bitmap */
 		render_font_get_scaled_bitmap_and_bounds(font, tempbitmap, bounds->max_y - bounds->min_y, aspect, *s, &chbounds);
 
 		/* copy the data into the target */
-		for (y = 0; y < chbounds.max_y - chbounds.min_y; y++)
+		for (int y = 0; y < chbounds.max_y - chbounds.min_y; y++)
 		{
 			int effy = bounds->min_y + y;
 			if (effy >= bounds->min_y && effy <= bounds->max_y)
 			{
 				UINT32 *src = BITMAP_ADDR32(tempbitmap, y, 0);
 				UINT32 *d = BITMAP_ADDR32(dest, effy, 0);
-				for (x = 0; x < chbounds.max_x - chbounds.min_x; x++)
+				for (int x = 0; x < chbounds.max_x - chbounds.min_x; x++)
 				{
 					int effx = curx + x + chbounds.min_x;
 					if (effx >= bounds->min_x && effx <= bounds->max_x)
@@ -604,17 +605,15 @@ static void layout_element_draw_text(bitmap_t *dest, const rectangle *bounds, co
 
 static void draw_segment_horizontal_caps(bitmap_t *dest, int minx, int maxx, int midy, int width, int caps, rgb_t color)
 {
-	int x, y;
-
 	/* loop over the width of the segment */
-	for (y = 0; y < width / 2; y++)
+	for (int y = 0; y < width / 2; y++)
 	{
 		UINT32 *d0 = BITMAP_ADDR32(dest, midy - y, 0);
 		UINT32 *d1 = BITMAP_ADDR32(dest, midy + y, 0);
 		int ty = (y < width / 8) ? width / 8 : y;
 
 		/* loop over the length of the segment */
-		for (x = minx + ((caps & LINE_CAP_START) ? ty : 0); x < maxx - ((caps & LINE_CAP_END) ? ty : 0); x++)
+		for (int x = minx + ((caps & LINE_CAP_START) ? ty : 0); x < maxx - ((caps & LINE_CAP_END) ? ty : 0); x++)
 			d0[x] = d1[x] = color;
 	}
 }
@@ -639,17 +638,15 @@ static void draw_segment_horizontal(bitmap_t *dest, int minx, int maxx, int midy
 
 static void draw_segment_vertical_caps(bitmap_t *dest, int miny, int maxy, int midx, int width, int caps, rgb_t color)
 {
-	int x, y;
-
 	/* loop over the width of the segment */
-	for (x = 0; x < width / 2; x++)
+	for (int x = 0; x < width / 2; x++)
 	{
 		UINT32 *d0 = BITMAP_ADDR32(dest, 0, midx - x);
 		UINT32 *d1 = BITMAP_ADDR32(dest, 0, midx + x);
 		int tx = (x < width / 8) ? width / 8 : x;
 
 		/* loop over the length of the segment */
-		for (y = miny + ((caps & LINE_CAP_START) ? tx : 0); y < maxy - ((caps & LINE_CAP_END) ? tx : 0); y++)
+		for (int y = miny + ((caps & LINE_CAP_START) ? tx : 0); y < maxy - ((caps & LINE_CAP_END) ? tx : 0); y++)
 			d0[y * dest->rowpixels] = d1[y * dest->rowpixels] = color;
 	}
 }
@@ -673,26 +670,25 @@ static void draw_segment_vertical(bitmap_t *dest, int miny, int maxy, int midx, 
 
 static void draw_segment_diagonal_1(bitmap_t *dest, int minx, int maxx, int miny, int maxy, int width, rgb_t color)
 {
-	int x, y;
-	float ratio;
-
 	/* compute parameters */
 	width *= 1.5;
-	ratio = (maxy - miny - width) / (float)(maxx - minx);
+	float ratio = (maxy - miny - width) / (float)(maxx - minx);
 
 	/* draw line */
-	for (x = minx; x < maxx; x++)
+	for (int x = minx; x < maxx; x++)
+	{
 		if (x >= 0 && x < dest->width)
 		{
 			UINT32 *d = BITMAP_ADDR32(dest, 0, x);
 			int step = (x - minx) * ratio;
 
-			for (y = maxy - width - step; y < maxy - step; y++)
+			for (int y = maxy - width - step; y < maxy - step; y++)
+			{
 				if (y >= 0 && y < dest->height)
-				{
 					d[y * dest->rowpixels] = color;
-				}
+			}
 		}
+	}
 }
 
 
@@ -703,26 +699,23 @@ static void draw_segment_diagonal_1(bitmap_t *dest, int minx, int maxx, int miny
 
 static void draw_segment_diagonal_2(bitmap_t *dest, int minx, int maxx, int miny, int maxy, int width, rgb_t color)
 {
-	int x, y;
-	float ratio;
-
 	/* compute parameters */
 	width *= 1.5;
-	ratio = (maxy - miny - width) / (float)(maxx - minx);
+	float ratio = (maxy - miny - width) / (float)(maxx - minx);
 
 	/* draw line */
-	for (x = minx; x < maxx; x++)
+	for (int x = minx; x < maxx; x++)
+	{
 		if (x >= 0 && x < dest->width)
 		{
 			UINT32 *d = BITMAP_ADDR32(dest, 0, x);
 			int step = (x - minx) * ratio;
 
-			for (y = miny + step; y < miny + step + width; y++)
+			for (int y = miny + step; y < miny + step + width; y++)
 				if (y >= 0 && y < dest->height)
-				{
 					d[y * dest->rowpixels] = color;
-				}
 		}
+	}
 }
 
 
@@ -732,15 +725,12 @@ static void draw_segment_diagonal_2(bitmap_t *dest, int minx, int maxx, int miny
 
 static void draw_segment_decimal(bitmap_t *dest, int midx, int midy, int width, rgb_t color)
 {
-	float ooradius2;
-	UINT32 x, y;
-
 	/* compute parameters */
 	width /= 2;
-	ooradius2 = 1.0f / (float)(width * width);
+	float ooradius2 = 1.0f / (float)(width * width);
 
 	/* iterate over y */
-	for (y = 0; y <= width; y++)
+	for (UINT32 y = 0; y <= width; y++)
 	{
 		UINT32 *d0 = BITMAP_ADDR32(dest, midy - y, 0);
 		UINT32 *d1 = BITMAP_ADDR32(dest, midy + y, 0);
@@ -752,7 +742,7 @@ static void draw_segment_decimal(bitmap_t *dest, int midx, int midy, int width, 
 		right = midx + (INT32)(xval + 0.5f);
 
 		/* draw this scanline */
-		for (x = left; x < right; x++)
+		for (UINT32 x = left; x < right; x++)
 			d0[x] = d1[x] = color;
 	}
 }
@@ -791,14 +781,15 @@ static void draw_segment_comma(bitmap_t *dest, int minx, int maxx, int miny, int
 
 static void apply_skew(bitmap_t *dest, int skewwidth)
 {
-	int x, y;
-
-	for (y = 0; y < dest->height; y++)
+	int x;
+	for (int y = 0; y < dest->height; y++)
 	{
 		UINT32 *destrow = BITMAP_ADDR32(dest, y, 0);
 		int offs = skewwidth * (dest->height - y) / dest->height;
+
 		for (x = dest->width - skewwidth - 1; x >= 0; x--)
 			destrow[x + offs] = destrow[x];
+
 		for (x = 0; x < offs; x++)
 			destrow[x] = 0;
 	}
@@ -2058,10 +2049,9 @@ void layout_file_free(layout_file *file)
 
 static void layout_view_free(layout_view *view)
 {
-	int layer;
-
 	/* for each layer, free each item in that layer */
-	for (layer = 0; layer < ITEM_LAYER_MAX; layer++)
+	for (int layer = 0; layer < ITEM_LAYER_MAX; layer++)
+	{
 		while (view->itemlist[layer] != NULL)
 		{
 			view_item *temp = view->itemlist[layer];
@@ -2072,10 +2062,12 @@ static void layout_view_free(layout_view *view)
 				global_free(temp->input_tag);
 			global_free(temp);
 		}
+	}
 
 	/* free the view itself */
 	if (view->name != NULL)
 		global_free((void *)view->name);
+
 	global_free(view);
 }
 

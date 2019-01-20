@@ -27,27 +27,27 @@ enum softlist_parse_position
 
 typedef struct _parse_state
 {
-	XML_Parser	parser;
-	int			done;
+	XML_Parser			parser;
+	int				done;
 
 	void (*error_proc)(const char *message);
-	void *param;
+	void				*param;
 
-	enum softlist_parse_position pos;
-	char **text_dest;
+	enum softlist_parse_position	pos;
+	char			**text_dest;
 } parse_state;
 
 
 struct _software_list
 {
-	mame_file	*file;
-	object_pool	*pool;
-	parse_state	state;
-	const char *description;
+	mame_file		*file;
+	object_pool		*pool;
+	parse_state			state;
+	const char 		*description;
 	struct software_info	*software_info_list;
 	struct software_info	*current_software_info;
-	software_info	*softinfo;
-	const char *look_for;
+	software_info		*softinfo;
+	const char		*look_for;
 	int part_entries;
 	int current_part_entry;
 	int rom_entries;
@@ -76,7 +76,9 @@ static void *expat_malloc(size_t size)
 
 static void *expat_realloc(void *ptr, size_t size)
 {
-	if (ptr) global_free(ptr);
+	if (ptr)
+		global_free(ptr);
+
 	return global_alloc_array_clear(UINT8,size);
 }
 

@@ -190,10 +190,11 @@ static void route_sound(running_machine *machine)
 {
 	/* iterate again over all the sound chips */
 	device_sound_interface *sound = NULL;
+	int numoutputs, inputnum, streaminput, streamoutput;
 
 	for (bool gotone = machine->m_devicelist.first(sound); gotone; gotone = sound->next(sound))
 	{
-		int numoutputs = stream_get_device_outputs(*sound);
+		numoutputs = stream_get_device_outputs(*sound);
 
 		/* iterate over all routes */
 		for (const device_config_sound_interface::sound_route *route = sound->sound_config().m_route_list; route != NULL; route = route->m_next)
@@ -202,19 +203,19 @@ static void route_sound(running_machine *machine)
 			if (target_device->type() == SPEAKER)
 				continue;
 
-			int inputnum = route->m_input;
+			inputnum = route->m_input;
 
 			/* iterate over all outputs, matching any that apply */
 			for (int outputnum = 0; outputnum < numoutputs; outputnum++)
+			{
 				if (route->m_output == outputnum || route->m_output == ALL_OUTPUTS)
 				{
 					sound_stream *inputstream, *stream;
-					int streaminput, streamoutput;
-
 					if (stream_device_input_to_stream_input(target_device, inputnum++, &inputstream, &streaminput))
 						if (stream_device_output_to_stream_output(*sound, outputnum, &stream, &streamoutput))
 							stream_set_input(inputstream, streaminput, stream, streamoutput, route->m_gain);
 				}
+			}
 		}
 	}
 }
@@ -394,14 +395,13 @@ static void sound_save(running_machine *machine, int config_type, xml_data_node 
 
 static TIMER_CALLBACK( sound_update )
 {
-	UINT32 finalmix_step, finalmix_offset = 0;
-	int samples_this_update = 0;
-	int sample;
 	sound_private *global = machine->sound_data;
+	UINT32 finalmix_step, finalmix_offset = 0;
 	INT32 *leftmix = global->leftmix;
 	INT32 *rightmix = global->rightmix;
 	INT16 *finalmix = global->finalmix;
 
+	int samples_this_update = 0;
 	/* force all the speaker streams to generate the proper number of samples */
 	for (speaker_device *speaker = speaker_first(*machine); speaker != NULL; speaker = speaker_next(speaker))
 		speaker->mix(leftmix, rightmix, samples_this_update, !global->enabled || global->nosound_mode);
@@ -409,6 +409,7 @@ static TIMER_CALLBACK( sound_update )
 	/* now downmix the final result */
 	finalmix_step = video_get_speed_factor();
 
+	int sample;
 	for (sample = global->finalmix_leftover; sample < samples_this_update * 100; sample += finalmix_step)
 	{
 		int sampindex = sample / 100;
@@ -416,15 +417,21 @@ static TIMER_CALLBACK( sound_update )
 		/* clamp the left side */
 		INT32 samp = leftmix[sampindex];
 
-		if (samp < -32768) samp = -32768;
-		else if (samp > 32767) samp = 32767;
+		if (samp < -32768)
+			samp = -32768;
+		else if (samp > 32767)
+			samp = 32767;
 
 		finalmix[finalmix_offset++] = samp;
 
 		/* clamp the right side */
 		samp = rightmix[sampindex];
-		if (samp < -32768) samp = -32768;
-		else if (samp > 32767) samp = 32767;
+
+		if (samp < -32768)
+			samp = -32768;
+		else if (samp > 32767)
+			samp = 32767;
+
 		finalmix[finalmix_offset++] = samp;
 	}
 	global->finalmix_leftover = sample - samples_this_update * 100;
@@ -433,7 +440,6 @@ static TIMER_CALLBACK( sound_update )
 	if (finalmix_offset > 0)
 	{
 		osd_update_audio_stream(machine, finalmix, finalmix_offset >> 1);
-/*		video_avi_add_sound(machine, finalmix, finalmix_offset / 2);	*/
 		if (global->wavfile != NULL)
 			wav_add_data_16(global->wavfile, finalmix, finalmix_offset);
 	}
@@ -637,6 +643,7 @@ void speaker_device::mixer_update(stream_sample_t **inputs, stream_sample_t **ou
 		// add up all the inputs
 		for (int inp = 1; inp < m_inputs; inp++)
 			sample += inputs[inp][pos];
+
 		outputs[0][pos] = sample;
 	}
 }
@@ -685,11 +692,13 @@ void speaker_device::mix(INT32 *leftmix, INT32 *rightmix, int &samples_this_upda
 	{
 		// if the speaker is centered, send to both left and right
 		if (m_config.m_x == 0)
+		{
 			for (sample = 0; sample < samples_this_update; sample++)
 			{
 				leftmix[sample] += stream_buf[sample];
 				rightmix[sample] += stream_buf[sample];
 			}
+		}
 
 		// if the speaker is to the left, send only to the left
 		else if (m_config.m_x < 0)
@@ -781,6 +790,7 @@ float sound_get_user_gain(running_machine *machine, int index)
 {
 	int inputnum;
 	speaker_device *speaker = index_to_input(machine, index, inputnum);
+
 	return (speaker != NULL) ? speaker->input_gain(inputnum) : 0;
 }
 
@@ -794,6 +804,7 @@ float sound_get_default_gain(running_machine *machine, int index)
 {
 	int inputnum;
 	speaker_device *speaker = index_to_input(machine, index, inputnum);
+
 	return (speaker != NULL) ? speaker->input_default_gain(inputnum) : 0;
 }
 
@@ -807,6 +818,7 @@ const char *sound_get_user_gain_name(running_machine *machine, int index)
 {
 	int inputnum;
 	speaker_device *speaker = index_to_input(machine, index, inputnum);
+
 	return (speaker != NULL) ? speaker->input_name(inputnum) : 0;
 }
 

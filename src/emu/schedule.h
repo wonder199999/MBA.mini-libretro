@@ -52,9 +52,9 @@
 //**************************************************************************/
 
 // these must be macros because we are included before the running_machine
-#define cpuexec_describe_context(mach)				(mach)->describe_context()
+#define cpuexec_describe_context(mach)			(mach)->describe_context()
 #define cpuexec_boost_interleave(mach, slice, dur)	(mach)->scheduler().boost_interleave(slice, dur)
-#define cpuexec_trigger(mach, trigid)				(mach)->scheduler().trigger(trigid)
+#define cpuexec_trigger(mach, trigid)			(mach)->scheduler().trigger(trigid)
 #define cpuexec_triggertime(mach, trigid, dur)		(mach)->scheduler().trigger(trigid, dur)
 
 
@@ -94,10 +94,10 @@ private:
 
 	static TIMER_CALLBACK( static_timed_trigger );
 
-	running_machine &			m_machine;				// reference to our owner
-	bool						m_quantum_set;			// have we set the scheduling quantum yet?
-	device_execute_interface *	m_executing_device;		// pointer to currently executing device
-	device_execute_interface *	m_execute_list;			// list of devices to be executed
+	running_machine			&m_machine;			// reference to our owner
+	bool					m_quantum_set;		// have we set the scheduling quantum yet?
+	device_execute_interface	*m_executing_device;		// pointer to currently executing device
+	device_execute_interface	*m_execute_list;		// list of devices to be executed
 };
 
 

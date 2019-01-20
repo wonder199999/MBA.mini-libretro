@@ -18,8 +18,8 @@
 #include "ui.h"
 
 
-#define LOG_LOAD 0
-#define LOG(x) do { if (LOG_LOAD) debugload x; } while(0)
+#define LOG_LOAD	0
+#define LOG(x)		do { if (LOG_LOAD) debugload x; } while(0)
 
 extern bool verify_rom_hash;
 
@@ -38,12 +38,12 @@ extern bool verify_rom_hash;
 typedef struct _open_chd open_chd;
 struct _open_chd
 {
-	open_chd *			next;					/* pointer to next in the list */
-	const char *			region;					/* disk region we came from */
-	chd_file *			origchd;				/* handle to the original CHD */
-	mame_file *			origfile;				/* file handle to the original CHD file */
-	chd_file *			diffchd;				/* handle to the diff CHD */
-	mame_file *			difffile;				/* file handle to the diff CHD file */
+	open_chd		*next;			/* pointer to next in the list */
+	const char		*region;		/* disk region we came from */
+	chd_file		*origchd;		/* handle to the original CHD */
+	mame_file		*origfile;		/* file handle to the original CHD file */
+	chd_file		*diffchd;		/* handle to the diff CHD */
+	mame_file		*difffile;		/* file handle to the diff CHD file */
 };
 
 
@@ -51,15 +51,15 @@ typedef struct _romload_private rom_load_data;
 struct _romload_private
 {
 	running_machine		*machine;		/* machine object where needed */
-	int			system_bios;		/* the system BIOS we wish to load */
+	int				system_bios;	/* the system BIOS we wish to load */
 
-	int			warnings;		/* warning count during processing */
-	int			errors;			/* error count during processing */
+	int				warnings;	/* warning count during processing */
+	int				errors;		/* error count during processing */
 
-	int			romsloaded;		/* current ROMs loaded count */
-	int			romstotal;		/* total number of ROMs to read */
-	UINT32			romsloadedsize;		/* total size of ROMs loaded so far */
-	UINT32			romstotalsize;		/* total size of ROMs to read */
+	int				romsloaded;	/* current ROMs loaded count */
+	int				romstotal;	/* total number of ROMs to read */
+	UINT32				romsloadedsize;	/* total size of ROMs loaded so far */
+	UINT32				romstotalsize;	/* total size of ROMs to read */
 
 	mame_file		*file;			/* current file */
 	open_chd		*chd_list;		/* disks */
@@ -67,7 +67,7 @@ struct _romload_private
 
 	region_info		*region;		/* info about current region */
 
-	astring			errorstring;		/* error string */
+	astring				errorstring;	/* error string */
 };
 
 
@@ -95,6 +95,7 @@ chd_file *get_disk_handle(running_machine *machine, const char *region)
 	for (curdisk = machine->romload_data->chd_list; curdisk != NULL; curdisk = curdisk->next)
 		if (strcmp(curdisk->region, region) == 0)
 			return (curdisk->diffchd != NULL) ? curdisk->diffchd : curdisk->origchd;
+
 	return NULL;
 }
 
@@ -165,12 +166,15 @@ const rom_source *rom_first_source(const game_driver *drv, const machine_config 
 
 	/* otherwise, look through devices */
 	if (config != NULL)
+	{
 		for (devconfig = config->m_devicelist.first(); devconfig != NULL; devconfig = devconfig->next())
 		{
 			const rom_entry *devromp = devconfig->rom_region();
 			if (devromp != NULL)
 				return (rom_source *)devconfig;
 		}
+	}
+
 	return NULL;
 }
 
@@ -197,6 +201,7 @@ const rom_source *rom_next_source(const game_driver *drv, const machine_config *
 		if (devromp != NULL)
 			return (rom_source *)devconfig;
 	}
+
 	return NULL;
 }
 
@@ -229,6 +234,7 @@ const rom_entry *rom_next_region(const rom_entry *romp)
 	romp++;
 	while (!ROMENTRY_ISREGIONEND(romp))
 		romp++;
+
 	return ROMENTRY_ISEND(romp) ? NULL : romp;
 }
 
@@ -243,6 +249,7 @@ const rom_entry *rom_first_file(const rom_entry *romp)
 	romp++;
 	while (!ROMENTRY_ISFILE(romp) && !ROMENTRY_ISREGIONEND(romp))
 		romp++;
+
 	return ROMENTRY_ISREGIONEND(romp) ? NULL : romp;
 }
 
@@ -257,6 +264,7 @@ const rom_entry *rom_next_file(const rom_entry *romp)
 	romp++;
 	while (!ROMENTRY_ISFILE(romp) && !ROMENTRY_ISREGIONEND(romp))
 		romp++;
+
 	return ROMENTRY_ISREGIONEND(romp) ? NULL : romp;
 }
 
@@ -275,6 +283,7 @@ astring &rom_region_name(astring &result, const game_driver *drv, const rom_sour
 		const device_config *devconfig = (const device_config *)source;
 		result.printf("%s:%s", devconfig->tag(), ROMREGION_GETTAG(romp));
 	}
+
 	return result;
 }
 
@@ -350,6 +359,7 @@ static void determine_bios_rom(rom_load_data *romdata)
 
 	/* look for a BIOS with a matching name */
 	for (rom = romdata->machine->gamedrv->rom; !ROMENTRY_ISEND(rom); rom++)
+	{
 		if (ROMENTRY_ISSYSTEM_BIOS(rom))
 		{
 			const char *biosname = ROM_GETNAME(rom);
@@ -364,6 +374,7 @@ static void determine_bios_rom(rom_load_data *romdata)
 				default_no = bios_flags;
 			bios_count++;
 		}
+	}
 
 	/* if none found, use the default */
 	if (romdata->system_bios == 0 && bios_count > 0)
@@ -459,10 +470,9 @@ static void handle_missing_file(rom_load_data *romdata, const rom_entry *romp)
 
 static void dump_wrong_and_correct_checksums(rom_load_data *romdata, const char *hash, const char *acthash)
 {
-	unsigned i;
+	UINT32 i;
 	char chksum[256];
-	unsigned found_functions;
-	unsigned wrong_functions;
+	UINT32 found_functions, wrong_functions;
 
 	found_functions = hash_data_used_functions(hash) & hash_data_used_functions(acthash);
 
@@ -470,16 +480,16 @@ static void dump_wrong_and_correct_checksums(rom_load_data *romdata, const char 
 	romdata->errorstring.catprintf("    EXPECTED: %s\n", chksum);
 
 	/* We dump informations only of the functions for which MAME provided
-        a correct checksum. Other functions we might have calculated are
-        useless here */
+	   a correct checksum. Other functions we might have calculated are
+	   useless here		*/
 	hash_data_print(acthash, found_functions, chksum);
 	romdata->errorstring.catprintf("       FOUND: %s\n", chksum);
 
 	/* For debugging purposes, we check if the checksums available in the
-       driver are correctly specified or not. This can be done by checking
-       the return value of one of the extract functions. Maybe we want to
-       activate this only in debug buils, but many developers only use
-       release builds, so I keep it as is for now. */
+	   driver are correctly specified or not. This can be done by checking
+	   the return value of one of the extract functions. Maybe we want to
+	   activate this only in debug buils, but many developers only use
+	   release builds, so I keep it as is for now.		*/
 	wrong_functions = 0;
 	for (i = 0; i < HASH_NUM_FUNCTIONS; i++)
 		if (hash_data_extract_printable_checksum(hash, 1 << i, chksum) == 2)
@@ -488,6 +498,7 @@ static void dump_wrong_and_correct_checksums(rom_load_data *romdata, const char 
 	if (wrong_functions)
 	{
 		for (i = 0; i < HASH_NUM_FUNCTIONS; i++)
+		{
 			if (wrong_functions & (1 << i))
 			{
 				romdata->errorstring.catprintf(
@@ -496,6 +507,7 @@ static void dump_wrong_and_correct_checksums(rom_load_data *romdata, const char 
 
 				romdata->warnings++;
 			}
+		}
 	}
 }
 
@@ -527,8 +539,10 @@ static void verify_length_and_hash(rom_load_data *romdata, const char *name, UIN
 
 	/* Bypass file verify CRC */
 	if (hash_data_has_info(hash, HASH_INFO_VERIFY_OFF))
+	{
 		romdata->errorstring.catprintf("%s: bypass CRC verify\n", name);
-
+		romdata->warnings++;
+	}
 	/* If there is no good dump known, write it */
 	else
 	if (hash_data_has_info(hash, HASH_INFO_NO_DUMP))
@@ -1259,6 +1273,7 @@ static UINT32 normalize_flags_for_device(running_machine *machine, UINT32 startf
 				startflags |= ROMREGION_64BIT;
 		}
 	}
+
 	return startflags;
 }
 

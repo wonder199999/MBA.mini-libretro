@@ -86,71 +86,71 @@ typedef struct _layout_file layout_file;
 /* an element_texture encapsulates a texture for a given element in a given state */
 struct _element_texture
 {
-	layout_element *	element;			/* pointer back to the element */
-	render_texture *	texture;			/* texture for this state */
-	int					state;				/* associated state number */
+	layout_element		*element;			/* pointer back to the element */
+	render_texture		*texture;			/* texture for this state */
+	int				state;			/* associated state number */
 };
 
 
 /* a layout_element is a single named element, which may have multiple components */
 struct _layout_element
 {
-	layout_element *	next;				/* link to next element */
-	const char *		name;				/* name of this element */
-	element_component *	complist;			/* head of the list of components */
-	int					defstate;			/* default state of this element */
-	int					maxstate;			/* maximum state value for all components */
-	element_texture *	elemtex;			/* array of element textures used for managing the scaled bitmaps */
+	layout_element		*next;				/* link to next element */
+	const char		*name;				/* name of this element */
+	element_component	*complist;			/* head of the list of components */
+	int				defstate;		/* default state of this element */
+	int				maxstate;		/* maximum state value for all components */
+	element_texture		*elemtex;			/* array of element textures used for managing the scaled bitmaps */
 };
 
 
 /* a view_item_state contains the string-tagged state of a view item */
 struct _view_item_state
 {
-	view_item_state *	next;				/* pointer to the next one */
-	const char *		name;				/* string that was set */
-	int					curstate;			/* current state */
+	view_item_state		*next;				/* pointer to the next one */
+	const char		*name;				/* string that was set */
+	int				curstate;		/* current state */
 };
 
 
 /* a view_item is a single backdrop, screen, overlay, or bezel item */
 struct _view_item
 {
-	view_item *			next;				/* link to next item */
-	layout_element *	element;			/* pointer to the associated element (non-screens only) */
-	const char *		output_name;		/* name of this item */
-	const char *		input_tag;			/* input tag of this item */
-	UINT32				input_mask;			/* input mask of this item */
-	int					index;				/* index for this item (screens only) */
-	int					orientation;		/* orientation of this item */
-	render_bounds		bounds;				/* bounds of the item */
-	render_bounds		rawbounds;			/* raw (original) bounds of the item */
-	render_color		color;				/* color of the item */
+	view_item		*next;				/* link to next item */
+	layout_element		*element;			/* pointer to the associated element (non-screens only) */
+	const char		*output_name;			/* name of this item */
+	const char		*input_tag;			/* input tag of this item */
+	UINT32				input_mask;		/* input mask of this item */
+	int				index;			/* index for this item (screens only) */
+	int				orientation;		/* orientation of this item */
+	render_bounds			bounds;			/* bounds of the item */
+	render_bounds			rawbounds;		/* raw (original) bounds of the item */
+	render_color			color;			/* color of the item */
 };
 
 
 /* a layout_view encapsulates a named list of items */
 struct _layout_view
 {
-	layout_view *		next;				/* pointer to next layout in the list */
-	const char *		name;				/* name of the layout */
+	layout_view		*next;					/* pointer to next layout in the list */
+	const char		*name;					/* name of the layout */
 	float				aspect;				/* X/Y of the layout */
 	float				scraspect;			/* X/Y of the screen areas */
 	UINT32				screens;			/* bitmask of screens used */
-	render_bounds		bounds;				/* computed bounds of the view */
-	render_bounds		scrbounds;			/* computed bounds of the screens within the view */
-	render_bounds		expbounds;			/* explicit bounds of the view */
-	UINT8				layenabled[ITEM_LAYER_MAX]; /* is this layer enabled? */
-	view_item *			itemlist[ITEM_LAYER_MAX]; /* list of layout items for each layer */
+	render_bounds			bounds;				/* computed bounds of the view */
+	render_bounds			scrbounds;			/* computed bounds of the screens within the view */
+	render_bounds			expbounds;			/* explicit bounds of the view */
+	UINT8				layenabled[ITEM_LAYER_MAX];	/* is this layer enabled? */
+	view_item		*itemlist[ITEM_LAYER_MAX];		/* list of layout items for each layer */
 };
 
 
 /* a layout_file consists of a list of elements and a list of views */
 struct _layout_file
 {
-	layout_file *		next;				/* pointer to the next file in the list */
-	layout_element *	elemlist;			/* list of shared layout elements */
-	layout_view *		viewlist;			/* list of views */
+	layout_file		*next;				/* pointer to the next file in the list */
+	layout_element		*elemlist;			/* list of shared layout elements */
+	layout_view		*viewlist;			/* list of views */
 };
 
 

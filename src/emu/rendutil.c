@@ -55,14 +55,10 @@ INLINE UINT8 compute_brightness(rgb_t rgb)
 
 void render_resample_argb_bitmap_hq(void *dest, UINT32 drowpixels, UINT32 dwidth, UINT32 dheight, const bitmap_t *source, const rectangle *orig_sbounds, const render_color *color)
 {
-	UINT32 swidth, sheight;
-	const UINT32 *sbase;
-	rectangle sbounds;
-	UINT32 dx, dy;
-
 	if (dwidth == 0 || dheight == 0)
 		return;
 
+	rectangle sbounds;
 	/* compute the real source bounds */
 	if (orig_sbounds != NULL)
 		sbounds = *orig_sbounds;
@@ -74,13 +70,13 @@ void render_resample_argb_bitmap_hq(void *dest, UINT32 drowpixels, UINT32 dwidth
 	}
 
 	/* adjust the source base */
-	sbase = (const UINT32 *)source->base + sbounds.min_y * source->rowpixels + sbounds.min_x;
+	const UINT32 *sbase = (const UINT32 *)source->base + sbounds.min_y * source->rowpixels + sbounds.min_x;
 
 	/* determine the steppings */
-	swidth = sbounds.max_x - sbounds.min_x;
-	sheight = sbounds.max_y - sbounds.min_y;
-	dx = (swidth << 12) / dwidth;
-	dy = (sheight << 12) / dheight;
+	UINT32 swidth = sbounds.max_x - sbounds.min_x;
+	UINT32 sheight = sbounds.max_y - sbounds.min_y;
+	UINT32 dx = (swidth << 12) / dwidth;
+	UINT32 dy = (sheight << 12) / dheight;
 
 	/* if the source is higher res than the target, use full averaging */
 	if (dx > 0x1000 || dy > 0x1000)
@@ -99,28 +95,26 @@ void render_resample_argb_bitmap_hq(void *dest, UINT32 drowpixels, UINT32 dwidth
 static void resample_argb_bitmap_average(UINT32 *dest, UINT32 drowpixels, UINT32 dwidth, UINT32 dheight, const UINT32 *source, UINT32 srowpixels, UINT32 swidth, UINT32 sheight, const render_color *color, UINT32 dx, UINT32 dy)
 {
 	UINT64 sumscale = (UINT64)dx * (UINT64)dy;
-	UINT32 r, g, b, a;
-	UINT32 x, y;
 
 	/* precompute premultiplied R/G/B/A factors */
-	r = color->r * color->a * 256.0;
-	g = color->g * color->a * 256.0;
-	b = color->b * color->a * 256.0;
-	a = color->a * 256.0;
+	float alphavar = 256.0f * color->a;
+	UINT32 r = color->r * alphavar;
+	UINT32 g = color->g * alphavar;
+	UINT32 b = color->b * alphavar;
+	UINT32 a = alphavar;
 
+	UINT32 curx, cury, xchunk, ychunk, factor, pix;
+	UINT64 sumr, sumg, sumb, suma;
 	/* loop over the target vertically */
-	for (y = 0; y < dheight; y++)
+	for (UINT32 y = 0; y < dheight; y++)
 	{
 		UINT32 starty = y * dy;
 
 		/* loop over the target horizontally */
-		for (x = 0; x < dwidth; x++)
+		for (UINT32 x = 0; x < dwidth; x++)
 		{
-			UINT64 sumr = 0, sumg = 0, sumb = 0, suma = 0;
+			sumr = sumg = sumb = suma = 0;
 			UINT32 startx = x * dx;
-			UINT32 xchunk, ychunk;
-			UINT32 curx, cury;
-
 			UINT32 yremaining = dy;
 
 			/* accumulate all source pixels that contribute to this pixel */
@@ -137,9 +131,6 @@ static void resample_argb_bitmap_average(UINT32 *dest, UINT32 drowpixels, UINT32
 				/* loop over all source pixels in the X direction */
 				for (curx = startx; xremaining; curx += xchunk)
 				{
-					UINT32 factor;
-					UINT32 pix;
-
 					/* determine the X contribution, clamping to the amount remaining */
 					xchunk = 0x1000 - (curx & 0xfff);
 					if (xchunk > xremaining)
@@ -190,30 +181,29 @@ static void resample_argb_bitmap_average(UINT32 *dest, UINT32 drowpixels, UINT32
 
 static void resample_argb_bitmap_bilinear(UINT32 *dest, UINT32 drowpixels, UINT32 dwidth, UINT32 dheight, const UINT32 *source, UINT32 srowpixels, UINT32 swidth, UINT32 sheight, const render_color *color, UINT32 dx, UINT32 dy)
 {
-	UINT32 maxx = swidth << 12, maxy = sheight << 12;
-	UINT32 r, g, b, a;
-	UINT32 x, y;
+	UINT32 maxx = swidth << 12;
+	UINT32 maxy = sheight << 12;
+	UINT32 pix0, pix1, pix2, pix3;
+	UINT32 sumr, sumg, sumb, suma;
+	UINT32 nextx, nexty, curx, cury;
+	UINT32 factor, minus;
 
 	/* precompute premultiplied R/G/B/A factors */
-	r = color->r * color->a * 256.0;
-	g = color->g * color->a * 256.0;
-	b = color->b * color->a * 256.0;
-	a = color->a * 256.0;
+	float alphavar = 256.0f * color->a;
+	UINT32 r = color->r * alphavar;
+	UINT32 g = color->g * alphavar;
+	UINT32 b = color->b * alphavar;
+	UINT32 a = alphavar;
 
 	/* loop over the target vertically */
-	for (y = 0; y < dheight; y++)
+	for (UINT32 y = 0; y < dheight; y++)
 	{
 		UINT32 starty = y * dy;
 
 		/* loop over the target horizontally */
-		for (x = 0; x < dwidth; x++)
+		for (UINT32 x = 0; x < dwidth; x++)
 		{
 			UINT32 startx = x * dx;
-			UINT32 pix0, pix1, pix2, pix3;
-			UINT32 sumr, sumg, sumb, suma;
-			UINT32 nextx, nexty;
-			UINT32 curx, cury;
-			UINT32 factor;
 
 			/* adjust start to the center; note that this math will tend to produce */
 			/* negative results on the first pixel, which is why we clamp below */
@@ -277,10 +267,11 @@ static void resample_argb_bitmap_bilinear(UINT32 *dest, UINT32 drowpixels, UINT3
 			if (a < 256)
 			{
 				UINT32 dpix = dest[y * drowpixels + x];
-				suma += RGB_ALPHA(dpix) * (256 - a);
-				sumr += RGB_RED(dpix) * (256 - a);
-				sumg += RGB_GREEN(dpix) * (256 - a);
-				sumb += RGB_BLUE(dpix) * (256 - a);
+				minus = 256 - a;
+				suma += RGB_ALPHA(dpix) * minus;
+				sumr += RGB_RED(dpix) * minus;
+				sumg += RGB_GREEN(dpix) * minus;
+				sumb += RGB_BLUE(dpix) * minus;
 			}
 
 			/* store the target pixel, dividing the RGBA values by the overall scale factor */
@@ -296,12 +287,12 @@ static void resample_argb_bitmap_bilinear(UINT32 *dest, UINT32 drowpixels, UINT3
 
 int render_clip_line(render_bounds *bounds, const render_bounds *clip)
 {
+	UINT8 thiscode, code0, code1;
+	float x, y;
 	/* loop until we get a final result */
 	while (1)
 	{
-		UINT8 code0 = 0, code1 = 0;
-		UINT8 thiscode;
-		float x, y;
+		code0 = 0, code1 = 0;
 
 		/* compute Cohen Sutherland bits for first coordinate */
 		if (bounds->y0 > clip->y1)
@@ -335,14 +326,14 @@ int render_clip_line(render_bounds *bounds, const render_bounds *clip)
 		thiscode = code0 ? code0 : code1;
 
 		/* off the bottom */
-		if (thiscode & 1)
+		if (thiscode & 0x01)
 		{
 			x = bounds->x0 + (bounds->x1 - bounds->x0) * (clip->y1 - bounds->y0) / (bounds->y1 - bounds->y0);
 			y = clip->y1;
 		}
 
 		/* off the top */
-		else if (thiscode & 2)
+		else if (thiscode & 0x02)
 		{
 			x = bounds->x0 + (bounds->x1 - bounds->x0) * (clip->y0 - bounds->y0) / (bounds->y1 - bounds->y0);
 			y = clip->y0;
