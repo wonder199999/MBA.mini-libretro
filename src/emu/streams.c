@@ -233,7 +233,6 @@ void streams_update(running_machine *machine)
 	streams_private *strdata = machine->streams_data;
 	attotime curtime = timer_get_time(machine);
 	int second_tick = FALSE;
-	sound_stream *stream;
 	int outputnum;
 
 	/* see if we ticked over to the next second */
@@ -243,6 +242,7 @@ void streams_update(running_machine *machine)
 		second_tick = TRUE;
 	}
 
+	sound_stream *stream;
 	/* iterate over all the streams */
 	for (stream = strdata->stream_head; stream != NULL; stream = stream->next)
 	{
@@ -271,11 +271,13 @@ void streams_update(running_machine *machine)
 			{
 				/* if we have samples to move, do so for each output */
 				if (output_bufindex > 0)
+				{
 					for (outputnum = 0; outputnum < stream->outputs; outputnum++)
 					{
 						stream_output *output = &stream->output[outputnum];
 						memmove(&output->buffer[0], &output->buffer[samples_to_lose], sizeof(output->buffer[0]) * (output_bufindex - samples_to_lose));
 					}
+				}
 
 				/* update the base position */
 				stream->output_base_sampindex += samples_to_lose;
@@ -288,6 +290,7 @@ void streams_update(running_machine *machine)
 
 	/* update sample rates if they have changed */
 	for (stream = strdata->stream_head; stream != NULL; stream = stream->next)
+	{
 		if (stream->new_sample_rate != 0)
 		{
 			UINT32 old_rate = stream->sample_rate;
@@ -308,6 +311,7 @@ void streams_update(running_machine *machine)
 			for (outputnum = 0; outputnum < stream->outputs; outputnum++)
 				memset(stream->output[outputnum].buffer, 0, stream->max_samples_per_update * sizeof(stream->output[outputnum].buffer[0]));
 		}
+	}
 }
 
 
@@ -403,6 +407,7 @@ int stream_device_output_to_stream_output(device_t *device, int outputnum, sound
 
 	/* scan the list looking for the nth stream that matches the tag */
 	for (stream = strdata->stream_head; stream != NULL; stream = stream->next)
+	{
 		if (stream->device == device)
 		{
 			if (outputnum < stream->outputs)
@@ -413,6 +418,8 @@ int stream_device_output_to_stream_output(device_t *device, int outputnum, sound
 			}
 			outputnum -= stream->outputs;
 		}
+	}
+
 	return FALSE;
 }
 
@@ -430,6 +437,7 @@ int stream_device_input_to_stream_input(device_t *device, int inputnum, sound_st
 
 	/* scan the list looking for the nth stream that matches the tag */
 	for (stream = strdata->stream_head; stream != NULL; stream = stream->next)
+	{
 		if (stream->device == device)
 		{
 			if (inputnum < stream->inputs)
@@ -440,6 +448,8 @@ int stream_device_input_to_stream_input(device_t *device, int inputnum, sound_st
 			}
 			inputnum -= stream->inputs;
 		}
+	}
+
 	return FALSE;
 }
 
@@ -514,6 +524,7 @@ const stream_sample_t *stream_get_output_since_last_update(sound_stream *stream,
 
 	/* compute the number of samples and a pointer to the output buffer */
 	*numsamples = stream->output_sampindex - stream->output_update_sampindex;
+
 	return output->buffer + (stream->output_update_sampindex - stream->output_base_sampindex);
 }
 
@@ -558,6 +569,7 @@ attotime stream_get_time(sound_stream *stream)
 {
 	streams_private *strdata = stream->device->machine->streams_data;
 	attotime base = attotime_make(strdata->last_update.seconds, 0);
+
 	return attotime_add_attoseconds(base, stream->output_sampindex * stream->attoseconds_per_sample);
 }
 
@@ -593,6 +605,7 @@ int stream_get_device_outputs(device_t *device)
 	for (stream = strdata->stream_head; stream != NULL; stream = stream->next)
 		if (stream->device == device)
 			outputs += stream->outputs;
+
 	return outputs;
 }
 
@@ -611,6 +624,7 @@ sound_stream *stream_find_by_device(device_t *device, int streamindex)
 	for (stream = strdata->stream_head; stream != NULL; stream = stream->next)
 		if (stream->device == device && streamindex-- == 0)
 			return stream;
+
 	return NULL;
 }
 

@@ -41,7 +41,7 @@
 #define timer_alloc(m,c,ptr)			_timer_alloc_internal(m, c, ptr, __FILE__, __LINE__, #c)
 #define timer_pulse(m,e,ptr,p,c)		_timer_pulse_internal(m, e, ptr, p, c, __FILE__, __LINE__, #c)
 #define timer_set(m,d,ptr,p,c)			_timer_set_internal(m, d, ptr, p, c, __FILE__, __LINE__, #c)
-#define timer_call_after_resynch(m,ptr,p,c) _timer_set_internal(m, attotime_zero, ptr, p, c, __FILE__, __LINE__, #c)
+#define timer_call_after_resynch(m,ptr,p,c)	_timer_set_internal(m, attotime_zero, ptr, p, c, __FILE__, __LINE__, #c)
 
 /* macros for a timer callback functions */
 #define TIMER_CALLBACK(name)			void name(running_machine *machine, void *ptr, int param)
@@ -63,13 +63,11 @@ typedef void (*timer_fired_func)(running_machine *machine, void *ptr, INT32 para
 typedef void (*timer_device_fired_func)(timer_device &timer, void *ptr, INT32 param);
 
 
-
-
 struct timer_execution_state
 {
 	attotime				nextfire;		/* time that the head of the timer list will fire */
 	attotime				basetime;		/* global basetime; everything moves forward from here */
-	attoseconds_t			curquantum;		/* current quantum of execution */
+	attoseconds_t				curquantum;		/* current quantum of execution */
 };
 
 
@@ -261,19 +259,19 @@ private:
 	virtual bool device_validity_check(const game_driver &driver) const;
 
 	// configuration data
-	timer_type				m_type;				// type of timer
-	timer_device_fired_func	m_callback;			// the timer's callback function
-	void *					m_ptr;				// the pointer parameter passed to the timer callback
+	timer_type					m_type;		// type of timer
+	timer_device_fired_func	m_callback;				// the timer's callback function
+	void					*m_ptr;			// the pointer parameter passed to the timer callback
 
 	// periodic timers only
-	UINT64					m_start_delay;		// delay before the timer fires for the first time
-	UINT64					m_period;			// period of repeated timer firings
-	INT32					m_param;			// the integer parameter passed to the timer callback
+	UINT64						m_start_delay;	// delay before the timer fires for the first time
+	UINT64						m_period;	// period of repeated timer firings
+	INT32						m_param;	// the integer parameter passed to the timer callback
 
 	// scanline timers only
-	const char *			m_screen;			// the name of the screen this timer tracks
-	UINT32					m_first_vpos;		// the first vertical scanline position the timer fires on
-	UINT32					m_increment;		// the number of scanlines between firings
+	const char				*m_screen;		// the name of the screen this timer tracks
+	UINT32						m_first_vpos;	// the first vertical scanline position the timer fires on
+	UINT32						m_increment;	// the number of scanlines between firings
 };
 
 
@@ -321,12 +319,12 @@ private:
 	void scanline_timer_callback(int scanline);
 
 	// internal state
-	const timer_device_config &m_config;
-	emu_timer *		m_timer;			// the backing timer
-	void *			m_ptr;				// the pointer parameter passed to the timer callback
+	const timer_device_config	&m_config;
+	emu_timer			*m_timer;	// the backing timer
+	void				*m_ptr;		// the pointer parameter passed to the timer callback
 
 	// scanline timers only
-	screen_device *m_screen;		// pointer to the screen
+	screen_device *m_screen;			// pointer to the screen
 	bool			m_first_time;		// indicates that the system is starting
 };
 

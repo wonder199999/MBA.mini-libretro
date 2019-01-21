@@ -134,15 +134,15 @@ private:
 	virtual bool device_validity_check(const game_driver &driver) const;
 
 	// configuration data
-	screen_type_enum	m_type;						// type of screen
-	int					m_width, m_height;			// default total width/height (HTOTAL, VTOTAL)
-	rectangle			m_visarea;					// default visible area (HBLANK end/start, VBLANK end/start)
+	screen_type_enum		m_type;				// type of screen
+	int				m_width, m_height;		// default total width/height (HTOTAL, VTOTAL)
+	rectangle			m_visarea;			// default visible area (HBLANK end/start, VBLANK end/start)
 	bool				m_oldstyle_vblank_supplied;	// MDRV_SCREEN_VBLANK_TIME macro used
-	attoseconds_t		m_refresh;					// default refresh period
-	attoseconds_t		m_vblank;					// duration of a VBLANK
-	bitmap_format		m_format;					// bitmap format
+	attoseconds_t			m_refresh;			// default refresh period
+	attoseconds_t			m_vblank;			// duration of a VBLANK
+	bitmap_format			m_format;			// bitmap format
 	float				m_xoffset, m_yoffset;		// default X/Y offsets
-	float				m_xscale, m_yscale;			// default X/Y scale factor
+	float				m_xscale, m_yscale;		// default X/Y scale factor
 };
 
 
@@ -231,40 +231,40 @@ private:
 	const screen_device_config &m_config;
 
 	// dimensions
-	int						m_width;				// current width (HTOTAL)
-	int						m_height;				// current height (VTOTAL)
-	rectangle				m_visarea;				// current visible area (HBLANK end/start, VBLANK end/start)
+	int						m_width;		// current width (HTOTAL)
+	int						m_height;		// current height (VTOTAL)
+	rectangle					m_visarea;		// current visible area (HBLANK end/start, VBLANK end/start)
 
 	// textures and bitmaps
-	render_texture *		m_texture[2];			// 2x textures for the screen bitmap
-	bitmap_t *				m_bitmap[2];			// 2x bitmaps for rendering
-	bitmap_t *				m_burnin;				// burn-in bitmap
-	UINT8					m_curbitmap;			// current bitmap index
-	UINT8					m_curtexture;			// current texture index
-	INT32					m_texture_format;		// texture format of bitmap for this screen
-	bool					m_changed;				// has this bitmap changed?
-	INT32					m_last_partial_scan;	// scanline of last partial update
+	render_texture				*m_texture[2];			// 2x textures for the screen bitmap
+	bitmap_t 				*m_bitmap[2];			// 2x bitmaps for rendering
+	bitmap_t 				*m_burnin;			// burn-in bitmap
+	UINT8						m_curbitmap;		// current bitmap index
+	UINT8						m_curtexture;		// current texture index
+	INT32						m_texture_format;	// texture format of bitmap for this screen
+	bool						m_changed;		// has this bitmap changed?
+	INT32						m_last_partial_scan;	// scanline of last partial update
 
 	// screen timing
-	attoseconds_t			m_frame_period;			// attoseconds per frame
-	attoseconds_t			m_scantime;				// attoseconds per scanline
-	attoseconds_t			m_pixeltime;			// attoseconds per pixel
-	attoseconds_t			m_vblank_period;		// attoseconds per VBLANK period
-	attotime				m_vblank_start_time;	// time of last VBLANK start
-	attotime				m_vblank_end_time;		// time of last VBLANK end
-	emu_timer *				m_vblank_begin_timer;	// timer to signal VBLANK start
-	emu_timer *				m_vblank_end_timer;		// timer to signal VBLANK end
-	emu_timer *				m_scanline0_timer;		// scanline 0 timer
-	emu_timer *				m_scanline_timer;		// scanline timer
-	UINT64					m_frame_number;			// the current frame number
+	attoseconds_t					m_frame_period;		// attoseconds per frame
+	attoseconds_t					m_scantime;		// attoseconds per scanline
+	attoseconds_t					m_pixeltime;		// attoseconds per pixel
+	attoseconds_t					m_vblank_period;	// attoseconds per VBLANK period
+	attotime					m_vblank_start_time;	// time of last VBLANK start
+	attotime					m_vblank_end_time;	// time of last VBLANK end
+	emu_timer 				*m_vblank_begin_timer;		// timer to signal VBLANK start
+	emu_timer 				*m_vblank_end_timer;		// timer to signal VBLANK end
+	emu_timer 				*m_scanline0_timer;		// scanline 0 timer
+	emu_timer 				*m_scanline_timer;		// scanline timer
+	UINT64						m_frame_number;		// the current frame number
 
 	struct callback_item
 	{
-		callback_item *				m_next;
-		vblank_state_changed_func	m_callback;
-		void *						m_param;
+		callback_item			*m_next;
+		vblank_state_changed_func		m_callback;
+		void				*m_param;
 	};
-	callback_item *			m_callback_list;		// list of VBLANK callbacks
+	callback_item				*m_callback_list;		// list of VBLANK callbacks
 };
 
 

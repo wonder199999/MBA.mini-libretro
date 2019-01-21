@@ -18,7 +18,7 @@
     DEBUGGING
 ***************************************************************************/
 
-#define VERBOSE 0
+#define VERBOSE	0
 
 #define LOG(x)	do { if (VERBOSE) logerror x; } while (0)
 
@@ -28,10 +28,10 @@
     CONSTANTS
 ***************************************************************************/
 
-#define MAX_TIMERS				256
-#define MAX_QUANTA				16
+#define MAX_TIMERS			256
+#define MAX_QUANTA			16
 
-#define DEFAULT_MINIMUM_QUANTUM	ATTOSECONDS_IN_MSEC(100)
+#define DEFAULT_MINIMUM_QUANTUM		ATTOSECONDS_IN_MSEC(100)
 
 
 
@@ -42,20 +42,20 @@
 class emu_timer
 {
 public:
-	running_machine *		machine;		/* pointer to the owning machine */
-	emu_timer *				next;			/* next timer in order in the list */
-	emu_timer *				prev;			/* previous timer in order in the list */
-	timer_fired_func		callback;		/* callback function */
-	INT32					param;			/* integer parameter */
-	void *					ptr;			/* pointer parameter */
-	const char *			file;			/* file that created the timer */
-	int 					line;			/* line number that created the timer */
-	const char *			func;			/* string name of the callback function */
-	UINT8					enabled;		/* is the timer enabled? */
-	UINT8					temporary;		/* is the timer temporary? */
-	attotime				period;			/* the repeat frequency of the timer */
-	attotime				start;			/* time when the timer was started */
-	attotime				expire;			/* time when the timer will expire */
+	running_machine			*machine;		/* pointer to the owning machine */
+	emu_timer			*next;			/* next timer in order in the list */
+	emu_timer			*prev;			/* previous timer in order in the list */
+	timer_fired_func			callback;	/* callback function */
+	INT32					param;		/* integer parameter */
+	void				*ptr;			/* pointer parameter */
+	const char			*file;			/* file that created the timer */
+	int 					line;		/* line number that created the timer */
+	const char			*func;			/* string name of the callback function */
+	UINT8					enabled;	/* is the timer enabled? */
+	UINT8					temporary;	/* is the timer temporary? */
+	attotime				period;		/* the repeat frequency of the timer */
+	attotime				start;		/* time when the timer was started */
+	attotime				expire;		/* time when the timer will expire */
 };
 
 
@@ -65,7 +65,7 @@ struct _quantum_slot
 {
 	attoseconds_t			actual;			/* actual duration of the quantum */
 	attoseconds_t			requested;		/* duration of the requested quantum */
-	attotime				expire;			/* absolute expiration time of this quantum */
+	attotime			expire;			/* absolute expiration time of this quantum */
 };
 
 
@@ -74,23 +74,23 @@ struct _quantum_slot
 struct _timer_private
 {
 	/* list of active timers */
-	emu_timer				timers[MAX_TIMERS]; /* actual timers */
-	emu_timer *				activelist;			/* head of the active list */
-	emu_timer *				freelist;			/* head of the free list */
-	emu_timer *				freelist_tail;		/* tail of the free list */
+	emu_timer				timers[MAX_TIMERS];		/* actual timers */
+	emu_timer			*activelist;				/* head of the active list */
+	emu_timer			*freelist;				/* head of the free list */
+	emu_timer			*freelist_tail;				/* tail of the free list */
 
 	/* execution state */
-	timer_execution_state	exec;				/* current global execution state */
+	timer_execution_state			exec;				/* current global execution state */
 
 	/* other internal states */
-	emu_timer *				callback_timer;		/* pointer to the current callback timer */
-	UINT8					callback_timer_modified; /* TRUE if the current callback timer was modified */
-	attotime				callback_timer_expire_time; /* the original expiration time */
+	emu_timer			*callback_timer;			/* pointer to the current callback timer */
+	UINT8					callback_timer_modified;	/* TRUE if the current callback timer was modified */
+	attotime				callback_timer_expire_time;	/* the original expiration time */
 
 	/* scheduling quanta */
-	quantum_slot			quantum_list[MAX_QUANTA]; /* list of scheduling quanta */
-	quantum_slot *			quantum_current;	/* current minimum quantum */
-	attoseconds_t			quantum_minimum;	/* duration of minimum quantum */
+	quantum_slot				quantum_list[MAX_QUANTA];	/* list of scheduling quanta */
+	quantum_slot			*quantum_current;			/* current minimum quantum */
+	attoseconds_t				quantum_minimum;		/* duration of minimum quantum */
 };
 
 
@@ -124,6 +124,7 @@ INLINE attotime get_current_time(running_machine *machine)
 	/* if we're executing as a particular CPU, use its local time as a base */
 	/* otherwise, return the global base time */
 	device_execute_interface *execdevice = machine->scheduler().currently_executing();
+
 	return (execdevice != NULL) ? execdevice->local_time() : global->exec.basetime;
 }
 
@@ -152,6 +153,7 @@ INLINE emu_timer *timer_new(running_machine *machine)
 
 	/* set up the machine */
 	timer->machine = machine;
+
 	return timer;
 }
 
@@ -168,7 +170,7 @@ INLINE void timer_list_insert(emu_timer *timer)
 	emu_timer *t, *lt = NULL;
 
 	/* sanity checks for the debug build */
-	#ifdef MAME_DEBUG
+#ifdef MAME_DEBUG
 	{
 		int tnum = 0;
 
@@ -181,7 +183,7 @@ INLINE void timer_list_insert(emu_timer *timer)
 				fatalerror("Timer list is full!");
 		}
 	}
-	#endif
+#endif
 
 	/* loop over the timer list */
 	for (t = global->activelist; t != NULL; lt = t, t = t->next)
@@ -228,7 +230,7 @@ INLINE void timer_list_remove(emu_timer *timer)
 	timer_private *global = timer->machine->timer_data;
 
 	/* sanity checks for the debug build */
-	#ifdef MAME_DEBUG
+#ifdef MAME_DEBUG
 	{
 		emu_timer *t;
 
@@ -237,7 +239,7 @@ INLINE void timer_list_remove(emu_timer *timer)
 		if (t == NULL)
 			fatalerror("timer (%s from %s:%d) not found in list", timer->func, timer->file, timer->line);
 	}
-	#endif
+#endif
 
 	/* remove it from the list */
 	if (timer->prev != NULL)
@@ -265,7 +267,6 @@ INLINE void timer_list_remove(emu_timer *timer)
 void timer_init(running_machine *machine)
 {
 	timer_private *global;
-	int i;
 
 	/* allocate global data */
 	global = machine->timer_data = auto_alloc_clear(machine, timer_private);
@@ -285,7 +286,7 @@ void timer_init(running_machine *machine)
 	/* initialize the lists */
 	global->activelist = NULL;
 	global->freelist = &global->timers[0];
-	for (i = 0; i < MAX_TIMERS-1; i++)
+	for (int i = 0; i < MAX_TIMERS-1; i++)
 		global->timers[i].next = &global->timers[i+1];
 	global->timers[MAX_TIMERS-1].next = NULL;
 	global->freelist_tail = &global->timers[MAX_TIMERS-1];
@@ -340,18 +341,16 @@ void timer_execute_timers(running_machine *machine)
 	/* if the current quantum has expired, find a new one */
 	if (attotime_compare(global->exec.basetime, global->quantum_current->expire) >= 0)
 	{
-		int curr;
-
 		global->quantum_current->requested = 0;
 		global->quantum_current = &global->quantum_list[0];
-		for (curr = 1; curr < ARRAY_LENGTH(global->quantum_list); curr++)
+		for (int curr = 1; curr < ARRAY_LENGTH(global->quantum_list); curr++)
 			if (global->quantum_list[curr].requested != 0 && global->quantum_list[curr].requested < global->quantum_current->requested)
 				global->quantum_current = &global->quantum_list[curr];
 		global->exec.curquantum = global->quantum_current->actual;
 	}
-
+#if 0
 	LOG(("timer_set_global_time: new=%s head->expire=%s\n", attotime_string(global->exec.basetime, 9), attotime_string(global->activelist->expire, 9)));
-
+#endif
 	/* now process any timers that are overdue */
 	while (attotime_compare(global->activelist->expire, global->exec.basetime) <= 0)
 	{
@@ -411,14 +410,14 @@ void timer_add_scheduling_quantum(running_machine *machine, attoseconds_t quantu
 	timer_private *global = machine->timer_data;
 	attotime curtime = timer_get_time(machine);
 	attotime expire = attotime_add(curtime, duration);
-	int curr, blank = -1;
+	int blank = -1;
 
 	/* a 0 request (minimum) needs to be non-zero to occupy a slot */
 	if (quantum == 0)
 		quantum = 1;
 
 	/* find an equal-duration slot or an empty slot */
-	for (curr = 1; curr < ARRAY_LENGTH(global->quantum_list); curr++)
+	for (int curr = 1; curr < ARRAY_LENGTH(global->quantum_list); curr++)
 	{
 		quantum_slot *slot = &global->quantum_list[curr];
 
@@ -466,7 +465,6 @@ void timer_add_scheduling_quantum(running_machine *machine, attoseconds_t quantu
 void timer_set_minimum_quantum(running_machine *machine, attoseconds_t quantum)
 {
 	timer_private *global = machine->timer_data;
-	int curr;
 
 	/* do nothing if nothing changed */
 	if (global->quantum_minimum == quantum)
@@ -474,7 +472,7 @@ void timer_set_minimum_quantum(running_machine *machine, attoseconds_t quantum)
 	global->quantum_minimum = quantum;
 
 	/* adjust all the actuals; this doesn't affect the current */
-	for (curr = 0; curr < ARRAY_LENGTH(global->quantum_list); curr++)
+	for (int curr = 0; curr < ARRAY_LENGTH(global->quantum_list); curr++)
 		if (global->quantum_list[curr].requested != 0)
 			global->quantum_list[curr].actual = MAX(global->quantum_list[curr].requested, global->quantum_minimum);
 
@@ -567,11 +565,14 @@ int timer_count_anonymous(running_machine *machine)
 
 	logerror("timer_count_anonymous:\n");
 	for (t = global->activelist; t; t = t->next)
+	{
 		if (t->temporary && t != global->callback_timer)
 		{
 			count++;
 			logerror("  Temp. timer %p, file %s:%d[%s]\n", (void *) t, t->file, t->line, t->func);
 		}
+	}
+
 	logerror("%d temporary timers found\n", count);
 
 	return count;
@@ -621,6 +622,7 @@ INLINE emu_timer *_timer_alloc_common(running_machine *machine, timer_fired_func
 	return timer;
 }
 
+
 emu_timer *_timer_alloc_internal(running_machine *machine, timer_fired_func callback, void *ptr, const char *file, int line, const char *func)
 {
 	return _timer_alloc_common(machine, callback, ptr, file, line, func, FALSE);
@@ -648,6 +650,7 @@ static void timer_remove(emu_timer *which)
 		global->freelist_tail->next = which;
 	else
 		global->freelist = which;
+
 	which->next = NULL;
 	global->freelist_tail = which;
 }
@@ -703,6 +706,7 @@ void timer_adjust_periodic(emu_timer *which, attotime start_delay, INT32 param, 
 
 	/* if this was inserted as the head, abort the current timeslice and resync */
 	LOG(("timer_adjust_oneshot %s.%s:%d to expire @ %s\n", which->file, which->func, which->line, attotime_string(which->expire, 9)));
+
 	if (which == global->activelist)
 		which->machine->scheduler().abort_timeslice();
 }
@@ -759,10 +763,8 @@ void timer_reset(emu_timer *which, attotime duration)
 
 int timer_enable(emu_timer *which, int enable)
 {
-	int old;
-
 	/* set the enable flag */
-	old = which->enabled;
+	int old = which->enabled;
 	which->enabled = enable;
 
 	/* remove the timer and insert back into the list */
@@ -930,9 +932,9 @@ void timer_print_first_timer(running_machine *machine)
 }
 
 
-//**************************************************************************
+//*************************************************************************/
 //  TIMER DEVICE CONFIGURATION
-//**************************************************************************
+//*************************************************************************/
 
 //-------------------------------------------------
 //  timer_device_config - constructor
@@ -1052,9 +1054,9 @@ bool timer_device_config::device_validity_check(const game_driver &driver) const
 
 
 
-//**************************************************************************
+//*************************************************************************/
 //  LIVE TIMER DEVICE
-//**************************************************************************
+//*************************************************************************/
 
 //-------------------------------------------------
 //  timer_device - constructor

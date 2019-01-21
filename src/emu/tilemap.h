@@ -311,15 +311,15 @@
 
 
 /* these flags control tilemap_draw() behavior */
-#define TILEMAP_DRAW_CATEGORY_MASK		0x0f		/* specify the category to draw */
-#define TILEMAP_DRAW_CATEGORY(x)		(x)			/* specify category to draw */
+#define TILEMAP_DRAW_CATEGORY_MASK			0x0f		/* specify the category to draw */
+#define TILEMAP_DRAW_CATEGORY(x)			(x)		/* specify category to draw */
 #define TILEMAP_DRAW_LAYER0				0x10		/* draw layer 0 */
 #define TILEMAP_DRAW_LAYER1				0x20		/* draw layer 1 */
 #define TILEMAP_DRAW_LAYER2				0x40		/* draw layer 2 */
 #define TILEMAP_DRAW_OPAQUE				0x80		/* draw everything, even transparent stuff */
-#define TILEMAP_DRAW_ALPHA_FLAG			0x100		/* draw with alpha blending (in the upper 8 bits) */
-#define TILEMAP_DRAW_ALPHA(x)			(TILEMAP_DRAW_ALPHA_FLAG | (rgb_clamp(x) << 24))
-#define TILEMAP_DRAW_ALL_CATEGORIES		0x200		/* draw all categories */
+#define TILEMAP_DRAW_ALPHA_FLAG				0x100		/* draw with alpha blending (in the upper 8 bits) */
+#define TILEMAP_DRAW_ALPHA(x)		(TILEMAP_DRAW_ALPHA_FLAG | (rgb_clamp(x) << 24))
+#define TILEMAP_DRAW_ALL_CATEGORIES			0x200		/* draw all categories */
 
 
 /* per-pixel flags in the transparency_bitmap */
@@ -334,14 +334,14 @@
 #define TILE_FLIPX						0x01		/* draw this tile horizontally flipped */
 #define TILE_FLIPY						0x02		/* draw this tile vertically flipped */
 #define TILE_4BPP						0x04		/* tile data is packed 4bpp */
-#define TILE_FORCE_LAYER0				TILEMAP_PIXEL_LAYER0 /* force all pixels to be layer 0 (no transparency) */
-#define TILE_FORCE_LAYER1				TILEMAP_PIXEL_LAYER1 /* force all pixels to be layer 1 (no transparency) */
-#define TILE_FORCE_LAYER2				TILEMAP_PIXEL_LAYER2 /* force all pixels to be layer 2 (no transparency) */
+#define TILE_FORCE_LAYER0			TILEMAP_PIXEL_LAYER0		/* force all pixels to be layer 0 (no transparency) */
+#define TILE_FORCE_LAYER1			TILEMAP_PIXEL_LAYER1		/* force all pixels to be layer 1 (no transparency) */
+#define TILE_FORCE_LAYER2			TILEMAP_PIXEL_LAYER2		/* force all pixels to be layer 2 (no transparency) */
 
 
 /* tilemap global flags, used by tilemap_set_flip() */
-#define TILEMAP_FLIPX					TILE_FLIPX	/* draw the tilemap horizontally flipped */
-#define TILEMAP_FLIPY					TILE_FLIPY	/* draw the tilemap vertically flipped */
+#define TILEMAP_FLIPX				TILE_FLIPX			/* draw the tilemap horizontally flipped */
+#define TILEMAP_FLIPY				TILE_FLIPY			/* draw the tilemap vertically flipped */
 
 
 /* set this value for a scroll row/column to fully disable it */
@@ -361,14 +361,14 @@
 #define TILEMAP_MAPPER(_name)			tilemap_memory_index _name(UINT32 col, UINT32 row, UINT32 num_cols, UINT32 num_rows)
 
 /* useful macro inside of a TILE_GET_INFO callback to set tile information  */
-#define SET_TILE_INFO(GFX,CODE,COLOR,FLAGS)         tileinfo_set(machine, tileinfo, GFX, CODE, COLOR, FLAGS)
-#define SET_TILE_INFO_DEVICE(GFX,CODE,COLOR,FLAGS)  tileinfo_set(device->machine, tileinfo, GFX, CODE, COLOR, FLAGS)
+#define SET_TILE_INFO(GFX,CODE,COLOR,FLAGS)		tileinfo_set(machine, tileinfo, GFX, CODE, COLOR, FLAGS)
+#define SET_TILE_INFO_DEVICE(GFX,CODE,COLOR,FLAGS)	tileinfo_set(device->machine, tileinfo, GFX, CODE, COLOR, FLAGS)
 
 /* Macros for setting tile attributes in the TILE_GET_INFO callback: */
 /*   TILE_FLIP_YX assumes that flipy is in bit 1 and flipx is in bit 0 */
 /*   TILE_FLIP_XY assumes that flipy is in bit 0 and flipx is in bit 1 */
-#define TILE_FLIPYX(YX)					((YX) & 3)
-#define TILE_FLIPXY(XY)					((((XY) & 2) >> 1) | (((XY) & 1) << 1))
+#define TILE_FLIPYX(YX)			((YX) & 3)
+#define TILE_FLIPXY(XY)			((((XY) & 2) >> 1) | (((XY) & 1) << 1))
 
 
 
@@ -387,14 +387,14 @@ typedef struct _tilemap_t tilemap_t;
 typedef struct _tile_data tile_data;
 struct _tile_data
 {
-	const UINT8 *	pen_data;		/* required */
-	const UINT8 *	mask_data;		/* required */
-	pen_t			palette_base;	/* defaults to 0 */
-	UINT8			category;		/* defaults to 0; range from 0..15 */
-	UINT8			group;			/* defaults to 0; range from 0..TILEMAP_NUM_GROUPS */
-	UINT8			flags;			/* defaults to 0; one or more of TILE_* flags above */
-	UINT8			pen_mask;		/* defaults to 0xff; mask to apply to pen_data while rendering the tile */
-	UINT8			gfxnum;			/* defaults to 0xff; specify index of machine->gfx for auto-invalidation on dirty */
+	const UINT8		*pen_data;			/* required */
+	const UINT8		*mask_data;			/* required */
+	pen_t				palette_base;		/* defaults to 0 */
+	UINT8				category;		/* defaults to 0; range from 0..15 */
+	UINT8				group;			/* defaults to 0; range from 0..TILEMAP_NUM_GROUPS */
+	UINT8				flags;			/* defaults to 0; one or more of TILE_* flags above */
+	UINT8				pen_mask;		/* defaults to 0xff; mask to apply to pen_data while rendering the tile */
+	UINT8				gfxnum;			/* defaults to 0xff; specify index of machine->gfx for auto-invalidation on dirty */
 };
 
 

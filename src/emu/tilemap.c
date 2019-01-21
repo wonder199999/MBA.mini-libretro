@@ -18,13 +18,13 @@
 ***************************************************************************/
 
 /* internal usage to mark tiles dirty */
-#define TILE_FLAG_DIRTY					0xff
+#define TILE_FLAG_DIRTY				(0xff)
 
 /* invalid logical index */
 #define INVALID_LOGICAL_INDEX			((tilemap_logical_index)~0)
 
 /* maximum index in each array */
-#define MAX_PEN_TO_FLAGS				256
+#define MAX_PEN_TO_FLAGS			(256)
 
 
 /***************************************************************************
@@ -53,10 +53,10 @@ typedef void (*blitopaque_func)(void *dest, const UINT16 *source, int count, con
 typedef struct _blit_parameters blit_parameters;
 struct _blit_parameters
 {
-	bitmap_t *			bitmap;
+	bitmap_t		*bitmap;
 	rectangle			cliprect;
-	blitmask_func		draw_masked;
-	blitopaque_func		draw_opaque;
+	blitmask_func			draw_masked;
+	blitopaque_func			draw_opaque;
 	UINT32				tilemap_priority_code;
 	UINT8				mask;
 	UINT8				value;
@@ -67,65 +67,65 @@ struct _blit_parameters
 /* core tilemap structure */
 struct _tilemap_t
 {
-	tilemap_t *					next;				/* pointer to next tilemap */
-	running_machine *			machine;			/* pointer back to the owning machine */
+	tilemap_t			*next;				/* pointer to next tilemap */
+	running_machine			*machine;			/* pointer back to the owning machine */
 
 	/* basic tilemap metrics */
-	UINT32						rows;				/* number of tile rows */
-	UINT32						cols;				/* number of tile columns */
-	UINT32						tilewidth;			/* width of a single tile in pixels */
-	UINT32						tileheight;			/* height of a single tile in pixels */
-	UINT32						width;				/* width of the full tilemap in pixels */
-	UINT32						height;				/* height of the full tilemap in pixels */
+	UINT32					rows;			/* number of tile rows */
+	UINT32					cols;			/* number of tile columns */
+	UINT32					tilewidth;		/* width of a single tile in pixels */
+	UINT32					tileheight;		/* height of a single tile in pixels */
+	UINT32					width;			/* width of the full tilemap in pixels */
+	UINT32					height;			/* height of the full tilemap in pixels */
 
 	/* logical <-> memory mappings */
-	tilemap_mapper_func			mapper;				/* callback to map a row/column to a memory index */
-	tilemap_logical_index *		memory_to_logical;	/* map from memory index to logical index */
-	tilemap_logical_index		max_logical_index;	/* maximum valid logical index */
-	tilemap_memory_index *		logical_to_memory;	/* map from logical index to memory index */
-	tilemap_memory_index		max_memory_index;	/* maximum valid memory index */
+	tilemap_mapper_func			mapper;			/* callback to map a row/column to a memory index */
+	tilemap_logical_index		*memory_to_logical;		/* map from memory index to logical index */
+	tilemap_logical_index			max_logical_index;	/* maximum valid logical index */
+	tilemap_memory_index		*logical_to_memory;		/* map from logical index to memory index */
+	tilemap_memory_index			max_memory_index;	/* maximum valid memory index */
 
 	/* callback to interpret video RAM for the tilemap */
 	tile_get_info_func			tile_get_info;		/* callback to get information about a tile */
-	void *						tile_get_info_object;/* object passed as the first parameter to the get_info functon */
-	tile_data					tileinfo;			/* structure to hold the data for a tile */
-	void *						user_data;			/* user data value passed to the callback */
+	void				*tile_get_info_object;		/* object passed as the first parameter to the get_info functon */
+	tile_data				tileinfo;		/* structure to hold the data for a tile */
+	void				*user_data;			/* user data value passed to the callback */
 
 	/* global tilemap states */
-	UINT8						enable;				/* true if we are enabled */
-	UINT8						attributes;			/* global attributes (flipx/y) */
-	UINT8						all_tiles_dirty;	/* true if all tiles are dirty */
-	UINT8						all_tiles_clean;	/* true if all tiles are clean */
-	UINT32						palette_offset;		/* palette offset */
-	UINT32						pen_data_offset;	/* pen data offset */
-	UINT32						gfx_used;			/* bitmask of gfx items used */
-	UINT32						gfx_dirtyseq[MAX_GFX_ELEMENTS]; /* dirtyseq values from last check */
+	UINT8					enable;				/* true if we are enabled */
+	UINT8					attributes;			/* global attributes (flipx/y) */
+	UINT8					all_tiles_dirty;		/* true if all tiles are dirty */
+	UINT8					all_tiles_clean;		/* true if all tiles are clean */
+	UINT32					palette_offset;			/* palette offset */
+	UINT32					pen_data_offset;		/* pen data offset */
+	UINT32					gfx_used;			/* bitmask of gfx items used */
+	UINT32					gfx_dirtyseq[MAX_GFX_ELEMENTS]; /* dirtyseq values from last check */
 
 	/* scroll information */
-	UINT32						scrollrows;			/* number of independently scrolled rows */
-	UINT32						scrollcols;			/* number of independently scrolled colums */
-	INT32 *						rowscroll;			/* array of rowscroll values */
-	INT32 *						colscroll;			/* array of colscroll values */
-	INT32						dx;					/* global horizontal scroll offset */
-	INT32						dx_flipped;			/* global horizontal scroll offset when flipped */
-	INT32						dy;					/* global vertical scroll offset */
-	INT32						dy_flipped;			/* global vertical scroll offset when flipped */
+	UINT32					scrollrows;		/* number of independently scrolled rows */
+	UINT32					scrollcols;		/* number of independently scrolled colums */
+	INT32				*rowscroll;			/* array of rowscroll values */
+	INT32				*colscroll;			/* array of colscroll values */
+	INT32					dx;			/* global horizontal scroll offset */
+	INT32					dx_flipped;		/* global horizontal scroll offset when flipped */
+	INT32					dy;			/* global vertical scroll offset */
+	INT32					dy_flipped;		/* global vertical scroll offset when flipped */
 
 	/* pixel data */
-	bitmap_t *					pixmap;				/* cached pixel data */
+	bitmap_t			*pixmap;			/* cached pixel data */
 
 	/* transparency mapping */
-	bitmap_t *					flagsmap;			/* per-pixel flags */
-	UINT8 *						tileflags;			/* per-tile flags */
-	UINT8 *						pen_to_flags;		/* mapping of pens to flags */
+	bitmap_t			*flagsmap;			/* per-pixel flags */
+	UINT8				*tileflags;			/* per-tile flags */
+	UINT8				*pen_to_flags;			/* mapping of pens to flags */
 };
 
 
 struct _tilemap_private
 {
-	tilemap_t *		list;
-	tilemap_t **		tailptr;
-	int				instance;
+	tilemap_t			*list;
+	tilemap_t			**tailptr;
+	int					instance;
 };
 
 
@@ -153,8 +153,7 @@ static UINT8 tile_apply_bitmask(tilemap_t *tmap, const UINT8 *maskdata, UINT32 x
 /* drawing helpers */
 static void configure_blit_parameters(blit_parameters *blit, tilemap_t *tmap, bitmap_t *dest, const rectangle *cliprect, UINT32 flags, UINT8 priority, UINT8 priority_mask);
 static void tilemap_draw_instance(tilemap_t *tmap, const blit_parameters *blit, int xpos, int ypos);
-static void tilemap_draw_roz_core(tilemap_t *tmap, const blit_parameters *blit,
-		UINT32 startx, UINT32 starty, int incxx, int incxy, int incyx, int incyy, int wraparound);
+static void tilemap_draw_roz_core(tilemap_t *tmap, const blit_parameters *blit, UINT32 startx, UINT32 starty, int incxx, int incxy, int incyx, int incyy, int wraparound);
 
 /* scanline rasterizers for drawing to the pixmap */
 static void scanline_draw_opaque_null(void *dest, const UINT16 *source, int count, const pen_t *pens, UINT8 *pri, UINT32 pcode, UINT8 alpha);
@@ -184,23 +183,19 @@ static void scanline_draw_masked_rgb32_alpha(void *dest, const UINT16 *source, c
 
 INLINE INT32 effective_rowscroll(tilemap_t *tmap, int index, UINT32 screen_width)
 {
-	INT32 value;
-
 	/* if we're flipping vertically, adjust the row number */
 	if (tmap->attributes & TILEMAP_FLIPY)
 		index = tmap->scrollrows - 1 - index;
 
 	/* adjust final result based on the horizontal flip and dx values */
-	if (!(tmap->attributes & TILEMAP_FLIPX))
-		value = tmap->dx - tmap->rowscroll[index];
-	else
-		value = screen_width - tmap->width - (tmap->dx_flipped - tmap->rowscroll[index]);
+	INT32 value = (tmap->attributes & TILEMAP_FLIPX) ? (screen_width - tmap->width - (tmap->dx_flipped - tmap->rowscroll[index])) : tmap->dx - tmap->rowscroll[index];
 
 	/* clamp to 0..width */
 	if (value < 0)
 		value = tmap->width - (-value) % tmap->width;
 	else
 		value %= tmap->width;
+
 	return value;
 }
 
@@ -213,23 +208,20 @@ INLINE INT32 effective_rowscroll(tilemap_t *tmap, int index, UINT32 screen_width
 
 INLINE INT32 effective_colscroll(tilemap_t *tmap, int index, UINT32 screen_height)
 {
-	INT32 value;
 
 	/* if we're flipping horizontally, adjust the column number */
 	if (tmap->attributes & TILEMAP_FLIPX)
 		index = tmap->scrollcols - 1 - index;
 
 	/* adjust final result based on the vertical flip and dx values */
-	if (!(tmap->attributes & TILEMAP_FLIPY))
-		value = tmap->dy - tmap->colscroll[index];
-	else
-		value = screen_height - tmap->height - (tmap->dy_flipped - tmap->colscroll[index]);
+	INT32 value = (tmap->attributes & TILEMAP_FLIPY) ? (screen_height - tmap->height - (tmap->dy_flipped - tmap->colscroll[index])) : tmap->dy - tmap->colscroll[index];
 
 	/* clamp to 0..height */
 	if (value < 0)
 		value = tmap->height - (-value) % tmap->height;
 	else
 		value %= tmap->height;
+
 	return value;
 }
 
@@ -261,16 +253,17 @@ INLINE int gfx_elements_changed(tilemap_t *tmap)
 {
 	UINT32 usedmask = tmap->gfx_used;
 	int isdirty = FALSE;
-	int gfxnum;
 
 	/* iterate over all used gfx types and set the dirty flag if any of them have changed */
-	for (gfxnum = 0; usedmask != 0; usedmask >>= 1, gfxnum++)
-		if ((usedmask & 1) != 0)
+	for (int gfxnum = 0; usedmask != 0; usedmask >>= 1, gfxnum++)
+	{
+		if ((usedmask & 0x01) != 0)
 			if (tmap->gfx_dirtyseq[gfxnum] != tmap->machine->gfx[gfxnum]->dirtyseq)
 			{
 				tmap->gfx_dirtyseq[gfxnum] = tmap->machine->gfx[gfxnum]->dirtyseq;
 				isdirty = TRUE;
 			}
+	}
 
 	return isdirty;
 }
@@ -286,13 +279,11 @@ INLINE int gfx_elements_changed(tilemap_t *tmap)
 
 void tilemap_init(running_machine *machine)
 {
-	UINT32 screen_width, screen_height;
-
 	if (machine->primary_screen == NULL)
 		return;
 
-	screen_width  = machine->primary_screen->width();
-	screen_height = machine->primary_screen->height();
+	UINT32 screen_width  = machine->primary_screen->width();
+	UINT32 screen_height = machine->primary_screen->height();
 
 	if (screen_width != 0 && screen_height != 0)
 	{
@@ -336,8 +327,6 @@ tilemap_t *tilemap_create_device(device_t *device, tile_get_info_device_func til
 static tilemap_t *tilemap_create_common(running_machine *machine, void *get_info_object, tile_get_info_func tile_get_info, tilemap_mapper_func mapper, int tilewidth, int tileheight, int cols, int rows)
 {
 	tilemap_t *tmap;
-	int tilemap_instance;
-	int group;
 
 	/* if no tilemap private data yet, allocate it */
 	if (machine->tilemap_data == NULL)
@@ -345,7 +334,8 @@ static tilemap_t *tilemap_create_common(running_machine *machine, void *get_info
 		machine->tilemap_data = auto_alloc_clear(machine, tilemap_private);
 		machine->tilemap_data->tailptr = &machine->tilemap_data->list;
 	}
-	tilemap_instance = machine->tilemap_data->instance;
+
+	INT32 tilemap_instance = machine->tilemap_data->instance;
 
 	/* allocate the tilemap itself */
 	tmap = auto_alloc_clear(machine, tilemap_t);
@@ -388,7 +378,7 @@ static tilemap_t *tilemap_create_common(running_machine *machine, void *get_info
 	tmap->tileflags = auto_alloc_array(machine, UINT8, tmap->max_logical_index);
 	tmap->flagsmap = auto_bitmap_alloc(machine, tmap->width, tmap->height, BITMAP_FORMAT_INDEXED8);
 	tmap->pen_to_flags = auto_alloc_array_clear(machine, UINT8, MAX_PEN_TO_FLAGS * TILEMAP_NUM_GROUPS);
-	for (group = 0; group < TILEMAP_NUM_GROUPS; group++)
+	for (int group = 0; group < TILEMAP_NUM_GROUPS; group++)
 		tilemap_map_pens_to_layer(tmap, group, 0, 0, TILEMAP_PIXEL_LAYER0);
 
 	/* add us to the end of the list of tilemaps */
@@ -412,6 +402,7 @@ static tilemap_t *tilemap_create_common(running_machine *machine, void *get_info
 
 	/* reset everything after a load */
 	state_save_register_postload(machine, tilemap_postload, tmap);
+
 	return tmap;
 }
 
@@ -560,28 +551,29 @@ void tilemap_mark_all_tiles_dirty_all(running_machine *machine)
 void tilemap_map_pens_to_layer(tilemap_t *tmap, int group, pen_t pen, pen_t mask, UINT8 layermask)
 {
 	UINT8 *array = tmap->pen_to_flags + group * MAX_PEN_TO_FLAGS;
-	pen_t start, stop, cur;
 	UINT8 changed = FALSE;
 
 	assert(group < TILEMAP_NUM_GROUPS);
 	assert((layermask & TILEMAP_PIXEL_CATEGORY_MASK) == 0);
 
 	/* we start at the index where (pen & mask) == pen, and all other bits are 0 */
-	start = pen & mask;
+	pen_t start = pen & mask;
 
 	/* we stop at the index where (pen & mask) == pen, and all other bits are 1 */
-	stop = start | ~mask;
+	pen_t stop = start | ~mask;
 
 	/* clamp to the number of entries actually there */
 	stop = MIN(stop, MAX_PEN_TO_FLAGS - 1);
 
 	/* iterate and set */
-	for (cur = start; cur <= stop; cur++)
+	for (pen_t cur = start; cur <= stop; cur++)
+	{
 		if ((cur & mask) == pen && array[cur] != layermask)
 		{
 			changed = TRUE;
 			array[cur] = layermask;
 		}
+	}
 
 	/* everything gets dirty if anything changed */
 	if (changed)
@@ -601,7 +593,7 @@ void tilemap_set_transparent_pen(tilemap_t *tmap, pen_t pen)
 	tilemap_map_pens_to_layer(tmap, 0, 0, 0, TILEMAP_PIXEL_LAYER0);
 
 	/* set the single pen to transparent */
-    tilemap_map_pen_to_layer(tmap, 0, pen, TILEMAP_PIXEL_TRANSPARENT);
+	tilemap_map_pen_to_layer(tmap, 0, pen, TILEMAP_PIXEL_TRANSPARENT);
 }
 
 
@@ -614,13 +606,12 @@ void tilemap_set_transparent_pen(tilemap_t *tmap, pen_t pen)
 
 void tilemap_set_transmask(tilemap_t *tmap, int group, UINT32 fgmask, UINT32 bgmask)
 {
-	pen_t pen;
-
+	UINT8 fgbits, bgbits;
 	/* iterate over all 32 pens specified */
-	for (pen = 0; pen < 32; pen++)
+	for (pen_t pen = 0; pen < 32; pen++)
 	{
-		UINT8 fgbits = ((fgmask >> pen) & 1) ? TILEMAP_PIXEL_TRANSPARENT : TILEMAP_PIXEL_LAYER0;
-		UINT8 bgbits = ((bgmask >> pen) & 1) ? TILEMAP_PIXEL_TRANSPARENT : TILEMAP_PIXEL_LAYER1;
+		fgbits = ((fgmask >> pen) & 0x01) ? TILEMAP_PIXEL_TRANSPARENT : TILEMAP_PIXEL_LAYER0;
+		bgbits = ((bgmask >> pen) & 0x01) ? TILEMAP_PIXEL_TRANSPARENT : TILEMAP_PIXEL_LAYER1;
 		tilemap_map_pen_to_layer(tmap, group, pen, fgbits | bgbits);
 	}
 }
@@ -773,6 +764,7 @@ bitmap_t *tilemap_get_pixmap(tilemap_t *tmap)
 {
 	/* ensure all the tiles are up-to-date and then return the pixmap */
 	pixmap_update(tmap, NULL);
+
 	return tmap->pixmap;
 }
 
@@ -786,6 +778,7 @@ bitmap_t *tilemap_get_flagsmap(tilemap_t *tmap)
 {
 	/* ensure all the tiles are up-to-date and then return the flagsmap */
 	pixmap_update(tmap, NULL);
+
 	return tmap->flagsmap;
 }
 
@@ -799,6 +792,7 @@ UINT8 *tilemap_get_tile_flags(tilemap_t *tmap)
 {
 	/* ensure all the tiles are up-to-date and then return the per-tile flags */
 	pixmap_update(tmap, NULL);
+
 	return tmap->tileflags;
 }
 
@@ -816,13 +810,11 @@ UINT8 *tilemap_get_tile_flags(tilemap_t *tmap)
 
 void tilemap_draw_primask(bitmap_t *dest, const rectangle *cliprect, tilemap_t *tmap, UINT32 flags, UINT8 priority, UINT8 priority_mask)
 {
-	UINT32 width, height;
-	blit_parameters blit;
-	int xpos, ypos;
-
 	/* skip if disabled */
 	if (!tmap->enable)
 		return;
+
+	blit_parameters blit;
 
 	/* configure the blit parameters based on the input parameters */
 	configure_blit_parameters(&blit, tmap, dest, cliprect, flags, priority, priority_mask);
@@ -835,9 +827,10 @@ void tilemap_draw_primask(bitmap_t *dest, const rectangle *cliprect, tilemap_t *
 		tmap->gfx_used = 0;
 	}
 
-	width  = tmap->machine->primary_screen->width();
-	height = tmap->machine->primary_screen->height();
+	UINT32 width  = tmap->machine->primary_screen->width();
+	UINT32 height = tmap->machine->primary_screen->height();
 
+	int xpos, ypos;
 	/* XY scrolling playfield */
 	if (tmap->scrollrows == 1 && tmap->scrollcols == 1)
 	{
@@ -862,7 +855,7 @@ void tilemap_draw_primask(bitmap_t *dest, const rectangle *cliprect, tilemap_t *
 		for (ypos = scrolly - tmap->height; ypos <= original_cliprect.max_y; ypos += tmap->height)
 		{
 			int const firstrow = MAX((original_cliprect.min_y - ypos) / rowheight, 0);
-			int const lastrow =  MIN((original_cliprect.max_y - ypos) / rowheight, tmap->scrollrows - 1);
+			int const lastrow  = MIN((original_cliprect.max_y - ypos) / rowheight, tmap->scrollrows - 1);
 
 			/* iterate over rows in the tilemap */
 			for (currow = firstrow; currow <= lastrow; currow = nextrow)
@@ -901,7 +894,7 @@ void tilemap_draw_primask(bitmap_t *dest, const rectangle *cliprect, tilemap_t *
 		/* iterate over columns in the tilemap */
 		for (curcol = 0; curcol < tmap->scrollcols; curcol = nextcol)
 		{
-			int scrolly	= effective_colscroll(tmap, curcol, height);
+			int scrolly = effective_colscroll(tmap, curcol, height);
 
 			/* scan forward until we find a non-matching column */
 			for (nextcol = curcol + 1; nextcol < tmap->scrollcols; nextcol++)
@@ -942,22 +935,25 @@ void tilemap_draw_roz_primask(bitmap_t *dest, const rectangle *cliprect, tilemap
 {
 	blit_parameters blit;
 
-/* notes:
-   - startx and starty MUST be UINT32 for calculations to work correctly
-   - srcbitmap->width and height are assumed to be a power of 2 to speed up wraparound
-   */
-
+/*	notes:
+	      - startx and starty MUST be UINT32 for calculations to work correctly
+	      - srcbitmap->width and height are assumed to be a power of 2 to speed up wraparound
+*/
 	/* skip if disabled */
 	if (!tmap->enable)
 		return;
 
 	/* see if this is just a regular render and if so, do a regular render */
-	if (incxx == (1 << 16) && incxy == 0 && incyx == 0 && incyy == (1 << 16) && wraparound)
+	if (incxx == (1 << 16) && incyy == (1 << 16))
 	{
-		tilemap_set_scrollx(tmap, 0, startx >> 16);
-		tilemap_set_scrolly(tmap, 0, starty >> 16);
-		tilemap_draw(dest, cliprect, tmap, flags, priority);
-		return;
+		if (incxy == 0 && incyx == 0 && wraparound)
+		{
+			tilemap_set_scrollx(tmap, 0, startx >> 16);
+			tilemap_set_scrolly(tmap, 0, starty >> 16);
+			tilemap_draw(dest, cliprect, tmap, flags, priority);
+
+			return;
+		}
 	}
 
 	/* configure the blit parameters */
@@ -983,14 +979,15 @@ void tilemap_draw_roz_primask(bitmap_t *dest, const rectangle *cliprect, tilemap
 int tilemap_count(running_machine *machine)
 {
 	tilemap_t *tmap;
-	int count = 0;
 
 	if (machine->tilemap_data == NULL)
 		return 0;
 
+	int count = 0;
 	/* find by the tilemap index */
 	for (tmap = machine->tilemap_data->list; tmap != NULL; tmap = tmap->next)
 		count++;
+
 	return count;
 }
 
@@ -1018,7 +1015,6 @@ void tilemap_draw_by_index(running_machine *machine, bitmap_t *dest, int number,
 {
 	tilemap_t *tmap = indexed_tilemap(machine, number);
 	blit_parameters blit;
-	int xpos,ypos;
 
 	/* set up for the blit, using hard-coded parameters (no priority, etc) */
 	configure_blit_parameters(&blit, tmap, dest, NULL, TILEMAP_DRAW_OPAQUE | TILEMAP_DRAW_ALL_CATEGORIES, 0, 0xff);
@@ -1036,8 +1032,8 @@ void tilemap_draw_by_index(running_machine *machine, bitmap_t *dest, int number,
 	}
 
 	/* iterate to handle wraparound */
-	for (ypos = scrolly - tmap->height; ypos <= blit.cliprect.max_y; ypos += tmap->height)
-		for (xpos = scrollx - tmap->width; xpos <= blit.cliprect.max_x; xpos += tmap->width)
+	for (int ypos = scrolly - tmap->height; ypos <= blit.cliprect.max_y; ypos += tmap->height)
+		for (int xpos = scrollx - tmap->width; xpos <= blit.cliprect.max_x; xpos += tmap->width)
 			tilemap_draw_instance(tmap, &blit, xpos, ypos);
 }
 
@@ -1121,12 +1117,14 @@ static void tilemap_exit(running_machine &machine)
 
 	/* free all the tilemaps in the list */
 	if (tilemap_data != NULL)
+	{
 		while (tilemap_data->list != NULL)
 		{
 			tilemap_t *next = tilemap_data->list->next;
 			tilemap_dispose(tilemap_data->list);
 			tilemap_data->list = next;
 		}
+	}
 }
 
 
@@ -1153,11 +1151,13 @@ static void tilemap_dispose(tilemap_t *tmap)
 
 	/* walk the list of tilemaps; when we find ourself, remove it */
 	for (tmapptr = &tmap->machine->tilemap_data->list; *tmapptr != NULL; tmapptr = &(*tmapptr)->next)
+	{
 		if (*tmapptr == tmap)
 		{
 			*tmapptr = tmap->next;
 			break;
 		}
+	}
 
 	/* free allocated memory */
 	auto_free(tmap->machine, tmap->pen_to_flags);
@@ -1184,19 +1184,19 @@ static void tilemap_dispose(tilemap_t *tmap)
 
 static void mappings_create(tilemap_t *tmap)
 {
-	UINT32 col, row;
-
 	/* compute the maximum logical index */
 	tmap->max_logical_index = tmap->rows * tmap->cols;
 
 	/* compute the maximum memory index */
 	tmap->max_memory_index = 0;
-	for (row = 0; row < tmap->rows; row++)
-		for (col = 0; col < tmap->cols; col++)
+	for (UINT32 row = 0; row < tmap->rows; row++)
+	{
+		for (UINT32 col = 0; col < tmap->cols; col++)
 		{
 			tilemap_memory_index memindex = (*tmap->mapper)(col, row, tmap->cols, tmap->rows);
 			tmap->max_memory_index = MAX(tmap->max_memory_index, memindex);
 		}
+	}
 	tmap->max_memory_index++;
 
 	/* allocate the necessary mappings */
@@ -1259,9 +1259,6 @@ static void mappings_update(tilemap_t *tmap)
 
 static void pixmap_update(tilemap_t *tmap, const rectangle *cliprect)
 {
-	int mincol, maxcol, minrow, maxrow;
-	int row, col;
-
 	/* if the graphics changed, we need to mark everything dirty */
 	if (gfx_elements_changed(tmap))
 		tilemap_mark_all_tiles_dirty(tmap);
@@ -1270,6 +1267,7 @@ static void pixmap_update(tilemap_t *tmap, const rectangle *cliprect)
 	if (tmap->all_tiles_clean)
 		return;
 
+	int mincol, maxcol, minrow, maxrow;
 	/* compute which columns and rows to update */
 	if (cliprect != NULL)
 	{
@@ -1294,19 +1292,20 @@ static void pixmap_update(tilemap_t *tmap, const rectangle *cliprect)
 	}
 
 	/* iterate over rows */
-	for (row = minrow; row <= maxrow; row++)
+	for (int row = minrow; row <= maxrow; row++)
 	{
 		tilemap_logical_index logindex = row * tmap->cols;
 
 		/* iterate over colums */
-		for (col = mincol; col <= maxcol; col++)
+		for (int col = mincol; col <= maxcol; col++)
 			if (tmap->tileflags[logindex + col] == TILE_FLAG_DIRTY)
 				tile_update(tmap, logindex + col, col, row);
 	}
 
 	/* mark it all clean */
-	if (mincol == 0 && minrow == 0 && maxcol == tmap->cols - 1 && maxcol == tmap->rows - 1)
-		tmap->all_tiles_clean = TRUE;
+	if (mincol == 0 && minrow == 0)
+		if (maxcol == tmap->cols - 1 && maxcol == tmap->rows - 1)
+			tmap->all_tiles_clean = TRUE;
 }
 
 
@@ -1319,14 +1318,13 @@ static void tile_update(tilemap_t *tmap, tilemap_logical_index logindex, UINT32 
 	UINT32 x0 = tmap->tilewidth * col;
 	UINT32 y0 = tmap->tileheight * row;
 	tilemap_memory_index memindex;
-	UINT32 flags;
 
 	/* call the get info callback for the associated memory index */
 	memindex = tmap->logical_to_memory[logindex];
 	(*tmap->tile_get_info)((running_machine *)tmap->tile_get_info_object, &tmap->tileinfo, memindex, tmap->user_data);
 
 	/* apply the global tilemap flip to the returned flip flags */
-	flags = tmap->tileinfo.flags ^ (tmap->attributes & 0x03);
+	UINT32 flags = tmap->tileinfo.flags ^ (tmap->attributes & 0x03);
 
 	/* draw the tile, using either direct or transparent */
 	tmap->tileflags[logindex] = tile_draw(tmap, tmap->tileinfo.pen_data + tmap->pen_data_offset, x0, y0,
@@ -1361,7 +1359,6 @@ static UINT8 tile_draw(tilemap_t *tmap, const UINT8 *pendata, UINT32 x0, UINT32 
 	int width = tmap->tilewidth;
 	UINT8 andmask = ~0, ormask = 0;
 	int dx0 = 1, dy0 = 1;
-	int tx, ty;
 
 	/* OR in the force layer flags */
 	category |= flags & (TILE_FORCE_LAYER0 | TILE_FORCE_LAYER1 | TILE_FORCE_LAYER2);
@@ -1388,22 +1385,23 @@ static UINT8 tile_draw(tilemap_t *tmap, const UINT8 *pendata, UINT32 x0, UINT32 
 	}
 
 	/* iterate over rows */
-	for (ty = 0; ty < height; ty++)
+	for (int ty = 0; ty < height; ty++)
 	{
 		UINT16 *pixptr = BITMAP_ADDR16(pixmap, y0, x0);
 		UINT8 *flagsptr = BITMAP_ADDR8(flagsmap, y0, x0);
-		int xoffs = 0;
 
 		/* pre-advance to the next row */
 		y0 += dy0;
 
+		int xoffs = 0;
+		UINT8 pen, map;
 		/* 8bpp data */
 		if (!(flags & TILE_4BPP))
 		{
-			for (tx = 0; tx < width; tx++)
+			for (int tx = 0; tx < width; tx++)
 			{
-				UINT8 pen = (*pendata++) & pen_mask;
-				UINT8 map = penmap[pen];
+				pen = (*pendata++) & pen_mask;
+				map = penmap[pen];
 				pixptr[xoffs] = palette_base + pen;
 				flagsptr[xoffs] = map | category;
 				andmask &= map;
@@ -1415,11 +1413,10 @@ static UINT8 tile_draw(tilemap_t *tmap, const UINT8 *pendata, UINT32 x0, UINT32 
 		/* 4bpp data */
 		else
 		{
-			for (tx = 0; tx < width; tx++)
+			UINT8 data;
+			for (int tx = 0; tx < width; tx++)
 			{
-				UINT8 data = *pendata++;
-				UINT8 pen, map;
-
+				data = *pendata++;
 				pen = (data & 0x0f) & pen_mask;
 				map = penmap[pen];
 				pixptr[xoffs] = palette_base + pen;
@@ -1438,6 +1435,7 @@ static UINT8 tile_draw(tilemap_t *tmap, const UINT8 *pendata, UINT32 x0, UINT32 
 			}
 		}
 	}
+
 	return andmask ^ ormask;
 }
 
@@ -1453,10 +1451,9 @@ static UINT8 tile_apply_bitmask(tilemap_t *tmap, const UINT8 *maskdata, UINT32 x
 	bitmap_t *flagsmap = tmap->flagsmap;
 	int height = tmap->tileheight;
 	int width = tmap->tilewidth;
-	UINT8 andmask = ~0, ormask = 0;
+	UINT8 andmask = ~0, ormask = 0, map;
 	int dx0 = 1, dy0 = 1;
 	int bitoffs = 0;
-	int tx, ty;
 
 	/* if we're vertically flipped, point to the bottom row and work backwards */
 	if (flags & TILE_FLIPY)
@@ -1473,7 +1470,7 @@ static UINT8 tile_apply_bitmask(tilemap_t *tmap, const UINT8 *maskdata, UINT32 x
 	}
 
 	/* iterate over rows */
-	for (ty = 0; ty < height; ty++)
+	for (int ty = 0; ty < height; ty++)
 	{
 		UINT8 *flagsptr = BITMAP_ADDR8(flagsmap, y0, x0);
 		int xoffs = 0;
@@ -1482,18 +1479,20 @@ static UINT8 tile_apply_bitmask(tilemap_t *tmap, const UINT8 *maskdata, UINT32 x
 		y0 += dy0;
 
 		/* anywhere the bitmask is 0 should be transparent */
-		for (tx = 0; tx < width; tx++)
+		for (int tx = 0; tx < width; tx++)
 		{
-			UINT8 map = flagsptr[xoffs];
+			map = flagsptr[xoffs];
 
 			if ((maskdata[bitoffs / 8] & (0x80 >> (bitoffs & 7))) == 0)
 				map = flagsptr[xoffs] = TILEMAP_PIXEL_TRANSPARENT | category;
+
 			andmask &= map;
 			ormask |= map;
 			xoffs += dx0;
 			bitoffs++;
 		}
 	}
+
 	return andmask ^ ormask;
 }
 
@@ -1569,7 +1568,7 @@ static void configure_blit_parameters(blit_parameters *blit, tilemap_t *tmap, bi
 
 	/* tile priority; unless otherwise specified, draw anything in layer 0 */
 	blit->mask = TILEMAP_PIXEL_CATEGORY_MASK;
-	blit->value	= flags & TILEMAP_PIXEL_CATEGORY_MASK;
+	blit->value = flags & TILEMAP_PIXEL_CATEGORY_MASK;
 
 	/* if no layers specified, draw layer 0 */
 	if ((flags & (TILEMAP_DRAW_LAYER0 | TILEMAP_DRAW_LAYER1 | TILEMAP_DRAW_LAYER2)) == 0)
@@ -1605,29 +1604,23 @@ static void tilemap_draw_instance(tilemap_t *tmap, const blit_parameters *blit, 
 {
 	bitmap_t *priority_bitmap = tmap->machine->priority_bitmap;
 	bitmap_t *dest = blit->bitmap;
-	const UINT16 *source_baseaddr;
-	const UINT8 *mask_baseaddr;
 	void *dest_baseaddr = NULL;
-	UINT8 *priority_baseaddr;
 	int dest_line_pitch_bytes = 0;
 	int dest_bytespp = 0;
-	int mincol, maxcol;
-	int x1, y1, x2, y2;
-	int y, nexty;
 
 	/* clip destination coordinates to the tilemap */
 	/* note that x2/y2 are exclusive, not inclusive */
-	x1 = MAX(xpos, blit->cliprect.min_x);
-	x2 = MIN(xpos + (int)tmap->width, blit->cliprect.max_x + 1);
-	y1 = MAX(ypos, blit->cliprect.min_y);
-	y2 = MIN(ypos + (int)tmap->height, blit->cliprect.max_y + 1);
+	INT32 x1 = MAX(xpos, blit->cliprect.min_x);
+	INT32 x2 = MIN(xpos + (int)tmap->width, blit->cliprect.max_x + 1);
+	INT32 y1 = MAX(ypos, blit->cliprect.min_y);
+	INT32 y2 = MIN(ypos + (int)tmap->height, blit->cliprect.max_y + 1);
 
 	/* if totally clipped, stop here */
 	if (x1 >= x2 || y1 >= y2)
 		return;
 
 	/* look up priority and destination base addresses for y1 */
-	priority_baseaddr = BITMAP_ADDR8(priority_bitmap, y1, xpos);
+	UINT8 *priority_baseaddr = BITMAP_ADDR8(priority_bitmap, y1, xpos);
 	if (dest != NULL)
 	{
 		dest_bytespp = dest->bpp / 8;
@@ -1642,32 +1635,30 @@ static void tilemap_draw_instance(tilemap_t *tmap, const blit_parameters *blit, 
 	y2 -= ypos;
 
 	/* get tilemap pixels */
-	source_baseaddr = BITMAP_ADDR16(tmap->pixmap, y1, 0);
-	mask_baseaddr = BITMAP_ADDR8(tmap->flagsmap, y1, 0);
+	const UINT16 *source_baseaddr = BITMAP_ADDR16(tmap->pixmap, y1, 0);
+	const UINT8 *mask_baseaddr = BITMAP_ADDR8(tmap->flagsmap, y1, 0);
 
 	/* get start/stop columns, rounding outward */
-	mincol = x1 / tmap->tilewidth;
-	maxcol = (x2 + tmap->tilewidth - 1) / tmap->tilewidth;
+	INT32 mincol = x1 / tmap->tilewidth;
+	INT32 maxcol = (x2 + tmap->tilewidth - 1) / tmap->tilewidth;
 
 	/* set up row counter */
-	y = y1;
-	nexty = tmap->tileheight * (y1 / tmap->tileheight) + tmap->tileheight;
+	INT32 y = y1;
+	INT32 nexty = tmap->tileheight * (y1 / tmap->tileheight) + tmap->tileheight;
 	nexty = MIN(nexty, y2);
 
+	int row, x_start, x_end, diff;
 	/* loop over tilemap rows */
 	for (;;)
 	{
-		int row = y / tmap->tileheight;
+		row = y / tmap->tileheight;
 		trans_t prev_trans = WHOLLY_TRANSPARENT;
 		trans_t cur_trans;
-		int x_start = x1;
-		int column;
+		x_start = x1;
 
 		/* iterate across the applicable tilemap columns */
-		for (column = mincol; column <= maxcol; column++)
+		for (int column = mincol; column <= maxcol; column++)
 		{
-			int x_end;
-
 			/* we don't actually render the last column; it is always just used for flushing */
 			if (column == maxcol)
 				cur_trans = WHOLLY_TRANSPARENT;
@@ -1705,12 +1696,11 @@ static void tilemap_draw_instance(tilemap_t *tmap, const blit_parameters *blit, 
 				const UINT16 *source0 = source_baseaddr + x_start;
 				void *dest0 = (UINT8 *)dest_baseaddr + x_start * dest_bytespp;
 				UINT8 *pmap0 = priority_baseaddr + x_start;
-				int cury;
 
 				/* if we were opaque, use the opaque renderer */
 				if (prev_trans == WHOLLY_OPAQUE)
 				{
-					for (cury = y; cury < nexty; cury++)
+					for (int cury = y; cury < nexty; cury++)
 					{
 						(*blit->draw_opaque)(dest0, source0, x_end - x_start, tmap->machine->pens, pmap0, blit->tilemap_priority_code, blit->alpha);
 
@@ -1724,7 +1714,7 @@ static void tilemap_draw_instance(tilemap_t *tmap, const blit_parameters *blit, 
 				else
 				{
 					const UINT8 *mask0 = mask_baseaddr + x_start;
-					for (cury = y; cury < nexty; cury++)
+					for (int cury = y; cury < nexty; cury++)
 					{
 						(*blit->draw_masked)(dest0, source0, mask0, blit->mask, blit->value, x_end - x_start, tmap->machine->pens, pmap0, blit->tilemap_priority_code, blit->alpha);
 
@@ -1746,10 +1736,11 @@ static void tilemap_draw_instance(tilemap_t *tmap, const blit_parameters *blit, 
 			break;
 
 		/* advance to the next row on all our bitmaps */
-		priority_baseaddr += priority_bitmap->rowpixels * (nexty - y);
-		source_baseaddr += tmap->pixmap->rowpixels * (nexty - y);
-		mask_baseaddr += tmap->flagsmap->rowpixels * (nexty - y);
-		dest_baseaddr = (UINT8 *)dest_baseaddr + dest_line_pitch_bytes * (nexty - y);
+		diff = nexty - y;
+		priority_baseaddr += priority_bitmap->rowpixels * diff;
+		source_baseaddr += tmap->pixmap->rowpixels * diff;
+		mask_baseaddr += tmap->flagsmap->rowpixels * diff;
+		dest_baseaddr = (UINT8 *)dest_baseaddr + dest_line_pitch_bytes * diff;
 
 		/* increment the Y counter */
 		y = nexty;
@@ -1765,17 +1756,17 @@ static void tilemap_draw_instance(tilemap_t *tmap, const blit_parameters *blit, 
     and zoom
 -------------------------------------------------*/
 
-#define ROZ_PLOT_PIXEL(INPUT_VAL)											\
-do {																		\
+#define ROZ_PLOT_PIXEL(INPUT_VAL)					\
+do {												\
 	if (blit->draw_masked == scanline_draw_masked_ind16)					\
-		*(UINT16 *)dest = (INPUT_VAL) + (priority >> 16);					\
+		*(UINT16 *)dest = (INPUT_VAL) + (priority >> 16);				\
 	else if (blit->draw_masked == scanline_draw_masked_rgb32)				\
-		*(UINT32 *)dest = clut[INPUT_VAL];									\
+		*(UINT32 *)dest = clut[INPUT_VAL];						\
 	else if (blit->draw_masked == scanline_draw_masked_rgb16)				\
-		*(UINT16 *)dest = clut[INPUT_VAL];									\
-	else if (blit->draw_masked == scanline_draw_masked_rgb32_alpha)			\
+		*(UINT16 *)dest = clut[INPUT_VAL];						\
+	else if (blit->draw_masked == scanline_draw_masked_rgb32_alpha)				\
 		*(UINT32 *)dest = alpha_blend_r32(*(UINT32 *)dest, clut[INPUT_VAL], alpha);	\
-	else if (blit->draw_masked == scanline_draw_masked_rgb16_alpha)			\
+	else if (blit->draw_masked == scanline_draw_masked_rgb16_alpha)				\
 		*(UINT16 *)dest = alpha_blend_r16(*(UINT16 *)dest, clut[INPUT_VAL], alpha);	\
 } while (0)
 
@@ -1795,13 +1786,9 @@ static void tilemap_draw_roz_core(tilemap_t *tmap, const blit_parameters *blit,
 	UINT8 mask = blit->mask;
 	UINT8 value = blit->value;
 	UINT8 alpha = blit->alpha;
-	UINT32 cx;
-	UINT32 cy;
+
+	UINT32 cx, cy;
 	int x;
-	int sx;
-	int sy;
-	int ex;
-	int ey;
 	void *dest;
 	UINT8 *pri;
 	const UINT16 *src;
@@ -1813,10 +1800,10 @@ static void tilemap_draw_roz_core(tilemap_t *tmap, const blit_parameters *blit,
 	starty += blit->cliprect.min_x * incxy + blit->cliprect.min_y * incyy;
 
 	/* extract start/end points */
-	sx = blit->cliprect.min_x;
-	sy = blit->cliprect.min_y;
-	ex = blit->cliprect.max_x;
-	ey = blit->cliprect.max_y;
+	INT32 sx = blit->cliprect.min_x;
+	INT32 sy = blit->cliprect.min_y;
+	INT32 ex = blit->cliprect.max_x;
+	INT32 ey = blit->cliprect.max_y;
 
 	/* optimized loop for the not rotated case */
 	if (incxy == 0 && incyx == 0 && !wraparound)
@@ -1968,12 +1955,10 @@ static void tilemap_draw_roz_core(tilemap_t *tmap, const blit_parameters *blit,
 
 static void scanline_draw_opaque_null(void *dest, const UINT16 *source, int count, const pen_t *pens, UINT8 *pri, UINT32 pcode, UINT8 alpha)
 {
-	int i;
-
 	/* skip entirely if not changing priority */
 	if (pcode != 0xff00)
 	{
-		for (i = 0; i < count; i++)
+		for (int i = 0; i < count; i++)
 			pri[i] = (pri[i] & (pcode >> 8)) | pcode;
 	}
 }
@@ -1986,12 +1971,10 @@ static void scanline_draw_opaque_null(void *dest, const UINT16 *source, int coun
 
 static void scanline_draw_masked_null(void *dest, const UINT16 *source, const UINT8 *maskptr, int mask, int value, int count, const pen_t *pens, UINT8 *pri, UINT32 pcode, UINT8 alpha)
 {
-	int i;
-
 	/* skip entirely if not changing priority */
 	if (pcode != 0xff00)
 	{
-		for (i = 0; i < count; i++)
+		for (int i = 0; i < count; i++)
 			if ((maskptr[i] & mask) == value)
 				pri[i] = (pri[i] & (pcode >> 8)) | pcode;
 	}
@@ -2051,23 +2034,24 @@ static void scanline_draw_masked_ind16(void *_dest, const UINT16 *source, const 
 {
 	UINT16 *dest = (UINT16 *)_dest;
 	int pal = pcode >> 16;
-	int i;
 
 	/* priority case */
 	if ((pcode & 0xffff) != 0xff00)
 	{
-		for (i = 0; i < count; i++)
+		for (int i = 0; i < count; i++)
+		{
 			if ((maskptr[i] & mask) == value)
 			{
 				dest[i] = source[i] + pal;
 				pri[i] = (pri[i] & (pcode >> 8)) | pcode;
 			}
+		}
 	}
 
 	/* no priority case */
 	else
 	{
-		for (i = 0; i < count; i++)
+		for (int i = 0; i < count; i++)
 			if ((maskptr[i] & mask) == value)
 				dest[i] = source[i] + pal;
 	}
@@ -2084,12 +2068,11 @@ static void scanline_draw_opaque_rgb16(void *_dest, const UINT16 *source, int co
 {
 	const pen_t *clut = &pens[pcode >> 16];
 	UINT16 *dest = (UINT16 *)_dest;
-	int i;
 
 	/* priority case */
 	if ((pcode & 0xffff) != 0xff00)
 	{
-		for (i = 0; i < count; i++)
+		for (int i = 0; i < count; i++)
 		{
 			dest[i] = clut[source[i]];
 			pri[i] = (pri[i] & (pcode >> 8)) | pcode;
@@ -2099,7 +2082,7 @@ static void scanline_draw_opaque_rgb16(void *_dest, const UINT16 *source, int co
 	/* no priority case */
 	else
 	{
-		for (i = 0; i < count; i++)
+		for (int i = 0; i < count; i++)
 			dest[i] = clut[source[i]];
 	}
 }
@@ -2114,23 +2097,24 @@ static void scanline_draw_masked_rgb16(void *_dest, const UINT16 *source, const 
 {
 	const pen_t *clut = &pens[pcode >> 16];
 	UINT16 *dest = (UINT16 *)_dest;
-	int i;
 
 	/* priority case */
 	if ((pcode & 0xffff) != 0xff00)
 	{
-		for (i = 0; i < count; i++)
+		for (int i = 0; i < count; i++)
+		{
 			if ((maskptr[i] & mask) == value)
 			{
 				dest[i] = clut[source[i]];
 				pri[i] = (pri[i] & (pcode >> 8)) | pcode;
 			}
+		}
 	}
 
 	/* no priority case */
 	else
 	{
-		for (i = 0; i < count; i++)
+		for (int i = 0; i < count; i++)
 			if ((maskptr[i] & mask) == value)
 				dest[i] = clut[source[i]];
 	}
@@ -2146,12 +2130,11 @@ static void scanline_draw_opaque_rgb16_alpha(void *_dest, const UINT16 *source, 
 {
 	const pen_t *clut = &pens[pcode >> 16];
 	UINT16 *dest = (UINT16 *)_dest;
-	int i;
 
 	/* priority case */
 	if ((pcode & 0xffff) != 0xff00)
 	{
-		for (i = 0; i < count; i++)
+		for (int i = 0; i < count; i++)
 		{
 			dest[i] = alpha_blend_r16(dest[i], clut[source[i]], alpha);
 			pri[i] = (pri[i] & (pcode >> 8)) | pcode;
@@ -2161,7 +2144,7 @@ static void scanline_draw_opaque_rgb16_alpha(void *_dest, const UINT16 *source, 
 	/* no priority case */
 	else
 	{
-		for (i = 0; i < count; i++)
+		for (int i = 0; i < count; i++)
 			dest[i] = alpha_blend_r16(dest[i], clut[source[i]], alpha);
 	}
 }
@@ -2177,23 +2160,24 @@ static void scanline_draw_masked_rgb16_alpha(void *_dest, const UINT16 *source, 
 {
 	const pen_t *clut = &pens[pcode >> 16];
 	UINT16 *dest = (UINT16 *)_dest;
-	int i;
 
 	/* priority case */
 	if ((pcode & 0xffff) != 0xff00)
 	{
-		for (i = 0; i < count; i++)
+		for (int i = 0; i < count; i++)
+		{
 			if ((maskptr[i] & mask) == value)
 			{
 				dest[i] = alpha_blend_r16(dest[i], clut[source[i]], alpha);
 				pri[i] = (pri[i] & (pcode >> 8)) | pcode;
 			}
+		}
 	}
 
 	/* no priority case */
 	else
 	{
-		for (i = 0; i < count; i++)
+		for (int i = 0; i < count; i++)
 			if ((maskptr[i] & mask) == value)
 				dest[i] = alpha_blend_r16(dest[i], clut[source[i]], alpha);
 	}
@@ -2209,12 +2193,11 @@ static void scanline_draw_opaque_rgb32(void *_dest, const UINT16 *source, int co
 {
 	const pen_t *clut = &pens[pcode >> 16];
 	UINT32 *dest = (UINT32 *)_dest;
-	int i;
 
 	/* priority case */
 	if ((pcode & 0xffff) != 0xff00)
 	{
-		for (i = 0; i < count; i++)
+		for (int i = 0; i < count; i++)
 		{
 			dest[i] = clut[source[i]];
 			pri[i] = (pri[i] & (pcode >> 8)) | pcode;
@@ -2224,7 +2207,7 @@ static void scanline_draw_opaque_rgb32(void *_dest, const UINT16 *source, int co
 	/* no priority case */
 	else
 	{
-		for (i = 0; i < count; i++)
+		for (int i = 0; i < count; i++)
 			dest[i] = clut[source[i]];
 	}
 }
@@ -2239,23 +2222,24 @@ static void scanline_draw_masked_rgb32(void *_dest, const UINT16 *source, const 
 {
 	const pen_t *clut = &pens[pcode >> 16];
 	UINT32 *dest = (UINT32 *)_dest;
-	int i;
 
 	/* priority case */
 	if ((pcode & 0xffff) != 0xff00)
 	{
-		for (i = 0; i < count; i++)
+		for (int i = 0; i < count; i++)
+		{
 			if ((maskptr[i] & mask) == value)
 			{
 				dest[i] = clut[source[i]];
 				pri[i] = (pri[i] & (pcode >> 8)) | pcode;
 			}
+		}
 	}
 
 	/* no priority case */
 	else
 	{
-		for (i = 0; i < count; i++)
+		for (int i = 0; i < count; i++)
 			if ((maskptr[i] & mask) == value)
 				dest[i] = clut[source[i]];
 	}
@@ -2271,12 +2255,11 @@ static void scanline_draw_opaque_rgb32_alpha(void *_dest, const UINT16 *source, 
 {
 	const pen_t *clut = &pens[pcode >> 16];
 	UINT32 *dest = (UINT32 *)_dest;
-	int i;
 
 	/* priority case */
 	if ((pcode & 0xffff) != 0xff00)
 	{
-		for (i = 0; i < count; i++)
+		for (int i = 0; i < count; i++)
 		{
 			dest[i] = alpha_blend_r32(dest[i], clut[source[i]], alpha);
 			pri[i] = (pri[i] & (pcode >> 8)) | pcode;
@@ -2286,7 +2269,7 @@ static void scanline_draw_opaque_rgb32_alpha(void *_dest, const UINT16 *source, 
 	/* no priority case */
 	else
 	{
-		for (i = 0; i < count; i++)
+		for (int i = 0; i < count; i++)
 			dest[i] = alpha_blend_r32(dest[i], clut[source[i]], alpha);
 	}
 }
@@ -2302,23 +2285,24 @@ static void scanline_draw_masked_rgb32_alpha(void *_dest, const UINT16 *source, 
 {
 	const pen_t *clut = &pens[pcode >> 16];
 	UINT32 *dest = (UINT32 *)_dest;
-	int i;
 
 	/* priority case */
 	if ((pcode & 0xffff) != 0xff00)
 	{
-		for (i = 0; i < count; i++)
+		for (int i = 0; i < count; i++)
+		{
 			if ((maskptr[i] & mask) == value)
 			{
 				dest[i] = alpha_blend_r32(dest[i], clut[source[i]], alpha);
 				pri[i] = (pri[i] & (pcode >> 8)) | pcode;
 			}
+		}
 	}
 
 	/* no priority case */
 	else
 	{
-		for (i = 0; i < count; i++)
+		for (int i = 0; i < count; i++)
 			if ((maskptr[i] & mask) == value)
 				dest[i] = alpha_blend_r32(dest[i], clut[source[i]], alpha);
 	}

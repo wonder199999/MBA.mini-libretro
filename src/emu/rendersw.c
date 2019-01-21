@@ -70,18 +70,23 @@
 
 #undef	COMMON_PART
 #define	COMMON_PART		\
-				INT32 u0 = curu >> 16;					\
-				INT32 u1 = 1;						\
-				if (u0 < 0)						\
-					u0 = u1 = 0;					\
-				else if (u0 + 1 >= texture->width)			\
-					u0 = texture->width - 1, u1 = 0;		\
-				INT32 v0 = curv >> 16;					\
-				INT32 v1 = texture->rowpixels;				\
-				if (v0 < 0)						\
-					v0 = v1 = 0;					\
-				else if (v0 + 1 >= texture->height)			\
-					v0 = texture->height - 1, v1 = 0;		\
+				INT32 u0, u1, v0, v1;						\
+				do								\
+				{								\
+					u0 = curu >> 16;					\
+					u1 = 1;							\
+					if (u0 < 0)						\
+						u0 = u1 = 0;					\
+					else if (u0 + 1 >= texture->width)			\
+						u0 = texture->width - 1, u1 = 0;		\
+					v0 = curv >> 16;					\
+					v1 = texture->rowpixels;				\
+					if (v0 < 0)						\
+						v0 = v1 = 0;					\
+					else if (v0 + 1 >= texture->height)			\
+						v0 = texture->height - 1, v1 = 0;		\
+				}								\
+				while (0)							;
 
 
 

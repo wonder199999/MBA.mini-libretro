@@ -350,6 +350,7 @@ INLINE int rows_to_height(int rows)
 {
 	if ((rows == 0) || (rows > 0x20))
 		rows = 0x20;
+
 	return rows * 0x10;
 }
 
@@ -404,7 +405,8 @@ static void draw_sprites( running_machine *machine, bitmap_t *bitmap, int scanli
 		}
 
 		/* skip if falls completely outside the screen */
-		if ((x >= 0x0140) && (x <= 0x01f0)) continue;
+		if ((x >= 0x0140) && (x <= 0x01f0))
+			continue;
 
 		/* double check the Y coordinate, in case somebody modified the sprite coordinate since we buffered it */
 		if (sprite_on_scanline(scanline, y, rows))
@@ -536,8 +538,11 @@ static void parse_sprites( running_machine *machine, int scanline )
 		}
 
 		/* skip sprites with 0 rows */
-		if (rows == 0) continue;
-		if (!sprite_on_scanline(scanline, y, rows)) continue;
+		if (rows == 0)
+			continue;
+
+		if (!sprite_on_scanline(scanline, y, rows))
+			continue;
 
 		/* sprite is on this scanline, add it to active list */
 		*sprite_list = sprite_number;
@@ -546,7 +551,8 @@ static void parse_sprites( running_machine *machine, int scanline )
 		/* increment sprite count, and if we reached the max, bail out */
 		active_sprite_count++;
 
-		if (active_sprite_count == MAX_SPRITES_PER_LINE) break;
+		if (active_sprite_count == MAX_SPRITES_PER_LINE)
+			break;
 	}
 	/* fill the rest of the sprite list with 0, including one extra entry */
 	memset(sprite_list, 0, sizeof(sprite_list[0]) * (MAX_SPRITES_PER_LINE - active_sprite_count + 1));
@@ -704,6 +710,7 @@ READ16_HANDLER( neogeo_video_register_r )
 			case 0x03: ret = get_video_control(space->machine); break;
 		}
 	}
+
 	return ret;
 }
 
