@@ -60,6 +60,11 @@ int8 floatx80_rounding_precision = 80;
 *----------------------------------------------------------------------------*/
 #include "softfloat-specialize"
 
+#ifdef __GNUC__
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-but-set-variable"
+#endif
+
 /*----------------------------------------------------------------------------
 | Takes a 64-bit fixed-point value `absZ' with binary point between bits 6
 | and 7, and returns the properly rounded 32-bit integer corresponding to the
@@ -5186,3 +5191,6 @@ flag float128_lt_quiet( float128 a, float128 b )
 
 #endif
 
+#ifdef __GNUC__
+#pragma GCC diagnostic pop
+#endif

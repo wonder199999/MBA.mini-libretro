@@ -1169,7 +1169,7 @@ void osd_exit(running_machine &machine)
 	if (our_target != NULL)
 		render_target_free(our_target);
 
- 		our_target = NULL;
+	our_target = NULL;
 
 	global_free(KB_device);
 	global_free(P4_device);

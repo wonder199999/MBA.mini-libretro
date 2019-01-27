@@ -820,8 +820,8 @@ static png_error write_deflated_chunk(core_file *fp, UINT8 *data, UINT32 type, U
 {
 	UINT64 lengthpos = core_ftell(fp);
 	UINT8 tempbuff[8192];
-    UINT32 zlength = 0;
-    z_stream stream;
+	UINT32 zlength = 0;
+	z_stream stream;
 	UINT32 crc;
 	int zerr;
 
@@ -838,9 +838,9 @@ static png_error write_deflated_chunk(core_file *fp, UINT8 *data, UINT32 type, U
 	memset(&stream, 0, sizeof(stream));
 	stream.next_in = data;
 	stream.avail_in = length;
-    zerr = deflateInit(&stream, Z_BEST_COMPRESSION);
-    if (zerr != Z_OK)
-    	return PNGERR_COMPRESS_ERROR;
+	zerr = deflateInit(&stream, Z_BEST_COMPRESSION);
+	if (zerr != Z_OK)
+		return PNGERR_COMPRESS_ERROR;
 
 	/* now loop until we run out of data */
 	for ( ; ; )

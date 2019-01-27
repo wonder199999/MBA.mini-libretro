@@ -625,7 +625,14 @@ static void start_handler(void *data, const char *tagname, const char **attribut
 						else if ( str_loadflag && !strcmp(str_loadflag, "fill") )
 						{
 							/* Handle 'fill' loadflag */
+#ifdef __GNUC__
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wint-to-pointer-cast"
+#endif
 							add_rom_entry( swlist, NULL, (const char*)atoi(str_value), offset, length, ROMENTRYTYPE_FILL );
+#ifdef __GNUC__
+#pragma GCC diagnostic pop
+#endif
 						}
 						else
 						{

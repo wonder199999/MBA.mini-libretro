@@ -345,24 +345,24 @@ bool legacy_image_device_base::load_software(char *swlist, char *swname, rom_ent
 
 bool legacy_image_device_base::load_internal(const char *path, bool is_create, int create_format, option_resolution *create_args)
 {
-    image_error_t err;
-    UINT32 open_plan[4];
-    int i;
+	image_error_t err;
+	UINT32 open_plan[4];
+	int i;
 	bool softload = FALSE;
 
-    /* first unload the image */
-    unload();
+	/* first unload the image */
+	unload();
 
-    /* clear any possible error messages */
-    clear_error();
+	/* clear any possible error messages */
+	clear_error();
 
-    /* we are now loading */
-    m_is_loading = TRUE;
+	/* we are now loading */
+	m_is_loading = TRUE;
 
-    /* record the filename */
-    err = set_image_filename(path);
-    if (err)
-        goto done;
+	/* record the filename */
+	err = set_image_filename(path);
+	if (err)
+		goto done;
 
 	/* Check if there's a software list defined for this device and use that if we're not creating an image */
 	softload = load_software_part( this, path, &m_software_info_ptr, &m_software_part_ptr, &m_full_software_name );
@@ -406,10 +406,11 @@ bool legacy_image_device_base::load_internal(const char *path, bool is_create, i
 		if (err)
 			goto done;
 	}
-    /* success! */
+	/* success! */
 
 done:
-    if (m_err) {
+	if (m_err)
+	{
 		if (!m_init_phase)
 		{
 			if (machine->phase() == MACHINE_PHASE_RUNNING)
@@ -419,7 +420,8 @@ done:
 		}
 		clear();
 	}
-	else {
+	else
+	{
 		/* do we need to reset the CPU? only schedule it if load/create is successful */
 		if ((attotime_compare(timer_get_time(device().machine), attotime_zero) > 0) && m_image_config.is_reset_on_load())
 			device().machine->schedule_hard_reset();

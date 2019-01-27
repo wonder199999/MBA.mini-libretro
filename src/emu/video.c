@@ -1158,6 +1158,10 @@ static void create_snapshot_bitmap(device_t *screen)
     numbering scheme
 -------------------------------------------------*/
 
+#ifdef __GNUC__
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wformat-overflow="
+#endif
 static file_error mame_fopen_next(running_machine *machine, const char *pathoption, const char *extension, mame_file **file)
 {
 	const char *snapname = options_get_string(machine->options(), OPTION_SNAPNAME);
@@ -1209,8 +1213,9 @@ static file_error mame_fopen_next(running_machine *machine, const char *pathopti
 	/* create the final file */
 	return mame_fopen(pathoption, fname, OPEN_FLAG_WRITE | OPEN_FLAG_CREATE | OPEN_FLAG_CREATE_PATHS, file);
 }
-
-
+#ifdef __GNUC__
+#pragma GCC diagnostic pop
+#endif
 
 /***************************************************************************
 	MNG MOVIE RECORDING

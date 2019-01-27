@@ -26,11 +26,11 @@ ifeq ($(platform),)
    ifeq ($(UNAME),)
 	platform = win
    else ifneq ($(findstring MINGW,$(UNAME)),)
-   	platform = win
+	platform = win
    else ifneq ($(findstring Darwin,$(UNAME)),)
-   	platform = osx
+	platform = osx
    else ifneq ($(findstring win,$(UNAME)),)
-   	platform = win
+	platform = win
    endif
 endif
 
@@ -107,16 +107,20 @@ ifeq ($(VRENDER),opengl)
 	CCOMFLAGS  += -DHAVE_OPENGL
 endif
 
-# Define platform parameters 
+# Optimize for local machine (auto detect)
+OPTFLAG ?= 0
+
+ifeq ($(OPTFLAG), 1)
+   CCOMFLAGS += -march=native
+endif
+
+
 # UNIX
 ifeq ($(platform), unix)
    TARGETLIB := $(TARGET_NAME)_libretro.so
    TARGETOS=linux
    fpic = -fPIC
    SHARED := -shared -Wl,--version-script=src/osd/retro/link.T
-   CCOMFLAGS += -fsigned-char -finline -fno-common -fno-builtin -fweb -frename-registers -falign-functions=16 -fsingle-precision-constant
-   ALIGNED = 1
-   PLATCFLAGS += -fstrict-aliasing -fno-merge-constants
 ifeq ($(VRENDER),opengl)
    LIBS += -lGL
 endif
@@ -129,15 +133,14 @@ endif
    CC = g++
    AR = @ar
    LD = g++
+   PLATCFLAGS += -fstrict-aliasing -fno-merge-constants -fsingle-precision-constant -fno-common -finline
    CCOMFLAGS += $(PLATCFLAGS) -ffast-math
    LIBS += -lstdc++ -lpthread
+   ALIGNED = 1
 
 
 # Android
 else ifeq ($(platform), android)
-   EXTRA_RULES = 1
-   ARM_ENABLED = 1
-   ALIGNED = 1
    TARGETLIB := $(TARGET_NAME)_libretro_android.so
    TARGETOS=linux
    fpic = -fPIC
@@ -156,6 +159,9 @@ else ifeq ($(platform), android)
    NATIVECFLAGS = -std=gnu99
    CCOMFLAGS += $(PLATCFLAGS) -ffast-math
    LIBS += -lstdc++
+   EXTRA_RULES = 1
+   ARM_ENABLED = 1
+   ALIGNED = 1
 
 
 # OS X
@@ -361,7 +367,7 @@ endif
    DEFS += -DX64_WINDOWS_ABI
 endif
 
-# Define platform parameters finish
+# Platform parameters finish
 
 GIT_VERSION ?= " $(shell git rev-parse --short HEAD || echo unknown)"
 ifneq ($(GIT_VERSION)," unknown")
@@ -369,7 +375,7 @@ ifneq ($(GIT_VERSION)," unknown")
 endif
 
 ifeq ($(ALIGNED), 1)
-	PLATCFLAGS += -DALIGN_INTS -DALIGN_SHORTS 
+	CCOMFLAGS += -DALIGN_INTS -DALIGN_SHORTS
 endif
 
 CCOMFLAGS += $(fpic)

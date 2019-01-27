@@ -1451,9 +1451,15 @@ void memory_configure_bank(running_machine *machine, const char *tag, int starte
 	memory_bank *bank = machine->memory_data->bankmap.find_hash_only(tag);
 	if (bank == NULL)
 		fatalerror("memory_configure_bank called for unknown bank '%s'", tag);
+#ifdef __GNUC__
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wnonnull-compare"
+#endif
 	if (base == NULL)
 		fatalerror("memory_configure_bank called NULL base");
-
+#ifdef __GNUC__
+#pragma GCC diagnostic pop
+#endif
 	// fill in the requested bank entries (backwards to improve allocation)
 	for (int entrynum = startentry + numentries - 1; entrynum >= startentry; entrynum--)
 		bank->configure(entrynum, reinterpret_cast<UINT8 *>(base) + (entrynum - startentry) * stride);
@@ -1471,9 +1477,15 @@ void memory_configure_bank_decrypted(running_machine *machine, const char *tag, 
 	memory_bank *bank = machine->memory_data->bankmap.find_hash_only(tag);
 	if (bank == NULL)
 		fatalerror("memory_configure_bank_decrypted called for unknown bank '%s'", tag);
+#ifdef __GNUC__
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wnonnull-compare"
+#endif
 	if (base == NULL)
 		fatalerror("memory_configure_bank_decrypted called NULL base");
-
+#ifdef __GNUC__
+#pragma GCC diagnostic pop
+#endif
 	// fill in the requested bank entries (backwards to improve allocation)
 	for (int entrynum = startentry + numentries - 1; entrynum >= startentry; entrynum--)
 		bank->configure_decrypted(entrynum, reinterpret_cast<UINT8 *>(base) + (entrynum - startentry) * stride);
