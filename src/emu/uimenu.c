@@ -3527,9 +3527,15 @@ static void menu_select_game_populate(running_machine *machine, ui_menu *menu, s
 	/* if nothing there, add a single multiline item and return */
 	if (matchcount == 0)
 	{
+#if defined(__GNUC__) && (__GNUC__ >= 6)
+		ui_menu_item_append(menu, "No " GAMESNOUN " found. Please check the rompath specified in the " CONFIGNAME ".ini file.\n\n"
+								  "If this is your first time using " APPNAME ", please see the config.txt file in "
+								  "the docs directory for information on configuring " APPNAME ".", NULL, MENU_FLAG_MULTILINE | MENU_FLAG_REDTEXT, NULL);
+#else
 		ui_menu_item_append(menu, "No "GAMESNOUN" found. Please check the rompath specified in the "CONFIGNAME".ini file.\n\n"
 								  "If this is your first time using "APPNAME", please see the config.txt file in "
 								  "the docs directory for information on configuring "APPNAME".", NULL, MENU_FLAG_MULTILINE | MENU_FLAG_REDTEXT, NULL);
+#endif
 		return;
 	}
 
@@ -3559,7 +3565,6 @@ static void menu_select_game_populate(running_machine *machine, ui_menu *menu, s
 	/* configure the custom rendering */
 	ui_menu_set_custom_render(menu, menu_select_game_custom_render, ui_get_line_height() + 3.0f * UI_BOX_TB_BORDER, 4.0f * ui_get_line_height() + 3.0f * UI_BOX_TB_BORDER);
 }
-
 
 /*-------------------------------------------------
     menu_select_game_driver_compare - compare the
