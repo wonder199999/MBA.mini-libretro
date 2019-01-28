@@ -120,7 +120,7 @@ attotime attotime_div(attotime _time1, UINT32 factor)
     attotime_string - return a temporary
     printable string describing an attotime
 -------------------------------------------------*/
-#ifdef __GNUC__
+#if defined(__GNUC__) && (__GNUC__ >= 6)
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wformat-overflow="
 #endif
@@ -162,6 +162,6 @@ const char *attotime_string(attotime _time, int precision)
 	}
 	return buffer;
 }
-#ifdef __GNUC__
+#if defined(__GNUC__) && (__GNUC__ >= 6)
 #pragma GCC diagnostic pop
 #endif

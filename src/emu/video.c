@@ -1158,7 +1158,7 @@ static void create_snapshot_bitmap(device_t *screen)
     numbering scheme
 -------------------------------------------------*/
 
-#ifdef __GNUC__
+#if defined(__GNUC__) && (__GNUC__ >= 6)
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wformat-overflow="
 #endif
@@ -1213,7 +1213,7 @@ static file_error mame_fopen_next(running_machine *machine, const char *pathopti
 	/* create the final file */
 	return mame_fopen(pathoption, fname, OPEN_FLAG_WRITE | OPEN_FLAG_CREATE | OPEN_FLAG_CREATE_PATHS, file);
 }
-#ifdef __GNUC__
+#if defined(__GNUC__) && (__GNUC__ >= 6)
 #pragma GCC diagnostic pop
 #endif
 

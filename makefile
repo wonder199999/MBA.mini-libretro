@@ -100,18 +100,13 @@ CORE_DIR = .
 PLATCFLAGS += -D__LIBRETRO__
 CCOMFLAGS  += -D__LIBRETRO__
 
+OPTFLAG ?= 0
+
 VRENDER ?= soft
 
 ifeq ($(VRENDER),opengl)
 	PLATCFLAGS += -DHAVE_OPENGL
 	CCOMFLAGS  += -DHAVE_OPENGL
-endif
-
-# Optimize for local machine (auto detect)
-OPTFLAG ?= 0
-
-ifeq ($(OPTFLAG), 1)
-   CCOMFLAGS += -march=native
 endif
 
 
@@ -447,6 +442,10 @@ endif
 # define PTR64 if we are a 64-bit target
 ifeq ($(PTR64), 1)
    DEFS += -DPTR64
+# Optimize for local machine (auto detect)
+   ifeq ($(OPTFLAG), 1)
+	CCOMFLAGS += -march=native
+   endif
 endif
 
 # need to ensure FLAC functions are statically linked
