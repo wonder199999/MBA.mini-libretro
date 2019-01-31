@@ -265,6 +265,11 @@ public:
 	UINT8		layer_enable_reg;
 	UINT8		force_screen_flip_flag;			/* used on some bootleg or hack roms */
 	UINT8		bootleg_sf2rb2;				/* for sf2rb && sf2rb2 */
+
+	/* for cps2 digital volume */
+	emu_timer	*digital_volume_timer;
+	INT32		cps2_digitalvolumelevel;
+	UINT8		cps2_disabledigitalvolume;
 };
 
 
@@ -366,6 +371,5 @@ void wof_decode(running_machine *machine);
 void dino_decode(running_machine *machine);
 void punisher_decode(running_machine *machine);
 void slammast_decode(running_machine *machine);
-
 
 #endif

@@ -97,11 +97,12 @@ EXE =
 LIBS = 
 CORE_DIR = .
 
-PLATCFLAGS += -D__LIBRETRO__
 CCOMFLAGS  += -D__LIBRETRO__
 
+# 64bit build on UNIX(linux), is it optimize for local machine (auto detect)?
 OPTFLAG ?= 0
 
+# The default is software rendering.
 VRENDER ?= soft
 
 ifeq ($(VRENDER),opengl)
@@ -442,7 +443,6 @@ endif
 # define PTR64 if we are a 64-bit target
 ifeq ($(PTR64), 1)
    DEFS += -DPTR64
-# Optimize for local machine (auto detect)
    ifeq ($(OPTFLAG), 1)
 	CCOMFLAGS += -march=native
    endif

@@ -96,10 +96,10 @@ static const _keyboard_table ktable[] = {
 	{"F14",      RETROK_F14,         ITEM_ID_F14},
 	{"F15",      RETROK_F15,         ITEM_ID_F15},
 	{"Esc",      RETROK_ESCAPE,      ITEM_ID_ESC},
-	{"TILDE",    RETROK_BACKQUOTE,   ITEM_ID_TILDE},
+	{"TILDE",    RETROK_BACKQUOTE,   ITEM_ID_TILDE}, */
 	{"MINUS",    RETROK_MINUS,       ITEM_ID_MINUS},
 	{"EQUALS",   RETROK_EQUALS,      ITEM_ID_EQUALS},
-	{"BKCSPACE", RETROK_BACKSPACE,   ITEM_ID_BACKSPACE}, */
+/*	{"BKCSPACE", RETROK_BACKSPACE,   ITEM_ID_BACKSPACE}, */
 	{"TAB",      RETROK_TAB,         ITEM_ID_TAB},
 /*	{"(",        RETROK_LEFTPAREN,   ITEM_ID_OPENBRACE},
 	{")",        RETROK_RIGHTPAREN,  ITEM_ID_CLOSEBRACE}, */

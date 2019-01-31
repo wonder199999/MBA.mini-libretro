@@ -756,15 +756,50 @@ static WRITE16_HANDLER( cps2_eeprom_port_w )
  *
  *************************************/
 
+static TIMER_CALLBACK( cps2_update_digital_volume )
+{
+	cps_state *state = machine->driver_data<cps_state>();
+
+	int digital_volume_buttons_state = input_port_read(machine, "DIGITALVOL");
+
+	if (digital_volume_buttons_state & 0x01)
+		state->cps2_digitalvolumelevel--;
+	else if (digital_volume_buttons_state & 0x02)
+		state->cps2_digitalvolumelevel++;
+
+	if (state->cps2_digitalvolumelevel > 39)
+		state->cps2_digitalvolumelevel = 39;
+	else if (state->cps2_digitalvolumelevel < 0)
+		state->cps2_digitalvolumelevel = 0;
+
+	sound_set_output_gain(machine->device("qsound"), 0, state->cps2_digitalvolumelevel / 39.0);
+	sound_set_output_gain(machine->device("qsound"), 1, state->cps2_digitalvolumelevel / 39.0);
+}
+
+
 static READ16_HANDLER( cps2_qsound_volume_r )
 {
 	cps_state *state = space->machine->driver_data<cps_state>();
 
-	/* Extra adapter memory (0x660000-0x663fff) available when bit 14 = 0 */
-	/* Network adapter (ssf2tb) present when bit 15 = 0 */
-	/* Only game known to use both these so far is SSF2TB */
+	/* Extra adapter memory (0x660000-0x663fff) available when bit 14 = 0
+	   Network adapter (ssf2tb) present when bit 15 = 0
+	   Only game known to use both these so far is SSF2TB */
+	if (state->cps2networkpresent)
+		return 0x2021;		/* SSF2TB doesn't have a digital slider in the test screen */
 
-	return state->cps2networkpresent ? 0x2021 : 0xe021;
+	if (state->cps2_disabledigitalvolume)
+		return 0xd000;		/* digital display isn't shown in test mode */
+
+	const static UINT16 cps2_vol_states[40] = {
+		0xf010, 0xf008, 0xf004, 0xf002, 0xf001, 0xe810, 0xe808, 0xe804, 0xe802, 0xe801,
+		0xe410, 0xe408, 0xe404, 0xe402, 0xe401, 0xe210, 0xe208, 0xe204, 0xe202, 0xe201,
+		0xe110, 0xe108, 0xe104, 0xe102, 0xe101, 0xe090, 0xe088, 0xe084, 0xe082, 0xe081,
+		0xe050, 0xe048, 0xe044, 0xe042, 0xe041, 0xe030, 0xe028, 0xe024, 0xe022, 0xe021
+	};
+
+	UINT16 result = cps2_vol_states[state->cps2_digitalvolumelevel];
+
+	return result;
 }
 
 
@@ -921,6 +956,10 @@ static INPUT_PORTS_START( cps2_4p4b )
 	PORT_BIT( 0x1000, IP_ACTIVE_HIGH, IPT_OUTPUT ) PORT_WRITE_LINE_DEVICE("eeprom", eeprom_write_bit)
 	PORT_BIT( 0x2000, IP_ACTIVE_HIGH, IPT_OUTPUT ) PORT_WRITE_LINE_DEVICE("eeprom", eeprom_set_clock_line)
 	PORT_BIT( 0x4000, IP_ACTIVE_LOW, IPT_OUTPUT ) PORT_WRITE_LINE_DEVICE("eeprom", eeprom_set_cs_line)
+
+	PORT_START( "DIGITALVOL" )
+	PORT_BIT( 0x0001, IP_ACTIVE_HIGH, IPT_VOLUME_DOWN )
+	PORT_BIT( 0x0002, IP_ACTIVE_HIGH, IPT_VOLUME_UP )
 INPUT_PORTS_END
 
 /* 4 players and 3 buttons */
@@ -8669,6 +8708,20 @@ ROM_END
  *
  *************************************/
 
+static void init_digital_volume(running_machine *machine)
+{
+	cps_state *state = machine->driver_data<cps_state>();
+
+	state->cps2_digitalvolumelevel = 39;	/* maximum */
+	state->cps2_disabledigitalvolume = 0;
+
+	state->digital_volume_timer = timer_alloc(machine, cps2_update_digital_volume, NULL);
+
+	/* create a timer to update our volume state from the fake switches -
+	   read it every 6 frames (wonder199999: 10 times per second? no need, 4 times per second should also be.)or so to enable some granularity */
+	timer_adjust_periodic(state->digital_volume_timer, ATTOTIME_IN_MSEC(250), 0, ATTOTIME_IN_MSEC(250));
+}
+
 static DRIVER_INIT( cps2 )
 {
 	cps_state *state = machine->driver_data<cps_state>();
@@ -8681,7 +8734,20 @@ static DRIVER_INIT( cps2 )
 
 	state->scancount = 0;
 	state->cps2networkpresent = 0;
-	/* machine->device("maincpu")->set_clock_scale(0.7375f); */
+
+	init_digital_volume(machine);
+}
+
+static DRIVER_INIT( singbrd )
+{
+	cps_state *state = machine->driver_data<cps_state>();
+
+	DRIVER_INIT_CALL(cps2);
+
+	state->cps2_disabledigitalvolume = 1;
+
+	/* The single board games don't have a digital volume switch */
+	timer_adjust_periodic(state->digital_volume_timer, attotime_never, 0, attotime_never);
 }
 
 static DRIVER_INIT( ssf2tb )
@@ -8732,12 +8798,16 @@ static WRITE16_HANDLER( gigaman2_dummyqsound_w )
 static void gigaman2_gfx_reorder( running_machine *machine, int gfx_len, UINT16 *gfxrom )
 {
 	UINT16 *buf = auto_alloc_array(machine, UINT16, gfx_len);
-	memcpy( buf, gfxrom, gfx_len );
 
-	for (INT32 i = 0; i < gfx_len / 2; i++)
-		gfxrom[i] = buf[ ((i & ~7) >> 2) | ((i & 4) << 18) | ((i & 2) >> 1) | ((i & 1) << 21) ];
+	if (buf != NULL)
+	{
+		memcpy(buf, gfxrom, gfx_len);
 
-	auto_free( machine, buf );
+		for (INT32 i = 0; i < gfx_len / 2; i++)
+			gfxrom[i] = buf[ ((i & ~7) >> 2) | ((i & 4) << 18) | ((i & 2) >> 1) | ((i & 1) << 21) ];
+
+		auto_free(machine, buf);
+	}
 }
 
 static DRIVER_INIT( gigaman2 )
@@ -8761,6 +8831,9 @@ static DRIVER_INIT( gigaman2 )
 	memory_install_readwrite16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x618000, 0x619fff, 0, 0, gigaman2_dummyqsound_r, gigaman2_dummyqsound_w);	/* no qsound.. */
 	space->set_decrypted_region(0x000000, (length) - 1, &rom[length / 4]);
 	m68k_set_encrypted_opcode_range(machine->device("maincpu"), 0, length);
+
+	/* no digital volume switch on this? */
+	timer_adjust_periodic(state->digital_volume_timer, attotime_never, 0, attotime_never);
 }
 
 
@@ -9014,7 +9087,7 @@ GAME( 1998, mvsca,      mvsc,     cps2, cps2_2p6b, cps2,     ROT0,   "Capcom", "
 GAME( 1998, mvscar1,    mvsc,     cps2, cps2_2p6b, cps2,     ROT0,   "Capcom", "Marvel Vs. Capcom: Clash of Super Heroes (Asia 980112)", GAME_SUPPORTS_SAVE )
 GAME( 1998, mvsch,      mvsc,     cps2, cps2_2p6b, cps2,     ROT0,   "Capcom", "Marvel Vs. Capcom: Clash of Super Heroes (Hispanic 980123)", GAME_SUPPORTS_SAVE )
 GAME( 1998, mvscb,      mvsc,     cps2, cps2_2p6b, cps2,     ROT0,   "Capcom", "Marvel Vs. Capcom: Clash of Super Heroes (Brazil 980123)", GAME_SUPPORTS_SAVE )
-GAME( 1998, mvscjsing,  mvsc,	  cps2, cps2_2p6b, cps2,     ROT0,   "Capcom", "Marvel Vs. Capcom: Clash of Super Heroes (Japan 980123) (Single PCB)", GAME_SUPPORTS_SAVE )
+GAME( 1998, mvscjsing,  mvsc,	  cps2, cps2_2p6b, singbrd,  ROT0,   "Capcom", "Marvel Vs. Capcom: Clash of Super Heroes (Japan 980123) (Single PCB)", GAME_SUPPORTS_SAVE )
 //
 GAME( 1998, sfa3,       0,        cps2, cps2_2p6b, cps2,     ROT0,   "Capcom", "Street Fighter Alpha 3 (Euro 980904)", GAME_SUPPORTS_SAVE )
 GAME( 1998, sfa3u,      sfa3,     cps2, cps2_2p6b, cps2,     ROT0,   "Capcom", "Street Fighter Alpha 3 (USA 980904)", GAME_SUPPORTS_SAVE )
