@@ -1659,20 +1659,19 @@ static MACHINE_RESET( cps )
 	}
 
 	/* specific game_init */
-	state->force_screen_flip_flag = 0;
-	state->bootleg_sf2rb2 = 0;
+	state->force_screen_flip_flag = 0;	// For: Cadillacs and Dinosaurs bootleg set 4 with PIC16c57
+	state->bootleg_sf2rb2 = 0;		// For: Street Fighter II': Champion Edition Rainbow set 1 / 2
+	state->spec_gameflag = 0;		// For: Tag specific games
 
 	if (strcmp(gamename, "dinopic4") == 0)
 		state->force_screen_flip_flag = 1;
-
-	if (strcmp(gamename, "sf2rb") == 0)
+	else if (strcmp(gamename, "sf2rb") == 0)
 	{
 		/* Patch out protection check */
 		UINT16 *rom = (UINT16 *)memory_region(machine, "maincpu");
 		rom[0xe5464 / 2] = 0x6012;
 	}
-
-	if (strcmp(gamename, "sf2rb2") == 0)
+	else if (strcmp(gamename, "sf2rb2") == 0)
 	{
 		/* Patch out protection check */
 		UINT16 *rom = (UINT16 *)memory_region(machine, "maincpu");
@@ -1680,6 +1679,11 @@ static MACHINE_RESET( cps )
 
 		state->bootleg_sf2rb2 = 1;
 	}
+
+	if (strcmp(machine->gamedrv->name, "pzloop2") == 0 || strcmp(machine->gamedrv->parent, "pzloop2") == 0)
+		state->spec_gameflag |= 0x01;	// if it's 'pzloop2' or 'pzloop2j', set the BIT 0 of spec_gameflag to 1.
+	else if (strcmp(machine->gamedrv->name, "mmatrix") == 0 || strcmp(machine->gamedrv->parent, "mmatrix") == 0)
+		state->spec_gameflag |= 0x02;	// if it's 'mmatrix', set the BIT 1 of spec_gameflag to 1.
 }
 
 
@@ -1696,6 +1700,7 @@ INLINE UINT16 *cps1_base( running_machine *machine, int offset, int boundary )
 		Mask out the irrelevant bits. */
 
 	base &= ~(boundary - 1);
+
 	return &state->gfxram[(base & 0x03ffff) / 2];
 }
 
@@ -1730,36 +1735,38 @@ READ16_HANDLER( cps1_cps_b_r )
 {
 	cps_state *state = space->machine->driver_data<cps_state>();
 
-	/* Some games interrogate a couple of registers on bootup. */
-	/* These are CPS1 board B self test checks. They wander from game to game. */
-	if (offset == state->game_config->cpsb_addr / 2)
-		return state->game_config->cpsb_value;
-
-	/* Extra input ports (on C-board) */
-	if (offset == state->game_config->in2_addr / 2)
-		return input_port_read(space->machine, "IN2");
-
-	/* Player 4 controls (on C-board) ("Captain Commando") */
-	if (offset == state->game_config->in3_addr / 2)
-		return input_port_read(space->machine, "IN3");
-
-	/* some games use as a protection check the ability to do 16-bit multiplications */
-	/* with a 32-bit result, by writing the factors to two ports and reading the */
-	/* result from two other ports. */
-	if (offset == state->game_config->mult_result_lo / 2)
-		return (state->cps_b_regs[state->game_config->mult_factor1 / 2] *
-				state->cps_b_regs[state->game_config->mult_factor2 / 2]) & 0xffff;
-
-	if (offset == state->game_config->mult_result_hi / 2)
-		return (state->cps_b_regs[state->game_config->mult_factor1 / 2] *
-				state->cps_b_regs[state->game_config->mult_factor2 / 2]) >> 16;
-
 	if (state->cps_version == 2)
 	{
-		if (offset == 0x10 / 2)		/* UNKNOWN--only mmatrix appears to read this, and I'm not sure if the result is actually used */
+		/* UNKNOWN--only mmatrix appears to read this, and I'm not sure if the result is actually used */
+		if (offset == 0x10 / 2)
 			return state->cps_b_regs[0x10 / 2];
-		if (offset == 0x12 / 2)
+		else if (offset == 0x12 / 2)
 			return state->cps_b_regs[0x12 / 2];
+	}
+	else
+	{
+		/* Some games interrogate a couple of registers on bootup. */
+		/* These are CPS1 board B self test checks. They wander from game to game. */
+		if (offset == state->game_config->cpsb_addr / 2)
+			return state->game_config->cpsb_value;
+
+		/* Extra input ports (on C-board) */
+		else if (offset == state->game_config->in2_addr / 2)
+			return input_port_read(space->machine, "IN2");
+
+		/* Player 4 controls (on C-board) ("Captain Commando") */
+		else if (offset == state->game_config->in3_addr / 2)
+			return input_port_read(space->machine, "IN3");
+
+		/* some games use as a protection check the ability to do 16-bit multiplications */
+		/* with a 32-bit result, by writing the factors to two ports and reading the result from two other ports. */
+		else if (offset == state->game_config->mult_result_lo / 2)
+			return (state->cps_b_regs[state->game_config->mult_factor1 / 2] *
+				state->cps_b_regs[state->game_config->mult_factor2 / 2]) & 0xffff;
+
+		else if (offset == state->game_config->mult_result_hi / 2)
+			return (state->cps_b_regs[state->game_config->mult_factor1 / 2] *
+				state->cps_b_regs[state->game_config->mult_factor2 / 2]) >> 16;
 	}
 #ifdef MAME_DEBUG
 	popmessage("CPS-B read port %02x contact MAMEDEV", offset * 2);
@@ -2531,27 +2538,21 @@ READ16_HANDLER( cps2_objram1_r )
 {
 	cps_state *state = space->machine->driver_data<cps_state>();
 
-	if (state->objram_bank & 1)
-		return state->objram2[offset];
-	else
-		return state->objram1[offset];
+	return (state->objram_bank & 0x01) ? state->objram2[offset] : state->objram1[offset];
 }
 
 READ16_HANDLER( cps2_objram2_r )
 {
 	cps_state *state = space->machine->driver_data<cps_state>();
 
-	if (state->objram_bank & 1)
-		return state->objram1[offset];
-	else
-		return state->objram2[offset];
+	return (state->objram_bank & 0x01) ? state->objram1[offset] : state->objram2[offset];
 }
 
 WRITE16_HANDLER( cps2_objram1_w )
 {
 	cps_state *state = space->machine->driver_data<cps_state>();
 
-	if (state->objram_bank & 1)
+	if (state->objram_bank & 0x01)
 		COMBINE_DATA(&state->objram2[offset]);
 	else
 		COMBINE_DATA(&state->objram1[offset]);
@@ -2561,7 +2562,7 @@ WRITE16_HANDLER( cps2_objram2_w )
 {
 	cps_state *state = space->machine->driver_data<cps_state>();
 
-	if (state->objram_bank & 1)
+	if (state->objram_bank & 0x01)
 		COMBINE_DATA(&state->objram1[offset]);
 	else
 		COMBINE_DATA(&state->objram2[offset]);
@@ -2575,10 +2576,7 @@ static UINT16 *cps2_objbase( running_machine *machine )
 	if (state->objram_bank & 0x01)
 		baseptr ^= 0x0080;
 
-	if (baseptr == 0x7000)
-		return state->objram1;
-	else
-		return state->objram2;
+	return (baseptr == 0x7000) ? state->objram1 : state->objram2;
 }
 
 
@@ -2693,17 +2691,17 @@ static void cps1_render_stars( screen_device *screen, bitmap_t *bitmap, const re
 
 	if (!stars_rom && (state->stars_enabled[0] || state->stars_enabled[1])) return;
 
-	INT32 offs, size = state->stars_rom_size / 2;
+	INT32 offs, col, sx, sy, size = state->stars_rom_size / 2;
 
 	if (state->stars_enabled[0])
 	{
 		for (offs = 0; offs < size; offs++)
 		{
-			INT32 col = stars_rom[8 * offs + 4];
+			col = stars_rom[8 * offs + 4];
 			if (col != 0x0f)
 			{
-				INT32 sx = ((offs >> 3) - state->stars2x + (col & 0x1f)) & 0x01ff;
-				INT32 sy = ((offs & 0xff) - state->stars2y) & 0xff;
+				sx = ((offs >> 3) - state->stars2x + (col & 0x1f)) & 0x01ff;
+				sy = ((offs & 0xff) - state->stars2y) & 0xff;
 				if (flip_screen_get(screen->machine))
 				{
 					sx = 511 - sx;
@@ -2723,11 +2721,11 @@ static void cps1_render_stars( screen_device *screen, bitmap_t *bitmap, const re
 	{
 		for (offs = 0; offs < size; offs++)
 		{
-			INT32 col = stars_rom[8 * offs];
+			col = stars_rom[8 * offs];
 			if (col != 0x0f)
 			{
-				INT32 sx = ((offs >> 3) - state->stars1x + (col & 0x1f)) & 0x01ff;
-				INT32 sy = ((offs & 0xff) - state->stars1y) & 0xff;
+				sx = ((offs >> 3) - state->stars1x + (col & 0x1f)) & 0x01ff;
+				sy = ((offs & 0xff) - state->stars1y) & 0xff;
 				if (flip_screen_get(screen->machine))
 				{
 					sx = 511 - sx;

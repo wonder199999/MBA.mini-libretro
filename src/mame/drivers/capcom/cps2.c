@@ -592,12 +592,12 @@ Stephh's inputs notes (based on some tests on the "parent" set) :
 ************************************************************************** */
 
 #include "emu.h"
-#include "cpu/z80/z80.h"
-#include "deprecat.h"
-#include "machine/eeprom.h"
 #include "cpu/m68000/m68000.h"
+#include "cpu/z80/z80.h"
+#include "machine/eeprom.h"
 #include "sound/qsound.h"
 #include "sound/okim6295.h"	/* gigaman2 bootleg */
+#include "deprecat.h"
 
 #include "includes/cps1.h"	/* External CPS1 definitions */
 
@@ -727,12 +727,14 @@ static WRITE16_HANDLER( cps2_eeprom_port_w )
 
 		coin_counter_w(space->machine, 0, data & 0x0001);
 
-		if ((strncmp(space->machine->gamedrv->name, "pzloop2", 8) == 0) || (strncmp(space->machine->gamedrv->name, "pzloop2j", 8) == 0))
-			state->readpaddle = data & 0x0002;	/* Puzz Loop 2 uses coin counter 2 input to switch between stick and paddle controls */
+		/* Puzz Loop 2 uses coin counter 2 input to switch between stick and paddle controls */
+		if (state->spec_gameflag & 0x01)
+			state->readpaddle = data & 0x0002;
 		else
 			coin_counter_w(space->machine, 1, data & 0x0002);
 
-		if (strncmp(space->machine->gamedrv->name, "mmatrix", 7) == 0)		// Mars Matrix seems to require the coin lockout bit to be reversed
+		// Mars Matrix seems to require the coin lockout bit to be reversed
+		if (state->spec_gameflag & 0x02)
 		{
 			coin_lockout_w(space->machine, 0, data & 0x0010);
 			coin_lockout_w(space->machine, 1, data & 0x0020);

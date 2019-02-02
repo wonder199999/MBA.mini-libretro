@@ -266,6 +266,9 @@ public:
 	UINT8		force_screen_flip_flag;			/* used on some bootleg or hack roms */
 	UINT8		bootleg_sf2rb2;				/* for sf2rb && sf2rb2 */
 
+	/* specific games flags */
+	UINT32		spec_gameflag;
+
 	/* for cps2 digital volume */
 	emu_timer	*digital_volume_timer;
 	INT32		cps2_digitalvolumelevel;
