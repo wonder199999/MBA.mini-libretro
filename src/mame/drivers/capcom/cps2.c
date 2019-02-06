@@ -608,14 +608,12 @@ Stephh's inputs notes (based on some tests on the "parent" set) :
  *
  *************************************/
 
-static void gigaman2_gfx_reorder(running_machine *machine, int gfx_len, UINT16 *gfxrom);
-
 /* Maximum size of Q Sound Z80 region */
-#define QSOUND_SIZE	0x50000
+#define QSOUND_SIZE	(0x50000)
 
 /* Maximum 680000 code size */
 #undef  CODE_SIZE
-#define CODE_SIZE	0x0400000
+#define CODE_SIZE	(0x0400000)
 
 
 /*************************************
@@ -646,7 +644,6 @@ static INTERRUPT_GEN( cps2_interrupt )
 	{
 		state->cps_b_regs[0x10 / 2] = 0;
 		cpu_set_input_line(device, 4, HOLD_LINE);
-		cps2_set_sprite_priorities(device->machine);
 		device->machine->primary_screen->update_partial(16 - 10 + state->scancount);	/* visarea.min_y - [first visible line?] + scancount */
 		state->scancalls++;
 	}
@@ -655,7 +652,6 @@ static INTERRUPT_GEN( cps2_interrupt )
 	{
 		state->cps_b_regs[0x12 / 2] = 0;
 		cpu_set_input_line(device, 4, HOLD_LINE);
-		cps2_set_sprite_priorities(device->machine);
 		device->machine->primary_screen->update_partial(16 - 10 + state->scancount);	/* visarea.min_y - [first visible line?] + scancount */
 		state->scancalls++;
 	}
@@ -665,12 +661,6 @@ static INTERRUPT_GEN( cps2_interrupt )
 		state->cps_b_regs[0x10 / 2] = state->scanline1;
 		state->cps_b_regs[0x12 / 2] = state->scanline2;
 		cpu_set_input_line(device, 2, HOLD_LINE);
-
-		if (state->scancalls)
-		{
-			cps2_set_sprite_priorities(device->machine);
-			device->machine->primary_screen->update_partial(256);
-		}
 		cps2_objram_latch(device->machine);
 	}
 }
@@ -8710,6 +8700,33 @@ ROM_END
  *
  *************************************/
 
+static READ16_HANDLER( gigaman2_dummyqsound_r )
+{
+	cps_state *state = space->machine->driver_data<cps_state>();
+	return state->gigaman2_dummyqsound_ram[offset];
+}
+
+static WRITE16_HANDLER( gigaman2_dummyqsound_w )
+{
+	cps_state *state = space->machine->driver_data<cps_state>();
+	state->gigaman2_dummyqsound_ram[offset] = data;
+}
+
+static void gigaman2_gfx_reorder( running_machine *machine, int gfx_len, UINT16 *gfxrom )
+{
+	UINT16 *buf = auto_alloc_array(machine, UINT16, gfx_len);
+
+	if (buf != NULL)
+	{
+		memcpy(buf, gfxrom, gfx_len);
+
+		for (INT32 i = 0; i < gfx_len / 2; i++)
+			gfxrom[i] = buf[ ((i & ~7) >> 2) | ((i & 4) << 18) | ((i & 2) >> 1) | ((i & 1) << 21) ];
+
+		auto_free(machine, buf);
+	}
+}
+
 static void init_digital_volume(running_machine *machine)
 {
 	cps_state *state = machine->driver_data<cps_state>();
@@ -8776,18 +8793,6 @@ static DRIVER_INIT ( pzloop2 )
 	memory_install_read16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x804000, 0x804001, 0, 0, joy_or_paddle_r);
 }
 
-static READ16_HANDLER( gigaman2_dummyqsound_r )
-{
-	cps_state *state = space->machine->driver_data<cps_state>();
-	return state->gigaman2_dummyqsound_ram[offset];
-}
-
-static WRITE16_HANDLER( gigaman2_dummyqsound_w )
-{
-	cps_state *state = space->machine->driver_data<cps_state>();
-	state->gigaman2_dummyqsound_ram[offset] = data;
-}
-
 /*	Gigaman 2 - 2004 Chinese rebuild bootleg
 	Just dumped the program roms. Other 3 are soldered and are MX26L6420MC-90
 	Probably a rebuild for chinese market
@@ -8796,21 +8801,6 @@ static WRITE16_HANDLER( gigaman2_dummyqsound_w )
 	CPU : Motorola 68K 16MHz
 	video : Actel A54SX16A-F
 	sound : Atmel AT89C4051-24PI + M6295 (noted AD-65)	*/
-
-static void gigaman2_gfx_reorder( running_machine *machine, int gfx_len, UINT16 *gfxrom )
-{
-	UINT16 *buf = auto_alloc_array(machine, UINT16, gfx_len);
-
-	if (buf != NULL)
-	{
-		memcpy(buf, gfxrom, gfx_len);
-
-		for (INT32 i = 0; i < gfx_len / 2; i++)
-			gfxrom[i] = buf[ ((i & ~7) >> 2) | ((i & 4) << 18) | ((i & 2) >> 1) | ((i & 1) << 21) ];
-
-		auto_free(machine, buf);
-	}
-}
 
 static DRIVER_INIT( gigaman2 )
 {

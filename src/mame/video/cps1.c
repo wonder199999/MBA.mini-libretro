@@ -2787,7 +2787,10 @@ VIDEO_UPDATE( cps1 )
 	cps1_get_video_base(screen->machine);
 	/* Find the offset of the last sprite in the sprite table */
 	if (state->cps_version == 2)
+	{
+		cps2_set_sprite_priorities(screen->machine);
 		cps2_find_last_sprite(screen->machine);
+	}
 	else
 		cps1_find_last_sprite(screen->machine);
 

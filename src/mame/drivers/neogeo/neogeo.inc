@@ -10894,8 +10894,8 @@ GAME( 1997, kof97oro,  neogeo,  neogeo,   neogeo,   kof97oro, ROT0, "hack", "The
 GAME( 2003, kof97pla,  neogeo,  neogeo,   neogeo,   kof97pla, ROT0, "hack", "The King of Fighters '97 Plus 2003 (bootleg / hack)", GAME_SUPPORTS_SAVE )
 GAME( 1997, kof97pls,  kof97,   neogeo,   neogeo,   neogeo,   ROT0, "bootleg", "The King of Fighters '97 Plus (bootleg)", GAME_SUPPORTS_SAVE )
 GAME( 2007, kof97xt,   neogeo,  neogeo,   neogeo,   neogeo,   ROT0, "hack", "The King of Fighters '97 - Final Battle (hack)", GAME_SUPPORTS_SAVE )
-GAME( 1997, kog,       kof97,	neogeo,   kog,	    kog,      ROT0, "bootleg", "King of Gladiator (The King of Fighters '97 bootleg)", GAME_NOT_WORKING | GAME_SUPPORTS_SAVE )	// protected bootleg
-GAME( 1997, kogplus,   kof97,	neogeo,   kog,	    kog,      ROT0, "bootleg", "King of Gladiator Plus (The King of Fighters '97 bootleg)", GAME_NOT_WORKING | GAME_SUPPORTS_SAVE )
+GAME( 1997, kog,       kof97,	neogeo,   kog,	    kog,      ROT0, "bootleg", "King of Gladiator (The King of Fighters '97 bootleg)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )	// protected bootleg
+GAME( 1997, kogplus,   kof97,	neogeo,   kog,	    kog,      ROT0, "bootleg", "King of Gladiator Plus (The King of Fighters '97 bootleg)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )
 //
 GAME( 1998, kof98,     neogeo,   neogeo,   neogeo,   kof98,    ROT0, "SNK", "The King of Fighters '98 - The Slugfest / King of Fighters '98 - dream match never ends (NGM-2420)", GAME_SUPPORTS_SAVE )
 GAME( 1998, kof98a,    kof98,    neogeo,   neogeo,   kof98,    ROT0, "SNK", "The King of Fighters '98 - The Slugfest / King of Fighters '98 - dream match never ends (NGM-2420, alternate board)", GAME_SUPPORTS_SAVE )

@@ -965,32 +965,20 @@ MACHINE_DRIVER_END
 
 static MACHINE_DRIVER_START( ppan )
 	MDRV_DRIVER_DATA(m92_state)
-
-	/* basic machine hardware */
-	MDRV_CPU_ADD( "maincpu", V33, XTAL_9MHz)
-	MDRV_CPU_PROGRAM_MAP( m92_map )
+	MDRV_IMPORT_FROM(m92)
+	MDRV_CPU_MODIFY("maincpu")
 	MDRV_CPU_IO_MAP( ppan_portmap )
-	/* no Sound CPU */
-	MDRV_MACHINE_START( m92 )
-	MDRV_MACHINE_RESET( m92 )
 
-	MDRV_TIMER_ADD_SCANLINE("scantimer", m92_scanline_interrupt, "screen", 0, 1)
-	/* video hardware */
-	MDRV_VIDEO_ATTRIBUTES(VIDEO_BUFFERS_SPRITERAM)
-	MDRV_SCREEN_ADD("screen", RASTER)
-	MDRV_SCREEN_REFRESH_RATE(60)
-	MDRV_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
-	MDRV_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
-	MDRV_SCREEN_SIZE(512, 256)
-	MDRV_SCREEN_VISIBLE_AREA(80, 511-112, 8, 247)
-	MDRV_GFXDECODE(gfx_m92)
-	MDRV_PALETTE_LENGTH(0x0800)
+	/* no Sound CPU */
+	MDRV_DEVICE_REMOVE("soundcpu")
+	MDRV_DEVICE_REMOVE("ymsnd")
+	MDRV_DEVICE_REMOVE("irem")
+
+	MDRV_SCREEN_MODIFY("screen")
 	MDRV_VIDEO_START(ppan)
 	MDRV_VIDEO_UPDATE(ppan)
 
-	/* sound hardware */
-	MDRV_SPEAKER_STANDARD_MONO("mono")
-	MDRV_OKIM6295_ADD("oki", XTAL_1MHz, OKIM6295_PIN7_HIGH)	/* clock frequency & pin 7 not verified */
+	MDRV_OKIM6295_ADD("oki", XTAL_1MHz, OKIM6295_PIN7_HIGH) /* clock frequency & pin7 not verified */
 	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.0)
 MACHINE_DRIVER_END
 
@@ -2270,55 +2258,54 @@ static DRIVER_INIT( m92_lethalth )
 }
 
 
-/**************************************************************************
-GAME( year,   archives name,   parent name,  MACHINE_DRIVER_START,  INPUT_PORTS,  DRIVER_INIT,	flip,	producer name,	title information,	status ) */
+/* ************************************************************************ */
 
-GAME( 1991,	gunforce,	0,		gunforce,	gunforce,	m92_most,	ROT0,	"Irem",		"Gunforce - Battle Fire Engulfed Terror Island (World)", 0 )
-GAME( 1991,	gunforcej,	gunforce,	gunforce,	gunforce,	m92_most,	ROT0,	"Irem",		"Gunforce - Battle Fire Engulfed Terror Island (Japan)", 0 )
-GAME( 1991,	gunforceu,	gunforce,	gunforce,	gunforce,	m92_most,	ROT0,	"Irem America",	"Gunforce - Battle Fire Engulfed Terror Island (US)", 0 )
+GAME( 1991,  gunforce,	0,	   gunforce,	gunforce,   m92_most,	  ROT0,	  "Irem", "Gunforce - Battle Fire Engulfed Terror Island (World)", GAME_SUPPORTS_SAVE )
+GAME( 1991,  gunforcej,	gunforce,  gunforce,	gunforce,   m92_most,	  ROT0,	  "Irem", "Gunforce - Battle Fire Engulfed Terror Island (Japan)", GAME_SUPPORTS_SAVE )
+GAME( 1991,  gunforceu,	gunforce,  gunforce,	gunforce,   m92_most,	  ROT0,	  "Irem America", "Gunforce - Battle Fire Engulfed Terror Island (US)", GAME_SUPPORTS_SAVE )
 //
-GAME( 1991,	bmaster,	0,		bmaster,	bmaster,	m92_most,	ROT0,	"Irem",		"Blade Master (World)", 0 )
-GAME( 1991,	crossbld,	bmaster,	bmaster,	bmaster,	m92_most,	ROT0,	"Irem",		"Cross Blades! (Japan)", 0 )
+GAME( 1991,  bmaster,	0,	   bmaster,	bmaster,   m92_most,	  ROT0,	  "Irem", "Blade Master (World)", GAME_SUPPORTS_SAVE )
+GAME( 1991,  crossbld,	bmaster,   bmaster,	bmaster,   m92_most,	  ROT0,	  "Irem", "Cross Blades! (Japan)", GAME_SUPPORTS_SAVE )
 //
-GAME( 1991,	lethalth,	0,		lethalth,	lethalth,	m92_lethalth,	ROT270,	"Irem",		"Lethal Thunder (World)", 0 )
-GAME( 1991,	thndblst,	lethalth,	lethalth,	lethalth,	m92_lethalth,	ROT270,	"Irem",		"Thunder Blaster (Japan)", 0 )
+GAME( 1991,  lethalth,	0,	   lethalth,	lethalth,  m92_lethalth,  ROT270, "Irem", "Lethal Thunder (World)", GAME_SUPPORTS_SAVE )
+GAME( 1991,  thndblst,	lethalth,  lethalth,	lethalth,  m92_lethalth,  ROT270, "Irem", "Thunder Blaster (Japan)", GAME_SUPPORTS_SAVE )
 //
-GAME( 1992,	uccops,		0,		uccops,		uccops,		m92_most,	ROT0,	"Irem",		"Undercover Cops (World)", 0 )
-GAME( 1992,	uccopsu,	uccops,		uccops,		uccops,		m92_most,	ROT0,	"Irem",		"Undercover Cops (US)", 0 )
-GAME( 1992,	uccopsar,	uccops,		uccops,		uccops,		m92_most,	ROT0,	"Irem",		"Undercover Cops - Alpha Renewal Version", 0 )
-GAME( 1992,	uccopsj,	uccops,		uccops,		uccops,		m92_most,	ROT0,	"Irem",		"Undercover Cops (Japan)", 0 )
+GAME( 1992,  uccops,	0,	   uccops,	uccops,	   m92_most,	  ROT0,	  "Irem", "Undercover Cops (World)", GAME_SUPPORTS_SAVE )
+GAME( 1992,  uccopsu,	uccops,	   uccops,	uccops,	   m92_most,	  ROT0,	  "Irem", "Undercover Cops (US)", GAME_SUPPORTS_SAVE )
+GAME( 1992,  uccopsar,	uccops,	   uccops,	uccops,	   m92_most,	  ROT0,	  "Irem", "Undercover Cops - Alpha Renewal Version", GAME_SUPPORTS_SAVE )
+GAME( 1992,  uccopsj,	uccops,	   uccops,	uccops,	   m92_most,	  ROT0,	  "Irem", "Undercover Cops (Japan)", GAME_SUPPORTS_SAVE )
 //
-GAME( 1992,	mysticri,	0,		mysticri,	mysticri,	m92_most,	ROT0,	"Irem",		"Mystic Riders (World)", 0 )
-GAME( 1992,	gunhohki,	mysticri,	mysticri,	mysticri,	m92_most,	ROT0,	"Irem",		"Mahou Keibitai Gun Hohki (Japan)", 0 )
-GAME( 1992,	mysticrib,	mysticri,	mysticri,	mysticri,	m92_most,	ROT0,	"Irem",		"Mystic Riders (bootleg?)", 0 )
+GAME( 1992,  mysticri,	0,	   mysticri,	mysticri,  m92_most,	  ROT0,	  "Irem", "Mystic Riders (World)", GAME_SUPPORTS_SAVE )
+GAME( 1992,  gunhohki,	mysticri,  mysticri,	mysticri,  m92_most,	  ROT0,	  "Irem", "Mahou Keibitai Gun Hohki (Japan)", GAME_SUPPORTS_SAVE )
+GAME( 1992,  mysticrib,	mysticri,  mysticri,	mysticri,  m92_most,	  ROT0,	  "Irem", "Mystic Riders (bootleg?)", GAME_SUPPORTS_SAVE )
 //
-GAME( 1992,	majtitl2,	0,		majtitl2,	majtitl2,	m92_majtitl2,	ROT0,	"Irem",		"Major Title 2 (World, set 1)", 0 )
-GAME( 1992,	majtitl2j,	majtitl2,	majtitl2,	majtitl2,	m92_majtitl2,	ROT0,	"Irem",		"Major Title 2 (Japan)", 0 )
-GAME( 1992,	skingame,	majtitl2,	majtitl2,	majtitl2,	m92_majtitl2,	ROT0,	"Irem America",	"The Irem Skins Game (US set 1)", 0 )
-GAME( 1992,	skingame2,	majtitl2,	majtitl2,	majtitl2,	m92_majtitl2,	ROT0,	"Irem America",	"The Irem Skins Game (US set 2)", 0 )
-GAME( 1992,	majtitl2a,	majtitl2,	mysticri,	majtitl2,	m92_majtitl2,	ROT0,	"Irem",		"Major Title 2 (World, set 1, alt sound CPU)", 0 )
-GAME( 1992,	majtitl2b,	majtitl2,	majtitl2,	majtitl2,	m92_majtitl2,	ROT0,	"Irem",		"Major Title 2 (World, set 2)", 0 )
+GAME( 1992,  majtitl2,	0,	   majtitl2,	majtitl2,  m92_majtitl2,  ROT0,	  "Irem", "Major Title 2 (World, set 1)", GAME_SUPPORTS_SAVE )
+GAME( 1992,  majtitl2j,	majtitl2,  majtitl2,	majtitl2,  m92_majtitl2,  ROT0,	  "Irem", "Major Title 2 (Japan)", GAME_SUPPORTS_SAVE )
+GAME( 1992,  skingame,	majtitl2,  majtitl2,	majtitl2,  m92_majtitl2,  ROT0,	  "Irem America", "The Irem Skins Game (US set 1)", GAME_SUPPORTS_SAVE )
+GAME( 1992,  skingame2,	majtitl2,  majtitl2,	majtitl2,  m92_majtitl2,  ROT0,	  "Irem America", "The Irem Skins Game (US set 2)", GAME_SUPPORTS_SAVE )
+GAME( 1992,  majtitl2a,	majtitl2,  mysticri,	majtitl2,  m92_majtitl2,  ROT0,	  "Irem", "Major Title 2 (World, set 1, alt sound CPU)", GAME_SUPPORTS_SAVE )
+GAME( 1992,  majtitl2b,	majtitl2,  majtitl2,	majtitl2,  m92_majtitl2,  ROT0,	  "Irem", "Major Title 2 (World, set 2)", GAME_SUPPORTS_SAVE )
 //
-GAME( 1992,	hook,		0,		hook,		hook,		m92_most,	ROT0,	"Irem",		"Hook (World)", 0 )
-GAME( 1992,	hooku,		hook,		hook,		hook,		m92_most,	ROT0,	"Irem America",	"Hook (US)", 0 )
-GAME( 1992,	hookj,		hook,		hook,		hook,		m92_most,	ROT0,	"Irem",		"Hook (Japan)", 0 )
-GAME( 1992,	ppan,		hook,		ppan,		hook,		m92_most,	ROT0,	"bootleg",	"Peter Pan (bootleg of Hook)", GAME_IMPERFECT_GRAPHICS ) /*PCB marked 'Peter Pan', no title screen, made in Italy? */
+GAME( 1992,  hook,	0,	   hook,	hook,	   m92_most,	  ROT0,	  "Irem", "Hook (World)", GAME_SUPPORTS_SAVE )
+GAME( 1992,  hooku,	hook,	   hook,	hook,	   m92_most,	  ROT0,	  "Irem America", "Hook (US)", GAME_SUPPORTS_SAVE )
+GAME( 1992,  hookj,	hook,	   hook,	hook,	   m92_most,	  ROT0,	  "Irem", "Hook (Japan)", GAME_SUPPORTS_SAVE )
+GAME( 1992,  ppan,	hook,	   ppan,	hook,	   m92_most,	  ROT0,	  "bootleg", "Peter Pan (bootleg of Hook)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )/*PCB marked 'Peter Pan', no title screen, made in Italy? */
 //
-GAME( 1992,	rtypeleo,	0,		rtypeleo,	rtypeleo,	m92_rtype,	ROT0,	"Irem",		"R-Type Leo (World)", 0 )
-GAME( 1992,	rtypeleoj,	rtypeleo,	rtypeleo,	rtypeleo,	m92_rtype,	ROT0,	"Irem",		"R-Type Leo (Japan)", 0 )
+GAME( 1992,  rtypeleo,	0,	   rtypeleo,	rtypeleo,  m92_rtype,	  ROT0,	  "Irem", "R-Type Leo (World)", GAME_SUPPORTS_SAVE )
+GAME( 1992,  rtypeleoj,	rtypeleo,  rtypeleo,	rtypeleo,  m92_rtype,	  ROT0,	  "Irem", "R-Type Leo (Japan)", GAME_SUPPORTS_SAVE )
 //
-GAME( 1993,	inthunt,	0,		inthunt,	inthunt,	m92_most,	ROT0,	"Irem",		"In The Hunt (World)", 0 )
-GAME( 1993,	inthuntu,	inthunt,	inthunt,	inthunt,	m92_most,	ROT0,	"Irem America",	"In The Hunt (US)", 0 )
-GAME( 1993,	kaiteids,	inthunt,	inthunt,	inthunt,	m92_most,	ROT0,	"Irem",		"Kaitei Daisensou (Japan)", 0 )
+GAME( 1993,  inthunt,	0,	   inthunt,	inthunt,   m92_most,	  ROT0,	  "Irem", "In The Hunt (World)", GAME_SUPPORTS_SAVE )
+GAME( 1993,  inthuntu,	inthunt,   inthunt,	inthunt,   m92_most,	  ROT0,	  "Irem America", "In The Hunt (US)", GAME_SUPPORTS_SAVE )
+GAME( 1993,  kaiteids,	inthunt,   inthunt,	inthunt,   m92_most,	  ROT0,	  "Irem", "Kaitei Daisensou (Japan)", GAME_SUPPORTS_SAVE )
 //
-GAME( 1993,	nbbatman,	0,		nbbatman,	nbbatman,	m92_gunforc2,	ROT0,	"Irem",		"Ninja Baseball Bat Man (World)", GAME_IMPERFECT_GRAPHICS )
-GAME( 1993,	nbbatmanu,	nbbatman,	nbbatman,	nbbatman,	m92_gunforc2,	ROT0,   "Irem America", "Ninja Baseball Bat Man (US)", GAME_IMPERFECT_GRAPHICS )
-GAME( 1993,	leaguemn,	nbbatman,	nbbatman,	nbbatman,	m92_gunforc2,	ROT0,	"Irem",		"Yakyuu Kakutou League-Man (Japan)", GAME_IMPERFECT_GRAPHICS )
+GAME( 1993,  nbbatman,	0,	   nbbatman,	nbbatman,  m92_gunforc2,  ROT0,	  "Irem", "Ninja Baseball Bat Man (World)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )
+GAME( 1993,  nbbatmanu,	nbbatman,  nbbatman,	nbbatman,  m92_gunforc2,  ROT0,   "Irem America", "Ninja Baseball Bat Man (US)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )
+GAME( 1993,  leaguemn,	nbbatman,  nbbatman,	nbbatman,  m92_gunforc2,  ROT0,	  "Irem", "Yakyuu Kakutou League-Man (Japan)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )
 //
-GAME( 1993,	ssoldier,	0,		psoldier,	psoldier,	m92_ssoldier,	ROT0,	"Irem America",	"Superior Soldiers (US)", 0 )
-GAME( 1993,	psoldier,	ssoldier,	psoldier,	psoldier,	m92_ssoldier,	ROT0,	"Irem",		"Perfect Soldiers (Japan)", 0 )
+GAME( 1993,  ssoldier,	0,	   psoldier,	psoldier,  m92_ssoldier,  ROT0,	  "Irem America", "Superior Soldiers (US)", GAME_SUPPORTS_SAVE )
+GAME( 1993,  psoldier,	ssoldier,  psoldier,	psoldier,  m92_ssoldier,  ROT0,	  "Irem", "Perfect Soldiers (Japan)", GAME_SUPPORTS_SAVE )
 //
-GAME( 1994,	gunforc2,	0,		gunforc2,	gunforc2,	m92_gunforc2,	ROT0,	"Irem",		"Gun Force II (US)", 0 )
-GAME( 1994,	geostorm,	gunforc2,	gunforc2,	gunforc2,	m92_gunforc2,	ROT0,	"Irem",		"Geo Storm (Japan)", 0 )
+GAME( 1994,  gunforc2,	0,	   gunforc2,	gunforc2,  m92_gunforc2,  ROT0,	  "Irem", "Gun Force II (US)", GAME_SUPPORTS_SAVE )
+GAME( 1994,  geostorm,	gunforc2,  gunforc2,	gunforc2,  m92_gunforc2,  ROT0,	  "Irem", "Geo Storm (Japan)", GAME_SUPPORTS_SAVE )
 //
-GAME( 1994,	dsoccr94j,	0,		dsoccr94j,	dsoccr94j,	m92_most,	ROT0,	"Irem",         "Dream Soccer '94 (Japan, M92 Hardware)", 0 )
+GAME( 1994,  dsoccr94j,	0,	   dsoccr94j,	dsoccr94j, m92_most,	  ROT0,	  "Irem", "Dream Soccer '94 (Japan, M92 Hardware)", GAME_SUPPORTS_SAVE )
