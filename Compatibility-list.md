@@ -1,15 +1,12 @@
-	Compatibility-list - Parent roms with the "*" :
-	#####################################################
-	#                       EXAMPLE:                    #
-	#  Parent name: Title name (date, version) - Note:  #
-	#   Clone name: Title name (date, version) - Note:  #
-	#####################################################
+# Compatibility-list (Parent roms name with the "*" )
 
+EXAMPLE:                    
+Parent name:  Title name (date, version) - Note:  
+Clone name:   Title name (date, version) - Note:  
+***
+## Support the following: 
+## Capcom System 1 ( 270 parent+clone roms are supported)
 
-	Support the following: 
-	/************************************************************/
-	/ * Capcom System 1 ( 269 parent+clone roms are supported) * /
-	/************************************************************/
 
 	*1941: 1941 - Counter Attack (900227 World)
 		1941j (clone of 1941): 1941 - Counter Attack (Japan)
@@ -37,6 +34,8 @@
 		cawingj (clone of cawing): U.S. Navy (901012 Japan)
 		cawingr1 (clone of cawing): Carrier Air Wing (U.S. navy 901009 etc)
 		cawingu (clone of cawing): Carrier Air Wing (U.S. navy 901012 USA)
+
+	*cps1frog: Frog Feast (CPS-1) (Rastersoft) (2006, Homebrew)
 	
 	*cworld2j: Adventure Quiz Capcom World 2 (クイズ５ あどべんちゃーくいず かぷこんわーるど２ 920611 Japan)
 		cworld2ja (clone of cworld2j): Adventure Quiz Capcom World 2 (クイズ５ あどべんちゃーくいず かぷこんわーるど２ Japan 920611, B-Board 90629B-3, no battery)
@@ -51,7 +50,7 @@
 		dinopic (clone of dino): Cadillacs and Dinosaurs (bootleg set 1 (with PIC16c57), 930201 etc)
 		dinopic2 (clone of dino): Cadillacs and Dinosaurs (bootleg set 2 (with PIC16c57), 930201 etc)
 		dinopic3 (clone of dino): Cadillacs and Dinosaurs (bootleg set 3 (with PIC16c57), 930201 etc)
-		dinopic4 (clone of dino): Cadillacs and Dinosaurs (bootleg set 4 (with PIC16c57), 930223 Asia TW) - Note: NOSOUND
+		dinopic4 (clone of dino): Cadillacs and Dinosaurs (bootleg set 4 (with PIC16c57), 930223 Asia TW) - Note: No Sound
 		dinot (clone of dino): Cadillacs and Dinosaurs Turbo (bootleg set 1, 930223 Asia TW)
 		dinotpic (clone of dino): Cadillacs and Dinosaurs Turbo (bootleg set 2 (with PIC16c57), 930201 etc)
 		dinou (clone of dino): Cadillacs & Dinosaurs (930201 USA)
@@ -316,9 +315,8 @@
 		wofchdx (clone of wofch): 三国志 III 外传: 夏侯恩的复仇 ◦ Sangokushi III Gaiden: Kakou-On's Revenge DX (hack)
 
 
-	/ ********************************************************* /
-	/ *  Capcom System 2 (304 parent+clone roms are supported) */
-	/ ********************************************************* /
+## Capcom System 2 (305 parent+clone roms are supported)
+
 	*1944: 1944 - the loop master (000620 USA)
 		1944ad (clone of 1944): 1944 - the loop master (000620 USA Phoenix Edition, alt)
 		1944d (clone of 1944): 1944 - the loop master (000620 USA Phoenix Edition)
@@ -666,9 +664,8 @@
 		xmvsfur2 (clone of xmvsf): X-Men vs Street Fighter (960910 USA)
 
 
-	/ ****************************************************** /
-	/ *    IREM M92 (37 parent+clone roms are supported)   * /
-	/ ****************************************************** /
+## IREM M92 (37 parent+clone roms are supported)  
+
 	*bmaster: Blade Master (World)
 		crossbld (clone of bmaster): Cross Blades! (Japan)
 
@@ -720,9 +717,8 @@
 		uccopsu (clone of uccops): Undercover Cops (US)
 
 
-	/****************************************************/
-	/ *  NEO GEO (293 parent+clone roms are supported)  */
-	/****************************************************/
+## NEO GEO (293 parent+clone roms are supported)
+
 	*2020bb: 2020 Super Baseball (set 1)
 		2020bba (clone of 2020bb): 2020 Super Baseball (set 2)
 		2020bbh (clone of 2020bb): 2020 Super Baseball (set 3)
@@ -933,7 +929,7 @@
 
 	*legendos: Legend of Success Joe / Ashitano Joe Densetsu ◦ あしたのジョー伝説
 
-	*lhcdb: Last Hope CD Beta (Neo CD conversion)
+	*lhcdb: Last Hope CD Beta (Neo CD conversion) - Note: Imperfect Graphics.
 
 	*lresort: Last Resort
 		lresortp (clone of lresort): Last Resort (prototype)
