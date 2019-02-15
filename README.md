@@ -6,6 +6,11 @@ M.B.A = MAME's skeleton + FBA's romsets
 M.B.A-mini from MAME2010-libretro [(https://github.com/libretro/mame2010-libretro)](https://github.com/libretro/mame2010-libretro.git)
 after the codes is streamlined, only CPS 1/2, NEOGEO, IREM M92 machines && roms is supported.
 
+![CPS1](https://raw.githubusercontent.com/wonder199999/images-repository/master/02-15-2019/sf2mdtb-190215-160214.png)
+![CPS2](https://raw.githubusercontent.com/wonder199999/images-repository/master/02-15-2019/mvscjsing-190215-215942.png)
+![M92](https://raw.githubusercontent.com/wonder199999/images-repository/master/02-15-2019/inthuntu-1.png)
+![NEOGEO](https://raw.githubusercontent.com/wonder199999/images-repository/master/02-15-2019/samsho5b-190215-220141.png)
+
 M.B.A-mini gave up the original mame0.139 romsets, but supported FBA02.97.38 romsets
 with more games (it's >= mame0.172 romsets). also in process, many roms graphics and
 sound issues have been fixed (especially for CPS1).
@@ -24,10 +29,12 @@ In the current situation, M.B.A-mini supports 270 CPS1 games (including clones),
 * Keyboard input: (enabled|disabled)
 * Use macro button: (disabled|assign A+B to L|assign A+B to R|assign C+D to L|assign C+D to R|assign A+B to L & C+D to R|assign A+B to R & C+D to L )
 * T.A.T.E mode: (disabled|enabled)
+![T.A.T.E](https://raw.githubusercontent.com/wonder199999/images-repository/master/02-15-2019/1941-2.png)
 * Set sample rate: (48000Hz|44100Hz|32000Hz|22050Hz)
 * Forced off ROM CRC verfiy: (No|Yes)
 * Set NEOGEO BIOS(All options):  (Default|Europe MVS(Ver. 2)|Europe MVS(Ver. 1)|USA MVS(Ver. 2?)|USA MVS(Ver. 1)|Asia MVS(Ver. 3)|Asia MVS(Latest)|Japan MVS(Ver. 3)|Japan MVS(Ver. 2)|Japan MVS(Ver. 1)|Japan MVS(J3)|Custom Japanese Hotel|UniBIOS(Ver. 3.2)|UniBIOS(Ver. 3.1)|UniBIOS(Ver. 3.0)|UniBIOS(Ver. 2.3)|UniBIOS(Ver. 2.3 older?)|UniBIOS(Ver. 2.2)|UniBIOS(Ver. 2.1)|UniBIOS(Ver. 2.0)|UniBIOS(Ver. 1.3)|UniBIOS(Ver. 1.2)|UniBIOS(Ver. 1.2 older)|UniBIOS(Ver. 1.1)|UniBIOS(Ver. 1.0)|Debug MVS|Asia AES|Japan AES)
 * Set NEOGEO BIOS(Typical options): (Default|Europe MVS(Ver. 2)|USA MVS(Ver. 2?)|Asia MVS(Ver. 3)|Japan MVS(Ver. 3)|UniBIOS(Ver. 3.2) )
+![UNIBIOS3.2](https://raw.githubusercontent.com/wonder199999/images-repository/master/02-15-2019/samsho5b-190215-220049.png)
 * Set brightness: (default|+1%|+2%|+3%|+4%|+5%|+6%|+7%|+8%|+9%|+10%|+11%|+12%|+13%|+14%|+15%|+16%|+17%|+18%|+19%|+20%|-20%|-19%|-18%|-17%|-16%|-15%|-14%|-13%|-12%|-11%|-10%|-9%|-8%|-7%|-6%|-5%|-4%|-3%|-2%|-1%)
 * Set contrast: (default|+1%|+2%|+3%|+4%|+5%|+6%|+7%|+8%|+9%|+10%|+11%|+12%|+13%|+14%|+15%|+16%|+17%|+18%|+19%|+20%|-20%|-19%|-18%|-17%|-16%|-15%|-14%|-13%|-12%|-11%|-10%|-9%|-8%|-7%|-6%|-5%|-4%|-3%|-2%|-1%)
 * Set gamma: (default|+1%|+2%|+3%|+4%|+5%|+6%|+7%|+8%|+9%|+10%|+11%|+12%|+13%|+14%|+15%|+16%|+17%|+18%|+19%|+20%|-20%|-19%|-18%|-17%|-16%|-15%|-14%|-13%|-12%|-11%|-10%|-9%|-8%|-7%|-6%|-5%|-4%|-3%|-2%|-1%)

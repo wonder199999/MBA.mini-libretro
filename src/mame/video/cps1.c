@@ -1735,6 +1735,29 @@ READ16_HANDLER( cps1_cps_b_r )
 {
 	cps_state *state = space->machine->driver_data<cps_state>();
 
+	/* Some games interrogate a couple of registers on bootup. */
+	/* These are CPS1 board B self test checks. They wander from game to game. */
+	if (offset == state->game_config->cpsb_addr / 2)
+		return state->game_config->cpsb_value;
+
+	/* Extra input ports (on C-board) */
+	if (offset == state->game_config->in2_addr / 2)
+		return input_port_read(space->machine, "IN2");
+
+	/* Player 4 controls (on C-board) ("Captain Commando") */
+	if (offset == state->game_config->in3_addr / 2)
+		return input_port_read(space->machine, "IN3");
+
+	/* some games use as a protection check the ability to do 16-bit multiplications */
+	/* with a 32-bit result, by writing the factors to two ports and reading the result from two other ports. */
+	if (offset == state->game_config->mult_result_lo / 2)
+		return (state->cps_b_regs[state->game_config->mult_factor1 / 2] *
+			state->cps_b_regs[state->game_config->mult_factor2 / 2]) & 0xffff;
+
+	if (offset == state->game_config->mult_result_hi / 2)
+		return (state->cps_b_regs[state->game_config->mult_factor1 / 2] *
+			state->cps_b_regs[state->game_config->mult_factor2 / 2]) >> 16;
+
 	if (state->cps_version == 2)
 	{
 		/* UNKNOWN--only mmatrix appears to read this, and I'm not sure if the result is actually used */
@@ -1742,31 +1765,6 @@ READ16_HANDLER( cps1_cps_b_r )
 			return state->cps_b_regs[0x10 / 2];
 		else if (offset == 0x12 / 2)
 			return state->cps_b_regs[0x12 / 2];
-	}
-	else
-	{
-		/* Some games interrogate a couple of registers on bootup. */
-		/* These are CPS1 board B self test checks. They wander from game to game. */
-		if (offset == state->game_config->cpsb_addr / 2)
-			return state->game_config->cpsb_value;
-
-		/* Extra input ports (on C-board) */
-		else if (offset == state->game_config->in2_addr / 2)
-			return input_port_read(space->machine, "IN2");
-
-		/* Player 4 controls (on C-board) ("Captain Commando") */
-		else if (offset == state->game_config->in3_addr / 2)
-			return input_port_read(space->machine, "IN3");
-
-		/* some games use as a protection check the ability to do 16-bit multiplications */
-		/* with a 32-bit result, by writing the factors to two ports and reading the result from two other ports. */
-		else if (offset == state->game_config->mult_result_lo / 2)
-			return (state->cps_b_regs[state->game_config->mult_factor1 / 2] *
-				state->cps_b_regs[state->game_config->mult_factor2 / 2]) & 0xffff;
-
-		else if (offset == state->game_config->mult_result_hi / 2)
-			return (state->cps_b_regs[state->game_config->mult_factor1 / 2] *
-				state->cps_b_regs[state->game_config->mult_factor2 / 2]) >> 16;
 	}
 #ifdef MAME_DEBUG
 	popmessage("CPS-B read port %02x contact MAMEDEV", offset * 2);
@@ -2787,10 +2785,7 @@ VIDEO_UPDATE( cps1 )
 	cps1_get_video_base(screen->machine);
 	/* Find the offset of the last sprite in the sprite table */
 	if (state->cps_version == 2)
-	{
-		cps2_set_sprite_priorities(screen->machine);
 		cps2_find_last_sprite(screen->machine);
-	}
 	else
 		cps1_find_last_sprite(screen->machine);
 

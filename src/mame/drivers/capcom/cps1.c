@@ -3333,8 +3333,9 @@ static const gfx_layout cps1_layout8x8 =
 	RGN_FRAC(1, 1),
 	4,
 	{ 0, 1, 2, 3 },
-	{ 1 * 4,  0 * 4,  3 * 4,  2 * 4,  5 * 4,  4 * 4,  7 * 4,  6 * 4 },
-	{ 0 * 64, 1 * 64, 2 * 64, 3 * 64, 4 * 64, 5 * 64, 6 * 64, 7 * 64 },
+	{ 1*4, 0*4, 3*4, 2*4, 5*4, 4*4, 7*4, 6*4 },
+	{ STEP8(0, 64) },
+//	{ 0 * 64, 1 * 64, 2 * 64, 3 * 64, 4 * 64, 5 * 64, 6 * 64, 7 * 64 },
 	64 * 8
 };
 
@@ -3344,8 +3345,9 @@ static const gfx_layout cps1_layout8x8_2 =
 	RGN_FRAC(1, 1),
 	4,
 	{ 0, 1, 2, 3 },
-	{ 9 * 4,  8 * 4,  11 * 4, 10 * 4, 13 * 4, 12 * 4, 15 * 4, 14 * 4 },
-	{ 0 * 64, 1 * 64, 2 * 64, 3 * 64, 4 * 64, 5 * 64, 6 * 64, 7 * 64 },
+	{ 9*4, 8*4, 11*4, 10*4, 13*4, 12*4, 15*4, 14*4 },
+	{ STEP8(0, 64) },
+//	{ 0 * 64, 1 * 64, 2 * 64, 3 * 64, 4 * 64, 5 * 64, 6 * 64, 7 * 64 },
 	64 * 8
 };
 
@@ -3394,10 +3396,10 @@ static MACHINE_DRIVER_START( cps1_10MHz )
 	MDRV_DRIVER_DATA(cps_state)
 
 	/* basic machine hardware */
-	MDRV_CPU_ADD("maincpu", M68000, XTAL_10MHz )				/* verified on pcb */
+	MDRV_CPU_ADD("maincpu", M68000, XTAL_10MHz )			/* verified on pcb */
 	MDRV_CPU_PROGRAM_MAP(main_map)
 	MDRV_CPU_VBLANK_INT("screen", cps1_interrupt)
-	MDRV_CPU_ADD("audiocpu", Z80, XTAL_3_579545MHz)				/* verified on pcb */
+	MDRV_CPU_ADD("audiocpu", Z80, XTAL_3_579545MHz)			/* verified on pcb */
 	MDRV_CPU_PROGRAM_MAP(sub_map)
 	MDRV_MACHINE_START(cps1)
 
@@ -3413,7 +3415,7 @@ static MACHINE_DRIVER_START( cps1_10MHz )
 
 	/* sound hardware */
 	MDRV_SPEAKER_STANDARD_MONO("mono")
-	MDRV_SOUND_ADD("2151", YM2151, XTAL_3_579545MHz)			/* verified on pcb */
+	MDRV_SOUND_ADD("2151", YM2151, XTAL_3_579545MHz)		/* verified on pcb */
 	MDRV_SOUND_CONFIG(ym2151_config)
 	MDRV_SOUND_ROUTE(0, "mono", 0.35)
 	MDRV_SOUND_ROUTE(1, "mono", 0.35)
@@ -3428,19 +3430,19 @@ static MACHINE_DRIVER_START( cps1_12MHz )
 	MDRV_IMPORT_FROM(cps1_10MHz)
 
 	MDRV_CPU_MODIFY("maincpu")
-	MDRV_CPU_CLOCK( XTAL_12MHz )				/* verified on pcb */
+	MDRV_CPU_CLOCK( XTAL_12MHz )					/* verified on pcb */
 MACHINE_DRIVER_END
 
 static MACHINE_DRIVER_START( qsound )
 	/* basic machine hardware */
 	MDRV_IMPORT_FROM(cps1_12MHz)
 
-	MDRV_CPU_REPLACE("maincpu", M68000, XTAL_12MHz )	/* verified on pcb */
+	MDRV_CPU_REPLACE("maincpu", M68000, XTAL_12MHz )		/* verified on pcb */
 	MDRV_CPU_PROGRAM_MAP(qsound_main_map)
-	MDRV_CPU_VBLANK_INT("screen", cps1_interrupt)	/* ??? interrupts per frame */
-	MDRV_CPU_REPLACE("audiocpu", Z80, XTAL_8MHz)		/* verified on pcb */
+	MDRV_CPU_VBLANK_INT("screen", cps1_interrupt)			/* ??? interrupts per frame */
+	MDRV_CPU_REPLACE("audiocpu", Z80, XTAL_8MHz)			/* verified on pcb */
 	MDRV_CPU_PROGRAM_MAP(qsound_sub_map)
-	MDRV_CPU_PERIODIC_INT(irq0_line_hold, 250)		/* ?? */
+	MDRV_CPU_PERIODIC_INT(irq0_line_hold, 250)			/* ?? */
 	MDRV_MACHINE_START(qsound)
 
 	MDRV_EEPROM_ADD("eeprom", qsound_eeprom_interface)
@@ -3520,7 +3522,7 @@ MACHINE_DRIVER_END
  *  ROM definition
 
 ***************************************************************************/
-//
+
 /* B-Board 89624B-3 */
 ROM_START( 1941 )		/* newset */
 	ROM_REGION( CODE_SIZE, "maincpu", 0 )      /* 68000 code */
@@ -3858,26 +3860,26 @@ ROM_START( wonder3 )		/* newset */
 	ROMX_LOAD( "rt_22.11c", 0x300007, 0x20000, CRC(228a0d4a) SHA1(bcaf12d01abe1d3cd5731bd5341cb22c4ca6139e) , ROM_SKIP(7) ) // == rt-4m.6a
 
 	ROM_REGION( 0x18000, "audiocpu", 0 ) /* 64k for the audio CPU (+banks) */
-	ROM_LOAD( "rt_23.13b",        0x00000, 0x08000, CRC(abfca165) SHA1(428069d3bdc45775854cd0e8abe447f134fe5492) )    // == rt_9.12b
-	ROM_CONTINUE(                 0x10000, 0x08000 )
+	ROM_LOAD( "rt_23.13b",	0x00000, 0x08000, CRC(abfca165) SHA1(428069d3bdc45775854cd0e8abe447f134fe5492) )    // == rt_9.12b
+	ROM_CONTINUE(		0x10000, 0x08000 )
 
 	ROM_REGION( 0x40000, "oki", 0 ) /* Samples */
 	ROM_LOAD( "rt_30.12c",  0x00000, 0x20000, CRC(26b211ab) SHA1(0ea03fdd9edff41eacfc52aa9e0421c10968356b) )    // == rt_18.11c
 	ROM_LOAD( "rt_31.13c",  0x20000, 0x20000, CRC(dbe64ad0) SHA1(09f2ad522fe75d7bcca094b8c6696c3733b539d5) )    // == rt_19.12c
 
 	ROM_REGION( 0x0200, "aboardplds", 0 )
-	ROM_LOAD( "buf1",         0x0000, 0x0117, CRC(eb122de7) SHA1(b26b5bfe258e3e184f069719f9fd008d6b8f6b9b) )
-	ROM_LOAD( "ioa1",         0x0000, 0x0117, CRC(59c7ee3b) SHA1(fbb887c5b4f5cb8df77cec710eaac2985bc482a6) )
-	ROM_LOAD( "prg1",         0x0000, 0x0117, CRC(f1129744) SHA1(a5300f301c1a08a7da768f0773fa0fe3f683b237) )
-	ROM_LOAD( "rom1",         0x0000, 0x0117, CRC(41dc73b9) SHA1(7d4c9f1693c821fbf84e32dd6ef62ddf14967845) )
-	ROM_LOAD( "sou1",         0x0000, 0x0117, CRC(84f4b2fe) SHA1(dcc9e86cc36316fe42eace02d6df75d08bc8bb6d) )
+	ROM_LOAD( "buf1",       0x0000, 0x0117, CRC(eb122de7) SHA1(b26b5bfe258e3e184f069719f9fd008d6b8f6b9b) )
+	ROM_LOAD( "ioa1",       0x0000, 0x0117, CRC(59c7ee3b) SHA1(fbb887c5b4f5cb8df77cec710eaac2985bc482a6) )
+	ROM_LOAD( "prg1",       0x0000, 0x0117, CRC(f1129744) SHA1(a5300f301c1a08a7da768f0773fa0fe3f683b237) )
+	ROM_LOAD( "rom1",       0x0000, 0x0117, CRC(41dc73b9) SHA1(7d4c9f1693c821fbf84e32dd6ef62ddf14967845) )
+	ROM_LOAD( "sou1",       0x0000, 0x0117, CRC(84f4b2fe) SHA1(dcc9e86cc36316fe42eace02d6df75d08bc8bb6d) )
 
 	ROM_REGION( 0x0200, "bboardplds", 0 )
-	ROM_LOAD( "rt22b.1a",     0x0000, 0x0117, CRC(89560d6a) SHA1(0f88920536eb131948339becb14557d77e02b9f8) )
-	ROM_LOAD( "iob1.12e",     0x0000, 0x0117, CRC(3abc0700) SHA1(973043aa46ec6d5d1db20dc9d5937005a0f9f6ae) )
+	ROM_LOAD( "rt22b.1a",   0x0000, 0x0117, CRC(89560d6a) SHA1(0f88920536eb131948339becb14557d77e02b9f8) )
+	ROM_LOAD( "iob1.12e",   0x0000, 0x0117, CRC(3abc0700) SHA1(973043aa46ec6d5d1db20dc9d5937005a0f9f6ae) )
 
 	ROM_REGION( 0x0200, "cboardplds", 0 )
-	ROM_LOAD( "ioc1.ic1",     0x0000, 0x0117, CRC(0d182081) SHA1(475b3d417785da4bc512cce2b274bb00d4cc6792) )
+	ROM_LOAD( "ioc1.ic1",   0x0000, 0x0117, CRC(0d182081) SHA1(475b3d417785da4bc512cce2b274bb00d4cc6792) )
 ROM_END
 
 /* Three Wonders (bootleg) */
@@ -4222,11 +4224,11 @@ ROM_START( captcommb )		/* newset */
 	ROM_CONTINUE(             0x200007, 0x40000)
 
 	ROM_REGION( 0x18000, "audiocpu", 0 ) /* 64k for the audio CPU (+banks) */
-	ROM_LOAD( "l.bin",     0x00000, 0x08000, CRC(698e8b58) SHA1(b7a3d905a7ed2c430426ca2e185e3d7e75e752a1) )
-	ROM_CONTINUE(              0x10000, 0x08000 )
+	ROM_LOAD( "l.bin",	0x00000, 0x08000, CRC(698e8b58) SHA1(b7a3d905a7ed2c430426ca2e185e3d7e75e752a1) )
+	ROM_CONTINUE(		0x10000, 0x08000 )
 
 	ROM_REGION( 0x40000, "oki", 0 ) /* Samples */
-	ROM_LOAD( "c91e-05.bin",     0x00000, 0x40000, CRC(096115fb) SHA1(b496550f61b3d4b54ba43522d31efd0b09057493))
+	ROM_LOAD( "c91e-05.bin",  0x00000, 0x40000, CRC(096115fb) SHA1(b496550f61b3d4b54ba43522d31efd0b09057493))
 ROM_END
 
 /* B-Board 89624B-3 */
@@ -4451,7 +4453,7 @@ ROM_START( cworld2ja )
 
 	ROM_REGION( 0x18000, "audiocpu", 0 ) /* 64k for the audio CPU (+banks) */
 	ROM_LOAD( "q5 - 09_90629b.12a",  0x00000, 0x08000, CRC(e14dc524) SHA1(0020a9002572002458fbfe45e8a959cb90de3f03) )
-	ROM_CONTINUE(           0x10000, 0x08000 )
+	ROM_CONTINUE(			 0x10000, 0x08000 )
 
 	ROM_REGION( 0x40000, "oki", 0 ) /* Samples */
 	ROM_LOAD( "q5 - 18_90629b.11c",  0x00000, 0x20000, CRC(d10c1b68) SHA1(2423241f3340d8ab1b6bf9514ca8c3bba1273873) )
@@ -4486,7 +4488,7 @@ ROM_START( cworld2jb )
 
 	ROM_REGION( 0x18000, "audiocpu", 0 ) /* 64k for the audio CPU (+banks) */
 	ROM_LOAD( "q5 - 09_91634b.12a", 0x00000, 0x08000, CRC(e14dc524) SHA1(0020a9002572002458fbfe45e8a959cb90de3f03) )
-	ROM_CONTINUE(           0x10000, 0x08000 )
+	ROM_CONTINUE(			0x10000, 0x08000 )
 
 	ROM_REGION( 0x40000, "oki", 0 ) /* Samples */
 	ROM_LOAD( "q5 - 18_91634b.11c", 0x00000, 0x20000, CRC(d10c1b68) SHA1(2423241f3340d8ab1b6bf9514ca8c3bba1273873) )
@@ -4672,12 +4674,12 @@ ROM_START( dinohunt )
 	ROMX_LOAD( "u8",   0x200006, 0x80000, CRC(8869bbb1) SHA1(e53f77baffb913bf3ef5396d84fbfbaec6a90ca2) , ROM_GROUPWORD | ROM_SKIP(6) )
 
 	ROM_REGION( 0x18000, "audiocpu", 0 ) /* 64k for the audio CPU (+banks) */
-	ROM_LOAD( "u9",             0x00000, 0x08000, CRC(2eb16a83) SHA1(067ea0bfc2c1e73520d6b836c72fbb9da9998311) )
-	ROM_CONTINUE(               0x10000, 0x08000 )
+	ROM_LOAD( "u9",	   0x00000, 0x08000, CRC(2eb16a83) SHA1(067ea0bfc2c1e73520d6b836c72fbb9da9998311) )
+	ROM_CONTINUE(	   0x10000, 0x08000 )
 
 	ROM_REGION( 0x40000, "oki", 0 ) /* samples */
-	ROM_LOAD( "u18",            0x00000, 0x20000, CRC(8d2899ba) SHA1(0b3ac6cf2ce0323e3bfc9da3ebfcb0fd14bc405b) )
-	ROM_LOAD( "u19",            0x20000, 0x20000, CRC(b34a4b42) SHA1(3eeb9e33bb911359e03d44949ac58439a3d3d54b) )
+	ROM_LOAD( "u18",   0x00000, 0x20000, CRC(8d2899ba) SHA1(0b3ac6cf2ce0323e3bfc9da3ebfcb0fd14bc405b) )
+	ROM_LOAD( "u19",   0x20000, 0x20000, CRC(b34a4b42) SHA1(3eeb9e33bb911359e03d44949ac58439a3d3d54b) )
 ROM_END
 
 ROM_START( dinoeh )
@@ -6810,8 +6812,8 @@ ROM_START( kodr1 )
 	ROMX_LOAD( "kd-4m.5c", 0x200006, 0x80000, CRC(402b9b4f) SHA1(4c11976976eadf1ad293b31b0a4d047d05032b06) , ROM_GROUPWORD | ROM_SKIP(6) )  // in "12" socket
 
 	ROM_REGION( 0x18000, "audiocpu", 0 )	/* 64k for the audio CPU (+banks) */
-	ROM_LOAD( "kd_9.12a",           0x00000, 0x08000, CRC(f5514510) SHA1(07e9c836adf9ef2f7e7729e99015f71e3b5f16e0) )    /* different CRC from kod, pcb verified */
-	ROM_CONTINUE(                   0x10000, 0x08000 )
+	ROM_LOAD( "kd_9.12a",	0x00000, 0x08000, CRC(f5514510) SHA1(07e9c836adf9ef2f7e7729e99015f71e3b5f16e0) )    /* different CRC from kod, pcb verified */
+	ROM_CONTINUE(		0x10000, 0x08000 )
 
 	ROM_REGION( 0x40000, "oki", 0 )		/* Samples */
 	ROM_LOAD( "kd_18.11c", 0x00000, 0x20000, CRC(69ecb2c8) SHA1(fadf266b6b20bd6329a3e638918c5a3106413476) )    /* different CRC from kod, pcb verified */
@@ -8110,8 +8112,8 @@ ROM_START( pang3b3 )
 	ROM_LOAD( "sou1",  0x0000, 0x0117, CRC(84f4b2fe) SHA1(dcc9e86cc36316fe42eace02d6df75d08bc8bb6d) )
 
 	ROM_REGION( 0x0200, "bboardplds", 0 )
-	ROM_LOAD( "cp1b1f.1f",    0x0000, 0x0117, CRC(3979b8e3) SHA1(07c9819d68b4d93bc37b96bd15d689ce54fe034e) )
-	ROM_LOAD( "cp1b8k.8k",    0x0000, 0x0117, CRC(8a52ea7a) SHA1(47a59abc54a83292cfd6faa2d293c8f948c7ea03) )
+	ROM_LOAD( "cp1b1f.1f",  0x0000, 0x0117, CRC(3979b8e3) SHA1(07c9819d68b4d93bc37b96bd15d689ce54fe034e) )
+	ROM_LOAD( "cp1b8k.8k",  0x0000, 0x0117, CRC(8a52ea7a) SHA1(47a59abc54a83292cfd6faa2d293c8f948c7ea03) )
 	ROM_LOAD( "cp1b9k.9k",  0x0000, 0x0117, CRC(a754bdc3) SHA1(9267b24cbddee4858b219468cc92f9df8f5fd0ef) )
 
 	ROM_REGION( 0x0200, "cboardplds", 0 )
@@ -8643,7 +8645,7 @@ ROM_START( slammast )
 	ROM_CONTINUE(           0x10000, 0x18000 )
 
 	ROM_REGION( 0x8000, "user1", 0 )
-	ROM_COPY( "audiocpu", 0x000000, 0x00000, 0x8000 )
+	ROM_COPY( "audiocpu",   0x00000, 0x00000, 0x8000 )
 
 	ROM_REGION( 0x400000, "qsound", 0 ) /* QSound samples */
 	ROM_LOAD( "mb-q1.1k",   0x000000, 0x80000, CRC(0630c3ce) SHA1(520fc74c5c3638f611fa2f1b5efb08b91747e29b) )
@@ -8802,10 +8804,10 @@ ROM_END
 /* FIXME B-Board uncertain but should be 91634B from the program ROM names */
 ROM_START( sfzch )
 	ROM_REGION( CODE_SIZE, "maincpu",0 )      /* 68000 code */
-	ROM_LOAD16_WORD_SWAP( "sfzch23",        0x000000, 0x80000, CRC(1140743f) SHA1(10bcedb5cca266f2aa3ed99ede6f9a64fc877539))
-	ROM_LOAD16_WORD_SWAP( "sfza22",         0x080000, 0x80000, CRC(8d9b2480) SHA1(405305c1572908d00eab735f28676fbbadb4fac6))
-	ROM_LOAD16_WORD_SWAP( "sfzch21",        0x100000, 0x80000, CRC(5435225d) SHA1(6b1156fd82d0710e244ede39faaae0847c598376))
-	ROM_LOAD16_WORD_SWAP( "sfza20",         0x180000, 0x80000, CRC(806e8f38) SHA1(b6d6912aa8f2f590335d7ff9a8214648e7131ebb))
+	ROM_LOAD16_WORD_SWAP( "sfzch23",    0x000000, 0x80000, CRC(1140743f) SHA1(10bcedb5cca266f2aa3ed99ede6f9a64fc877539) )
+	ROM_LOAD16_WORD_SWAP( "sfza22",     0x080000, 0x80000, CRC(8d9b2480) SHA1(405305c1572908d00eab735f28676fbbadb4fac6) )
+	ROM_LOAD16_WORD_SWAP( "sfzch21",    0x100000, 0x80000, CRC(5435225d) SHA1(6b1156fd82d0710e244ede39faaae0847c598376) )
+	ROM_LOAD16_WORD_SWAP( "sfza20",     0x180000, 0x80000, CRC(806e8f38) SHA1(b6d6912aa8f2f590335d7ff9a8214648e7131ebb) )
 
 	ROM_REGION( 0x800000, "gfx", 0 )
 	ROMX_LOAD( "sfz_01.3a",  0x000000, 0x80000, CRC(0dd53e62) SHA1(5f3bcf5ca0fd564d115fe5075a4163d3ee3226df), ROM_GROUPWORD | ROM_SKIP(6) )
@@ -8921,9 +8923,9 @@ ROM_START( striderua )
 	ROM_LOAD( "lwio.11e",     0x0000, 0x0117, CRC(ad52b90c) SHA1(f0fd6aeea515ee449320fe15684e6b3ab7f97bf4) )
 ROM_END
 
-// 90629B-3 PCB - Converted from an SF2 'inhouse' (but with no official labels etc.)
-// actually an incomplete conversion, layer enables are wrong in a number of places which causes the game to break even on real hardware.
-// this is essentially a Capcom made bootleg of a Capcom game.
+/* 90629B-3 PCB - Converted from an SF2 'inhouse' (but with no official labels etc.)
+   actually an incomplete conversion, layer enables are wrong in a number of places which causes the game to break even on real hardware.
+   this is essentially a Capcom made bootleg of a Capcom game.		*/
 ROM_START( strideruc )
 	ROM_REGION( CODE_SIZE, "maincpu", 0 )      /* 68000 code */
 	ROM_LOAD16_WORD_SWAP( "34.8f", 0x000000, 0x80000, CRC(e0fb5657) SHA1(6c7f668220de80169feea35371aff363f67f7b0c) )

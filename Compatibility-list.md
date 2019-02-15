@@ -6,7 +6,7 @@ Clone name:   Title name (date, version) - Note:
 ***
 ## Support the following: 
 ## Capcom System 1 ( 270 parent+clone roms are supported)
-
+![CPS1](https://raw.githubusercontent.com/wonder199999/images-repository/master/02-15-2019/sgyxz-190215-155858.png)
 
 	*1941: 1941 - Counter Attack (900227 World)
 		1941j (clone of 1941): 1941 - Counter Attack (Japan)
@@ -316,6 +316,7 @@ Clone name:   Title name (date, version) - Note:
 
 
 ## Capcom System 2 (305 parent+clone roms are supported)
+![CPS2](https://raw.githubusercontent.com/wonder199999/images-repository/master/02-15-2019/ssf2-190215-171136.png)
 
 	*1944: 1944 - the loop master (000620 USA)
 		1944ad (clone of 1944): 1944 - the loop master (000620 USA Phoenix Edition, alt)
@@ -665,6 +666,7 @@ Clone name:   Title name (date, version) - Note:
 
 
 ## IREM M92 (37 parent+clone roms are supported)  
+![M92](https://raw.githubusercontent.com/wonder199999/images-repository/master/02-15-2019/leaguemn-190215-220724.png)
 
 	*bmaster: Blade Master (World)
 		crossbld (clone of bmaster): Cross Blades! (Japan)
@@ -718,6 +720,7 @@ Clone name:   Title name (date, version) - Note:
 
 
 ## NEO GEO (293 parent+clone roms are supported)
+![NEOGEO](https://raw.githubusercontent.com/wonder199999/images-repository/master/02-15-2019/kf2k3bl-1.png)
 
 	*2020bb: 2020 Super Baseball (set 1)
 		2020bba (clone of 2020bb): 2020 Super Baseball (set 2)
