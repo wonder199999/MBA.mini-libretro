@@ -1723,11 +1723,6 @@ WRITE16_HANDLER( cps1_cps_a_w )
 	if (state->cps_version == 2)
 		if (offset == 0x24 / 2)
 			return;
-
-#ifdef MAME_DEBUG
-	if (offset > CPS1_VIDEOCONTROL)
-		popmessage("write to CPS-A register %02x contact MAMEDEV", offset * 2);
-#endif
 }
 
 
@@ -1766,9 +1761,7 @@ READ16_HANDLER( cps1_cps_b_r )
 		else if (offset == 0x12 / 2)
 			return state->cps_b_regs[0x12 / 2];
 	}
-#ifdef MAME_DEBUG
-	popmessage("CPS-B read port %02x contact MAMEDEV", offset * 2);
-#endif
+
 	return 0xffff;
 }
 
@@ -1807,16 +1800,6 @@ WRITE16_HANDLER( cps1_cps_b_w )
 			}
 		}
 	}
-#ifdef MAME_DEBUG
-	if ( offset != state->game_config->cpsb_addr / 2 && /* only varth writes here */ offset != state->game_config->mult_factor1 / 2 &&
-			offset != state->game_config->mult_factor2 / 2 && offset != state->game_config->layer_control / 2 &&
-			offset != state->game_config->unknown1 / 2 && offset != state->game_config->unknown2 / 2 &&
-			offset != state->game_config->unknown3 / 2 && offset != state->game_config->priority[0] / 2 &&
-			offset != state->game_config->priority[1] / 2 && offset != state->game_config->priority[2] / 2 &&
-			offset != state->game_config->priority[3] / 2 && offset != state->game_config->palette_control / 2 &&
-			offset != state->game_config->out2_addr / 2 && !state->game_config->bootleg_kludge )
-		popmessage("CPS-B write %04x to port %02x contact MAMEDEV", data, offset * 2);
-#endif
 }
 
 
@@ -2026,34 +2009,6 @@ void cps1_get_video_base( running_machine *machine )
 
 	state->stars_enabled[0] = layercontrol & state->game_config->layer_enable_mask[3];
 	state->stars_enabled[1] = layercontrol & state->game_config->layer_enable_mask[4];
-
-#ifdef MAME_DEBUG
-{
-	int enablemask = 0;
-
-	if (state->game_config->layer_enable_mask[0] == state->game_config->layer_enable_mask[1])
-		enablemask = state->game_config->layer_enable_mask[0];
-
-	if (state->game_config->layer_enable_mask[0] == state->game_config->layer_enable_mask[2])
-		enablemask = state->game_config->layer_enable_mask[0];
-
-	if (state->game_config->layer_enable_mask[1] == state->game_config->layer_enable_mask[2])
-		enablemask = state->game_config->layer_enable_mask[1];
-
-	if (enablemask)
-	{
-		if (((layercontrol & enablemask) && (layercontrol & enablemask) != enablemask))
-			popmessage("layer %02x contact MAMEDEV", layercontrol & 0xc03f);
-	}
-
-	enablemask = state->game_config->layer_enable_mask[0] | state->game_config->layer_enable_mask[1]
-			| state->game_config->layer_enable_mask[2]
-			| state->game_config->layer_enable_mask[3] | state->game_config->layer_enable_mask[4];
-
-	if (((layercontrol & ~enablemask) & 0x003e) != 0)
-		popmessage("layer %02x contact MAMEDEV", layercontrol & 0xc03f);
-}
-#endif
 }
 
 
@@ -2616,9 +2571,6 @@ static void cps2_render_sprites( running_machine *machine, bitmap_t *bitmap, con
 	INT32 xoffs = 64 - cps2_port(machine, CPS2_OBJ_XOFFS), x;
 	INT32 yoffs = 16 - cps2_port(machine, CPS2_OBJ_YOFFS), y;
 
-#ifdef MAME_DEBUG
-	if (input_code_pressed(machine, KEYCODE_Z) && input_code_pressed(machine, KEYCODE_R)) return;
-#endif
 	for (INT32 i = state->cps2_last_sprite_offset; i >= 0; i -= 4)
 	{
 		x = base[i + 0];

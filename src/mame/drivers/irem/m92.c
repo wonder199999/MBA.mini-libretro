@@ -934,7 +934,11 @@ static MACHINE_DRIVER_START( m92 )
 	MDRV_CPU_ADD("maincpu", V33, XTAL_9MHz)			/* NEC V33, 18 MHz clock */
 	MDRV_CPU_PROGRAM_MAP(m92_map)
 	MDRV_CPU_IO_MAP(m92_portmap)
-	MDRV_CPU_ADD("soundcpu", V35, XTAL_7_15909MHz)		/* 14.31818 MHz */
+#if defined(ARM_ENABLED)
+	MDRV_CPU_ADD("soundcpu", V35, XTAL_7_15909MHz)		/* Suitable for weak performance platforms (MAME0.139 and older versions of the settings) */
+#else
+	MDRV_CPU_ADD("soundcpu", V35, XTAL_14_31818MHz)		/* 14.31818 MHz */
+#endif
 	MDRV_CPU_PROGRAM_MAP(sound_map)
 	MDRV_MACHINE_START(m92)
 	MDRV_MACHINE_RESET(m92)
