@@ -12,6 +12,8 @@
 NATIVE := 0
 ALIGNED = 0
 MDEBUG = 0
+PTR64 = 0
+BIGENDIAN = 0
 
 # ------------------------------------------------------------
 # Set the BIOS used by NEOGEO
@@ -20,42 +22,43 @@ MDEBUG = 0
 # ------------------------------------------------------------
 NEOGEO_BIOS = 0
 
+# system platform
 UNAME = $(shell uname -a)
+
 ifeq ($(platform),)
    platform = unix
+   system_platform = unix
    ifeq ($(UNAME),)
 	platform = win
+	EXE_EXT = .exe
+	system_platform = win
    else ifneq ($(findstring MINGW,$(UNAME)),)
 	platform = win
+	system_platform = win
    else ifneq ($(findstring Darwin,$(UNAME)),)
 	platform = osx
+	system_platform = osx
    else ifneq ($(findstring win,$(UNAME)),)
 	platform = win
    endif
 endif
 
-# system platform
-system_platform = unix
-ifeq ($(UNAME),)
-   EXE_EXT = .exe
-   system_platform = win
-else ifneq ($(findstring Darwin,$(UNAME)),)
-   system_platform = osx
-else ifneq ($(findstring MINGW,$(UNAME)),)
-   system_platform = win
-endif
-
+# Autodetect PTR64 and ENDIAN
 UNAME = $(shell uname -m)
+
 ifeq ($(firstword $(filter x86_64,$(UNAME))),x86_64)
    PTR64 = 1
 endif
 ifeq ($(firstword $(filter amd64,$(UNAME))),amd64)
    PTR64 = 1
 endif
+ifneq (,$(findstring mingw64-w64,$(PATH)))
+   PTR64 = 1
+endif
 ifeq ($(firstword $(filter ppc64,$(UNAME))),ppc64)
    PTR64 = 1
 endif
-ifneq (,$(findstring mingw64-w64,$(PATH)))
+ifeq ($(firstword $(filter aarch64,$(UNAME))),aarch64)
    PTR64 = 1
 endif
 ifneq (,$(findstring Power,$(UNAME)))
@@ -69,6 +72,8 @@ endif
 DEFS = -DCRLF=2 -DDISABLE_MIDI=1
 # Default to something reasonable for all platforms
 ARFLAGS = -cr
+# uncomment next line to build PortMidi as part of MAME/MESS build
+BUILD_MIDILIB = 0
 
 #-------------------------------------------------
 # compile flags
@@ -88,9 +93,6 @@ CPPONLYFLAGS =
 LDFLAGS =
 LDFLAGSEMULATOR =
 
-# uncomment next line to build PortMidi as part of MAME/MESS build
-BUILD_MIDILIB = 0
-
 TARGET_NAME := mba_mini
 fpic := 
 EXE = 
@@ -99,14 +101,13 @@ CORE_DIR = .
 
 CCOMFLAGS  += -D__LIBRETRO__
 
-# 64bit build on UNIX(linux), is it optimize for local machine (auto detect)?
+# When doing 64bit build, is it optimize for local machine (hence the result might not run on different machines).
 OPTFLAG ?= 0
 
 # The default is software rendering.
 VRENDER ?= soft
 
 ifeq ($(VRENDER),opengl)
-	PLATCFLAGS += -DHAVE_OPENGL
 	CCOMFLAGS  += -DHAVE_OPENGL
 endif
 
@@ -129,7 +130,7 @@ endif
    CC = g++
    AR = @ar
    LD = g++
-   PLATCFLAGS += -fstrict-aliasing -fno-merge-constants -fsingle-precision-constant -fno-common -finline
+   PLATCFLAGS += -fno-merge-constants -fsingle-precision-constant -fno-common -finline
    CCOMFLAGS += $(PLATCFLAGS) -ffast-math
    LIBS += -lstdc++ -lpthread
    ALIGNED = 1
@@ -141,6 +142,7 @@ else ifeq ($(platform), android)
    TARGETOS=linux
    fpic = -fPIC
    SHARED := -shared -Wl,--version-script=src/osd/retro/link.T
+   NATIVE = 1
    CC_AS = @arm-linux-androideabi-gcc
    CC = @arm-linux-androideabi-g++
    AR = @arm-linux-androideabi-ar
@@ -435,16 +437,15 @@ OBJ = obj/$(PREFIX)$(OSD)$(SUFFIX)$(SUFFIX64)$(SUFFIXDEBUG)$(SUFFIXPROFILE)
 DEFS += -DINLINE="static inline"
 
 # define MSB_FIRST if we are a big-endian target
-ifdef BIGENDIAN
-   DEFS       += -DMSB_FIRST
-   PLATCFLAGS += -DMSB_FIRST
+ifeq ($(BIGENDIAN), 1)
+   DEFS += -DMSB_FIRST
 endif
 
 # define PTR64 if we are a 64-bit target
 ifeq ($(PTR64), 1)
    DEFS += -DPTR64
    ifeq ($(OPTFLAG), 1)
-	CCOMFLAGS += -march=native
+	CCOMFLAGS += -march=native -mtune=native
    endif
 endif
 
@@ -499,8 +500,7 @@ CCOMFLAGS += \
 	-Wformat-security \
 	-Wwrite-strings \
 	-Wno-sign-compare \
-	-Wno-conversion \
-	-Wno-cast-align 
+	-Wno-conversion 
 
 # warnings only applicable to C compiles
 CONLYFLAGS += \
