@@ -45,6 +45,9 @@ In the current situation, M.B.A-mini supports 270 CPS1 games (including clones),
 
 	`make` or `make -j4`
 
+  Optimize for local machines when 64-bit building,
+	use: `make "OPTFLAG=1"`	
+
 * Build for arm linux:
   
 	`make platform=armv`
@@ -56,7 +59,6 @@ In the current situation, M.B.A-mini supports 270 CPS1 games (including clones),
 * Build for android:
   
 	`make "NATIVE=1" buildtools`
-
 	`make platform=android`
 
 
