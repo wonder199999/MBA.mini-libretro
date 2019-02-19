@@ -17,7 +17,7 @@ INCFLAGS := \
 INCFLAGS += -I$(DEPS_DIR)/expat
 EXPAT = $(OBJ)/libexpat.a
 
-# add SoftFloat floating point emulation library
+# add 'SoftFloat' floating point emulation library
 SOFTFLOAT = $(OBJ)/libsoftfloat.a
 
 # add PortMidi MIDI library
@@ -31,7 +31,6 @@ endif
 LIBS += -lz
 
 # then the various core pieces
-
 MAMESRC = $(SRC_DIR)/mame
 MAMEOBJ = $(OBJ)/mame
 
@@ -233,10 +232,10 @@ EMUVIDEOOBJS = \
 	$(EMUVIDEO)/vector.o \
 
 
+# 
 LIBEMUOBJS = $(EMUOBJS) $(EMUSOUNDOBJS) $(EMUAUDIOOBJS) $(EMUDRIVEROBJS) $(EMUMACHINEOBJS) $(EMUVIDEOOBJS)
 
 $(LIBEMU): $(LIBEMUOBJS)
-
 
 #-------------------------------------------------
 # CPU core objects
@@ -245,14 +244,12 @@ $(LIBEMU): $(LIBEMUOBJS)
 CPUSRC = $(EMUSRC)/cpu
 CPUOBJ = $(EMUOBJ)/cpu
 
-
 #-------------------------------------------------
 # Shared code
 #-------------------------------------------------
 
 OBJDIRS += $(CPUOBJ)
 CPUOBJS += $(CPUOBJ)/vtlb.o
-
 
 #-------------------------------------------------
 # Intel MCS-48 (8039 and derivatives)
@@ -277,16 +274,10 @@ CPUOBJS += $(CPUOBJ)/m68000/m68kcpu.o $(CPUOBJ)/m68000/m68kops.o
 DASMOBJS += $(CPUOBJ)/m68000/m68kdasm.o
 endif
 
-# when we compile source files we need to include generated files from the OBJ directory
-$(CPUOBJ)/m68000/%.o: $(CPUSRC)/m68000/%.c | $(OSPREBUILD)
-	@echo Compiling $<...
-	$(CC) $(CDEFS) $(CFLAGS) -I$(CPUOBJ)/m68000 -c $< -o $@
-
 # when we compile generated files we need to include stuff from the src directory
 $(CPUOBJ)/m68000/%.o: $(CPUSRC)/m68000/%.c | $(OSPREBUILD)
 	@echo Compiling $<...
 	$(CC) $(CDEFS) $(CFLAGS) -I$(CPUSRC)/m68000 -c $< -o $@
-
 
 #-------------------------------------------------
 # NEC V-series Intel-compatible
@@ -321,7 +312,6 @@ $(CPUOBJ)/nec/v25sfr.o:		$(CPUSRC)/nec/v25sfr.c \
 					$(CPUSRC)/nec/nec.h \
 						$(CPUSRC)/nec/v25priv.h
 
-
 #-------------------------------------------------
 # Zilog Z80
 #-------------------------------------------------
@@ -335,6 +325,8 @@ endif
 $(CPUOBJ)/z80/z80.o:	$(CPUSRC)/z80/z80.c \
 				$(CPUSRC)/z80/z80.h
 
+
+# 
 $(LIBCPU): $(CPUOBJS)
 $(LIBDASM): $(DASMOBJS)
 
@@ -344,7 +336,6 @@ $(LIBDASM): $(DASMOBJS)
 
 SOUNDSRC = $(EMUSRC)/sound
 SOUNDOBJ = $(EMUOBJ)/sound
-
 
 #-------------------------------------------------
 # Core sound types; samples always required
@@ -364,7 +355,6 @@ ifneq ($(filter SPEAKER,$(SOUNDS)),)
 SOUNDOBJS += $(SOUNDOBJ)/speaker.o
 endif
 
-
 #-------------------------------------------------
 # Irem custom sound chips
 #-------------------------------------------------
@@ -373,7 +363,6 @@ ifneq ($(filter IREMGA20,$(SOUNDS)),)
 SOUNDOBJS += $(SOUNDOBJ)/iremga20.o
 endif
 
-
 #-------------------------------------------------
 # OKI ADPCM sample players
 #-------------------------------------------------
@@ -381,7 +370,6 @@ endif
 ifneq ($(filter MSM5205,$(SOUNDS)),)
 SOUNDOBJS += $(SOUNDOBJ)/msm5205.o
 endif
-
 
 ifneq ($(filter OKIM6295,$(SOUNDS)),)
 SOUNDOBJS += $(SOUNDOBJ)/okim6295.o
@@ -394,7 +382,6 @@ endif
 ifneq ($(filter QSOUND,$(SOUNDS)),)
 SOUNDOBJS += $(SOUNDOBJ)/qsound.o
 endif
-
 
 #-------------------------------------------------
 # Yamaha FM synthesizers
@@ -416,8 +403,8 @@ ifneq ($(filter YM2610 YM2610B,$(SOUNDS)),)
 SOUNDOBJS += $(SOUNDOBJ)/2610intf.o $(SOUNDOBJ)/ay8910.o $(SOUNDOBJ)/fm.o $(SOUNDOBJ)/ymdeltat.o
 endif
 
+# 
 $(LIBSOUND): $(SOUNDOBJS)
-
 
 #-------------------------------------------------
 # additional dependencies
@@ -430,7 +417,6 @@ OBJDIRS += \
 	$(LIBOBJ)/util \
 	$(LIBOBJ)/expat \
 	$(LIBOBJ)/softfloat \
-
 
 #-------------------------------------------------
 # utility library objects
@@ -462,11 +448,7 @@ UTILOBJS = \
 	$(LIBOBJ)/util/xmlfile.o \
 	$(LIBOBJ)/util/zippath.o \
 
-#	$(LIBOBJ)/util/cdrom.o \
-#	$(LIBOBJ)/util/imageutl.o \
-
 $(OBJ)/libutil.a: $(UTILOBJS)
-
 
 #-------------------------------------------------
 # expat library objects
@@ -482,7 +464,6 @@ $(OBJ)/libexpat.a: $(EXPATOBJS)
 $(LIBOBJ)/expat/%.o: $(LIBSRC)/explat/%.c | $(OSPREBUILD)
 	@echo Compiling $<...
 	$(CC) $(CDEFS) $(CCOMFLAGS) $(CONLYFLAGS) -c $< -o $@
-
 
 #-------------------------------------------------
 # SoftFloat library objects
@@ -556,6 +537,7 @@ OBJDIRS += $(MINIOBJ) \
 #-------------------------------------------------
 # OSD core library
 #-------------------------------------------------
+
 OSDCOREOBJS := \
 	$(MINIOBJ)/retrodir.o \
 	$(MINIOBJ)/retrofile.o \
@@ -567,6 +549,7 @@ OSDCOREOBJS := \
 #-------------------------------------------------
 # OSD mini library
 #-------------------------------------------------
+
 ifeq ($(VRENDER),opengl)
 	OSDOBJS += $(MINIOBJ)/libretro-common/glsym/rglgen.o
 	ifeq ($(GLES), 1)
@@ -578,6 +561,7 @@ endif
 
 OSDOBJS += $(OBJ)/osd/retro/libretro.o
 
+# 
 $(LIBOCORE): $(OSDCOREOBJS)
 
 #-------------------------------------------------
