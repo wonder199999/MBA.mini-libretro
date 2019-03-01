@@ -894,22 +894,6 @@ static int iptdev_get_state(void *device_internal, void *item_internal)
 	return *itemdata;
 }
 
-static const char *specific_games_initinput_vs6b[] = {
-	"sf2",		"sf2ce",
-	"sf2hf",	"sfzch",
-	"ssf2",		"ssf2t",
-	"sfa",		"sfa2",
-	"sfa3",		"sfz2al",
-	"hsf2",		"dstlk",
-	"vsav",		"vsav2",
-	"vhunt2",	"msh",
-	"mshvsf",	"mvsc",
-	"xmcota",	"xmvsf",
-	"ringdest",	"nwarr",
-	"ssoldier",
-	NULL
-};
-
 static void initInput( running_machine *machine )
 {
 	UINT32 i;
@@ -990,6 +974,16 @@ static void initInput( running_machine *machine )
 	input_device_item_add(P4_device, "P4 JoyD",  &pad_state[3][KEY_JOYSTICK_D], ITEM_ID_2_PAD, iptdev_get_state);
 	input_device_item_add(P4_device, "P4 JoyL",  &pad_state[3][KEY_JOYSTICK_L], ITEM_ID_4_PAD, iptdev_get_state);
 	input_device_item_add(P4_device, "P4 JoyR",  &pad_state[3][KEY_JOYSTICK_R], ITEM_ID_6_PAD, iptdev_get_state);
+
+	const char *specific_games_initinput_vs6b[] = {
+		"sf2",		"sf2ce",	"sf2hf",	"sfzch",
+		"ssf2",		"ssf2t",	"sfa",		"sfa2",
+		"sfa3",		"sfz2al",	"hsf2",		"dstlk",
+		"vsav",		"vsav2",	"vhunt2",	"msh",
+		"mshvsf",	"mvsc",		"xmcota",	"xmvsf",
+		"ringdest",	"nwarr",	"ssoldier",
+		NULL
+	};
 
 	/* Neo Geo buttons layout */
 	if (!core_stricmp(machine->gamedrv->source_file, "src/mame/drivers/neogeo/neogeo.inc"))
@@ -1372,19 +1366,6 @@ void osd_customize_input_type_list(input_type_desc *typelist)
 //	main
 //============================================================
 
-static const char *xargv[] = {
-	"-joystick",
-	"-sound",
-	"-rompath",
-	NULL, NULL,
-	NULL, NULL,
-	NULL, NULL,
-	NULL, NULL,
-	NULL, NULL,
-	NULL, NULL,
-	NULL, NULL
-};
-
 static int parsePath(char *path, char *gamePath, char *gameName)
 {
 	int i;
@@ -1452,12 +1433,17 @@ static int getGameInfo(char *gameName, int *rotation, int *driverIndex)
 static int executeGame(char *path)
 {
 	/* cli_frontend does the heavy lifting; if we have osd-specific options, we create a derivative of cli_options and add our own */
-	int result = 0;
-	int gameRot = 0;
-	int paramCount;
-	int driverIndex;
-
+	int result = 0, gameRot = 0;
+	int paramCount, driverIndex;
 	FirstTimeUpdate = 1;
+
+	const char *xargv[] = {
+		"-joystick", "-sound", "-rompath",
+		NULL, NULL, NULL, NULL,
+		NULL, NULL, NULL, NULL,
+		NULL, NULL, NULL, NULL,
+		NULL, NULL
+	};
 
 	//split the path to directory and the name without the zip extension
 	result = parsePath(path, MAME_GAME_PATH, MAME_GAME_NAME);
