@@ -149,7 +149,6 @@ struct _streams_private
 };
 
 
-
 /***************************************************************************
     FUNCTION PROTOTYPES
 ***************************************************************************/
@@ -160,7 +159,6 @@ static void allocate_output_buffers(running_machine *machine, sound_stream *stre
 static void recompute_sample_rate_data(running_machine *machine, sound_stream *stream);
 static void generate_samples(sound_stream *stream, int samples);
 static stream_sample_t *generate_resampled_data(stream_input *input, UINT32 numsamples);
-
 
 
 /***************************************************************************
@@ -194,7 +192,6 @@ INLINE INT32 time_to_sampindex(const streams_private *strdata, const sound_strea
 }
 
 
-
 /***************************************************************************
     SYSTEM-LEVEL MANAGEMENT
 ***************************************************************************/
@@ -220,6 +217,7 @@ void streams_init(running_machine *machine)
 	/* register global states */
 	state_save_register_global(machine, strdata->last_update.seconds);
 	state_save_register_global(machine, strdata->last_update.attoseconds);
+	state_save_register_postload(machine, stream_postload, strdata);
 }
 
 
@@ -315,7 +313,6 @@ void streams_update(running_machine *machine)
 }
 
 
-
 /***************************************************************************
     STREAM CONFIGURATION AND SETUP
 ***************************************************************************/
@@ -347,7 +344,6 @@ sound_stream *stream_create(device_t *device, int inputs, int outputs, int sampl
 	/* create a unique tag for saving */
 	sprintf(statetag, "%d", stream->index);
 	state_save_register_item(machine, "stream", statetag, 0, stream->sample_rate);
-	state_save_register_postload(machine, stream_postload, stream);
 
 	/* allocate space for the inputs */
 	if (inputs > 0)
@@ -529,7 +525,6 @@ const stream_sample_t *stream_get_output_since_last_update(sound_stream *stream,
 }
 
 
-
 /***************************************************************************
     STREAM TIMING
 ***************************************************************************/
@@ -675,7 +670,6 @@ void stream_set_output_gain(sound_stream *stream, int output, float gain)
 }
 
 
-
 /***************************************************************************
     STREAM BUFFER MAINTENANCE
 ***************************************************************************/
@@ -686,20 +680,22 @@ void stream_set_output_gain(sound_stream *stream, int output, float gain)
 
 static STATE_POSTLOAD( stream_postload )
 {
-	streams_private *strdata = machine->streams_data;
-	sound_stream *stream = (sound_stream *)param;
+	streams_private *strdata = reinterpret_cast<streams_private *>(param);
+	for (sound_stream *stream = strdata->stream_head; stream != NULL; stream = stream->next)
+	{
+		/* recompute the same rate information */
+		recompute_sample_rate_data(machine, stream);
 
-	/* recompute the same rate information */
-	recompute_sample_rate_data(machine, stream);
+		/* make sure our output buffers are fully cleared */
+		for (int outputnum = 0; outputnum < stream->outputs; outputnum++)
+			memset(stream->output[outputnum].buffer, 0,
+				stream->output_bufalloc * sizeof(stream->output[outputnum].buffer[0]));
 
-	/* make sure our output buffers are fully cleared */
-	for (int outputnum = 0; outputnum < stream->outputs; outputnum++)
-		memset(stream->output[outputnum].buffer, 0, stream->output_bufalloc * sizeof(stream->output[outputnum].buffer[0]));
-
-	/* recompute the sample indexes to make sense */
-	stream->output_sampindex = strdata->last_update.attoseconds / stream->attoseconds_per_sample;
-	stream->output_update_sampindex = stream->output_sampindex;
-	stream->output_base_sampindex = stream->output_sampindex - stream->max_samples_per_update;
+		/* recompute the sample indexes to make sense */
+		stream->output_sampindex = strdata->last_update.attoseconds / stream->attoseconds_per_sample;
+		stream->output_update_sampindex = stream->output_sampindex;
+		stream->output_base_sampindex = stream->output_sampindex - stream->max_samples_per_update;
+	}
 }
 
 
@@ -815,7 +811,6 @@ static void recompute_sample_rate_data(running_machine *machine, sound_stream *s
 }
 
 
-
 /***************************************************************************
     SOUND GENERATION
 ***************************************************************************/
@@ -873,9 +868,6 @@ static stream_sample_t *generate_resampled_data(stream_input *input, UINT32 nums
 	stream_sample_t sample;
 	attoseconds_t basetime;
 	INT32 basesample;
-	UINT32 basefrac;
-	UINT32 step;
-	int gain;
 
 	/* if we don't have an output to pull data from, generate silence */
 	if (output == NULL)
@@ -886,10 +878,10 @@ static stream_sample_t *generate_resampled_data(stream_input *input, UINT32 nums
 
 	/* grab data from the output */
 	input_stream = output->owner;
-	gain = (input->gain * output->gain) >> 8;
+	INT32 gain = (input->gain * output->gain) >> 8;
 
 	/* determine the time at which the current sample begins, accounting for the
-       latency we calculated between the input and output streams */
+	   latency we calculated between the input and output streams */
 	basetime = stream->output_sampindex * stream->attoseconds_per_sample - input->latency_attoseconds;
 
 	/* now convert that time into a sample in the input stream */
@@ -903,12 +895,12 @@ static stream_sample_t *generate_resampled_data(stream_input *input, UINT32 nums
 	source = output->buffer + (basesample - input_stream->output_base_sampindex);
 
 	/* determine the current fraction of a sample */
-	basefrac = (basetime - basesample * input_stream->attoseconds_per_sample) / ((input_stream->attoseconds_per_sample + FRAC_ONE - 1) >> FRAC_BITS);
+	UINT32 basefrac = (basetime - basesample * input_stream->attoseconds_per_sample) / ((input_stream->attoseconds_per_sample + FRAC_ONE - 1) >> FRAC_BITS);
 	assert(basefrac >= 0);
 	assert(basefrac < FRAC_ONE);
 
 	/* compute the stepping fraction */
-	step = ((UINT64)input_stream->sample_rate << FRAC_BITS) / stream->sample_rate;
+	UINT32 step = ((UINT64)input_stream->sample_rate << FRAC_BITS) / stream->sample_rate;
 
 	/* if we have equal sample rates, we just need to copy */
 	if (step == FRAC_ONE)
