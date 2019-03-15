@@ -312,7 +312,7 @@ INLINE void apply_orientation(render_bounds *bounds, int orientation)
 		FSWAP(bounds->x1, bounds->y1);
 	}
 	/* apply X flip */
-	else if (orientation & ORIENTATION_FLIP_X)
+	if (orientation & ORIENTATION_FLIP_X)
 	{
 		bounds->x0 = 1.0f - bounds->x0;
 		bounds->x1 = 1.0f - bounds->x1;
