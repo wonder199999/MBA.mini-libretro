@@ -78,26 +78,9 @@
 /* These are the CPU types understood by this disassembler */
 #define TYPE_68000 1
 #define TYPE_68008 2
-#define TYPE_68010 4
-#define TYPE_68020 8
-#define TYPE_68030 16
-#define TYPE_68040 32
 
 #define M68000_ONLY		(TYPE_68000 | TYPE_68008)
-
-#define M68010_ONLY		TYPE_68010
-#define M68010_LESS		(TYPE_68000 | TYPE_68008 | TYPE_68010)
-#define M68010_PLUS		(TYPE_68010 | TYPE_68020 | TYPE_68030 | TYPE_68040)
-
-#define M68020_ONLY 	TYPE_68020
-#define M68020_LESS 	(TYPE_68010 | TYPE_68020)
-#define M68020_PLUS		(TYPE_68020 | TYPE_68030 | TYPE_68040)
-
-#define M68030_ONLY 	TYPE_68030
-#define M68030_LESS 	(TYPE_68010 | TYPE_68020 | TYPE_68030)
-#define M68030_PLUS		(TYPE_68030 | TYPE_68040)
-
-#define M68040_PLUS		TYPE_68040
+#define M68010_LESS	M68000_ONLY
 
 
 /* Extension word formats */
@@ -295,11 +278,6 @@ static UINT32 dasm_read_imm_32(UINT32 advance)
 #define get_imm_str_u8() get_imm_str_u(0)
 #define get_imm_str_u16() get_imm_str_u(1)
 #define get_imm_str_u32() get_imm_str_u(2)
-
-static int sext_7bit_int(int value)
-{
-	return (value & 0x40) ? (value | 0xffffff80) : (value & 0x7f);
-}
 
 
 /* 100% portable signed int generators */
@@ -967,13 +945,6 @@ static void d68000_bcc_16(void)
 	sprintf(g_dasm_str, "b%-2s     $%x", g_cc[(g_cpu_ir>>8)&0xf], temp_pc + make_int_16(read_imm_16()));
 }
 
-static void d68020_bcc_32(void)
-{
-	UINT32 temp_pc = g_cpu_pc;
-	LIMIT_CPU_TYPES(M68020_PLUS);
-	sprintf(g_dasm_str, "b%-2s     $%x; (2+)", g_cc[(g_cpu_ir>>8)&0xf], temp_pc + read_imm_32());
-}
-
 static void d68000_bchg_r(void)
 {
 	sprintf(g_dasm_str, "bchg    D%d, %s", (g_cpu_ir>>9)&7, get_ea_mode_str_8(g_cpu_ir));
@@ -996,180 +967,6 @@ static void d68000_bclr_s(void)
 	sprintf(g_dasm_str, "bclr    %s, %s", str, get_ea_mode_str_8(g_cpu_ir));
 }
 
-static void d68010_bkpt(void)
-{
-	LIMIT_CPU_TYPES(M68010_PLUS);
-	sprintf(g_dasm_str, "bkpt #%d; (1+)", g_cpu_ir&7);
-}
-
-static void d68020_bfchg(void)
-{
-	UINT32 extension;
-	char offset[3];
-	char width[3];
-
-	LIMIT_CPU_TYPES(M68020_PLUS);
-
-	extension = read_imm_16();
-
-	if(BIT_B(extension))
-		sprintf(offset, "D%d", (extension>>6)&7);
-	else
-		sprintf(offset, "%d", (extension>>6)&31);
-	if(BIT_5(extension))
-		sprintf(width, "D%d", extension&7);
-	else
-		sprintf(width, "%d", g_5bit_data_table[extension&31]);
-	sprintf(g_dasm_str, "bfchg   %s {%s:%s}; (2+)", get_ea_mode_str_8(g_cpu_ir), offset, width);
-}
-
-static void d68020_bfclr(void)
-{
-	UINT32 extension;
-	char offset[3];
-	char width[3];
-
-	LIMIT_CPU_TYPES(M68020_PLUS);
-
-	extension = read_imm_16();
-
-	if(BIT_B(extension))
-		sprintf(offset, "D%d", (extension>>6)&7);
-	else
-		sprintf(offset, "%d", (extension>>6)&31);
-	if(BIT_5(extension))
-		sprintf(width, "D%d", extension&7);
-	else
-		sprintf(width, "%d", g_5bit_data_table[extension&31]);
-	sprintf(g_dasm_str, "bfclr   %s {%s:%s}; (2+)", get_ea_mode_str_8(g_cpu_ir), offset, width);
-}
-
-static void d68020_bfexts(void)
-{
-	UINT32 extension;
-	char offset[3];
-	char width[3];
-
-	LIMIT_CPU_TYPES(M68020_PLUS);
-
-	extension = read_imm_16();
-
-	if(BIT_B(extension))
-		sprintf(offset, "D%d", (extension>>6)&7);
-	else
-		sprintf(offset, "%d", (extension>>6)&31);
-	if(BIT_5(extension))
-		sprintf(width, "D%d", extension&7);
-	else
-		sprintf(width, "%d", g_5bit_data_table[extension&31]);
-	sprintf(g_dasm_str, "bfexts  D%d, %s {%s:%s}; (2+)", (extension>>12)&7, get_ea_mode_str_8(g_cpu_ir), offset, width);
-}
-
-static void d68020_bfextu(void)
-{
-	UINT32 extension;
-	char offset[3];
-	char width[3];
-
-	LIMIT_CPU_TYPES(M68020_PLUS);
-
-	extension = read_imm_16();
-
-	if(BIT_B(extension))
-		sprintf(offset, "D%d", (extension>>6)&7);
-	else
-		sprintf(offset, "%d", (extension>>6)&31);
-	if(BIT_5(extension))
-		sprintf(width, "D%d", extension&7);
-	else
-		sprintf(width, "%d", g_5bit_data_table[extension&31]);
-	sprintf(g_dasm_str, "bfextu  D%d, %s {%s:%s}; (2+)", (extension>>12)&7, get_ea_mode_str_8(g_cpu_ir), offset, width);
-}
-
-static void d68020_bfffo(void)
-{
-	UINT32 extension;
-	char offset[3];
-	char width[3];
-
-	LIMIT_CPU_TYPES(M68020_PLUS);
-
-	extension = read_imm_16();
-
-	if(BIT_B(extension))
-		sprintf(offset, "D%d", (extension>>6)&7);
-	else
-		sprintf(offset, "%d", (extension>>6)&31);
-	if(BIT_5(extension))
-		sprintf(width, "D%d", extension&7);
-	else
-		sprintf(width, "%d", g_5bit_data_table[extension&31]);
-	sprintf(g_dasm_str, "bfffo   D%d, %s {%s:%s}; (2+)", (extension>>12)&7, get_ea_mode_str_8(g_cpu_ir), offset, width);
-}
-
-static void d68020_bfins(void)
-{
-	UINT32 extension;
-	char offset[3];
-	char width[3];
-
-	LIMIT_CPU_TYPES(M68020_PLUS);
-
-	extension = read_imm_16();
-
-	if(BIT_B(extension))
-		sprintf(offset, "D%d", (extension>>6)&7);
-	else
-		sprintf(offset, "%d", (extension>>6)&31);
-	if(BIT_5(extension))
-		sprintf(width, "D%d", extension&7);
-	else
-		sprintf(width, "%d", g_5bit_data_table[extension&31]);
-	sprintf(g_dasm_str, "bfins   D%d, %s {%s:%s}; (2+)", (extension>>12)&7, get_ea_mode_str_8(g_cpu_ir), offset, width);
-}
-
-static void d68020_bfset(void)
-{
-	UINT32 extension;
-	char offset[3];
-	char width[3];
-
-	LIMIT_CPU_TYPES(M68020_PLUS);
-
-	extension = read_imm_16();
-
-	if(BIT_B(extension))
-		sprintf(offset, "D%d", (extension>>6)&7);
-	else
-		sprintf(offset, "%d", (extension>>6)&31);
-	if(BIT_5(extension))
-		sprintf(width, "D%d", extension&7);
-	else
-		sprintf(width, "%d", g_5bit_data_table[extension&31]);
-	sprintf(g_dasm_str, "bfset   %s {%s:%s}; (2+)", get_ea_mode_str_8(g_cpu_ir), offset, width);
-}
-
-static void d68020_bftst(void)
-{
-	UINT32 extension;
-	char offset[3];
-	char width[3];
-
-	LIMIT_CPU_TYPES(M68020_PLUS);
-
-	extension = read_imm_16();
-
-	if(BIT_B(extension))
-		sprintf(offset, "D%d", (extension>>6)&7);
-	else
-		sprintf(offset, "%d", (extension>>6)&31);
-	if(BIT_5(extension))
-		sprintf(width, "D%d", extension&7);
-	else
-		sprintf(width, "%d", g_5bit_data_table[extension&31]);
-	sprintf(g_dasm_str, "bftst   %s {%s:%s}; (2+)", get_ea_mode_str_8(g_cpu_ir), offset, width);
-}
-
 static void d68000_bra_8(void)
 {
 	UINT32 temp_pc = g_cpu_pc;
@@ -1180,13 +977,6 @@ static void d68000_bra_16(void)
 {
 	UINT32 temp_pc = g_cpu_pc;
 	sprintf(g_dasm_str, "bra     $%x", temp_pc + make_int_16(read_imm_16()));
-}
-
-static void d68020_bra_32(void)
-{
-	UINT32 temp_pc = g_cpu_pc;
-	LIMIT_CPU_TYPES(M68020_PLUS);
-	sprintf(g_dasm_str, "bra     $%x; (2+)", temp_pc + read_imm_32());
 }
 
 static void d68000_bset_r(void)
@@ -1214,14 +1004,6 @@ static void d68000_bsr_16(void)
 	SET_OPCODE_FLAGS(DASMFLAG_STEP_OVER);
 }
 
-static void d68020_bsr_32(void)
-{
-	UINT32 temp_pc = g_cpu_pc;
-	LIMIT_CPU_TYPES(M68020_PLUS);
-	sprintf(g_dasm_str, "bsr     $%x; (2+)", temp_pc + read_imm_32());
-	SET_OPCODE_FLAGS(DASMFLAG_STEP_OVER);
-}
-
 static void d68000_btst_r(void)
 {
 	sprintf(g_dasm_str, "btst    D%d, %s", (g_cpu_ir>>9)&7, get_ea_mode_str_8(g_cpu_ir));
@@ -1233,122 +1015,10 @@ static void d68000_btst_s(void)
 	sprintf(g_dasm_str, "btst    %s, %s", str, get_ea_mode_str_8(g_cpu_ir));
 }
 
-static void d68020_callm(void)
-{
-	char* str;
-	LIMIT_CPU_TYPES(M68020_ONLY);
-	str = get_imm_str_u8();
-
-	sprintf(g_dasm_str, "callm   %s, %s; (2)", str, get_ea_mode_str_8(g_cpu_ir));
-}
-
-static void d68020_cas_8(void)
-{
-	UINT32 extension;
-	LIMIT_CPU_TYPES(M68020_PLUS);
-	extension = read_imm_16();
-	sprintf(g_dasm_str, "cas.b   D%d, D%d, %s; (2+)", extension&7, (extension>>8)&7, get_ea_mode_str_8(g_cpu_ir));
-}
-
-static void d68020_cas_16(void)
-{
-	UINT32 extension;
-	LIMIT_CPU_TYPES(M68020_PLUS);
-	extension = read_imm_16();
-	sprintf(g_dasm_str, "cas.w   D%d, D%d, %s; (2+)", extension&7, (extension>>8)&7, get_ea_mode_str_16(g_cpu_ir));
-}
-
-static void d68020_cas_32(void)
-{
-	UINT32 extension;
-	LIMIT_CPU_TYPES(M68020_PLUS);
-	extension = read_imm_16();
-	sprintf(g_dasm_str, "cas.l   D%d, D%d, %s; (2+)", extension&7, (extension>>8)&7, get_ea_mode_str_32(g_cpu_ir));
-}
-
-static void d68020_cas2_16(void)
-{
-/* CAS2 Dc1:Dc2,Du1:Dc2:(Rn1):(Rn2)
-f e d c b a 9 8 7 6 5 4 3 2 1 0
- DARn1  0 0 0  Du1  0 0 0  Dc1
- DARn2  0 0 0  Du2  0 0 0  Dc2
-*/
-
-	UINT32 extension;
-	LIMIT_CPU_TYPES(M68020_PLUS);
-	extension = read_imm_32();
-	sprintf(g_dasm_str, "cas2.w  D%d:D%d:D%d:D%d, (%c%d):(%c%d); (2+)",
-		(extension>>16)&7, extension&7, (extension>>22)&7, (extension>>6)&7,
-		BIT_1F(extension) ? 'A' : 'D', (extension>>28)&7,
-		BIT_F(extension) ? 'A' : 'D', (extension>>12)&7);
-}
-
-static void d68020_cas2_32(void)
-{
-	UINT32 extension;
-	LIMIT_CPU_TYPES(M68020_PLUS);
-	extension = read_imm_32();
-	sprintf(g_dasm_str, "cas2.l  D%d:D%d:D%d:D%d, (%c%d):(%c%d); (2+)",
-		(extension>>16)&7, extension&7, (extension>>22)&7, (extension>>6)&7,
-		BIT_1F(extension) ? 'A' : 'D', (extension>>28)&7,
-		BIT_F(extension) ? 'A' : 'D', (extension>>12)&7);
-}
-
 static void d68000_chk_16(void)
 {
 	sprintf(g_dasm_str, "chk.w   %s, D%d", get_ea_mode_str_16(g_cpu_ir), (g_cpu_ir>>9)&7);
 	SET_OPCODE_FLAGS(DASMFLAG_STEP_OVER);
-}
-
-static void d68020_chk_32(void)
-{
-	LIMIT_CPU_TYPES(M68020_PLUS);
-	sprintf(g_dasm_str, "chk.l   %s, D%d; (2+)", get_ea_mode_str_32(g_cpu_ir), (g_cpu_ir>>9)&7);
-	SET_OPCODE_FLAGS(DASMFLAG_STEP_OVER);
-}
-
-static void d68020_chk2_cmp2_8(void)
-{
-	UINT32 extension;
-	LIMIT_CPU_TYPES(M68020_PLUS);
-	extension = read_imm_16();
-	sprintf(g_dasm_str, "%s.b  %s, %c%d; (2+)", BIT_B(extension) ? "chk2" : "cmp2", get_ea_mode_str_8(g_cpu_ir), BIT_F(extension) ? 'A' : 'D', (extension>>12)&7);
-}
-
-static void d68020_chk2_cmp2_16(void)
-{
-	UINT32 extension;
-	LIMIT_CPU_TYPES(M68020_PLUS);
-	extension = read_imm_16();
-	sprintf(g_dasm_str, "%s.w  %s, %c%d; (2+)", BIT_B(extension) ? "chk2" : "cmp2", get_ea_mode_str_16(g_cpu_ir), BIT_F(extension) ? 'A' : 'D', (extension>>12)&7);
-}
-
-static void d68020_chk2_cmp2_32(void)
-{
-	UINT32 extension;
-	LIMIT_CPU_TYPES(M68020_PLUS);
-	extension = read_imm_16();
-	sprintf(g_dasm_str, "%s.l  %s, %c%d; (2+)", BIT_B(extension) ? "chk2" : "cmp2", get_ea_mode_str_32(g_cpu_ir), BIT_F(extension) ? 'A' : 'D', (extension>>12)&7);
-}
-
-static void d68040_cinv(void)
-{
-	LIMIT_CPU_TYPES(M68040_PLUS);
-	switch((g_cpu_ir>>3)&3)
-	{
-		case 0:
-			sprintf(g_dasm_str, "cinv (illegal scope); (4)");
-			break;
-		case 1:
-			sprintf(g_dasm_str, "cinvl   %d, (A%d); (4)", (g_cpu_ir>>6)&3, g_cpu_ir&7);
-			break;
-		case 2:
-			sprintf(g_dasm_str, "cinvp   %d, (A%d); (4)", (g_cpu_ir>>6)&3, g_cpu_ir&7);
-			break;
-		case 3:
-			sprintf(g_dasm_str, "cinva   %d; (4)", (g_cpu_ir>>6)&3);
-			break;
-	}
 }
 
 static void d68000_clr_8(void)
@@ -1397,22 +1067,6 @@ static void d68000_cmpi_8(void)
 	sprintf(g_dasm_str, "cmpi.b  %s, %s", str, get_ea_mode_str_8(g_cpu_ir));
 }
 
-static void d68020_cmpi_pcdi_8(void)
-{
-	char* str;
-	LIMIT_CPU_TYPES(M68010_PLUS);
-	str = get_imm_str_s8();
-	sprintf(g_dasm_str, "cmpi.b  %s, %s; (2+)", str, get_ea_mode_str_8(g_cpu_ir));
-}
-
-static void d68020_cmpi_pcix_8(void)
-{
-	char* str;
-	LIMIT_CPU_TYPES(M68010_PLUS);
-	str = get_imm_str_s8();
-	sprintf(g_dasm_str, "cmpi.b  %s, %s; (2+)", str, get_ea_mode_str_8(g_cpu_ir));
-}
-
 static void d68000_cmpi_16(void)
 {
 	char* str;
@@ -1420,43 +1074,11 @@ static void d68000_cmpi_16(void)
 	sprintf(g_dasm_str, "cmpi.w  %s, %s", str, get_ea_mode_str_16(g_cpu_ir));
 }
 
-static void d68020_cmpi_pcdi_16(void)
-{
-	char* str;
-	LIMIT_CPU_TYPES(M68010_PLUS);
-	str = get_imm_str_s16();
-	sprintf(g_dasm_str, "cmpi.w  %s, %s; (2+)", str, get_ea_mode_str_16(g_cpu_ir));
-}
-
-static void d68020_cmpi_pcix_16(void)
-{
-	char* str;
-	LIMIT_CPU_TYPES(M68010_PLUS);
-	str = get_imm_str_s16();
-	sprintf(g_dasm_str, "cmpi.w  %s, %s; (2+)", str, get_ea_mode_str_16(g_cpu_ir));
-}
-
 static void d68000_cmpi_32(void)
 {
 	char* str;
 	str = get_imm_str_s32();
 	sprintf(g_dasm_str, "cmpi.l  %s, %s", str, get_ea_mode_str_32(g_cpu_ir));
-}
-
-static void d68020_cmpi_pcdi_32(void)
-{
-	char* str;
-	LIMIT_CPU_TYPES(M68010_PLUS);
-	str = get_imm_str_s32();
-	sprintf(g_dasm_str, "cmpi.l  %s, %s; (2+)", str, get_ea_mode_str_32(g_cpu_ir));
-}
-
-static void d68020_cmpi_pcix_32(void)
-{
-	char* str;
-	LIMIT_CPU_TYPES(M68010_PLUS);
-	str = get_imm_str_s32();
-	sprintf(g_dasm_str, "cmpi.l  %s, %s; (2+)", str, get_ea_mode_str_32(g_cpu_ir));
 }
 
 static void d68000_cmpm_8(void)
@@ -1472,130 +1094,6 @@ static void d68000_cmpm_16(void)
 static void d68000_cmpm_32(void)
 {
 	sprintf(g_dasm_str, "cmpm.l  (A%d)+, (A%d)+", g_cpu_ir&7, (g_cpu_ir>>9)&7);
-}
-
-static void d68020_cpbcc_16(void)
-{
-	UINT32 extension;
-	UINT32 new_pc = g_cpu_pc;
-	LIMIT_CPU_TYPES(M68020_PLUS);
-	extension = read_imm_16();
-	new_pc += make_int_16(read_imm_16());
-	sprintf(g_dasm_str, "%db%-4s  %s; %x (extension = %x) (2-3)", (g_cpu_ir>>9)&7, g_cpcc[g_cpu_ir&0x3f], get_imm_str_s16(), new_pc, extension);
-}
-
-static void d68020_cpbcc_32(void)
-{
-	UINT32 extension;
-	UINT32 new_pc = g_cpu_pc;
-	LIMIT_CPU_TYPES(M68020_PLUS);
-	extension = read_imm_16();
-	new_pc += read_imm_32();
-	sprintf(g_dasm_str, "%db%-4s  %s; %x (extension = %x) (2-3)", (g_cpu_ir>>9)&7, g_cpcc[g_cpu_ir&0x3f], get_imm_str_s16(), new_pc, extension);
-}
-
-static void d68020_cpdbcc(void)
-{
-	UINT32 extension1;
-	UINT32 extension2;
-	UINT32 new_pc = g_cpu_pc;
-	LIMIT_CPU_TYPES(M68020_PLUS);
-	extension1 = read_imm_16();
-	extension2 = read_imm_16();
-	new_pc += make_int_16(read_imm_16());
-	sprintf(g_dasm_str, "%ddb%-4s D%d,%s; %x (extension = %x) (2-3)", (g_cpu_ir>>9)&7, g_cpcc[extension1&0x3f], g_cpu_ir&7, get_imm_str_s16(), new_pc, extension2);
-}
-
-static void d68020_cpgen(void)
-{
-	LIMIT_CPU_TYPES(M68020_PLUS);
-	sprintf(g_dasm_str, "%dgen    %s; (2-3)", (g_cpu_ir>>9)&7, get_imm_str_u32());
-}
-
-static void d68020_cprestore(void)
-{
-	LIMIT_CPU_TYPES(M68020_PLUS);
-	if (((g_cpu_ir>>9)&7) == 1)
-	{
-		sprintf(g_dasm_str, "frestore %s", get_ea_mode_str_8(g_cpu_ir));
-	}
-	else
-	{
-		sprintf(g_dasm_str, "%drestore %s; (2-3)", (g_cpu_ir>>9)&7, get_ea_mode_str_8(g_cpu_ir));
-	}
-}
-
-static void d68020_cpsave(void)
-{
-	LIMIT_CPU_TYPES(M68020_PLUS);
-	if (((g_cpu_ir>>9)&7) == 1)
-	{
-		sprintf(g_dasm_str, "fsave   %s", get_ea_mode_str_8(g_cpu_ir));
-	}
-	else
-	{
-		sprintf(g_dasm_str, "%dsave   %s; (2-3)", (g_cpu_ir>>9)&7, get_ea_mode_str_8(g_cpu_ir));
-	}
-}
-
-static void d68020_cpscc(void)
-{
-	UINT32 extension1;
-	UINT32 extension2;
-	LIMIT_CPU_TYPES(M68020_PLUS);
-	extension1 = read_imm_16();
-	extension2 = read_imm_16();
-	sprintf(g_dasm_str, "%ds%-4s  %s; (extension = %x) (2-3)", (g_cpu_ir>>9)&7, g_cpcc[extension1&0x3f], get_ea_mode_str_8(g_cpu_ir), extension2);
-}
-
-static void d68020_cptrapcc_0(void)
-{
-	UINT32 extension1;
-	UINT32 extension2;
-	LIMIT_CPU_TYPES(M68020_PLUS);
-	extension1 = read_imm_16();
-	extension2 = read_imm_16();
-	sprintf(g_dasm_str, "%dtrap%-4s; (extension = %x) (2-3)", (g_cpu_ir>>9)&7, g_cpcc[extension1&0x3f], extension2);
-}
-
-static void d68020_cptrapcc_16(void)
-{
-	UINT32 extension1;
-	UINT32 extension2;
-	LIMIT_CPU_TYPES(M68020_PLUS);
-	extension1 = read_imm_16();
-	extension2 = read_imm_16();
-	sprintf(g_dasm_str, "%dtrap%-4s %s; (extension = %x) (2-3)", (g_cpu_ir>>9)&7, g_cpcc[extension1&0x3f], get_imm_str_u16(), extension2);
-}
-
-static void d68020_cptrapcc_32(void)
-{
-	UINT32 extension1;
-	UINT32 extension2;
-	LIMIT_CPU_TYPES(M68020_PLUS);
-	extension1 = read_imm_16();
-	extension2 = read_imm_16();
-	sprintf(g_dasm_str, "%dtrap%-4s %s; (extension = %x) (2-3)", (g_cpu_ir>>9)&7, g_cpcc[extension1&0x3f], get_imm_str_u32(), extension2);
-}
-
-static void d68040_cpush(void)
-{
-	LIMIT_CPU_TYPES(M68040_PLUS);
-	switch((g_cpu_ir>>3)&3)
-	{
-		case 0:
-			sprintf(g_dasm_str, "cpush (illegal scope); (4)");
-			break;
-		case 1:
-			sprintf(g_dasm_str, "cpushl  %d, (A%d); (4)", (g_cpu_ir>>6)&3, g_cpu_ir&7);
-			break;
-		case 2:
-			sprintf(g_dasm_str, "cpushp  %d, (A%d); (4)", (g_cpu_ir>>6)&3, g_cpu_ir&7);
-			break;
-		case 3:
-			sprintf(g_dasm_str, "cpusha  %d; (4)", (g_cpu_ir>>6)&3);
-			break;
-	}
 }
 
 static void d68000_dbra(void)
@@ -1620,20 +1118,6 @@ static void d68000_divs(void)
 static void d68000_divu(void)
 {
 	sprintf(g_dasm_str, "divu.w  %s, D%d", get_ea_mode_str_16(g_cpu_ir), (g_cpu_ir>>9)&7);
-}
-
-static void d68020_divl(void)
-{
-	UINT32 extension;
-	LIMIT_CPU_TYPES(M68020_PLUS);
-	extension = read_imm_16();
-
-	if(BIT_A(extension))
-		sprintf(g_dasm_str, "div%c.l  %s, D%d:D%d; (2+)", BIT_B(extension) ? 's' : 'u', get_ea_mode_str_32(g_cpu_ir), extension&7, (extension>>12)&7);
-	else if((extension&7) == ((extension>>12)&7))
-		sprintf(g_dasm_str, "div%c.l  %s, D%d; (2+)", BIT_B(extension) ? 's' : 'u', get_ea_mode_str_32(g_cpu_ir), (extension>>12)&7);
-	else
-		sprintf(g_dasm_str, "div%cl.l %s, D%d:D%d; (2+)", BIT_B(extension) ? 's' : 'u', get_ea_mode_str_32(g_cpu_ir), extension&7, (extension>>12)&7);
 }
 
 static void d68000_eor_8(void)
@@ -1704,226 +1188,6 @@ static void d68000_ext_32(void)
 	sprintf(g_dasm_str, "ext.l   D%d", g_cpu_ir&7);
 }
 
-static void d68020_extb_32(void)
-{
-	LIMIT_CPU_TYPES(M68020_PLUS);
-	sprintf(g_dasm_str, "extb.l  D%d; (2+)", g_cpu_ir&7);
-}
-
-static void d68040_fpu(void)
-{
-	char float_data_format[8][3] =
-	{
-		".l", ".s", ".x", ".p", ".w", ".d", ".b", ".p"
-	};
-
-	char mnemonic[40];
-	UINT32 w2, src, dst_reg;
-	LIMIT_CPU_TYPES(M68030_PLUS);
-	w2 = read_imm_16();
-
-	src = (w2 >> 10) & 0x7;
-	dst_reg = (w2 >> 7) & 0x7;
-
-	// special override for FMOVECR
-	if ((((w2 >> 13) & 0x7) == 2) && (((w2>>10)&0x7) == 7))
-	{
-		sprintf(g_dasm_str, "fmovecr   #$%0x, fp%d", (w2&0x7f), dst_reg);
-		return;
-	}
-
-	switch ((w2 >> 13) & 0x7)
-	{
-		case 0x0:
-		case 0x2:
-		{
-			switch(w2 & 0x7f)
-			{
-				case 0x00:	sprintf(mnemonic, "fmove"); break;
-				case 0x01:	sprintf(mnemonic, "fint"); break;
-				case 0x02:	sprintf(mnemonic, "fsinh"); break;
-				case 0x03:	sprintf(mnemonic, "fintrz"); break;
-				case 0x04:	sprintf(mnemonic, "fsqrt"); break;
-				case 0x06:	sprintf(mnemonic, "flognp1"); break;
-				case 0x08:	sprintf(mnemonic, "fetoxm1"); break;
-				case 0x09:	sprintf(mnemonic, "ftanh1"); break;
-				case 0x0a:	sprintf(mnemonic, "fatan"); break;
-				case 0x0c:	sprintf(mnemonic, "fasin"); break;
-				case 0x0d:	sprintf(mnemonic, "fatanh"); break;
-				case 0x0e:	sprintf(mnemonic, "fsin"); break;
-				case 0x0f:	sprintf(mnemonic, "ftan"); break;
-				case 0x10:	sprintf(mnemonic, "fetox"); break;
-				case 0x11:	sprintf(mnemonic, "ftwotox"); break;
-				case 0x12:	sprintf(mnemonic, "ftentox"); break;
-				case 0x14:	sprintf(mnemonic, "flogn"); break;
-				case 0x15:	sprintf(mnemonic, "flog10"); break;
-				case 0x16:	sprintf(mnemonic, "flog2"); break;
-				case 0x18:	sprintf(mnemonic, "fabs"); break;
-				case 0x19:	sprintf(mnemonic, "fcosh"); break;
-				case 0x1a:	sprintf(mnemonic, "fneg"); break;
-				case 0x1c:	sprintf(mnemonic, "facos"); break;
-				case 0x1d:	sprintf(mnemonic, "fcos"); break;
-				case 0x1e:	sprintf(mnemonic, "fgetexp"); break;
-				case 0x1f:	sprintf(mnemonic, "fgetman"); break;
-				case 0x20:	sprintf(mnemonic, "fdiv"); break;
-				case 0x21:	sprintf(mnemonic, "fmod"); break;
-				case 0x22:	sprintf(mnemonic, "fadd"); break;
-				case 0x23:	sprintf(mnemonic, "fmul"); break;
-				case 0x24:	sprintf(mnemonic, "fsgldiv"); break;
-				case 0x25:	sprintf(mnemonic, "frem"); break;
-				case 0x26:	sprintf(mnemonic, "fscale"); break;
-				case 0x27:	sprintf(mnemonic, "fsglmul"); break;
-				case 0x28:	sprintf(mnemonic, "fsub"); break;
-				case 0x30: case 0x31: case 0x32: case 0x33: case 0x34: case 0x35: case 0x36: case 0x37:
-							sprintf(mnemonic, "fsincos"); break;
-				case 0x38:	sprintf(mnemonic, "fcmp"); break;
-				case 0x3a:	sprintf(mnemonic, "ftst"); break;
-				case 0x41:	sprintf(mnemonic, "fssqrt"); break;
-				case 0x45:	sprintf(mnemonic, "fdsqrt"); break;
-				case 0x58:	sprintf(mnemonic, "fsabs"); break;
-				case 0x5a:	sprintf(mnemonic, "fsneg"); break;
-				case 0x5c:	sprintf(mnemonic, "fdabs"); break;
-				case 0x5e:	sprintf(mnemonic, "fdneg"); break;
-				case 0x60:	sprintf(mnemonic, "fsdiv"); break;
-				case 0x62:	sprintf(mnemonic, "fsadd"); break;
-				case 0x63:	sprintf(mnemonic, "fsmul"); break;
-				case 0x64:	sprintf(mnemonic, "fddiv"); break;
-				case 0x66:	sprintf(mnemonic, "fdadd"); break;
-				case 0x67:	sprintf(mnemonic, "fdmul"); break;
-				case 0x68:	sprintf(mnemonic, "fssub"); break;
-				case 0x6c:	sprintf(mnemonic, "fdsub"); break;
-
-				default:	sprintf(mnemonic, "FPU (?)"); break;
-			}
-
-			if (w2 & 0x4000)
-			{
-				sprintf(g_dasm_str, "%s%s   %s, FP%d", mnemonic, float_data_format[src], get_ea_mode_str_32(g_cpu_ir), dst_reg);
-			}
-			else
-			{
-				sprintf(g_dasm_str, "%s.x   FP%d, FP%d", mnemonic, src, dst_reg);
-			}
-			break;
-		}
-
-		case 0x3:
-		{
-			switch ((w2>>10)&7)
-			{
-				case 3:		// packed decimal w/fixed k-factor
-					sprintf(g_dasm_str, "fmove%s   FP%d, %s {#%d}", float_data_format[(w2>>10)&7], dst_reg, get_ea_mode_str_32(g_cpu_ir), sext_7bit_int(w2&0x7f));
-					break;
-
-				case 7:		// packed decimal w/dynamic k-factor (register)
-					sprintf(g_dasm_str, "fmove%s   FP%d, %s {D%d}", float_data_format[(w2>>10)&7], dst_reg, get_ea_mode_str_32(g_cpu_ir), (w2>>4)&7);
-					break;
-
-				default:
-					sprintf(g_dasm_str, "fmove%s   FP%d, %s", float_data_format[(w2>>10)&7], dst_reg, get_ea_mode_str_32(g_cpu_ir));
-					break;
-			}
-			break;
-		}
-
-		case 0x4:	// ea to control
-		{
-			sprintf(g_dasm_str, "fmovem.l   %s, ", get_ea_mode_str_32(g_cpu_ir));
-			if (w2 & 0x1000) strcat(g_dasm_str, "fpcr");
-			if (w2 & 0x0800) strcat(g_dasm_str, "/fpsr");
-			if (w2 & 0x0400) strcat(g_dasm_str, "/fpiar");
-			break;
-		}
-
-		case 0x5:	// control to ea
-		{
-
-			strcpy(g_dasm_str, "fmovem.l   ");
-			if (w2 & 0x1000) strcat(g_dasm_str, "fpcr");
-			if (w2 & 0x0800) strcat(g_dasm_str, "/fpsr");
-			if (w2 & 0x0400) strcat(g_dasm_str, "/fpiar");
-			strcat(g_dasm_str, ", ");
-			strcat(g_dasm_str, get_ea_mode_str_32(g_cpu_ir));
-			break;
-		}
-
-		case 0x6:	// memory to FPU, list
-		{
-			char temp[32];
-
-			if ((w2>>11) & 1)	// dynamic register list
-			{
-				sprintf(g_dasm_str, "fmovem.x   %s, D%d", get_ea_mode_str_32(g_cpu_ir), (w2>>4)&7);
-			}
-			else	// static register list
-			{
-				int i;
-
-				sprintf(g_dasm_str, "fmovem.x   %s, ", get_ea_mode_str_32(g_cpu_ir));
-
-				for (i = 0; i < 8; i++)
-				{
-					if (w2 & (1<<i))
-					{
-						if ((w2>>12) & 1)	// postincrement or control
-						{
-							sprintf(temp, "FP%d ", 7-i);
-						}
-						else			// predecrement
-						{
-							sprintf(temp, "FP%d ", i);
-						}
-						strcat(g_dasm_str, temp);
-					}
-				}
-			}
-			break;
-		}
-
-		case 0x7:	// FPU to memory, list
-		{
-			char temp[32];
-
-			if ((w2>>11) & 1)	// dynamic register list
-			{
-				sprintf(g_dasm_str, "fmovem.x   D%d, %s", (w2>>4)&7, get_ea_mode_str_32(g_cpu_ir));
-			}
-			else	// static register list
-			{
-				int i;
-
-				sprintf(g_dasm_str, "fmovem.x   ");
-
-				for (i = 0; i < 8; i++)
-				{
-					if (w2 & (1<<i))
-					{
-						if ((w2>>12) & 1)	// postincrement or control
-						{
-							sprintf(temp, "FP%d ", 7-i);
-						}
-						else			// predecrement
-						{
-							sprintf(temp, "FP%d ", i);
-						}
-						strcat(g_dasm_str, temp);
-					}
-				}
-
-				strcat(g_dasm_str, ", ");
-				strcat(g_dasm_str, get_ea_mode_str_32(g_cpu_ir));
-			}
-			break;
-		}
-
-		default:
-		{
-			sprintf(g_dasm_str, "FPU (?) ");
-			break;
-		}
-	}
-}
-
 static void d68000_jmp(void)
 {
 	sprintf(g_dasm_str, "jmp     %s", get_ea_mode_str_32(g_cpu_ir));
@@ -1943,12 +1207,6 @@ static void d68000_lea(void)
 static void d68000_link_16(void)
 {
 	sprintf(g_dasm_str, "link    A%d, %s", g_cpu_ir&7, get_imm_str_s16());
-}
-
-static void d68020_link_32(void)
-{
-	LIMIT_CPU_TYPES(M68020_PLUS);
-	sprintf(g_dasm_str, "link    A%d, %s; (2+)", g_cpu_ir&7, get_imm_str_s32());
 }
 
 static void d68000_lsr_s_8(void)
@@ -2054,12 +1312,6 @@ static void d68000_move_to_ccr(void)
 	sprintf(g_dasm_str, "move    %s, CCR", get_ea_mode_str_8(g_cpu_ir));
 }
 
-static void d68010_move_fr_ccr(void)
-{
-	LIMIT_CPU_TYPES(M68010_PLUS);
-	sprintf(g_dasm_str, "move    CCR, %s; (1+)", get_ea_mode_str_8(g_cpu_ir));
-}
-
 static void d68000_move_fr_sr(void)
 {
 	sprintf(g_dasm_str, "move    SR, %s", get_ea_mode_str_16(g_cpu_ir));
@@ -2078,91 +1330,6 @@ static void d68000_move_fr_usp(void)
 static void d68000_move_to_usp(void)
 {
 	sprintf(g_dasm_str, "move    A%d, USP", g_cpu_ir&7);
-}
-
-static void d68010_movec(void)
-{
-	UINT32 extension;
-	const char* reg_name;
-	const char* processor;
-	LIMIT_CPU_TYPES(M68010_PLUS);
-	extension = read_imm_16();
-
-	switch(extension & 0xfff)
-	{
-		case 0x000:
-			reg_name = "SFC";
-			processor = "1+";
-			break;
-		case 0x001:
-			reg_name = "DFC";
-			processor = "1+";
-			break;
-		case 0x800:
-			reg_name = "USP";
-			processor = "1+";
-			break;
-		case 0x801:
-			reg_name = "VBR";
-			processor = "1+";
-			break;
-		case 0x002:
-			reg_name = "CACR";
-			processor = "2+";
-			break;
-		case 0x802:
-			reg_name = "CAAR";
-			processor = "2,3";
-			break;
-		case 0x803:
-			reg_name = "MSP";
-			processor = "2+";
-			break;
-		case 0x804:
-			reg_name = "ISP";
-			processor = "2+";
-			break;
-		case 0x003:
-			reg_name = "TC";
-			processor = "4+";
-			break;
-		case 0x004:
-			reg_name = "ITT0";
-			processor = "4+";
-			break;
-		case 0x005:
-			reg_name = "ITT1";
-			processor = "4+";
-			break;
-		case 0x006:
-			reg_name = "DTT0";
-			processor = "4+";
-			break;
-		case 0x007:
-			reg_name = "DTT1";
-			processor = "4+";
-			break;
-		case 0x805:
-			reg_name = "MMUSR";
-			processor = "4+";
-			break;
-		case 0x806:
-			reg_name = "URP";
-			processor = "4+";
-			break;
-		case 0x807:
-			reg_name = "SRP";
-			processor = "4+";
-			break;
-		default:
-			reg_name = make_signed_hex_str_16(extension & 0xfff);
-			processor = "?";
-	}
-
-	if(BIT_0(g_cpu_ir))
-		sprintf(g_dasm_str, "movec %c%d, %s; (%s)", BIT_F(extension) ? 'A' : 'D', (extension>>12)&7, reg_name, processor);
-	else
-		sprintf(g_dasm_str, "movec %s, %c%d; (%s)", reg_name, BIT_F(extension) ? 'A' : 'D', (extension>>12)&7, processor);
 }
 
 static void d68000_movem_pd_16(void)
@@ -2473,72 +1640,9 @@ static void d68000_movep_er_32(void)
 	sprintf(g_dasm_str, "movep.l ($%x,A%d), D%d", read_imm_16(), g_cpu_ir&7, (g_cpu_ir>>9)&7);
 }
 
-static void d68010_moves_8(void)
-{
-	UINT32 extension;
-	LIMIT_CPU_TYPES(M68010_PLUS);
-	extension = read_imm_16();
-	if(BIT_B(extension))
-		sprintf(g_dasm_str, "moves.b %c%d, %s; (1+)", BIT_F(extension) ? 'A' : 'D', (extension>>12)&7, get_ea_mode_str_8(g_cpu_ir));
-	else
-		sprintf(g_dasm_str, "moves.b %s, %c%d; (1+)", get_ea_mode_str_8(g_cpu_ir), BIT_F(extension) ? 'A' : 'D', (extension>>12)&7);
-}
-
-static void d68010_moves_16(void)
-{
-	UINT32 extension;
-	LIMIT_CPU_TYPES(M68010_PLUS);
-	extension = read_imm_16();
-	if(BIT_B(extension))
-		sprintf(g_dasm_str, "moves.w %c%d, %s; (1+)", BIT_F(extension) ? 'A' : 'D', (extension>>12)&7, get_ea_mode_str_16(g_cpu_ir));
-	else
-		sprintf(g_dasm_str, "moves.w %s, %c%d; (1+)", get_ea_mode_str_16(g_cpu_ir), BIT_F(extension) ? 'A' : 'D', (extension>>12)&7);
-}
-
-static void d68010_moves_32(void)
-{
-	UINT32 extension;
-	LIMIT_CPU_TYPES(M68010_PLUS);
-	extension = read_imm_16();
-	if(BIT_B(extension))
-		sprintf(g_dasm_str, "moves.l %c%d, %s; (1+)", BIT_F(extension) ? 'A' : 'D', (extension>>12)&7, get_ea_mode_str_32(g_cpu_ir));
-	else
-		sprintf(g_dasm_str, "moves.l %s, %c%d; (1+)", get_ea_mode_str_32(g_cpu_ir), BIT_F(extension) ? 'A' : 'D', (extension>>12)&7);
-}
-
 static void d68000_moveq(void)
 {
 	sprintf(g_dasm_str, "moveq   #%s, D%d", make_signed_hex_str_8(g_cpu_ir), (g_cpu_ir>>9)&7);
-}
-
-static void d68040_move16_pi_pi(void)
-{
-	LIMIT_CPU_TYPES(M68040_PLUS);
-	sprintf(g_dasm_str, "move16  (A%d)+, (A%d)+; (4)", g_cpu_ir&7, (read_imm_16()>>12)&7);
-}
-
-static void d68040_move16_pi_al(void)
-{
-	LIMIT_CPU_TYPES(M68040_PLUS);
-	sprintf(g_dasm_str, "move16  (A%d)+, %s; (4)", g_cpu_ir&7, get_imm_str_u32());
-}
-
-static void d68040_move16_al_pi(void)
-{
-	LIMIT_CPU_TYPES(M68040_PLUS);
-	sprintf(g_dasm_str, "move16  %s, (A%d)+; (4)", get_imm_str_u32(), g_cpu_ir&7);
-}
-
-static void d68040_move16_ai_al(void)
-{
-	LIMIT_CPU_TYPES(M68040_PLUS);
-	sprintf(g_dasm_str, "move16  (A%d), %s; (4)", g_cpu_ir&7, get_imm_str_u32());
-}
-
-static void d68040_move16_al_ai(void)
-{
-	LIMIT_CPU_TYPES(M68040_PLUS);
-	sprintf(g_dasm_str, "move16  %s, (A%d); (4)", get_imm_str_u32(), g_cpu_ir&7);
 }
 
 static void d68000_muls(void)
@@ -2549,18 +1653,6 @@ static void d68000_muls(void)
 static void d68000_mulu(void)
 {
 	sprintf(g_dasm_str, "mulu.w  %s, D%d", get_ea_mode_str_16(g_cpu_ir), (g_cpu_ir>>9)&7);
-}
-
-static void d68020_mull(void)
-{
-	UINT32 extension;
-	LIMIT_CPU_TYPES(M68020_PLUS);
-	extension = read_imm_16();
-
-	if(BIT_A(extension))
-		sprintf(g_dasm_str, "mul%c.l %s, D%d-D%d; (2+)", BIT_B(extension) ? 's' : 'u', get_ea_mode_str_32(g_cpu_ir), extension&7, (extension>>12)&7);
-	else
-		sprintf(g_dasm_str, "mul%c.l  %s, D%d; (2+)", BIT_B(extension) ? 's' : 'u', get_ea_mode_str_32(g_cpu_ir), (extension>>12)&7);
 }
 
 static void d68000_nbcd(void)
@@ -2676,36 +1768,9 @@ static void d68000_ori_to_sr(void)
 	sprintf(g_dasm_str, "ori     %s, SR", get_imm_str_u16());
 }
 
-static void d68020_pack_rr(void)
-{
-	LIMIT_CPU_TYPES(M68020_PLUS);
-	sprintf(g_dasm_str, "pack    D%d, D%d, %s; (2+)", g_cpu_ir&7, (g_cpu_ir>>9)&7, get_imm_str_u16());
-}
-
-static void d68020_pack_mm(void)
-{
-	LIMIT_CPU_TYPES(M68020_PLUS);
-	sprintf(g_dasm_str, "pack    -(A%d), -(A%d), %s; (2+)", g_cpu_ir&7, (g_cpu_ir>>9)&7, get_imm_str_u16());
-}
-
 static void d68000_pea(void)
 {
 	sprintf(g_dasm_str, "pea     %s", get_ea_mode_str_32(g_cpu_ir));
-}
-
-// this is a 68040-specific form of PFLUSH
-static void d68040_pflush(void)
-{
-	LIMIT_CPU_TYPES(M68040_PLUS);
-
-	if (g_cpu_ir & 0x10)
-	{
-		sprintf(g_dasm_str, "pflusha%s", (g_cpu_ir & 8) ? "" : "n");
-	}
-	else
-	{
-		sprintf(g_dasm_str, "pflush%s(A%d)", (g_cpu_ir & 8) ? "" : "n", g_cpu_ir & 7);
-	}
 }
 
 static void d68000_reset(void)
@@ -2793,7 +1858,6 @@ static void d68000_roxr_s_16(void)
 	sprintf(g_dasm_str, "roxr.w  #%d, D%d", g_3bit_qdata_table[(g_cpu_ir>>9)&7], g_cpu_ir&7);
 }
 
-
 static void d68000_roxr_s_32(void)
 {
 	sprintf(g_dasm_str, "roxr.l  #%d, D%d", g_3bit_qdata_table[(g_cpu_ir>>9)&7], g_cpu_ir&7);
@@ -2854,23 +1918,9 @@ static void d68000_roxl_ea(void)
 	sprintf(g_dasm_str, "roxl.w  %s", get_ea_mode_str_32(g_cpu_ir));
 }
 
-static void d68010_rtd(void)
-{
-	LIMIT_CPU_TYPES(M68010_PLUS);
-	sprintf(g_dasm_str, "rtd     %s; (1+)", get_imm_str_s16());
-	SET_OPCODE_FLAGS(DASMFLAG_STEP_OUT);
-}
-
 static void d68000_rte(void)
 {
 	sprintf(g_dasm_str, "rte");
-	SET_OPCODE_FLAGS(DASMFLAG_STEP_OUT);
-}
-
-static void d68020_rtm(void)
-{
-	LIMIT_CPU_TYPES(M68020_ONLY);
-	sprintf(g_dasm_str, "rtm     %c%d; (2+)", BIT_3(g_cpu_ir) ? 'A' : 'D', g_cpu_ir&7);
 	SET_OPCODE_FLAGS(DASMFLAG_STEP_OUT);
 }
 
@@ -3024,27 +2074,6 @@ static void d68000_trap(void)
 	sprintf(g_dasm_str, "trap    #$%x", g_cpu_ir&0xf);
 }
 
-static void d68020_trapcc_0(void)
-{
-	LIMIT_CPU_TYPES(M68020_PLUS);
-	sprintf(g_dasm_str, "trap%-2s; (2+)", g_cc[(g_cpu_ir>>8)&0xf]);
-	SET_OPCODE_FLAGS(DASMFLAG_STEP_OVER);
-}
-
-static void d68020_trapcc_16(void)
-{
-	LIMIT_CPU_TYPES(M68020_PLUS);
-	sprintf(g_dasm_str, "trap%-2s  %s; (2+)", g_cc[(g_cpu_ir>>8)&0xf], get_imm_str_u16());
-	SET_OPCODE_FLAGS(DASMFLAG_STEP_OVER);
-}
-
-static void d68020_trapcc_32(void)
-{
-	LIMIT_CPU_TYPES(M68020_PLUS);
-	sprintf(g_dasm_str, "trap%-2s  %s; (2+)", g_cc[(g_cpu_ir>>8)&0xf], get_imm_str_u32());
-	SET_OPCODE_FLAGS(DASMFLAG_STEP_OVER);
-}
-
 static void d68000_trapv(void)
 {
 	sprintf(g_dasm_str, "trapv");
@@ -3056,51 +2085,9 @@ static void d68000_tst_8(void)
 	sprintf(g_dasm_str, "tst.b   %s", get_ea_mode_str_8(g_cpu_ir));
 }
 
-static void d68020_tst_pcdi_8(void)
-{
-	LIMIT_CPU_TYPES(M68020_PLUS);
-	sprintf(g_dasm_str, "tst.b   %s; (2+)", get_ea_mode_str_8(g_cpu_ir));
-}
-
-static void d68020_tst_pcix_8(void)
-{
-	LIMIT_CPU_TYPES(M68020_PLUS);
-	sprintf(g_dasm_str, "tst.b   %s; (2+)", get_ea_mode_str_8(g_cpu_ir));
-}
-
-static void d68020_tst_i_8(void)
-{
-	LIMIT_CPU_TYPES(M68020_PLUS);
-	sprintf(g_dasm_str, "tst.b   %s; (2+)", get_ea_mode_str_8(g_cpu_ir));
-}
-
 static void d68000_tst_16(void)
 {
 	sprintf(g_dasm_str, "tst.w   %s", get_ea_mode_str_16(g_cpu_ir));
-}
-
-static void d68020_tst_a_16(void)
-{
-	LIMIT_CPU_TYPES(M68020_PLUS);
-	sprintf(g_dasm_str, "tst.w   %s; (2+)", get_ea_mode_str_16(g_cpu_ir));
-}
-
-static void d68020_tst_pcdi_16(void)
-{
-	LIMIT_CPU_TYPES(M68020_PLUS);
-	sprintf(g_dasm_str, "tst.w   %s; (2+)", get_ea_mode_str_16(g_cpu_ir));
-}
-
-static void d68020_tst_pcix_16(void)
-{
-	LIMIT_CPU_TYPES(M68020_PLUS);
-	sprintf(g_dasm_str, "tst.w   %s; (2+)", get_ea_mode_str_16(g_cpu_ir));
-}
-
-static void d68020_tst_i_16(void)
-{
-	LIMIT_CPU_TYPES(M68020_PLUS);
-	sprintf(g_dasm_str, "tst.w   %s; (2+)", get_ea_mode_str_16(g_cpu_ir));
 }
 
 static void d68000_tst_32(void)
@@ -3108,47 +2095,10 @@ static void d68000_tst_32(void)
 	sprintf(g_dasm_str, "tst.l   %s", get_ea_mode_str_32(g_cpu_ir));
 }
 
-static void d68020_tst_a_32(void)
-{
-	LIMIT_CPU_TYPES(M68020_PLUS);
-	sprintf(g_dasm_str, "tst.l   %s; (2+)", get_ea_mode_str_32(g_cpu_ir));
-}
-
-static void d68020_tst_pcdi_32(void)
-{
-	LIMIT_CPU_TYPES(M68020_PLUS);
-	sprintf(g_dasm_str, "tst.l   %s; (2+)", get_ea_mode_str_32(g_cpu_ir));
-}
-
-static void d68020_tst_pcix_32(void)
-{
-	LIMIT_CPU_TYPES(M68020_PLUS);
-	sprintf(g_dasm_str, "tst.l   %s; (2+)", get_ea_mode_str_32(g_cpu_ir));
-}
-
-static void d68020_tst_i_32(void)
-{
-	LIMIT_CPU_TYPES(M68020_PLUS);
-	sprintf(g_dasm_str, "tst.l   %s; (2+)", get_ea_mode_str_32(g_cpu_ir));
-}
-
 static void d68000_unlk(void)
 {
 	sprintf(g_dasm_str, "unlk    A%d", g_cpu_ir&7);
 }
-
-static void d68020_unpk_rr(void)
-{
-	LIMIT_CPU_TYPES(M68020_PLUS);
-	sprintf(g_dasm_str, "unpk    D%d, D%d, %s; (2+)", g_cpu_ir&7, (g_cpu_ir>>9)&7, get_imm_str_u16());
-}
-
-static void d68020_unpk_mm(void)
-{
-	LIMIT_CPU_TYPES(M68020_PLUS);
-	sprintf(g_dasm_str, "unpk    -(A%d), -(A%d), %s; (2+)", g_cpu_ir&7, (g_cpu_ir>>9)&7, get_imm_str_u16());
-}
-
 
 // PFLUSH:  001xxx0xxxxxxxxx
 // PLOAD:   001000x0000xxxxx
@@ -3355,42 +2305,42 @@ static const opcode_struct g_opcode_info[] =
 	{d68000_asl_ea       , 0xffc0, 0xe1c0, 0x3f8},
 	{d68000_bcc_8        , 0xf000, 0x6000, 0x000},
 	{d68000_bcc_16       , 0xf0ff, 0x6000, 0x000},
-	{d68020_bcc_32       , 0xf0ff, 0x60ff, 0x000},
+//	{d68020_bcc_32       , 0xf0ff, 0x60ff, 0x000},
 	{d68000_bchg_r       , 0xf1c0, 0x0140, 0xbf8},
 	{d68000_bchg_s       , 0xffc0, 0x0840, 0xbf8},
 	{d68000_bclr_r       , 0xf1c0, 0x0180, 0xbf8},
 	{d68000_bclr_s       , 0xffc0, 0x0880, 0xbf8},
-	{d68020_bfchg        , 0xffc0, 0xeac0, 0xa78},
-	{d68020_bfclr        , 0xffc0, 0xecc0, 0xa78},
-	{d68020_bfexts       , 0xffc0, 0xebc0, 0xa7b},
-	{d68020_bfextu       , 0xffc0, 0xe9c0, 0xa7b},
-	{d68020_bfffo        , 0xffc0, 0xedc0, 0xa7b},
-	{d68020_bfins        , 0xffc0, 0xefc0, 0xa78},
-	{d68020_bfset        , 0xffc0, 0xeec0, 0xa78},
-	{d68020_bftst        , 0xffc0, 0xe8c0, 0xa7b},
-	{d68010_bkpt         , 0xfff8, 0x4848, 0x000},
+//	{d68020_bfchg        , 0xffc0, 0xeac0, 0xa78},
+//	{d68020_bfclr        , 0xffc0, 0xecc0, 0xa78},
+//	{d68020_bfexts       , 0xffc0, 0xebc0, 0xa7b},
+//	{d68020_bfextu       , 0xffc0, 0xe9c0, 0xa7b},
+//	{d68020_bfffo        , 0xffc0, 0xedc0, 0xa7b},
+//	{d68020_bfins        , 0xffc0, 0xefc0, 0xa78},
+//	{d68020_bfset        , 0xffc0, 0xeec0, 0xa78},
+//	{d68020_bftst        , 0xffc0, 0xe8c0, 0xa7b},
+//	{d68010_bkpt         , 0xfff8, 0x4848, 0x000},
 	{d68000_bra_8        , 0xff00, 0x6000, 0x000},
 	{d68000_bra_16       , 0xffff, 0x6000, 0x000},
-	{d68020_bra_32       , 0xffff, 0x60ff, 0x000},
+//	{d68020_bra_32       , 0xffff, 0x60ff, 0x000},
 	{d68000_bset_r       , 0xf1c0, 0x01c0, 0xbf8},
 	{d68000_bset_s       , 0xffc0, 0x08c0, 0xbf8},
 	{d68000_bsr_8        , 0xff00, 0x6100, 0x000},
 	{d68000_bsr_16       , 0xffff, 0x6100, 0x000},
-	{d68020_bsr_32       , 0xffff, 0x61ff, 0x000},
+//	{d68020_bsr_32       , 0xffff, 0x61ff, 0x000},
 	{d68000_btst_r       , 0xf1c0, 0x0100, 0xbff},
 	{d68000_btst_s       , 0xffc0, 0x0800, 0xbfb},
-	{d68020_callm        , 0xffc0, 0x06c0, 0x27b},
-	{d68020_cas_8        , 0xffc0, 0x0ac0, 0x3f8},
-	{d68020_cas_16       , 0xffc0, 0x0cc0, 0x3f8},
-	{d68020_cas_32       , 0xffc0, 0x0ec0, 0x3f8},
-	{d68020_cas2_16      , 0xffff, 0x0cfc, 0x000},
-	{d68020_cas2_32      , 0xffff, 0x0efc, 0x000},
+//	{d68020_callm        , 0xffc0, 0x06c0, 0x27b},
+//	{d68020_cas_8        , 0xffc0, 0x0ac0, 0x3f8},
+//	{d68020_cas_16       , 0xffc0, 0x0cc0, 0x3f8},
+//	{d68020_cas_32       , 0xffc0, 0x0ec0, 0x3f8},
+//	{d68020_cas2_16      , 0xffff, 0x0cfc, 0x000},
+//	{d68020_cas2_32      , 0xffff, 0x0efc, 0x000},
 	{d68000_chk_16       , 0xf1c0, 0x4180, 0xbff},
-	{d68020_chk_32       , 0xf1c0, 0x4100, 0xbff},
-	{d68020_chk2_cmp2_8  , 0xffc0, 0x00c0, 0x27b},
-	{d68020_chk2_cmp2_16 , 0xffc0, 0x02c0, 0x27b},
-	{d68020_chk2_cmp2_32 , 0xffc0, 0x04c0, 0x27b},
-	{d68040_cinv         , 0xff20, 0xf400, 0x000},
+//	{d68020_chk_32       , 0xf1c0, 0x4100, 0xbff},
+//	{d68020_chk2_cmp2_8  , 0xffc0, 0x00c0, 0x27b},
+//	{d68020_chk2_cmp2_16 , 0xffc0, 0x02c0, 0x27b},
+//	{d68020_chk2_cmp2_32 , 0xffc0, 0x04c0, 0x27b},
+//	{d68040_cinv         , 0xff20, 0xf400, 0x000},
 	{d68000_clr_8        , 0xffc0, 0x4200, 0xbf8},
 	{d68000_clr_16       , 0xffc0, 0x4240, 0xbf8},
 	{d68000_clr_32       , 0xffc0, 0x4280, 0xbf8},
@@ -3400,33 +2350,33 @@ static const opcode_struct g_opcode_info[] =
 	{d68000_cmpa_16      , 0xf1c0, 0xb0c0, 0xfff},
 	{d68000_cmpa_32      , 0xf1c0, 0xb1c0, 0xfff},
 	{d68000_cmpi_8       , 0xffc0, 0x0c00, 0xbf8},
-	{d68020_cmpi_pcdi_8  , 0xffff, 0x0c3a, 0x000},
-	{d68020_cmpi_pcix_8  , 0xffff, 0x0c3b, 0x000},
+//	{d68020_cmpi_pcdi_8  , 0xffff, 0x0c3a, 0x000},
+//	{d68020_cmpi_pcix_8  , 0xffff, 0x0c3b, 0x000},
 	{d68000_cmpi_16      , 0xffc0, 0x0c40, 0xbf8},
-	{d68020_cmpi_pcdi_16 , 0xffff, 0x0c7a, 0x000},
-	{d68020_cmpi_pcix_16 , 0xffff, 0x0c7b, 0x000},
+//	{d68020_cmpi_pcdi_16 , 0xffff, 0x0c7a, 0x000},
+//	{d68020_cmpi_pcix_16 , 0xffff, 0x0c7b, 0x000},
 	{d68000_cmpi_32      , 0xffc0, 0x0c80, 0xbf8},
-	{d68020_cmpi_pcdi_32 , 0xffff, 0x0cba, 0x000},
-	{d68020_cmpi_pcix_32 , 0xffff, 0x0cbb, 0x000},
+//	{d68020_cmpi_pcdi_32 , 0xffff, 0x0cba, 0x000},
+//	{d68020_cmpi_pcix_32 , 0xffff, 0x0cbb, 0x000},
 	{d68000_cmpm_8       , 0xf1f8, 0xb108, 0x000},
 	{d68000_cmpm_16      , 0xf1f8, 0xb148, 0x000},
 	{d68000_cmpm_32      , 0xf1f8, 0xb188, 0x000},
-	{d68020_cpbcc_16     , 0xf1c0, 0xf080, 0x000},
-	{d68020_cpbcc_32     , 0xf1c0, 0xf0c0, 0x000},
-	{d68020_cpdbcc       , 0xf1f8, 0xf048, 0x000},
-	{d68020_cpgen        , 0xf1c0, 0xf000, 0x000},
-	{d68020_cprestore    , 0xf1c0, 0xf140, 0x37f},
-	{d68020_cpsave       , 0xf1c0, 0xf100, 0x2f8},
-	{d68020_cpscc        , 0xf1c0, 0xf040, 0xbf8},
-	{d68020_cptrapcc_0   , 0xf1ff, 0xf07c, 0x000},
-	{d68020_cptrapcc_16  , 0xf1ff, 0xf07a, 0x000},
-	{d68020_cptrapcc_32  , 0xf1ff, 0xf07b, 0x000},
-	{d68040_cpush        , 0xff20, 0xf420, 0x000},
+//	{d68020_cpbcc_16     , 0xf1c0, 0xf080, 0x000},
+//	{d68020_cpbcc_32     , 0xf1c0, 0xf0c0, 0x000},
+//	{d68020_cpdbcc       , 0xf1f8, 0xf048, 0x000},
+//	{d68020_cpgen        , 0xf1c0, 0xf000, 0x000},
+//	{d68020_cprestore    , 0xf1c0, 0xf140, 0x37f},
+//	{d68020_cpsave       , 0xf1c0, 0xf100, 0x2f8},
+//	{d68020_cpscc        , 0xf1c0, 0xf040, 0xbf8},
+//	{d68020_cptrapcc_0   , 0xf1ff, 0xf07c, 0x000},
+//	{d68020_cptrapcc_16  , 0xf1ff, 0xf07a, 0x000},
+//	{d68020_cptrapcc_32  , 0xf1ff, 0xf07b, 0x000},
+//	{d68040_cpush        , 0xff20, 0xf420, 0x000},
 	{d68000_dbcc         , 0xf0f8, 0x50c8, 0x000},
 	{d68000_dbra         , 0xfff8, 0x51c8, 0x000},
 	{d68000_divs         , 0xf1c0, 0x81c0, 0xbff},
 	{d68000_divu         , 0xf1c0, 0x80c0, 0xbff},
-	{d68020_divl         , 0xffc0, 0x4c40, 0xbff},
+//	{d68020_divl         , 0xffc0, 0x4c40, 0xbff},
 	{d68000_eor_8        , 0xf1c0, 0xb100, 0xbf8},
 	{d68000_eor_16       , 0xf1c0, 0xb140, 0xbf8},
 	{d68000_eor_32       , 0xf1c0, 0xb180, 0xbf8},
@@ -3438,16 +2388,16 @@ static const opcode_struct g_opcode_info[] =
 	{d68000_exg_dd       , 0xf1f8, 0xc140, 0x000},
 	{d68000_exg_aa       , 0xf1f8, 0xc148, 0x000},
 	{d68000_exg_da       , 0xf1f8, 0xc188, 0x000},
-	{d68020_extb_32      , 0xfff8, 0x49c0, 0x000},
+//	{d68020_extb_32      , 0xfff8, 0x49c0, 0x000},
 	{d68000_ext_16       , 0xfff8, 0x4880, 0x000},
 	{d68000_ext_32       , 0xfff8, 0x48c0, 0x000},
-	{d68040_fpu          , 0xffc0, 0xf200, 0x000},
+//	{d68040_fpu          , 0xffc0, 0xf200, 0x000},
 	{d68000_illegal      , 0xffff, 0x4afc, 0x000},
 	{d68000_jmp          , 0xffc0, 0x4ec0, 0x27b},
 	{d68000_jsr          , 0xffc0, 0x4e80, 0x27b},
 	{d68000_lea          , 0xf1c0, 0x41c0, 0x27b},
 	{d68000_link_16      , 0xfff8, 0x4e50, 0x000},
-	{d68020_link_32      , 0xfff8, 0x4808, 0x000},
+//	{d68020_link_32      , 0xfff8, 0x4808, 0x000},
 	{d68000_lsr_s_8      , 0xf1f8, 0xe008, 0x000},
 	{d68000_lsr_s_16     , 0xf1f8, 0xe048, 0x000},
 	{d68000_lsr_s_32     , 0xf1f8, 0xe088, 0x000},
@@ -3468,12 +2418,12 @@ static const opcode_struct g_opcode_info[] =
 	{d68000_movea_16     , 0xf1c0, 0x3040, 0xfff},
 	{d68000_movea_32     , 0xf1c0, 0x2040, 0xfff},
 	{d68000_move_to_ccr  , 0xffc0, 0x44c0, 0xbff},
-	{d68010_move_fr_ccr  , 0xffc0, 0x42c0, 0xbf8},
+//	{d68010_move_fr_ccr  , 0xffc0, 0x42c0, 0xbf8},
 	{d68000_move_to_sr   , 0xffc0, 0x46c0, 0xbff},
 	{d68000_move_fr_sr   , 0xffc0, 0x40c0, 0xbf8},
 	{d68000_move_to_usp  , 0xfff8, 0x4e60, 0x000},
 	{d68000_move_fr_usp  , 0xfff8, 0x4e68, 0x000},
-	{d68010_movec        , 0xfffe, 0x4e7a, 0x000},
+//	{d68010_movec        , 0xfffe, 0x4e7a, 0x000},
 	{d68000_movem_pd_16  , 0xfff8, 0x48a0, 0x000},
 	{d68000_movem_pd_32  , 0xfff8, 0x48e0, 0x000},
 	{d68000_movem_re_16  , 0xffc0, 0x4880, 0x2f8},
@@ -3484,18 +2434,18 @@ static const opcode_struct g_opcode_info[] =
 	{d68000_movep_er_32  , 0xf1f8, 0x0148, 0x000},
 	{d68000_movep_re_16  , 0xf1f8, 0x0188, 0x000},
 	{d68000_movep_re_32  , 0xf1f8, 0x01c8, 0x000},
-	{d68010_moves_8      , 0xffc0, 0x0e00, 0x3f8},
-	{d68010_moves_16     , 0xffc0, 0x0e40, 0x3f8},
-	{d68010_moves_32     , 0xffc0, 0x0e80, 0x3f8},
+//	{d68010_moves_8      , 0xffc0, 0x0e00, 0x3f8},
+//	{d68010_moves_16     , 0xffc0, 0x0e40, 0x3f8},
+//	{d68010_moves_32     , 0xffc0, 0x0e80, 0x3f8},
 	{d68000_moveq        , 0xf100, 0x7000, 0x000},
-	{d68040_move16_pi_pi , 0xfff8, 0xf620, 0x000},
-	{d68040_move16_pi_al , 0xfff8, 0xf600, 0x000},
-	{d68040_move16_al_pi , 0xfff8, 0xf608, 0x000},
-	{d68040_move16_ai_al , 0xfff8, 0xf610, 0x000},
-	{d68040_move16_al_ai , 0xfff8, 0xf618, 0x000},
+//	{d68040_move16_pi_pi , 0xfff8, 0xf620, 0x000},
+//	{d68040_move16_pi_al , 0xfff8, 0xf600, 0x000},
+//	{d68040_move16_al_pi , 0xfff8, 0xf608, 0x000},
+//	{d68040_move16_ai_al , 0xfff8, 0xf610, 0x000},
+//	{d68040_move16_al_ai , 0xfff8, 0xf618, 0x000},
 	{d68000_muls         , 0xf1c0, 0xc1c0, 0xbff},
 	{d68000_mulu         , 0xf1c0, 0xc0c0, 0xbff},
-	{d68020_mull         , 0xffc0, 0x4c00, 0xbff},
+//	{d68020_mull         , 0xffc0, 0x4c00, 0xbff},
 	{d68000_nbcd         , 0xffc0, 0x4800, 0xbf8},
 	{d68000_neg_8        , 0xffc0, 0x4400, 0xbf8},
 	{d68000_neg_16       , 0xffc0, 0x4440, 0xbf8},
@@ -3518,10 +2468,10 @@ static const opcode_struct g_opcode_info[] =
 	{d68000_ori_8        , 0xffc0, 0x0000, 0xbf8},
 	{d68000_ori_16       , 0xffc0, 0x0040, 0xbf8},
 	{d68000_ori_32       , 0xffc0, 0x0080, 0xbf8},
-	{d68020_pack_rr      , 0xf1f8, 0x8140, 0x000},
-	{d68020_pack_mm      , 0xf1f8, 0x8148, 0x000},
+//	{d68020_pack_rr      , 0xf1f8, 0x8140, 0x000},
+//	{d68020_pack_mm      , 0xf1f8, 0x8148, 0x000},
 	{d68000_pea          , 0xffc0, 0x4840, 0x27b},
-	{d68040_pflush       , 0xffe0, 0xf500, 0x000},
+//	{d68040_pflush       , 0xffe0, 0xf500, 0x000},
 	{d68000_reset        , 0xffff, 0x4e70, 0x000},
 	{d68000_ror_s_8      , 0xf1f8, 0xe018, 0x000},
 	{d68000_ror_s_16     , 0xf1f8, 0xe058, 0x000},
@@ -3551,9 +2501,9 @@ static const opcode_struct g_opcode_info[] =
 	{d68000_roxl_r_16    , 0xf1f8, 0xe170, 0x000},
 	{d68000_roxl_r_32    , 0xf1f8, 0xe1b0, 0x000},
 	{d68000_roxl_ea      , 0xffc0, 0xe5c0, 0x3f8},
-	{d68010_rtd          , 0xffff, 0x4e74, 0x000},
+//	{d68010_rtd          , 0xffff, 0x4e74, 0x000},
 	{d68000_rte          , 0xffff, 0x4e73, 0x000},
-	{d68020_rtm          , 0xfff0, 0x06c0, 0x000},
+//	{d68020_rtm          , 0xfff0, 0x06c0, 0x000},
 	{d68000_rtr          , 0xffff, 0x4e77, 0x000},
 	{d68000_rts          , 0xffff, 0x4e75, 0x000},
 	{d68000_sbcd_rr      , 0xf1f8, 0x8100, 0x000},
@@ -3583,27 +2533,27 @@ static const opcode_struct g_opcode_info[] =
 	{d68000_swap         , 0xfff8, 0x4840, 0x000},
 	{d68000_tas          , 0xffc0, 0x4ac0, 0xbf8},
 	{d68000_trap         , 0xfff0, 0x4e40, 0x000},
-	{d68020_trapcc_0     , 0xf0ff, 0x50fc, 0x000},
-	{d68020_trapcc_16    , 0xf0ff, 0x50fa, 0x000},
-	{d68020_trapcc_32    , 0xf0ff, 0x50fb, 0x000},
+//	{d68020_trapcc_0     , 0xf0ff, 0x50fc, 0x000},
+//	{d68020_trapcc_16    , 0xf0ff, 0x50fa, 0x000},
+//	{d68020_trapcc_32    , 0xf0ff, 0x50fb, 0x000},
 	{d68000_trapv        , 0xffff, 0x4e76, 0x000},
 	{d68000_tst_8        , 0xffc0, 0x4a00, 0xbf8},
-	{d68020_tst_pcdi_8   , 0xffff, 0x4a3a, 0x000},
-	{d68020_tst_pcix_8   , 0xffff, 0x4a3b, 0x000},
-	{d68020_tst_i_8      , 0xffff, 0x4a3c, 0x000},
+//	{d68020_tst_pcdi_8   , 0xffff, 0x4a3a, 0x000},
+//	{d68020_tst_pcix_8   , 0xffff, 0x4a3b, 0x000},
+//	{d68020_tst_i_8      , 0xffff, 0x4a3c, 0x000},
 	{d68000_tst_16       , 0xffc0, 0x4a40, 0xbf8},
-	{d68020_tst_a_16     , 0xfff8, 0x4a48, 0x000},
-	{d68020_tst_pcdi_16  , 0xffff, 0x4a7a, 0x000},
-	{d68020_tst_pcix_16  , 0xffff, 0x4a7b, 0x000},
-	{d68020_tst_i_16     , 0xffff, 0x4a7c, 0x000},
+//	{d68020_tst_a_16     , 0xfff8, 0x4a48, 0x000},
+//	{d68020_tst_pcdi_16  , 0xffff, 0x4a7a, 0x000},
+//	{d68020_tst_pcix_16  , 0xffff, 0x4a7b, 0x000},
+//	{d68020_tst_i_16     , 0xffff, 0x4a7c, 0x000},
 	{d68000_tst_32       , 0xffc0, 0x4a80, 0xbf8},
-	{d68020_tst_a_32     , 0xfff8, 0x4a88, 0x000},
-	{d68020_tst_pcdi_32  , 0xffff, 0x4aba, 0x000},
-	{d68020_tst_pcix_32  , 0xffff, 0x4abb, 0x000},
-	{d68020_tst_i_32     , 0xffff, 0x4abc, 0x000},
+//	{d68020_tst_a_32     , 0xfff8, 0x4a88, 0x000},
+//	{d68020_tst_pcdi_32  , 0xffff, 0x4aba, 0x000},
+//	{d68020_tst_pcix_32  , 0xffff, 0x4abb, 0x000},
+//	{d68020_tst_i_32     , 0xffff, 0x4abc, 0x000},
 	{d68000_unlk         , 0xfff8, 0x4e58, 0x000},
-	{d68020_unpk_rr      , 0xf1f8, 0x8180, 0x000},
-	{d68020_unpk_mm      , 0xf1f8, 0x8188, 0x000},
+//	{d68020_unpk_rr      , 0xf1f8, 0x8180, 0x000},
+//	{d68020_unpk_mm      , 0xf1f8, 0x8188, 0x000},
 	{d68851_p000         , 0xffc0, 0xf000, 0x000},
 	{d68851_pbcc16       , 0xffc0, 0xf080, 0x000},
 	{d68851_pbcc32       , 0xffc0, 0xf0c0, 0x000},
@@ -3734,7 +2684,7 @@ static unsigned int m68k_disassemble(char* str_buff, unsigned int pc, unsigned i
 		case M68K_CPU_TYPE_68008:
 			g_cpu_type = TYPE_68008;
 			break;
-		case M68K_CPU_TYPE_68010:
+/*		case M68K_CPU_TYPE_68010:
 			g_cpu_type = TYPE_68010;
 			break;
 		case M68K_CPU_TYPE_68EC020:
@@ -3750,6 +2700,7 @@ static unsigned int m68k_disassemble(char* str_buff, unsigned int pc, unsigned i
 		case M68K_CPU_TYPE_68LC040:
 			g_cpu_type = TYPE_68040;
 			break;
+*/
 		default:
 			return 0;
 	}
@@ -3816,7 +2767,7 @@ unsigned int m68k_is_valid_instruction(unsigned int instruction, unsigned int cp
 				return 0;
 			if(g_instruction_table[instruction] == d68010_rtd)
 				return 0;
-		case M68K_CPU_TYPE_68010:
+/*		case M68K_CPU_TYPE_68010:
 			if(g_instruction_table[instruction] == d68020_bcc_32)
 				return 0;
 			if(g_instruction_table[instruction] == d68020_bfchg)
@@ -3981,9 +2932,9 @@ unsigned int m68k_is_valid_instruction(unsigned int instruction, unsigned int cp
 			if(g_instruction_table[instruction] == d68040_pflush)
 				return 0;
 	}
+*/
 	if(cpu_type != M68K_CPU_TYPE_68020 && cpu_type != M68K_CPU_TYPE_68EC020 &&
-	  (g_instruction_table[instruction] == d68020_callm ||
-	  g_instruction_table[instruction] == d68020_rtm))
+		(g_instruction_table[instruction] == d68020_callm || g_instruction_table[instruction] == d68020_rtm))
 		return 0;
 
 	return 1;
@@ -3998,26 +2949,6 @@ CPU_DISASSEMBLE( m68000 )
 CPU_DISASSEMBLE( m68008 )
 {
 	return m68k_disassemble_raw(buffer, pc, oprom, opram, M68K_CPU_TYPE_68008);
-}
-
-CPU_DISASSEMBLE( m68010 )
-{
-	return m68k_disassemble_raw(buffer, pc, oprom, opram, M68K_CPU_TYPE_68010);
-}
-
-CPU_DISASSEMBLE( m68020 )
-{
-	return m68k_disassemble_raw(buffer, pc, oprom, opram, M68K_CPU_TYPE_68020);
-}
-
-CPU_DISASSEMBLE( m68030 )
-{
-	return m68k_disassemble_raw(buffer, pc, oprom, opram, M68K_CPU_TYPE_68030);
-}
-
-CPU_DISASSEMBLE( m68040 )
-{
-	return m68k_disassemble_raw(buffer, pc, oprom, opram, M68K_CPU_TYPE_68040);
 }
 
 // f028 2215 0008

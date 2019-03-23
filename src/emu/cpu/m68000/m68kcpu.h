@@ -25,9 +25,6 @@
 #ifndef __M68KCPU_H__
 #define __M68KCPU_H__
 
-typedef struct _m68ki_cpu_core m68ki_cpu_core;
-
-
 #include "m68000.h"
 #include "../../../lib/softfloat/milieu.h"
 #include "../../../lib/softfloat/softfloat.h"
@@ -40,10 +37,9 @@ typedef struct _m68ki_cpu_core m68ki_cpu_core;
 /* ======================================================================== */
 
 /* Check for > 32bit sizes */
-#define MAKE_INT_8(A) (INT8)(A)
+#define MAKE_INT_8(A)  (INT8)(A)
 #define MAKE_INT_16(A) (INT16)(A)
 #define MAKE_INT_32(A) (INT32)(A)
-
 
 /* ======================================================================== */
 /* ============================ GENERAL DEFINES =========================== */
@@ -68,11 +64,11 @@ typedef struct _m68ki_cpu_core m68ki_cpu_core;
 #define EXCEPTION_TRAP_BASE               32
 
 /* Function codes set by CPU during data/address bus activity */
-#define FUNCTION_CODE_USER_DATA          1
-#define FUNCTION_CODE_USER_PROGRAM       2
-#define FUNCTION_CODE_SUPERVISOR_DATA    5
-#define FUNCTION_CODE_SUPERVISOR_PROGRAM 6
-#define FUNCTION_CODE_CPU_SPACE          7
+#define FUNCTION_CODE_USER_DATA            1
+#define FUNCTION_CODE_USER_PROGRAM         2
+#define FUNCTION_CODE_SUPERVISOR_DATA      5
+#define FUNCTION_CODE_SUPERVISOR_PROGRAM   6
+#define FUNCTION_CODE_CPU_SPACE            7
 
 /* CPU types for deciding what to emulate */
 #define CPU_TYPE_000	(0x00000001)
@@ -99,11 +95,9 @@ typedef struct _m68ki_cpu_core m68ki_cpu_core;
 #define RUN_MODE_NORMAL          0
 #define RUN_MODE_BERR_AERR_RESET 1
 
-
 /* ======================================================================== */
 /* ================================ MACROS ================================ */
 /* ======================================================================== */
-
 
 /* ---------------------------- General Macros ---------------------------- */
 
@@ -170,7 +164,7 @@ typedef struct _m68ki_cpu_core m68ki_cpu_core;
 #define LSR(A, C) ((A) >> (C))
 
 /* We have to do this because the morons at ANSI decided that shifts
-* by >= data size are undefined.
+ * by >= data size are undefined.
 */
 #define LSR_32(A, C) ((C) < 32 ? (A) >> (C) : 0)
 #define LSL_32(A, C) ((C) < 32 ? (A) << (C) : 0)
@@ -194,15 +188,13 @@ typedef struct _m68ki_cpu_core m68ki_cpu_core;
 #define ROR_32(A, C)    MASK_OUT_ABOVE_32(LSR_32(A, C) | LSL_32(A, 32-(C)))
 #define ROR_33(A, C)                     (LSR_32(A, C) | LSL_32(A, 33-(C)))
 
-
-
 /* ------------------------------ CPU Access ------------------------------ */
 
 /* Access the CPU registers */
-#define REG_DA           m68k->dar /* easy access to data and address regs */
+#define REG_DA           m68k->dar	/* easy access to data and address regs */
 #define REG_D            m68k->dar
-#define REG_A            (m68k->dar+8)
-#define REG_PPC 		 m68k->ppc
+#define REG_A            (m68k->dar + 8)
+#define REG_PPC		 m68k->ppc
 #define REG_PC           m68k->pc
 #define REG_SP_BASE      m68k->sp
 #define REG_USP          m68k->sp[0]
@@ -268,10 +260,10 @@ typedef struct _m68ki_cpu_core m68ki_cpu_core;
 /* sigjmp() on Mac OS X and *BSD in general saves signal contexts and is super-slow, use sigsetjmp() to tell it not to */
 #ifdef _BSD_SETJMP_H
 #define m68ki_set_address_error_trap(m68k) \
-	if(sigsetjmp(m68k->aerr_trap, 0) != 0) \
+	if (sigsetjmp(m68k->aerr_trap, 0) != 0) \
 	{ \
 		m68ki_exception_address_error(m68k); \
-		if(m68k->stopped) \
+		if (m68k->stopped) \
 		{ \
 			if (m68k->remaining_cycles > 0) \
 				m68k->remaining_cycles = 0; \
@@ -280,7 +272,7 @@ typedef struct _m68ki_cpu_core m68ki_cpu_core;
 	}
 
 #define m68ki_check_address_error(m68k, ADDR, WRITE_MODE, FC) \
-	if((ADDR)&1) \
+	if ((ADDR) & 0x01) \
 	{ \
 		m68k->aerr_address = ADDR; \
 		m68k->aerr_write_mode = WRITE_MODE; \
@@ -289,10 +281,10 @@ typedef struct _m68ki_cpu_core m68ki_cpu_core;
 	}
 #else
 #define m68ki_set_address_error_trap(m68k) \
-	if(setjmp(m68k->aerr_trap) != 0) \
+	if (setjmp(m68k->aerr_trap) != 0) \
 	{ \
 		m68ki_exception_address_error(m68k); \
-		if(m68k->stopped) \
+		if (m68k->stopped) \
 		{ \
 			if (m68k->remaining_cycles > 0) \
 				m68k->remaining_cycles = 0; \
@@ -301,7 +293,7 @@ typedef struct _m68ki_cpu_core m68ki_cpu_core;
 	}
 
 #define m68ki_check_address_error(m68k, ADDR, WRITE_MODE, FC) \
-	if((ADDR)&1) \
+	if ((ADDR) & 0x01) \
 	{ \
 		m68k->aerr_address = ADDR; \
 		m68k->aerr_write_mode = WRITE_MODE; \
@@ -525,6 +517,8 @@ typedef struct _m68ki_cpu_core m68ki_cpu_core;
 /* =============================== PROTOTYPES ============================= */
 /* ======================================================================== */
 
+typedef struct _m68ki_cpu_core m68ki_cpu_core;
+
 typedef union _fp_reg fp_reg;
 union _fp_reg
 {
@@ -547,11 +541,12 @@ struct _m68k_memory_interface
 	void	(*write32)(address_space *, offs_t, UINT32);		// Write 32 bit
 };
 
+
 struct _m68ki_cpu_core
 {
-	UINT32 cpu_type;     /* CPU Type: 68000, 68008, 68010, 68EC020, 68020, 68EC030, 68030, 68EC040, or 68040 */
-	UINT32 dasm_type;	 /* disassembly type */
-	UINT32 dar[16];      /* Data and Address Registers */
+	UINT32		cpu_type;	/* CPU Type: 68000, 68008 */
+	UINT32		dasm_type;	/* disassembly type */
+	UINT32		dar[16];	/* Data and Address Registers */
 	UINT32 ppc;		   /* Previous program counter */
 	UINT32 pc;           /* Program Counter */
 	UINT32 sp[7];        /* User, Interrupt, and Master Stack Pointers */
@@ -583,7 +578,6 @@ struct _m68ki_cpu_core
 	UINT32 instr_mode;   /* Stores whether we are in instruction mode or group 0/1 exception mode */
 	UINT32 run_mode;     /* Stores whether we are processing a reset, bus error, address error, or something else */
 	int    has_pmmu;     /* Indicates if a PMMU available (yes on 030, 040, no on EC030) */
-	int    pmmu_enabled; /* Indicates if the PMMU is enabled */
 	int    fpu_just_reset; /* Indicates the FPU was just reset */
 
 	/* Clocks required for instructions / exceptions */
@@ -650,7 +644,6 @@ struct _m68ki_cpu_core
 extern const UINT8    m68ki_shift_8_table[];
 extern const UINT16   m68ki_shift_16_table[];
 extern const UINT32   m68ki_shift_32_table[];
-extern const UINT8    m68ki_exception_cycle_table[][256];
 extern const UINT8    m68ki_ea_idx_cycle_table[];
 
 /* Read data immediately after the program counter */

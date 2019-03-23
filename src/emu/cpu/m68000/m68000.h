@@ -21,17 +21,23 @@ enum
 {
 	M68K_CPU_TYPE_INVALID,
 	M68K_CPU_TYPE_68000,
-	M68K_CPU_TYPE_68008,
-	M68K_CPU_TYPE_68010,
-	M68K_CPU_TYPE_68EC020,
-	M68K_CPU_TYPE_68020,
-	M68K_CPU_TYPE_68EC030,
-	M68K_CPU_TYPE_68030,
-	M68K_CPU_TYPE_68EC040,
-	M68K_CPU_TYPE_68LC040,
-	M68K_CPU_TYPE_68040
+	M68K_CPU_TYPE_68008
 };
 
+/* The M68000 is a 16/32-bit CISC microprocessor,
+   which implements a 32-bit instruction set,
+   with 32-bit registers and 32-bit internal data bus,
+   but with a 16-bit data ALU and two 16-bit arithmetic ALUs
+   and a 16-bit external data bus / a 24-bit address bus.
+*/
+DECLARE_LEGACY_CPU_DEVICE(M68000, m68000);
+
+/* Except for its smaller data and address buses,
+   (an 8-bit external data bus / a 20-bit address bus)
+   the 68008 behaved identically to the 68000
+   and had the same internal organization and microarchitecture.
+*/
+DECLARE_LEGACY_CPU_DEVICE(M68008, m68008);
 
 /* Special interrupt acknowledge values.
  * Use these as special returns from the interrupt acknowledge callback
@@ -71,27 +77,11 @@ typedef void (*m68k_cmpild_func)(running_device *device, UINT32 data, UINT8 reg)
 typedef void (*m68k_rte_func)(running_device *device);
 typedef int (*m68k_tas_func)(running_device *device);
 
-
-DECLARE_LEGACY_CPU_DEVICE(M68000, m68000);
-DECLARE_LEGACY_CPU_DEVICE(M68008, m68008);
-DECLARE_LEGACY_CPU_DEVICE(M68010, m68010);
-DECLARE_LEGACY_CPU_DEVICE(M68EC020, m68ec020);
-DECLARE_LEGACY_CPU_DEVICE(M68020, m68020);
-DECLARE_LEGACY_CPU_DEVICE(M68020PMMU, m68020pmmu);
-DECLARE_LEGACY_CPU_DEVICE(M68EC030, m68ec030);
-DECLARE_LEGACY_CPU_DEVICE(M68030, m68030);
-DECLARE_LEGACY_CPU_DEVICE(M68EC040, m68ec040);
-DECLARE_LEGACY_CPU_DEVICE(M68LC040, m68lc040);
-DECLARE_LEGACY_CPU_DEVICE(M68040, m68040);
-
-
 void m68k_set_encrypted_opcode_range(running_device *device, offs_t start, offs_t end);
-
-unsigned int m68k_disassemble_raw(char* str_buff, unsigned int pc, const unsigned char* opdata, const unsigned char* argdata, unsigned int cpu_type);
-
 void m68k_set_reset_callback(running_device *device, m68k_reset_func callback);
 void m68k_set_cmpild_callback(running_device *device, m68k_cmpild_func callback);
 void m68k_set_rte_callback(running_device *device, m68k_rte_func callback);
 void m68k_set_tas_callback(running_device *device, m68k_tas_func callback);
+unsigned int m68k_disassemble_raw(char* str_buff, unsigned int pc, const unsigned char* opdata, const unsigned char* argdata, unsigned int cpu_type);
 
 #endif /* __M68000_H__ */
