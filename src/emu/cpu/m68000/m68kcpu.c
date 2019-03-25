@@ -40,8 +40,7 @@ static const char copyright_notice[] =
 /* ======================================================================== */
 
 /* Used by shift & rotate instructions */
-const UINT8 m68ki_shift_8_table[65] =
-{
+const UINT8 m68ki_shift_8_table[65] = {
 	0x00, 0x80, 0xc0, 0xe0, 0xf0, 0xf8, 0xfc, 0xfe, 0xff, 0xff, 0xff, 0xff,
 	0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff,
 	0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff,
@@ -49,8 +48,7 @@ const UINT8 m68ki_shift_8_table[65] =
 	0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff,
 	0xff, 0xff, 0xff, 0xff, 0xff
 };
-const UINT16 m68ki_shift_16_table[65] =
-{
+const UINT16 m68ki_shift_16_table[65] = {
 	0x0000, 0x8000, 0xc000, 0xe000, 0xf000, 0xf800, 0xfc00, 0xfe00, 0xff00,
 	0xff80, 0xffc0, 0xffe0, 0xfff0, 0xfff8, 0xfffc, 0xfffe, 0xffff, 0xffff,
 	0xffff, 0xffff, 0xffff, 0xffff, 0xffff, 0xffff, 0xffff, 0xffff, 0xffff,
@@ -60,8 +58,7 @@ const UINT16 m68ki_shift_16_table[65] =
 	0xffff, 0xffff, 0xffff, 0xffff, 0xffff, 0xffff, 0xffff, 0xffff, 0xffff,
 	0xffff, 0xffff
 };
-const UINT32 m68ki_shift_32_table[65] =
-{
+const UINT32 m68ki_shift_32_table[65] = {
 	0x00000000, 0x80000000, 0xc0000000, 0xe0000000, 0xf0000000, 0xf8000000,
 	0xfc000000, 0xfe000000, 0xff000000, 0xff800000, 0xffc00000, 0xffe00000,
 	0xfff00000, 0xfff80000, 0xfffc0000, 0xfffe0000, 0xffff0000, 0xffff8000,
@@ -153,8 +150,7 @@ static UINT8 const m68ki_exception_cycle_table[256] = {
 		  4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4
 };
 
-const UINT8 m68ki_ea_idx_cycle_table[64] =
-{
+const UINT8 m68ki_ea_idx_cycle_table[64] = {
 	 0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
 	 0, /* ..01.000 no memory indirect, base NULL             */
 	 5, /* ..01..01 memory indirect,    base NULL, outer NULL */
@@ -172,23 +168,6 @@ const UINT8 m68ki_ea_idx_cycle_table[64] =
 	13, /* ..11..11 memory indirect,    base 32,   outer 32   */
 	 0, 11, 13, 13,  0, 11, 13, 13,  0, 11, 13, 13
 };
-
-
-/********************************************************/
-/*	EXTERN						*/
-/********************************************************/
-
-static double fx80_to_double(floatx80 fx)
-{
-	UINT64 d;
-	double *foo;
-
-	foo = (double *)&d;
-
-	d = floatx80_to_float64(fx);
-
-	return *foo;
-}
 
 
 /********************************************************/
@@ -400,10 +379,6 @@ static CPU_INIT( m68k )
 	state_save_register_device_item(device, 0, REG_ISP);
 	state_save_register_device_item(device, 0, REG_MSP);
 	state_save_register_device_item(device, 0, m68k->vbr);
-	state_save_register_device_item(device, 0, m68k->sfc);
-	state_save_register_device_item(device, 0, m68k->dfc);
-	state_save_register_device_item(device, 0, m68k->cacr);
-	state_save_register_device_item(device, 0, m68k->caar);
 	state_save_register_device_item(device, 0, m68k->save_sr);
 	state_save_register_device_item(device, 0, m68k->int_level);
 	state_save_register_device_item(device, 0, m68k->save_stopped);
@@ -568,44 +543,10 @@ static CPU_SET_INFO( m68k )
 static CPU_EXPORT_STRING( m68k )
 {
 	m68ki_cpu_core *m68k = get_safe_token(device);
-	UINT16 sr;
 
-	switch (entry.index())
+	if (entry.index() == STATE_GENFLAGS)
 	{
-		case M68K_FP0:
-			string.printf("%f", fx80_to_double(REG_FP[0]));
-			break;
-
-		case M68K_FP1:
-			string.printf("%f", fx80_to_double(REG_FP[1]));
-			break;
-
-		case M68K_FP2:
-			string.printf("%f", fx80_to_double(REG_FP[2]));
-			break;
-
-		case M68K_FP3:
-			string.printf("%f", fx80_to_double(REG_FP[3]));
-			break;
-
-		case M68K_FP4:
-			string.printf("%f", fx80_to_double(REG_FP[4]));
-			break;
-
-		case M68K_FP5:
-			string.printf("%f", fx80_to_double(REG_FP[5]));
-			break;
-
-		case M68K_FP6:
-			string.printf("%f", fx80_to_double(REG_FP[6]));
-			break;
-
-		case M68K_FP7:
-			string.printf("%f", fx80_to_double(REG_FP[7]));
-			break;
-
-		case STATE_GENFLAGS:
-			sr = m68ki_get_sr(m68k);
+			UINT16 sr = m68ki_get_sr(m68k);
 			string.printf("%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c",
 				sr & 0x8000 ? 'T':'.',
 				sr & 0x4000 ? 't':'.',
@@ -623,7 +564,6 @@ static CPU_EXPORT_STRING( m68k )
 				sr & 0x0004 ? 'Z':'.',
 				sr & 0x0002 ? 'V':'.',
 				sr & 0x0001 ? 'C':'.');
-			break;
 	}
 }
 
@@ -711,13 +651,7 @@ static const m68k_memory_interface interface_d8 =
 /****************************************************************************
  * 16-bit data memory interface
  ****************************************************************************/
-/*
-static UINT16 read_immediate_16(address_space *space, offs_t address)
-{
-	m68ki_cpu_core *m68k = get_safe_token(space->cpu);
-	return memory_decrypted_read_word(space, (address) ^ m68k->memory.opcode_xor);
-}
-*/
+
 static UINT16 simple_read_immediate_16(address_space *space, offs_t address)
 {
 	return memory_decrypted_read_word(space, address);
@@ -794,7 +728,6 @@ static CPU_INIT( m68000 )
 	m68k->cyc_movem_l      = 3;
 	m68k->cyc_shift        = 1;
 	m68k->cyc_reset        = 132;
-	m68k->has_pmmu	       = 0;
 
 	define_state(device);
 }
@@ -839,7 +772,6 @@ static CPU_INIT( m68008 )
 	m68k->cyc_movem_l      = 3;
 	m68k->cyc_shift        = 1;
 	m68k->cyc_reset        = 132;
-	m68k->has_pmmu	       = 0;
 
 	define_state(device);
 }

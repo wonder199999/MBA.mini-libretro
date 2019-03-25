@@ -17,9 +17,6 @@ INCFLAGS := \
 INCFLAGS += -I$(DEPS_DIR)/expat
 EXPAT = $(OBJ)/libexpat.a
 
-# add 'SoftFloat' floating point emulation library
-SOFTFLOAT = $(OBJ)/libsoftfloat.a
-
 # add PortMidi MIDI library
 ifeq ($(BUILD_MIDILIB), 1)
    INCFLAGS += -I$(DEPS_DIR)/portmidi
@@ -416,7 +413,6 @@ LIBOBJ = $(OBJ)/lib
 OBJDIRS += \
 	$(LIBOBJ)/util \
 	$(LIBOBJ)/expat \
-	$(LIBOBJ)/softfloat \
 
 #-------------------------------------------------
 # utility library objects
@@ -465,22 +461,6 @@ $(LIBOBJ)/expat/%.o: $(LIBSRC)/explat/%.c | $(OSPREBUILD)
 	@echo Compiling $<...
 	$(CC) $(CDEFS) $(CCOMFLAGS) $(CONLYFLAGS) -c $< -o $@
 
-#-------------------------------------------------
-# SoftFloat library objects
-#-------------------------------------------------
-
-PROCESSOR_H = $(LIBSRC)/softfloat/processors/mamesf.h
-SOFTFLOAT_MACROS = $(LIBSRC)/softfloat/softfloat/bits64/softfloat-macros
-
-SOFTFLOATOBJS = \
-	$(LIBOBJ)/softfloat/softfloat.o
-
-$(OBJ)/libsoftfloat.a: $(SOFTFLOATOBJS)
-
-$(LIBOBJ)/softfloat/softfloat.o: $(LIBSRC)/softfloat/softfloat.c \
-					   $(LIBSRC)/softfloat/softfloat.h \
-						$(LIBSRC)/softfloat/softfloat-macros \
-							$(LIBSRC)/softfloat/softfloat-specialize
 
 ###########################################################################
 #
@@ -568,4 +548,4 @@ $(LIBOCORE): $(OSDCOREOBJS)
 # rules for building the libaries
 #-------------------------------------------------
 
-OBJECTS = $(DRVLIBS) $(LIBOSD) $(LIBCPU) $(LIBEMU) $(LIBDASM) $(LIBSOUND) $(LIBUTIL) $(EXPAT) $(LIBOCORE) $(SOFTFLOAT)
+OBJECTS = $(DRVLIBS) $(LIBOSD) $(LIBCPU) $(LIBEMU) $(LIBDASM) $(LIBSOUND) $(LIBUTIL) $(EXPAT) $(LIBOCORE)

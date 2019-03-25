@@ -14398,96 +14398,56 @@ static void m68k_op_move_16_toc_i(m68ki_cpu_core *m68k)
 
 static void m68k_op_move_16_frs_d(m68ki_cpu_core *m68k)
 {
-	if (CPU_TYPE_IS_000(m68k->cpu_type) || m68k->s_flag)	/* NS990408 */
-	{
-		DY = MASK_OUT_BELOW_16(DY) | m68ki_get_sr(m68k);
-		return;
-	}
-	m68ki_exception_privilege_violation(m68k);
+	DY = MASK_OUT_BELOW_16(DY) | m68ki_get_sr(m68k);
 }
 
 
 static void m68k_op_move_16_frs_ai(m68ki_cpu_core *m68k)
 {
-	if (CPU_TYPE_IS_000(m68k->cpu_type) || m68k->s_flag)	/* NS990408 */
-	{
-		UINT32 ea = EA_AY_AI_16(m68k);
-		m68ki_write_16(m68k, ea, m68ki_get_sr(m68k));
-		return;
-	}
-	m68ki_exception_privilege_violation(m68k);
+	UINT32 ea = EA_AY_AI_16(m68k);
+	m68ki_write_16(m68k, ea, m68ki_get_sr(m68k));
 }
 
 
 static void m68k_op_move_16_frs_pi(m68ki_cpu_core *m68k)
 {
-	if (CPU_TYPE_IS_000(m68k->cpu_type) || m68k->s_flag)	/* NS990408 */
-	{
-		UINT32 ea = EA_AY_PI_16(m68k);
-		m68ki_write_16(m68k, ea, m68ki_get_sr(m68k));
-		return;
-	}
-	m68ki_exception_privilege_violation(m68k);
+	UINT32 ea = EA_AY_PI_16(m68k);
+	m68ki_write_16(m68k, ea, m68ki_get_sr(m68k));
 }
 
 
 static void m68k_op_move_16_frs_pd(m68ki_cpu_core *m68k)
 {
-	if (CPU_TYPE_IS_000(m68k->cpu_type) || m68k->s_flag)	/* NS990408 */
-	{
-		UINT32 ea = EA_AY_PD_16(m68k);
-		m68ki_write_16(m68k, ea, m68ki_get_sr(m68k));
-		return;
-	}
-	m68ki_exception_privilege_violation(m68k);
+	UINT32 ea = EA_AY_PD_16(m68k);
+	m68ki_write_16(m68k, ea, m68ki_get_sr(m68k));
 }
 
 
 static void m68k_op_move_16_frs_di(m68ki_cpu_core *m68k)
 {
-	if (CPU_TYPE_IS_000(m68k->cpu_type) || m68k->s_flag)	/* NS990408 */
-	{
-		UINT32 ea = EA_AY_DI_16(m68k);
-		m68ki_write_16(m68k, ea, m68ki_get_sr(m68k));
-		return;
-	}
-	m68ki_exception_privilege_violation(m68k);
+	UINT32 ea = EA_AY_DI_16(m68k);
+	m68ki_write_16(m68k, ea, m68ki_get_sr(m68k));
 }
 
 
 static void m68k_op_move_16_frs_ix(m68ki_cpu_core *m68k)
 {
-	if (CPU_TYPE_IS_000(m68k->cpu_type) || m68k->s_flag)	/* NS990408 */
-	{
-		UINT32 ea = EA_AY_IX_16(m68k);
-		m68ki_write_16(m68k, ea, m68ki_get_sr(m68k));
-		return;
-	}
-	m68ki_exception_privilege_violation(m68k);
+	UINT32 ea = EA_AY_IX_16(m68k);
+	m68ki_write_16(m68k, ea, m68ki_get_sr(m68k));
 }
 
 
 static void m68k_op_move_16_frs_aw(m68ki_cpu_core *m68k)
 {
-	if (CPU_TYPE_IS_000(m68k->cpu_type) || m68k->s_flag)	/* NS990408 */
-	{
-		UINT32 ea = EA_AW_16(m68k);
-		m68ki_write_16(m68k, ea, m68ki_get_sr(m68k));
-		return;
-	}
-	m68ki_exception_privilege_violation(m68k);
+	UINT32 ea = EA_AW_16(m68k);
+	m68ki_write_16(m68k, ea, m68ki_get_sr(m68k));
 }
 
 
 static void m68k_op_move_16_frs_al(m68ki_cpu_core *m68k)
 {
-	if (CPU_TYPE_IS_000(m68k->cpu_type) || m68k->s_flag)	/* NS990408 */
-	{
-		UINT32 ea = EA_AL_16(m68k);
-		m68ki_write_16(m68k, ea, m68ki_get_sr(m68k));
-		return;
-	}
-	m68ki_exception_privilege_violation(m68k);
+	UINT32 ea = EA_AL_16(m68k);
+	m68ki_write_16(m68k, ea, m68ki_get_sr(m68k));
 }
 
 
@@ -19309,62 +19269,18 @@ static void m68k_op_rte_32(m68ki_cpu_core *m68k)
 {
 	if (m68k->s_flag)
 	{
-		UINT32 new_sr;
-		UINT32 new_pc;
-		UINT32 format_word;
-
 		if (m68k->rte_instr_callback != NULL)
 			(*m68k->rte_instr_callback)(m68k->device);
 		m68ki_trace_t0();			   /* auto-disable (see m68kcpu.h) */
 
-		if (CPU_TYPE_IS_000(m68k->cpu_type))
-		{
-			new_sr = m68ki_pull_16(m68k);
-			new_pc = m68ki_pull_32(m68k);
-			m68ki_jump(m68k, new_pc);
-			m68ki_set_sr(m68k, new_sr);
+		UINT32 new_sr = m68ki_pull_16(m68k);
+		UINT32 new_pc = m68ki_pull_32(m68k);
+		m68ki_jump(m68k, new_pc);
+		m68ki_set_sr(m68k, new_sr);
 
-			m68k->instr_mode = INSTRUCTION_YES;
-			m68k->run_mode = RUN_MODE_NORMAL;
-
-			return;
-		}
-
-		/* Otherwise it's 020 */
-rte_loop:
-		format_word = m68ki_read_16(m68k, REG_A[7]+6) >> 12;
-		switch (format_word)
-		{
-			case 0: /* Normal */
-				new_sr = m68ki_pull_16(m68k);
-				new_pc = m68ki_pull_32(m68k);
-				m68ki_fake_pull_16(m68k);	/* format word */
-				m68ki_jump(m68k, new_pc);
-				m68ki_set_sr(m68k, new_sr);
-				m68k->instr_mode = INSTRUCTION_YES;
-				m68k->run_mode = RUN_MODE_NORMAL;
-				return;
-			case 1: /* Throwaway */
-				new_sr = m68ki_pull_16(m68k);
-				m68ki_fake_pull_32(m68k);	/* program counter */
-				m68ki_fake_pull_16(m68k);	/* format word */
-				m68ki_set_sr_noint(m68k, new_sr);
-				goto rte_loop;
-			case 2: /* Trap */
-				new_sr = m68ki_pull_16(m68k);
-				new_pc = m68ki_pull_32(m68k);
-				m68ki_fake_pull_16(m68k);	/* format word */
-				m68ki_fake_pull_32(m68k);	/* address */
-				m68ki_jump(m68k, new_pc);
-				m68ki_set_sr(m68k, new_sr);
-				m68k->instr_mode = INSTRUCTION_YES;
-				m68k->run_mode = RUN_MODE_NORMAL;
-				return;
-		}
-		/* Not handling long or short bus fault */
 		m68k->instr_mode = INSTRUCTION_YES;
 		m68k->run_mode = RUN_MODE_NORMAL;
-		m68ki_exception_format_error(m68k);
+
 		return;
 	}
 	m68ki_exception_privilege_violation(m68k);
