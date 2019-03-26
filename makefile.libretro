@@ -268,7 +268,6 @@ $(CPUOBJ)/mcs48/mcs48.o:	$(CPUSRC)/mcs48/mcs48.c \
 ifneq ($(filter M680X0,$(CPUS)),)
 OBJDIRS += $(CPUOBJ)/m68000
 CPUOBJS += $(CPUOBJ)/m68000/m68kcpu.o $(CPUOBJ)/m68000/m68kops.o
-DASMOBJS += $(CPUOBJ)/m68000/m68kdasm.o
 endif
 
 # when we compile generated files we need to include stuff from the src directory
