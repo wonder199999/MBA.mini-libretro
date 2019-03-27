@@ -683,9 +683,6 @@ INLINE void m68ki_exception_address_error(m68ki_cpu_core *m68k);
 INLINE void m68ki_exception_interrupt(m68ki_cpu_core *m68k, UINT32 int_level);
 INLINE void m68ki_check_interrupts(m68ki_cpu_core *m68k);		/* ASG: check for interrupts */
 
-/* quick disassembly (used for logging) */
-char *m68ki_disassemble_quick(unsigned int pc, unsigned int cpu_type);
-
 
 /* ======================================================================== */
 /* =========================== UTILITY FUNCTIONS ========================== */

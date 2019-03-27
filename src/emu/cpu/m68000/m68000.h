@@ -82,6 +82,5 @@ void m68k_set_reset_callback(running_device *device, m68k_reset_func callback);
 void m68k_set_cmpild_callback(running_device *device, m68k_cmpild_func callback);
 void m68k_set_rte_callback(running_device *device, m68k_rte_func callback);
 void m68k_set_tas_callback(running_device *device, m68k_tas_func callback);
-unsigned int m68k_disassemble_raw(char* str_buff, unsigned int pc, const unsigned char* opdata, const unsigned char* argdata, unsigned int cpu_type);
 
 #endif /* __M68000_H__ */

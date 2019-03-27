@@ -1,32 +1,4 @@
 /* ======================================================================== */
-/* ========================= LICENSING & COPYRIGHT ======================== */
-/* ======================================================================== */
-
-#if 0
-static const char copyright_notice[] =
-"MUSASHI\n"
-"Version 4.60 (2010-03-12)\n"
-"A portable Motorola M680x0 processor emulation engine.\n"
-"Copyright Karl Stenerud.  All rights reserved.\n"
-"\n"
-"This code may be freely used for non-commercial purpooses as long as this\n"
-"copyright notice remains unaltered in the source code and any binary files\n"
-"containing this code in compiled form.\n"
-"\n"
-"All other licensing terms must be negotiated with the author\n"
-"(Karl Stenerud).\n"
-"\n"
-"The latest version of this code can be obtained at:\n"
-"http://kstenerud.cjb.net or http://mamedev.org\n"
-;
-#endif
-
-/* ======================================================================== */
-/* ================================= NOTES ================================ */
-/* ======================================================================== */
-
-
-/* ======================================================================== */
 /* ================================ INCLUDES ============================== */
 /* ======================================================================== */
 
@@ -432,8 +404,7 @@ static CPU_RESET( m68k )
 
 static CPU_DISASSEMBLE( m68k )
 {
-	m68ki_cpu_core *m68k = get_safe_token(device);
-	return m68k_disassemble_raw(buffer, pc, oprom, opram, m68k->dasm_type);
+	return 0x0001;
 }
 
 
