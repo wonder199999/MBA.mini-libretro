@@ -225,7 +225,7 @@ static const z80dasm mnemonic_ed[256] =
 	{zDB,"?"},      {zDB,"?"},      {zDB,"?"},      {zDB,"?"},
 	{zDB,"?"},      {zDB,"?"},      {zDB,"?"},      {zDB,"?"},
 	{zIN,"b,(c)"},  {zOUT,"(c),b"}, {zSBC,"hl,bc"}, {zLD,"(W),bc"},
-	{zNEG,0},		{zRETN,0},		{zIM,"0"},      {zLD,"i,a"},
+	{zNEG,0},	{zRETN,0},	{zIM,"0"},      {zLD,"i,a"},
 	{zIN,"c,(c)"},  {zOUT,"(c),c"}, {zADC,"hl,bc"}, {zLD,"bc,(W)"},
 	{zNEG,"*"},     {zRETI,0},      {zIM,"0"},      {zLD,"r,a"},
 	{zIN,"d,(c)"},  {zOUT,"(c),d"}, {zSBC,"hl,de"}, {zLD,"(W),de"},
@@ -248,13 +248,13 @@ static const z80dasm mnemonic_ed[256] =
 	{zDB,"?"},      {zDB,"?"},      {zDB,"?"},      {zDB,"?"},
 	{zDB,"?"},      {zDB,"?"},      {zDB,"?"},      {zDB,"?"},
 	{zDB,"?"},      {zDB,"?"},      {zDB,"?"},      {zDB,"?"},
-	{zLDI,0},		{zCPI,0},		{zINI,0},		{zOUTI,0},
+	{zLDI,0},	{zCPI,0},	{zINI,0},	{zOUTI,0},
 	{zDB,"?"},      {zDB,"?"},      {zDB,"?"},      {zDB,"?"},
-	{zLDD,0},		{zCPD,0},		{zIND,0},		{zOUTD,0},
+	{zLDD,0},	{zCPD,0},	{zIND,0},	{zOUTD,0},
 	{zDB,"?"},      {zDB,"?"},      {zDB,"?"},      {zDB,"?"},
-	{zLDIR,0},		{zCPIR,0},		{zINIR,0},		{zOTIR,0},
+	{zLDIR,0},	{zCPIR,0},	{zINIR,0},	{zOTIR,0},
 	{zDB,"?"},      {zDB,"?"},      {zDB,"?"},      {zDB,"?"},
-	{zLDDR,0},		{zCPDR,0},		{zINDR,0},		{zOTDR,0},
+	{zLDDR,0},	{zCPDR,0},	{zINDR,0},	{zOTDR,0},
 	{zDB,"?"},      {zDB,"?"},      {zDB,"?"},      {zDB,"?"},
 	{zDB,"?"},      {zDB,"?"},      {zDB,"?"},      {zDB,"?"},
 	{zDB,"?"},      {zDB,"?"},      {zDB,"?"},      {zDB,"?"},
@@ -344,7 +344,7 @@ static const z80dasm mnemonic_xx[256] =
 
 static const z80dasm mnemonic_main[256] =
 {
-	{zNOP,0},		{zLD,"bc,N"},   {zLD,"(bc),a"}, {zINC,"bc"},
+	{zNOP,0},	{zLD,"bc,N"},   {zLD,"(bc),a"}, {zINC,"bc"},
 	{zINC,"b"},     {zDEC,"b"},     {zLD,"b,B"},    {zRLCA,0},
 	{zEX,"af,af'"}, {zADD,"hl,bc"}, {zLD,"a,(bc)"}, {zDEC,"bc"},
 	{zINC,"c"},     {zDEC,"c"},     {zLD,"c,B"},    {zRRCA,0},
@@ -412,12 +412,14 @@ static const z80dasm mnemonic_main[256] =
 
 static char sign(INT8 offset)
 {
-	return (offset < 0)? '-':'+';
+	return (offset < 0) ? '-' : '+';
 }
 
 static int offs(INT8 offset)
 {
-	if (offset < 0) return -offset;
+	if (offset < 0)
+		return -offset;
+
 	return offset;
 }
 
@@ -426,9 +428,10 @@ static int offs(INT8 offset)
  ****************************************************************************/
 CPU_DISASSEMBLE( z80 )
 {
-    const z80dasm *d;
+	const z80dasm *d;
 	const char *src, *ixy;
 	char *dst;
+
 	INT8 offset = 0;
 	UINT8 op, op1 = 0;
 	UINT16 ea = 0;
@@ -441,94 +444,98 @@ CPU_DISASSEMBLE( z80 )
 
 	switch (op)
 	{
-	case 0xcb:
-		op = oprom[pos++];
-		d = &mnemonic_cb[op];
+		case 0xcb:
+			op = oprom[pos++];
+			d = &mnemonic_cb[op];
 		break;
-	case 0xed:
-		op1 = oprom[pos++];
-		d = &mnemonic_ed[op1];
+
+		case 0xed:
+			op1 = oprom[pos++];
+			d = &mnemonic_ed[op1];
 		break;
-	case 0xdd:
-		ixy = "ix";
-		op1 = oprom[pos++];
-		if( op1 == 0xcb )
-		{
-			offset = (INT8) opram[pos++];
-			op1 = opram[pos++]; /* fourth byte from opbase.ram! */
-			d = &mnemonic_xx_cb[op1];
-		}
-		else d = &mnemonic_xx[op1];
+
+		case 0xdd:
+			ixy = "ix";
+			op1 = oprom[pos++];
+			if (op1 == 0xcb)
+			{
+				offset = (INT8)opram[pos++];
+				op1 = opram[pos++]; /* fourth byte from opbase.ram! */
+				d = &mnemonic_xx_cb[op1];
+			}
+			else
+				d = &mnemonic_xx[op1];
 		break;
-	case 0xfd:
-		ixy = "iy";
-		op1 = oprom[pos++];
-		if( op1 == 0xcb )
-		{
-			offset = (INT8) opram[pos++];
-			op1 = opram[pos++]; /* fourth byte from opbase.ram! */
-			d = &mnemonic_xx_cb[op1];
-		}
-		else d = &mnemonic_xx[op1];
+		case 0xfd:
+			ixy = "iy";
+			op1 = oprom[pos++];
+			if (op1 == 0xcb)
+			{
+				offset = (INT8)opram[pos++];
+				op1 = opram[pos++]; /* fourth byte from opbase.ram! */
+				d = &mnemonic_xx_cb[op1];
+			}
+			else
+				d = &mnemonic_xx[op1];
 		break;
-	default:
-		d = &mnemonic_main[op];
+		default:
+			d = &mnemonic_main[op];
 		break;
 	}
 
-	if( d->arguments )
+	if (d->arguments)
 	{
 		dst += sprintf(dst, "%-4s ", s_mnemonic[d->mnemonic]);
 		src = d->arguments;
-		while( *src )
+		while (*src)
 		{
-			switch( *src )
+			switch (*src)
 			{
-			case '?':   /* illegal opcode */
-				dst += sprintf( dst, "$%02x,$%02x", op, op1 );
+				case '?':   /* illegal opcode */
+					dst += sprintf( dst, "$%02x,$%02x", op, op1 );
 				break;
-			case 'A':
-				ea = opram[pos+0] + ( opram[pos+1] << 8 );
-				pos += 2;
-				dst += sprintf( dst, "$%04X", ea );
+				case 'A':
+					ea = opram[pos+0] + ( opram[pos+1] << 8 );
+					pos += 2;
+					dst += sprintf( dst, "$%04X", ea );
 				break;
-			case 'B':   /* Byte op arg */
-				ea = opram[pos++];
-				dst += sprintf( dst, "$%02X", ea );
+				case 'B':   /* Byte op arg */
+					ea = opram[pos++];
+					dst += sprintf( dst, "$%02X", ea );
 				break;
-			case 'N':   /* Immediate 16 bit */
-				ea = opram[pos+0] + ( opram[pos+1] << 8 );
-				pos += 2;
-				dst += sprintf( dst, "$%04X", ea );
+				case 'N':   /* Immediate 16 bit */
+					ea = opram[pos+0] + ( opram[pos+1] << 8 );
+					pos += 2;
+					dst += sprintf( dst, "$%04X", ea );
 				break;
-			case 'O':   /* Offset relative to PC */
-				offset = (INT8) opram[pos++];
-				dst += sprintf( dst, "$%04X", (pc + offset + 2) & 0xffff );
+				case 'O':   /* Offset relative to PC */
+					offset = (INT8) opram[pos++];
+					dst += sprintf( dst, "$%04X", (pc + offset + 2) & 0xffff );
 				break;
-			case 'P':   /* Port number */
-				ea = opram[pos++];
-				dst += sprintf( dst, "$%02X", ea );
+				case 'P':   /* Port number */
+					ea = opram[pos++];
+					dst += sprintf( dst, "$%02X", ea );
 				break;
-			case 'V':   /* Restart vector */
-				ea = op & 0x38;
-				dst += sprintf( dst, "$%02X", ea );
+				case 'V':   /* Restart vector */
+					ea = op & 0x38;
+					dst += sprintf( dst, "$%02X", ea );
 				break;
-			case 'W':   /* Memory address word */
-				ea = opram[pos+0] + ( opram[pos+1] << 8 );
-				pos += 2;
-				dst += sprintf( dst, "$%04X", ea );
+				case 'W':   /* Memory address word */
+					ea = opram[pos+0] + ( opram[pos+1] << 8 );
+					pos += 2;
+					dst += sprintf( dst, "$%04X", ea );
 				break;
-			case 'X':
-				offset = (INT8) opram[pos++];
-				/* fall through */
-			case 'Y':
-				dst += sprintf( dst,"(%s%c$%02x)", ixy, sign(offset), offs(offset) );
+				case 'X':
+					offset = (INT8) opram[pos++];
+					/* fall through */
+				case 'Y':
+					dst += sprintf( dst,"(%s%c$%02x)", ixy, sign(offset), offs(offset) );
 				break;
-			case 'I':
-				dst += sprintf( dst, "%s", ixy);
+				case 'I':
+					dst += sprintf( dst, "%s", ixy);
 				break;
-			default:
-				*dst++ = *src;
+				default:
+					*dst++ = *src;
 			}
 			src++;
 		}
