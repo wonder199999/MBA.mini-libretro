@@ -30,7 +30,7 @@ static unsigned EA_205(nec_state_t *nec_state) { E16=FETCH(); E16+=FETCH()<<8; E
 static unsigned EA_206(nec_state_t *nec_state) { E16=FETCH(); E16+=FETCH()<<8; EO=Wreg(BP)+(INT16)E16; EA=DefaultBase(SS)+EO; return EA; }
 static unsigned EA_207(nec_state_t *nec_state) { E16=FETCH(); E16+=FETCH()<<8; EO=Wreg(BW)+(INT16)E16; EA=DefaultBase(DS0)+EO; return EA; }
 
-static unsigned (*const GetEA[192])(nec_state_t *)={
+static unsigned (*const GetEA[192])(nec_state_t *) = {
 	EA_000, EA_001, EA_002, EA_003, EA_004, EA_005, EA_006, EA_007,
 	EA_000, EA_001, EA_002, EA_003, EA_004, EA_005, EA_006, EA_007,
 	EA_000, EA_001, EA_002, EA_003, EA_004, EA_005, EA_006, EA_007,

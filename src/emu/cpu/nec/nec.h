@@ -6,7 +6,7 @@
 typedef struct _nec_config nec_config;
 struct _nec_config
 {
-	const UINT8	*v25v35_decryptiontable;  /* internal decryption table */
+	const UINT8 *v25v35_decryptiontable;  /* internal decryption table */
 };
 
 #define NEC_INPUT_LINE_INTP0	10
@@ -23,9 +23,6 @@ enum
 };
 
 /* Public functions */
-DECLARE_LEGACY_CPU_DEVICE(V20, v20);
-DECLARE_LEGACY_CPU_DEVICE(V25, v25);
-DECLARE_LEGACY_CPU_DEVICE(V30, v30);
 DECLARE_LEGACY_CPU_DEVICE(V33, v33);
 DECLARE_LEGACY_CPU_DEVICE(V35, v35);
 
