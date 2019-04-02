@@ -65,7 +65,6 @@ SOUNDS += DAC
 SOUNDS += SPEAKER
 SOUNDS += YM2151
 SOUNDS += YM2203
-SOUNDS += YM2608
 SOUNDS += YM2610
 SOUNDS += MSM5205
 SOUNDS += OKIM6295
@@ -389,10 +388,6 @@ endif
 
 ifneq ($(filter YM2203,$(SOUNDS)),)
 SOUNDOBJS += $(SOUNDOBJ)/2203intf.o $(SOUNDOBJ)/ay8910.o $(SOUNDOBJ)/fm.o
-endif
-
-ifneq ($(filter YM2608,$(SOUNDS)),)
-SOUNDOBJS += $(SOUNDOBJ)/2608intf.o $(SOUNDOBJ)/ay8910.o $(SOUNDOBJ)/fm.o $(SOUNDOBJ)/ymdeltat.o
 endif
 
 ifneq ($(filter YM2610 YM2610B,$(SOUNDS)),)
