@@ -26,19 +26,11 @@
 
 #define CONTROL_W	(0x80)
 #define CONTROL_R	(0x40)
-#define CONTROL_S	(0x20)		/* not emulated */
-#define CONTROL_CALIBRATION	(0x1f )	/* not emulated */
 
 #define SECONDS_ST	(0x80)
 
-#define DAY_FT		(0x40)		/* not emulated */
 #define DAY_CEB		(0x20)		/* M48T35/M48T58 */
 #define DAY_CB		(0x10)		/* M48T35/M48T58 */
-
-#define DATE_BLE	(0x80)		/* M48T58: not emulated */
-#define DATE_BL		(0x40)		/* M48T58: not emulated */
-
-#define FLAGS_BL	(0x10)		/* MK48T08: not emulated */
 
 
 typedef struct
