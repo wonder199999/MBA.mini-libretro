@@ -73,7 +73,7 @@ static const ssg_callbacks psgintf =
 /*------------------------- TM2610 -------------------------------*/
 
 /* IRQ Handler */
-static void IRQHandler(void *param,int irq)
+static void IRQHandler(void *param, int irq)
 {
 	ym2610_state *info = (ym2610_state *)param;
 	if (info->intf->handler)
@@ -123,23 +123,18 @@ static STREAM_UPDATE( ym2610_stream_update )
 	ym2610_update_one(info->chip, outputs, samples);
 }
 
-static STREAM_UPDATE( ym2610b_stream_update )
-{
-	ym2610_state *info = (ym2610_state *)param;
-	ym2610b_update_one(info->chip, outputs, samples);
-}
-
-
 static STATE_POSTLOAD( ym2610_intf_postload )
 {
 	ym2610_state *info = (ym2610_state *)param;
 	ym2610_postload(info->chip);
 }
 
-
 static DEVICE_START( ym2610 )
 {
-	static const ym2610_interface generic_2610 = { 0 };
+	static const ym2610_interface generic_2610 = {
+		0
+	};
+
 	static const ay8910_interface generic_ay8910 = {
 		AY8910_LEGACY_OUTPUT | AY8910_SINGLE_OUTPUT,
 		AY8910_DEFAULT_LOADS,
@@ -155,7 +150,6 @@ static DEVICE_START( ym2610 )
 
 	ym2610_state *info = get_safe_token(device);
 	astring name;
-	device_type type = device->type();
 
 	info->intf = intf;
 	info->device = device;
@@ -167,7 +161,7 @@ static DEVICE_START( ym2610 )
 	info->timer[1] = timer_alloc(device->machine, timer_callback_1, info);
 
 	/* stream system initialize */
-	info->stream = stream_create(device,0,2,rate,info,(type == SOUND_YM2610) ? ym2610_stream_update : ym2610b_stream_update);
+	info->stream = stream_create(device, 0, 2, rate, info, ym2610_stream_update);
 
 	/* setup adpcm buffers */
 	pcmbufa  = *device->region();
@@ -185,8 +179,7 @@ static DEVICE_START( ym2610 )
 
 	/**** initialize YM2610 ****/
 	info->chip = ym2610_init(info, device, device->clock(), rate,
-		           pcmbufa, pcmsizea, pcmbufb, pcmsizeb,
-		           timer_handler, IRQHandler, &psgintf);
+		pcmbufa, pcmsizea, pcmbufb, pcmsizeb, timer_handler, IRQHandler, &psgintf);
 	assert_always(info->chip != NULL, "Error creating YM2610 chip");
 
 	state_save_register_postload(device->machine, ym2610_intf_postload, info);
