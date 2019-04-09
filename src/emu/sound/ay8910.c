@@ -155,7 +155,7 @@ struct _ay_ym_param
 {
 	double	r_up;
 	double	r_down;
-	double	res[32];
+	double	res[16];
 	int	res_count;
 };
 
@@ -259,7 +259,7 @@ static const ay_ym_param ay8910_param = {
 	800000,
 	8000000,
 	{ 15950, 15350, 15090, 14760, 14275, 13620, 12890, 11370,
-		10600, 8590, 7190, 5985, 4820, 3945, 3017, 2345, },
+		10600, 8590, 7190, 5985, 4820, 3945, 3017, 2345 },
 	16
 };
 
@@ -453,6 +453,7 @@ static void ay8910_write_reg(ay8910_context *psg, int r, int v)
 	}
 }
 
+
 static STREAM_UPDATE( ay8910_update )
 {
 	ay8910_context *psg = (ay8910_context *)param;
@@ -578,6 +579,7 @@ static STREAM_UPDATE( ay8910_update )
 		samples--;
 	}
 }
+
 
 static void build_mixer_table(ay8910_context *psg)
 {
