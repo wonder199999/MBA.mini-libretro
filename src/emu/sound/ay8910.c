@@ -303,7 +303,7 @@ INLINE void build_3D_table(double rl, const ay_ym_param *par, const ay_ym_param 
 					rw += 1.0 / ( (e & 0x04) ? par_env->res[j3] : par->res[j3]);
 					rt += 1.0 / ( (e & 0x04) ? par_env->res[j3] : par->res[j3]);
 
-					indx = (e << 15) | (j3<<10) | (j2<<5) | j1;
+					indx = (e << 15) | (j3 << 10) | (j2 << 5) | j1;
 					temp[indx] = rw / rt;
 					if (temp[indx] < min)
 						min = temp[indx];
@@ -436,8 +436,6 @@ static void ay8910_write_reg(ay8910_context *psg, int r, int v)
 			{
 				if (psg->portAwrite.write)
 					devcb_call_write8(&psg->portAwrite, 0, psg->regs[AY_PORTA]);
-				else
-					logerror("warning - write %02x to 8910 '%s' Port A\n",psg->regs[AY_PORTA],psg->device->tag());
 			}
 			break;
 
@@ -446,8 +444,6 @@ static void ay8910_write_reg(ay8910_context *psg, int r, int v)
 			{
 				if (psg->portBwrite.write)
 					devcb_call_write8(&psg->portBwrite, 0, psg->regs[AY_PORTB]);
-				else
-					logerror("warning - write %02x to 8910 '%s' Port B\n",psg->regs[AY_PORTB],psg->device->tag());
 			}
 			break;
 	}
@@ -524,9 +520,7 @@ static STREAM_UPDATE( ay8910_update )
 		}
 
 		for (chan = 0; chan < NUM_CHANNELS; chan++)
-		{
 			psg->vol_enabled[chan] = (psg->output[chan] | TONE_ENABLEQ(psg, chan)) & (psg->output_noise | NOISE_ENABLEQ(psg, chan));
-		}
 
 		/* update envelope */
 		if (psg->holding == 0)
@@ -684,7 +678,7 @@ void ay8910_reset_ym(void *chip)
 	psg->ready = 1;
 }
 
-void ay8910_set_volume(running_device *device,int channel,int volume)
+void ay8910_set_volume(running_device *device, int channel, int volume)
 {
 	ay8910_context *psg = get_safe_token(device);
 
@@ -741,15 +735,11 @@ int ay8910_read_ym(void *chip)
 			data. Some games, like kidniki, need this to work.	*/
 			if (psg->portAread.read)
 				psg->regs[AY_PORTA] = devcb_call_read8(&psg->portAread, 0);
-			else
-				logerror("%s: warning - read 8910 '%s' Port A\n", cpuexec_describe_context(psg->device->machine), psg->device->tag());
 			break;
 
 		case AY_PORTB:
 			if (psg->portBread.read)
 				psg->regs[AY_PORTB] = devcb_call_read8(&psg->portBread, 0);
-			else
-				logerror("%s: warning - read 8910 '%s' Port B\n", cpuexec_describe_context(psg->device->machine), psg->device->tag());
 			break;
 	}
 
