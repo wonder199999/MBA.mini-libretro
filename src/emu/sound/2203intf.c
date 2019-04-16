@@ -7,12 +7,12 @@
 typedef struct _ym2203_state ym2203_state;
 struct _ym2203_state
 {
-	sound_stream *	stream;
-	emu_timer *		timer[2];
-	void *			chip;
-	void *			psg;
-	const ym2203_interface *intf;
-	running_device *device;
+	running_device		*device;
+	const ym2203_interface	*intf;
+	sound_stream		*stream;
+	emu_timer		*timer[2];
+	void			*chip;
+	void			*psg;
 };
 
 
@@ -20,6 +20,7 @@ INLINE ym2203_state *get_safe_token(running_device *device)
 {
 	assert(device != NULL);
 	assert(device->type() == SOUND_YM2203);
+
 	return (ym2203_state *)downcast<legacy_device_base *>(device)->token();
 }
 
@@ -68,13 +69,13 @@ static void IRQHandler(void *param,int irq)
 static TIMER_CALLBACK( timer_callback_2203_0 )
 {
 	ym2203_state *info = (ym2203_state *)ptr;
-	ym2203_timer_over(info->chip,0);
+	ym2203_timer_over(info->chip, 0);
 }
 
 static TIMER_CALLBACK( timer_callback_2203_1 )
 {
 	ym2203_state *info = (ym2203_state *)ptr;
-	ym2203_timer_over(info->chip,1);
+	ym2203_timer_over(info->chip, 1);
 }
 
 /* update request from fm.c */
@@ -88,7 +89,8 @@ void ym2203_update_request(void *param)
 static void timer_handler(void *param,int c,int count,int clock)
 {
 	ym2203_state *info = (ym2203_state *)param;
-	if( count == 0 )
+
+	if (count == 0)
 	{	/* Reset FM Timer */
 		timer_enable(info->timer[c], 0);
 	}
@@ -116,8 +118,9 @@ static STATE_POSTLOAD( ym2203_intf_postload )
 
 static DEVICE_START( ym2203 )
 {
-	static const ym2203_interface generic_2203 =
-	{
+	ym2203_state *info = get_safe_token(device);
+
+	static const ym2203_interface generic_2203 = {
 		{
 			AY8910_LEGACY_OUTPUT,
 			AY8910_DEFAULT_LOADS,
@@ -126,8 +129,7 @@ static DEVICE_START( ym2203 )
 		NULL
 	};
 	const ym2203_interface *intf = device->baseconfig().static_config() ? (const ym2203_interface *)device->baseconfig().static_config() : &generic_2203;
-	ym2203_state *info = get_safe_token(device);
-	int rate = device->clock()/72; /* ??? */
+	int rate = device->clock() / 72;	/* ??? */
 
 	info->intf = intf;
 	info->device = device;
@@ -139,10 +141,10 @@ static DEVICE_START( ym2203 )
 	info->timer[1] = timer_alloc(device->machine, timer_callback_2203_1, info);
 
 	/* stream system initialize */
-	info->stream = stream_create(device,0,1,rate,info,ym2203_stream_update);
+	info->stream = stream_create(device, 0, 1, rate, info, ym2203_stream_update);
 
 	/* Initialize FM emurator */
-	info->chip = ym2203_init(info,device,device->clock(),rate,timer_handler,IRQHandler,&psgintf);
+	info->chip = ym2203_init(info, device, device->clock(), rate, timer_handler, IRQHandler, &psgintf);
 	assert_always(info->chip != NULL, "Error creating YM2203 chip");
 
 	state_save_register_postload(device->machine, ym2203_intf_postload, info);
@@ -162,17 +164,16 @@ static DEVICE_RESET( ym2203 )
 }
 
 
-
 READ8_DEVICE_HANDLER( ym2203_r )
 {
 	ym2203_state *info = get_safe_token(device);
-	return ym2203_read(info->chip, offset & 1);
+	return ym2203_read(info->chip, offset & 0x01);
 }
 
 WRITE8_DEVICE_HANDLER( ym2203_w )
 {
 	ym2203_state *info = get_safe_token(device);
-	ym2203_write(info->chip, offset & 1, data);
+	ym2203_write(info->chip, offset & 0x01, data);
 }
 
 
@@ -191,19 +192,19 @@ DEVICE_GET_INFO( ym2203 )
 	switch (state)
 	{
 		/* --- the following bits of info are returned as 64-bit signed integers --- */
-		case DEVINFO_INT_TOKEN_BYTES:					info->i = sizeof(ym2203_state);					break;
+		case DEVINFO_INT_TOKEN_BYTES:		info->i = sizeof(ym2203_state); break;
 
 		/* --- the following bits of info are returned as pointers to data or functions --- */
-		case DEVINFO_FCT_START:							info->start = DEVICE_START_NAME( ym2203 );		break;
-		case DEVINFO_FCT_STOP:							info->stop = DEVICE_STOP_NAME( ym2203 );		break;
-		case DEVINFO_FCT_RESET:							info->reset = DEVICE_RESET_NAME( ym2203 );		break;
+		case DEVINFO_FCT_START:			info->start = DEVICE_START_NAME( ym2203 ); break;
+		case DEVINFO_FCT_STOP:			info->stop = DEVICE_STOP_NAME( ym2203 ); break;
+		case DEVINFO_FCT_RESET:			info->reset = DEVICE_RESET_NAME( ym2203 ); break;
 
 		/* --- the following bits of info are returned as NULL-terminated strings --- */
-		case DEVINFO_STR_NAME:							strcpy(info->s, "YM2203");						break;
-		case DEVINFO_STR_FAMILY:					strcpy(info->s, "Yamaha FM");					break;
-		case DEVINFO_STR_VERSION:					strcpy(info->s, "1.0");							break;
-		case DEVINFO_STR_SOURCE_FILE:						strcpy(info->s, __FILE__);						break;
-		case DEVINFO_STR_CREDITS:					strcpy(info->s, "Copyright Nicola Salmoria and the MAME Team"); break;
+		case DEVINFO_STR_NAME:			strcpy(info->s, "YM2203"); break;
+		case DEVINFO_STR_FAMILY:		strcpy(info->s, "Yamaha FM"); break;
+		case DEVINFO_STR_VERSION:		strcpy(info->s, "1.0"); break;
+		case DEVINFO_STR_SOURCE_FILE:		strcpy(info->s, __FILE__); break;
+		case DEVINFO_STR_CREDITS:		strcpy(info->s, "Copyright Nicola Salmoria and the MAME Team"); break;
 	}
 }
 

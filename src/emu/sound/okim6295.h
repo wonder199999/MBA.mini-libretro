@@ -50,15 +50,18 @@ enum
 
 
 // ======================> adpcm_state
-
 // Internal ADPCM state, used by external ADPCM generators with compatible specs to the OKIM 6295.
 class adpcm_state
 {
 public:
-	adpcm_state() { compute_tables(); reset(); }
+	adpcm_state() {
+		compute_tables();
+		reset();
+	}
 
 	void reset();
-	INT16 clock(UINT8 nibble);
+
+	INT16	clock(UINT8 nibble);
 
 	INT32	m_signal;
 	INT32	m_step;
@@ -72,12 +75,11 @@ private:
 };
 
 
-
 // ======================> okim6295_device_config
 
-class okim6295_device_config :	public device_config,
-								public device_config_sound_interface,
-								public device_config_memory_interface
+class okim6295_device_config :  public device_config,
+				public device_config_sound_interface,
+				public device_config_memory_interface
 {
 	friend class okim6295_device;
 
@@ -101,8 +103,8 @@ protected:
 	virtual const address_space_config *memory_space_config(int spacenum = 0) const;
 
 	// internal state
-	const address_space_config  m_space_config;
-	UINT8						m_pin7;
+	const address_space_config m_space_config;
+	UINT8 m_pin7;
 };
 
 
@@ -110,8 +112,8 @@ protected:
 // ======================> okim6295_device
 
 class okim6295_device : public device_t,
-						public device_sound_interface,
-						public device_memory_interface
+			public device_sound_interface,
+			public device_memory_interface
 {
 	friend class okim6295_device_config;
 
@@ -133,7 +135,7 @@ protected:
 	virtual void device_clock_changed();
 
 	// internal callbacks
-	static STREAM_UPDATE( static_stream_generate );
+	static STREAM_UPDATE(static_stream_generate);
 	virtual void stream_generate(stream_sample_t **inputs, stream_sample_t **outputs, int samples);
 
 	// a single voice
@@ -143,9 +145,9 @@ protected:
 		okim_voice();
 		void generate_adpcm(direct_read_data &direct, stream_sample_t *buffer, int samples);
 
-		adpcm_state m_adpcm;			// current ADPCM state
+		adpcm_state	m_adpcm;			// current ADPCM state
 		bool		m_playing;
-		offs_t		m_base_offset;		// pointer to the base memory location
+		offs_t		m_base_offset;			// pointer to the base memory location
 		UINT32		m_sample;			// current sample number
 		UINT32		m_count;			// total samples to play
 		INT8		m_volume;			// output volume
@@ -170,7 +172,6 @@ protected:
 
 // device type definition
 extern const device_type SOUND_OKIM6295;
-
 
 
 //**************************************************************************

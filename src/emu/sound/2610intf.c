@@ -93,7 +93,7 @@ static TIMER_CALLBACK( timer_callback_1 )
 	ym2610_timer_over(info->chip,1);
 }
 
-static void timer_handler(void *param,int c,int count,int clock)
+static void timer_handler(void *param, int c, int count, int clock)
 {
 	ym2610_state *info = (ym2610_state *)param;
 
