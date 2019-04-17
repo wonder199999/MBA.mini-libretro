@@ -3,9 +3,9 @@
 
 struct _wav_file
 {
-	FILE *file;
-	UINT32 total_offs;
-	UINT32 data_offs;
+	FILE	*file;
+	UINT32	total_offs;
+	UINT32	data_offs;
 };
 
 
@@ -121,7 +121,6 @@ void wav_add_data_16(wav_file *wav, INT16 *data, int samples)
 void wav_add_data_32(wav_file *wav, INT32 *data, int samples, int shift)
 {
 	INT16 *temp;
-	int i;
 
 	if (!wav) return;
 
@@ -131,7 +130,7 @@ void wav_add_data_32(wav_file *wav, INT32 *data, int samples, int shift)
 		return;
 
 	/* clamp */
-	for (i = 0; i < samples; i++)
+	for (int i = 0; i < samples; i++)
 	{
 		int val = data[i] >> shift;
 		temp[i] = (val < -32768) ? -32768 : (val > 32767) ? 32767 : val;
@@ -149,7 +148,6 @@ void wav_add_data_32(wav_file *wav, INT32 *data, int samples, int shift)
 void wav_add_data_16lr(wav_file *wav, INT16 *left, INT16 *right, int samples)
 {
 	INT16 *temp;
-	int i;
 
 	if (!wav) return;
 
@@ -159,7 +157,7 @@ void wav_add_data_16lr(wav_file *wav, INT16 *left, INT16 *right, int samples)
 		return;
 
 	/* interleave */
-	for (i = 0; i < samples * 2; i++)
+	for (int i = 0; i < samples * 2; i++)
 		temp[i] = (i & 1) ? right[i / 2] : left[i / 2];
 
 	/* write and flush */
@@ -174,7 +172,6 @@ void wav_add_data_16lr(wav_file *wav, INT16 *left, INT16 *right, int samples)
 void wav_add_data_32lr(wav_file *wav, INT32 *left, INT32 *right, int samples, int shift)
 {
 	INT16 *temp;
-	int i;
 
 	if (!wav) return;
 
@@ -184,7 +181,7 @@ void wav_add_data_32lr(wav_file *wav, INT32 *left, INT32 *right, int samples, in
 		return;
 
 	/* interleave */
-	for (i = 0; i < samples * 2; i++)
+	for (int i = 0; i < samples * 2; i++)
 	{
 		int val = (i & 1) ? right[i / 2] : left[i / 2];
 		val >>= shift;

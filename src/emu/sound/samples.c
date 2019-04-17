@@ -7,8 +7,8 @@
 typedef struct _sample_channel sample_channel;
 struct _sample_channel
 {
-	sound_stream *stream;
-	const INT16 *source;
+	sound_stream	*stream;
+	const INT16	*source;
 	INT32		source_length;
 	INT32		source_num;
 	UINT32		pos;
@@ -23,10 +23,10 @@ struct _sample_channel
 typedef struct _samples_info samples_info;
 struct _samples_info
 {
-	running_device *device;
+	running_device		*device;
 	int			numchannels;	/* how many channels */
-	sample_channel *channel;/* array of channels */
-	loaded_samples *samples;/* array of samples */
+	sample_channel		*channel;	/* array of channels */
+	loaded_samples		*samples;	/* array of samples */
 };
 
 
@@ -34,15 +34,14 @@ INLINE samples_info *get_safe_token(running_device *device)
 {
 	assert(device != NULL);
 	assert(device->type() == SOUND_SAMPLES);
+
 	return (samples_info *)downcast<legacy_device_base *>(device)->token();
 }
-
-
 
 #define FRAC_BITS		24
 #define FRAC_ONE		(1 << FRAC_BITS)
 #define FRAC_MASK		(FRAC_ONE - 1)
-#define MAX_CHANNELS    100
+#define MAX_CHANNELS		100
 
 
 /*-------------------------------------------------
@@ -163,13 +162,14 @@ static int read_wav_sample(running_machine *machine, mame_file *f, loaded_sample
 	else
 	{
 		/* 16-bit data is fine as-is */
-		sample->data = auto_alloc_array(machine, INT16, length/2);
+		sample->data = auto_alloc_array(machine, INT16, length / 2);
 		mame_fread(f, sample->data, length);
 		sample->length /= 2;
 		if (ENDIANNESS_NATIVE != ENDIANNESS_LITTLE)
 			for (sindex = 0; sindex < sample->length; sindex++)
 				sample->data[sindex] = LITTLE_ENDIANIZE_INT16(sample->data[sindex]);
 	}
+
 	return 1;
 }
 
@@ -195,27 +195,28 @@ loaded_samples *readsamples(running_machine *machine, const char *const *samplen
 		skipfirst = 1;
 
 	/* count the samples */
-	for (i = 0; samplenames[i+skipfirst] != 0; i++) ;
+	for (i = 0; samplenames[i + skipfirst] != 0; i++) ;
 	if (i == 0)
 		return NULL;
 
 	/* allocate the array */
-	samples = (loaded_samples *)auto_alloc_array_clear(machine, UINT8, sizeof(loaded_samples) + (i-1) * sizeof(loaded_sample));
+	samples = (loaded_samples *)auto_alloc_array_clear(machine, UINT8, sizeof(loaded_samples) + (i - 1) * sizeof(loaded_sample));
 	samples->total = i;
 
 	/* load the samples */
 	for (i = 0; i < samples->total; i++)
+	{
 		if (samplenames[i+skipfirst][0])
 		{
 			file_error filerr;
 			mame_file *f;
 
-			astring fname(basename, PATH_SEPARATOR, samplenames[i+skipfirst]);
+			astring fname(basename, PATH_SEPARATOR, samplenames[i + skipfirst]);
 			filerr = mame_fopen(SEARCHPATH_SAMPLE, fname, OPEN_FLAG_READ, &f);
 
 			if (filerr != FILERR_NONE && skipfirst)
 			{
-				astring fname(samplenames[0] + 1, PATH_SEPARATOR, samplenames[i+skipfirst]);
+				astring fname(samplenames[0] + 1, PATH_SEPARATOR, samplenames[i + skipfirst]);
 				filerr = mame_fopen(SEARCHPATH_SAMPLE, fname, OPEN_FLAG_READ, &f);
 			}
 			if (filerr == FILERR_NONE)
@@ -224,30 +225,29 @@ loaded_samples *readsamples(running_machine *machine, const char *const *samplen
 				mame_fclose(f);
 			}
 		}
+	}
 
 	return samples;
 }
 
 
-
-
 /* Start one of the samples loaded from disk. Note: channel must be in the range */
 /* 0 .. Samplesinterface->channels-1. It is NOT the discrete channel to pass to */
 /* mixer_play_sample() */
-void sample_start(running_device *device,int channel,int samplenum,int loop)
+void sample_start(running_device *device, int channel, int samplenum, int loop)
 {
-    samples_info *info = get_safe_token(device);
-    sample_channel *chan;
-    loaded_sample *sample;
+	samples_info *info = get_safe_token(device);
+	sample_channel *chan;
+	loaded_sample *sample;
 
 	/* if samples are disabled, just return quietly */
 	if (info->samples == NULL)
 		return;
 
-    assert( samplenum < info->samples->total );
-    assert( channel < info->numchannels );
+	assert(samplenum < info->samples->total);
+	assert(channel < info->numchannels);
 
-    chan = &info->channel[channel];
+	chan = &info->channel[channel];
 
 	/* force an update before we start */
 	stream_update(chan->stream);
@@ -267,12 +267,12 @@ void sample_start(running_device *device,int channel,int samplenum,int loop)
 
 void sample_start_raw(running_device *device,int channel,const INT16 *sampledata,int samples,int frequency,int loop)
 {
-    samples_info *info = get_safe_token(device);
-    sample_channel *chan;
+	samples_info *info = get_safe_token(device);
+	sample_channel *chan;
 
-    assert( channel < info->numchannels );
+	assert( channel < info->numchannels );
 
-    chan = &info->channel[channel];
+	chan = &info->channel[channel];
 
 	/* force an update before we start */
 	stream_update(chan->stream);
@@ -291,12 +291,12 @@ void sample_start_raw(running_device *device,int channel,const INT16 *sampledata
 
 void sample_set_freq(running_device *device,int channel,int freq)
 {
-    samples_info *info = get_safe_token(device);
-    sample_channel *chan;
+	samples_info *info = get_safe_token(device);
+	sample_channel *chan;
 
-    assert( channel < info->numchannels );
+	assert(channel < info->numchannels);
 
-    chan = &info->channel[channel];
+	chan = &info->channel[channel];
 
 	/* force an update before we start */
 	stream_update(chan->stream);
@@ -307,12 +307,12 @@ void sample_set_freq(running_device *device,int channel,int freq)
 
 void sample_set_volume(running_device *device,int channel,float volume)
 {
-    samples_info *info = get_safe_token(device);
-    sample_channel *chan;
+	samples_info *info = get_safe_token(device);
+	sample_channel *chan;
 
-    assert( channel < info->numchannels );
+	assert( channel < info->numchannels );
 
-    chan = &info->channel[channel];
+	chan = &info->channel[channel];
 
 	stream_set_output_gain(chan->stream, 0, volume);
 }
@@ -320,12 +320,12 @@ void sample_set_volume(running_device *device,int channel,float volume)
 
 void sample_set_pause(running_device *device,int channel,int pause)
 {
-    samples_info *info = get_safe_token(device);
-    sample_channel *chan;
+	samples_info *info = get_safe_token(device);
+	sample_channel *chan;
 
-    assert( channel < info->numchannels );
+	assert(channel < info->numchannels);
 
-    chan = &info->channel[channel];
+	chan = &info->channel[channel];
 
 	/* force an update before we start */
 	stream_update(chan->stream);
@@ -336,28 +336,28 @@ void sample_set_pause(running_device *device,int channel,int pause)
 
 void sample_stop(running_device *device,int channel)
 {
-    samples_info *info = get_safe_token(device);
-    sample_channel *chan;
+	samples_info *info = get_safe_token(device);
+	sample_channel *chan;
 
-    assert( channel < info->numchannels );
+	assert(channel < info->numchannels);
 
-    chan = &info->channel[channel];
+	chan = &info->channel[channel];
 
-    /* force an update before we start */
-    stream_update(chan->stream);
-    chan->source = NULL;
-    chan->source_num = -1;
+	/* force an update before we start */
+	stream_update(chan->stream);
+	chan->source = NULL;
+	chan->source_num = -1;
 }
 
 
 int sample_get_base_freq(running_device *device,int channel)
 {
-    samples_info *info = get_safe_token(device);
-    sample_channel *chan;
+	samples_info *info = get_safe_token(device);
+	sample_channel *chan;
 
-    assert( channel < info->numchannels );
+	assert(channel < info->numchannels);
 
-    chan = &info->channel[channel];
+	chan = &info->channel[channel];
 
 	/* force an update before we start */
 	stream_update(chan->stream);
@@ -367,12 +367,12 @@ int sample_get_base_freq(running_device *device,int channel)
 
 int sample_playing(running_device *device,int channel)
 {
-    samples_info *info = get_safe_token(device);
-    sample_channel *chan;
+	samples_info *info = get_safe_token(device);
+	sample_channel *chan;
 
-    assert( channel < info->numchannels );
+	assert(channel < info->numchannels);
 
-    chan = &info->channel[channel];
+	chan = &info->channel[channel];
 
 	/* force an update before we start */
 	stream_update(chan->stream);
@@ -469,10 +469,8 @@ static STATE_POSTLOAD( samples_postload )
 
 static DEVICE_START( samples )
 {
-	int i;
 	const samples_interface *intf = (const samples_interface *)device->baseconfig().static_config();
 	samples_info *info = get_safe_token(device);
-
 	info->device = device;
 
 	/* read audio samples */
@@ -483,10 +481,10 @@ static DEVICE_START( samples )
 	info->numchannels = intf->channels;
 	assert(info->numchannels < MAX_CHANNELS);
 	info->channel = auto_alloc_array(device->machine, sample_channel, info->numchannels);
-	for (i = 0; i < info->numchannels; i++)
-	{
-	    info->channel[i].stream = stream_create(device, 0, 1, device->machine->sample_rate, &info->channel[i], sample_update_sound);
 
+	for (int i = 0; i < info->numchannels; i++)
+	{
+		info->channel[i].stream = stream_create(device, 0, 1, device->machine->sample_rate, &info->channel[i], sample_update_sound);
 		info->channel[i].source = NULL;
 		info->channel[i].source_num = -1;
 		info->channel[i].step = 0;
@@ -494,15 +492,16 @@ static DEVICE_START( samples )
 		info->channel[i].paused = 0;
 
 		/* register with the save state system */
-        state_save_register_device_item(device, i, info->channel[i].source_length);
-        state_save_register_device_item(device, i, info->channel[i].source_num);
-        state_save_register_device_item(device, i, info->channel[i].pos);
-        state_save_register_device_item(device, i, info->channel[i].frac);
-        state_save_register_device_item(device, i, info->channel[i].step);
-        state_save_register_device_item(device, i, info->channel[i].loop);
-        state_save_register_device_item(device, i, info->channel[i].paused);
+	        state_save_register_device_item(device, i, info->channel[i].source_length);
+        	state_save_register_device_item(device, i, info->channel[i].source_num);
+	        state_save_register_device_item(device, i, info->channel[i].pos);
+        	state_save_register_device_item(device, i, info->channel[i].frac);
+	        state_save_register_device_item(device, i, info->channel[i].step);
+        	state_save_register_device_item(device, i, info->channel[i].loop);
+	        state_save_register_device_item(device, i, info->channel[i].paused);
 	}
 	state_save_register_postload(device->machine, samples_postload, info);
+
 
 	/* initialize any custom handlers */
 	if (intf->start)
@@ -520,19 +519,19 @@ DEVICE_GET_INFO( samples )
 	switch (state)
 	{
 		/* --- the following bits of info are returned as 64-bit signed integers --- */
-		case DEVINFO_INT_TOKEN_BYTES:					info->i = sizeof(samples_info);			break;
+		case DEVINFO_INT_TOKEN_BYTES:		info->i = sizeof(samples_info); break;
 
 		/* --- the following bits of info are returned as pointers to data or functions --- */
-        case DEVINFO_FCT_START:                         info->start = DEVICE_START_NAME( samples );		break;
-        case DEVINFO_FCT_STOP:                          /* Nothing */                           		break;
-        case DEVINFO_FCT_RESET:                         /* Nothing */                           		break;
+        	case DEVINFO_FCT_START:			info->start = DEVICE_START_NAME( samples ); break;
+	        case DEVINFO_FCT_STOP:		/* Nothing */	break;
+        	case DEVINFO_FCT_RESET:		/* Nothing */	break;
 
 		/* --- the following bits of info are returned as NULL-terminated strings --- */
-        case DEVINFO_STR_NAME:                          strcpy(info->s, "Samples");                 	break;
-        case DEVINFO_STR_FAMILY:                   strcpy(info->s, "Big Hack");                 	break;
-        case DEVINFO_STR_VERSION:                  strcpy(info->s, "1.1");                      	break;
-        case DEVINFO_STR_SOURCE_FILE:                     strcpy(info->s, __FILE__);                    		break;
-        case DEVINFO_STR_CREDITS:                  strcpy(info->s, "Copyright Nicola Salmoria and the MAME Team"); break;
+	        case DEVINFO_STR_NAME:			strcpy(info->s, "Samples"); break;
+        	case DEVINFO_STR_FAMILY:		strcpy(info->s, "Big Hack"); break;
+	        case DEVINFO_STR_VERSION:		strcpy(info->s, "1.1"); break;
+        	case DEVINFO_STR_SOURCE_FILE:		strcpy(info->s, __FILE__); break;
+	        case DEVINFO_STR_CREDITS:		strcpy(info->s, "Copyright Nicola Salmoria and the MAME Team"); break;
 	}
 }
 
