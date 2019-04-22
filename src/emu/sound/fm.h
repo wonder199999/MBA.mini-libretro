@@ -107,13 +107,13 @@ void ym2203_update_one(void *chip, FMSAMPLE *buffer, int length);
 ** Write
 ** return : InterruptLevel
 */
-int ym2203_write(void *chip,int a,unsigned char v);
+int ym2203_write(void *chip, int a, unsigned char v);
 
 /*
 ** Read
 ** return : InterruptLevel
 */
-unsigned char ym2203_read(void *chip,int a);
+unsigned char ym2203_read(void *chip, int a);
 
 /*
 **  Timer OverFlow
@@ -130,8 +130,9 @@ void ym2203_postload(void *chip);
 #if BUILD_YM2610
 
 /* -------------------- YM2610(OPNB) Interface -------------------- */
-void *ym2610_init(void *param, running_device *device, int baseclock, int rate, void *pcmroma, int pcmasize, void *pcmromb, int pcmbsize,
-			FM_TIMERHANDLER TimerHandler, FM_IRQHANDLER IRQHandler, const ssg_callbacks *ssg);
+void *ym2610_init(void *param, running_device *device, int baseclock, int rate,
+			void *pcmroma, int pcmasize, void *pcmromb, int pcmbsize,
+				FM_TIMERHANDLER TimerHandler, FM_IRQHANDLER IRQHandler, const ssg_callbacks *ssg);
 
 void ym2610_shutdown(void *chip);
 void ym2610_reset_chip(void *chip);

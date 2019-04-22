@@ -100,8 +100,6 @@
 */
 
 
-
-
 /************************************************************************/
 /*    comment of hiro-shi(Hiromitsu Shioya)                             */
 /*    YM2610(B) = OPN-B                                                 */
@@ -136,10 +134,10 @@
 #define LFO_SH		24  /*  8.24 fixed point (LFO calculations)       */
 #define TIMER_SH	16  /* 16.16 fixed point (timers calculations)    */
 
-#define FREQ_MASK	((1<<FREQ_SH)-1)
+#define FREQ_MASK	((1<<FREQ_SH)-1)	/* 65535 */
 
 #define ENV_BITS	10
-#define ENV_LEN		(1<<ENV_BITS)
+#define ENV_LEN		(1<<ENV_BITS)		/* 1024 */
 #define ENV_STEP	(128.0/ENV_LEN)
 
 #define MAX_ATT_INDEX	(ENV_LEN-1)	/* 1023 */
@@ -152,8 +150,8 @@
 #define EG_OFF		0
 
 #define SIN_BITS	10
-#define SIN_LEN		(1<<SIN_BITS)
-#define SIN_MASK	(SIN_LEN-1)
+#define SIN_LEN		(1<<SIN_BITS)	/* 1024 */
+#define SIN_MASK	(SIN_LEN-1)	/* 1023 */
 
 #define TL_RES_LEN	(256)		/* 8 bits addressing (real chip) */
 
@@ -161,311 +159,277 @@
 #define MAXOUT		(+32767)
 #define MINOUT		(-32768)
 
-
-/*  TL_TAB_LEN is calculated as:
-*   13 - sinus amplitude bits     (Y axis)
-*   2  - sinus sign bit           (Y axis)
-*   TL_RES_LEN - sinus resolution (X axis)
-*/
 #define TL_TAB_LEN	(13*2*TL_RES_LEN)
-static signed int tl_tab[TL_TAB_LEN];
-
 #define ENV_QUIET	(TL_TAB_LEN>>3)
-
-/* sin waveform table in 'decibel' scale */
-static unsigned int sin_tab[SIN_LEN];
-
-/* sustain level table (3dB per step) */
-/* bit0, bit1, bit2, bit3, bit4, bit5, bit6 */
-/* 1,    2,    4,    8,    16,   32,   64   (value)*/
-/* 0.75, 1.5,  3,    6,    12,   24,   48   (dB)*/
-
-/* 0 - 15: 0, 3, 6, 9,12,15,18,21,24,27,30,33,36,39,42,93 (dB)*/
-#define SC(db)	(UINT32)(db * (4.0/ENV_STEP))
-static const UINT32 sl_table[16] = {
-	SC( 0), SC( 1), SC( 2), SC(3 ), SC(4 ), SC(5 ), SC(6 ), SC( 7),
-	SC( 8), SC( 9), SC(10), SC(11), SC(12), SC(13), SC(14), SC(31)
-};
-#undef SC
-
-
 #define RATE_STEPS	(8)
-static const UINT8 eg_inc[19*RATE_STEPS] = {
 
-/*cycle:0 1  2 3  4 5  6 7*/
 
-/* 0 */ 0,1, 0,1, 0,1, 0,1, /* rates 00..11 0 (increment by 0 or 1) */
-/* 1 */ 0,1, 0,1, 1,1, 0,1, /* rates 00..11 1 */
-/* 2 */ 0,1, 1,1, 0,1, 1,1, /* rates 00..11 2 */
-/* 3 */ 0,1, 1,1, 1,1, 1,1, /* rates 00..11 3 */
+typedef struct {
+	/* all 128 LFO PM waveforms */
+	INT32		lfo_pm_table[128*8*32];		/* 32768 */
+	/*  TL_TAB_LEN is calculated as:
+	*   13 - sinus amplitude bits     (Y axis)
+	*   2  - sinus sign bit           (Y axis)
+	*   TL_RES_LEN - sinus resolution (X axis)
+	*/
+	INT32		tl_tab[TL_TAB_LEN];		/* 6656 */
+	/* sin waveform table in 'decibel' scale */
+	UINT32		sin_tab[SIN_LEN];		/* 1024 */
+	/* speedup purposes only */
+	INT32		jedi_table[49*16];
+} _lookup_tables;
 
-/* 4 */ 1,1, 1,1, 1,1, 1,1, /* rate 12 0 (increment by 1) */
-/* 5 */ 1,1, 1,2, 1,1, 1,2, /* rate 12 1 */
-/* 6 */ 1,2, 1,2, 1,2, 1,2, /* rate 12 2 */
-/* 7 */ 1,2, 2,2, 1,2, 2,2, /* rate 12 3 */
-
-/* 8 */ 2,2, 2,2, 2,2, 2,2, /* rate 13 0 (increment by 2) */
-/* 9 */ 2,2, 2,4, 2,2, 2,4, /* rate 13 1 */
-/*10 */ 2,4, 2,4, 2,4, 2,4, /* rate 13 2 */
-/*11 */ 2,4, 4,4, 2,4, 4,4, /* rate 13 3 */
-
-/*12 */ 4,4, 4,4, 4,4, 4,4, /* rate 14 0 (increment by 4) */
-/*13 */ 4,4, 4,8, 4,4, 4,8, /* rate 14 1 */
-/*14 */ 4,8, 4,8, 4,8, 4,8, /* rate 14 2 */
-/*15 */ 4,8, 8,8, 4,8, 8,8, /* rate 14 3 */
-
-/*16 */ 8,8, 8,8, 8,8, 8,8, /* rates 15 0, 15 1, 15 2, 15 3 (increment by 8) */
-/*17 */ 16,16,16,16,16,16,16,16, /* rates 15 2, 15 3 for attack */
-/*18 */ 0,0, 0,0, 0,0, 0,0  /* infinity rates for attack and decay(s) */
+static _lookup_tables lookup_tables = {
+	{ 0 }, { 0 }, { 0 }, { 0 }
 };
 
+typedef struct {
+	const UINT8	eg_rate_select[128];
+	const UINT8	eg_rate_shift[128];
+	const UINT8	eg_inc[152];	/* 19*RATE_STEPS */
+	const UINT8	dttable[128];
+	const UINT8	opn_fktable[16];
+	const UINT8	lfo_ams_depth_shift[4];
+	const UINT8	lfo_pm_output[56][8];
+	const UINT32	sl_table[16];
+	const INT32	opn_ssg_pres[2][4];
+	const UINT32	lfo_samples_per_step[8];
+	const INT32	step_inc[8];
+} eg_data;
 
-#define O(a)	(a*RATE_STEPS)
+static eg_data TABLES = {
+	/* eg_rate_select[128] / Envelope Generator rates (32 + 64 rates + 32 RKS) */
+	{
+		/* 32 infinite time rates */
+		144,144,144,144,144,144,144,144,
+		144,144,144,144,144,144,144,144,
+		144,144,144,144,144,144,144,144,
+		144,144,144,144,144,144,144,144,
+		/* rates 00-11 */
+		0,8,16,24,0,8,16,24,0,8,16,24,0,8,16,24,
+		0,8,16,24,0,8,16,24,0,8,16,24,0,8,16,24,
+		0,8,16,24,0,8,16,24,0,8,16,24,0,8,16,24,
+		/* rate 12 */
+		32,40,48,56,
+		/* rate 13 */
+		64,72,80,88,
+		/* rate 14 */
+		96,104,112,120,
+		/* rate 15 */
+		128,128,128,128,
+		/* 32 dummy rates (same as 15 3) */
+		128,128,128,128,128,128,128,128,
+		128,128,128,128,128,128,128,128,
+		128,128,128,128,128,128,128,128,
+		128,128,128,128,128,128,128,128
+	},
+	/*rate  0,    1,    2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15 */
+	/*shift 11,  10,  9,  8,  7,  6,  5,  4,  3,  2, 1,  0,  0,  0,  0,  0 */
+	/*mask  2047, 1023, 511, 255, 127, 63, 31, 15, 7,  3, 1,  0,  0,  0,  0,  0 */
+	/* eg_rate_shift[128] / Envelope Generator counter shifts (32 + 64 rates + 32 RKS) */
+	{
+		/* 32 infinite time rates */
+		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+		/* rates 00-11 */
+		11,11,11,11,10,10,10,10,9,9,9,9,8,8,8,8,
+		7,7,7,7,6,6,6,6,5,5,5,5,4,4,4,4,
+		3,3,3,3,2,2,2,2,1,1,1,1,0,0,0,0,
+		/* rate 12 */
+		0,0,0,0,
+		/* rate 13 */
+		0,0,0,0,
+		/* rate 14 */
+		0,0,0,0,
+		/* rate 15 */
+		0,0,0,0,
+		/* 32 dummy rates (same as 15 3) */
+		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+	},
+	/*cycle:0 1  2 3  4 5  6 7*/
+	/* eg_inc[152] */
+	{
+		/* 0 */ 0,1, 0,1, 0,1, 0,1, /* rates 00..11 0 (increment by 0 or 1) */
+		/* 1 */ 0,1, 0,1, 1,1, 0,1, /* rates 00..11 1 */
+		/* 2 */ 0,1, 1,1, 0,1, 1,1, /* rates 00..11 2 */
+		/* 3 */ 0,1, 1,1, 1,1, 1,1, /* rates 00..11 3 */
+		/* 4 */ 1,1, 1,1, 1,1, 1,1, /* rate 12 0 (increment by 1) */
+		/* 5 */ 1,1, 1,2, 1,1, 1,2, /* rate 12 1 */
+		/* 6 */ 1,2, 1,2, 1,2, 1,2, /* rate 12 2 */
+		/* 7 */ 1,2, 2,2, 1,2, 2,2, /* rate 12 3 */
+		/* 8 */ 2,2, 2,2, 2,2, 2,2, /* rate 13 0 (increment by 2) */
+		/* 9 */ 2,2, 2,4, 2,2, 2,4, /* rate 13 1 */
+		/*10 */ 2,4, 2,4, 2,4, 2,4, /* rate 13 2 */
+		/*11 */ 2,4, 4,4, 2,4, 4,4, /* rate 13 3 */
+		/*12 */ 4,4, 4,4, 4,4, 4,4, /* rate 14 0 (increment by 4) */
+		/*13 */ 4,4, 4,8, 4,4, 4,8, /* rate 14 1 */
+		/*14 */ 4,8, 4,8, 4,8, 4,8, /* rate 14 2 */
+		/*15 */ 4,8, 8,8, 4,8, 8,8, /* rate 14 3 */
+		/*16 */ 8,8, 8,8, 8,8, 8,8, /* rates 15 0, 15 1, 15 2, 15 3 (increment by 8) */
+		/*17 */ 16,16,16,16,16,16,16,16, /* rates 15 2, 15 3 for attack */
+		/*18 */ 0,0, 0,0, 0,0, 0,0  /* infinity rates for attack and decay(s) */
+	},
+	/* this is YM2151 and YM2612 phase increment data (in 10.10 fixed point format)*/
+	/* dttable[128]*/
+	{
+		/* FD=0 */
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+		/* FD=1 */
+		0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2,
+		2, 3, 3, 3, 4, 4, 4, 5, 5, 6, 6, 7, 8, 8, 8, 8,
+		/* FD=2 */
+		1, 1, 1, 1, 2, 2, 2, 2, 2, 3, 3, 3, 4, 4, 4, 5,
+		5, 6, 6, 7, 8, 8, 9,10,11,12,13,14,16,16,16,16,
+		/* FD=3 */
+		2, 2, 2, 2, 2, 3, 3, 3, 4, 4, 4, 5, 5, 6, 6, 7,
+		8 , 8, 9,10,11,12,13,14,16,17,19,20,22,22,22,22
+	},
+	/* opn_fktable[16] */
+	{
+	/* OPN key frequency number -> key code follow table */
+	/* fnum higher 4bit -> keycode lower 2bit */
+		0, 0, 0, 0, 0, 0, 0, 1,
+		2, 3, 3, 3, 3, 3, 3, 3
+	},
+	/* lfo_ams_depth_shift[4] */
+	{
+	/* There are 4 different LFO AM depths available, they are:
+	   0 dB, 1.4 dB, 5.9 dB, 11.8 dB
+	   Here is how it is generated (in EG steps):
 
-/*note that there is no O(17) in this table - it's directly in the code */
-static const UINT8 eg_rate_select[32+64+32] = {	/* Envelope Generator rates (32 + 64 rates + 32 RKS) */
-/* 32 infinite time rates */
-O(18),O(18),O(18),O(18),O(18),O(18),O(18),O(18),
-O(18),O(18),O(18),O(18),O(18),O(18),O(18),O(18),
-O(18),O(18),O(18),O(18),O(18),O(18),O(18),O(18),
-O(18),O(18),O(18),O(18),O(18),O(18),O(18),O(18),
+	   11.8 dB = 0, 2, 4, 6, 8, 10,12,14,16...126,126,124,122,120,118,....4,2,0
+	   5.9 dB  = 0, 1, 2, 3, 4, 5, 6, 7, 8....63, 63, 62, 61, 60, 59,.....2,1,0
+	   1.4 dB  = 0, 0, 0, 0, 1, 1, 1, 1, 2,...15, 15, 15, 15, 14, 14,.....0,0,0
 
-/* rates 00-11 */
-O( 0),O( 1),O( 2),O( 3),
-O( 0),O( 1),O( 2),O( 3),
-O( 0),O( 1),O( 2),O( 3),
-O( 0),O( 1),O( 2),O( 3),
-O( 0),O( 1),O( 2),O( 3),
-O( 0),O( 1),O( 2),O( 3),
-O( 0),O( 1),O( 2),O( 3),
-O( 0),O( 1),O( 2),O( 3),
-O( 0),O( 1),O( 2),O( 3),
-O( 0),O( 1),O( 2),O( 3),
-O( 0),O( 1),O( 2),O( 3),
-O( 0),O( 1),O( 2),O( 3),
+	  (1.4 dB is loosing precision as you can see)
 
-/* rate 12 */
-O( 4),O( 5),O( 6),O( 7),
+	  It's implemented as generator from 0..126 with step 2 then a shift
+	  right N times, where N is:
+	    8 for 0 dB
+	    3 for 1.4 dB
+	    1 for 5.9 dB
+	    0 for 11.8 dB	*/
+		8, 3, 1, 0
+	},
+	/* There are 8 different LFO PM depths available, they are:
+	   0, 3.4, 6.7, 10, 14, 20, 40, 80 (cents)
 
-/* rate 13 */
-O( 8),O( 9),O(10),O(11),
+	   Modulation level at each depth depends on F-NUMBER bits: 4,5,6,7,8,9,10
+	   (bits 8,9,10 = FNUM MSB from OCT/FNUM register)
 
-/* rate 14 */
-O(12),O(13),O(14),O(15),
+	   Here we store only first quarter (positive one) of full waveform.
+	   Full table (lfo_pm_table) containing all 128 waveforms is build
+	   at run (init) time.
 
-/* rate 15 */
-O(16),O(16),O(16),O(16),
+	   One value in table below represents 4 (four) basic LFO steps
+	   (1 PM step = 4 AM steps).
 
-/* 32 dummy rates (same as 15 3) */
-O(16),O(16),O(16),O(16),O(16),O(16),O(16),O(16),
-O(16),O(16),O(16),O(16),O(16),O(16),O(16),O(16),
-O(16),O(16),O(16),O(16),O(16),O(16),O(16),O(16),
-O(16),O(16),O(16),O(16),O(16),O(16),O(16),O(16)
-
+	   For example:
+		at LFO SPEED=0 (which is 108 samples per basic LFO step)
+		one value from "lfo_pm_output" table lasts for 432 consecutive
+		samples (4*108=432) and one full LFO waveform cycle lasts for 13824
+		samples (32*432=13824; 32 because we store only a quarter of whole
+		waveform in the table below)
+	*/
+	{
+	/* lfo_pm_output[7*8][8] *//* 7 bits meaningful (of F-NUMBER), 8 LFO output levels per one depth (out of 32), 8 LFO depths */
+		/* FNUM BIT 4: 000 0001xxxx */
+		/* DEPTH 0 */ {0,   0,   0,   0,   0,   0,   0,   0},
+		/* DEPTH 1 */ {0,   0,   0,   0,   0,   0,   0,   0},
+		/* DEPTH 2 */ {0,   0,   0,   0,   0,   0,   0,   0},
+		/* DEPTH 3 */ {0,   0,   0,   0,   0,   0,   0,   0},
+		/* DEPTH 4 */ {0,   0,   0,   0,   0,   0,   0,   0},
+		/* DEPTH 5 */ {0,   0,   0,   0,   0,   0,   0,   0},
+		/* DEPTH 6 */ {0,   0,   0,   0,   0,   0,   0,   0},
+		/* DEPTH 7 */ {0,   0,   0,   0,   1,   1,   1,   1},
+		/* FNUM BIT 5: 000 0010xxxx */
+		/* DEPTH 0 */ {0,   0,   0,   0,   0,   0,   0,   0},
+		/* DEPTH 1 */ {0,   0,   0,   0,   0,   0,   0,   0},
+		/* DEPTH 2 */ {0,   0,   0,   0,   0,   0,   0,   0},
+		/* DEPTH 3 */ {0,   0,   0,   0,   0,   0,   0,   0},
+		/* DEPTH 4 */ {0,   0,   0,   0,   0,   0,   0,   0},
+		/* DEPTH 5 */ {0,   0,   0,   0,   0,   0,   0,   0},
+		/* DEPTH 6 */ {0,   0,   0,   0,   1,   1,   1,   1},
+		/* DEPTH 7 */ {0,   0,   1,   1,   2,   2,   2,   3},
+		/* FNUM BIT 6: 000 0100xxxx */
+		/* DEPTH 0 */ {0,   0,   0,   0,   0,   0,   0,   0},
+		/* DEPTH 1 */ {0,   0,   0,   0,   0,   0,   0,   0},
+		/* DEPTH 2 */ {0,   0,   0,   0,   0,   0,   0,   0},
+		/* DEPTH 3 */ {0,   0,   0,   0,   0,   0,   0,   0},
+		/* DEPTH 4 */ {0,   0,   0,   0,   0,   0,   0,   1},
+		/* DEPTH 5 */ {0,   0,   0,   0,   1,   1,   1,   1},
+		/* DEPTH 6 */ {0,   0,   1,   1,   2,   2,   2,   3},
+		/* DEPTH 7 */ {0,   0,   2,   3,   4,   4,   5,   6},
+		/* FNUM BIT 7: 000 1000xxxx */
+		/* DEPTH 0 */ {0,   0,   0,   0,   0,   0,   0,   0},
+		/* DEPTH 1 */ {0,   0,   0,   0,   0,   0,   0,   0},
+		/* DEPTH 2 */ {0,   0,   0,   0,   0,   0,   1,   1},
+		/* DEPTH 3 */ {0,   0,   0,   0,   1,   1,   1,   1},
+		/* DEPTH 4 */ {0,   0,   0,   1,   1,   1,   1,   2},
+		/* DEPTH 5 */ {0,   0,   1,   1,   2,   2,   2,   3},
+		/* DEPTH 6 */ {0,   0,   2,   3,   4,   4,   5,   6},
+		/* DEPTH 7 */ {0,   0,   4,   6,   8,   8, 0xa, 0xc},
+		/* FNUM BIT 8: 001 0000xxxx */
+		/* DEPTH 0 */ {0,   0,   0,   0,   0,   0,   0,   0},
+		/* DEPTH 1 */ {0,   0,   0,   0,   1,   1,   1,   1},
+		/* DEPTH 2 */ {0,   0,   0,   1,   1,   1,   2,   2},
+		/* DEPTH 3 */ {0,   0,   1,   1,   2,   2,   3,   3},
+		/* DEPTH 4 */ {0,   0,   1,   2,   2,   2,   3,   4},
+		/* DEPTH 5 */ {0,   0,   2,   3,   4,   4,   5,   6},
+		/* DEPTH 6 */ {0,   0,   4,   6,   8,   8, 0xa, 0xc},
+		/* DEPTH 7 */ {0,   0,   8, 0xc,0x10,0x10,0x14,0x18},
+		/* FNUM BIT 9: 010 0000xxxx */
+		/* DEPTH 0 */ {0,   0,   0,   0,   0,   0,   0,   0},
+		/* DEPTH 1 */ {0,   0,   0,   0,   2,   2,   2,   2},
+		/* DEPTH 2 */ {0,   0,   0,   2,   2,   2,   4,   4},
+		/* DEPTH 3 */ {0,   0,   2,   2,   4,   4,   6,   6},
+		/* DEPTH 4 */ {0,   0,   2,   4,   4,   4,   6,   8},
+		/* DEPTH 5 */ {0,   0,   4,   6,   8,   8, 0xa, 0xc},
+		/* DEPTH 6 */ {0,   0,   8, 0xc,0x10,0x10,0x14,0x18},
+		/* DEPTH 7 */ {0,   0,0x10,0x18,0x20,0x20,0x28,0x30},
+		/* FNUM BIT10: 100 0000xxxx */
+		/* DEPTH 0 */ {0,   0,   0,   0,   0,   0,   0,   0},
+		/* DEPTH 1 */ {0,   0,   0,   0,   4,   4,   4,   4},
+		/* DEPTH 2 */ {0,   0,   0,   4,   4,   4,   8,   8},
+		/* DEPTH 3 */ {0,   0,   4,   4,   8,   8, 0xc, 0xc},
+		/* DEPTH 4 */ {0,   0,   4,   8,   8,   8, 0xc,0x10},
+		/* DEPTH 5 */ {0,   0,   8, 0xc,0x10,0x10,0x14,0x18},
+		/* DEPTH 6 */ {0,   0,0x10,0x18,0x20,0x20,0x28,0x30},
+		/* DEPTH 7 */ {0,   0,0x20,0x30,0x40,0x40,0x50,0x60}
+	},
+	/* sl_table[16] */
+	/* sustain level table (3dB per step) */
+	/* bit0, bit1, bit2, bit3, bit4, bit5, bit6 */
+	/* 1,    2,    4,    8,    16,   32,   64   (value)*/
+	/* 0.75, 1.5,  3,    6,    12,   24,   48   (dB)*/
+	/* 0 - 15: 0, 3, 6, 9,12,15,18,21,24,27,30,33,36,39,42,93 (dB)*/
+	{
+		0x0000, 0x0020, 0x0040, 0x0060, 0x0080, 0x00a0, 0x00c0, 0x00e0,
+		0x0100, 0x0120, 0x0140, 0x0160, 0x0180, 0x01a0, 0x01c0, 0x03e0
+	},
+	{
+		{ 24, 24, 72, 36 },	/* opn_pres */
+		{ 1,   1,  4,  2 }	/* sgg_pres */
+	},
+	/* lfo_samples_per_step[8] */
+	{
+	/* 8 LFO speed parameters */
+	/* each value represents number of samples that one LFO level will last for */
+		108, 77, 71, 67, 62, 44, 8, 5
+	},
+	/* step_inc[8] */
+	{
+	/* different from the usual ADPCM table */
+		-16, -16, -16, -16, 32, 80, 112, 144
+	}
 };
-#undef O
-
-/*rate  0,    1,    2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15 */
-/*shift 11,  10,  9,  8,  7,  6,  5,  4,  3,  2, 1,  0,  0,  0,  0,  0 */
-/*mask  2047, 1023, 511, 255, 127, 63, 31, 15, 7,  3, 1,  0,  0,  0,  0,  0 */
-
-#define O(a)	(a*1)
-static const UINT8 eg_rate_shift[32+64+32] = {	/* Envelope Generator counter shifts (32 + 64 rates + 32 RKS) */
-/* 32 infinite time rates */
-O(0),O(0),O(0),O(0),O(0),O(0),O(0),O(0),
-O(0),O(0),O(0),O(0),O(0),O(0),O(0),O(0),
-O(0),O(0),O(0),O(0),O(0),O(0),O(0),O(0),
-O(0),O(0),O(0),O(0),O(0),O(0),O(0),O(0),
-
-/* rates 00-11 */
-O(11),O(11),O(11),O(11),
-O(10),O(10),O(10),O(10),
-O( 9),O( 9),O( 9),O( 9),
-O( 8),O( 8),O( 8),O( 8),
-O( 7),O( 7),O( 7),O( 7),
-O( 6),O( 6),O( 6),O( 6),
-O( 5),O( 5),O( 5),O( 5),
-O( 4),O( 4),O( 4),O( 4),
-O( 3),O( 3),O( 3),O( 3),
-O( 2),O( 2),O( 2),O( 2),
-O( 1),O( 1),O( 1),O( 1),
-O( 0),O( 0),O( 0),O( 0),
-
-/* rate 12 */
-O( 0),O( 0),O( 0),O( 0),
-
-/* rate 13 */
-O( 0),O( 0),O( 0),O( 0),
-
-/* rate 14 */
-O( 0),O( 0),O( 0),O( 0),
-
-/* rate 15 */
-O( 0),O( 0),O( 0),O( 0),
-
-/* 32 dummy rates (same as 15 3) */
-O( 0),O( 0),O( 0),O( 0),O( 0),O( 0),O( 0),O( 0),
-O( 0),O( 0),O( 0),O( 0),O( 0),O( 0),O( 0),O( 0),
-O( 0),O( 0),O( 0),O( 0),O( 0),O( 0),O( 0),O( 0),
-O( 0),O( 0),O( 0),O( 0),O( 0),O( 0),O( 0),O( 0)
-
-};
-#undef O
-
-static const UINT8 dt_tab[4 * 32]={
-/* this is YM2151 and YM2612 phase increment data (in 10.10 fixed point format)*/
-/* FD=0 */
-	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-/* FD=1 */
-	0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2,
-	2, 3, 3, 3, 4, 4, 4, 5, 5, 6, 6, 7, 8, 8, 8, 8,
-/* FD=2 */
-	1, 1, 1, 1, 2, 2, 2, 2, 2, 3, 3, 3, 4, 4, 4, 5,
-	5, 6, 6, 7, 8, 8, 9,10,11,12,13,14,16,16,16,16,
-/* FD=3 */
-	2, 2, 2, 2, 2, 3, 3, 3, 4, 4, 4, 5, 5, 6, 6, 7,
-	8 , 8, 9,10,11,12,13,14,16,17,19,20,22,22,22,22
-};
-
-
-/* OPN key frequency number -> key code follow table */
-/* fnum higher 4bit -> keycode lower 2bit */
-static const UINT8 opn_fktable[16] = {
-	0,0,0,0,0,0,0,1,2,3,3,3,3,3,3,3
-};
-
-
-/* 8 LFO speed parameters */
-/* each value represents number of samples that one LFO level will last for */
-static const UINT32 lfo_samples_per_step[8] = {
-	108, 77, 71, 67, 62, 44, 8, 5
-};
-
-
-/*There are 4 different LFO AM depths available, they are:
-  0 dB, 1.4 dB, 5.9 dB, 11.8 dB
-  Here is how it is generated (in EG steps):
-
-  11.8 dB = 0, 2, 4, 6, 8, 10,12,14,16...126,126,124,122,120,118,....4,2,0
-   5.9 dB = 0, 1, 2, 3, 4, 5, 6, 7, 8....63, 63, 62, 61, 60, 59,.....2,1,0
-   1.4 dB = 0, 0, 0, 0, 1, 1, 1, 1, 2,...15, 15, 15, 15, 14, 14,.....0,0,0
-
-  (1.4 dB is loosing precision as you can see)
-
-  It's implemented as generator from 0..126 with step 2 then a shift
-  right N times, where N is:
-    8 for 0 dB
-    3 for 1.4 dB
-    1 for 5.9 dB
-    0 for 11.8 dB
-*/
-static const UINT8 lfo_ams_depth_shift[4] = {
-	8, 3, 1, 0
-};
-
-
-/*There are 8 different LFO PM depths available, they are:
-  0, 3.4, 6.7, 10, 14, 20, 40, 80 (cents)
-
-  Modulation level at each depth depends on F-NUMBER bits: 4,5,6,7,8,9,10
-  (bits 8,9,10 = FNUM MSB from OCT/FNUM register)
-
-  Here we store only first quarter (positive one) of full waveform.
-  Full table (lfo_pm_table) containing all 128 waveforms is build
-  at run (init) time.
-
-  One value in table below represents 4 (four) basic LFO steps
-  (1 PM step = 4 AM steps).
-
-  For example:
-   at LFO SPEED=0 (which is 108 samples per basic LFO step)
-   one value from "lfo_pm_output" table lasts for 432 consecutive
-   samples (4*108=432) and one full LFO waveform cycle lasts for 13824
-   samples (32*432=13824; 32 because we store only a quarter of whole
-            waveform in the table below)
-*/
-static const UINT8 lfo_pm_output[7*8][8] = { /* 7 bits meaningful (of F-NUMBER), 8 LFO output levels per one depth (out of 32), 8 LFO depths */
-/* FNUM BIT 4: 000 0001xxxx */
-/* DEPTH 0 */ {0,   0,   0,   0,   0,   0,   0,   0},
-/* DEPTH 1 */ {0,   0,   0,   0,   0,   0,   0,   0},
-/* DEPTH 2 */ {0,   0,   0,   0,   0,   0,   0,   0},
-/* DEPTH 3 */ {0,   0,   0,   0,   0,   0,   0,   0},
-/* DEPTH 4 */ {0,   0,   0,   0,   0,   0,   0,   0},
-/* DEPTH 5 */ {0,   0,   0,   0,   0,   0,   0,   0},
-/* DEPTH 6 */ {0,   0,   0,   0,   0,   0,   0,   0},
-/* DEPTH 7 */ {0,   0,   0,   0,   1,   1,   1,   1},
-
-/* FNUM BIT 5: 000 0010xxxx */
-/* DEPTH 0 */ {0,   0,   0,   0,   0,   0,   0,   0},
-/* DEPTH 1 */ {0,   0,   0,   0,   0,   0,   0,   0},
-/* DEPTH 2 */ {0,   0,   0,   0,   0,   0,   0,   0},
-/* DEPTH 3 */ {0,   0,   0,   0,   0,   0,   0,   0},
-/* DEPTH 4 */ {0,   0,   0,   0,   0,   0,   0,   0},
-/* DEPTH 5 */ {0,   0,   0,   0,   0,   0,   0,   0},
-/* DEPTH 6 */ {0,   0,   0,   0,   1,   1,   1,   1},
-/* DEPTH 7 */ {0,   0,   1,   1,   2,   2,   2,   3},
-
-/* FNUM BIT 6: 000 0100xxxx */
-/* DEPTH 0 */ {0,   0,   0,   0,   0,   0,   0,   0},
-/* DEPTH 1 */ {0,   0,   0,   0,   0,   0,   0,   0},
-/* DEPTH 2 */ {0,   0,   0,   0,   0,   0,   0,   0},
-/* DEPTH 3 */ {0,   0,   0,   0,   0,   0,   0,   0},
-/* DEPTH 4 */ {0,   0,   0,   0,   0,   0,   0,   1},
-/* DEPTH 5 */ {0,   0,   0,   0,   1,   1,   1,   1},
-/* DEPTH 6 */ {0,   0,   1,   1,   2,   2,   2,   3},
-/* DEPTH 7 */ {0,   0,   2,   3,   4,   4,   5,   6},
-
-/* FNUM BIT 7: 000 1000xxxx */
-/* DEPTH 0 */ {0,   0,   0,   0,   0,   0,   0,   0},
-/* DEPTH 1 */ {0,   0,   0,   0,   0,   0,   0,   0},
-/* DEPTH 2 */ {0,   0,   0,   0,   0,   0,   1,   1},
-/* DEPTH 3 */ {0,   0,   0,   0,   1,   1,   1,   1},
-/* DEPTH 4 */ {0,   0,   0,   1,   1,   1,   1,   2},
-/* DEPTH 5 */ {0,   0,   1,   1,   2,   2,   2,   3},
-/* DEPTH 6 */ {0,   0,   2,   3,   4,   4,   5,   6},
-/* DEPTH 7 */ {0,   0,   4,   6,   8,   8, 0xa, 0xc},
-
-/* FNUM BIT 8: 001 0000xxxx */
-/* DEPTH 0 */ {0,   0,   0,   0,   0,   0,   0,   0},
-/* DEPTH 1 */ {0,   0,   0,   0,   1,   1,   1,   1},
-/* DEPTH 2 */ {0,   0,   0,   1,   1,   1,   2,   2},
-/* DEPTH 3 */ {0,   0,   1,   1,   2,   2,   3,   3},
-/* DEPTH 4 */ {0,   0,   1,   2,   2,   2,   3,   4},
-/* DEPTH 5 */ {0,   0,   2,   3,   4,   4,   5,   6},
-/* DEPTH 6 */ {0,   0,   4,   6,   8,   8, 0xa, 0xc},
-/* DEPTH 7 */ {0,   0,   8, 0xc,0x10,0x10,0x14,0x18},
-
-/* FNUM BIT 9: 010 0000xxxx */
-/* DEPTH 0 */ {0,   0,   0,   0,   0,   0,   0,   0},
-/* DEPTH 1 */ {0,   0,   0,   0,   2,   2,   2,   2},
-/* DEPTH 2 */ {0,   0,   0,   2,   2,   2,   4,   4},
-/* DEPTH 3 */ {0,   0,   2,   2,   4,   4,   6,   6},
-/* DEPTH 4 */ {0,   0,   2,   4,   4,   4,   6,   8},
-/* DEPTH 5 */ {0,   0,   4,   6,   8,   8, 0xa, 0xc},
-/* DEPTH 6 */ {0,   0,   8, 0xc,0x10,0x10,0x14,0x18},
-/* DEPTH 7 */ {0,   0,0x10,0x18,0x20,0x20,0x28,0x30},
-
-/* FNUM BIT10: 100 0000xxxx */
-/* DEPTH 0 */ {0,   0,   0,   0,   0,   0,   0,   0},
-/* DEPTH 1 */ {0,   0,   0,   0,   4,   4,   4,   4},
-/* DEPTH 2 */ {0,   0,   0,   4,   4,   4,   8,   8},
-/* DEPTH 3 */ {0,   0,   4,   4,   8,   8, 0xc, 0xc},
-/* DEPTH 4 */ {0,   0,   4,   8,   8,   8, 0xc,0x10},
-/* DEPTH 5 */ {0,   0,   8, 0xc,0x10,0x10,0x14,0x18},
-/* DEPTH 6 */ {0,   0,0x10,0x18,0x20,0x20,0x28,0x30},
-/* DEPTH 7 */ {0,   0,0x20,0x30,0x40,0x40,0x50,0x60},
-
-};
-
-
-/* all 128 LFO PM waveforms */
-static INT32 lfo_pm_table[128*8*32]; /* 128 combinations of 7 bits meaningful (of F-NUMBER), 8 LFO depths, 32 LFO output levels per one depth */
 
 
 /* register number to channel number , slot offset */
-#define OPN_CHAN(N)	(N&3)
-#define OPN_SLOT(N)	((N>>2)&3)
+#define OPN_CHAN(N)	(N&0x03)
+#define OPN_SLOT(N)	((N>>2)&0x03)
 
 /* slot number */
 #define SLOT1	0
@@ -521,7 +485,6 @@ typedef struct
 
 } FM_SLOT;
 
-
 typedef struct
 {
 	FM_SLOT		SLOT[4];	/* four SLOTs (operators) */
@@ -545,7 +508,6 @@ typedef struct
 	UINT8		kcode;		/* key code:                        */
 	UINT32		block_fnum;	/* current blk/fnum value for this slot (can be different betweeen slots of one channel in 3slot mode) */
 } FM_CH;
-
 
 typedef struct
 {
@@ -578,7 +540,6 @@ typedef struct
 } FM_ST;
 
 
-
 /***********************************************************/
 /* OPN unit                                                */
 /***********************************************************/
@@ -591,7 +552,6 @@ typedef struct
 	UINT8		kcode[3];	/* key code */
 	UINT32		block_fnum[3];	/* current fnum value for this slot (can be different betweeen slots of one channel in 3slot mode) */
 } FM_3SLOT;
-
 
 /* OPN/A/B common state */
 typedef struct
@@ -620,7 +580,6 @@ typedef struct
 	UINT32		lfo_freq[8];		/* LFO FREQ table */
 } FM_OPN;
 
-
 /* current chip state */
 static INT32 m2, c1, c2;	/* Phase Modulation input for operators 2,3,4 */
 static INT32 mem;		/* one sample delay memory */
@@ -633,13 +592,15 @@ static INT32 out_delta[4];	/* channel output NONE,LEFT,RIGHT or CENTER for YM260
 static UINT32 LFO_AM;		/* runtime LFO calculations helper */
 static INT32 LFO_PM;		/* runtime LFO calculations helper */
 
+static eg_data *TAB = &TABLES;
+static _lookup_tables *LOOKUP = &lookup_tables;
+
 
 /* limitter */
 #define Limit(val, max, min) {			\
 	if ( val > max )      val = max;	\
 	else if ( val < min ) val = min;	\
 }
-
 
 /* status set and IRQ handling */
 INLINE void FM_STATUS_SET(FM_ST *ST, int flag)
@@ -670,7 +631,7 @@ INLINE void FM_STATUS_RESET(FM_ST *ST, int flag)
 }
 
 /* IRQ mask set */
-INLINE void FM_IRQMASK_SET(FM_ST *ST,int flag)
+INLINE void FM_IRQMASK_SET(FM_ST *ST, int flag)
 {
 	ST->irqmask = flag;
 	/* IRQ handling check */
@@ -739,7 +700,6 @@ INLINE void set_timers(FM_ST *ST, void *n, int v)
 	}
 }
 
-
 /* Timer A Overflow */
 INLINE void TimerAOver(FM_ST *ST)
 {
@@ -752,6 +712,7 @@ INLINE void TimerAOver(FM_ST *ST)
 	if (ST->timer_handler)
 		(ST->timer_handler)(ST->param, 0, ST->TAC * ST->timer_prescaler, ST->clock);
 }
+
 /* Timer B Overflow */
 INLINE void TimerBOver(FM_ST *ST)
 {
@@ -818,7 +779,7 @@ INLINE void FM_KEYOFF(FM_CH *CH , int s)
 }
 
 /* set algorithm connection */
-static void setup_connection( FM_CH *CH, int ch)
+static void setup_connection(FM_CH *CH, int ch)
 {
 	INT32 *carrier = &out_fm[ch];
 
@@ -830,75 +791,75 @@ static void setup_connection( FM_CH *CH, int ch)
 
 	switch (CH->ALGO)
 	{
-	case 0:
-		/* M1---C1---MEM---M2---C2---OUT */
-		*om1 = &c1;
-		*oc1 = &mem;
-		*om2 = &c2;
-		*memc= &m2;
+		case 0:
+			/* M1---C1---MEM---M2---C2---OUT */
+			*om1 = &c1;
+			*oc1 = &mem;
+			*om2 = &c2;
+			*memc= &m2;
 		break;
-	case 1:
-		/* M1------+-MEM---M2---C2---OUT */
-		/*      C1-+                     */
-		*om1 = &mem;
-		*oc1 = &mem;
-		*om2 = &c2;
-		*memc= &m2;
+		case 1:
+			/* M1------+-MEM---M2---C2---OUT */
+			/*      C1-+                     */
+			*om1 = &mem;
+			*oc1 = &mem;
+			*om2 = &c2;
+			*memc= &m2;
 		break;
-	case 2:
-		/* M1-----------------+-C2---OUT */
-		/*      C1---MEM---M2-+          */
-		*om1 = &c2;
-		*oc1 = &mem;
-		*om2 = &c2;
-		*memc= &m2;
+		case 2:
+			/* M1-----------------+-C2---OUT */
+			/*      C1---MEM---M2-+          */
+			*om1 = &c2;
+			*oc1 = &mem;
+			*om2 = &c2;
+			*memc= &m2;
 		break;
-	case 3:
-		/* M1---C1---MEM------+-C2---OUT */
-		/*                 M2-+          */
-		*om1 = &c1;
-		*oc1 = &mem;
-		*om2 = &c2;
-		*memc= &c2;
+		case 3:
+			/* M1---C1---MEM------+-C2---OUT */
+			/*                 M2-+          */
+			*om1 = &c1;
+			*oc1 = &mem;
+			*om2 = &c2;
+			*memc= &c2;
 		break;
-	case 4:
-		/* M1---C1-+-OUT */
-		/* M2---C2-+     */
-		/* MEM: not used */
-		*om1 = &c1;
-		*oc1 = carrier;
-		*om2 = &c2;
-		*memc= &mem;	/* store it anywhere where it will not be used */
+		case 4:
+			/* M1---C1-+-OUT */
+			/* M2---C2-+     */
+			/* MEM: not used */
+			*om1 = &c1;
+			*oc1 = carrier;
+			*om2 = &c2;
+			*memc= &mem;	/* store it anywhere where it will not be used */
 		break;
-	case 5:
-		/*    +----C1----+     */
-		/* M1-+-MEM---M2-+-OUT */
-		/*    +----C2----+     */
-		*om1 = 0;	/* special mark */
-		*oc1 = carrier;
-		*om2 = carrier;
-		*memc= &m2;
+		case 5:
+			/*    +----C1----+     */
+			/* M1-+-MEM---M2-+-OUT */
+			/*    +----C2----+     */
+			*om1 = 0;	/* special mark */
+			*oc1 = carrier;
+			*om2 = carrier;
+			*memc= &m2;
 		break;
-	case 6:
-		/* M1---C1-+     */
-		/*      M2-+-OUT */
-		/*      C2-+     */
-		/* MEM: not used */
-		*om1 = &c1;
-		*oc1 = carrier;
-		*om2 = carrier;
-		*memc= &mem;	/* store it anywhere where it will not be used */
+		case 6:
+			/* M1---C1-+     */
+			/*      M2-+-OUT */
+			/*      C2-+     */
+			/* MEM: not used */
+			*om1 = &c1;
+			*oc1 = carrier;
+			*om2 = carrier;
+			*memc= &mem;	/* store it anywhere where it will not be used */
 		break;
-	case 7:
-		/* M1-+     */
-		/* C1-+-OUT */
-		/* M2-+     */
-		/* C2-+     */
-		/* MEM: not used*/
-		*om1 = carrier;
-		*oc1 = carrier;
-		*om2 = carrier;
-		*memc= &mem;	/* store it anywhere where it will not be used */
+		case 7:
+			/* M1-+     */
+			/* C1-+-OUT */
+			/* M2-+     */
+			/* C2-+     */
+			/* MEM: not used*/
+			*om1 = carrier;
+			*oc1 = carrier;
+			*om2 = carrier;
+			*memc= &mem;	/* store it anywhere where it will not be used */
 		break;
 	}
 
@@ -933,8 +894,8 @@ INLINE void set_ar_ksr(UINT8 type, FM_CH *CH, FM_SLOT *SLOT, int v)
 	/* refresh Attack rate */
 	if ((SLOT->ar + SLOT->ksr) < (32 + 62))
 	{
-		SLOT->eg_sh_ar  = eg_rate_shift [SLOT->ar + SLOT->ksr];
-		SLOT->eg_sel_ar = eg_rate_select[SLOT->ar + SLOT->ksr];
+		SLOT->eg_sh_ar  = TAB->eg_rate_shift[SLOT->ar + SLOT->ksr];
+		SLOT->eg_sel_ar = TAB->eg_rate_select[SLOT->ar + SLOT->ksr];
 	}
 	else
 	{
@@ -948,8 +909,8 @@ INLINE void set_dr(UINT8 type, FM_SLOT *SLOT, int v)
 {
 	SLOT->d1r = (v & 0x1f) ? (32 + ((v & 0x1f) << 1)) : 0;
 
-	SLOT->eg_sh_d1r = eg_rate_shift[SLOT->d1r + SLOT->ksr];
-	SLOT->eg_sel_d1r= eg_rate_select[SLOT->d1r + SLOT->ksr];
+	SLOT->eg_sh_d1r  = TAB->eg_rate_shift[SLOT->d1r + SLOT->ksr];
+	SLOT->eg_sel_d1r = TAB->eg_rate_select[SLOT->d1r + SLOT->ksr];
 }
 
 /* set sustain rate */
@@ -957,40 +918,38 @@ INLINE void set_sr(UINT8 type, FM_SLOT *SLOT, int v)
 {
 	SLOT->d2r = (v & 0x1f) ? (32 + ((v & 0x1f) << 1)) : 0;
 
-	SLOT->eg_sh_d2r = eg_rate_shift[SLOT->d2r + SLOT->ksr];
-	SLOT->eg_sel_d2r= eg_rate_select[SLOT->d2r + SLOT->ksr];
+	SLOT->eg_sh_d2r  = TAB->eg_rate_shift[SLOT->d2r + SLOT->ksr];
+	SLOT->eg_sel_d2r = TAB->eg_rate_select[SLOT->d2r + SLOT->ksr];
 }
 
 /* set release rate */
 INLINE void set_sl_rr(UINT8 type, FM_SLOT *SLOT, int v)
 {
-	SLOT->sl = sl_table[v >> 4];
+	SLOT->sl = TAB->sl_table[v >> 4];
 	SLOT->rr  = 34 + ((v & 0x0f) << 2);
 
-	SLOT->eg_sh_rr  = eg_rate_shift [SLOT->rr + SLOT->ksr];
-	SLOT->eg_sel_rr = eg_rate_select[SLOT->rr + SLOT->ksr];
+	SLOT->eg_sh_rr  = TAB->eg_rate_shift [SLOT->rr + SLOT->ksr];
+	SLOT->eg_sel_rr = TAB->eg_rate_select[SLOT->rr + SLOT->ksr];
 }
 
 INLINE signed int op_calc(UINT32 phase, unsigned int env, signed int pm)
 {
-	UINT32 p = (env << 3) + sin_tab[(((signed int)((phase & ~FREQ_MASK) + (pm << 15))) >> FREQ_SH ) & SIN_MASK];
+	UINT32 p = (env << 3) + LOOKUP->sin_tab[(((signed int)((phase & ~FREQ_MASK) + (pm << 15))) >> FREQ_SH ) & SIN_MASK];
 
 	if (p >= TL_TAB_LEN)
 		return 0;
 
-	return tl_tab[p];
+	return LOOKUP->tl_tab[p];
 }
 
 INLINE signed int op_calc1(UINT32 phase, unsigned int env, signed int pm)
 {
-	UINT32 p;
-
-	p = (env<<3) + sin_tab[ ( ((signed int)((phase & ~FREQ_MASK) + pm      )) >> FREQ_SH ) & SIN_MASK ];
+	UINT32 p = (env << 3) + LOOKUP->sin_tab[(((signed int)((phase & ~FREQ_MASK) + pm)) >> FREQ_SH ) & SIN_MASK];
 
 	if (p >= TL_TAB_LEN)
 		return 0;
 
-	return tl_tab[p];
+	return LOOKUP->tl_tab[p];
 }
 
 /* advance LFO to next sample */
@@ -1045,7 +1004,7 @@ static void advance_eg_channel(FM_OPN *OPN, FM_SLOT *SLOT)
 			case EG_ATT:		/* attack phase */
 				if (!(OPN->eg_cnt & ((1 << SLOT->eg_sh_ar) - 1)))
 				{
-					SLOT->volume += (~SLOT->volume * (eg_inc[SLOT->eg_sel_ar + ((OPN->eg_cnt >> SLOT->eg_sh_ar)& 0x07)])) >> 4;
+					SLOT->volume += (~SLOT->volume * (TAB->eg_inc[SLOT->eg_sel_ar + ((OPN->eg_cnt >> SLOT->eg_sh_ar)& 0x07)])) >> 4;
 
 					if (SLOT->volume <= MIN_ATT_INDEX)
 					{
@@ -1061,7 +1020,7 @@ static void advance_eg_channel(FM_OPN *OPN, FM_SLOT *SLOT)
 				{
 					if (!(OPN->eg_cnt & ((1 << SLOT->eg_sh_d1r) - 1)))
 					{
-						SLOT->volume += 4 * eg_inc[SLOT->eg_sel_d1r + ((OPN->eg_cnt >> SLOT->eg_sh_d1r) & 0x07)];
+						SLOT->volume += 4 * TAB->eg_inc[SLOT->eg_sel_d1r + ((OPN->eg_cnt >> SLOT->eg_sh_d1r) & 0x07)];
 
 						if (SLOT->volume >= (INT32)(SLOT->sl))
 							SLOT->state = EG_SUS;
@@ -1071,7 +1030,7 @@ static void advance_eg_channel(FM_OPN *OPN, FM_SLOT *SLOT)
 				{
 					if (!(OPN->eg_cnt & ((1 << SLOT->eg_sh_d1r) - 1)))
 					{
-						SLOT->volume += eg_inc[SLOT->eg_sel_d1r + ((OPN->eg_cnt >> SLOT->eg_sh_d1r) & 0x07)];
+						SLOT->volume += TAB->eg_inc[SLOT->eg_sel_d1r + ((OPN->eg_cnt >> SLOT->eg_sh_d1r) & 0x07)];
 
 						if (SLOT->volume >= (INT32)(SLOT->sl))
 							SLOT->state = EG_SUS;
@@ -1085,7 +1044,7 @@ static void advance_eg_channel(FM_OPN *OPN, FM_SLOT *SLOT)
 				{
 					if (!(OPN->eg_cnt & ((1 << SLOT->eg_sh_d2r) - 1)))
 					{
-						SLOT->volume += 4 * eg_inc[SLOT->eg_sel_d2r + ((OPN->eg_cnt >> SLOT->eg_sh_d2r) & 0x07)];
+						SLOT->volume += 4 * TAB->eg_inc[SLOT->eg_sel_d2r + ((OPN->eg_cnt >> SLOT->eg_sh_d2r) & 0x07)];
 
 						if (SLOT->volume >= ENV_QUIET)
 						{
@@ -1122,7 +1081,7 @@ static void advance_eg_channel(FM_OPN *OPN, FM_SLOT *SLOT)
 				{
 					if (!(OPN->eg_cnt & ((1 << SLOT->eg_sh_d2r) - 1)))
 					{
-						SLOT->volume += eg_inc[SLOT->eg_sel_d2r + ((OPN->eg_cnt >> SLOT->eg_sh_d2r) & 0x07)];
+						SLOT->volume += TAB->eg_inc[SLOT->eg_sel_d2r + ((OPN->eg_cnt >> SLOT->eg_sh_d2r) & 0x07)];
 
 						if (SLOT->volume >= MAX_ATT_INDEX)
 						{
@@ -1138,7 +1097,7 @@ static void advance_eg_channel(FM_OPN *OPN, FM_SLOT *SLOT)
 				if (!(OPN->eg_cnt & ((1 << SLOT->eg_sh_rr) - 1)))
 				{
 					/* SSG-EG affects Release phase also (Nemesis) */
-					SLOT->volume += eg_inc[SLOT->eg_sel_rr + ((OPN->eg_cnt >> SLOT->eg_sh_rr) & 0x07)];
+					SLOT->volume += TAB->eg_inc[SLOT->eg_sel_rr + ((OPN->eg_cnt >> SLOT->eg_sh_rr) & 0x07)];
 
 					if (SLOT->volume >= MAX_ATT_INDEX)
 					{
@@ -1175,7 +1134,7 @@ static void advance_eg_channel(FM_OPN *OPN, FM_SLOT *SLOT)
 INLINE void update_phase_lfo_slot(FM_OPN *OPN, FM_SLOT *SLOT, INT32 pms, UINT32 block_fnum)
 {
 	UINT32 fnum_lfo  = ((block_fnum & 0x7f0) >> 4) * 32 * 8;
-	INT32  lfo_fn_table_index_offset = lfo_pm_table[ fnum_lfo + pms + LFO_PM ];
+	INT32  lfo_fn_table_index_offset = LOOKUP->lfo_pm_table[ fnum_lfo + pms + LFO_PM ];
 
 	if (lfo_fn_table_index_offset)    /* LFO phase modulation active */
 	{
@@ -1185,7 +1144,7 @@ INLINE void update_phase_lfo_slot(FM_OPN *OPN, FM_SLOT *SLOT, INT32 pms, UINT32 
 		UINT32 fn = block_fnum & 0xfff;
 
 		/* keyscale code */
-		INT32 kc = (blk << 2) | opn_fktable[fn >> 8];
+		INT32 kc = (blk << 2) | TAB->opn_fktable[fn >> 8];
 
 		/* phase increment counter */
 		INT32 fc = (OPN->fn_table[fn] >> (7 - blk)) + SLOT->DT[kc];
@@ -1205,7 +1164,7 @@ INLINE void update_phase_lfo_channel(FM_OPN *OPN, FM_CH *CH)
 {
 	UINT32 block_fnum = CH->block_fnum;
 	UINT32 fnum_lfo = ((block_fnum & 0x7f0) >> 4) * 32 * 8;
-	INT32 lfo_fn_table_index_offset = lfo_pm_table[fnum_lfo + CH->pms + LFO_PM];
+	INT32 lfo_fn_table_index_offset = LOOKUP->lfo_pm_table[fnum_lfo + CH->pms + LFO_PM];
 
 	if (lfo_fn_table_index_offset)    /* LFO phase modulation active */
 	{
@@ -1215,7 +1174,7 @@ INLINE void update_phase_lfo_channel(FM_OPN *OPN, FM_CH *CH)
 		UINT32 fn = block_fnum & 0xfff;
 
 		/* keyscale code */
-		INT32 kc = (blk << 2) | opn_fktable[fn >> 8];
+		INT32 kc = (blk << 2) | TAB->opn_fktable[fn >> 8];
 
 	        /* phase increment counter */
 		INT32 fc = (OPN->fn_table[fn] >> (7 - blk));
@@ -1349,8 +1308,8 @@ INLINE void refresh_fc_eg_slot(FM_OPN *OPN, FM_SLOT *SLOT, int fc, int kc)
 		/* calculate envelope generator rates */
 		if ((SLOT->ar + SLOT->ksr) < (32 + 62))
 		{
-			SLOT->eg_sh_ar  = eg_rate_shift [SLOT->ar + SLOT->ksr];
-			SLOT->eg_sel_ar = eg_rate_select[SLOT->ar + SLOT->ksr];
+			SLOT->eg_sh_ar  = TAB->eg_rate_shift[SLOT->ar + SLOT->ksr];
+			SLOT->eg_sel_ar = TAB->eg_rate_select[SLOT->ar + SLOT->ksr];
 		}
 		else
 		{
@@ -1358,13 +1317,13 @@ INLINE void refresh_fc_eg_slot(FM_OPN *OPN, FM_SLOT *SLOT, int fc, int kc)
 			SLOT->eg_sel_ar = 17 * RATE_STEPS;
 		}
 
-		SLOT->eg_sh_d1r = eg_rate_shift [SLOT->d1r + SLOT->ksr];
-		SLOT->eg_sh_d2r = eg_rate_shift [SLOT->d2r + SLOT->ksr];
-		SLOT->eg_sh_rr  = eg_rate_shift [SLOT->rr  + SLOT->ksr];
+		SLOT->eg_sh_d1r = TAB->eg_rate_shift[SLOT->d1r + SLOT->ksr];
+		SLOT->eg_sh_d2r = TAB->eg_rate_shift[SLOT->d2r + SLOT->ksr];
+		SLOT->eg_sh_rr  = TAB->eg_rate_shift[SLOT->rr + SLOT->ksr];
 
-		SLOT->eg_sel_d1r= eg_rate_select[SLOT->d1r + SLOT->ksr];
-		SLOT->eg_sel_d2r= eg_rate_select[SLOT->d2r + SLOT->ksr];
-		SLOT->eg_sel_rr = eg_rate_select[SLOT->rr  + SLOT->ksr];
+		SLOT->eg_sel_d1r = TAB->eg_rate_select[SLOT->d1r + SLOT->ksr];
+		SLOT->eg_sel_d2r = TAB->eg_rate_select[SLOT->d2r + SLOT->ksr];
+		SLOT->eg_sel_rr  = TAB->eg_rate_select[SLOT->rr + SLOT->ksr];
 	}
 }
 
@@ -1385,7 +1344,7 @@ static void refresh_fc_eg_chan(FM_OPN *OPN, FM_CH *CH)
 }
 
 /* initialize time tables */
-static void init_timetables(FM_ST *ST, const UINT8 *dttable)
+static void init_timetables(FM_ST *ST)
 {
 	double rate;
 
@@ -1394,8 +1353,8 @@ static void init_timetables(FM_ST *ST, const UINT8 *dttable)
 	{
 		for (int i = 0; i <= 31; i++)
 		{
-			rate = ((double)dttable[d * 32 + i]) * SIN_LEN * ST->freqbase * (1 << FREQ_SH) / ((double)(1 << 20));
-			ST->dt_tab[d][i]   = (INT32)rate;
+			rate = ((double)TAB->dttable[d * 32 + i]) * SIN_LEN * ST->freqbase * (1 << FREQ_SH) / ((double)(1 << 20));
+			ST->dt_tab[d][i] = (INT32)rate;
 			ST->dt_tab[d + 4][i] = -ST->dt_tab[d][i];
 		}
 	}
@@ -1403,11 +1362,11 @@ static void init_timetables(FM_ST *ST, const UINT8 *dttable)
 
 static void reset_channels(FM_ST *ST, FM_CH *CH, int num)
 {
-	ST->mode   = 0;	/* normal mode */
-	ST->TA     = 0;
-	ST->TAC    = 0;
-	ST->TB     = 0;
-	ST->TBC    = 0;
+	ST->mode = 0;	/* normal mode */
+	ST->TA   = 0;
+	ST->TAC  = 0;
+	ST->TB   = 0;
+	ST->TBC  = 0;
 
 	for (int c = 0; c < num; c++)
 	{
@@ -1427,8 +1386,8 @@ static void reset_channels(FM_ST *ST, FM_CH *CH, int num)
 /* initialize generic tables */
 static int init_tables(void)
 {
-	signed int i, x;
-	signed int n;
+	INT32 i, x;
+	INT32 n;
 	double o, m;
 
 	for (x = 0; x < TL_RES_LEN; x++)
@@ -1448,13 +1407,13 @@ static int init_tables(void)
 					/* 11 bits here (rounded) */
 		n <<= 2;		/* 13 bits here (as in real chip) */
 
-		tl_tab[x * 2 + 0] = n;
-		tl_tab[x * 2 + 1] = -tl_tab[x * 2 + 0];
+		LOOKUP->tl_tab[x * 2 + 0] = n;
+		LOOKUP->tl_tab[x * 2 + 1] = -(LOOKUP->tl_tab[x * 2 + 0]);
 
 		for (i = 1; i < 13; i++)
 		{
-			tl_tab[x * 2 + 0 + i * 2 * TL_RES_LEN] =  tl_tab[x * 2 + 0] >> i;
-			tl_tab[x * 2 + 1 + i * 2 * TL_RES_LEN] = -tl_tab[x * 2 + 0 + i * 2 * TL_RES_LEN];
+			LOOKUP->tl_tab[x * 2 + 0 + i * 2 * TL_RES_LEN] = LOOKUP->tl_tab[x * 2 + 0] >> i;
+			LOOKUP->tl_tab[x * 2 + 1 + i * 2 * TL_RES_LEN] = -(LOOKUP->tl_tab[x * 2 + 0 + i * 2 * TL_RES_LEN]);
 		}
 	}
 
@@ -1478,7 +1437,7 @@ static int init_tables(void)
 		else
 			n >>= 1;
 
-		sin_tab[i] = n * 2 + (m >= 0.0 ? 0 : 1);
+		LOOKUP->sin_tab[i] = n * 2 + (m >= 0.0 ? 0 : 1);
 	}
 
 	/* build LFO PM modulation table */
@@ -1499,20 +1458,19 @@ static int init_tables(void)
 					if (fnum & (1 << bit_tmp))		/* only if bit "bit_tmp" is set */
 					{
 						offset_fnum_bit = bit_tmp * 8;
-						value += lfo_pm_output[offset_fnum_bit + offset_depth][step];
+						value += TAB->lfo_pm_output[offset_fnum_bit + offset_depth][step];
 					}
 				}
-				lfo_pm_table[(fnum * 32 * 8) + (i * 32) + step + 0] = value;
-				lfo_pm_table[(fnum * 32 * 8) + (i * 32) + (step ^ 7) + 8] = value;
-				lfo_pm_table[(fnum * 32 * 8) + (i * 32) + step + 16] = -value;
-				lfo_pm_table[(fnum * 32 * 8) + (i * 32) + (step ^ 7) + 24] = -value;
+				LOOKUP->lfo_pm_table[(fnum * 32 * 8) + (i * 32) + step + 0] = value;
+				LOOKUP->lfo_pm_table[(fnum * 32 * 8) + (i * 32) + (step ^ 7) + 8] = value;
+				LOOKUP->lfo_pm_table[(fnum * 32 * 8) + (i * 32) + step + 16] = -value;
+				LOOKUP->lfo_pm_table[(fnum * 32 * 8) + (i * 32) + (step ^ 7) + 24] = -value;
 			}
 		}
 	}
 
 	return 1;
 }
-
 
 
 static void FMCloseTable( void )
@@ -1607,7 +1565,7 @@ static void OPNSetPres(FM_OPN *OPN, int pres, int timer_prescaler, int SSGpres)
 		(*OPN->ST.SSG->set_clock)(OPN->ST.param, OPN->ST.clock * 2 / SSGpres);
 
 	/* make time tables */
-	init_timetables(&OPN->ST, dt_tab);
+	init_timetables(&OPN->ST);
 
 	/* there are 2048 FNUMs that can be generated using FNUM/BLK registers
 	   but LFO works with one more bit of a precision so we really need 4096 elements */
@@ -1632,7 +1590,7 @@ static void OPNSetPres(FM_OPN *OPN, int pres, int timer_prescaler, int SSGpres)
 	{
 		/* Amplitude modulation: 64 output levels (triangle waveform); 1 level lasts for one of "lfo_samples_per_step" samples */
 		/* Phase modulation: one entry from lfo_pm_output lasts for one of 4 * "lfo_samples_per_step" samples  */
-		OPN->lfo_freq[i] = (1.0 / lfo_samples_per_step[i]) * (1 << LFO_SH) * OPN->ST.freqbase;
+		OPN->lfo_freq[i] = (UINT32)((1.0 / TAB->lfo_samples_per_step[i]) * (1 << LFO_SH) * OPN->ST.freqbase);
 	}
 }
 
@@ -1825,7 +1783,7 @@ static void OPNWriteReg(FM_OPN *OPN, int r, int v)
 					UINT32 fn = (((UINT32)((OPN->ST.fn_h) & 0x07)) << 8) + v;
 					UINT8 blk = OPN->ST.fn_h >> 3;
 					/* keyscale code */
-					CH->kcode = (blk << 2) | opn_fktable[fn >> 7];
+					CH->kcode = (blk << 2) | TAB->opn_fktable[fn >> 7];
 					/* phase increment counter */
 					CH->fc = OPN->fn_table[fn * 2] >> (7 - blk);
 
@@ -1846,7 +1804,7 @@ static void OPNWriteReg(FM_OPN *OPN, int r, int v)
 						UINT32 fn = (((UINT32)(OPN->SL3.fn_h & 0x07)) << 8) + v;
 						UINT8 blk = OPN->SL3.fn_h >> 3;
 						/* keyscale code */
-						OPN->SL3.kcode[c]= (blk << 2) | opn_fktable[fn >> 7];
+						OPN->SL3.kcode[c]= (blk << 2) | TAB->opn_fktable[fn >> 7];
 						/* phase increment counter */
 						OPN->SL3.fc[c] = OPN->fn_table[fn * 2] >> (7 - blk);
 						OPN->SL3.block_fnum[c] = (blk << 11) | fn;
@@ -1880,7 +1838,7 @@ static void OPNWriteReg(FM_OPN *OPN, int r, int v)
 					CH->pms = (v & 0x07) * 32; /* CH->pms = PM depth * 32 (index in lfo_pm_table) */
 
 					/* b4-5 AMS */
-					CH->ams = lfo_ams_depth_shift[(v >> 4) & 0x03];
+					CH->ams = TAB->lfo_ams_depth_shift[(v >> 4) & 0x03];
 
 					/* PAN :  b7 = L, b6 = R */
 					OPN->pan[c * 2] = (v & 0x80) ? ~0 : 0;
@@ -1912,12 +1870,8 @@ reg.2f : sel1 = in10 , sel2 = in20 (clear selector)
 reset  : sel1 = in11 , sel2 = in21 (clear both)
 
 */
-static const int opn_ssg_pres[2][4] = {
-	{ 2*12, 2*12, 6*12, 3*12 },	/* opn_pres */
-	{ 1, 1, 4, 2 }			/* sgg_pres */
-};
 
-static void OPNPrescaler_w(FM_OPN *OPN , int addr, int pre_divider)
+static void OPNPrescaler_w(FM_OPN *OPN, int addr, int pre_divider)
 {
 	switch (addr)
 	{
@@ -1940,7 +1894,7 @@ static void OPNPrescaler_w(FM_OPN *OPN , int addr, int pre_divider)
 	int sel = OPN->ST.prescaler_sel & 0x03;
 
 	/* update prescaler */
-	OPNSetPres(OPN,	opn_ssg_pres[0][sel] * pre_divider, opn_ssg_pres[0][sel] * pre_divider, opn_ssg_pres[1][sel] * pre_divider);
+	OPNSetPres(OPN,	TAB->opn_ssg_pres[0][sel] * pre_divider, TAB->opn_ssg_pres[0][sel] * pre_divider, TAB->opn_ssg_pres[1][sel] * pre_divider);
 }
 #endif /* BUILD_OPN_PRESCALER */
 
@@ -2296,36 +2250,28 @@ static UINT32 pcmsizeA;
 
 /* Algorithm and tables verified on real YM2608 and YM2610 */
 
-/* usual ADPCM table (16 * 1.1^N) */
-static const int steps[49] = {
-	 16,  17,   19,   21,   23,   25,   28,
-	 31,  34,   37,   41,   45,   50,   55,
-	 60,  66,   73,   80,   88,   97,  107,
-	118, 130,  143,  157,  173,  190,  209,
-	230, 253,  279,  307,  337,  371,  408,
-	449, 494,  544,  598,  658,  724,  796,
-	876, 963, 1060, 1166, 1282, 1411, 1552
-};
-
-/* different from the usual ADPCM table */
-static const int step_inc[8] = {
-	-1*16, -1*16, -1*16, -1*16, 2*16, 5*16, 7*16, 9*16
-};
-
-/* speedup purposes only */
-static int jedi_table[49*16];
-
 static void Init_ADPCMATable(void)
 {
-	int step, nib, value;
+	int value;
 
-	for (step = 0; step < 49; step++)
+	/* usual ADPCM table (16 * 1.1^N) */
+	const INT32 steps[49] = {
+		 16,  17,   19,   21,   23,   25,   28,
+		 31,  34,   37,   41,   45,   50,   55,
+		 60,  66,   73,   80,   88,   97,  107,
+		118, 130,  143,  157,  173,  190,  209,
+		230, 253,  279,  307,  337,  371,  408,
+		449, 494,  544,  598,  658,  724,  796,
+		876, 963, 1060, 1166, 1282, 1411, 1552
+	};
+
+	for (int step = 0; step < 49; step++)
 	{
 		/* loop over all nibbles and compute the difference */
-		for (nib = 0; nib < 16; nib++)
+		for (int nib = 0; nib < 16; nib++)
 		{
 			value = (2 * (nib & 0x07) + 1) * steps[step] / 8;
-			jedi_table[step * 16 + nib] = (nib & 0x08) ? -value : value;
+			LOOKUP->jedi_table[step * 16 + nib] = (nib & 0x08) ? -value : value;
 		}
 	}
 }
@@ -2366,7 +2312,7 @@ INLINE void ADPCMA_calc_chan(YM2610 *F2610, ADPCM_CH *ch)
 
 			ch->now_addr++;
 
-			ch->adpcm_acc += jedi_table[ch->adpcm_step + data];
+			ch->adpcm_acc += LOOKUP->jedi_table[ch->adpcm_step + data];
 
 			/* extend 12-bit signed int */
 			if (ch->adpcm_acc & ~0x7ff)
@@ -2374,7 +2320,7 @@ INLINE void ADPCMA_calc_chan(YM2610 *F2610, ADPCM_CH *ch)
 			else
 				ch->adpcm_acc &= 0xfff;
 
-			ch->adpcm_step += step_inc[data & 0x07];
+			ch->adpcm_step += TAB->step_inc[data & 0x07];
 			Limit(ch->adpcm_step, 48*16, 0*16);
 
 		}
@@ -2928,9 +2874,7 @@ int ym2610_write(void *chip, int a, UINT8 v)
 							F2610->adpcm_arrivedEndAddress &= statusmask;
 						}
 						break;
-						default:
-							logerror("YM2610: write to unknown deltat register %02x val=%02x\n", addr, v);
-						break;
+						default: break;
 					}
 				break;
 				case 0x20:	/* Mode Register */
