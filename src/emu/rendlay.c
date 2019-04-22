@@ -76,25 +76,6 @@
 #include "lh/horizont.lh"
 #include "lh/vertical.lh"
 
-/* dual screen layouts */
-#include "lh/dualhsxs.lh"
-#include "lh/dualhovu.lh"
-#include "lh/dualhuov.lh"
-
-/* triple screen layouts */
-#include "lh/triphsxs.lh"
-
-/* generic color overlay layouts */
-#include "lh/ho20ffff.lh"
-#include "lh/ho2eff2e.lh"
-#include "lh/ho4f893d.lh"
-#include "lh/ho88ffff.lh"
-#include "lh/hoa0a0ff.lh"
-#include "lh/hoffe457.lh"
-#include "lh/voffff20.lh"
-#include "lh/hoffff20.lh"
-
-
 
 /***************************************************************************
     CONSTANTS
