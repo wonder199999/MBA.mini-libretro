@@ -84,6 +84,9 @@ static const input_item_id non_char_keys[] =
 	ITEM_ID_CANCEL
 };
 
+#define ENABLE_MORE_OPTS	0
+
+
 /***************************************************************************
     GLOBAL VARIABLES
 ***************************************************************************/
@@ -987,7 +990,7 @@ static astring &warnings_string(running_machine *machine, astring &string)
 	string.cat("\n\nType OK or move the joystick left then right to continue");
 	return string;
 }
-#endif
+#endif	/* #if 0 */
 
 /*-------------------------------------------------
     game_info_astring - populate an allocated
@@ -1178,12 +1181,6 @@ static UINT32 handler_messagebox_anykey(running_machine *machine, render_contain
 
 int ui_use_newui( void )
 {
-#ifdef MESS
-	#if (defined(WIN32) || defined(_MSC_VER)) && !defined(SDLMAME_WIN32)
-		if (options_get_bool(mame_options(), "newui"))
-			return TRUE;
-	#endif
-#endif
 	return FALSE;
 }
 
@@ -1422,7 +1419,7 @@ static UINT32 handler_ingame(running_machine *machine, render_container *contain
 		else
 			machine->pause();
 	}
-#endif
+#endif	/* #if 0 */
 
 	/* handle a toggle cheats request */
 	if (ui_input_pressed(machine, IPT_UI_TOGGLE_CHEAT))
@@ -1644,7 +1641,7 @@ static slider_state *slider_init(running_machine *machine)
 			}
 
 	/* add CPU overclocking (cheat only) */
-	if (options_get_bool(machine->options(), OPTION_CHEAT))
+	if (options_get_bool(machine->options(), OPTION_CHEAT) && ENABLE_MORE_OPTS)
 	{
 		device_execute_interface *exec = NULL;
 		for (bool gotone = machine->m_devicelist.first(exec); gotone; gotone = exec->next(exec))
@@ -1666,7 +1663,7 @@ static slider_state *slider_init(running_machine *machine)
 		void *param = (void *)screen;
 
 		/* add refresh rate tweaker */
-		if (options_get_bool(machine->options(), OPTION_CHEAT))
+		if (options_get_bool(machine->options(), OPTION_CHEAT) && ENABLE_MORE_OPTS)
 		{
 			string.printf("%s Refresh Rate", slider_get_screen_desc(*screen));
 			*tailptr = slider_alloc(machine, string, -10000, 0, 10000, 1000, slider_refresh, param);

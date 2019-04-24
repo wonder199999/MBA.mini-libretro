@@ -15,7 +15,6 @@
 #include <ctype.h>
 
 
-
 /***************************************************************************
     BUILT-IN (CORE) OPTIONS
 ***************************************************************************/
@@ -26,20 +25,13 @@ const options_entry mame_core_options[] =
 	{ "<UNADORNED0>",                NULL,        0,                 NULL },
 
 	/* config options */
-	{ NULL,                          NULL,        OPTION_HEADER,     "CORE CONFIGURATION OPTIONS" },
-	{ "readconfig;rc",               "0",         OPTION_BOOLEAN,    "enable loading of configuration files" },
-#ifdef MESS
-	{ "writeconfig;wc",				 "1",		  OPTION_BOOLEAN,	 "writes configuration to (driver).ini on exit" },
-#else
-	{ "writeconfig;wc",				 "0",		  OPTION_BOOLEAN,	 "writes configuration to (driver).ini on exit" },
-#endif /* MESS */
+	{ NULL,                          NULL,	      OPTION_HEADER,     "CORE CONFIGURATION OPTIONS" },
+	{ "readconfig;rc",               "0",	      OPTION_BOOLEAN,    "enable loading of configuration files" },
+	{ "writeconfig;wc",		 "0",	      OPTION_BOOLEAN,	 "writes configuration to (driver).ini on exit" },
 
 	/* seach path options */
 	{ NULL,                          NULL,        OPTION_HEADER,     "CORE SEARCH PATH OPTIONS" },
 	{ "rompath;rp;biospath;bp",      "roms",      0,                 "path to ROMsets and hard disk images" },
-#ifdef MESS
-	{ "hashpath;hash_directory;hash","hash",      0,                 "path to hash files" },
-#endif /* MESS */
 	{ "samplepath;sp",               "samples",   0,                 "path to samplesets" },
 	{ "artpath;artwork_directory",   "artwork",   0,                 "path to artwork files" },
 	{ "ctrlrpath;ctrlr_directory",   "ctrlr",     0,                 "path to controller definitions" },
@@ -117,26 +109,25 @@ const options_entry mame_core_options[] =
 	{ NULL,                          NULL,        OPTION_HEADER,     "CORE SOUND OPTIONS" },
 	{ "sound",                       "1",         OPTION_BOOLEAN,    "enable sound output" },
 	{ "samplerate;sr(1000-1000000)", "48000",     0,                 "set sound output sample rate" },
-	{ "samples",                     "1",         OPTION_BOOLEAN,    "enable the use of external samples if available" },
+	{ "samples",                     "0",         OPTION_BOOLEAN,    "enable the use of external samples if available" },
 	{ "volume;vol",                  "0",         0,                 "sound volume in decibels (-32 min, 0 max)" },
 
 	/* input options */
-	{ NULL,                          NULL,        OPTION_HEADER,     "CORE INPUT OPTIONS" },
-	{ "coin_lockout;coinlock",       "1",         OPTION_BOOLEAN,    "enable coin lockouts to actually lock out coins" },
-	{ "ctrlr",                       NULL,        0,                 "preconfigure for specified controller" },
-	{ "mouse",                       "0",         OPTION_BOOLEAN,    "enable mouse input" },
-	{ "joystick;joy",                "1",         OPTION_BOOLEAN,    "enable joystick input" },
-	{ "lightgun;gun",                "0",         OPTION_BOOLEAN,    "enable lightgun input" },
-	{ "multikeyboard;multikey",      "0",         OPTION_BOOLEAN,    "enable separate input from each keyboard device (if present)" },
-	{ "multimouse",                  "0",         OPTION_BOOLEAN,    "enable separate input from each mouse device (if present)" },
-	{ "steadykey;steady",            "0",         OPTION_BOOLEAN,    "enable steadykey support" },
-	{ "offscreen_reload;reload",     "0",         OPTION_BOOLEAN,    "convert lightgun button 2 into offscreen reload" },
-	{ "joystick_map;joymap",         "auto",      0,                 "explicit joystick map, or auto to auto-select" },
-	{ "joystick_deadzone;joy_deadzone;jdz",      "0.3",  0,          "center deadzone range for joystick where change is ignored (0.0 center, 1.0 end)" },
-	{ "joystick_saturation;joy_saturation;jsat", "0.85", 0,          "end of axis saturation range for joystick where change is ignored (0.0 center, 1.0 end)" },
-	{ "natural;nat",				 "0",		  OPTION_BOOLEAN,	 "specifies whether to use a natural keyboard or not" },
-	{ "uimodekey;umk",      		 "auto",	  0,    			 "specifies the key used to toggle between full and partial UI mode" },
-
+	{ NULL,						NULL,	OPTION_HEADER,	 "CORE INPUT OPTIONS" },
+	{ "coin_lockout;coinlock",			"1",	OPTION_BOOLEAN,	 "enable coin lockouts to actually lock out coins" },
+	{ "ctrlr",					NULL,	0,		 "preconfigure for specified controller" },
+	{ "mouse",					"0",	OPTION_BOOLEAN,	 "enable mouse input" },
+	{ "joystick;joy",				"1",	OPTION_BOOLEAN,	 "enable joystick input" },
+	{ "lightgun;gun",				"0",	OPTION_BOOLEAN,	 "enable lightgun input" },
+	{ "multikeyboard;multikey",			"0",	OPTION_BOOLEAN,	 "enable separate input from each keyboard device (if present)" },
+	{ "multimouse",					"0",	OPTION_BOOLEAN,	 "enable separate input from each mouse device (if present)" },
+	{ "steadykey;steady",				"0",	OPTION_BOOLEAN,	 "enable steadykey support" },
+	{ "offscreen_reload;reload",			"0",	OPTION_BOOLEAN,	 "convert lightgun button 2 into offscreen reload" },
+	{ "joystick_map;joymap",			"auto",	0,		 "explicit joystick map, or auto to auto-select" },
+	{ "joystick_deadzone;joy_deadzone;jdz",		"0.3",  0,		 "center deadzone range for joystick where change is ignored (0.0 center, 1.0 end)" },
+	{ "joystick_saturation;joy_saturation;jsat",	"0.85", 0,		 "end of axis saturation range for joystick where change is ignored (0.0 center, 1.0 end)" },
+	{ "natural;nat",				"0",	OPTION_BOOLEAN,	 "specifies whether to use a natural keyboard or not" },
+	{ "uimodekey;umk",				"auto",	0,		 "specifies the key used to toggle between full and partial UI mode" },
 
 	/* input autoenable options */
 	{ NULL,                          NULL,        OPTION_HEADER,     "CORE INPUT AUTOMATIC ENABLE OPTIONS" },
@@ -161,7 +152,7 @@ const options_entry mame_core_options[] =
 	/* misc options */
 	{ NULL,                          NULL,        OPTION_HEADER,     "CORE MISC OPTIONS" },
 	{ "bios",                        NULL,        0,                 "select the system BIOS to use" },
-	{ "cheat;c",                     "0",         OPTION_BOOLEAN,    "enable cheat subsystem" },
+	{ "cheat;c",                     "1",         OPTION_BOOLEAN,    "enable cheat subsystem" },
 	{ "skip_gameinfo",               "0",         OPTION_BOOLEAN,    "skip displaying the game information screen at startup" },
 	{ "skip_nagscreen",              "0",         OPTION_BOOLEAN,    "skip displaying the legal notice at startup" },
 	{ "skip_warnings",               "0",         OPTION_BOOLEAN,    "skip displaying the emulation status at startup" },
@@ -170,7 +161,6 @@ const options_entry mame_core_options[] =
 	{ OPTION_ADDED_DEVICE_OPTIONS,	 "0",		  OPTION_BOOLEAN | OPTION_INTERNAL,	"image device-specific options have been added" },
 	{ NULL }
 };
-
 
 
 /***************************************************************************
@@ -185,7 +175,6 @@ static void memory_error(const char *message)
 {
 	fatalerror("%s", message);
 }
-
 
 
 /*-------------------------------------------------
@@ -209,6 +198,7 @@ static void mame_puts_error(const char *s)
 	mame_printf_error("%s", s);
 }
 
+
 /*-------------------------------------------------
     image_get_device_option - accesses a device
     option
@@ -223,8 +213,10 @@ const char *image_get_device_option(device_image_interface *image)
 		/* access the option */
 		result = options_get_string(image->device().machine->options(),  image->image_config().instance_name());
 	}
+
 	return result;
 }
+
 
 /*-------------------------------------------------
     image_add_device_options - add all of the device
@@ -274,6 +266,7 @@ void image_add_device_options(core_options *opts, const game_driver *driver)
 	global_free(config);
 }
 
+
 /*-------------------------------------------------
     image_driver_name_callback - called when we
     parse the driver name, so we can add options
@@ -316,10 +309,6 @@ core_options *mame_options_init(const options_entry *entries)
 
 	/* we need to dynamically add options when the device name is parsed */
 	options_set_option_callback(opts, OPTION_GAMENAME, image_driver_name_callback);
-
-#ifdef MESS
-	mess_options_init(opts);
-#endif /* MESS */
 
 	return opts;
 }

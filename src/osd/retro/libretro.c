@@ -1435,15 +1435,20 @@ static int executeGame(char *path)
 	/* cli_frontend does the heavy lifting; if we have osd-specific options, we create a derivative of cli_options and add our own */
 	int result = 0, gameRot = 0;
 	int paramCount, driverIndex;
-	FirstTimeUpdate = 1;
+
+	const char *sysdir;
+	char retro_system_dir[1024];
+	unsigned char exist_dir = 0;
 
 	const char *xargv[] = {
 		"-joystick", "-sound", "-rompath",
 		NULL, NULL, NULL, NULL,
 		NULL, NULL, NULL, NULL,
 		NULL, NULL, NULL, NULL,
-		NULL, NULL
+		NULL, NULL, NULL, NULL
 	};
+
+	FirstTimeUpdate = 1;
 
 	//split the path to directory and the name without the zip extension
 	result = parsePath(path, MAME_GAME_PATH, MAME_GAME_NAME);
@@ -1471,35 +1476,47 @@ static int executeGame(char *path)
 		}
 	}
 
+	if (environ_cb(RETRO_ENVIRONMENT_GET_SYSTEM_DIRECTORY, &sysdir) && sysdir)
+	{
+		snprintf(retro_system_dir, sizeof(retro_system_dir), "%s", sysdir);
+#ifdef _WIN32
+		strcat(retro_system_dir, "\\mba-cheat");
+#else
+		strcat(retro_system_dir, "/mba-cheat");
+#endif
+		exist_dir = 1;
+		LOGI("SYSTEM Directory: %s\n", retro_system_dir);
+	}
+
 /*	LOGI("creating frontend...\n");	*/
 
 	//find how many parameters we have
 	for (paramCount = 0; xargv[paramCount] != NULL; paramCount++) ;
 
-	xargv[paramCount++] = (char*)retro_content_dir;
+	xargv[paramCount++] = (char *)retro_content_dir;
 
-	xargv[paramCount++] = (char*)"-cfg_directory";
-	xargv[paramCount++] = (char*)retro_content_dir;
+	xargv[paramCount++] = (char *)"-cfg_directory";
+	xargv[paramCount++] = (char *)retro_content_dir;
 
-	xargv[paramCount++] = (char*)"-nvram_directory";
-	xargv[paramCount++] = (char*)retro_content_dir;
+	xargv[paramCount++] = (char *)"-nvram_directory";
+	xargv[paramCount++] = (char *)retro_content_dir;
 
-	xargv[paramCount++] = (char*)"-memcard_directory";
-	xargv[paramCount++] = (char*)retro_content_dir;
+	xargv[paramCount++] = (char *)"-memcard_directory";
+	xargv[paramCount++] = (char *)retro_content_dir;
 
 	if (!tate)
 	{
 		switch (screenRot)
 		{
 			case 1:
-				xargv[paramCount++] = (char*)"-ror";
+				xargv[paramCount++] = (char *)"-ror";
 			break;
 			case 2:
-				xargv[paramCount++] = (char*)"-rol";
+				xargv[paramCount++] = (char *)"-rol";
 			break;
 			case 3:
-				xargv[paramCount++] = (char*)"-flipx";
-				xargv[paramCount++] = (char*)"-flipy";
+				xargv[paramCount++] = (char *)"-flipx";
+				xargv[paramCount++] = (char *)"-flipy";
 			break;
 		}
 	}
@@ -1508,9 +1525,15 @@ static int executeGame(char *path)
 
 	if (is_neogeo && set_neogeo_bios >= 0)
 	{
-		xargv[paramCount++] = (char*)"-bios";
-		xargv[paramCount++] = (char*)neogeo_bioses[set_neogeo_bios].name;
+		xargv[paramCount++] = (char *)"-bios";
+		xargv[paramCount++] = (char *)neogeo_bioses[set_neogeo_bios].name;
 		LOGI("Current loaded NEOGEO BIOS is < %s >\n", neogeo_bioses[set_neogeo_bios].bios);
+	}
+
+	if (exist_dir)
+	{
+		xargv[paramCount++] = (char *)"-cheatpath";
+		xargv[paramCount++] = (char *)retro_system_dir;
 	}
 
 /*	LOGI("executing frontend... params:%i\n", paramCount);
@@ -1521,7 +1544,7 @@ static int executeGame(char *path)
 		LOGI("\n");
 	}
 */
-	result = cli_execute(paramCount, (char**)xargv, NULL);
+	result = cli_execute(paramCount, (char **)xargv, NULL);
 	xargv[paramCount - 2] = NULL;
 
 	return result;
