@@ -18,14 +18,9 @@
 
 #include <ctype.h>
 
-/* MESS/MAME configuration */
-#ifdef MESS
-#define XML_ROOT "mess"
-#define XML_TOP "machine"
-#else
+/* MAME configuration */
 #define XML_ROOT "mame"
 #define XML_TOP "game"
-#endif
 
 
 
@@ -155,29 +150,42 @@ static void print_game_adjusters(FILE *out, const game_driver *game, const iopor
 static void print_game_input(FILE *out, const game_driver *game, const ioport_list &portlist)
 {
 	/* fix me -- this needs to be cleaned up to match the core style */
+	enum {
+		cjoy, cdoublejoy,
+		cAD_stick, cdial,
+		ctrackball, cpaddle,
+		clightgun, cpedal,
+		ckeypad, ckeyboard,
+		ENDCONTROLTYPES
+	};
 
-enum {cjoy, cdoublejoy, cAD_stick, cdial, ctrackball, cpaddle, clightgun, cpedal, ckeypad, ckeyboard, ENDCONTROLTYPES};
 	int nplayer = 0;
 	int nbutton = 0;
-	int ncoin = 0;
 	//int controlsyes = 0;
 	int analogcontrol = 0;
+	int ncoin = 0;
 	int i;
-	const char* service = 0;
-	const char* tilt = 0;
-	const char* const control_types[] = {"joy", "doublejoy", "stick", "dial", "trackball", "paddle", "lightgun", "pedal", "keypad", "keyboard"};
+
+	const char *service = 0;
+	const char *tilt = 0;
+	const char *const control_types[] = {
+		"joy", "doublejoy", "stick", "dial", "trackball",
+		"paddle", "lightgun", "pedal", "keypad", "keyboard"
+	};
+
 	static struct _input_info
 	{
-		const char *	type;			/* general type of input */
-		const char *	Xway;			/* 2, 4, or 8 way */
-		int				analog;
-		int				keyb;
-		int				min;			/* analog minimum value */
-		int				max;			/* analog maximum value  */
-		int				sensitivity;	/* default analog sensitivity */
-		int				keydelta;		/* default analog keydelta */
-		int				reverse;		/* default analog reverse setting */
+		const char	*type;			/* general type of input */
+		const char	*Xway;			/* 2, 4, or 8 way */
+		int		analog;
+		int		keyb;
+		int		min;			/* analog minimum value */
+		int		max;			/* analog maximum value  */
+		int		sensitivity;		/* default analog sensitivity */
+		int		keydelta;		/* default analog keydelta */
+		int		reverse;		/* default analog reverse setting */
 	} control[ENDCONTROLTYPES];
+
 	const input_port_config *port;
 	const input_field_config *field;
 
@@ -977,7 +985,7 @@ static void print_game_software_list(FILE *out, const game_driver *game, const m
 	{
 		software_list_config *swlist = (software_list_config *)downcast<const legacy_device_config_base *>(dev)->inline_config();
 
-		for ( int i = 0; i < DEVINFO_STR_SWLIST_MAX - DEVINFO_STR_SWLIST_0; i++ )
+		for (int i = 0; i < DEVINFO_STR_SWLIST_MAX - DEVINFO_STR_SWLIST_0; i++)
 		{
 			if ( swlist->list_name[i] && (swlist->list_type == SOFTWARE_LIST_ORIGINAL_SYSTEM))
 			{
@@ -1063,9 +1071,6 @@ static void print_game_info(FILE *out, const game_driver *game)
 	print_game_driver(out, game, config);
 	print_game_images( out, game, config );
 	print_game_software_list( out, game, config );
-#ifdef MESS
-	print_mess_game_xml(out, game, config);
-#endif /* MESS */
 
 	/* close the topmost tag */
 	fprintf(out, "\t</" XML_TOP ">\n");
@@ -1090,11 +1095,7 @@ void print_mame_xml(FILE *out, const game_driver *const games[], const char *gam
 		"\t<!ATTLIST " XML_ROOT " build CDATA #IMPLIED>\n"
 		"\t<!ATTLIST " XML_ROOT " debug (yes|no) \"no\">\n"
 		"\t<!ATTLIST " XML_ROOT " mameconfig CDATA #REQUIRED>\n"
-#ifdef MESS
-		"\t<!ELEMENT " XML_TOP " (description, year?, manufacturer, biosset*, rom*, disk*, sample*, chip*, display*, sound?, input?, dipswitch*, configuration*, category*, adjuster*, driver?, device*, ramoption*, softwarelist*)>\n"
-#else
 		"\t<!ELEMENT " XML_TOP " (description, year?, manufacturer, biosset*, rom*, disk*, sample*, chip*, display*, sound?, input?, dipswitch*, configuration*, category*, adjuster*, driver?, device*, softwarelist*)>\n"
-#endif
 		"\t\t<!ATTLIST " XML_TOP " name CDATA #REQUIRED>\n"
 		"\t\t<!ATTLIST " XML_TOP " sourcefile CDATA #IMPLIED>\n"
 		"\t\t<!ATTLIST " XML_TOP " isbios (yes|no) \"no\">\n"
@@ -1212,10 +1213,6 @@ void print_mame_xml(FILE *out, const game_driver *const games[], const char *gam
 		"\t\t\t\t<!ATTLIST extension name CDATA #REQUIRED>\n"
 		"\t\t<!ELEMENT softwarelist EMPTY>\n"
 		"\t\t\t<!ATTLIST softwarelist name CDATA #REQUIRED>\n"
-#ifdef MESS
-		"\t\t<!ELEMENT ramoption (#PCDATA)>\n"
-		"\t\t\t<!ATTLIST ramoption default CDATA #IMPLIED>\n"
-#endif
 		"]>\n\n"
 		"<" XML_ROOT " build=\"%s\" debug=\""
 #ifdef MAME_DEBUG

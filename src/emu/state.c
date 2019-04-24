@@ -106,11 +106,7 @@ struct _state_private
     GLOBAL VARIABLES
 ***************************************************************************/
 
-#ifdef MESS
-static const char ss_magic_num[8] = { 'M', 'E', 'S', 'S', 'S', 'A', 'V', 'E' };
-#else
 static const char ss_magic_num[8] = { 'M', 'A', 'M', 'E', 'S', 'A', 'V', 'E' };
-#endif
 
 
 

@@ -4369,7 +4369,7 @@ static UINT64 playback_read_uint64(running_machine *machine)
 	/* return the appropriate value */
 	return LITTLE_ENDIANIZE_INT64(result);
 }
-#endif
+#endif	/* #if 0*/
 
 /*-------------------------------------------------
     playback_init - initialize INP playback
@@ -4567,7 +4567,7 @@ static void record_write_uint64(running_machine *machine, UINT64 data)
 	if (mame_fwrite(portdata->record_file, &result, sizeof(result)) != sizeof(result))
 		record_end(machine, "Out of space");
 }
-#endif
+#endif	/* #if 0 */
 
 /*-------------------------------------------------
     record_init - initialize INP recording
@@ -4690,28 +4690,13 @@ static void record_port(const input_port_config *port)
 		}
 	}
 }
-#endif
+#endif	/* #if 0 */
 
 int input_machine_has_keyboard(running_machine *machine)
 {
-	int have_keyboard = FALSE;
-#ifdef MESS
-	const input_field_config *field;
-	const input_port_config *port;
-	for (port = machine->m_portlist.first(); port != NULL; port = port->next())
-	{
-		for (field = port->fieldlist; field != NULL; field = field->next)
-		{
-			if (field->type == IPT_KEYBOARD)
-			{
-				have_keyboard = TRUE;
-				break;
-			}
-		}
-	}
-#endif
-
-	return have_keyboard;
+//	int have_keyboard = FALSE;
+//	return have_keyboard;
+	return 0;
 }
 
 /***************************************************************************
@@ -4765,7 +4750,7 @@ static const char *code_point_string(running_machine *machine, unicode_char ch)
 	}
 	return result;
 }
-#endif
+#endif	/* #if 0 */
 
 /*-------------------------------------------------
     scan_keys - scans through input ports and
@@ -5547,4 +5532,4 @@ static void execute_dumpkbd(running_machine *machine, int ref, int params, const
 		fclose(file);
 
 }
-#endif
+#endif	/* #if 0 */
