@@ -81,8 +81,8 @@ T0 output clock
 ***************************************************************************/
 
 /* timer/counter enable bits */
-#define TIMER_ENABLED	0x01
-#define COUNTER_ENABLED	0x02
+#define TIMER_ENABLED		0x01
+#define COUNTER_ENABLED		0x02
 
 /* flag bits */
 #define C_FLAG			0x80
@@ -103,12 +103,12 @@ T0 output clock
 #define P2_NDACK		0x80
 
 /* enable bits (UPI-41) */
-#define ENABLE_FLAGS	0x01
+#define ENABLE_FLAGS		0x01
 #define ENABLE_DMA		0x02
 
 /* feature masks */
-#define MCS48_FEATURE	0x01
-#define UPI41_FEATURE	0x02
+#define MCS48_FEATURE		0x01
+#define UPI41_FEATURE		0x02
 
 
 
@@ -120,48 +120,48 @@ T0 output clock
 typedef struct _mcs48_state mcs48_state;
 struct _mcs48_state
 {
-	UINT16		prevpc;				/* 16-bit previous program counter */
-	UINT16		pc;					/* 16-bit program counter */
+	UINT16		 prevpc;		/* 16-bit previous program counter */
+	UINT16		 pc;			/* 16-bit program counter */
 
-	UINT8		a;					/* 8-bit accumulator */
-	UINT8 *		regptr;				/* pointer to r0-r7 */
-	UINT8		psw;				/* 8-bit cpustate->psw */
-	UINT8		p1;					/* 8-bit latched port 1 */
-	UINT8		p2;					/* 8-bit latched port 2 */
-	UINT8		ea;					/* 1-bit latched ea input */
-	UINT8		timer;				/* 8-bit timer */
-	UINT8		prescaler;			/* 5-bit timer prescaler */
-	UINT8		t1_history;			/* 8-bit history of the T1 input */
-	UINT8		sts;				/* 8-bit status register (UPI-41 only, except for F1) */
-	UINT8		dbbi;				/* 8-bit input data buffer (UPI-41 only) */
-	UINT8		dbbo;				/* 8-bit output data buffer (UPI-41 only) */
+	UINT8		 a;			/* 8-bit accumulator */
+	UINT8		*regptr;		/* pointer to r0-r7 */
+	UINT8		 psw;			/* 8-bit cpustate->psw */
+	UINT8		 p1;			/* 8-bit latched port 1 */
+	UINT8		 p2;			/* 8-bit latched port 2 */
+	UINT8		 ea;			/* 1-bit latched ea input */
+	UINT8		 timer;			/* 8-bit timer */
+	UINT8		 prescaler;		/* 5-bit timer prescaler */
+	UINT8		 t1_history;		/* 8-bit history of the T1 input */
+	UINT8		 sts;			/* 8-bit status register (UPI-41 only, except for F1) */
+	UINT8		 dbbi;			/* 8-bit input data buffer (UPI-41 only) */
+	UINT8		 dbbo;			/* 8-bit output data buffer (UPI-41 only) */
 
-	UINT8		irq_state;			/* TRUE if an IRQ is pending */
-	UINT8		irq_in_progress;	/* TRUE if an IRQ is in progress */
-	UINT8		timer_overflow;		/* TRUE on a timer overflow; cleared by taking interrupt */
-	UINT8		timer_flag;			/* TRUE on a timer overflow; cleared on JTF */
-	UINT8		tirq_enabled;		/* TRUE if the timer IRQ is enabled */
-	UINT8		xirq_enabled;		/* TRUE if the external IRQ is enabled */
-	UINT8		timecount_enabled;	/* bitmask of timer/counter enabled */
-	UINT8		flags_enabled;		/* TRUE if I/O flags have been enabled (UPI-41 only) */
-	UINT8		dma_enabled;		/* TRUE if DMA has been enabled (UPI-41 only) */
+	UINT8		 irq_state;		/* TRUE if an IRQ is pending */
+	UINT8		 irq_in_progress;	/* TRUE if an IRQ is in progress */
+	UINT8		 timer_overflow;	/* TRUE on a timer overflow; cleared by taking interrupt */
+	UINT8		 timer_flag;		/* TRUE on a timer overflow; cleared on JTF */
+	UINT8		 tirq_enabled;		/* TRUE if the timer IRQ is enabled */
+	UINT8		 xirq_enabled;		/* TRUE if the external IRQ is enabled */
+	UINT8		 timecount_enabled;	/* bitmask of timer/counter enabled */
+	UINT8		 flags_enabled;		/* TRUE if I/O flags have been enabled (UPI-41 only) */
+	UINT8		 dma_enabled;		/* TRUE if DMA has been enabled (UPI-41 only) */
 
-	UINT16		a11;				/* A11 value, either 0x000 or 0x800 */
+	UINT16		 a11;			/* A11 value, either 0x000 or 0x800 */
 
-	device_irq_callback irq_callback;
-	legacy_cpu_device *device;
-	int			icount;
+	device_irq_callback	 irq_callback;
+	legacy_cpu_device	*device;
+	int			 icount;
 
 	/* Memory spaces */
-	address_space	*program;
-	direct_read_data		*direct;
-	address_space	*data;
-	address_space	*io;
+	address_space		*program;
+	direct_read_data	*direct;
+	address_space		*data;
+	address_space		*io;
 
 	UINT8		feature_mask;		/* processor feature flags */
 	UINT16		int_rom_size;		/* internal rom size */
 
-	UINT8		rtemp;				/* temporary for import/export */
+	UINT8		rtemp;			/* temporary for import/export */
 };
 
 
@@ -194,14 +194,14 @@ typedef int (*mcs48_ophandler)(mcs48_state *state);
 #define prog_w(V)		cpustate->io->write_byte(MCS48_PORT_PROG, V)
 
 /* r0-r7 map to memory via the regptr */
-#define R0				regptr[0]
-#define R1				regptr[1]
-#define R2				regptr[2]
-#define R3				regptr[3]
-#define R4				regptr[4]
-#define R5				regptr[5]
-#define R6				regptr[6]
-#define R7				regptr[7]
+#define R0			regptr[0]
+#define R1			regptr[1]
+#define R2			regptr[2]
+#define R3			regptr[3]
+#define R4			regptr[4]
+#define R5			regptr[5]
+#define R6			regptr[6]
+#define R7			regptr[7]
 
 
 
@@ -220,23 +220,10 @@ static int check_irqs(mcs48_state *cpustate);
 INLINE mcs48_state *get_safe_token(running_device *device)
 {
 	assert(device != NULL);
-	assert(device->type() == I8035 ||
-		   device->type() == I8048 ||
-		   device->type() == I8648 ||
-		   device->type() == I8748 ||
-		   device->type() == I8039 ||
-		   device->type() == I8049 ||
-		   device->type() == I8749 ||
-		   device->type() == I8040 ||
-		   device->type() == I8050 ||
-		   device->type() == I8041 ||
-		   device->type() == I8741 ||
-		   device->type() == I8042 ||
-		   device->type() == I8242 ||
-		   device->type() == I8742 ||
-		   device->type() == MB8884 ||
-		   device->type() == N7751 ||
-		   device->type() == M58715);
+	assert( device->type() == I8748 ||
+		device->type() == I8039 ||
+		device->type() == I8049);
+
 	return (mcs48_state *)downcast<legacy_cpu_device *>(device)->token();
 }
 
@@ -281,8 +268,8 @@ INLINE void update_regptr(mcs48_state *cpustate)
 INLINE void push_pc_psw(mcs48_state *cpustate)
 {
 	UINT8 sp = cpustate->psw & 0x07;
-	ram_w(8 + 2*sp, cpustate->pc);
-	ram_w(9 + 2*sp, ((cpustate->pc >> 8) & 0x0f) | (cpustate->psw & 0xf0));
+	ram_w(8 + 2 * sp, cpustate->pc);
+	ram_w(9 + 2 * sp, ((cpustate->pc >> 8) & 0x0f) | (cpustate->psw & 0xf0));
 	cpustate->psw = (cpustate->psw & 0xf8) | ((sp + 1) & 0x07);
 }
 
@@ -295,8 +282,8 @@ INLINE void push_pc_psw(mcs48_state *cpustate)
 INLINE void pull_pc_psw(mcs48_state *cpustate)
 {
 	UINT8 sp = (cpustate->psw - 1) & 0x07;
-	cpustate->pc = ram_r(8 + 2*sp);
-	cpustate->pc |= ram_r(9 + 2*sp) << 8;
+	cpustate->pc = ram_r(8 + 2 * sp);
+	cpustate->pc |= ram_r(9 + 2 * sp) << 8;
 	cpustate->psw = ((cpustate->pc >> 8) & 0xf0) | 0x08 | sp;
 	cpustate->pc &= 0xfff;
 	update_regptr(cpustate);
@@ -311,8 +298,8 @@ INLINE void pull_pc_psw(mcs48_state *cpustate)
 INLINE void pull_pc(mcs48_state *cpustate)
 {
 	UINT8 sp = (cpustate->psw - 1) & 0x07;
-	cpustate->pc = ram_r(8 + 2*sp);
-	cpustate->pc |= ram_r(9 + 2*sp) << 8;
+	cpustate->pc = ram_r(8 + 2 * sp);
+	cpustate->pc |= ram_r(9 + 2 * sp) << 8;
 	cpustate->pc &= 0xfff;
 	cpustate->psw = (cpustate->psw & 0xf0) | 0x08 | sp;
 }
@@ -398,12 +385,15 @@ INLINE void execute_jcc(mcs48_state *cpustate, UINT8 result)
 INLINE UINT8 p2_mask(mcs48_state *cpustate)
 {
 	UINT8 result = 0xff;
+
 	if ((cpustate->feature_mask & UPI41_FEATURE) == 0)
 		return result;
+
 	if (cpustate->flags_enabled)
 		result &= ~(P2_OBF | P2_NIBF);
 	if (cpustate->dma_enabled)
 		result &= ~(P2_DRQ | P2_NDACK);
+
 	return result;
 }
 
@@ -416,7 +406,7 @@ INLINE UINT8 p2_mask(mcs48_state *cpustate)
 INLINE void expander_operation(mcs48_state *cpustate, UINT8 operation, UINT8 port)
 {
 	/* put opcode/data on low 4 bits of P2 */
-	port_w(2, cpustate->p2 = (cpustate->p2 & 0xf0) | (operation << 2) | (port & 3));
+	port_w(2, cpustate->p2 = (cpustate->p2 & 0xf0) | (operation << 2) | (port & 0x03));
 
 	/* generate high-to-low transition on PROG line */
 	prog_w(0);
@@ -439,13 +429,12 @@ INLINE void expander_operation(mcs48_state *cpustate, UINT8 operation, UINT8 por
 
 #define OPHANDLER(_name) static int _name(mcs48_state *cpustate)
 
-#define SPLIT_OPHANDLER(_name, _mcs48name, _upi41name) \
-OPHANDLER(_name) { return (!(cpustate->feature_mask & UPI41_FEATURE)) ? _mcs48name(cpustate) : _upi41name(cpustate); }
+#define SPLIT_OPHANDLER(_name, _mcs48name) \
+		OPHANDLER(_name) { return _mcs48name(cpustate); }
 
 
 OPHANDLER( illegal )
 {
-//	logerror("MCS-48 PC:%04X - Illegal opcode = %02x\n", cpustate->pc - 1, program_r(cpustate->pc - 1));
 	return 1;
 }
 
@@ -493,24 +482,24 @@ OPHANDLER( anld_p5_a )		{ expander_operation(cpustate, MCS48_EXPANDER_OP_AND, 5)
 OPHANDLER( anld_p6_a )		{ expander_operation(cpustate, MCS48_EXPANDER_OP_AND, 6); return 2; }
 OPHANDLER( anld_p7_a )		{ expander_operation(cpustate, MCS48_EXPANDER_OP_AND, 7); return 2; }
 
-OPHANDLER( call_0 )			{ execute_call(cpustate, argument_fetch(cpustate) | 0x000); return 2; }
-OPHANDLER( call_1 )			{ execute_call(cpustate, argument_fetch(cpustate) | 0x100); return 2; }
-OPHANDLER( call_2 )			{ execute_call(cpustate, argument_fetch(cpustate) | 0x200); return 2; }
-OPHANDLER( call_3 )			{ execute_call(cpustate, argument_fetch(cpustate) | 0x300); return 2; }
-OPHANDLER( call_4 )			{ execute_call(cpustate, argument_fetch(cpustate) | 0x400); return 2; }
-OPHANDLER( call_5 )			{ execute_call(cpustate, argument_fetch(cpustate) | 0x500); return 2; }
-OPHANDLER( call_6 )			{ execute_call(cpustate, argument_fetch(cpustate) | 0x600); return 2; }
-OPHANDLER( call_7 )			{ execute_call(cpustate, argument_fetch(cpustate) | 0x700); return 2; }
+OPHANDLER( call_0 )		{ execute_call(cpustate, argument_fetch(cpustate) | 0x000); return 2; }
+OPHANDLER( call_1 )		{ execute_call(cpustate, argument_fetch(cpustate) | 0x100); return 2; }
+OPHANDLER( call_2 )		{ execute_call(cpustate, argument_fetch(cpustate) | 0x200); return 2; }
+OPHANDLER( call_3 )		{ execute_call(cpustate, argument_fetch(cpustate) | 0x300); return 2; }
+OPHANDLER( call_4 )		{ execute_call(cpustate, argument_fetch(cpustate) | 0x400); return 2; }
+OPHANDLER( call_5 )		{ execute_call(cpustate, argument_fetch(cpustate) | 0x500); return 2; }
+OPHANDLER( call_6 )		{ execute_call(cpustate, argument_fetch(cpustate) | 0x600); return 2; }
+OPHANDLER( call_7 )		{ execute_call(cpustate, argument_fetch(cpustate) | 0x700); return 2; }
 
-OPHANDLER( clr_a )			{ cpustate->a = 0; return 1; }
-OPHANDLER( clr_c )			{ cpustate->psw &= ~C_FLAG; return 1; }
-OPHANDLER( clr_f0 )			{ cpustate->psw &= ~F_FLAG; cpustate->sts &= ~STS_F0; return 1; }
-OPHANDLER( clr_f1 )			{ cpustate->sts &= ~STS_F1; return 1; }
+OPHANDLER( clr_a )		{ cpustate->a = 0; return 1; }
+OPHANDLER( clr_c )		{ cpustate->psw &= ~C_FLAG; return 1; }
+OPHANDLER( clr_f0 )		{ cpustate->psw &= ~F_FLAG; cpustate->sts &= ~STS_F0; return 1; }
+OPHANDLER( clr_f1 )		{ cpustate->sts &= ~STS_F1; return 1; }
 
-OPHANDLER( cpl_a )			{ cpustate->a ^= 0xff; return 1; }
-OPHANDLER( cpl_c )			{ cpustate->psw ^= C_FLAG; return 1; }
-OPHANDLER( cpl_f0 )			{ cpustate->psw ^= F_FLAG; cpustate->sts ^= STS_F0; return 1; }
-OPHANDLER( cpl_f1 )			{ cpustate->sts ^= STS_F1; return 1; }
+OPHANDLER( cpl_a )		{ cpustate->a ^= 0xff; return 1; }
+OPHANDLER( cpl_c )		{ cpustate->psw ^= C_FLAG; return 1; }
+OPHANDLER( cpl_f0 )		{ cpustate->psw ^= F_FLAG; cpustate->sts ^= STS_F0; return 1; }
+OPHANDLER( cpl_f1 )		{ cpustate->sts ^= STS_F1; return 1; }
 
 OPHANDLER( da_a )
 {
@@ -527,20 +516,21 @@ OPHANDLER( da_a )
 	}
 	else
 		cpustate->psw &= ~C_FLAG;
+
 	return 1;
 }
 
-OPHANDLER( dec_a )			{ cpustate->a--; return 1; }
-OPHANDLER( dec_r0 )			{ cpustate->R0--; return 1; }
-OPHANDLER( dec_r1 )			{ cpustate->R1--; return 1; }
-OPHANDLER( dec_r2 )			{ cpustate->R2--; return 1; }
-OPHANDLER( dec_r3 )			{ cpustate->R3--; return 1; }
-OPHANDLER( dec_r4 )			{ cpustate->R4--; return 1; }
-OPHANDLER( dec_r5 )			{ cpustate->R5--; return 1; }
-OPHANDLER( dec_r6 )			{ cpustate->R6--; return 1; }
-OPHANDLER( dec_r7 )			{ cpustate->R7--; return 1; }
+OPHANDLER( dec_a )		{ cpustate->a--; return 1; }
+OPHANDLER( dec_r0 )		{ cpustate->R0--; return 1; }
+OPHANDLER( dec_r1 )		{ cpustate->R1--; return 1; }
+OPHANDLER( dec_r2 )		{ cpustate->R2--; return 1; }
+OPHANDLER( dec_r3 )		{ cpustate->R3--; return 1; }
+OPHANDLER( dec_r4 )		{ cpustate->R4--; return 1; }
+OPHANDLER( dec_r5 )		{ cpustate->R5--; return 1; }
+OPHANDLER( dec_r6 )		{ cpustate->R6--; return 1; }
+OPHANDLER( dec_r7 )		{ cpustate->R7--; return 1; }
 
-OPHANDLER( dis_i )			{ cpustate->xirq_enabled = FALSE; return 1; }
+OPHANDLER( dis_i )		{ cpustate->xirq_enabled = FALSE; return 1; }
 OPHANDLER( dis_tcnti )		{ cpustate->tirq_enabled = FALSE; cpustate->timer_overflow = FALSE; return 1; }
 
 OPHANDLER( djnz_r0 )		{ execute_jcc(cpustate, --cpustate->R0 != 0); return 2; }
@@ -552,33 +542,14 @@ OPHANDLER( djnz_r5 )		{ execute_jcc(cpustate, --cpustate->R5 != 0); return 2; }
 OPHANDLER( djnz_r6 )		{ execute_jcc(cpustate, --cpustate->R6 != 0); return 2; }
 OPHANDLER( djnz_r7 )		{ execute_jcc(cpustate, --cpustate->R7 != 0); return 2; }
 
-OPHANDLER( en_i )			{ cpustate->xirq_enabled = TRUE; return 1 + check_irqs(cpustate); }
+OPHANDLER( en_i )		{ cpustate->xirq_enabled = TRUE; return 1 + check_irqs(cpustate); }
 OPHANDLER( en_tcnti )		{ cpustate->tirq_enabled = TRUE; return 1 + check_irqs(cpustate); }
-OPHANDLER( en_dma )			{ cpustate->dma_enabled = TRUE; port_w(2, cpustate->p2); return 1; }
-OPHANDLER( en_flags )		{ cpustate->flags_enabled = TRUE; port_w(2, cpustate->p2); return 1; }
 
-OPHANDLER( ent0_clk )
-{
-//	logerror("MCS-48 PC:%04X - Unimplemented opcode = %02x\n", cpustate->pc - 1, program_r(cpustate->pc - 1));
-	return 1;
-}
+OPHANDLER( ent0_clk )		{ return 1; }
 
 OPHANDLER( in_a_p1 )		{ cpustate->a = port_r(1) & cpustate->p1; return 2; }
 OPHANDLER( in_a_p2 )		{ cpustate->a = port_r(2) & cpustate->p2; return 2; }
 OPHANDLER( ins_a_bus )		{ cpustate->a = bus_r(); return 2; }
-OPHANDLER( in_a_dbb )
-{
-	/* acknowledge the IBF IRQ and clear the bit in STS */
-	if ((cpustate->sts & STS_IBF) != 0 && cpustate->irq_callback != NULL)
-		(*cpustate->irq_callback)(cpustate->device, UPI41_INPUT_IBF);
-	cpustate->sts &= ~STS_IBF;
-
-	/* if P2 flags are enabled, update the state of P2 */
-	if (cpustate->flags_enabled && (cpustate->p2 & P2_NIBF) == 0)
-		port_w(2, cpustate->p2 |= P2_NIBF);
-	cpustate->a = cpustate->dbbi;
-	return 2;
-}
 
 OPHANDLER( inc_a )			{ cpustate->a++; return 1; }
 OPHANDLER( inc_r0 )			{ cpustate->R0++; return 1; }
@@ -589,8 +560,8 @@ OPHANDLER( inc_r4 )			{ cpustate->R4++; return 1; }
 OPHANDLER( inc_r5 )			{ cpustate->R5++; return 1; }
 OPHANDLER( inc_r6 )			{ cpustate->R6++; return 1; }
 OPHANDLER( inc_r7 )			{ cpustate->R7++; return 1; }
-OPHANDLER( inc_xr0 )		{ ram_w(cpustate->R0, ram_r(cpustate->R0) + 1); return 1; }
-OPHANDLER( inc_xr1 )		{ ram_w(cpustate->R1, ram_r(cpustate->R1) + 1); return 1; }
+OPHANDLER( inc_xr0 )			{ ram_w(cpustate->R0, ram_r(cpustate->R0) + 1); return 1; }
+OPHANDLER( inc_xr1 )			{ ram_w(cpustate->R1, ram_r(cpustate->R1) + 1); return 1; }
 
 OPHANDLER( jb_0 )			{ execute_jcc(cpustate, (cpustate->a & 0x01) != 0); return 2; }
 OPHANDLER( jb_1 )			{ execute_jcc(cpustate, (cpustate->a & 0x02) != 0); return 2; }
@@ -605,11 +576,9 @@ OPHANDLER( jf0 )			{ execute_jcc(cpustate, (cpustate->psw & F_FLAG) != 0); retur
 OPHANDLER( jf1 )			{ execute_jcc(cpustate, (cpustate->sts & STS_F1) != 0); return 2; }
 OPHANDLER( jnc )			{ execute_jcc(cpustate, (cpustate->psw & C_FLAG) == 0); return 2; }
 OPHANDLER( jni )			{ execute_jcc(cpustate, cpustate->irq_state != 0); return 2; }
-OPHANDLER( jnibf )			{ execute_jcc(cpustate, (cpustate->sts & STS_IBF) == 0); return 2; }
-OPHANDLER( jnt_0 )  		{ execute_jcc(cpustate, test_r(0) == 0); return 2; }
-OPHANDLER( jnt_1 )  		{ execute_jcc(cpustate, test_r(1) == 0); return 2; }
+OPHANDLER( jnt_0 )  			{ execute_jcc(cpustate, test_r(0) == 0); return 2; }
+OPHANDLER( jnt_1 )  			{ execute_jcc(cpustate, test_r(1) == 0); return 2; }
 OPHANDLER( jnz )			{ execute_jcc(cpustate, cpustate->a != 0); return 2; }
-OPHANDLER( jobf )			{ execute_jcc(cpustate, (cpustate->sts & STS_OBF) != 0); return 2; }
 OPHANDLER( jtf )			{ execute_jcc(cpustate, cpustate->timer_flag); cpustate->timer_flag = FALSE; return 2; }
 OPHANDLER( jt_0 )			{ execute_jcc(cpustate, test_r(0) != 0); return 2; }
 OPHANDLER( jt_1 )			{ execute_jcc(cpustate, test_r(1) != 0); return 2; }
@@ -623,7 +592,7 @@ OPHANDLER( jmp_4 )			{ execute_jmp(cpustate, argument_fetch(cpustate) | 0x400); 
 OPHANDLER( jmp_5 )			{ execute_jmp(cpustate, argument_fetch(cpustate) | 0x500); return 2; }
 OPHANDLER( jmp_6 )			{ execute_jmp(cpustate, argument_fetch(cpustate) | 0x600); return 2; }
 OPHANDLER( jmp_7 )			{ execute_jmp(cpustate, argument_fetch(cpustate) | 0x700); return 2; }
-OPHANDLER( jmpp_xa )		{ cpustate->pc &= 0xf00; cpustate->pc |= program_r(cpustate->pc | cpustate->a); return 2; }
+OPHANDLER( jmpp_xa )			{ cpustate->pc &= 0xf00; cpustate->pc |= program_r(cpustate->pc | cpustate->a); return 2; }
 
 OPHANDLER( mov_a_n )		{ cpustate->a = argument_fetch(cpustate); return 2; }
 OPHANDLER( mov_a_psw )		{ cpustate->a = cpustate->psw; return 1; }
@@ -640,7 +609,6 @@ OPHANDLER( mov_a_xr1 )		{ cpustate->a = ram_r(cpustate->R1); return 1; }
 OPHANDLER( mov_a_t )		{ cpustate->a = cpustate->timer; return 1; }
 
 OPHANDLER( mov_psw_a )		{ cpustate->psw = cpustate->a; update_regptr(cpustate); return 1; }
-OPHANDLER( mov_sts_a )		{ cpustate->sts = (cpustate->sts & 0x0f) | (cpustate->a & 0xf0); return 1; }
 OPHANDLER( mov_r0_a )		{ cpustate->R0 = cpustate->a; return 1; }
 OPHANDLER( mov_r1_a )		{ cpustate->R1 = cpustate->a; return 1; }
 OPHANDLER( mov_r2_a )		{ cpustate->R2 = cpustate->a; return 1; }
@@ -680,7 +648,7 @@ OPHANDLER( movx_a_xr1 )		{ cpustate->a = ext_r(cpustate->R1); return 2; }
 OPHANDLER( movx_xr0_a )		{ ext_w(cpustate->R0, cpustate->a); return 2; }
 OPHANDLER( movx_xr1_a )		{ ext_w(cpustate->R1, cpustate->a); return 2; }
 
-OPHANDLER( nop )			{ return 1; }
+OPHANDLER( nop )		{ return 1; }
 
 OPHANDLER( orl_a_r0 )		{ cpustate->a |= cpustate->R0; return 1; }
 OPHANDLER( orl_a_r1 )		{ cpustate->a |= cpustate->R1; return 1; }
@@ -705,34 +673,22 @@ OPHANDLER( orld_p7_a )		{ expander_operation(cpustate, MCS48_EXPANDER_OP_OR, 7);
 OPHANDLER( outl_bus_a )		{ bus_w(cpustate->a); return 2; }
 OPHANDLER( outl_p1_a )		{ port_w(1, cpustate->p1 = cpustate->a); return 2; }
 OPHANDLER( outl_p2_a )		{ UINT8 mask = p2_mask(cpustate); port_w(2, cpustate->p2 = (cpustate->p2 & ~mask) | (cpustate->a & mask)); return 2; }
-OPHANDLER( out_dbb_a )
-{
-	/* copy to the DBBO and update the bit in STS */
-	cpustate->dbbo = cpustate->a;
-	cpustate->sts |= STS_OBF;
+OPHANDLER( ret )		{ pull_pc(cpustate); return 2; }
 
-	/* if P2 flags are enabled, update the state of P2 */
-	if (cpustate->flags_enabled && (cpustate->p2 & P2_OBF) == 0)
-		port_w(2, cpustate->p2 |= P2_OBF);
-	return 2;
-}
-
-
-OPHANDLER( ret )			{ pull_pc(cpustate); return 2; }
 OPHANDLER( retr )
 {
 	pull_pc_psw(cpustate);
 
 	/* implicitly clear the IRQ in progress flip flop and re-check interrupts */
 	cpustate->irq_in_progress = FALSE;
-	return 2 + check_irqs(cpustate);
+	return (check_irqs(cpustate) + 2);
 }
 
-OPHANDLER( rl_a )			{ cpustate->a = (cpustate->a << 1) | (cpustate->a >> 7); return 1; }
-OPHANDLER( rlc_a )			{ UINT8 newc = cpustate->a & C_FLAG; cpustate->a = (cpustate->a << 1) | (cpustate->psw >> 7); cpustate->psw = (cpustate->psw & ~C_FLAG) | newc; return 1; }
+OPHANDLER( rl_a )		{ cpustate->a = (cpustate->a << 1) | (cpustate->a >> 7); return 1; }
+OPHANDLER( rlc_a )		{ UINT8 newc = cpustate->a & C_FLAG; cpustate->a = (cpustate->a << 1) | (cpustate->psw >> 7); cpustate->psw = (cpustate->psw & ~C_FLAG) | newc; return 1; }
 
-OPHANDLER( rr_a )			{ cpustate->a = (cpustate->a >> 1) | (cpustate->a << 7); return 1; }
-OPHANDLER( rrc_a )			{ UINT8 newc = (cpustate->a << 7) & C_FLAG; cpustate->a = (cpustate->a >> 1) | (cpustate->psw & C_FLAG); cpustate->psw = (cpustate->psw & ~C_FLAG) | newc; return 1; }
+OPHANDLER( rr_a )		{ cpustate->a = (cpustate->a >> 1) | (cpustate->a << 7); return 1; }
+OPHANDLER( rrc_a )		{ UINT8 newc = (cpustate->a << 7) & C_FLAG; cpustate->a = (cpustate->a >> 1) | (cpustate->psw & C_FLAG); cpustate->psw = (cpustate->psw & ~C_FLAG) | newc; return 1; }
 
 OPHANDLER( sel_mb0 )		{ cpustate->a11 = 0x000; return 1; }
 OPHANDLER( sel_mb1 )		{ cpustate->a11 = 0x800; return 1; }
@@ -743,9 +699,9 @@ OPHANDLER( sel_rb1 )		{ cpustate->psw |=  B_FLAG; update_regptr(cpustate); retur
 OPHANDLER( stop_tcnt )		{ cpustate->timecount_enabled = 0; return 1; }
 
 OPHANDLER( strt_cnt )		{ cpustate->timecount_enabled = COUNTER_ENABLED; cpustate->t1_history = test_r(1); return 1; }
-OPHANDLER( strt_t )			{ cpustate->timecount_enabled = TIMER_ENABLED; cpustate->prescaler = 0; return 1; }
+OPHANDLER( strt_t )		{ cpustate->timecount_enabled = TIMER_ENABLED; cpustate->prescaler = 0; return 1; }
 
-OPHANDLER( swap_a )			{ cpustate->a = (cpustate->a << 4) | (cpustate->a >> 4); return 1; }
+OPHANDLER( swap_a )		{ cpustate->a = (cpustate->a << 4) | (cpustate->a >> 4); return 1; }
 
 OPHANDLER( xch_a_r0 )		{ UINT8 tmp = cpustate->a; cpustate->a = cpustate->R0; cpustate->R0 = tmp; return 1; }
 OPHANDLER( xch_a_r1 )		{ UINT8 tmp = cpustate->a; cpustate->a = cpustate->R1; cpustate->R1 = tmp; return 1; }
@@ -773,20 +729,20 @@ OPHANDLER( xrl_a_xr0 )		{ cpustate->a ^= ram_r(cpustate->R0); return 1; }
 OPHANDLER( xrl_a_xr1 )		{ cpustate->a ^= ram_r(cpustate->R1); return 1; }
 OPHANDLER( xrl_a_n )		{ cpustate->a ^= argument_fetch(cpustate); return 2; }
 
-SPLIT_OPHANDLER( split_02, outl_bus_a, out_dbb_a )
-SPLIT_OPHANDLER( split_08, ins_a_bus,  illegal )
-SPLIT_OPHANDLER( split_22, illegal,    in_a_dbb )
-SPLIT_OPHANDLER( split_75, ent0_clk,   illegal )
-SPLIT_OPHANDLER( split_80, movx_a_xr0, illegal )
-SPLIT_OPHANDLER( split_81, movx_a_xr1, illegal )
-SPLIT_OPHANDLER( split_86, jni,        jobf )
-SPLIT_OPHANDLER( split_88, orl_bus_n,  illegal )
-SPLIT_OPHANDLER( split_90, movx_xr0_a, mov_sts_a )
-SPLIT_OPHANDLER( split_91, movx_xr1_a, illegal )
-SPLIT_OPHANDLER( split_98, anl_bus_n,  illegal )
-SPLIT_OPHANDLER( split_d6, illegal,    jnibf )
-SPLIT_OPHANDLER( split_e5, sel_mb0,    en_dma )
-SPLIT_OPHANDLER( split_f5, sel_mb1,    en_flags )
+SPLIT_OPHANDLER( split_02, outl_bus_a)
+SPLIT_OPHANDLER( split_08, ins_a_bus)
+SPLIT_OPHANDLER( split_22, illegal)
+SPLIT_OPHANDLER( split_75, ent0_clk)
+SPLIT_OPHANDLER( split_80, movx_a_xr0)
+SPLIT_OPHANDLER( split_81, movx_a_xr1)
+SPLIT_OPHANDLER( split_86, jni)
+SPLIT_OPHANDLER( split_88, orl_bus_n)
+SPLIT_OPHANDLER( split_90, movx_xr0_a)
+SPLIT_OPHANDLER( split_91, movx_xr1_a)
+SPLIT_OPHANDLER( split_98, anl_bus_n)
+SPLIT_OPHANDLER( split_d6, illegal)
+SPLIT_OPHANDLER( split_e5, sel_mb0)
+SPLIT_OPHANDLER( split_f5, sel_mb1)
 
 
 
@@ -845,9 +801,9 @@ static void mcs48_init(legacy_cpu_device *device, device_irq_callback irqcallbac
 	mcs48_state *cpustate = get_safe_token(device);
 
 	/* External access line
-     * EA=1 : read from external rom
-     * EA=0 : read from internal rom
-     */
+	 * EA=1 : read from external rom
+	 * EA=0 : read from internal rom
+	 */
 
 	/* FIXME: Current implementation suboptimal */
 	cpustate->ea = (romsize ? 0 : 1);
@@ -882,14 +838,6 @@ static void mcs48_init(legacy_cpu_device *device, device_irq_callback irqcallbac
 			state->state_add(MCS48_R0 + regnum, tempstr.format("R%d", regnum), cpustate->rtemp).callimport().callexport();
 
 		state->state_add(MCS48_EA,        "EA",        cpustate->ea).mask(0x1);
-
-		if (feature_mask & UPI41_FEATURE)
-		{
-			state->state_add(MCS48_STS,   "STS",       cpustate->sts);
-			state->state_add(MCS48_DBBI,  "DBBI",      cpustate->dbbi);
-			state->state_add(MCS48_DBBO,  "DBBO",      cpustate->dbbo);
-		}
-
 	}
 
 	/* ensure that regptr is valid before get_info gets called */
@@ -931,7 +879,7 @@ static void mcs48_init(legacy_cpu_device *device, device_irq_callback irqcallbac
 
 static CPU_INIT( mcs48_norom )
 {
-	mcs48_init(device, irqcallback, MCS48_FEATURE, 0x0);
+	mcs48_init(device, irqcallback, MCS48_FEATURE, 0x00);
 }
 
 
@@ -954,39 +902,6 @@ static CPU_INIT( mcs48_1k_rom )
 static CPU_INIT( mcs48_2k_rom )
 {
 	mcs48_init(device, irqcallback, MCS48_FEATURE, 0x800);
-}
-
-
-/*-------------------------------------------------
-    mcs48_4k_rom - initialization for systems
-    with 2k of internal ROM
--------------------------------------------------*/
-
-static CPU_INIT( mcs48_4k_rom )
-{
-	mcs48_init(device, irqcallback, MCS48_FEATURE, 0x1000);
-}
-
-
-/*-------------------------------------------------
-    upi41_1k_rom_init - initialization for systems
-    with 1k of internal ROM
--------------------------------------------------*/
-
-static CPU_INIT( upi41_1k_rom )
-{
-	mcs48_init(device, irqcallback, UPI41_FEATURE, 0x400);
-}
-
-
-/*-------------------------------------------------
-    upi41_2k_rom_init - initialization for systems
-    with 2k of internal ROM
--------------------------------------------------*/
-
-static CPU_INIT( upi41_2k_rom )
-{
-	mcs48_init(device, irqcallback, UPI41_FEATURE, 0x800);
 }
 
 
@@ -1064,6 +979,7 @@ static int check_irqs(mcs48_state *cpustate)
 		cpustate->timer_overflow = FALSE;
 		return 2;
 	}
+
 	return 0;
 }
 
@@ -1089,12 +1005,14 @@ static void burn_cycles(mcs48_state *cpustate, int count)
 
 	/* if the counter is enabled, poll the T1 test input once for each cycle */
 	else if (cpustate->timecount_enabled & COUNTER_ENABLED)
+	{
 		for ( ; count > 0; count--)
 		{
-			cpustate->t1_history = (cpustate->t1_history << 1) | (test_r(1) & 1);
-			if ((cpustate->t1_history & 3) == 2)
+			cpustate->t1_history = (cpustate->t1_history << 1) | (test_r(1) & 0x01);
+			if ((cpustate->t1_history & 0x03) == 2)
 				timerover = (++cpustate->timer == 0);
 		}
+	}
 
 	/* if either source caused a timer overflow, set the flags and check IRQs */
 	if (timerover)
@@ -1120,6 +1038,7 @@ static CPU_EXECUTE( mcs48 )
 {
 	mcs48_state *cpustate = get_safe_token(device);
 	int curcycles;
+	unsigned int opcode;
 
 	update_regptr(cpustate);
 
@@ -1132,8 +1051,6 @@ static CPU_EXECUTE( mcs48 )
 	/* iterate over remaining cycles, guaranteeing at least one instruction */
 	do
 	{
-		unsigned opcode;
-
 		/* fetch next opcode */
 		cpustate->prevpc = cpustate->pc;
 		opcode = opcode_fetch(cpustate);
@@ -1146,73 +1063,8 @@ static CPU_EXECUTE( mcs48 )
 		if (cpustate->timecount_enabled != 0)
 			burn_cycles(cpustate, curcycles);
 
-	} while (cpustate->icount > 0);
-}
-
-
-
-/***************************************************************************
-    DATA ACCESS HELPERS
-***************************************************************************/
-
-/*-------------------------------------------------
-    upi41_master_r - master CPU data/status
-    read
--------------------------------------------------*/
-
-UINT8 upi41_master_r(running_device *device, UINT8 a0)
-{
-	mcs48_state *cpustate = get_safe_token(device);
-
-	/* if just reading the status, return it */
-	if ((a0 & 1) != 0)
-		return cpustate->sts;
-
-	/* if the output buffer was full, it gets cleared now */
-	if (cpustate->sts & STS_OBF)
-	{
-		cpustate->sts &= ~STS_OBF;
-		if (cpustate->flags_enabled)
-			port_w(2, cpustate->p2 &= ~P2_OBF);
 	}
-	return cpustate->dbbo;
-}
-
-
-/*-------------------------------------------------
-    upi41_master_w - master CPU command/data
-    write
--------------------------------------------------*/
-
-static TIMER_CALLBACK( master_callback )
-{
-	legacy_cpu_device *device = (legacy_cpu_device *)ptr;
-	mcs48_state *cpustate = get_safe_token(device);
-	UINT8 a0 = (param >> 8) & 1;
-	UINT8 data = param;
-
-	/* data always goes to the input buffer */
-	cpustate->dbbi = data;
-
-	/* set the appropriate flags */
-	if ((cpustate->sts & STS_IBF) == 0)
-	{
-		cpustate->sts |= STS_IBF;
-		if (cpustate->flags_enabled)
-			port_w(2, cpustate->p2 &= ~P2_NIBF);
-	}
-
-	/* set F1 accordingly */
-	if (a0 == 0)
-		cpustate->sts &= ~STS_F1;
-	else
-		cpustate->sts |= STS_F1;
-}
-
-void upi41_master_w(running_device *_device, UINT8 a0, UINT8 data)
-{
-	legacy_cpu_device *device = downcast<legacy_cpu_device *>(_device);
-	timer_call_after_resynch(device->machine, (void *)device, (a0 << 8) | data, master_callback);
+	while (cpustate->icount > 0);
 }
 
 
@@ -1230,20 +1082,12 @@ static ADDRESS_MAP_START(program_11bit, ADDRESS_SPACE_PROGRAM, 8)
 	AM_RANGE(0x000, 0x7ff) AM_ROM
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START(program_12bit, ADDRESS_SPACE_PROGRAM, 8)
-	AM_RANGE(0x000, 0xfff) AM_ROM
-ADDRESS_MAP_END
-
 static ADDRESS_MAP_START(data_6bit, ADDRESS_SPACE_DATA, 8)
 	AM_RANGE(0x00, 0x3f) AM_RAM
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START(data_7bit, ADDRESS_SPACE_DATA, 8)
 	AM_RANGE(0x00, 0x7f) AM_RAM
-ADDRESS_MAP_END
-
-static ADDRESS_MAP_START(data_8bit, ADDRESS_SPACE_DATA, 8)
-	AM_RANGE(0x00, 0xff) AM_RAM
 ADDRESS_MAP_END
 
 
@@ -1343,7 +1187,7 @@ static CPU_SET_INFO( mcs48 )
 	switch (state)
 	{
 		/* --- the following bits of info are set as 64-bit signed integers --- */
-		case CPUINFO_INT_INPUT_STATE + MCS48_INPUT_IRQ:	cpustate->irq_state = (info->i != CLEAR_LINE);	break;
+		case CPUINFO_INT_INPUT_STATE + MCS48_INPUT_IRQ:	cpustate->irq_state = (info->i != CLEAR_LINE); break;
 		case CPUINFO_INT_INPUT_STATE + MCS48_INPUT_EA:	cpustate->ea = (info->i != CLEAR_LINE);	break;
 	}
 }
@@ -1361,51 +1205,51 @@ static CPU_GET_INFO( mcs48 )
 	switch (state)
 	{
 		/* --- the following bits of info are returned as 64-bit signed integers --- */
-		case CPUINFO_INT_CONTEXT_SIZE:					info->i = sizeof(mcs48_state);			break;
-		case CPUINFO_INT_INPUT_LINES:					info->i = 2;							break;
-		case CPUINFO_INT_DEFAULT_IRQ_VECTOR:			info->i = MCS48_INPUT_IRQ;				break;
-		case DEVINFO_INT_ENDIANNESS:					info->i = ENDIANNESS_LITTLE;			break;
-		case CPUINFO_INT_CLOCK_MULTIPLIER:				info->i = 1;							break;
-		case CPUINFO_INT_CLOCK_DIVIDER:					info->i = 3*5;							break;
-		case CPUINFO_INT_MIN_INSTRUCTION_BYTES:			info->i = 1;							break;
-		case CPUINFO_INT_MAX_INSTRUCTION_BYTES:			info->i = 2;							break;
-		case CPUINFO_INT_MIN_CYCLES:					info->i = 1;							break;
-		case CPUINFO_INT_MAX_CYCLES:					info->i = 3;							break;
+		case CPUINFO_INT_CONTEXT_SIZE:					info->i = sizeof(mcs48_state); break;
+		case CPUINFO_INT_INPUT_LINES:					info->i = 2; break;
+		case CPUINFO_INT_DEFAULT_IRQ_VECTOR:				info->i = MCS48_INPUT_IRQ; break;
+		case DEVINFO_INT_ENDIANNESS:					info->i = ENDIANNESS_LITTLE; break;
+		case CPUINFO_INT_CLOCK_MULTIPLIER:				info->i = 1; break;
+		case CPUINFO_INT_CLOCK_DIVIDER:					info->i = 3 * 5; break;
+		case CPUINFO_INT_MIN_INSTRUCTION_BYTES:				info->i = 1; break;
+		case CPUINFO_INT_MAX_INSTRUCTION_BYTES:				info->i = 2; break;
+		case CPUINFO_INT_MIN_CYCLES:					info->i = 1; break;
+		case CPUINFO_INT_MAX_CYCLES:					info->i = 3; break;
 
-		case DEVINFO_INT_DATABUS_WIDTH + ADDRESS_SPACE_PROGRAM:			info->i = 8;							break;
-		case DEVINFO_INT_ADDRBUS_WIDTH + ADDRESS_SPACE_PROGRAM: 		info->i = 12;							break;
-		case DEVINFO_INT_ADDRBUS_SHIFT + ADDRESS_SPACE_PROGRAM:			info->i = 0;							break;
-		case DEVINFO_INT_DATABUS_WIDTH + ADDRESS_SPACE_DATA:			info->i = 8;							break;
-		case DEVINFO_INT_ADDRBUS_WIDTH + ADDRESS_SPACE_DATA:			/*info->i = 6 or 7 or 8;*/				break;
-		case DEVINFO_INT_ADDRBUS_SHIFT + ADDRESS_SPACE_DATA:			info->i = 0;							break;
-		case DEVINFO_INT_DATABUS_WIDTH + ADDRESS_SPACE_IO:				info->i = 8;							break;
-		case DEVINFO_INT_ADDRBUS_WIDTH + ADDRESS_SPACE_IO:				info->i = 9;							break;
-		case DEVINFO_INT_ADDRBUS_SHIFT + ADDRESS_SPACE_IO:				info->i = 0;							break;
+		case DEVINFO_INT_DATABUS_WIDTH + ADDRESS_SPACE_PROGRAM:		info->i = 8; break;
+		case DEVINFO_INT_ADDRBUS_WIDTH + ADDRESS_SPACE_PROGRAM: 	info->i = 12; break;
+		case DEVINFO_INT_ADDRBUS_SHIFT + ADDRESS_SPACE_PROGRAM:		info->i = 0; break;
+		case DEVINFO_INT_DATABUS_WIDTH + ADDRESS_SPACE_DATA:		info->i = 8; break;
+		case DEVINFO_INT_ADDRBUS_WIDTH + ADDRESS_SPACE_DATA: /*info->i = 6 or 7 or 8;*/ break;
+		case DEVINFO_INT_ADDRBUS_SHIFT + ADDRESS_SPACE_DATA:		info->i = 0; break;
+		case DEVINFO_INT_DATABUS_WIDTH + ADDRESS_SPACE_IO:		info->i = 8; break;
+		case DEVINFO_INT_ADDRBUS_WIDTH + ADDRESS_SPACE_IO:		info->i = 9; break;
+		case DEVINFO_INT_ADDRBUS_SHIFT + ADDRESS_SPACE_IO:		info->i = 0; break;
 
 		case CPUINFO_INT_INPUT_STATE + MCS48_INPUT_IRQ:	info->i = cpustate->irq_state ? ASSERT_LINE : CLEAR_LINE; break;
-		case CPUINFO_INT_INPUT_STATE + MCS48_INPUT_EA:	info->i = cpustate->ea;					break;
+		case CPUINFO_INT_INPUT_STATE + MCS48_INPUT_EA:	info->i = cpustate->ea; break;
 
 		/* --- the following bits of info are returned as pointers to functions --- */
-		case CPUINFO_FCT_SET_INFO:		info->setinfo = CPU_SET_INFO_NAME(mcs48);				break;
-		case CPUINFO_FCT_INIT:			/* set per-core */										break;
-		case CPUINFO_FCT_RESET:			info->reset = CPU_RESET_NAME(mcs48);					break;
-		case CPUINFO_FCT_EXECUTE:		info->execute = CPU_EXECUTE_NAME(mcs48);				break;
-		case CPUINFO_FCT_DISASSEMBLE:	info->disassemble = CPU_DISASSEMBLE_NAME(mcs48);		break;
-		case CPUINFO_FCT_IMPORT_STATE:	info->import_state = CPU_IMPORT_STATE_NAME(mcs48);		break;
-		case CPUINFO_FCT_EXPORT_STATE:	info->export_state = CPU_EXPORT_STATE_NAME(mcs48);		break;
-		case CPUINFO_FCT_EXPORT_STRING:	info->export_string = CPU_EXPORT_STRING_NAME(mcs48);	break;
+		case CPUINFO_FCT_SET_INFO:			info->setinfo = CPU_SET_INFO_NAME(mcs48); break;
+		case CPUINFO_FCT_INIT: /* set per-core */ break;
+		case CPUINFO_FCT_RESET:				info->reset = CPU_RESET_NAME(mcs48); break;
+		case CPUINFO_FCT_EXECUTE:			info->execute = CPU_EXECUTE_NAME(mcs48); break;
+		case CPUINFO_FCT_DISASSEMBLE:			info->disassemble = CPU_DISASSEMBLE_NAME(mcs48); break;
+		case CPUINFO_FCT_IMPORT_STATE:			info->import_state = CPU_IMPORT_STATE_NAME(mcs48); break;
+		case CPUINFO_FCT_EXPORT_STATE:			info->export_state = CPU_EXPORT_STATE_NAME(mcs48); break;
+		case CPUINFO_FCT_EXPORT_STRING:			info->export_string = CPU_EXPORT_STRING_NAME(mcs48); break;
 
 		/* --- the following bits of info are returned as pointers --- */
-		case CPUINFO_PTR_INSTRUCTION_COUNTER:			info->icount = &cpustate->icount;		break;
-		case DEVINFO_PTR_INTERNAL_MEMORY_MAP + ADDRESS_SPACE_PROGRAM:	/* set per-core */						break;
-		case DEVINFO_PTR_INTERNAL_MEMORY_MAP + ADDRESS_SPACE_DATA:		/* set per-core */						break;
+		case CPUINFO_PTR_INSTRUCTION_COUNTER:				info->icount = &cpustate->icount; break;
+		case DEVINFO_PTR_INTERNAL_MEMORY_MAP + ADDRESS_SPACE_PROGRAM:	/* set per-core */ break;
+		case DEVINFO_PTR_INTERNAL_MEMORY_MAP + ADDRESS_SPACE_DATA:	/* set per-core */ break;
 
 		/* --- the following bits of info are returned as NULL-terminated strings --- */
-		case DEVINFO_STR_NAME:							/* set per-core */						break;
-		case DEVINFO_STR_FAMILY:					strcpy(info->s, "Intel 8039");			break;
-		case DEVINFO_STR_VERSION:					strcpy(info->s, "1.2");					break;
-		case DEVINFO_STR_SOURCE_FILE:						strcpy(info->s, __FILE__);				break;
-		case DEVINFO_STR_CREDITS:					strcpy(info->s, "Copyright Mirko Buffoni\nBased on the original work Copyright Dan Boris"); break;
+		case DEVINFO_STR_NAME:						/* set per-core */ break;
+		case DEVINFO_STR_FAMILY:			strcpy(info->s, "Intel 8039"); break;
+		case DEVINFO_STR_VERSION:			strcpy(info->s, "1.2"); break;
+		case DEVINFO_STR_SOURCE_FILE:			strcpy(info->s, __FILE__); break;
+		case DEVINFO_STR_CREDITS:			strcpy(info->s, "Copyright Mirko Buffoni\nBased on the original work Copyright Dan Boris"); break;
 	}
 }
 
@@ -1425,32 +1269,25 @@ static void mcs48_generic_get_info(const device_config *devconfig, legacy_cpu_de
 				info->i = 6;
 			else if (ramsize == 128)
 				info->i = 7;
-			else if (ramsize == 256)
-				info->i = 8;
 			else
 				fatalerror("mcs48_generic_get_info: Invalid RAM size");
-			break;
+		break;
 
 		/* --- the following bits of info are returned as pointers to functions --- */
 		case CPUINFO_FCT_INIT:
 			if (romsize == 0)
 				info->init = CPU_INIT_NAME(mcs48_norom);
 			else if (romsize == 1024)
-				info->init = (features == UPI41_FEATURE) ? CPU_INIT_NAME(upi41_1k_rom) : CPU_INIT_NAME(mcs48_1k_rom);
+				info->init = CPU_INIT_NAME(mcs48_1k_rom);
 			else if (romsize == 2048)
-				info->init = (features == UPI41_FEATURE) ? CPU_INIT_NAME(upi41_2k_rom) : CPU_INIT_NAME(mcs48_2k_rom);
-			else if (romsize == 4096)
-				info->init = CPU_INIT_NAME(mcs48_4k_rom);
+				info->init = CPU_INIT_NAME(mcs48_2k_rom);
 			else
 				fatalerror("mcs48_generic_get_info: Invalid ROM size");
-			break;
+		break;
 
 		case CPUINFO_FCT_DISASSEMBLE:
-			if (features == UPI41_FEATURE)
-				info->disassemble = CPU_DISASSEMBLE_NAME(upi41);
-			else
-				info->disassemble = CPU_DISASSEMBLE_NAME(mcs48);
-			break;
+			info->disassemble = CPU_DISASSEMBLE_NAME(mcs48);
+		break;
 
 		/* --- the following bits of info are returned as pointers --- */
 		case DEVINFO_PTR_INTERNAL_MEMORY_MAP + ADDRESS_SPACE_PROGRAM:
@@ -1460,84 +1297,39 @@ static void mcs48_generic_get_info(const device_config *devconfig, legacy_cpu_de
 				info->internal_map8 = ADDRESS_MAP_NAME(program_10bit);
 			else if (romsize == 2048)
 				info->internal_map8 = ADDRESS_MAP_NAME(program_11bit);
-			else if (romsize == 4096)
-				info->internal_map8 = ADDRESS_MAP_NAME(program_12bit);
 			else
 				fatalerror("mcs48_generic_get_info: Invalid RAM size");
-			break;
+		break;
 
 		case DEVINFO_PTR_INTERNAL_MEMORY_MAP + ADDRESS_SPACE_DATA:
 			if (ramsize == 64)
 				info->internal_map8 = ADDRESS_MAP_NAME(data_6bit);
 			else if (ramsize == 128)
 				info->internal_map8 = ADDRESS_MAP_NAME(data_7bit);
-			else if (ramsize == 256)
-				info->internal_map8 = ADDRESS_MAP_NAME(data_8bit);
 			else
 				fatalerror("mcs48_generic_get_info: Invalid RAM size");
-			break;
+		break;
 
 		/* --- the following bits of info are returned as NULL-terminated strings --- */
 		case DEVINFO_STR_NAME:
 			strcpy(info->s, name);
-			break;
+		break;
 
 		/* default case */
 		default:
 			CPU_GET_INFO_CALL(mcs48);
-			break;
+		break;
 	}
 }
 
 
 /* Official Intel MCS-48 parts */
-CPU_GET_INFO( i8021 )  { mcs48_generic_get_info(devconfig, device, state, info, MCS48_FEATURE, 1024,  64, "I8021"); }
-CPU_GET_INFO( i8022 )  { mcs48_generic_get_info(devconfig, device, state, info, MCS48_FEATURE, 2048, 128, "I8022"); }
-CPU_GET_INFO( i8035 )  { mcs48_generic_get_info(devconfig, device, state, info, MCS48_FEATURE,    0,  64, "I8035"); }
-CPU_GET_INFO( i8048 )  { mcs48_generic_get_info(devconfig, device, state, info, MCS48_FEATURE, 1024,  64, "I8048"); }
-CPU_GET_INFO( i8648 )  { mcs48_generic_get_info(devconfig, device, state, info, MCS48_FEATURE, 1024,  64, "I8648"); }
 CPU_GET_INFO( i8748 )  { mcs48_generic_get_info(devconfig, device, state, info, MCS48_FEATURE, 1024,  64, "I8748"); }
 CPU_GET_INFO( i8039 )  { mcs48_generic_get_info(devconfig, device, state, info, MCS48_FEATURE,    0, 128, "I8039"); }
 CPU_GET_INFO( i8049 )  { mcs48_generic_get_info(devconfig, device, state, info, MCS48_FEATURE, 2048, 128, "I8049"); }
-CPU_GET_INFO( i8749 )  { mcs48_generic_get_info(devconfig, device, state, info, MCS48_FEATURE, 2048, 128, "I8749"); }
-CPU_GET_INFO( i8040 )  { mcs48_generic_get_info(devconfig, device, state, info, MCS48_FEATURE,    0, 256, "I8040"); }
-CPU_GET_INFO( i8050 )  { mcs48_generic_get_info(devconfig, device, state, info, MCS48_FEATURE, 4096, 256, "I8050"); }
 
-
-/* Official Intel UPI-41 parts */
-CPU_GET_INFO( i8041 )  { mcs48_generic_get_info(devconfig, device, state, info, UPI41_FEATURE, 1024, 128, "I8041"); }
-CPU_GET_INFO( i8741 )  { mcs48_generic_get_info(devconfig, device, state, info, UPI41_FEATURE, 1024, 128, "I8741"); }
-CPU_GET_INFO( i8042 )  { mcs48_generic_get_info(devconfig, device, state, info, UPI41_FEATURE, 2048, 256, "I8042"); }
-CPU_GET_INFO( i8242 )  { mcs48_generic_get_info(devconfig, device, state, info, UPI41_FEATURE, 2048, 256, "I8242"); }
-CPU_GET_INFO( i8742 )  { mcs48_generic_get_info(devconfig, device, state, info, UPI41_FEATURE, 2048, 256, "I8742"); }
-
-
-/* Clones */
-CPU_GET_INFO( mb8884 ) { mcs48_generic_get_info(devconfig, device, state, info, MCS48_FEATURE,    0,  64, "MB8884"); }
-CPU_GET_INFO( n7751 )  { mcs48_generic_get_info(devconfig, device, state, info, MCS48_FEATURE, 1024,  64, "N7751"); }
-CPU_GET_INFO( m58715 ) { mcs48_generic_get_info(devconfig, device, state, info, MCS48_FEATURE, 2048, 128, "M58715"); }
 
 /* Official Intel MCS-48 parts */
-DEFINE_LEGACY_CPU_DEVICE(I8021, i8021);			/* 1k internal ROM,      64 bytes internal RAM */
-DEFINE_LEGACY_CPU_DEVICE(I8022, i8022);			/* 2k internal ROM,     128 bytes internal RAM */
-DEFINE_LEGACY_CPU_DEVICE(I8035, i8035);			/* external ROM,         64 bytes internal RAM */
-DEFINE_LEGACY_CPU_DEVICE(I8048, i8048);			/* 1k internal ROM,      64 bytes internal RAM */
-DEFINE_LEGACY_CPU_DEVICE(I8648, i8648);			/* 1k internal OTP ROM,  64 bytes internal RAM */
 DEFINE_LEGACY_CPU_DEVICE(I8748, i8748);			/* 1k internal EEPROM,   64 bytes internal RAM */
 DEFINE_LEGACY_CPU_DEVICE(I8039, i8039);			/* external ROM,        128 bytes internal RAM */
 DEFINE_LEGACY_CPU_DEVICE(I8049, i8049);			/* 2k internal ROM,     128 bytes internal RAM */
-DEFINE_LEGACY_CPU_DEVICE(I8749, i8749);			/* 2k internal EEPROM,  128 bytes internal RAM */
-DEFINE_LEGACY_CPU_DEVICE(I8040, i8040);			/* external ROM,        256 bytes internal RAM */
-DEFINE_LEGACY_CPU_DEVICE(I8050, i8050);			/* 4k internal ROM,     256 bytes internal RAM */
-
-/* Official Intel UPI-41 parts */
-DEFINE_LEGACY_CPU_DEVICE(I8041, i8041);			/* 1k internal ROM,     128 bytes internal RAM */
-DEFINE_LEGACY_CPU_DEVICE(I8741, i8741);			/* 1k internal EEPROM,  128 bytes internal RAM */
-DEFINE_LEGACY_CPU_DEVICE(I8042, i8042);			/* 2k internal ROM,     256 bytes internal RAM */
-DEFINE_LEGACY_CPU_DEVICE(I8242, i8242);			/* 2k internal ROM,     256 bytes internal RAM */
-DEFINE_LEGACY_CPU_DEVICE(I8742, i8742);			/* 2k internal EEPROM,  256 bytes internal RAM */
-
-/* Clones */
-DEFINE_LEGACY_CPU_DEVICE(MB8884, mb8884);		/* 8035 clone */
-DEFINE_LEGACY_CPU_DEVICE(N7751, n7751);			/* 8048 clone */
-DEFINE_LEGACY_CPU_DEVICE(M58715, m58715);		/* 8049 clone */
