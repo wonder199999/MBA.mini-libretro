@@ -11,43 +11,10 @@
 /* ================================= DATA ================================= */
 /* ======================================================================== */
 
-/* Used by shift & rotate instructions */
-const UINT8 m68ki_shift_8_table[65] = {
-	0x00, 0x80, 0xc0, 0xe0, 0xf0, 0xf8, 0xfc, 0xfe, 0xff, 0xff, 0xff, 0xff,
-	0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff,
-	0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff,
-	0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff,
-	0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff,
-	0xff, 0xff, 0xff, 0xff, 0xff
-};
-const UINT16 m68ki_shift_16_table[65] = {
-	0x0000, 0x8000, 0xc000, 0xe000, 0xf000, 0xf800, 0xfc00, 0xfe00, 0xff00,
-	0xff80, 0xffc0, 0xffe0, 0xfff0, 0xfff8, 0xfffc, 0xfffe, 0xffff, 0xffff,
-	0xffff, 0xffff, 0xffff, 0xffff, 0xffff, 0xffff, 0xffff, 0xffff, 0xffff,
-	0xffff, 0xffff, 0xffff, 0xffff, 0xffff, 0xffff, 0xffff, 0xffff, 0xffff,
-	0xffff, 0xffff, 0xffff, 0xffff, 0xffff, 0xffff, 0xffff, 0xffff, 0xffff,
-	0xffff, 0xffff, 0xffff, 0xffff, 0xffff, 0xffff, 0xffff, 0xffff, 0xffff,
-	0xffff, 0xffff, 0xffff, 0xffff, 0xffff, 0xffff, 0xffff, 0xffff, 0xffff,
-	0xffff, 0xffff
-};
-const UINT32 m68ki_shift_32_table[65] = {
-	0x00000000, 0x80000000, 0xc0000000, 0xe0000000, 0xf0000000, 0xf8000000,
-	0xfc000000, 0xfe000000, 0xff000000, 0xff800000, 0xffc00000, 0xffe00000,
-	0xfff00000, 0xfff80000, 0xfffc0000, 0xfffe0000, 0xffff0000, 0xffff8000,
-	0xffffc000, 0xffffe000, 0xfffff000, 0xfffff800, 0xfffffc00, 0xfffffe00,
-	0xffffff00, 0xffffff80, 0xffffffc0, 0xffffffe0, 0xfffffff0, 0xfffffff8,
-	0xfffffffc, 0xfffffffe, 0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff,
-	0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff,
-	0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff,
-	0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff,
-	0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff,
-	0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff
-};
-
 /* Number of clock cycles to use for exception processing.
  * I used 4 for any vectors that are undocumented for processing times.
  */
-static UINT8 const m68ki_exception_cycle_table[256] = {
+static const UINT8 m68ki_exception_cycle_table[256] = {
 
 		 40, /*  0: Reset - Initial Stack Pointer                      */
 		  4, /*  1: Reset - Initial Program Counter                    */
@@ -120,25 +87,6 @@ static UINT8 const m68ki_exception_cycle_table[256] = {
 		  4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,
 		  4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,
 		  4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4
-};
-
-const UINT8 m68ki_ea_idx_cycle_table[64] = {
-	 0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
-	 0, /* ..01.000 no memory indirect, base NULL             */
-	 5, /* ..01..01 memory indirect,    base NULL, outer NULL */
-	 7, /* ..01..10 memory indirect,    base NULL, outer 16   */
-	 7, /* ..01..11 memory indirect,    base NULL, outer 32   */
-	 0,  5,  7,  7,  0,  5,  7,  7,  0,  5,  7,  7,
-	 2, /* ..10.000 no memory indirect, base 16               */
-	 7, /* ..10..01 memory indirect,    base 16,   outer NULL */
-	 9, /* ..10..10 memory indirect,    base 16,   outer 16   */
-	 9, /* ..10..11 memory indirect,    base 16,   outer 32   */
-	 0,  7,  9,  9,  0,  7,  9,  9,  0,  7,  9,  9,
-	 6, /* ..11.000 no memory indirect, base 32               */
-	11, /* ..11..01 memory indirect,    base 32,   outer NULL */
-	13, /* ..11..10 memory indirect,    base 32,   outer 16   */
-	13, /* ..11..11 memory indirect,    base 32,   outer 32   */
-	 0, 11, 13, 13,  0, 11, 13, 13,  0, 11, 13, 13
 };
 
 
@@ -230,8 +178,7 @@ static void m68k_postload(running_machine *machine, void *param)
 {
 	m68ki_cpu_core *m68k = (m68ki_cpu_core *)param;
 	m68ki_set_sr_noint_nosp(m68k, m68k->save_sr);
-	m68k->stopped = m68k->save_stopped ? STOP_LEVEL_STOP : 0 |
-			m68k->save_halted  ? STOP_LEVEL_HALT : 0;
+	m68k->stopped = m68k->save_stopped ? STOP_LEVEL_STOP : 0 | m68k->save_halted  ? STOP_LEVEL_HALT : 0;
 	m68ki_jump(m68k, REG_PC);
 }
 

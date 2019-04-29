@@ -4,9 +4,56 @@
 
 
 /* ======================================================================== */
-/* ========================= INSTRUCTION HANDLERS ========================= */
+/* ============================ LOOKUP TABLES ============================= */
 /* ======================================================================== */
 
+typedef struct
+{
+	const UINT8  m68ki_shift_8_table[65];
+	const UINT16 m68ki_shift_16_table[65];
+	const UINT32 m68ki_shift_32_table[65];
+} m68k_shift_data;
+
+static m68k_shift_data _lookup_tables = {	/* Used by shift & rotate instructions */
+	{
+		0x00, 0x80, 0xc0, 0xe0, 0xf0, 0xf8, 0xfc, 0xfe, 0xff, 0xff, 0xff, 0xff,
+		0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff,
+		0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff,
+		0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff,
+		0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff,
+		0xff, 0xff, 0xff, 0xff, 0xff
+	},
+	{
+		0x0000, 0x8000, 0xc000, 0xe000, 0xf000, 0xf800, 0xfc00, 0xfe00, 0xff00,
+		0xff80, 0xffc0, 0xffe0, 0xfff0, 0xfff8, 0xfffc, 0xfffe, 0xffff, 0xffff,
+		0xffff, 0xffff, 0xffff, 0xffff, 0xffff, 0xffff, 0xffff, 0xffff, 0xffff,
+		0xffff, 0xffff, 0xffff, 0xffff, 0xffff, 0xffff, 0xffff, 0xffff, 0xffff,
+		0xffff, 0xffff, 0xffff, 0xffff, 0xffff, 0xffff, 0xffff, 0xffff, 0xffff,
+		0xffff, 0xffff, 0xffff, 0xffff, 0xffff, 0xffff, 0xffff, 0xffff, 0xffff,
+		0xffff, 0xffff, 0xffff, 0xffff, 0xffff, 0xffff, 0xffff, 0xffff, 0xffff,
+		0xffff, 0xffff
+	},
+	{
+		0x00000000, 0x80000000, 0xc0000000, 0xe0000000, 0xf0000000, 0xf8000000,
+		0xfc000000, 0xfe000000, 0xff000000, 0xff800000, 0xffc00000, 0xffe00000,
+		0xfff00000, 0xfff80000, 0xfffc0000, 0xfffe0000, 0xffff0000, 0xffff8000,
+		0xffffc000, 0xffffe000, 0xfffff000, 0xfffff800, 0xfffffc00, 0xfffffe00,
+		0xffffff00, 0xffffff80, 0xffffffc0, 0xffffffe0, 0xfffffff0, 0xfffffff8,
+		0xfffffffc, 0xfffffffe, 0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff,
+		0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff,
+		0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff,
+		0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff,
+		0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff,
+		0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff
+	}
+};
+
+static m68k_shift_data *TAB = &_lookup_tables;
+
+
+/* ======================================================================== */
+/* ========================= INSTRUCTION HANDLERS ========================= */
+/* ======================================================================== */
 
 static void m68k_op_1010(m68ki_cpu_core *m68k)
 {
@@ -1045,21 +1092,21 @@ static void m68k_op_add_32_re_al(m68ki_cpu_core *m68k)
 
 static void m68k_op_adda_16_d(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &AX;
+	UINT32 *r_dst = &AX;
 
 	*r_dst = MASK_OUT_ABOVE_32(*r_dst + MAKE_INT_16(DY));
 }
 
 static void m68k_op_adda_16_a(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &AX;
+	UINT32 *r_dst = &AX;
 
 	*r_dst = MASK_OUT_ABOVE_32(*r_dst + MAKE_INT_16(AY));
 }
 
 static void m68k_op_adda_16_ai(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &AX;
+	UINT32 *r_dst = &AX;
 	UINT32 src = MAKE_INT_16(OPER_AY_AI_16(m68k));
 
 	*r_dst = MASK_OUT_ABOVE_32(*r_dst + src);
@@ -1067,7 +1114,7 @@ static void m68k_op_adda_16_ai(m68ki_cpu_core *m68k)
 
 static void m68k_op_adda_16_pi(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &AX;
+	UINT32 *r_dst = &AX;
 	UINT32 src = MAKE_INT_16(OPER_AY_PI_16(m68k));
 
 	*r_dst = MASK_OUT_ABOVE_32(*r_dst + src);
@@ -1075,7 +1122,7 @@ static void m68k_op_adda_16_pi(m68ki_cpu_core *m68k)
 
 static void m68k_op_adda_16_pd(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &AX;
+	UINT32 *r_dst = &AX;
 	UINT32 src = MAKE_INT_16(OPER_AY_PD_16(m68k));
 
 	*r_dst = MASK_OUT_ABOVE_32(*r_dst + src);
@@ -1083,7 +1130,7 @@ static void m68k_op_adda_16_pd(m68ki_cpu_core *m68k)
 
 static void m68k_op_adda_16_di(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &AX;
+	UINT32 *r_dst = &AX;
 	UINT32 src = MAKE_INT_16(OPER_AY_DI_16(m68k));
 
 	*r_dst = MASK_OUT_ABOVE_32(*r_dst + src);
@@ -1091,7 +1138,7 @@ static void m68k_op_adda_16_di(m68ki_cpu_core *m68k)
 
 static void m68k_op_adda_16_ix(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &AX;
+	UINT32 *r_dst = &AX;
 	UINT32 src = MAKE_INT_16(OPER_AY_IX_16(m68k));
 
 	*r_dst = MASK_OUT_ABOVE_32(*r_dst + src);
@@ -1099,7 +1146,7 @@ static void m68k_op_adda_16_ix(m68ki_cpu_core *m68k)
 
 static void m68k_op_adda_16_aw(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &AX;
+	UINT32 *r_dst = &AX;
 	UINT32 src = MAKE_INT_16(OPER_AW_16(m68k));
 
 	*r_dst = MASK_OUT_ABOVE_32(*r_dst + src);
@@ -1107,7 +1154,7 @@ static void m68k_op_adda_16_aw(m68ki_cpu_core *m68k)
 
 static void m68k_op_adda_16_al(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &AX;
+	UINT32 *r_dst = &AX;
 	UINT32 src = MAKE_INT_16(OPER_AL_16(m68k));
 
 	*r_dst = MASK_OUT_ABOVE_32(*r_dst + src);
@@ -1115,7 +1162,7 @@ static void m68k_op_adda_16_al(m68ki_cpu_core *m68k)
 
 static void m68k_op_adda_16_pcdi(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &AX;
+	UINT32 *r_dst = &AX;
 	UINT32 src = MAKE_INT_16(OPER_PCDI_16(m68k));
 
 	*r_dst = MASK_OUT_ABOVE_32(*r_dst + src);
@@ -1123,7 +1170,7 @@ static void m68k_op_adda_16_pcdi(m68ki_cpu_core *m68k)
 
 static void m68k_op_adda_16_pcix(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &AX;
+	UINT32 *r_dst = &AX;
 	UINT32 src = MAKE_INT_16(OPER_PCIX_16(m68k));
 
 	*r_dst = MASK_OUT_ABOVE_32(*r_dst + src);
@@ -1131,7 +1178,7 @@ static void m68k_op_adda_16_pcix(m68ki_cpu_core *m68k)
 
 static void m68k_op_adda_16_i(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &AX;
+	UINT32 *r_dst = &AX;
 	UINT32 src = MAKE_INT_16(OPER_I_16(m68k));
 
 	*r_dst = MASK_OUT_ABOVE_32(*r_dst + src);
@@ -1139,21 +1186,21 @@ static void m68k_op_adda_16_i(m68ki_cpu_core *m68k)
 
 static void m68k_op_adda_32_d(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &AX;
+	UINT32 *r_dst = &AX;
 
 	*r_dst = MASK_OUT_ABOVE_32(*r_dst + DY);
 }
 
 static void m68k_op_adda_32_a(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &AX;
+	UINT32 *r_dst = &AX;
 
 	*r_dst = MASK_OUT_ABOVE_32(*r_dst + AY);
 }
 
 static void m68k_op_adda_32_ai(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &AX;
+	UINT32 *r_dst = &AX;
 	UINT32 src = OPER_AY_AI_32(m68k);
 
 	*r_dst = MASK_OUT_ABOVE_32(*r_dst + src);
@@ -1161,7 +1208,7 @@ static void m68k_op_adda_32_ai(m68ki_cpu_core *m68k)
 
 static void m68k_op_adda_32_pi(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &AX;
+	UINT32 *r_dst = &AX;
 	UINT32 src = OPER_AY_PI_32(m68k);
 
 	*r_dst = MASK_OUT_ABOVE_32(*r_dst + src);
@@ -1169,7 +1216,7 @@ static void m68k_op_adda_32_pi(m68ki_cpu_core *m68k)
 
 static void m68k_op_adda_32_pd(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &AX;
+	UINT32 *r_dst = &AX;
 	UINT32 src = OPER_AY_PD_32(m68k);
 
 	*r_dst = MASK_OUT_ABOVE_32(*r_dst + src);
@@ -1177,7 +1224,7 @@ static void m68k_op_adda_32_pd(m68ki_cpu_core *m68k)
 
 static void m68k_op_adda_32_di(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &AX;
+	UINT32 *r_dst = &AX;
 	UINT32 src = OPER_AY_DI_32(m68k);
 
 	*r_dst = MASK_OUT_ABOVE_32(*r_dst + src);
@@ -1185,7 +1232,7 @@ static void m68k_op_adda_32_di(m68ki_cpu_core *m68k)
 
 static void m68k_op_adda_32_ix(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &AX;
+	UINT32 *r_dst = &AX;
 	UINT32 src = OPER_AY_IX_32(m68k);
 
 	*r_dst = MASK_OUT_ABOVE_32(*r_dst + src);
@@ -1193,7 +1240,7 @@ static void m68k_op_adda_32_ix(m68ki_cpu_core *m68k)
 
 static void m68k_op_adda_32_aw(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &AX;
+	UINT32 *r_dst = &AX;
 	UINT32 src = OPER_AW_32(m68k);
 
 	*r_dst = MASK_OUT_ABOVE_32(*r_dst + src);
@@ -1201,7 +1248,7 @@ static void m68k_op_adda_32_aw(m68ki_cpu_core *m68k)
 
 static void m68k_op_adda_32_al(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &AX;
+	UINT32 *r_dst = &AX;
 	UINT32 src = OPER_AL_32(m68k);
 
 	*r_dst = MASK_OUT_ABOVE_32(*r_dst + src);
@@ -1209,7 +1256,7 @@ static void m68k_op_adda_32_al(m68ki_cpu_core *m68k)
 
 static void m68k_op_adda_32_pcdi(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &AX;
+	UINT32 *r_dst = &AX;
 	UINT32 src = OPER_PCDI_32(m68k);
 
 	*r_dst = MASK_OUT_ABOVE_32(*r_dst + src);
@@ -1217,7 +1264,7 @@ static void m68k_op_adda_32_pcdi(m68ki_cpu_core *m68k)
 
 static void m68k_op_adda_32_pcix(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &AX;
+	UINT32 *r_dst = &AX;
 	UINT32 src = OPER_PCIX_32(m68k);
 
 	*r_dst = MASK_OUT_ABOVE_32(*r_dst + src);
@@ -1225,7 +1272,7 @@ static void m68k_op_adda_32_pcix(m68ki_cpu_core *m68k)
 
 static void m68k_op_adda_32_i(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &AX;
+	UINT32 *r_dst = &AX;
 	UINT32 src = OPER_I_32(m68k);
 
 	*r_dst = MASK_OUT_ABOVE_32(*r_dst + src);
@@ -1233,7 +1280,7 @@ static void m68k_op_adda_32_i(m68ki_cpu_core *m68k)
 
 static void m68k_op_addi_8_d(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DY;
+	UINT32 *r_dst = &DY;
 	UINT32 src = OPER_I_8(m68k);
 	UINT32 dst = MASK_OUT_ABOVE_8(*r_dst);
 	UINT32 res = src + dst;
@@ -1383,7 +1430,7 @@ static void m68k_op_addi_8_al(m68ki_cpu_core *m68k)
 
 static void m68k_op_addi_16_d(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DY;
+	UINT32 *r_dst = &DY;
 	UINT32 src = OPER_I_16(m68k);
 	UINT32 dst = MASK_OUT_ABOVE_16(*r_dst);
 	UINT32 res = src + dst;
@@ -1503,7 +1550,7 @@ static void m68k_op_addi_16_al(m68ki_cpu_core *m68k)
 
 static void m68k_op_addi_32_d(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DY;
+	UINT32 *r_dst = &DY;
 	UINT32 src = OPER_I_32(m68k);
 	UINT32 dst = *r_dst;
 	UINT32 res = src + dst;
@@ -1625,8 +1672,8 @@ static void m68k_op_addi_32_al(m68ki_cpu_core *m68k)
 
 static void m68k_op_addq_8_d(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DY;
-	UINT32 src = (((m68k->ir >> 9) - 1) & 7) + 1;
+	UINT32 *r_dst = &DY;
+	UINT32 src = (((m68k->ir >> 9) - 1) & 0x07) + 1;
 	UINT32 dst = MASK_OUT_ABOVE_8(*r_dst);
 	UINT32 res = src + dst;
 
@@ -1641,7 +1688,7 @@ static void m68k_op_addq_8_d(m68ki_cpu_core *m68k)
 
 static void m68k_op_addq_8_ai(m68ki_cpu_core *m68k)
 {
-	UINT32 src = (((m68k->ir >> 9) - 1) & 7) + 1;
+	UINT32 src = (((m68k->ir >> 9) - 1) & 0x07) + 1;
 	UINT32 ea = EA_AY_AI_8(m68k);
 	UINT32 dst = m68ki_read_8(m68k, ea);
 	UINT32 res = src + dst;
@@ -1657,7 +1704,7 @@ static void m68k_op_addq_8_ai(m68ki_cpu_core *m68k)
 
 static void m68k_op_addq_8_pi(m68ki_cpu_core *m68k)
 {
-	UINT32 src = (((m68k->ir >> 9) - 1) & 7) + 1;
+	UINT32 src = (((m68k->ir >> 9) - 1) & 0x07) + 1;
 	UINT32 ea = EA_AY_PI_8(m68k);
 	UINT32 dst = m68ki_read_8(m68k, ea);
 	UINT32 res = src + dst;
@@ -1673,7 +1720,7 @@ static void m68k_op_addq_8_pi(m68ki_cpu_core *m68k)
 
 static void m68k_op_addq_8_pi7(m68ki_cpu_core *m68k)
 {
-	UINT32 src = (((m68k->ir >> 9) - 1) & 7) + 1;
+	UINT32 src = (((m68k->ir >> 9) - 1) & 0x07) + 1;
 	UINT32 ea = EA_A7_PI_8(m68k);
 	UINT32 dst = m68ki_read_8(m68k, ea);
 	UINT32 res = src + dst;
@@ -1689,7 +1736,7 @@ static void m68k_op_addq_8_pi7(m68ki_cpu_core *m68k)
 
 static void m68k_op_addq_8_pd(m68ki_cpu_core *m68k)
 {
-	UINT32 src = (((m68k->ir >> 9) - 1) & 7) + 1;
+	UINT32 src = (((m68k->ir >> 9) - 1) & 0x07) + 1;
 	UINT32 ea = EA_AY_PD_8(m68k);
 	UINT32 dst = m68ki_read_8(m68k, ea);
 	UINT32 res = src + dst;
@@ -1705,7 +1752,7 @@ static void m68k_op_addq_8_pd(m68ki_cpu_core *m68k)
 
 static void m68k_op_addq_8_pd7(m68ki_cpu_core *m68k)
 {
-	UINT32 src = (((m68k->ir >> 9) - 1) & 7) + 1;
+	UINT32 src = (((m68k->ir >> 9) - 1) & 0x07) + 1;
 	UINT32 ea = EA_A7_PD_8(m68k);
 	UINT32 dst = m68ki_read_8(m68k, ea);
 	UINT32 res = src + dst;
@@ -1721,7 +1768,7 @@ static void m68k_op_addq_8_pd7(m68ki_cpu_core *m68k)
 
 static void m68k_op_addq_8_di(m68ki_cpu_core *m68k)
 {
-	UINT32 src = (((m68k->ir >> 9) - 1) & 7) + 1;
+	UINT32 src = (((m68k->ir >> 9) - 1) & 0x07) + 1;
 	UINT32 ea = EA_AY_DI_8(m68k);
 	UINT32 dst = m68ki_read_8(m68k, ea);
 	UINT32 res = src + dst;
@@ -1737,7 +1784,7 @@ static void m68k_op_addq_8_di(m68ki_cpu_core *m68k)
 
 static void m68k_op_addq_8_ix(m68ki_cpu_core *m68k)
 {
-	UINT32 src = (((m68k->ir >> 9) - 1) & 7) + 1;
+	UINT32 src = (((m68k->ir >> 9) - 1) & 0x07) + 1;
 	UINT32 ea = EA_AY_IX_8(m68k);
 	UINT32 dst = m68ki_read_8(m68k, ea);
 	UINT32 res = src + dst;
@@ -1753,7 +1800,7 @@ static void m68k_op_addq_8_ix(m68ki_cpu_core *m68k)
 
 static void m68k_op_addq_8_aw(m68ki_cpu_core *m68k)
 {
-	UINT32 src = (((m68k->ir >> 9) - 1) & 7) + 1;
+	UINT32 src = (((m68k->ir >> 9) - 1) & 0x07) + 1;
 	UINT32 ea = EA_AW_8(m68k);
 	UINT32 dst = m68ki_read_8(m68k, ea);
 	UINT32 res = src + dst;
@@ -1769,7 +1816,7 @@ static void m68k_op_addq_8_aw(m68ki_cpu_core *m68k)
 
 static void m68k_op_addq_8_al(m68ki_cpu_core *m68k)
 {
-	UINT32 src = (((m68k->ir >> 9) - 1) & 7) + 1;
+	UINT32 src = (((m68k->ir >> 9) - 1) & 0x07) + 1;
 	UINT32 ea = EA_AL_8(m68k);
 	UINT32 dst = m68ki_read_8(m68k, ea);
 	UINT32 res = src + dst;
@@ -1786,7 +1833,7 @@ static void m68k_op_addq_8_al(m68ki_cpu_core *m68k)
 static void m68k_op_addq_16_d(m68ki_cpu_core *m68k)
 {
 	UINT32* r_dst = &DY;
-	UINT32 src = (((m68k->ir >> 9) - 1) & 7) + 1;
+	UINT32 src = (((m68k->ir >> 9) - 1) & 0x07) + 1;
 	UINT32 dst = MASK_OUT_ABOVE_16(*r_dst);
 	UINT32 res = src + dst;
 
@@ -1803,13 +1850,13 @@ static void m68k_op_addq_16_a(m68ki_cpu_core *m68k)
 {
 	UINT32* r_dst = &AY;
 
-	*r_dst = MASK_OUT_ABOVE_32(*r_dst + (((m68k->ir >> 9) - 1) & 7) + 1);
+	*r_dst = MASK_OUT_ABOVE_32(*r_dst + (((m68k->ir >> 9) - 1) & 0x07) + 1);
 }
 
 
 static void m68k_op_addq_16_ai(m68ki_cpu_core *m68k)
 {
-	UINT32 src = (((m68k->ir >> 9) - 1) & 7) + 1;
+	UINT32 src = (((m68k->ir >> 9) - 1) & 0x07) + 1;
 	UINT32 ea = EA_AY_AI_16(m68k);
 	UINT32 dst = m68ki_read_16(m68k, ea);
 	UINT32 res = src + dst;
@@ -1825,7 +1872,7 @@ static void m68k_op_addq_16_ai(m68ki_cpu_core *m68k)
 
 static void m68k_op_addq_16_pi(m68ki_cpu_core *m68k)
 {
-	UINT32 src = (((m68k->ir >> 9) - 1) & 7) + 1;
+	UINT32 src = (((m68k->ir >> 9) - 1) & 0x07) + 1;
 	UINT32 ea = EA_AY_PI_16(m68k);
 	UINT32 dst = m68ki_read_16(m68k, ea);
 	UINT32 res = src + dst;
@@ -1841,7 +1888,7 @@ static void m68k_op_addq_16_pi(m68ki_cpu_core *m68k)
 
 static void m68k_op_addq_16_pd(m68ki_cpu_core *m68k)
 {
-	UINT32 src = (((m68k->ir >> 9) - 1) & 7) + 1;
+	UINT32 src = (((m68k->ir >> 9) - 1) & 0x07) + 1;
 	UINT32 ea = EA_AY_PD_16(m68k);
 	UINT32 dst = m68ki_read_16(m68k, ea);
 	UINT32 res = src + dst;
@@ -1857,7 +1904,7 @@ static void m68k_op_addq_16_pd(m68ki_cpu_core *m68k)
 
 static void m68k_op_addq_16_di(m68ki_cpu_core *m68k)
 {
-	UINT32 src = (((m68k->ir >> 9) - 1) & 7) + 1;
+	UINT32 src = (((m68k->ir >> 9) - 1) & 0x07) + 1;
 	UINT32 ea = EA_AY_DI_16(m68k);
 	UINT32 dst = m68ki_read_16(m68k, ea);
 	UINT32 res = src + dst;
@@ -1873,7 +1920,7 @@ static void m68k_op_addq_16_di(m68ki_cpu_core *m68k)
 
 static void m68k_op_addq_16_ix(m68ki_cpu_core *m68k)
 {
-	UINT32 src = (((m68k->ir >> 9) - 1) & 7) + 1;
+	UINT32 src = (((m68k->ir >> 9) - 1) & 0x07) + 1;
 	UINT32 ea = EA_AY_IX_16(m68k);
 	UINT32 dst = m68ki_read_16(m68k, ea);
 	UINT32 res = src + dst;
@@ -1889,7 +1936,7 @@ static void m68k_op_addq_16_ix(m68ki_cpu_core *m68k)
 
 static void m68k_op_addq_16_aw(m68ki_cpu_core *m68k)
 {
-	UINT32 src = (((m68k->ir >> 9) - 1) & 7) + 1;
+	UINT32 src = (((m68k->ir >> 9) - 1) & 0x07) + 1;
 	UINT32 ea = EA_AW_16(m68k);
 	UINT32 dst = m68ki_read_16(m68k, ea);
 	UINT32 res = src + dst;
@@ -1905,7 +1952,7 @@ static void m68k_op_addq_16_aw(m68ki_cpu_core *m68k)
 
 static void m68k_op_addq_16_al(m68ki_cpu_core *m68k)
 {
-	UINT32 src = (((m68k->ir >> 9) - 1) & 7) + 1;
+	UINT32 src = (((m68k->ir >> 9) - 1) & 0x07) + 1;
 	UINT32 ea = EA_AL_16(m68k);
 	UINT32 dst = m68ki_read_16(m68k, ea);
 	UINT32 res = src + dst;
@@ -1921,8 +1968,8 @@ static void m68k_op_addq_16_al(m68ki_cpu_core *m68k)
 
 static void m68k_op_addq_32_d(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DY;
-	UINT32 src = (((m68k->ir >> 9) - 1) & 7) + 1;
+	UINT32 *r_dst = &DY;
+	UINT32 src = (((m68k->ir >> 9) - 1) & 0x07) + 1;
 	UINT32 dst = *r_dst;
 	UINT32 res = src + dst;
 
@@ -1937,19 +1984,18 @@ static void m68k_op_addq_32_d(m68ki_cpu_core *m68k)
 
 static void m68k_op_addq_32_a(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &AY;
+	UINT32 *r_dst = &AY;
 
-	*r_dst = MASK_OUT_ABOVE_32(*r_dst + (((m68k->ir >> 9) - 1) & 7) + 1);
+	*r_dst = MASK_OUT_ABOVE_32(*r_dst + (((m68k->ir >> 9) - 1) & 0x07) + 1);
 }
 
 
 static void m68k_op_addq_32_ai(m68ki_cpu_core *m68k)
 {
-	UINT32 src = (((m68k->ir >> 9) - 1) & 7) + 1;
+	UINT32 src = (((m68k->ir >> 9) - 1) & 0x07) + 1;
 	UINT32 ea = EA_AY_AI_32(m68k);
 	UINT32 dst = m68ki_read_32(m68k, ea);
 	UINT32 res = src + dst;
-
 
 	m68k->n_flag = NFLAG_32(res);
 	m68k->v_flag = VFLAG_ADD_32(src, dst, res);
@@ -1962,11 +2008,10 @@ static void m68k_op_addq_32_ai(m68ki_cpu_core *m68k)
 
 static void m68k_op_addq_32_pi(m68ki_cpu_core *m68k)
 {
-	UINT32 src = (((m68k->ir >> 9) - 1) & 7) + 1;
+	UINT32 src = (((m68k->ir >> 9) - 1) & 0x07) + 1;
 	UINT32 ea = EA_AY_PI_32(m68k);
 	UINT32 dst = m68ki_read_32(m68k, ea);
 	UINT32 res = src + dst;
-
 
 	m68k->n_flag = NFLAG_32(res);
 	m68k->v_flag = VFLAG_ADD_32(src, dst, res);
@@ -1979,11 +2024,10 @@ static void m68k_op_addq_32_pi(m68ki_cpu_core *m68k)
 
 static void m68k_op_addq_32_pd(m68ki_cpu_core *m68k)
 {
-	UINT32 src = (((m68k->ir >> 9) - 1) & 7) + 1;
+	UINT32 src = (((m68k->ir >> 9) - 1) & 0x07) + 1;
 	UINT32 ea = EA_AY_PD_32(m68k);
 	UINT32 dst = m68ki_read_32(m68k, ea);
 	UINT32 res = src + dst;
-
 
 	m68k->n_flag = NFLAG_32(res);
 	m68k->v_flag = VFLAG_ADD_32(src, dst, res);
@@ -1996,11 +2040,10 @@ static void m68k_op_addq_32_pd(m68ki_cpu_core *m68k)
 
 static void m68k_op_addq_32_di(m68ki_cpu_core *m68k)
 {
-	UINT32 src = (((m68k->ir >> 9) - 1) & 7) + 1;
+	UINT32 src = (((m68k->ir >> 9) - 1) & 0x07) + 1;
 	UINT32 ea = EA_AY_DI_32(m68k);
 	UINT32 dst = m68ki_read_32(m68k, ea);
 	UINT32 res = src + dst;
-
 
 	m68k->n_flag = NFLAG_32(res);
 	m68k->v_flag = VFLAG_ADD_32(src, dst, res);
@@ -2013,11 +2056,10 @@ static void m68k_op_addq_32_di(m68ki_cpu_core *m68k)
 
 static void m68k_op_addq_32_ix(m68ki_cpu_core *m68k)
 {
-	UINT32 src = (((m68k->ir >> 9) - 1) & 7) + 1;
+	UINT32 src = (((m68k->ir >> 9) - 1) & 0x07) + 1;
 	UINT32 ea = EA_AY_IX_32(m68k);
 	UINT32 dst = m68ki_read_32(m68k, ea);
 	UINT32 res = src + dst;
-
 
 	m68k->n_flag = NFLAG_32(res);
 	m68k->v_flag = VFLAG_ADD_32(src, dst, res);
@@ -2030,11 +2072,10 @@ static void m68k_op_addq_32_ix(m68ki_cpu_core *m68k)
 
 static void m68k_op_addq_32_aw(m68ki_cpu_core *m68k)
 {
-	UINT32 src = (((m68k->ir >> 9) - 1) & 7) + 1;
+	UINT32 src = (((m68k->ir >> 9) - 1) & 0x07) + 1;
 	UINT32 ea = EA_AW_32(m68k);
 	UINT32 dst = m68ki_read_32(m68k, ea);
 	UINT32 res = src + dst;
-
 
 	m68k->n_flag = NFLAG_32(res);
 	m68k->v_flag = VFLAG_ADD_32(src, dst, res);
@@ -2047,11 +2088,10 @@ static void m68k_op_addq_32_aw(m68ki_cpu_core *m68k)
 
 static void m68k_op_addq_32_al(m68ki_cpu_core *m68k)
 {
-	UINT32 src = (((m68k->ir >> 9) - 1) & 7) + 1;
+	UINT32 src = (((m68k->ir >> 9) - 1) & 0x07) + 1;
 	UINT32 ea = EA_AL_32(m68k);
 	UINT32 dst = m68ki_read_32(m68k, ea);
 	UINT32 res = src + dst;
-
 
 	m68k->n_flag = NFLAG_32(res);
 	m68k->v_flag = VFLAG_ADD_32(src, dst, res);
@@ -2064,7 +2104,7 @@ static void m68k_op_addq_32_al(m68ki_cpu_core *m68k)
 
 static void m68k_op_addx_8_rr(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DX;
+	UINT32 *r_dst = &DX;
 	UINT32 src = MASK_OUT_ABOVE_8(DY);
 	UINT32 dst = MASK_OUT_ABOVE_8(*r_dst);
 	UINT32 res = src + dst + XFLAG_AS_1(m68k);
@@ -2082,7 +2122,7 @@ static void m68k_op_addx_8_rr(m68ki_cpu_core *m68k)
 
 static void m68k_op_addx_16_rr(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DX;
+	UINT32 *r_dst = &DX;
 	UINT32 src = MASK_OUT_ABOVE_16(DY);
 	UINT32 dst = MASK_OUT_ABOVE_16(*r_dst);
 	UINT32 res = src + dst + XFLAG_AS_1(m68k);
@@ -2100,7 +2140,7 @@ static void m68k_op_addx_16_rr(m68ki_cpu_core *m68k)
 
 static void m68k_op_addx_32_rr(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DX;
+	UINT32 *r_dst = &DX;
 	UINT32 src = DY;
 	UINT32 dst = *r_dst;
 	UINT32 res = src + dst + XFLAG_AS_1(m68k);
@@ -3292,89 +3332,89 @@ static void m68k_op_andi_16_tos(m68ki_cpu_core *m68k)
 
 static void m68k_op_asr_8_s(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DY;
-	UINT32 shift = (((m68k->ir >> 9) - 1) & 7) + 1;
+	UINT32 *r_dst = &DY;
+	UINT32 shift = (((m68k->ir >> 9) - 1) & 0x07) + 1;
 	UINT32 src = MASK_OUT_ABOVE_8(*r_dst);
 	UINT32 res = src >> shift;
 
 	if (shift != 0)
-		m68k->remaining_cycles -= shift<<m68k->cyc_shift;
+		m68k->remaining_cycles -= shift << m68k->cyc_shift;
 
 	if (GET_MSB_8(src))
-		res |= m68ki_shift_8_table[shift];
+		res |= TAB->m68ki_shift_8_table[shift];
 
 	*r_dst = MASK_OUT_BELOW_8(*r_dst) | res;
 
 	m68k->n_flag = NFLAG_8(res);
 	m68k->not_z_flag = res;
 	m68k->v_flag = VFLAG_CLEAR;
-	m68k->x_flag = m68k->c_flag = src << (9-shift);
+	m68k->x_flag = m68k->c_flag = src << (9 - shift);
 }
 
 
 static void m68k_op_asr_16_s(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DY;
-	UINT32 shift = (((m68k->ir >> 9) - 1) & 7) + 1;
+	UINT32 *r_dst = &DY;
+	UINT32 shift = (((m68k->ir >> 9) - 1) & 0x07) + 1;
 	UINT32 src = MASK_OUT_ABOVE_16(*r_dst);
 	UINT32 res = src >> shift;
 
 	if (shift != 0)
-		m68k->remaining_cycles -= shift<<m68k->cyc_shift;
+		m68k->remaining_cycles -= shift << m68k->cyc_shift;
 
 	if (GET_MSB_16(src))
-		res |= m68ki_shift_16_table[shift];
+		res |= TAB->m68ki_shift_16_table[shift];
 
 	*r_dst = MASK_OUT_BELOW_16(*r_dst) | res;
 
 	m68k->n_flag = NFLAG_16(res);
 	m68k->not_z_flag = res;
 	m68k->v_flag = VFLAG_CLEAR;
-	m68k->x_flag = m68k->c_flag = src << (9-shift);
+	m68k->x_flag = m68k->c_flag = src << (9 - shift);
 }
 
 
 static void m68k_op_asr_32_s(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DY;
-	UINT32 shift = (((m68k->ir >> 9) - 1) & 7) + 1;
+	UINT32 *r_dst = &DY;
+	UINT32 shift = (((m68k->ir >> 9) - 1) & 0x07) + 1;
 	UINT32 src = *r_dst;
 	UINT32 res = src >> shift;
 
 	if (shift != 0)
-		m68k->remaining_cycles -= shift<<m68k->cyc_shift;
+		m68k->remaining_cycles -= shift << m68k->cyc_shift;
 
 	if (GET_MSB_32(src))
-		res |= m68ki_shift_32_table[shift];
+		res |= TAB->m68ki_shift_32_table[shift];
 
 	*r_dst = res;
 
 	m68k->n_flag = NFLAG_32(res);
 	m68k->not_z_flag = res;
 	m68k->v_flag = VFLAG_CLEAR;
-	m68k->x_flag = m68k->c_flag = src << (9-shift);
+	m68k->x_flag = m68k->c_flag = src << (9 - shift);
 }
 
 
 static void m68k_op_asr_8_r(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DY;
+	UINT32 *r_dst = &DY;
 	UINT32 shift = DX & 0x3f;
 	UINT32 src = MASK_OUT_ABOVE_8(*r_dst);
 	UINT32 res = src >> shift;
 
 	if (shift != 0)
 	{
-		m68k->remaining_cycles -= shift<<m68k->cyc_shift;
+		m68k->remaining_cycles -= shift << m68k->cyc_shift;
 
 		if (shift < 8)
 		{
 			if (GET_MSB_8(src))
-				res |= m68ki_shift_8_table[shift];
+				res |= TAB->m68ki_shift_8_table[shift];
 
 			*r_dst = MASK_OUT_BELOW_8(*r_dst) | res;
 
-			m68k->x_flag = m68k->c_flag = src << (9-shift);
+			m68k->x_flag = m68k->c_flag = src << (9 - shift);
 			m68k->n_flag = NFLAG_8(res);
 			m68k->not_z_flag = res;
 			m68k->v_flag = VFLAG_CLEAR;
@@ -3410,23 +3450,23 @@ static void m68k_op_asr_8_r(m68ki_cpu_core *m68k)
 
 static void m68k_op_asr_16_r(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DY;
+	UINT32 *r_dst = &DY;
 	UINT32 shift = DX & 0x3f;
 	UINT32 src = MASK_OUT_ABOVE_16(*r_dst);
 	UINT32 res = src >> shift;
 
 	if (shift != 0)
 	{
-		m68k->remaining_cycles -= shift<<m68k->cyc_shift;
+		m68k->remaining_cycles -= shift << m68k->cyc_shift;
 
 		if (shift < 16)
 		{
 			if (GET_MSB_16(src))
-				res |= m68ki_shift_16_table[shift];
+				res |= TAB->m68ki_shift_16_table[shift];
 
 			*r_dst = MASK_OUT_BELOW_16(*r_dst) | res;
 
-			m68k->c_flag = m68k->x_flag = (src >> (shift - 1))<<8;
+			m68k->c_flag = m68k->x_flag = (src >> (shift - 1)) << 8;
 			m68k->n_flag = NFLAG_16(res);
 			m68k->not_z_flag = res;
 			m68k->v_flag = VFLAG_CLEAR;
@@ -3462,23 +3502,23 @@ static void m68k_op_asr_16_r(m68ki_cpu_core *m68k)
 
 static void m68k_op_asr_32_r(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DY;
+	UINT32 *r_dst = &DY;
 	UINT32 shift = DX & 0x3f;
 	UINT32 src = *r_dst;
 	UINT32 res = src >> shift;
 
 	if (shift != 0)
 	{
-		m68k->remaining_cycles -= shift<<m68k->cyc_shift;
+		m68k->remaining_cycles -= shift << m68k->cyc_shift;
 
 		if (shift < 32)
 		{
 			if (GET_MSB_32(src))
-				res |= m68ki_shift_32_table[shift];
+				res |= TAB->m68ki_shift_32_table[shift];
 
 			*r_dst = res;
 
-			m68k->c_flag = m68k->x_flag = (src >> (shift - 1))<<8;
+			m68k->c_flag = m68k->x_flag = (src >> (shift - 1)) << 8;
 			m68k->n_flag = NFLAG_32(res);
 			m68k->not_z_flag = res;
 			m68k->v_flag = VFLAG_CLEAR;
@@ -3640,74 +3680,74 @@ static void m68k_op_asr_16_al(m68ki_cpu_core *m68k)
 
 static void m68k_op_asl_8_s(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DY;
-	UINT32 shift = (((m68k->ir >> 9) - 1) & 7) + 1;
+	UINT32 *r_dst = &DY;
+	UINT32 shift = (((m68k->ir >> 9) - 1) & 0x07) + 1;
 	UINT32 src = MASK_OUT_ABOVE_8(*r_dst);
 	UINT32 res = MASK_OUT_ABOVE_8(src << shift);
 
 	if (shift != 0)
-		m68k->remaining_cycles -= shift<<m68k->cyc_shift;
+		m68k->remaining_cycles -= shift << m68k->cyc_shift;
 
 	*r_dst = MASK_OUT_BELOW_8(*r_dst) | res;
 
 	m68k->x_flag = m68k->c_flag = src << shift;
 	m68k->n_flag = NFLAG_8(res);
 	m68k->not_z_flag = res;
-	src &= m68ki_shift_8_table[shift + 1];
-	m68k->v_flag = (!(src == 0 || (src == m68ki_shift_8_table[shift + 1] && shift < 8)))<<7;
+	src &= TAB->m68ki_shift_8_table[shift + 1];
+	m68k->v_flag = (!(src == 0 || (src == TAB->m68ki_shift_8_table[shift + 1] && shift < 8))) << 7;
 }
 
 
 static void m68k_op_asl_16_s(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DY;
-	UINT32 shift = (((m68k->ir >> 9) - 1) & 7) + 1;
+	UINT32 *r_dst = &DY;
+	UINT32 shift = (((m68k->ir >> 9) - 1) & 0x07) + 1;
 	UINT32 src = MASK_OUT_ABOVE_16(*r_dst);
 	UINT32 res = MASK_OUT_ABOVE_16(src << shift);
 
 	if (shift != 0)
-		m68k->remaining_cycles -= shift<<m68k->cyc_shift;
+		m68k->remaining_cycles -= shift << m68k->cyc_shift;
 
 	*r_dst = MASK_OUT_BELOW_16(*r_dst) | res;
 
 	m68k->n_flag = NFLAG_16(res);
 	m68k->not_z_flag = res;
-	m68k->x_flag = m68k->c_flag = src >> (8-shift);
-	src &= m68ki_shift_16_table[shift + 1];
-	m68k->v_flag = (!(src == 0 || src == m68ki_shift_16_table[shift + 1]))<<7;
+	m68k->x_flag = m68k->c_flag = src >> (8 - shift);
+	src &= TAB->m68ki_shift_16_table[shift + 1];
+	m68k->v_flag = (!(src == 0 || src == TAB->m68ki_shift_16_table[shift + 1])) << 7;
 }
 
 
 static void m68k_op_asl_32_s(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DY;
-	UINT32 shift = (((m68k->ir >> 9) - 1) & 7) + 1;
+	UINT32 *r_dst = &DY;
+	UINT32 shift = (((m68k->ir >> 9) - 1) & 0x07) + 1;
 	UINT32 src = *r_dst;
 	UINT32 res = MASK_OUT_ABOVE_32(src << shift);
 
 	if (shift != 0)
-		m68k->remaining_cycles -= shift<<m68k->cyc_shift;
+		m68k->remaining_cycles -= shift << m68k->cyc_shift;
 
 	*r_dst = res;
 
 	m68k->n_flag = NFLAG_32(res);
 	m68k->not_z_flag = res;
-	m68k->x_flag = m68k->c_flag = src >> (24-shift);
-	src &= m68ki_shift_32_table[shift + 1];
-	m68k->v_flag = (!(src == 0 || src == m68ki_shift_32_table[shift + 1]))<<7;
+	m68k->x_flag = m68k->c_flag = src >> (24 - shift);
+	src &= TAB->m68ki_shift_32_table[shift + 1];
+	m68k->v_flag = (!(src == 0 || src == TAB->m68ki_shift_32_table[shift + 1])) << 7;
 }
 
 
 static void m68k_op_asl_8_r(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DY;
+	UINT32 *r_dst = &DY;
 	UINT32 shift = DX & 0x3f;
 	UINT32 src = MASK_OUT_ABOVE_8(*r_dst);
 	UINT32 res = MASK_OUT_ABOVE_8(src << shift);
 
 	if (shift != 0)
 	{
-		m68k->remaining_cycles -= shift<<m68k->cyc_shift;
+		m68k->remaining_cycles -= shift << m68k->cyc_shift;
 
 		if (shift < 8)
 		{
@@ -3715,13 +3755,13 @@ static void m68k_op_asl_8_r(m68ki_cpu_core *m68k)
 			m68k->x_flag = m68k->c_flag = src << shift;
 			m68k->n_flag = NFLAG_8(res);
 			m68k->not_z_flag = res;
-			src &= m68ki_shift_8_table[shift + 1];
-			m68k->v_flag = (!(src == 0 || src == m68ki_shift_8_table[shift + 1]))<<7;
+			src &= TAB->m68ki_shift_8_table[shift + 1];
+			m68k->v_flag = (!(src == 0 || src == TAB->m68ki_shift_8_table[shift + 1])) << 7;
 			return;
 		}
 
 		*r_dst &= 0xffffff00;
-		m68k->x_flag = m68k->c_flag = ((shift == 8 ? src & 1 : 0))<<8;
+		m68k->x_flag = m68k->c_flag = ((shift == 8 ? src & 1 : 0)) << 8;
 		m68k->n_flag = NFLAG_CLEAR;
 		m68k->not_z_flag = ZFLAG_SET;
 		m68k->v_flag = (!(src == 0))<<7;
@@ -3737,14 +3777,14 @@ static void m68k_op_asl_8_r(m68ki_cpu_core *m68k)
 
 static void m68k_op_asl_16_r(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DY;
+	UINT32 *r_dst = &DY;
 	UINT32 shift = DX & 0x3f;
 	UINT32 src = MASK_OUT_ABOVE_16(*r_dst);
 	UINT32 res = MASK_OUT_ABOVE_16(src << shift);
 
 	if (shift != 0)
 	{
-		m68k->remaining_cycles -= shift<<m68k->cyc_shift;
+		m68k->remaining_cycles -= shift << m68k->cyc_shift;
 
 		if (shift < 16)
 		{
@@ -3752,16 +3792,16 @@ static void m68k_op_asl_16_r(m68ki_cpu_core *m68k)
 			m68k->x_flag = m68k->c_flag = (src << shift) >> 8;
 			m68k->n_flag = NFLAG_16(res);
 			m68k->not_z_flag = res;
-			src &= m68ki_shift_16_table[shift + 1];
-			m68k->v_flag = (!(src == 0 || src == m68ki_shift_16_table[shift + 1]))<<7;
+			src &= TAB->m68ki_shift_16_table[shift + 1];
+			m68k->v_flag = (!(src == 0 || src == TAB->m68ki_shift_16_table[shift + 1])) << 7;
 			return;
 		}
 
 		*r_dst &= 0xffff0000;
-		m68k->x_flag = m68k->c_flag = ((shift == 16 ? src & 1 : 0))<<8;
+		m68k->x_flag = m68k->c_flag = ((shift == 16 ? src & 1 : 0)) << 8;
 		m68k->n_flag = NFLAG_CLEAR;
 		m68k->not_z_flag = ZFLAG_SET;
-		m68k->v_flag = (!(src == 0))<<7;
+		m68k->v_flag = (!(src == 0)) << 7;
 		return;
 	}
 
@@ -3774,14 +3814,14 @@ static void m68k_op_asl_16_r(m68ki_cpu_core *m68k)
 
 static void m68k_op_asl_32_r(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DY;
+	UINT32 *r_dst = &DY;
 	UINT32 shift = DX & 0x3f;
 	UINT32 src = *r_dst;
 	UINT32 res = MASK_OUT_ABOVE_32(src << shift);
 
 	if (shift != 0)
 	{
-		m68k->remaining_cycles -= shift<<m68k->cyc_shift;
+		m68k->remaining_cycles -= shift << m68k->cyc_shift;
 
 		if (shift < 32)
 		{
@@ -3789,16 +3829,16 @@ static void m68k_op_asl_32_r(m68ki_cpu_core *m68k)
 			m68k->x_flag = m68k->c_flag = (src >> (32 - shift)) << 8;
 			m68k->n_flag = NFLAG_32(res);
 			m68k->not_z_flag = res;
-			src &= m68ki_shift_32_table[shift + 1];
-			m68k->v_flag = (!(src == 0 || src == m68ki_shift_32_table[shift + 1]))<<7;
+			src &= TAB->m68ki_shift_32_table[shift + 1];
+			m68k->v_flag = (!(src == 0 || src == TAB->m68ki_shift_32_table[shift + 1])) << 7;
 			return;
 		}
 
 		*r_dst = 0;
-		m68k->x_flag = m68k->c_flag = ((shift == 32 ? src & 1 : 0))<<8;
+		m68k->x_flag = m68k->c_flag = ((shift == 32 ? src & 1 : 0)) << 8;
 		m68k->n_flag = NFLAG_CLEAR;
 		m68k->not_z_flag = ZFLAG_SET;
-		m68k->v_flag = (!(src == 0))<<7;
+		m68k->v_flag = (!(src == 0)) << 7;
 		return;
 	}
 
@@ -3821,7 +3861,7 @@ static void m68k_op_asl_16_ai(m68ki_cpu_core *m68k)
 	m68k->not_z_flag = res;
 	m68k->x_flag = m68k->c_flag = src >> 7;
 	src &= 0xc000;
-	m68k->v_flag = (!(src == 0 || src == 0xc000))<<7;
+	m68k->v_flag = (!(src == 0 || src == 0xc000)) << 7;
 }
 
 
@@ -4469,7 +4509,7 @@ static void m68k_op_ble_32(m68ki_cpu_core *m68k)
 
 static void m68k_op_bchg_32_r_d(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DY;
+	UINT32 *r_dst = &DY;
 	UINT32 mask = 1 << (DX & 0x1f);
 
 	m68k->not_z_flag = *r_dst & mask;
@@ -4481,7 +4521,7 @@ static void m68k_op_bchg_8_r_ai(m68ki_cpu_core *m68k)
 {
 	UINT32 ea = EA_AY_AI_8(m68k);
 	UINT32 src = m68ki_read_8(m68k, ea);
-	UINT32 mask = 1 << (DX & 7);
+	UINT32 mask = 1 << (DX & 0x07);
 
 	m68k->not_z_flag = src & mask;
 	m68ki_write_8(m68k, ea, src ^ mask);
@@ -4492,7 +4532,7 @@ static void m68k_op_bchg_8_r_pi(m68ki_cpu_core *m68k)
 {
 	UINT32 ea = EA_AY_PI_8(m68k);
 	UINT32 src = m68ki_read_8(m68k, ea);
-	UINT32 mask = 1 << (DX & 7);
+	UINT32 mask = 1 << (DX & 0x07);
 
 	m68k->not_z_flag = src & mask;
 	m68ki_write_8(m68k, ea, src ^ mask);
@@ -4503,7 +4543,7 @@ static void m68k_op_bchg_8_r_pi7(m68ki_cpu_core *m68k)
 {
 	UINT32 ea = EA_A7_PI_8(m68k);
 	UINT32 src = m68ki_read_8(m68k, ea);
-	UINT32 mask = 1 << (DX & 7);
+	UINT32 mask = 1 << (DX & 0x07);
 
 	m68k->not_z_flag = src & mask;
 	m68ki_write_8(m68k, ea, src ^ mask);
@@ -4525,7 +4565,7 @@ static void m68k_op_bchg_8_r_pd7(m68ki_cpu_core *m68k)
 {
 	UINT32 ea = EA_A7_PD_8(m68k);
 	UINT32 src = m68ki_read_8(m68k, ea);
-	UINT32 mask = 1 << (DX & 7);
+	UINT32 mask = 1 << (DX & 0x07);
 
 	m68k->not_z_flag = src & mask;
 	m68ki_write_8(m68k, ea, src ^ mask);
@@ -4536,7 +4576,7 @@ static void m68k_op_bchg_8_r_di(m68ki_cpu_core *m68k)
 {
 	UINT32 ea = EA_AY_DI_8(m68k);
 	UINT32 src = m68ki_read_8(m68k, ea);
-	UINT32 mask = 1 << (DX & 7);
+	UINT32 mask = 1 << (DX & 0x07);
 
 	m68k->not_z_flag = src & mask;
 	m68ki_write_8(m68k, ea, src ^ mask);
@@ -4547,7 +4587,7 @@ static void m68k_op_bchg_8_r_ix(m68ki_cpu_core *m68k)
 {
 	UINT32 ea = EA_AY_IX_8(m68k);
 	UINT32 src = m68ki_read_8(m68k, ea);
-	UINT32 mask = 1 << (DX & 7);
+	UINT32 mask = 1 << (DX & 0x07);
 
 	m68k->not_z_flag = src & mask;
 	m68ki_write_8(m68k, ea, src ^ mask);
@@ -4558,7 +4598,7 @@ static void m68k_op_bchg_8_r_aw(m68ki_cpu_core *m68k)
 {
 	UINT32 ea = EA_AW_8(m68k);
 	UINT32 src = m68ki_read_8(m68k, ea);
-	UINT32 mask = 1 << (DX & 7);
+	UINT32 mask = 1 << (DX & 0x07);
 
 	m68k->not_z_flag = src & mask;
 	m68ki_write_8(m68k, ea, src ^ mask);
@@ -4569,7 +4609,7 @@ static void m68k_op_bchg_8_r_al(m68ki_cpu_core *m68k)
 {
 	UINT32 ea = EA_AL_8(m68k);
 	UINT32 src = m68ki_read_8(m68k, ea);
-	UINT32 mask = 1 << (DX & 7);
+	UINT32 mask = 1 << (DX & 0x07);
 
 	m68k->not_z_flag = src & mask;
 	m68ki_write_8(m68k, ea, src ^ mask);
@@ -4578,7 +4618,7 @@ static void m68k_op_bchg_8_r_al(m68ki_cpu_core *m68k)
 
 static void m68k_op_bchg_32_s_d(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DY;
+	UINT32 *r_dst = &DY;
 	UINT32 mask = 1 << (OPER_I_8(m68k) & 0x1f);
 
 	m68k->not_z_flag = *r_dst & mask;
@@ -4588,7 +4628,7 @@ static void m68k_op_bchg_32_s_d(m68ki_cpu_core *m68k)
 
 static void m68k_op_bchg_8_s_ai(m68ki_cpu_core *m68k)
 {
-	UINT32 mask = 1 << (OPER_I_8(m68k) & 7);
+	UINT32 mask = 1 << (OPER_I_8(m68k) & 0x07);
 	UINT32 ea = EA_AY_AI_8(m68k);
 	UINT32 src = m68ki_read_8(m68k, ea);
 
@@ -4599,7 +4639,7 @@ static void m68k_op_bchg_8_s_ai(m68ki_cpu_core *m68k)
 
 static void m68k_op_bchg_8_s_pi(m68ki_cpu_core *m68k)
 {
-	UINT32 mask = 1 << (OPER_I_8(m68k) & 7);
+	UINT32 mask = 1 << (OPER_I_8(m68k) & 0x07);
 	UINT32 ea = EA_AY_PI_8(m68k);
 	UINT32 src = m68ki_read_8(m68k, ea);
 
@@ -4610,7 +4650,7 @@ static void m68k_op_bchg_8_s_pi(m68ki_cpu_core *m68k)
 
 static void m68k_op_bchg_8_s_pi7(m68ki_cpu_core *m68k)
 {
-	UINT32 mask = 1 << (OPER_I_8(m68k) & 7);
+	UINT32 mask = 1 << (OPER_I_8(m68k) & 0x07);
 	UINT32 ea = EA_A7_PI_8(m68k);
 	UINT32 src = m68ki_read_8(m68k, ea);
 
@@ -4621,7 +4661,7 @@ static void m68k_op_bchg_8_s_pi7(m68ki_cpu_core *m68k)
 
 static void m68k_op_bchg_8_s_pd(m68ki_cpu_core *m68k)
 {
-	UINT32 mask = 1 << (OPER_I_8(m68k) & 7);
+	UINT32 mask = 1 << (OPER_I_8(m68k) & 0x07);
 	UINT32 ea = EA_AY_PD_8(m68k);
 	UINT32 src = m68ki_read_8(m68k, ea);
 
@@ -4632,7 +4672,7 @@ static void m68k_op_bchg_8_s_pd(m68ki_cpu_core *m68k)
 
 static void m68k_op_bchg_8_s_pd7(m68ki_cpu_core *m68k)
 {
-	UINT32 mask = 1 << (OPER_I_8(m68k) & 7);
+	UINT32 mask = 1 << (OPER_I_8(m68k) & 0x07);
 	UINT32 ea = EA_A7_PD_8(m68k);
 	UINT32 src = m68ki_read_8(m68k, ea);
 
@@ -4643,7 +4683,7 @@ static void m68k_op_bchg_8_s_pd7(m68ki_cpu_core *m68k)
 
 static void m68k_op_bchg_8_s_di(m68ki_cpu_core *m68k)
 {
-	UINT32 mask = 1 << (OPER_I_8(m68k) & 7);
+	UINT32 mask = 1 << (OPER_I_8(m68k) & 0x07);
 	UINT32 ea = EA_AY_DI_8(m68k);
 	UINT32 src = m68ki_read_8(m68k, ea);
 
@@ -4654,7 +4694,7 @@ static void m68k_op_bchg_8_s_di(m68ki_cpu_core *m68k)
 
 static void m68k_op_bchg_8_s_ix(m68ki_cpu_core *m68k)
 {
-	UINT32 mask = 1 << (OPER_I_8(m68k) & 7);
+	UINT32 mask = 1 << (OPER_I_8(m68k) & 0x07);
 	UINT32 ea = EA_AY_IX_8(m68k);
 	UINT32 src = m68ki_read_8(m68k, ea);
 
@@ -4665,7 +4705,7 @@ static void m68k_op_bchg_8_s_ix(m68ki_cpu_core *m68k)
 
 static void m68k_op_bchg_8_s_aw(m68ki_cpu_core *m68k)
 {
-	UINT32 mask = 1 << (OPER_I_8(m68k) & 7);
+	UINT32 mask = 1 << (OPER_I_8(m68k) & 0x07);
 	UINT32 ea = EA_AW_8(m68k);
 	UINT32 src = m68ki_read_8(m68k, ea);
 
@@ -4676,7 +4716,7 @@ static void m68k_op_bchg_8_s_aw(m68ki_cpu_core *m68k)
 
 static void m68k_op_bchg_8_s_al(m68ki_cpu_core *m68k)
 {
-	UINT32 mask = 1 << (OPER_I_8(m68k) & 7);
+	UINT32 mask = 1 << (OPER_I_8(m68k) & 0x07);
 	UINT32 ea = EA_AL_8(m68k);
 	UINT32 src = m68ki_read_8(m68k, ea);
 
@@ -4687,7 +4727,7 @@ static void m68k_op_bchg_8_s_al(m68ki_cpu_core *m68k)
 
 static void m68k_op_bclr_32_r_d(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DY;
+	UINT32 *r_dst = &DY;
 	UINT32 mask = 1 << (DX & 0x1f);
 
 	m68k->not_z_flag = *r_dst & mask;
@@ -4699,7 +4739,7 @@ static void m68k_op_bclr_8_r_ai(m68ki_cpu_core *m68k)
 {
 	UINT32 ea = EA_AY_AI_8(m68k);
 	UINT32 src = m68ki_read_8(m68k, ea);
-	UINT32 mask = 1 << (DX & 7);
+	UINT32 mask = 1 << (DX & 0x07);
 
 	m68k->not_z_flag = src & mask;
 	m68ki_write_8(m68k, ea, src & ~mask);
@@ -4710,7 +4750,7 @@ static void m68k_op_bclr_8_r_pi(m68ki_cpu_core *m68k)
 {
 	UINT32 ea = EA_AY_PI_8(m68k);
 	UINT32 src = m68ki_read_8(m68k, ea);
-	UINT32 mask = 1 << (DX & 7);
+	UINT32 mask = 1 << (DX & 0x07);
 
 	m68k->not_z_flag = src & mask;
 	m68ki_write_8(m68k, ea, src & ~mask);
@@ -4721,7 +4761,7 @@ static void m68k_op_bclr_8_r_pi7(m68ki_cpu_core *m68k)
 {
 	UINT32 ea = EA_A7_PI_8(m68k);
 	UINT32 src = m68ki_read_8(m68k, ea);
-	UINT32 mask = 1 << (DX & 7);
+	UINT32 mask = 1 << (DX & 0x07);
 
 	m68k->not_z_flag = src & mask;
 	m68ki_write_8(m68k, ea, src & ~mask);
@@ -4732,7 +4772,7 @@ static void m68k_op_bclr_8_r_pd(m68ki_cpu_core *m68k)
 {
 	UINT32 ea = EA_AY_PD_8(m68k);
 	UINT32 src = m68ki_read_8(m68k, ea);
-	UINT32 mask = 1 << (DX & 7);
+	UINT32 mask = 1 << (DX & 0x07);
 
 	m68k->not_z_flag = src & mask;
 	m68ki_write_8(m68k, ea, src & ~mask);
@@ -4743,7 +4783,7 @@ static void m68k_op_bclr_8_r_pd7(m68ki_cpu_core *m68k)
 {
 	UINT32 ea = EA_A7_PD_8(m68k);
 	UINT32 src = m68ki_read_8(m68k, ea);
-	UINT32 mask = 1 << (DX & 7);
+	UINT32 mask = 1 << (DX & 0x07);
 
 	m68k->not_z_flag = src & mask;
 	m68ki_write_8(m68k, ea, src & ~mask);
@@ -4754,7 +4794,7 @@ static void m68k_op_bclr_8_r_di(m68ki_cpu_core *m68k)
 {
 	UINT32 ea = EA_AY_DI_8(m68k);
 	UINT32 src = m68ki_read_8(m68k, ea);
-	UINT32 mask = 1 << (DX & 7);
+	UINT32 mask = 1 << (DX & 0x07);
 
 	m68k->not_z_flag = src & mask;
 	m68ki_write_8(m68k, ea, src & ~mask);
@@ -4765,7 +4805,7 @@ static void m68k_op_bclr_8_r_ix(m68ki_cpu_core *m68k)
 {
 	UINT32 ea = EA_AY_IX_8(m68k);
 	UINT32 src = m68ki_read_8(m68k, ea);
-	UINT32 mask = 1 << (DX & 7);
+	UINT32 mask = 1 << (DX & 0x07);
 
 	m68k->not_z_flag = src & mask;
 	m68ki_write_8(m68k, ea, src & ~mask);
@@ -4787,7 +4827,7 @@ static void m68k_op_bclr_8_r_al(m68ki_cpu_core *m68k)
 {
 	UINT32 ea = EA_AL_8(m68k);
 	UINT32 src = m68ki_read_8(m68k, ea);
-	UINT32 mask = 1 << (DX & 7);
+	UINT32 mask = 1 << (DX & 0x07);
 
 	m68k->not_z_flag = src & mask;
 	m68ki_write_8(m68k, ea, src & ~mask);
@@ -4796,7 +4836,7 @@ static void m68k_op_bclr_8_r_al(m68ki_cpu_core *m68k)
 
 static void m68k_op_bclr_32_s_d(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DY;
+	UINT32 *r_dst = &DY;
 	UINT32 mask = 1 << (OPER_I_8(m68k) & 0x1f);
 
 	m68k->not_z_flag = *r_dst & mask;
@@ -4806,7 +4846,7 @@ static void m68k_op_bclr_32_s_d(m68ki_cpu_core *m68k)
 
 static void m68k_op_bclr_8_s_ai(m68ki_cpu_core *m68k)
 {
-	UINT32 mask = 1 << (OPER_I_8(m68k) & 7);
+	UINT32 mask = 1 << (OPER_I_8(m68k) & 0x07);
 	UINT32 ea = EA_AY_AI_8(m68k);
 	UINT32 src = m68ki_read_8(m68k, ea);
 
@@ -4817,7 +4857,7 @@ static void m68k_op_bclr_8_s_ai(m68ki_cpu_core *m68k)
 
 static void m68k_op_bclr_8_s_pi(m68ki_cpu_core *m68k)
 {
-	UINT32 mask = 1 << (OPER_I_8(m68k) & 7);
+	UINT32 mask = 1 << (OPER_I_8(m68k) & 0x07);
 	UINT32 ea = EA_AY_PI_8(m68k);
 	UINT32 src = m68ki_read_8(m68k, ea);
 
@@ -4828,7 +4868,7 @@ static void m68k_op_bclr_8_s_pi(m68ki_cpu_core *m68k)
 
 static void m68k_op_bclr_8_s_pi7(m68ki_cpu_core *m68k)
 {
-	UINT32 mask = 1 << (OPER_I_8(m68k) & 7);
+	UINT32 mask = 1 << (OPER_I_8(m68k) & 0x07);
 	UINT32 ea = EA_A7_PI_8(m68k);
 	UINT32 src = m68ki_read_8(m68k, ea);
 
@@ -4839,7 +4879,7 @@ static void m68k_op_bclr_8_s_pi7(m68ki_cpu_core *m68k)
 
 static void m68k_op_bclr_8_s_pd(m68ki_cpu_core *m68k)
 {
-	UINT32 mask = 1 << (OPER_I_8(m68k) & 7);
+	UINT32 mask = 1 << (OPER_I_8(m68k) & 0x07);
 	UINT32 ea = EA_AY_PD_8(m68k);
 	UINT32 src = m68ki_read_8(m68k, ea);
 
@@ -4850,7 +4890,7 @@ static void m68k_op_bclr_8_s_pd(m68ki_cpu_core *m68k)
 
 static void m68k_op_bclr_8_s_pd7(m68ki_cpu_core *m68k)
 {
-	UINT32 mask = 1 << (OPER_I_8(m68k) & 7);
+	UINT32 mask = 1 << (OPER_I_8(m68k) & 0x07);
 	UINT32 ea = EA_A7_PD_8(m68k);
 	UINT32 src = m68ki_read_8(m68k, ea);
 
@@ -4861,7 +4901,7 @@ static void m68k_op_bclr_8_s_pd7(m68ki_cpu_core *m68k)
 
 static void m68k_op_bclr_8_s_di(m68ki_cpu_core *m68k)
 {
-	UINT32 mask = 1 << (OPER_I_8(m68k) & 7);
+	UINT32 mask = 1 << (OPER_I_8(m68k) & 0x07);
 	UINT32 ea = EA_AY_DI_8(m68k);
 	UINT32 src = m68ki_read_8(m68k, ea);
 
@@ -4872,7 +4912,7 @@ static void m68k_op_bclr_8_s_di(m68ki_cpu_core *m68k)
 
 static void m68k_op_bclr_8_s_ix(m68ki_cpu_core *m68k)
 {
-	UINT32 mask = 1 << (OPER_I_8(m68k) & 7);
+	UINT32 mask = 1 << (OPER_I_8(m68k) & 0x07);
 	UINT32 ea = EA_AY_IX_8(m68k);
 	UINT32 src = m68ki_read_8(m68k, ea);
 
@@ -4883,7 +4923,7 @@ static void m68k_op_bclr_8_s_ix(m68ki_cpu_core *m68k)
 
 static void m68k_op_bclr_8_s_aw(m68ki_cpu_core *m68k)
 {
-	UINT32 mask = 1 << (OPER_I_8(m68k) & 7);
+	UINT32 mask = 1 << (OPER_I_8(m68k) & 0x07);
 	UINT32 ea = EA_AW_8(m68k);
 	UINT32 src = m68ki_read_8(m68k, ea);
 
@@ -4894,7 +4934,7 @@ static void m68k_op_bclr_8_s_aw(m68ki_cpu_core *m68k)
 
 static void m68k_op_bclr_8_s_al(m68ki_cpu_core *m68k)
 {
-	UINT32 mask = 1 << (OPER_I_8(m68k) & 7);
+	UINT32 mask = 1 << (OPER_I_8(m68k) & 0x07);
 	UINT32 ea = EA_AL_8(m68k);
 	UINT32 src = m68ki_read_8(m68k, ea);
 
@@ -4915,7 +4955,7 @@ static void m68k_op_bra_16(m68ki_cpu_core *m68k)
 {
 	UINT32 offset = OPER_I_16(m68k);
 	REG_PC -= 2;
-	m68ki_trace_t0();			   /* auto-disable (see m68kcpu.h) */
+	m68ki_trace_t0();				/* auto-disable (see m68kcpu.h) */
 	m68ki_branch_16(m68k, offset);
 	if (REG_PC == REG_PPC && m68k->remaining_cycles > 0)
 		m68k->remaining_cycles = 0;
@@ -4933,7 +4973,7 @@ static void m68k_op_bra_32(m68ki_cpu_core *m68k)
 
 static void m68k_op_bset_32_r_d(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DY;
+	UINT32 *r_dst = &DY;
 	UINT32 mask = 1 << (DX & 0x1f);
 
 	m68k->not_z_flag = *r_dst & mask;
@@ -4945,7 +4985,7 @@ static void m68k_op_bset_8_r_ai(m68ki_cpu_core *m68k)
 {
 	UINT32 ea = EA_AY_AI_8(m68k);
 	UINT32 src = m68ki_read_8(m68k, ea);
-	UINT32 mask = 1 << (DX & 7);
+	UINT32 mask = 1 << (DX & 0x07);
 
 	m68k->not_z_flag = src & mask;
 	m68ki_write_8(m68k, ea, src | mask);
@@ -4956,7 +4996,7 @@ static void m68k_op_bset_8_r_pi(m68ki_cpu_core *m68k)
 {
 	UINT32 ea = EA_AY_PI_8(m68k);
 	UINT32 src = m68ki_read_8(m68k, ea);
-	UINT32 mask = 1 << (DX & 7);
+	UINT32 mask = 1 << (DX & 0x07);
 
 	m68k->not_z_flag = src & mask;
 	m68ki_write_8(m68k, ea, src | mask);
@@ -4967,7 +5007,7 @@ static void m68k_op_bset_8_r_pi7(m68ki_cpu_core *m68k)
 {
 	UINT32 ea = EA_A7_PI_8(m68k);
 	UINT32 src = m68ki_read_8(m68k, ea);
-	UINT32 mask = 1 << (DX & 7);
+	UINT32 mask = 1 << (DX & 0x07);
 
 	m68k->not_z_flag = src & mask;
 	m68ki_write_8(m68k, ea, src | mask);
@@ -4978,7 +5018,7 @@ static void m68k_op_bset_8_r_pd(m68ki_cpu_core *m68k)
 {
 	UINT32 ea = EA_AY_PD_8(m68k);
 	UINT32 src = m68ki_read_8(m68k, ea);
-	UINT32 mask = 1 << (DX & 7);
+	UINT32 mask = 1 << (DX & 0x07);
 
 	m68k->not_z_flag = src & mask;
 	m68ki_write_8(m68k, ea, src | mask);
@@ -4989,7 +5029,7 @@ static void m68k_op_bset_8_r_pd7(m68ki_cpu_core *m68k)
 {
 	UINT32 ea = EA_A7_PD_8(m68k);
 	UINT32 src = m68ki_read_8(m68k, ea);
-	UINT32 mask = 1 << (DX & 7);
+	UINT32 mask = 1 << (DX & 0x07);
 
 	m68k->not_z_flag = src & mask;
 	m68ki_write_8(m68k, ea, src | mask);
@@ -5000,7 +5040,7 @@ static void m68k_op_bset_8_r_di(m68ki_cpu_core *m68k)
 {
 	UINT32 ea = EA_AY_DI_8(m68k);
 	UINT32 src = m68ki_read_8(m68k, ea);
-	UINT32 mask = 1 << (DX & 7);
+	UINT32 mask = 1 << (DX & 0x07);
 
 	m68k->not_z_flag = src & mask;
 	m68ki_write_8(m68k, ea, src | mask);
@@ -5011,7 +5051,7 @@ static void m68k_op_bset_8_r_ix(m68ki_cpu_core *m68k)
 {
 	UINT32 ea = EA_AY_IX_8(m68k);
 	UINT32 src = m68ki_read_8(m68k, ea);
-	UINT32 mask = 1 << (DX & 7);
+	UINT32 mask = 1 << (DX & 0x07);
 
 	m68k->not_z_flag = src & mask;
 	m68ki_write_8(m68k, ea, src | mask);
@@ -5022,7 +5062,7 @@ static void m68k_op_bset_8_r_aw(m68ki_cpu_core *m68k)
 {
 	UINT32 ea = EA_AW_8(m68k);
 	UINT32 src = m68ki_read_8(m68k, ea);
-	UINT32 mask = 1 << (DX & 7);
+	UINT32 mask = 1 << (DX & 0x07);
 
 	m68k->not_z_flag = src & mask;
 	m68ki_write_8(m68k, ea, src | mask);
@@ -5033,7 +5073,7 @@ static void m68k_op_bset_8_r_al(m68ki_cpu_core *m68k)
 {
 	UINT32 ea = EA_AL_8(m68k);
 	UINT32 src = m68ki_read_8(m68k, ea);
-	UINT32 mask = 1 << (DX & 7);
+	UINT32 mask = 1 << (DX & 0x07);
 
 	m68k->not_z_flag = src & mask;
 	m68ki_write_8(m68k, ea, src | mask);
@@ -5042,7 +5082,7 @@ static void m68k_op_bset_8_r_al(m68ki_cpu_core *m68k)
 
 static void m68k_op_bset_32_s_d(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DY;
+	UINT32 *r_dst = &DY;
 	UINT32 mask = 1 << (OPER_I_8(m68k) & 0x1f);
 
 	m68k->not_z_flag = *r_dst & mask;
@@ -5052,7 +5092,7 @@ static void m68k_op_bset_32_s_d(m68ki_cpu_core *m68k)
 
 static void m68k_op_bset_8_s_ai(m68ki_cpu_core *m68k)
 {
-	UINT32 mask = 1 << (OPER_I_8(m68k) & 7);
+	UINT32 mask = 1 << (OPER_I_8(m68k) & 0x07);
 	UINT32 ea = EA_AY_AI_8(m68k);
 	UINT32 src = m68ki_read_8(m68k, ea);
 
@@ -5063,7 +5103,7 @@ static void m68k_op_bset_8_s_ai(m68ki_cpu_core *m68k)
 
 static void m68k_op_bset_8_s_pi(m68ki_cpu_core *m68k)
 {
-	UINT32 mask = 1 << (OPER_I_8(m68k) & 7);
+	UINT32 mask = 1 << (OPER_I_8(m68k) & 0x07);
 	UINT32 ea = EA_AY_PI_8(m68k);
 	UINT32 src = m68ki_read_8(m68k, ea);
 
@@ -5074,7 +5114,7 @@ static void m68k_op_bset_8_s_pi(m68ki_cpu_core *m68k)
 
 static void m68k_op_bset_8_s_pi7(m68ki_cpu_core *m68k)
 {
-	UINT32 mask = 1 << (OPER_I_8(m68k) & 7);
+	UINT32 mask = 1 << (OPER_I_8(m68k) & 0x07);
 	UINT32 ea = EA_A7_PI_8(m68k);
 	UINT32 src = m68ki_read_8(m68k, ea);
 
@@ -5085,7 +5125,7 @@ static void m68k_op_bset_8_s_pi7(m68ki_cpu_core *m68k)
 
 static void m68k_op_bset_8_s_pd(m68ki_cpu_core *m68k)
 {
-	UINT32 mask = 1 << (OPER_I_8(m68k) & 7);
+	UINT32 mask = 1 << (OPER_I_8(m68k) & 0x07);
 	UINT32 ea = EA_AY_PD_8(m68k);
 	UINT32 src = m68ki_read_8(m68k, ea);
 
@@ -5096,7 +5136,7 @@ static void m68k_op_bset_8_s_pd(m68ki_cpu_core *m68k)
 
 static void m68k_op_bset_8_s_pd7(m68ki_cpu_core *m68k)
 {
-	UINT32 mask = 1 << (OPER_I_8(m68k) & 7);
+	UINT32 mask = 1 << (OPER_I_8(m68k) & 0x07);
 	UINT32 ea = EA_A7_PD_8(m68k);
 	UINT32 src = m68ki_read_8(m68k, ea);
 
@@ -5107,7 +5147,7 @@ static void m68k_op_bset_8_s_pd7(m68ki_cpu_core *m68k)
 
 static void m68k_op_bset_8_s_di(m68ki_cpu_core *m68k)
 {
-	UINT32 mask = 1 << (OPER_I_8(m68k) & 7);
+	UINT32 mask = 1 << (OPER_I_8(m68k) & 0x07);
 	UINT32 ea = EA_AY_DI_8(m68k);
 	UINT32 src = m68ki_read_8(m68k, ea);
 
@@ -5118,7 +5158,7 @@ static void m68k_op_bset_8_s_di(m68ki_cpu_core *m68k)
 
 static void m68k_op_bset_8_s_ix(m68ki_cpu_core *m68k)
 {
-	UINT32 mask = 1 << (OPER_I_8(m68k) & 7);
+	UINT32 mask = 1 << (OPER_I_8(m68k) & 0x07);
 	UINT32 ea = EA_AY_IX_8(m68k);
 	UINT32 src = m68ki_read_8(m68k, ea);
 
@@ -5129,7 +5169,7 @@ static void m68k_op_bset_8_s_ix(m68ki_cpu_core *m68k)
 
 static void m68k_op_bset_8_s_aw(m68ki_cpu_core *m68k)
 {
-	UINT32 mask = 1 << (OPER_I_8(m68k) & 7);
+	UINT32 mask = 1 << (OPER_I_8(m68k) & 0x07);
 	UINT32 ea = EA_AW_8(m68k);
 	UINT32 src = m68ki_read_8(m68k, ea);
 
@@ -5140,7 +5180,7 @@ static void m68k_op_bset_8_s_aw(m68ki_cpu_core *m68k)
 
 static void m68k_op_bset_8_s_al(m68ki_cpu_core *m68k)
 {
-	UINT32 mask = 1 << (OPER_I_8(m68k) & 7);
+	UINT32 mask = 1 << (OPER_I_8(m68k) & 0x07);
 	UINT32 ea = EA_AL_8(m68k);
 	UINT32 src = m68ki_read_8(m68k, ea);
 
@@ -5183,73 +5223,73 @@ static void m68k_op_btst_32_r_d(m68ki_cpu_core *m68k)
 
 static void m68k_op_btst_8_r_ai(m68ki_cpu_core *m68k)
 {
-	m68k->not_z_flag = OPER_AY_AI_8(m68k) & (1 << (DX & 7));
+	m68k->not_z_flag = OPER_AY_AI_8(m68k) & (1 << (DX & 0x07));
 }
 
 
 static void m68k_op_btst_8_r_pi(m68ki_cpu_core *m68k)
 {
-	m68k->not_z_flag = OPER_AY_PI_8(m68k) & (1 << (DX & 7));
+	m68k->not_z_flag = OPER_AY_PI_8(m68k) & (1 << (DX & 0x07));
 }
 
 
 static void m68k_op_btst_8_r_pi7(m68ki_cpu_core *m68k)
 {
-	m68k->not_z_flag = OPER_A7_PI_8(m68k) & (1 << (DX & 7));
+	m68k->not_z_flag = OPER_A7_PI_8(m68k) & (1 << (DX & 0x07));
 }
 
 
 static void m68k_op_btst_8_r_pd(m68ki_cpu_core *m68k)
 {
-	m68k->not_z_flag = OPER_AY_PD_8(m68k) & (1 << (DX & 7));
+	m68k->not_z_flag = OPER_AY_PD_8(m68k) & (1 << (DX & 0x07));
 }
 
 
 static void m68k_op_btst_8_r_pd7(m68ki_cpu_core *m68k)
 {
-	m68k->not_z_flag = OPER_A7_PD_8(m68k) & (1 << (DX & 7));
+	m68k->not_z_flag = OPER_A7_PD_8(m68k) & (1 << (DX & 0x07));
 }
 
 
 static void m68k_op_btst_8_r_di(m68ki_cpu_core *m68k)
 {
-	m68k->not_z_flag = OPER_AY_DI_8(m68k) & (1 << (DX & 7));
+	m68k->not_z_flag = OPER_AY_DI_8(m68k) & (1 << (DX & 0x07));
 }
 
 
 static void m68k_op_btst_8_r_ix(m68ki_cpu_core *m68k)
 {
-	m68k->not_z_flag = OPER_AY_IX_8(m68k) & (1 << (DX & 7));
+	m68k->not_z_flag = OPER_AY_IX_8(m68k) & (1 << (DX & 0x07));
 }
 
 
 static void m68k_op_btst_8_r_aw(m68ki_cpu_core *m68k)
 {
-	m68k->not_z_flag = OPER_AW_8(m68k) & (1 << (DX & 7));
+	m68k->not_z_flag = OPER_AW_8(m68k) & (1 << (DX & 0x07));
 }
 
 
 static void m68k_op_btst_8_r_al(m68ki_cpu_core *m68k)
 {
-	m68k->not_z_flag = OPER_AL_8(m68k) & (1 << (DX & 7));
+	m68k->not_z_flag = OPER_AL_8(m68k) & (1 << (DX & 0x07));
 }
 
 
 static void m68k_op_btst_8_r_pcdi(m68ki_cpu_core *m68k)
 {
-	m68k->not_z_flag = OPER_PCDI_8(m68k) & (1 << (DX & 7));
+	m68k->not_z_flag = OPER_PCDI_8(m68k) & (1 << (DX & 0x07));
 }
 
 
 static void m68k_op_btst_8_r_pcix(m68ki_cpu_core *m68k)
 {
-	m68k->not_z_flag = OPER_PCIX_8(m68k) & (1 << (DX & 7));
+	m68k->not_z_flag = OPER_PCIX_8(m68k) & (1 << (DX & 0x07));
 }
 
 
 static void m68k_op_btst_8_r_i(m68ki_cpu_core *m68k)
 {
-	m68k->not_z_flag = OPER_I_8(m68k) & (1 << (DX & 7));
+	m68k->not_z_flag = OPER_I_8(m68k) & (1 << (DX & 0x07));
 }
 
 
@@ -5261,7 +5301,7 @@ static void m68k_op_btst_32_s_d(m68ki_cpu_core *m68k)
 
 static void m68k_op_btst_8_s_ai(m68ki_cpu_core *m68k)
 {
-	UINT32 bit = OPER_I_8(m68k) & 7;
+	UINT32 bit = OPER_I_8(m68k) & 0x07;
 
 	m68k->not_z_flag = OPER_AY_AI_8(m68k) & (1 << bit);
 }
@@ -5269,7 +5309,7 @@ static void m68k_op_btst_8_s_ai(m68ki_cpu_core *m68k)
 
 static void m68k_op_btst_8_s_pi(m68ki_cpu_core *m68k)
 {
-	UINT32 bit = OPER_I_8(m68k) & 7;
+	UINT32 bit = OPER_I_8(m68k) & 0x07;
 
 	m68k->not_z_flag = OPER_AY_PI_8(m68k) & (1 << bit);
 }
@@ -5277,7 +5317,7 @@ static void m68k_op_btst_8_s_pi(m68ki_cpu_core *m68k)
 
 static void m68k_op_btst_8_s_pi7(m68ki_cpu_core *m68k)
 {
-	UINT32 bit = OPER_I_8(m68k) & 7;
+	UINT32 bit = OPER_I_8(m68k) & 0x07;
 
 	m68k->not_z_flag = OPER_A7_PI_8(m68k) & (1 << bit);
 }
@@ -5285,7 +5325,7 @@ static void m68k_op_btst_8_s_pi7(m68ki_cpu_core *m68k)
 
 static void m68k_op_btst_8_s_pd(m68ki_cpu_core *m68k)
 {
-	UINT32 bit = OPER_I_8(m68k) & 7;
+	UINT32 bit = OPER_I_8(m68k) & 0x07;
 
 	m68k->not_z_flag = OPER_AY_PD_8(m68k) & (1 << bit);
 }
@@ -5293,7 +5333,7 @@ static void m68k_op_btst_8_s_pd(m68ki_cpu_core *m68k)
 
 static void m68k_op_btst_8_s_pd7(m68ki_cpu_core *m68k)
 {
-	UINT32 bit = OPER_I_8(m68k) & 7;
+	UINT32 bit = OPER_I_8(m68k) & 0x07;
 
 	m68k->not_z_flag = OPER_A7_PD_8(m68k) & (1 << bit);
 }
@@ -5301,7 +5341,7 @@ static void m68k_op_btst_8_s_pd7(m68ki_cpu_core *m68k)
 
 static void m68k_op_btst_8_s_di(m68ki_cpu_core *m68k)
 {
-	UINT32 bit = OPER_I_8(m68k) & 7;
+	UINT32 bit = OPER_I_8(m68k) & 0x07;
 
 	m68k->not_z_flag = OPER_AY_DI_8(m68k) & (1 << bit);
 }
@@ -5309,7 +5349,7 @@ static void m68k_op_btst_8_s_di(m68ki_cpu_core *m68k)
 
 static void m68k_op_btst_8_s_ix(m68ki_cpu_core *m68k)
 {
-	UINT32 bit = OPER_I_8(m68k) & 7;
+	UINT32 bit = OPER_I_8(m68k) & 0x07;
 
 	m68k->not_z_flag = OPER_AY_IX_8(m68k) & (1 << bit);
 }
@@ -5317,7 +5357,7 @@ static void m68k_op_btst_8_s_ix(m68ki_cpu_core *m68k)
 
 static void m68k_op_btst_8_s_aw(m68ki_cpu_core *m68k)
 {
-	UINT32 bit = OPER_I_8(m68k) & 7;
+	UINT32 bit = OPER_I_8(m68k) & 0x07;
 
 	m68k->not_z_flag = OPER_AW_8(m68k) & (1 << bit);
 }
@@ -5325,7 +5365,7 @@ static void m68k_op_btst_8_s_aw(m68ki_cpu_core *m68k)
 
 static void m68k_op_btst_8_s_al(m68ki_cpu_core *m68k)
 {
-	UINT32 bit = OPER_I_8(m68k) & 7;
+	UINT32 bit = OPER_I_8(m68k) & 0x07;
 
 	m68k->not_z_flag = OPER_AL_8(m68k) & (1 << bit);
 }
@@ -5333,7 +5373,7 @@ static void m68k_op_btst_8_s_al(m68ki_cpu_core *m68k)
 
 static void m68k_op_btst_8_s_pcdi(m68ki_cpu_core *m68k)
 {
-	UINT32 bit = OPER_I_8(m68k) & 7;
+	UINT32 bit = OPER_I_8(m68k) & 0x07;
 
 	m68k->not_z_flag = OPER_PCDI_8(m68k) & (1 << bit);
 }
@@ -5341,7 +5381,7 @@ static void m68k_op_btst_8_s_pcdi(m68ki_cpu_core *m68k)
 
 static void m68k_op_btst_8_s_pcix(m68ki_cpu_core *m68k)
 {
-	UINT32 bit = OPER_I_8(m68k) & 7;
+	UINT32 bit = OPER_I_8(m68k) & 0x07;
 
 	m68k->not_z_flag = OPER_PCIX_8(m68k) & (1 << bit);
 }
@@ -5351,15 +5391,14 @@ static void m68k_op_chk_16_d(m68ki_cpu_core *m68k)
 	INT32 src = MAKE_INT_16(DX);
 	INT32 bound = MAKE_INT_16(DY);
 
-	m68k->not_z_flag = ZFLAG_16(src); /* Undocumented */
-	m68k->v_flag = VFLAG_CLEAR;   /* Undocumented */
-	m68k->c_flag = CFLAG_CLEAR;   /* Undocumented */
+	m68k->not_z_flag = ZFLAG_16(src);	/* Undocumented */
+	m68k->v_flag = VFLAG_CLEAR;		/* Undocumented */
+	m68k->c_flag = CFLAG_CLEAR;		/* Undocumented */
 
 	if (src >= 0 && src <= bound)
-	{
 		return;
-	}
-	m68k->n_flag = (src < 0)<<7;
+
+	m68k->n_flag = (src < 0) << 7;
 	m68ki_exception_trap(m68k, EXCEPTION_CHK);
 }
 
@@ -5374,10 +5413,9 @@ static void m68k_op_chk_16_ai(m68ki_cpu_core *m68k)
 	m68k->c_flag = CFLAG_CLEAR;   /* Undocumented */
 
 	if (src >= 0 && src <= bound)
-	{
 		return;
-	}
-	m68k->n_flag = (src < 0)<<7;
+
+	m68k->n_flag = (src < 0) << 7;
 	m68ki_exception_trap(m68k, EXCEPTION_CHK);
 }
 
@@ -5392,10 +5430,9 @@ static void m68k_op_chk_16_pi(m68ki_cpu_core *m68k)
 	m68k->c_flag = CFLAG_CLEAR;   /* Undocumented */
 
 	if (src >= 0 && src <= bound)
-	{
 		return;
-	}
-	m68k->n_flag = (src < 0)<<7;
+
+	m68k->n_flag = (src < 0) << 7;
 	m68ki_exception_trap(m68k, EXCEPTION_CHK);
 }
 
@@ -5410,10 +5447,9 @@ static void m68k_op_chk_16_pd(m68ki_cpu_core *m68k)
 	m68k->c_flag = CFLAG_CLEAR;   /* Undocumented */
 
 	if (src >= 0 && src <= bound)
-	{
 		return;
-	}
-	m68k->n_flag = (src < 0)<<7;
+
+	m68k->n_flag = (src < 0) << 7;
 	m68ki_exception_trap(m68k, EXCEPTION_CHK);
 }
 
@@ -5428,10 +5464,9 @@ static void m68k_op_chk_16_di(m68ki_cpu_core *m68k)
 	m68k->c_flag = CFLAG_CLEAR;   /* Undocumented */
 
 	if (src >= 0 && src <= bound)
-	{
 		return;
-	}
-	m68k->n_flag = (src < 0)<<7;
+
+	m68k->n_flag = (src < 0) << 7;
 	m68ki_exception_trap(m68k, EXCEPTION_CHK);
 }
 
@@ -5446,10 +5481,9 @@ static void m68k_op_chk_16_ix(m68ki_cpu_core *m68k)
 	m68k->c_flag = CFLAG_CLEAR;   /* Undocumented */
 
 	if (src >= 0 && src <= bound)
-	{
 		return;
-	}
-	m68k->n_flag = (src < 0)<<7;
+
+	m68k->n_flag = (src < 0) << 7;
 	m68ki_exception_trap(m68k, EXCEPTION_CHK);
 }
 
@@ -5464,10 +5498,9 @@ static void m68k_op_chk_16_aw(m68ki_cpu_core *m68k)
 	m68k->c_flag = CFLAG_CLEAR;   /* Undocumented */
 
 	if (src >= 0 && src <= bound)
-	{
 		return;
-	}
-	m68k->n_flag = (src < 0)<<7;
+
+	m68k->n_flag = (src < 0) << 7;
 	m68ki_exception_trap(m68k, EXCEPTION_CHK);
 }
 
@@ -5482,10 +5515,9 @@ static void m68k_op_chk_16_al(m68ki_cpu_core *m68k)
 	m68k->c_flag = CFLAG_CLEAR;   /* Undocumented */
 
 	if (src >= 0 && src <= bound)
-	{
 		return;
-	}
-	m68k->n_flag = (src < 0)<<7;
+
+	m68k->n_flag = (src < 0) << 7;
 	m68ki_exception_trap(m68k, EXCEPTION_CHK);
 }
 
@@ -5500,10 +5532,9 @@ static void m68k_op_chk_16_pcdi(m68ki_cpu_core *m68k)
 	m68k->c_flag = CFLAG_CLEAR;   /* Undocumented */
 
 	if (src >= 0 && src <= bound)
-	{
 		return;
-	}
-	m68k->n_flag = (src < 0)<<7;
+
+	m68k->n_flag = (src < 0) << 7;
 	m68ki_exception_trap(m68k, EXCEPTION_CHK);
 }
 
@@ -5518,10 +5549,9 @@ static void m68k_op_chk_16_pcix(m68ki_cpu_core *m68k)
 	m68k->c_flag = CFLAG_CLEAR;   /* Undocumented */
 
 	if (src >= 0 && src <= bound)
-	{
 		return;
-	}
-	m68k->n_flag = (src < 0)<<7;
+
+	m68k->n_flag = (src < 0) << 7;
 	m68ki_exception_trap(m68k, EXCEPTION_CHK);
 }
 
@@ -5536,10 +5566,9 @@ static void m68k_op_chk_16_i(m68ki_cpu_core *m68k)
 	m68k->c_flag = CFLAG_CLEAR;   /* Undocumented */
 
 	if (src >= 0 && src <= bound)
-	{
 		return;
-	}
-	m68k->n_flag = (src < 0)<<7;
+
+	m68k->n_flag = (src < 0) << 7;
 	m68ki_exception_trap(m68k, EXCEPTION_CHK);
 }
 
@@ -6864,7 +6893,7 @@ static void m68k_op_cmpi_32_d(m68ki_cpu_core *m68k)
 	UINT32 res = dst - src;
 
 	if (m68k->cmpild_instr_callback != NULL)
-		(*m68k->cmpild_instr_callback)(m68k->device, src, m68k->ir & 7);
+		(*m68k->cmpild_instr_callback)(m68k->device, src, m68k->ir & 0x07);
 
 	m68k->n_flag = NFLAG_32(res);
 	m68k->not_z_flag = MASK_OUT_ABOVE_32(res);
@@ -7050,7 +7079,7 @@ static void m68k_op_dbt_16(m68ki_cpu_core *m68k)
 
 static void m68k_op_dbf_16(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DY;
+	UINT32 *r_dst = &DY;
 	UINT32 res = MASK_OUT_ABOVE_16(*r_dst - 1);
 
 	*r_dst = MASK_OUT_BELOW_16(*r_dst) | res;
@@ -7072,7 +7101,7 @@ static void m68k_op_dbhi_16(m68ki_cpu_core *m68k)
 {
 	if (COND_NOT_HI(m68k))
 	{
-		UINT32* r_dst = &DY;
+		UINT32 *r_dst = &DY;
 		UINT32 res = MASK_OUT_ABOVE_16(*r_dst - 1);
 
 		*r_dst = MASK_OUT_BELOW_16(*r_dst) | res;
@@ -7097,7 +7126,7 @@ static void m68k_op_dbls_16(m68ki_cpu_core *m68k)
 {
 	if (COND_NOT_LS(m68k))
 	{
-		UINT32* r_dst = &DY;
+		UINT32 *r_dst = &DY;
 		UINT32 res = MASK_OUT_ABOVE_16(*r_dst - 1);
 
 		*r_dst = MASK_OUT_BELOW_16(*r_dst) | res;
@@ -7122,7 +7151,7 @@ static void m68k_op_dbcc_16(m68ki_cpu_core *m68k)
 {
 	if (COND_NOT_CC(m68k))
 	{
-		UINT32* r_dst = &DY;
+		UINT32 *r_dst = &DY;
 		UINT32 res = MASK_OUT_ABOVE_16(*r_dst - 1);
 
 		*r_dst = MASK_OUT_BELOW_16(*r_dst) | res;
@@ -7147,7 +7176,7 @@ static void m68k_op_dbcs_16(m68ki_cpu_core *m68k)
 {
 	if (COND_NOT_CS(m68k))
 	{
-		UINT32* r_dst = &DY;
+		UINT32 *r_dst = &DY;
 		UINT32 res = MASK_OUT_ABOVE_16(*r_dst - 1);
 
 		*r_dst = MASK_OUT_BELOW_16(*r_dst) | res;
@@ -7172,7 +7201,7 @@ static void m68k_op_dbne_16(m68ki_cpu_core *m68k)
 {
 	if (COND_NOT_NE(m68k))
 	{
-		UINT32* r_dst = &DY;
+		UINT32 *r_dst = &DY;
 		UINT32 res = MASK_OUT_ABOVE_16(*r_dst - 1);
 
 		*r_dst = MASK_OUT_BELOW_16(*r_dst) | res;
@@ -7197,7 +7226,7 @@ static void m68k_op_dbeq_16(m68ki_cpu_core *m68k)
 {
 	if (COND_NOT_EQ(m68k))
 	{
-		UINT32* r_dst = &DY;
+		UINT32 *r_dst = &DY;
 		UINT32 res = MASK_OUT_ABOVE_16(*r_dst - 1);
 
 		*r_dst = MASK_OUT_BELOW_16(*r_dst) | res;
@@ -7222,7 +7251,7 @@ static void m68k_op_dbvc_16(m68ki_cpu_core *m68k)
 {
 	if (COND_NOT_VC(m68k))
 	{
-		UINT32* r_dst = &DY;
+		UINT32 *r_dst = &DY;
 		UINT32 res = MASK_OUT_ABOVE_16(*r_dst - 1);
 
 		*r_dst = MASK_OUT_BELOW_16(*r_dst) | res;
@@ -7247,7 +7276,7 @@ static void m68k_op_dbvs_16(m68ki_cpu_core *m68k)
 {
 	if (COND_NOT_VS(m68k))
 	{
-		UINT32* r_dst = &DY;
+		UINT32 *r_dst = &DY;
 		UINT32 res = MASK_OUT_ABOVE_16(*r_dst - 1);
 
 		*r_dst = MASK_OUT_BELOW_16(*r_dst) | res;
@@ -7272,7 +7301,7 @@ static void m68k_op_dbpl_16(m68ki_cpu_core *m68k)
 {
 	if (COND_NOT_PL(m68k))
 	{
-		UINT32* r_dst = &DY;
+		UINT32 *r_dst = &DY;
 		UINT32 res = MASK_OUT_ABOVE_16(*r_dst - 1);
 
 		*r_dst = MASK_OUT_BELOW_16(*r_dst) | res;
@@ -7297,7 +7326,7 @@ static void m68k_op_dbmi_16(m68ki_cpu_core *m68k)
 {
 	if (COND_NOT_MI(m68k))
 	{
-		UINT32* r_dst = &DY;
+		UINT32 *r_dst = &DY;
 		UINT32 res = MASK_OUT_ABOVE_16(*r_dst - 1);
 
 		*r_dst = MASK_OUT_BELOW_16(*r_dst) | res;
@@ -7322,7 +7351,7 @@ static void m68k_op_dbge_16(m68ki_cpu_core *m68k)
 {
 	if (COND_NOT_GE(m68k))
 	{
-		UINT32* r_dst = &DY;
+		UINT32 *r_dst = &DY;
 		UINT32 res = MASK_OUT_ABOVE_16(*r_dst - 1);
 
 		*r_dst = MASK_OUT_BELOW_16(*r_dst) | res;
@@ -7347,7 +7376,7 @@ static void m68k_op_dblt_16(m68ki_cpu_core *m68k)
 {
 	if (COND_NOT_LT(m68k))
 	{
-		UINT32* r_dst = &DY;
+		UINT32 *r_dst = &DY;
 		UINT32 res = MASK_OUT_ABOVE_16(*r_dst - 1);
 
 		*r_dst = MASK_OUT_BELOW_16(*r_dst) | res;
@@ -7372,7 +7401,7 @@ static void m68k_op_dbgt_16(m68ki_cpu_core *m68k)
 {
 	if (COND_NOT_GT(m68k))
 	{
-		UINT32* r_dst = &DY;
+		UINT32 *r_dst = &DY;
 		UINT32 res = MASK_OUT_ABOVE_16(*r_dst - 1);
 
 		*r_dst = MASK_OUT_BELOW_16(*r_dst) | res;
@@ -7397,7 +7426,7 @@ static void m68k_op_dble_16(m68ki_cpu_core *m68k)
 {
 	if (COND_NOT_LE(m68k))
 	{
-		UINT32* r_dst = &DY;
+		UINT32 *r_dst = &DY;
 		UINT32 res = MASK_OUT_ABOVE_16(*r_dst - 1);
 
 		*r_dst = MASK_OUT_BELOW_16(*r_dst) | res;
@@ -7420,7 +7449,7 @@ static void m68k_op_dble_16(m68ki_cpu_core *m68k)
 
 static void m68k_op_divs_16_d(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DX;
+	UINT32 *r_dst = &DX;
 	INT32 src = MAKE_INT_16(DY);
 	INT32 quotient;
 	INT32 remainder;
@@ -7458,7 +7487,7 @@ static void m68k_op_divs_16_d(m68ki_cpu_core *m68k)
 
 static void m68k_op_divs_16_ai(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DX;
+	UINT32 *r_dst = &DX;
 	INT32 src = MAKE_INT_16(OPER_AY_AI_16(m68k));
 	INT32 quotient;
 	INT32 remainder;
@@ -7496,7 +7525,7 @@ static void m68k_op_divs_16_ai(m68ki_cpu_core *m68k)
 
 static void m68k_op_divs_16_pi(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DX;
+	UINT32 *r_dst = &DX;
 	INT32 src = MAKE_INT_16(OPER_AY_PI_16(m68k));
 	INT32 quotient;
 	INT32 remainder;
@@ -7534,7 +7563,7 @@ static void m68k_op_divs_16_pi(m68ki_cpu_core *m68k)
 
 static void m68k_op_divs_16_pd(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DX;
+	UINT32 *r_dst = &DX;
 	INT32 src = MAKE_INT_16(OPER_AY_PD_16(m68k));
 	INT32 quotient;
 	INT32 remainder;
@@ -7572,7 +7601,7 @@ static void m68k_op_divs_16_pd(m68ki_cpu_core *m68k)
 
 static void m68k_op_divs_16_di(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DX;
+	UINT32 *r_dst = &DX;
 	INT32 src = MAKE_INT_16(OPER_AY_DI_16(m68k));
 	INT32 quotient;
 	INT32 remainder;
@@ -7610,7 +7639,7 @@ static void m68k_op_divs_16_di(m68ki_cpu_core *m68k)
 
 static void m68k_op_divs_16_ix(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DX;
+	UINT32 *r_dst = &DX;
 	INT32 src = MAKE_INT_16(OPER_AY_IX_16(m68k));
 	INT32 quotient;
 	INT32 remainder;
@@ -7648,7 +7677,7 @@ static void m68k_op_divs_16_ix(m68ki_cpu_core *m68k)
 
 static void m68k_op_divs_16_aw(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DX;
+	UINT32 *r_dst = &DX;
 	INT32 src = MAKE_INT_16(OPER_AW_16(m68k));
 	INT32 quotient;
 	INT32 remainder;
@@ -7686,7 +7715,7 @@ static void m68k_op_divs_16_aw(m68ki_cpu_core *m68k)
 
 static void m68k_op_divs_16_al(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DX;
+	UINT32 *r_dst = &DX;
 	INT32 src = MAKE_INT_16(OPER_AL_16(m68k));
 	INT32 quotient;
 	INT32 remainder;
@@ -7724,7 +7753,7 @@ static void m68k_op_divs_16_al(m68ki_cpu_core *m68k)
 
 static void m68k_op_divs_16_pcdi(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DX;
+	UINT32 *r_dst = &DX;
 	INT32 src = MAKE_INT_16(OPER_PCDI_16(m68k));
 	INT32 quotient;
 	INT32 remainder;
@@ -7762,7 +7791,7 @@ static void m68k_op_divs_16_pcdi(m68ki_cpu_core *m68k)
 
 static void m68k_op_divs_16_pcix(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DX;
+	UINT32 *r_dst = &DX;
 	INT32 src = MAKE_INT_16(OPER_PCIX_16(m68k));
 	INT32 quotient;
 	INT32 remainder;
@@ -7800,7 +7829,7 @@ static void m68k_op_divs_16_pcix(m68ki_cpu_core *m68k)
 
 static void m68k_op_divs_16_i(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DX;
+	UINT32 *r_dst = &DX;
 	INT32 src = MAKE_INT_16(OPER_I_16(m68k));
 	INT32 quotient;
 	INT32 remainder;
@@ -7838,7 +7867,7 @@ static void m68k_op_divs_16_i(m68ki_cpu_core *m68k)
 
 static void m68k_op_divu_16_d(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DX;
+	UINT32 *r_dst = &DX;
 	UINT32 src = MASK_OUT_ABOVE_16(DY);
 
 	if (src != 0)
@@ -7864,7 +7893,7 @@ static void m68k_op_divu_16_d(m68ki_cpu_core *m68k)
 
 static void m68k_op_divu_16_ai(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DX;
+	UINT32 *r_dst = &DX;
 	UINT32 src = OPER_AY_AI_16(m68k);
 
 	if (src != 0)
@@ -7890,7 +7919,7 @@ static void m68k_op_divu_16_ai(m68ki_cpu_core *m68k)
 
 static void m68k_op_divu_16_pi(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DX;
+	UINT32 *r_dst = &DX;
 	UINT32 src = OPER_AY_PI_16(m68k);
 
 	if (src != 0)
@@ -7916,7 +7945,7 @@ static void m68k_op_divu_16_pi(m68ki_cpu_core *m68k)
 
 static void m68k_op_divu_16_pd(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DX;
+	UINT32 *r_dst = &DX;
 	UINT32 src = OPER_AY_PD_16(m68k);
 
 	if (src != 0)
@@ -7942,7 +7971,7 @@ static void m68k_op_divu_16_pd(m68ki_cpu_core *m68k)
 
 static void m68k_op_divu_16_di(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DX;
+	UINT32 *r_dst = &DX;
 	UINT32 src = OPER_AY_DI_16(m68k);
 
 	if (src != 0)
@@ -7968,7 +7997,7 @@ static void m68k_op_divu_16_di(m68ki_cpu_core *m68k)
 
 static void m68k_op_divu_16_ix(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DX;
+	UINT32 *r_dst = &DX;
 	UINT32 src = OPER_AY_IX_16(m68k);
 
 	if (src != 0)
@@ -7994,7 +8023,7 @@ static void m68k_op_divu_16_ix(m68ki_cpu_core *m68k)
 
 static void m68k_op_divu_16_aw(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DX;
+	UINT32 *r_dst = &DX;
 	UINT32 src = OPER_AW_16(m68k);
 
 	if (src != 0)
@@ -8020,7 +8049,7 @@ static void m68k_op_divu_16_aw(m68ki_cpu_core *m68k)
 
 static void m68k_op_divu_16_al(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DX;
+	UINT32 *r_dst = &DX;
 	UINT32 src = OPER_AL_16(m68k);
 
 	if (src != 0)
@@ -8046,7 +8075,7 @@ static void m68k_op_divu_16_al(m68ki_cpu_core *m68k)
 
 static void m68k_op_divu_16_pcdi(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DX;
+	UINT32 *r_dst = &DX;
 	UINT32 src = OPER_PCDI_16(m68k);
 
 	if (src != 0)
@@ -8072,7 +8101,7 @@ static void m68k_op_divu_16_pcdi(m68ki_cpu_core *m68k)
 
 static void m68k_op_divu_16_pcix(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DX;
+	UINT32 *r_dst = &DX;
 	UINT32 src = OPER_PCIX_16(m68k);
 
 	if (src != 0)
@@ -8098,7 +8127,7 @@ static void m68k_op_divu_16_pcix(m68ki_cpu_core *m68k)
 
 static void m68k_op_divu_16_i(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DX;
+	UINT32 *r_dst = &DX;
 	UINT32 src = OPER_I_16(m68k);
 
 	if (src != 0)
@@ -8876,8 +8905,8 @@ static void m68k_op_eori_16_tos(m68ki_cpu_core *m68k)
 
 static void m68k_op_exg_32_dd(m68ki_cpu_core *m68k)
 {
-	UINT32* reg_a = &DX;
-	UINT32* reg_b = &DY;
+	UINT32 *reg_a = &DX;
+	UINT32 *reg_b = &DY;
 	UINT32 tmp = *reg_a;
 	*reg_a = *reg_b;
 	*reg_b = tmp;
@@ -8886,8 +8915,8 @@ static void m68k_op_exg_32_dd(m68ki_cpu_core *m68k)
 
 static void m68k_op_exg_32_aa(m68ki_cpu_core *m68k)
 {
-	UINT32* reg_a = &AX;
-	UINT32* reg_b = &AY;
+	UINT32 *reg_a = &AX;
+	UINT32 *reg_b = &AY;
 	UINT32 tmp = *reg_a;
 	*reg_a = *reg_b;
 	*reg_b = tmp;
@@ -8896,8 +8925,8 @@ static void m68k_op_exg_32_aa(m68ki_cpu_core *m68k)
 
 static void m68k_op_exg_32_da(m68ki_cpu_core *m68k)
 {
-	UINT32* reg_a = &DX;
-	UINT32* reg_b = &AY;
+	UINT32 *reg_a = &DX;
+	UINT32 *reg_b = &AY;
 	UINT32 tmp = *reg_a;
 	*reg_a = *reg_b;
 	*reg_b = tmp;
@@ -8906,7 +8935,7 @@ static void m68k_op_exg_32_da(m68ki_cpu_core *m68k)
 
 static void m68k_op_ext_16(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DY;
+	UINT32 *r_dst = &DY;
 
 	*r_dst = MASK_OUT_BELOW_16(*r_dst) | MASK_OUT_ABOVE_8(*r_dst) | (GET_MSB_8(*r_dst) ? 0xff00 : 0);
 
@@ -8919,7 +8948,7 @@ static void m68k_op_ext_16(m68ki_cpu_core *m68k)
 
 static void m68k_op_ext_32(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DY;
+	UINT32 *r_dst = &DY;
 
 	*r_dst = MASK_OUT_ABOVE_16(*r_dst) | (GET_MSB_16(*r_dst) ? 0xffff0000 : 0);
 
@@ -9114,7 +9143,7 @@ static void m68k_op_link_16_a7(m68ki_cpu_core *m68k)
 
 static void m68k_op_link_16(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &AY;
+	UINT32 *r_dst = &AY;
 
 	m68ki_push_32(m68k, *r_dst);
 	*r_dst = REG_A[7];
@@ -9124,76 +9153,76 @@ static void m68k_op_link_16(m68ki_cpu_core *m68k)
 
 static void m68k_op_lsr_8_s(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DY;
-	UINT32 shift = (((m68k->ir >> 9) - 1) & 7) + 1;
+	UINT32 *r_dst = &DY;
+	UINT32 shift = (((m68k->ir >> 9) - 1) & 0x07) + 1;
 	UINT32 src = MASK_OUT_ABOVE_8(*r_dst);
 	UINT32 res = src >> shift;
 
 	if (shift != 0)
-		m68k->remaining_cycles -= shift<<m68k->cyc_shift;
+		m68k->remaining_cycles -= shift << m68k->cyc_shift;
 
 	*r_dst = MASK_OUT_BELOW_8(*r_dst) | res;
 
 	m68k->n_flag = NFLAG_CLEAR;
 	m68k->not_z_flag = res;
-	m68k->x_flag = m68k->c_flag = src << (9-shift);
+	m68k->x_flag = m68k->c_flag = src << (9 - shift);
 	m68k->v_flag = VFLAG_CLEAR;
 }
 
 
 static void m68k_op_lsr_16_s(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DY;
-	UINT32 shift = (((m68k->ir >> 9) - 1) & 7) + 1;
+	UINT32 *r_dst = &DY;
+	UINT32 shift = (((m68k->ir >> 9) - 1) & 0x07) + 1;
 	UINT32 src = MASK_OUT_ABOVE_16(*r_dst);
 	UINT32 res = src >> shift;
 
 	if (shift != 0)
-		m68k->remaining_cycles -= shift<<m68k->cyc_shift;
+		m68k->remaining_cycles -= shift << m68k->cyc_shift;
 
 	*r_dst = MASK_OUT_BELOW_16(*r_dst) | res;
 
 	m68k->n_flag = NFLAG_CLEAR;
 	m68k->not_z_flag = res;
-	m68k->x_flag = m68k->c_flag = src << (9-shift);
+	m68k->x_flag = m68k->c_flag = src << (9 - shift);
 	m68k->v_flag = VFLAG_CLEAR;
 }
 
 
 static void m68k_op_lsr_32_s(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DY;
-	UINT32 shift = (((m68k->ir >> 9) - 1) & 7) + 1;
+	UINT32 *r_dst = &DY;
+	UINT32 shift = (((m68k->ir >> 9) - 1) & 0x07) + 1;
 	UINT32 src = *r_dst;
 	UINT32 res = src >> shift;
 
 	if (shift != 0)
-		m68k->remaining_cycles -= shift<<m68k->cyc_shift;
+		m68k->remaining_cycles -= shift << m68k->cyc_shift;
 
 	*r_dst = res;
 
 	m68k->n_flag = NFLAG_CLEAR;
 	m68k->not_z_flag = res;
-	m68k->x_flag = m68k->c_flag = src << (9-shift);
+	m68k->x_flag = m68k->c_flag = src << (9 - shift);
 	m68k->v_flag = VFLAG_CLEAR;
 }
 
 
 static void m68k_op_lsr_8_r(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DY;
+	UINT32 *r_dst = &DY;
 	UINT32 shift = DX & 0x3f;
 	UINT32 src = MASK_OUT_ABOVE_8(*r_dst);
 	UINT32 res = src >> shift;
 
 	if (shift != 0)
 	{
-		m68k->remaining_cycles -= shift<<m68k->cyc_shift;
+		m68k->remaining_cycles -= shift << m68k->cyc_shift;
 
 		if (shift <= 8)
 		{
 			*r_dst = MASK_OUT_BELOW_8(*r_dst) | res;
-			m68k->x_flag = m68k->c_flag = src << (9-shift);
+			m68k->x_flag = m68k->c_flag = src << (9 - shift);
 			m68k->n_flag = NFLAG_CLEAR;
 			m68k->not_z_flag = res;
 			m68k->v_flag = VFLAG_CLEAR;
@@ -9218,19 +9247,19 @@ static void m68k_op_lsr_8_r(m68ki_cpu_core *m68k)
 
 static void m68k_op_lsr_16_r(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DY;
+	UINT32 *r_dst = &DY;
 	UINT32 shift = DX & 0x3f;
 	UINT32 src = MASK_OUT_ABOVE_16(*r_dst);
 	UINT32 res = src >> shift;
 
 	if (shift != 0)
 	{
-		m68k->remaining_cycles -= shift<<m68k->cyc_shift;
+		m68k->remaining_cycles -= shift << m68k->cyc_shift;
 
 		if (shift <= 16)
 		{
 			*r_dst = MASK_OUT_BELOW_16(*r_dst) | res;
-			m68k->c_flag = m68k->x_flag = (src >> (shift - 1))<<8;
+			m68k->c_flag = m68k->x_flag = (src >> (shift - 1)) << 8;
 			m68k->n_flag = NFLAG_CLEAR;
 			m68k->not_z_flag = res;
 			m68k->v_flag = VFLAG_CLEAR;
@@ -9255,19 +9284,19 @@ static void m68k_op_lsr_16_r(m68ki_cpu_core *m68k)
 
 static void m68k_op_lsr_32_r(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DY;
+	UINT32 *r_dst = &DY;
 	UINT32 shift = DX & 0x3f;
 	UINT32 src = *r_dst;
 	UINT32 res = src >> shift;
 
 	if (shift != 0)
 	{
-		m68k->remaining_cycles -= shift<<m68k->cyc_shift;
+		m68k->remaining_cycles -= shift << m68k->cyc_shift;
 
 		if (shift < 32)
 		{
 			*r_dst = res;
-			m68k->c_flag = m68k->x_flag = (src >> (shift - 1))<<8;
+			m68k->c_flag = m68k->x_flag = (src >> (shift - 1)) << 8;
 			m68k->n_flag = NFLAG_CLEAR;
 			m68k->not_z_flag = res;
 			m68k->v_flag = VFLAG_CLEAR;
@@ -9275,7 +9304,7 @@ static void m68k_op_lsr_32_r(m68ki_cpu_core *m68k)
 		}
 
 		*r_dst = 0;
-		m68k->x_flag = m68k->c_flag = (shift == 32 ? GET_MSB_32(src)>>23 : 0);
+		m68k->x_flag = m68k->c_flag = (shift == 32 ? GET_MSB_32(src) >> 23 : 0);
 		m68k->n_flag = NFLAG_CLEAR;
 		m68k->not_z_flag = ZFLAG_SET;
 		m68k->v_flag = VFLAG_CLEAR;
@@ -9396,13 +9425,13 @@ static void m68k_op_lsr_16_al(m68ki_cpu_core *m68k)
 
 static void m68k_op_lsl_8_s(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DY;
-	UINT32 shift = (((m68k->ir >> 9) - 1) & 7) + 1;
+	UINT32 *r_dst = &DY;
+	UINT32 shift = (((m68k->ir >> 9) - 1) & 0x07) + 1;
 	UINT32 src = MASK_OUT_ABOVE_8(*r_dst);
 	UINT32 res = MASK_OUT_ABOVE_8(src << shift);
 
 	if (shift != 0)
-		m68k->remaining_cycles -= shift<<m68k->cyc_shift;
+		m68k->remaining_cycles -= shift << m68k->cyc_shift;
 
 	*r_dst = MASK_OUT_BELOW_8(*r_dst) | res;
 
@@ -9415,52 +9444,52 @@ static void m68k_op_lsl_8_s(m68ki_cpu_core *m68k)
 
 static void m68k_op_lsl_16_s(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DY;
-	UINT32 shift = (((m68k->ir >> 9) - 1) & 7) + 1;
+	UINT32 *r_dst = &DY;
+	UINT32 shift = (((m68k->ir >> 9) - 1) & 0x07) + 1;
 	UINT32 src = MASK_OUT_ABOVE_16(*r_dst);
 	UINT32 res = MASK_OUT_ABOVE_16(src << shift);
 
 	if (shift != 0)
-		m68k->remaining_cycles -= shift<<m68k->cyc_shift;
+		m68k->remaining_cycles -= shift << m68k->cyc_shift;
 
 	*r_dst = MASK_OUT_BELOW_16(*r_dst) | res;
 
 	m68k->n_flag = NFLAG_16(res);
 	m68k->not_z_flag = res;
-	m68k->x_flag = m68k->c_flag = src >> (8-shift);
+	m68k->x_flag = m68k->c_flag = src >> (8 - shift);
 	m68k->v_flag = VFLAG_CLEAR;
 }
 
 
 static void m68k_op_lsl_32_s(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DY;
-	UINT32 shift = (((m68k->ir >> 9) - 1) & 7) + 1;
+	UINT32 *r_dst = &DY;
+	UINT32 shift = (((m68k->ir >> 9) - 1) & 0x07) + 1;
 	UINT32 src = *r_dst;
 	UINT32 res = MASK_OUT_ABOVE_32(src << shift);
 
 	if (shift != 0)
-		m68k->remaining_cycles -= shift<<m68k->cyc_shift;
+		m68k->remaining_cycles -= shift << m68k->cyc_shift;
 
 	*r_dst = res;
 
 	m68k->n_flag = NFLAG_32(res);
 	m68k->not_z_flag = res;
-	m68k->x_flag = m68k->c_flag = src >> (24-shift);
+	m68k->x_flag = m68k->c_flag = src >> (24 - shift);
 	m68k->v_flag = VFLAG_CLEAR;
 }
 
 
 static void m68k_op_lsl_8_r(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DY;
+	UINT32 *r_dst = &DY;
 	UINT32 shift = DX & 0x3f;
 	UINT32 src = MASK_OUT_ABOVE_8(*r_dst);
 	UINT32 res = MASK_OUT_ABOVE_8(src << shift);
 
 	if (shift != 0)
 	{
-		m68k->remaining_cycles -= shift<<m68k->cyc_shift;
+		m68k->remaining_cycles -= shift << m68k->cyc_shift;
 
 		if (shift <= 8)
 		{
@@ -9490,14 +9519,14 @@ static void m68k_op_lsl_8_r(m68ki_cpu_core *m68k)
 
 static void m68k_op_lsl_16_r(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DY;
+	UINT32 *r_dst = &DY;
 	UINT32 shift = DX & 0x3f;
 	UINT32 src = MASK_OUT_ABOVE_16(*r_dst);
 	UINT32 res = MASK_OUT_ABOVE_16(src << shift);
 
 	if (shift != 0)
 	{
-		m68k->remaining_cycles -= shift<<m68k->cyc_shift;
+		m68k->remaining_cycles -= shift << m68k->cyc_shift;
 
 		if (shift <= 16)
 		{
@@ -9527,14 +9556,14 @@ static void m68k_op_lsl_16_r(m68ki_cpu_core *m68k)
 
 static void m68k_op_lsl_32_r(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DY;
+	UINT32 *r_dst = &DY;
 	UINT32 shift = DX & 0x3f;
 	UINT32 src = *r_dst;
 	UINT32 res = MASK_OUT_ABOVE_32(src << shift);
 
 	if (shift != 0)
 	{
-		m68k->remaining_cycles -= shift<<m68k->cyc_shift;
+		m68k->remaining_cycles -= shift << m68k->cyc_shift;
 
 		if (shift < 32)
 		{
@@ -9547,7 +9576,7 @@ static void m68k_op_lsl_32_r(m68ki_cpu_core *m68k)
 		}
 
 		*r_dst = 0;
-		m68k->x_flag = m68k->c_flag = ((shift == 32 ? src & 1 : 0))<<8;
+		m68k->x_flag = m68k->c_flag = ((shift == 32 ? src & 0x01 : 0)) << 8;
 		m68k->n_flag = NFLAG_CLEAR;
 		m68k->not_z_flag = ZFLAG_SET;
 		m68k->v_flag = VFLAG_CLEAR;
@@ -9669,7 +9698,7 @@ static void m68k_op_lsl_16_al(m68ki_cpu_core *m68k)
 static void m68k_op_move_8_d_d(m68ki_cpu_core *m68k)
 {
 	UINT32 res = MASK_OUT_ABOVE_8(DY);
-	UINT32* r_dst = &DX;
+	UINT32 *r_dst = &DX;
 
 	*r_dst = MASK_OUT_BELOW_8(*r_dst) | res;
 
@@ -9683,7 +9712,7 @@ static void m68k_op_move_8_d_d(m68ki_cpu_core *m68k)
 static void m68k_op_move_8_d_ai(m68ki_cpu_core *m68k)
 {
 	UINT32 res = OPER_AY_AI_8(m68k);
-	UINT32* r_dst = &DX;
+	UINT32 *r_dst = &DX;
 
 	*r_dst = MASK_OUT_BELOW_8(*r_dst) | res;
 
@@ -9697,7 +9726,7 @@ static void m68k_op_move_8_d_ai(m68ki_cpu_core *m68k)
 static void m68k_op_move_8_d_pi(m68ki_cpu_core *m68k)
 {
 	UINT32 res = OPER_AY_PI_8(m68k);
-	UINT32* r_dst = &DX;
+	UINT32 *r_dst = &DX;
 
 	*r_dst = MASK_OUT_BELOW_8(*r_dst) | res;
 
@@ -9711,7 +9740,7 @@ static void m68k_op_move_8_d_pi(m68ki_cpu_core *m68k)
 static void m68k_op_move_8_d_pi7(m68ki_cpu_core *m68k)
 {
 	UINT32 res = OPER_A7_PI_8(m68k);
-	UINT32* r_dst = &DX;
+	UINT32 *r_dst = &DX;
 
 	*r_dst = MASK_OUT_BELOW_8(*r_dst) | res;
 
@@ -9725,7 +9754,7 @@ static void m68k_op_move_8_d_pi7(m68ki_cpu_core *m68k)
 static void m68k_op_move_8_d_pd(m68ki_cpu_core *m68k)
 {
 	UINT32 res = OPER_AY_PD_8(m68k);
-	UINT32* r_dst = &DX;
+	UINT32 *r_dst = &DX;
 
 	*r_dst = MASK_OUT_BELOW_8(*r_dst) | res;
 
@@ -9739,7 +9768,7 @@ static void m68k_op_move_8_d_pd(m68ki_cpu_core *m68k)
 static void m68k_op_move_8_d_pd7(m68ki_cpu_core *m68k)
 {
 	UINT32 res = OPER_A7_PD_8(m68k);
-	UINT32* r_dst = &DX;
+	UINT32 *r_dst = &DX;
 
 	*r_dst = MASK_OUT_BELOW_8(*r_dst) | res;
 
@@ -9753,7 +9782,7 @@ static void m68k_op_move_8_d_pd7(m68ki_cpu_core *m68k)
 static void m68k_op_move_8_d_di(m68ki_cpu_core *m68k)
 {
 	UINT32 res = OPER_AY_DI_8(m68k);
-	UINT32* r_dst = &DX;
+	UINT32 *r_dst = &DX;
 
 	*r_dst = MASK_OUT_BELOW_8(*r_dst) | res;
 
@@ -9767,7 +9796,7 @@ static void m68k_op_move_8_d_di(m68ki_cpu_core *m68k)
 static void m68k_op_move_8_d_ix(m68ki_cpu_core *m68k)
 {
 	UINT32 res = OPER_AY_IX_8(m68k);
-	UINT32* r_dst = &DX;
+	UINT32 *r_dst = &DX;
 
 	*r_dst = MASK_OUT_BELOW_8(*r_dst) | res;
 
@@ -9781,7 +9810,7 @@ static void m68k_op_move_8_d_ix(m68ki_cpu_core *m68k)
 static void m68k_op_move_8_d_aw(m68ki_cpu_core *m68k)
 {
 	UINT32 res = OPER_AW_8(m68k);
-	UINT32* r_dst = &DX;
+	UINT32 *r_dst = &DX;
 
 	*r_dst = MASK_OUT_BELOW_8(*r_dst) | res;
 
@@ -9795,7 +9824,7 @@ static void m68k_op_move_8_d_aw(m68ki_cpu_core *m68k)
 static void m68k_op_move_8_d_al(m68ki_cpu_core *m68k)
 {
 	UINT32 res = OPER_AL_8(m68k);
-	UINT32* r_dst = &DX;
+	UINT32 *r_dst = &DX;
 
 	*r_dst = MASK_OUT_BELOW_8(*r_dst) | res;
 
@@ -9809,7 +9838,7 @@ static void m68k_op_move_8_d_al(m68ki_cpu_core *m68k)
 static void m68k_op_move_8_d_pcdi(m68ki_cpu_core *m68k)
 {
 	UINT32 res = OPER_PCDI_8(m68k);
-	UINT32* r_dst = &DX;
+	UINT32 *r_dst = &DX;
 
 	*r_dst = MASK_OUT_BELOW_8(*r_dst) | res;
 
@@ -9823,7 +9852,7 @@ static void m68k_op_move_8_d_pcdi(m68ki_cpu_core *m68k)
 static void m68k_op_move_8_d_pcix(m68ki_cpu_core *m68k)
 {
 	UINT32 res = OPER_PCIX_8(m68k);
-	UINT32* r_dst = &DX;
+	UINT32 *r_dst = &DX;
 
 	*r_dst = MASK_OUT_BELOW_8(*r_dst) | res;
 
@@ -9837,7 +9866,7 @@ static void m68k_op_move_8_d_pcix(m68ki_cpu_core *m68k)
 static void m68k_op_move_8_d_i(m68ki_cpu_core *m68k)
 {
 	UINT32 res = OPER_I_8(m68k);
-	UINT32* r_dst = &DX;
+	UINT32 *r_dst = &DX;
 
 	*r_dst = MASK_OUT_BELOW_8(*r_dst) | res;
 
@@ -11489,7 +11518,7 @@ static void m68k_op_move_8_al_i(m68ki_cpu_core *m68k)
 static void m68k_op_move_16_d_d(m68ki_cpu_core *m68k)
 {
 	UINT32 res = MASK_OUT_ABOVE_16(DY);
-	UINT32* r_dst = &DX;
+	UINT32 *r_dst = &DX;
 
 	*r_dst = MASK_OUT_BELOW_16(*r_dst) | res;
 
@@ -11503,7 +11532,7 @@ static void m68k_op_move_16_d_d(m68ki_cpu_core *m68k)
 static void m68k_op_move_16_d_a(m68ki_cpu_core *m68k)
 {
 	UINT32 res = MASK_OUT_ABOVE_16(AY);
-	UINT32* r_dst = &DX;
+	UINT32 *r_dst = &DX;
 
 	*r_dst = MASK_OUT_BELOW_16(*r_dst) | res;
 
@@ -11517,7 +11546,7 @@ static void m68k_op_move_16_d_a(m68ki_cpu_core *m68k)
 static void m68k_op_move_16_d_ai(m68ki_cpu_core *m68k)
 {
 	UINT32 res = OPER_AY_AI_16(m68k);
-	UINT32* r_dst = &DX;
+	UINT32 *r_dst = &DX;
 
 	*r_dst = MASK_OUT_BELOW_16(*r_dst) | res;
 
@@ -11531,7 +11560,7 @@ static void m68k_op_move_16_d_ai(m68ki_cpu_core *m68k)
 static void m68k_op_move_16_d_pi(m68ki_cpu_core *m68k)
 {
 	UINT32 res = OPER_AY_PI_16(m68k);
-	UINT32* r_dst = &DX;
+	UINT32 *r_dst = &DX;
 
 	*r_dst = MASK_OUT_BELOW_16(*r_dst) | res;
 
@@ -11545,7 +11574,7 @@ static void m68k_op_move_16_d_pi(m68ki_cpu_core *m68k)
 static void m68k_op_move_16_d_pd(m68ki_cpu_core *m68k)
 {
 	UINT32 res = OPER_AY_PD_16(m68k);
-	UINT32* r_dst = &DX;
+	UINT32 *r_dst = &DX;
 
 	*r_dst = MASK_OUT_BELOW_16(*r_dst) | res;
 
@@ -11559,7 +11588,7 @@ static void m68k_op_move_16_d_pd(m68ki_cpu_core *m68k)
 static void m68k_op_move_16_d_di(m68ki_cpu_core *m68k)
 {
 	UINT32 res = OPER_AY_DI_16(m68k);
-	UINT32* r_dst = &DX;
+	UINT32 *r_dst = &DX;
 
 	*r_dst = MASK_OUT_BELOW_16(*r_dst) | res;
 
@@ -11573,7 +11602,7 @@ static void m68k_op_move_16_d_di(m68ki_cpu_core *m68k)
 static void m68k_op_move_16_d_ix(m68ki_cpu_core *m68k)
 {
 	UINT32 res = OPER_AY_IX_16(m68k);
-	UINT32* r_dst = &DX;
+	UINT32 *r_dst = &DX;
 
 	*r_dst = MASK_OUT_BELOW_16(*r_dst) | res;
 
@@ -11587,7 +11616,7 @@ static void m68k_op_move_16_d_ix(m68ki_cpu_core *m68k)
 static void m68k_op_move_16_d_aw(m68ki_cpu_core *m68k)
 {
 	UINT32 res = OPER_AW_16(m68k);
-	UINT32* r_dst = &DX;
+	UINT32 *r_dst = &DX;
 
 	*r_dst = MASK_OUT_BELOW_16(*r_dst) | res;
 
@@ -11601,7 +11630,7 @@ static void m68k_op_move_16_d_aw(m68ki_cpu_core *m68k)
 static void m68k_op_move_16_d_al(m68ki_cpu_core *m68k)
 {
 	UINT32 res = OPER_AL_16(m68k);
-	UINT32* r_dst = &DX;
+	UINT32 *r_dst = &DX;
 
 	*r_dst = MASK_OUT_BELOW_16(*r_dst) | res;
 
@@ -11615,7 +11644,7 @@ static void m68k_op_move_16_d_al(m68ki_cpu_core *m68k)
 static void m68k_op_move_16_d_pcdi(m68ki_cpu_core *m68k)
 {
 	UINT32 res = OPER_PCDI_16(m68k);
-	UINT32* r_dst = &DX;
+	UINT32 *r_dst = &DX;
 
 	*r_dst = MASK_OUT_BELOW_16(*r_dst) | res;
 
@@ -11629,7 +11658,7 @@ static void m68k_op_move_16_d_pcdi(m68ki_cpu_core *m68k)
 static void m68k_op_move_16_d_pcix(m68ki_cpu_core *m68k)
 {
 	UINT32 res = OPER_PCIX_16(m68k);
-	UINT32* r_dst = &DX;
+	UINT32 *r_dst = &DX;
 
 	*r_dst = MASK_OUT_BELOW_16(*r_dst) | res;
 
@@ -11643,7 +11672,7 @@ static void m68k_op_move_16_d_pcix(m68ki_cpu_core *m68k)
 static void m68k_op_move_16_d_i(m68ki_cpu_core *m68k)
 {
 	UINT32 res = OPER_I_16(m68k);
-	UINT32* r_dst = &DX;
+	UINT32 *r_dst = &DX;
 
 	*r_dst = MASK_OUT_BELOW_16(*r_dst) | res;
 
@@ -12833,7 +12862,7 @@ static void m68k_op_move_16_al_i(m68ki_cpu_core *m68k)
 static void m68k_op_move_32_d_d(m68ki_cpu_core *m68k)
 {
 	UINT32 res = DY;
-	UINT32* r_dst = &DX;
+	UINT32 *r_dst = &DX;
 
 	*r_dst = res;
 
@@ -12847,7 +12876,7 @@ static void m68k_op_move_32_d_d(m68ki_cpu_core *m68k)
 static void m68k_op_move_32_d_a(m68ki_cpu_core *m68k)
 {
 	UINT32 res = AY;
-	UINT32* r_dst = &DX;
+	UINT32 *r_dst = &DX;
 
 	*r_dst = res;
 
@@ -12861,7 +12890,7 @@ static void m68k_op_move_32_d_a(m68ki_cpu_core *m68k)
 static void m68k_op_move_32_d_ai(m68ki_cpu_core *m68k)
 {
 	UINT32 res = OPER_AY_AI_32(m68k);
-	UINT32* r_dst = &DX;
+	UINT32 *r_dst = &DX;
 
 	*r_dst = res;
 
@@ -12875,7 +12904,7 @@ static void m68k_op_move_32_d_ai(m68ki_cpu_core *m68k)
 static void m68k_op_move_32_d_pi(m68ki_cpu_core *m68k)
 {
 	UINT32 res = OPER_AY_PI_32(m68k);
-	UINT32* r_dst = &DX;
+	UINT32 *r_dst = &DX;
 
 	*r_dst = res;
 
@@ -12889,7 +12918,7 @@ static void m68k_op_move_32_d_pi(m68ki_cpu_core *m68k)
 static void m68k_op_move_32_d_pd(m68ki_cpu_core *m68k)
 {
 	UINT32 res = OPER_AY_PD_32(m68k);
-	UINT32* r_dst = &DX;
+	UINT32 *r_dst = &DX;
 
 	*r_dst = res;
 
@@ -12903,7 +12932,7 @@ static void m68k_op_move_32_d_pd(m68ki_cpu_core *m68k)
 static void m68k_op_move_32_d_di(m68ki_cpu_core *m68k)
 {
 	UINT32 res = OPER_AY_DI_32(m68k);
-	UINT32* r_dst = &DX;
+	UINT32 *r_dst = &DX;
 
 	*r_dst = res;
 
@@ -12917,7 +12946,7 @@ static void m68k_op_move_32_d_di(m68ki_cpu_core *m68k)
 static void m68k_op_move_32_d_ix(m68ki_cpu_core *m68k)
 {
 	UINT32 res = OPER_AY_IX_32(m68k);
-	UINT32* r_dst = &DX;
+	UINT32 *r_dst = &DX;
 
 	*r_dst = res;
 
@@ -12931,7 +12960,7 @@ static void m68k_op_move_32_d_ix(m68ki_cpu_core *m68k)
 static void m68k_op_move_32_d_aw(m68ki_cpu_core *m68k)
 {
 	UINT32 res = OPER_AW_32(m68k);
-	UINT32* r_dst = &DX;
+	UINT32 *r_dst = &DX;
 
 	*r_dst = res;
 
@@ -12945,7 +12974,7 @@ static void m68k_op_move_32_d_aw(m68ki_cpu_core *m68k)
 static void m68k_op_move_32_d_al(m68ki_cpu_core *m68k)
 {
 	UINT32 res = OPER_AL_32(m68k);
-	UINT32* r_dst = &DX;
+	UINT32 *r_dst = &DX;
 
 	*r_dst = res;
 
@@ -12959,7 +12988,7 @@ static void m68k_op_move_32_d_al(m68ki_cpu_core *m68k)
 static void m68k_op_move_32_d_pcdi(m68ki_cpu_core *m68k)
 {
 	UINT32 res = OPER_PCDI_32(m68k);
-	UINT32* r_dst = &DX;
+	UINT32 *r_dst = &DX;
 
 	*r_dst = res;
 
@@ -12973,7 +13002,7 @@ static void m68k_op_move_32_d_pcdi(m68ki_cpu_core *m68k)
 static void m68k_op_move_32_d_pcix(m68ki_cpu_core *m68k)
 {
 	UINT32 res = OPER_PCIX_32(m68k);
-	UINT32* r_dst = &DX;
+	UINT32 *r_dst = &DX;
 
 	*r_dst = res;
 
@@ -12987,7 +13016,7 @@ static void m68k_op_move_32_d_pcix(m68ki_cpu_core *m68k)
 static void m68k_op_move_32_d_i(m68ki_cpu_core *m68k)
 {
 	UINT32 res = OPER_I_32(m68k);
-	UINT32* r_dst = &DX;
+	UINT32 *r_dst = &DX;
 
 	*r_dst = res;
 
@@ -13505,7 +13534,7 @@ static void m68k_op_move_32_pd_i(m68ki_cpu_core *m68k)
 	UINT32 ea = EA_AX_PD_32(m68k);
 
 	m68ki_write_16(m68k, ea+2, res & 0xFFFF );
-	m68ki_write_16(m68k, ea, (res >> 16) & 0xFFFF );
+	m68ki_write_16(m68k, ea, (res >> 16) & 0xffff);
 
 	m68k->n_flag = NFLAG_32(res);
 	m68k->not_z_flag = res;
@@ -14626,13 +14655,13 @@ static void m68k_op_movem_16_re_pd(m68ki_cpu_core *m68k)
 		if (register_list & (1 << i))
 		{
 			ea -= 2;
-			m68ki_write_16(m68k, ea, MASK_OUT_ABOVE_16(REG_DA[15-i]));
+			m68ki_write_16(m68k, ea, MASK_OUT_ABOVE_16(REG_DA[15 - i]));
 			count++;
 		}
 	}
 	AY = ea;
 
-	m68k->remaining_cycles -= count<<m68k->cyc_movem_w;
+	m68k->remaining_cycles -= count << m68k->cyc_movem_w;
 }
 
 
@@ -14652,7 +14681,7 @@ static void m68k_op_movem_16_re_ai(m68ki_cpu_core *m68k)
 		}
 	}
 
-	m68k->remaining_cycles -= count<<m68k->cyc_movem_w;
+	m68k->remaining_cycles -= count << m68k->cyc_movem_w;
 }
 
 
@@ -14672,7 +14701,7 @@ static void m68k_op_movem_16_re_di(m68ki_cpu_core *m68k)
 		}
 	}
 
-	m68k->remaining_cycles -= count<<m68k->cyc_movem_w;
+	m68k->remaining_cycles -= count << m68k->cyc_movem_w;
 }
 
 
@@ -14692,7 +14721,7 @@ static void m68k_op_movem_16_re_ix(m68ki_cpu_core *m68k)
 		}
 	}
 
-	m68k->remaining_cycles -= count<<m68k->cyc_movem_w;
+	m68k->remaining_cycles -= count << m68k->cyc_movem_w;
 }
 
 
@@ -14712,7 +14741,7 @@ static void m68k_op_movem_16_re_aw(m68ki_cpu_core *m68k)
 		}
 	}
 
-	m68k->remaining_cycles -= count<<m68k->cyc_movem_w;
+	m68k->remaining_cycles -= count << m68k->cyc_movem_w;
 }
 
 
@@ -14732,7 +14761,7 @@ static void m68k_op_movem_16_re_al(m68ki_cpu_core *m68k)
 		}
 	}
 
-	m68k->remaining_cycles -= count<<m68k->cyc_movem_w;
+	m68k->remaining_cycles -= count << m68k->cyc_movem_w;
 }
 
 
@@ -14747,14 +14776,14 @@ static void m68k_op_movem_32_re_pd(m68ki_cpu_core *m68k)
 		if (register_list & (1 << i))
 		{
 			ea -= 4;
-			m68ki_write_16(m68k, ea+2, REG_DA[15-i] & 0xFFFF );
-			m68ki_write_16(m68k, ea, (REG_DA[15-i] >> 16) & 0xFFFF );
+			m68ki_write_16(m68k, ea + 2, REG_DA[15 - i] & 0xFFFF);
+			m68ki_write_16(m68k, ea, (REG_DA[15 - i] >> 16) & 0xFFFF);
 			count++;
 		}
 	}
 	AY = ea;
 
-	m68k->remaining_cycles -= count<<m68k->cyc_movem_l;
+	m68k->remaining_cycles -= count << m68k->cyc_movem_l;
 }
 
 
@@ -14774,7 +14803,7 @@ static void m68k_op_movem_32_re_ai(m68ki_cpu_core *m68k)
 		}
 	}
 
-	m68k->remaining_cycles -= count<<m68k->cyc_movem_l;
+	m68k->remaining_cycles -= count << m68k->cyc_movem_l;
 }
 
 
@@ -14794,7 +14823,7 @@ static void m68k_op_movem_32_re_di(m68ki_cpu_core *m68k)
 		}
 	}
 
-	m68k->remaining_cycles -= count<<m68k->cyc_movem_l;
+	m68k->remaining_cycles -= count << m68k->cyc_movem_l;
 }
 
 
@@ -14814,7 +14843,7 @@ static void m68k_op_movem_32_re_ix(m68ki_cpu_core *m68k)
 		}
 	}
 
-	m68k->remaining_cycles -= count<<m68k->cyc_movem_l;
+	m68k->remaining_cycles -= count << m68k->cyc_movem_l;
 }
 
 
@@ -14834,7 +14863,7 @@ static void m68k_op_movem_32_re_aw(m68ki_cpu_core *m68k)
 		}
 	}
 
-	m68k->remaining_cycles -= count<<m68k->cyc_movem_l;
+	m68k->remaining_cycles -= count << m68k->cyc_movem_l;
 }
 
 
@@ -14854,7 +14883,7 @@ static void m68k_op_movem_32_re_al(m68ki_cpu_core *m68k)
 		}
 	}
 
-	m68k->remaining_cycles -= count<<m68k->cyc_movem_l;
+	m68k->remaining_cycles -= count << m68k->cyc_movem_l;
 }
 
 
@@ -14875,7 +14904,7 @@ static void m68k_op_movem_16_er_pi(m68ki_cpu_core *m68k)
 	}
 	AY = ea;
 
-	m68k->remaining_cycles -= count<<m68k->cyc_movem_w;
+	m68k->remaining_cycles -= count << m68k->cyc_movem_w;
 }
 
 
@@ -14895,7 +14924,7 @@ static void m68k_op_movem_16_er_pcdi(m68ki_cpu_core *m68k)
 		}
 	}
 
-	m68k->remaining_cycles -= count<<m68k->cyc_movem_w;
+	m68k->remaining_cycles -= count << m68k->cyc_movem_w;
 }
 
 
@@ -14915,7 +14944,7 @@ static void m68k_op_movem_16_er_pcix(m68ki_cpu_core *m68k)
 		}
 	}
 
-	m68k->remaining_cycles -= count<<m68k->cyc_movem_w;
+	m68k->remaining_cycles -= count << m68k->cyc_movem_w;
 }
 
 
@@ -14935,7 +14964,7 @@ static void m68k_op_movem_16_er_ai(m68ki_cpu_core *m68k)
 		}
 	}
 
-	m68k->remaining_cycles -= count<<m68k->cyc_movem_w;
+	m68k->remaining_cycles -= count << m68k->cyc_movem_w;
 }
 
 
@@ -14955,7 +14984,7 @@ static void m68k_op_movem_16_er_di(m68ki_cpu_core *m68k)
 		}
 	}
 
-	m68k->remaining_cycles -= count<<m68k->cyc_movem_w;
+	m68k->remaining_cycles -= count << m68k->cyc_movem_w;
 }
 
 
@@ -14975,7 +15004,7 @@ static void m68k_op_movem_16_er_ix(m68ki_cpu_core *m68k)
 		}
 	}
 
-	m68k->remaining_cycles -= count<<m68k->cyc_movem_w;
+	m68k->remaining_cycles -= count << m68k->cyc_movem_w;
 }
 
 
@@ -14995,7 +15024,7 @@ static void m68k_op_movem_16_er_aw(m68ki_cpu_core *m68k)
 		}
 	}
 
-	m68k->remaining_cycles -= count<<m68k->cyc_movem_w;
+	m68k->remaining_cycles -= count << m68k->cyc_movem_w;
 }
 
 
@@ -15015,7 +15044,7 @@ static void m68k_op_movem_16_er_al(m68ki_cpu_core *m68k)
 		}
 	}
 
-	m68k->remaining_cycles -= count<<m68k->cyc_movem_w;
+	m68k->remaining_cycles -= count << m68k->cyc_movem_w;
 }
 
 
@@ -15036,7 +15065,7 @@ static void m68k_op_movem_32_er_pi(m68ki_cpu_core *m68k)
 	}
 	AY = ea;
 
-	m68k->remaining_cycles -= count<<m68k->cyc_movem_l;
+	m68k->remaining_cycles -= count << m68k->cyc_movem_l;
 }
 
 
@@ -15056,7 +15085,7 @@ static void m68k_op_movem_32_er_pcdi(m68ki_cpu_core *m68k)
 		}
 	}
 
-	m68k->remaining_cycles -= count<<m68k->cyc_movem_l;
+	m68k->remaining_cycles -= count << m68k->cyc_movem_l;
 }
 
 
@@ -15076,7 +15105,7 @@ static void m68k_op_movem_32_er_pcix(m68ki_cpu_core *m68k)
 		}
 	}
 
-	m68k->remaining_cycles -= count<<m68k->cyc_movem_l;
+	m68k->remaining_cycles -= count << m68k->cyc_movem_l;
 }
 
 
@@ -15096,7 +15125,7 @@ static void m68k_op_movem_32_er_ai(m68ki_cpu_core *m68k)
 		}
 	}
 
-	m68k->remaining_cycles -= count<<m68k->cyc_movem_l;
+	m68k->remaining_cycles -= count << m68k->cyc_movem_l;
 }
 
 
@@ -15116,7 +15145,7 @@ static void m68k_op_movem_32_er_di(m68ki_cpu_core *m68k)
 		}
 	}
 
-	m68k->remaining_cycles -= count<<m68k->cyc_movem_l;
+	m68k->remaining_cycles -= count << m68k->cyc_movem_l;
 }
 
 
@@ -15136,7 +15165,7 @@ static void m68k_op_movem_32_er_ix(m68ki_cpu_core *m68k)
 		}
 	}
 
-	m68k->remaining_cycles -= count<<m68k->cyc_movem_l;
+	m68k->remaining_cycles -= count << m68k->cyc_movem_l;
 }
 
 
@@ -15156,7 +15185,7 @@ static void m68k_op_movem_32_er_aw(m68ki_cpu_core *m68k)
 		}
 	}
 
-	m68k->remaining_cycles -= count<<m68k->cyc_movem_l;
+	m68k->remaining_cycles -= count << m68k->cyc_movem_l;
 }
 
 
@@ -15176,7 +15205,7 @@ static void m68k_op_movem_32_er_al(m68ki_cpu_core *m68k)
 		}
 	}
 
-	m68k->remaining_cycles -= count<<m68k->cyc_movem_l;
+	m68k->remaining_cycles -= count << m68k->cyc_movem_l;
 }
 
 
@@ -15205,7 +15234,7 @@ static void m68k_op_movep_32_re(m68ki_cpu_core *m68k)
 static void m68k_op_movep_16_er(m68ki_cpu_core *m68k)
 {
 	UINT32 ea = EA_AY_DI_16(m68k);
-	UINT32* r_dst = &DX;
+	UINT32 *r_dst = &DX;
 
 	*r_dst = MASK_OUT_BELOW_16(*r_dst) | ((m68ki_read_8(m68k, ea) << 8) + m68ki_read_8(m68k, ea + 2));
 }
@@ -15233,7 +15262,7 @@ static void m68k_op_moveq_32(m68ki_cpu_core *m68k)
 
 static void m68k_op_muls_16_d(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DX;
+	UINT32 *r_dst = &DX;
 	UINT32 res = MASK_OUT_ABOVE_32(MAKE_INT_16(DY) * MAKE_INT_16(MASK_OUT_ABOVE_16(*r_dst)));
 
 	*r_dst = res;
@@ -15247,7 +15276,7 @@ static void m68k_op_muls_16_d(m68ki_cpu_core *m68k)
 
 static void m68k_op_muls_16_ai(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DX;
+	UINT32 *r_dst = &DX;
 	UINT32 res = MASK_OUT_ABOVE_32(MAKE_INT_16(OPER_AY_AI_16(m68k)) * MAKE_INT_16(MASK_OUT_ABOVE_16(*r_dst)));
 
 	*r_dst = res;
@@ -15261,7 +15290,7 @@ static void m68k_op_muls_16_ai(m68ki_cpu_core *m68k)
 
 static void m68k_op_muls_16_pi(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DX;
+	UINT32 *r_dst = &DX;
 	UINT32 res = MASK_OUT_ABOVE_32(MAKE_INT_16(OPER_AY_PI_16(m68k)) * MAKE_INT_16(MASK_OUT_ABOVE_16(*r_dst)));
 
 	*r_dst = res;
@@ -15275,7 +15304,7 @@ static void m68k_op_muls_16_pi(m68ki_cpu_core *m68k)
 
 static void m68k_op_muls_16_pd(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DX;
+	UINT32 *r_dst = &DX;
 	UINT32 res = MASK_OUT_ABOVE_32(MAKE_INT_16(OPER_AY_PD_16(m68k)) * MAKE_INT_16(MASK_OUT_ABOVE_16(*r_dst)));
 
 	*r_dst = res;
@@ -15289,7 +15318,7 @@ static void m68k_op_muls_16_pd(m68ki_cpu_core *m68k)
 
 static void m68k_op_muls_16_di(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DX;
+	UINT32 *r_dst = &DX;
 	UINT32 res = MASK_OUT_ABOVE_32(MAKE_INT_16(OPER_AY_DI_16(m68k)) * MAKE_INT_16(MASK_OUT_ABOVE_16(*r_dst)));
 
 	*r_dst = res;
@@ -15303,7 +15332,7 @@ static void m68k_op_muls_16_di(m68ki_cpu_core *m68k)
 
 static void m68k_op_muls_16_ix(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DX;
+	UINT32 *r_dst = &DX;
 	UINT32 res = MASK_OUT_ABOVE_32(MAKE_INT_16(OPER_AY_IX_16(m68k)) * MAKE_INT_16(MASK_OUT_ABOVE_16(*r_dst)));
 
 	*r_dst = res;
@@ -15317,7 +15346,7 @@ static void m68k_op_muls_16_ix(m68ki_cpu_core *m68k)
 
 static void m68k_op_muls_16_aw(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DX;
+	UINT32 *r_dst = &DX;
 	UINT32 res = MASK_OUT_ABOVE_32(MAKE_INT_16(OPER_AW_16(m68k)) * MAKE_INT_16(MASK_OUT_ABOVE_16(*r_dst)));
 
 	*r_dst = res;
@@ -15331,7 +15360,7 @@ static void m68k_op_muls_16_aw(m68ki_cpu_core *m68k)
 
 static void m68k_op_muls_16_al(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DX;
+	UINT32 *r_dst = &DX;
 	UINT32 res = MASK_OUT_ABOVE_32(MAKE_INT_16(OPER_AL_16(m68k)) * MAKE_INT_16(MASK_OUT_ABOVE_16(*r_dst)));
 
 	*r_dst = res;
@@ -15345,7 +15374,7 @@ static void m68k_op_muls_16_al(m68ki_cpu_core *m68k)
 
 static void m68k_op_muls_16_pcdi(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DX;
+	UINT32 *r_dst = &DX;
 	UINT32 res = MASK_OUT_ABOVE_32(MAKE_INT_16(OPER_PCDI_16(m68k)) * MAKE_INT_16(MASK_OUT_ABOVE_16(*r_dst)));
 
 	*r_dst = res;
@@ -15359,7 +15388,7 @@ static void m68k_op_muls_16_pcdi(m68ki_cpu_core *m68k)
 
 static void m68k_op_muls_16_pcix(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DX;
+	UINT32 *r_dst = &DX;
 	UINT32 res = MASK_OUT_ABOVE_32(MAKE_INT_16(OPER_PCIX_16(m68k)) * MAKE_INT_16(MASK_OUT_ABOVE_16(*r_dst)));
 
 	*r_dst = res;
@@ -15373,7 +15402,7 @@ static void m68k_op_muls_16_pcix(m68ki_cpu_core *m68k)
 
 static void m68k_op_muls_16_i(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DX;
+	UINT32 *r_dst = &DX;
 	UINT32 res = MASK_OUT_ABOVE_32(MAKE_INT_16(OPER_I_16(m68k)) * MAKE_INT_16(MASK_OUT_ABOVE_16(*r_dst)));
 
 	*r_dst = res;
@@ -15387,7 +15416,7 @@ static void m68k_op_muls_16_i(m68ki_cpu_core *m68k)
 
 static void m68k_op_mulu_16_d(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DX;
+	UINT32 *r_dst = &DX;
 	UINT32 res = MASK_OUT_ABOVE_16(DY) * MASK_OUT_ABOVE_16(*r_dst);
 
 	*r_dst = res;
@@ -15401,7 +15430,7 @@ static void m68k_op_mulu_16_d(m68ki_cpu_core *m68k)
 
 static void m68k_op_mulu_16_ai(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DX;
+	UINT32 *r_dst = &DX;
 	UINT32 res = OPER_AY_AI_16(m68k) * MASK_OUT_ABOVE_16(*r_dst);
 
 	*r_dst = res;
@@ -15415,7 +15444,7 @@ static void m68k_op_mulu_16_ai(m68ki_cpu_core *m68k)
 
 static void m68k_op_mulu_16_pi(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DX;
+	UINT32 *r_dst = &DX;
 	UINT32 res = OPER_AY_PI_16(m68k) * MASK_OUT_ABOVE_16(*r_dst);
 
 	*r_dst = res;
@@ -15429,7 +15458,7 @@ static void m68k_op_mulu_16_pi(m68ki_cpu_core *m68k)
 
 static void m68k_op_mulu_16_pd(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DX;
+	UINT32 *r_dst = &DX;
 	UINT32 res = OPER_AY_PD_16(m68k) * MASK_OUT_ABOVE_16(*r_dst);
 
 	*r_dst = res;
@@ -15443,7 +15472,7 @@ static void m68k_op_mulu_16_pd(m68ki_cpu_core *m68k)
 
 static void m68k_op_mulu_16_di(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DX;
+	UINT32 *r_dst = &DX;
 	UINT32 res = OPER_AY_DI_16(m68k) * MASK_OUT_ABOVE_16(*r_dst);
 
 	*r_dst = res;
@@ -15457,7 +15486,7 @@ static void m68k_op_mulu_16_di(m68ki_cpu_core *m68k)
 
 static void m68k_op_mulu_16_ix(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DX;
+	UINT32 *r_dst = &DX;
 	UINT32 res = OPER_AY_IX_16(m68k) * MASK_OUT_ABOVE_16(*r_dst);
 
 	*r_dst = res;
@@ -15471,7 +15500,7 @@ static void m68k_op_mulu_16_ix(m68ki_cpu_core *m68k)
 
 static void m68k_op_mulu_16_aw(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DX;
+	UINT32 *r_dst = &DX;
 	UINT32 res = OPER_AW_16(m68k) * MASK_OUT_ABOVE_16(*r_dst);
 
 	*r_dst = res;
@@ -15485,7 +15514,7 @@ static void m68k_op_mulu_16_aw(m68ki_cpu_core *m68k)
 
 static void m68k_op_mulu_16_al(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DX;
+	UINT32 *r_dst = &DX;
 	UINT32 res = OPER_AL_16(m68k) * MASK_OUT_ABOVE_16(*r_dst);
 
 	*r_dst = res;
@@ -15499,7 +15528,7 @@ static void m68k_op_mulu_16_al(m68ki_cpu_core *m68k)
 
 static void m68k_op_mulu_16_pcdi(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DX;
+	UINT32 *r_dst = &DX;
 	UINT32 res = OPER_PCDI_16(m68k) * MASK_OUT_ABOVE_16(*r_dst);
 
 	*r_dst = res;
@@ -15513,7 +15542,7 @@ static void m68k_op_mulu_16_pcdi(m68ki_cpu_core *m68k)
 
 static void m68k_op_mulu_16_pcix(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DX;
+	UINT32 *r_dst = &DX;
 	UINT32 res = OPER_PCIX_16(m68k) * MASK_OUT_ABOVE_16(*r_dst);
 
 	*r_dst = res;
@@ -15527,7 +15556,7 @@ static void m68k_op_mulu_16_pcix(m68ki_cpu_core *m68k)
 
 static void m68k_op_mulu_16_i(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DX;
+	UINT32 *r_dst = &DX;
 	UINT32 res = OPER_I_16(m68k) * MASK_OUT_ABOVE_16(*r_dst);
 
 	*r_dst = res;
@@ -15541,7 +15570,7 @@ static void m68k_op_mulu_16_i(m68ki_cpu_core *m68k)
 
 static void m68k_op_nbcd_8_d(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DY;
+	UINT32 *r_dst = &DY;
 	UINT32 dst = *r_dst;
 	UINT32 res = MASK_OUT_ABOVE_8(0x9a - dst - XFLAG_AS_1(m68k));
 
@@ -15871,7 +15900,7 @@ static void m68k_op_nbcd_8_al(m68ki_cpu_core *m68k)
 
 static void m68k_op_neg_8_d(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DY;
+	UINT32 *r_dst = &DY;
 	UINT32 res = 0 - MASK_OUT_ABOVE_8(*r_dst);
 
 	m68k->n_flag = NFLAG_8(res);
@@ -16020,12 +16049,12 @@ static void m68k_op_neg_8_al(m68ki_cpu_core *m68k)
 
 static void m68k_op_neg_16_d(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DY;
+	UINT32 *r_dst = &DY;
 	UINT32 res = 0 - MASK_OUT_ABOVE_16(*r_dst);
 
 	m68k->n_flag = NFLAG_16(res);
 	m68k->c_flag = m68k->x_flag = CFLAG_16(res);
-	m68k->v_flag = (*r_dst & res)>>8;
+	m68k->v_flag = (*r_dst & res) >> 8;
 	m68k->not_z_flag = MASK_OUT_ABOVE_16(res);
 
 	*r_dst = MASK_OUT_BELOW_16(*r_dst) | m68k->not_z_flag;
@@ -16040,7 +16069,7 @@ static void m68k_op_neg_16_ai(m68ki_cpu_core *m68k)
 
 	m68k->n_flag = NFLAG_16(res);
 	m68k->c_flag = m68k->x_flag = CFLAG_16(res);
-	m68k->v_flag = (src & res)>>8;
+	m68k->v_flag = (src & res) >> 8;
 	m68k->not_z_flag = MASK_OUT_ABOVE_16(res);
 
 	m68ki_write_16(m68k, ea, m68k->not_z_flag);
@@ -16055,7 +16084,7 @@ static void m68k_op_neg_16_pi(m68ki_cpu_core *m68k)
 
 	m68k->n_flag = NFLAG_16(res);
 	m68k->c_flag = m68k->x_flag = CFLAG_16(res);
-	m68k->v_flag = (src & res)>>8;
+	m68k->v_flag = (src & res) >> 8;
 	m68k->not_z_flag = MASK_OUT_ABOVE_16(res);
 
 	m68ki_write_16(m68k, ea, m68k->not_z_flag);
@@ -16070,7 +16099,7 @@ static void m68k_op_neg_16_pd(m68ki_cpu_core *m68k)
 
 	m68k->n_flag = NFLAG_16(res);
 	m68k->c_flag = m68k->x_flag = CFLAG_16(res);
-	m68k->v_flag = (src & res)>>8;
+	m68k->v_flag = (src & res) >> 8;
 	m68k->not_z_flag = MASK_OUT_ABOVE_16(res);
 
 	m68ki_write_16(m68k, ea, m68k->not_z_flag);
@@ -16085,7 +16114,7 @@ static void m68k_op_neg_16_di(m68ki_cpu_core *m68k)
 
 	m68k->n_flag = NFLAG_16(res);
 	m68k->c_flag = m68k->x_flag = CFLAG_16(res);
-	m68k->v_flag = (src & res)>>8;
+	m68k->v_flag = (src & res) >> 8;
 	m68k->not_z_flag = MASK_OUT_ABOVE_16(res);
 
 	m68ki_write_16(m68k, ea, m68k->not_z_flag);
@@ -16100,7 +16129,7 @@ static void m68k_op_neg_16_ix(m68ki_cpu_core *m68k)
 
 	m68k->n_flag = NFLAG_16(res);
 	m68k->c_flag = m68k->x_flag = CFLAG_16(res);
-	m68k->v_flag = (src & res)>>8;
+	m68k->v_flag = (src & res) >> 8;
 	m68k->not_z_flag = MASK_OUT_ABOVE_16(res);
 
 	m68ki_write_16(m68k, ea, m68k->not_z_flag);
@@ -16115,7 +16144,7 @@ static void m68k_op_neg_16_aw(m68ki_cpu_core *m68k)
 
 	m68k->n_flag = NFLAG_16(res);
 	m68k->c_flag = m68k->x_flag = CFLAG_16(res);
-	m68k->v_flag = (src & res)>>8;
+	m68k->v_flag = (src & res) >> 8;
 	m68k->not_z_flag = MASK_OUT_ABOVE_16(res);
 
 	m68ki_write_16(m68k, ea, m68k->not_z_flag);
@@ -16130,7 +16159,7 @@ static void m68k_op_neg_16_al(m68ki_cpu_core *m68k)
 
 	m68k->n_flag = NFLAG_16(res);
 	m68k->c_flag = m68k->x_flag = CFLAG_16(res);
-	m68k->v_flag = (src & res)>>8;
+	m68k->v_flag = (src & res) >> 8;
 	m68k->not_z_flag = MASK_OUT_ABOVE_16(res);
 
 	m68ki_write_16(m68k, ea, m68k->not_z_flag);
@@ -16139,12 +16168,12 @@ static void m68k_op_neg_16_al(m68ki_cpu_core *m68k)
 
 static void m68k_op_neg_32_d(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DY;
+	UINT32 *r_dst = &DY;
 	UINT32 res = 0 - *r_dst;
 
 	m68k->n_flag = NFLAG_32(res);
 	m68k->c_flag = m68k->x_flag = CFLAG_SUB_32(*r_dst, 0, res);
-	m68k->v_flag = (*r_dst & res)>>24;
+	m68k->v_flag = (*r_dst & res) >> 24;
 	m68k->not_z_flag = MASK_OUT_ABOVE_32(res);
 
 	*r_dst = m68k->not_z_flag;
@@ -16159,7 +16188,7 @@ static void m68k_op_neg_32_ai(m68ki_cpu_core *m68k)
 
 	m68k->n_flag = NFLAG_32(res);
 	m68k->c_flag = m68k->x_flag = CFLAG_SUB_32(src, 0, res);
-	m68k->v_flag = (src & res)>>24;
+	m68k->v_flag = (src & res) >> 24;
 	m68k->not_z_flag = MASK_OUT_ABOVE_32(res);
 
 	m68ki_write_32(m68k, ea, m68k->not_z_flag);
@@ -16174,7 +16203,7 @@ static void m68k_op_neg_32_pi(m68ki_cpu_core *m68k)
 
 	m68k->n_flag = NFLAG_32(res);
 	m68k->c_flag = m68k->x_flag = CFLAG_SUB_32(src, 0, res);
-	m68k->v_flag = (src & res)>>24;
+	m68k->v_flag = (src & res) >> 24;
 	m68k->not_z_flag = MASK_OUT_ABOVE_32(res);
 
 	m68ki_write_32(m68k, ea, m68k->not_z_flag);
@@ -16189,7 +16218,7 @@ static void m68k_op_neg_32_pd(m68ki_cpu_core *m68k)
 
 	m68k->n_flag = NFLAG_32(res);
 	m68k->c_flag = m68k->x_flag = CFLAG_SUB_32(src, 0, res);
-	m68k->v_flag = (src & res)>>24;
+	m68k->v_flag = (src & res) >> 24;
 	m68k->not_z_flag = MASK_OUT_ABOVE_32(res);
 
 	m68ki_write_32(m68k, ea, m68k->not_z_flag);
@@ -16204,7 +16233,7 @@ static void m68k_op_neg_32_di(m68ki_cpu_core *m68k)
 
 	m68k->n_flag = NFLAG_32(res);
 	m68k->c_flag = m68k->x_flag = CFLAG_SUB_32(src, 0, res);
-	m68k->v_flag = (src & res)>>24;
+	m68k->v_flag = (src & res) >> 24;
 	m68k->not_z_flag = MASK_OUT_ABOVE_32(res);
 
 	m68ki_write_32(m68k, ea, m68k->not_z_flag);
@@ -16219,7 +16248,7 @@ static void m68k_op_neg_32_ix(m68ki_cpu_core *m68k)
 
 	m68k->n_flag = NFLAG_32(res);
 	m68k->c_flag = m68k->x_flag = CFLAG_SUB_32(src, 0, res);
-	m68k->v_flag = (src & res)>>24;
+	m68k->v_flag = (src & res) >> 24;
 	m68k->not_z_flag = MASK_OUT_ABOVE_32(res);
 
 	m68ki_write_32(m68k, ea, m68k->not_z_flag);
@@ -16234,7 +16263,7 @@ static void m68k_op_neg_32_aw(m68ki_cpu_core *m68k)
 
 	m68k->n_flag = NFLAG_32(res);
 	m68k->c_flag = m68k->x_flag = CFLAG_SUB_32(src, 0, res);
-	m68k->v_flag = (src & res)>>24;
+	m68k->v_flag = (src & res) >> 24;
 	m68k->not_z_flag = MASK_OUT_ABOVE_32(res);
 
 	m68ki_write_32(m68k, ea, m68k->not_z_flag);
@@ -16249,7 +16278,7 @@ static void m68k_op_neg_32_al(m68ki_cpu_core *m68k)
 
 	m68k->n_flag = NFLAG_32(res);
 	m68k->c_flag = m68k->x_flag = CFLAG_SUB_32(src, 0, res);
-	m68k->v_flag = (src & res)>>24;
+	m68k->v_flag = (src & res) >> 24;
 	m68k->not_z_flag = MASK_OUT_ABOVE_32(res);
 
 	m68ki_write_32(m68k, ea, m68k->not_z_flag);
@@ -16258,7 +16287,7 @@ static void m68k_op_neg_32_al(m68ki_cpu_core *m68k)
 
 static void m68k_op_negx_8_d(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DY;
+	UINT32 *r_dst = &DY;
 	UINT32 res = 0 - MASK_OUT_ABOVE_8(*r_dst) - XFLAG_AS_1(m68k);
 
 	m68k->n_flag = NFLAG_8(res);
@@ -16427,12 +16456,12 @@ static void m68k_op_negx_8_al(m68ki_cpu_core *m68k)
 
 static void m68k_op_negx_16_d(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DY;
+	UINT32 *r_dst = &DY;
 	UINT32 res = 0 - MASK_OUT_ABOVE_16(*r_dst) - XFLAG_AS_1(m68k);
 
 	m68k->n_flag = NFLAG_16(res);
 	m68k->x_flag = m68k->c_flag = CFLAG_16(res);
-	m68k->v_flag = (*r_dst & res)>>8;
+	m68k->v_flag = (*r_dst & res) >> 8;
 
 	res = MASK_OUT_ABOVE_16(res);
 	m68k->not_z_flag |= res;
@@ -16449,7 +16478,7 @@ static void m68k_op_negx_16_ai(m68ki_cpu_core *m68k)
 
 	m68k->n_flag = NFLAG_16(res);
 	m68k->x_flag = m68k->c_flag = CFLAG_16(res);
-	m68k->v_flag = (src & res)>>8;
+	m68k->v_flag = (src & res) >> 8;
 
 	res = MASK_OUT_ABOVE_16(res);
 	m68k->not_z_flag |= res;
@@ -16466,7 +16495,7 @@ static void m68k_op_negx_16_pi(m68ki_cpu_core *m68k)
 
 	m68k->n_flag = NFLAG_16(res);
 	m68k->x_flag = m68k->c_flag = CFLAG_16(res);
-	m68k->v_flag = (src & res)>>8;
+	m68k->v_flag = (src & res) >> 8;
 
 	res = MASK_OUT_ABOVE_16(res);
 	m68k->not_z_flag |= res;
@@ -16483,7 +16512,7 @@ static void m68k_op_negx_16_pd(m68ki_cpu_core *m68k)
 
 	m68k->n_flag = NFLAG_16(res);
 	m68k->x_flag = m68k->c_flag = CFLAG_16(res);
-	m68k->v_flag = (src & res)>>8;
+	m68k->v_flag = (src & res) >> 8;
 
 	res = MASK_OUT_ABOVE_16(res);
 	m68k->not_z_flag |= res;
@@ -16500,7 +16529,7 @@ static void m68k_op_negx_16_di(m68ki_cpu_core *m68k)
 
 	m68k->n_flag = NFLAG_16(res);
 	m68k->x_flag = m68k->c_flag = CFLAG_16(res);
-	m68k->v_flag = (src & res)>>8;
+	m68k->v_flag = (src & res) >> 8;
 
 	res = MASK_OUT_ABOVE_16(res);
 	m68k->not_z_flag |= res;
@@ -16517,7 +16546,7 @@ static void m68k_op_negx_16_ix(m68ki_cpu_core *m68k)
 
 	m68k->n_flag = NFLAG_16(res);
 	m68k->x_flag = m68k->c_flag = CFLAG_16(res);
-	m68k->v_flag = (src & res)>>8;
+	m68k->v_flag = (src & res) >> 8;
 
 	res = MASK_OUT_ABOVE_16(res);
 	m68k->not_z_flag |= res;
@@ -16534,7 +16563,7 @@ static void m68k_op_negx_16_aw(m68ki_cpu_core *m68k)
 
 	m68k->n_flag = NFLAG_16(res);
 	m68k->x_flag = m68k->c_flag = CFLAG_16(res);
-	m68k->v_flag = (src & res)>>8;
+	m68k->v_flag = (src & res) >> 8;
 
 	res = MASK_OUT_ABOVE_16(res);
 	m68k->not_z_flag |= res;
@@ -16551,7 +16580,7 @@ static void m68k_op_negx_16_al(m68ki_cpu_core *m68k)
 
 	m68k->n_flag = NFLAG_16(res);
 	m68k->x_flag = m68k->c_flag = CFLAG_16(res);
-	m68k->v_flag = (src & res)>>8;
+	m68k->v_flag = (src & res) >> 8;
 
 	res = MASK_OUT_ABOVE_16(res);
 	m68k->not_z_flag |= res;
@@ -16562,12 +16591,12 @@ static void m68k_op_negx_16_al(m68ki_cpu_core *m68k)
 
 static void m68k_op_negx_32_d(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DY;
+	UINT32 *r_dst = &DY;
 	UINT32 res = 0 - MASK_OUT_ABOVE_32(*r_dst) - XFLAG_AS_1(m68k);
 
 	m68k->n_flag = NFLAG_32(res);
 	m68k->x_flag = m68k->c_flag = CFLAG_SUB_32(*r_dst, 0, res);
-	m68k->v_flag = (*r_dst & res)>>24;
+	m68k->v_flag = (*r_dst & res) >> 24;
 
 	res = MASK_OUT_ABOVE_32(res);
 	m68k->not_z_flag |= res;
@@ -16584,7 +16613,7 @@ static void m68k_op_negx_32_ai(m68ki_cpu_core *m68k)
 
 	m68k->n_flag = NFLAG_32(res);
 	m68k->x_flag = m68k->c_flag = CFLAG_SUB_32(src, 0, res);
-	m68k->v_flag = (src & res)>>24;
+	m68k->v_flag = (src & res) >> 24;
 
 	res = MASK_OUT_ABOVE_32(res);
 	m68k->not_z_flag |= res;
@@ -16601,7 +16630,7 @@ static void m68k_op_negx_32_pi(m68ki_cpu_core *m68k)
 
 	m68k->n_flag = NFLAG_32(res);
 	m68k->x_flag = m68k->c_flag = CFLAG_SUB_32(src, 0, res);
-	m68k->v_flag = (src & res)>>24;
+	m68k->v_flag = (src & res) >> 24;
 
 	res = MASK_OUT_ABOVE_32(res);
 	m68k->not_z_flag |= res;
@@ -16618,7 +16647,7 @@ static void m68k_op_negx_32_pd(m68ki_cpu_core *m68k)
 
 	m68k->n_flag = NFLAG_32(res);
 	m68k->x_flag = m68k->c_flag = CFLAG_SUB_32(src, 0, res);
-	m68k->v_flag = (src & res)>>24;
+	m68k->v_flag = (src & res) >> 24;
 
 	res = MASK_OUT_ABOVE_32(res);
 	m68k->not_z_flag |= res;
@@ -16635,7 +16664,7 @@ static void m68k_op_negx_32_di(m68ki_cpu_core *m68k)
 
 	m68k->n_flag = NFLAG_32(res);
 	m68k->x_flag = m68k->c_flag = CFLAG_SUB_32(src, 0, res);
-	m68k->v_flag = (src & res)>>24;
+	m68k->v_flag = (src & res) >> 24;
 
 	res = MASK_OUT_ABOVE_32(res);
 	m68k->not_z_flag |= res;
@@ -16652,7 +16681,7 @@ static void m68k_op_negx_32_ix(m68ki_cpu_core *m68k)
 
 	m68k->n_flag = NFLAG_32(res);
 	m68k->x_flag = m68k->c_flag = CFLAG_SUB_32(src, 0, res);
-	m68k->v_flag = (src & res)>>24;
+	m68k->v_flag = (src & res) >> 24;
 
 	res = MASK_OUT_ABOVE_32(res);
 	m68k->not_z_flag |= res;
@@ -16669,7 +16698,7 @@ static void m68k_op_negx_32_aw(m68ki_cpu_core *m68k)
 
 	m68k->n_flag = NFLAG_32(res);
 	m68k->x_flag = m68k->c_flag = CFLAG_SUB_32(src, 0, res);
-	m68k->v_flag = (src & res)>>24;
+	m68k->v_flag = (src & res) >> 24;
 
 	res = MASK_OUT_ABOVE_32(res);
 	m68k->not_z_flag |= res;
@@ -16686,7 +16715,7 @@ static void m68k_op_negx_32_al(m68ki_cpu_core *m68k)
 
 	m68k->n_flag = NFLAG_32(res);
 	m68k->x_flag = m68k->c_flag = CFLAG_SUB_32(src, 0, res);
-	m68k->v_flag = (src & res)>>24;
+	m68k->v_flag = (src & res) >> 24;
 
 	res = MASK_OUT_ABOVE_32(res);
 	m68k->not_z_flag |= res;
@@ -16703,7 +16732,7 @@ static void m68k_op_nop(m68ki_cpu_core *m68k)
 
 static void m68k_op_not_8_d(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DY;
+	UINT32 *r_dst = &DY;
 	UINT32 res = MASK_OUT_ABOVE_8(~*r_dst);
 
 	*r_dst = MASK_OUT_BELOW_8(*r_dst) | res;
@@ -16843,7 +16872,7 @@ static void m68k_op_not_8_al(m68ki_cpu_core *m68k)
 
 static void m68k_op_not_16_d(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DY;
+	UINT32 *r_dst = &DY;
 	UINT32 res = MASK_OUT_ABOVE_16(~*r_dst);
 
 	*r_dst = MASK_OUT_BELOW_16(*r_dst) | res;
@@ -16955,7 +16984,7 @@ static void m68k_op_not_16_al(m68ki_cpu_core *m68k)
 
 static void m68k_op_not_32_d(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DY;
+	UINT32 *r_dst = &DY;
 	UINT32 res = *r_dst = MASK_OUT_ABOVE_32(~*r_dst);
 
 	m68k->n_flag = NFLAG_32(res);
@@ -18238,52 +18267,52 @@ static void m68k_op_reset(m68ki_cpu_core *m68k)
 
 static void m68k_op_ror_8_s(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DY;
-	UINT32 orig_shift = (((m68k->ir >> 9) - 1) & 7) + 1;
-	UINT32 shift = orig_shift & 7;
+	UINT32 *r_dst = &DY;
+	UINT32 orig_shift = (((m68k->ir >> 9) - 1) & 0x07) + 1;
+	UINT32 shift = orig_shift & 0x07;
 	UINT32 src = MASK_OUT_ABOVE_8(*r_dst);
 	UINT32 res = ROR_8(src, shift);
 
 	if (orig_shift != 0)
-		m68k->remaining_cycles -= orig_shift<<m68k->cyc_shift;
+		m68k->remaining_cycles -= orig_shift << m68k->cyc_shift;
 
 	*r_dst = MASK_OUT_BELOW_8(*r_dst) | res;
 
 	m68k->n_flag = NFLAG_8(res);
 	m68k->not_z_flag = res;
-	m68k->c_flag = src << (9-orig_shift);
+	m68k->c_flag = src << (9 - orig_shift);
 	m68k->v_flag = VFLAG_CLEAR;
 }
 
 
 static void m68k_op_ror_16_s(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DY;
-	UINT32 shift = (((m68k->ir >> 9) - 1) & 7) + 1;
+	UINT32 *r_dst = &DY;
+	UINT32 shift = (((m68k->ir >> 9) - 1) & 0x07) + 1;
 	UINT32 src = MASK_OUT_ABOVE_16(*r_dst);
 	UINT32 res = ROR_16(src, shift);
 
 	if (shift != 0)
-		m68k->remaining_cycles -= shift<<m68k->cyc_shift;
+		m68k->remaining_cycles -= shift << m68k->cyc_shift;
 
 	*r_dst = MASK_OUT_BELOW_16(*r_dst) | res;
 
 	m68k->n_flag = NFLAG_16(res);
 	m68k->not_z_flag = res;
-	m68k->c_flag = src << (9-shift);
+	m68k->c_flag = src << (9 - shift);
 	m68k->v_flag = VFLAG_CLEAR;
 }
 
 
 static void m68k_op_ror_32_s(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DY;
-	UINT32 shift = (((m68k->ir >> 9) - 1) & 7) + 1;
+	UINT32 *r_dst = &DY;
+	UINT32 shift = (((m68k->ir >> 9) - 1) & 0x07) + 1;
 	UINT64 src = *r_dst;
 	UINT32 res = ROR_32(src, shift);
 
 	if (shift != 0)
-		m68k->remaining_cycles -= shift<<m68k->cyc_shift;
+		m68k->remaining_cycles -= shift << m68k->cyc_shift;
 
 	*r_dst = res;
 
@@ -18296,18 +18325,18 @@ static void m68k_op_ror_32_s(m68ki_cpu_core *m68k)
 
 static void m68k_op_ror_8_r(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DY;
+	UINT32 *r_dst = &DY;
 	UINT32 orig_shift = DX & 0x3f;
-	UINT32 shift = orig_shift & 7;
+	UINT32 shift = orig_shift & 0x07;
 	UINT32 src = MASK_OUT_ABOVE_8(*r_dst);
 	UINT32 res = ROR_8(src, shift);
 
 	if (orig_shift != 0)
 	{
-		m68k->remaining_cycles -= orig_shift<<m68k->cyc_shift;
+		m68k->remaining_cycles -= orig_shift << m68k->cyc_shift;
 
 		*r_dst = MASK_OUT_BELOW_8(*r_dst) | res;
-		m68k->c_flag = src << (8-((shift-1)&7));
+		m68k->c_flag = src << (8 - ((shift - 1) & 0x07));
 		m68k->n_flag = NFLAG_8(res);
 		m68k->not_z_flag = res;
 		m68k->v_flag = VFLAG_CLEAR;
@@ -18323,18 +18352,18 @@ static void m68k_op_ror_8_r(m68ki_cpu_core *m68k)
 
 static void m68k_op_ror_16_r(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DY;
+	UINT32 *r_dst = &DY;
 	UINT32 orig_shift = DX & 0x3f;
-	UINT32 shift = orig_shift & 15;
+	UINT32 shift = orig_shift & 0x0f;
 	UINT32 src = MASK_OUT_ABOVE_16(*r_dst);
 	UINT32 res = ROR_16(src, shift);
 
 	if (orig_shift != 0)
 	{
-		m68k->remaining_cycles -= orig_shift<<m68k->cyc_shift;
+		m68k->remaining_cycles -= orig_shift << m68k->cyc_shift;
 
 		*r_dst = MASK_OUT_BELOW_16(*r_dst) | res;
-		m68k->c_flag = (src >> ((shift - 1) & 15)) << 8;
+		m68k->c_flag = (src >> ((shift - 1) & 0x0f)) << 8;
 		m68k->n_flag = NFLAG_16(res);
 		m68k->not_z_flag = res;
 		m68k->v_flag = VFLAG_CLEAR;
@@ -18350,18 +18379,18 @@ static void m68k_op_ror_16_r(m68ki_cpu_core *m68k)
 
 static void m68k_op_ror_32_r(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DY;
+	UINT32 *r_dst = &DY;
 	UINT32 orig_shift = DX & 0x3f;
-	UINT32 shift = orig_shift & 31;
+	UINT32 shift = orig_shift & 0x1f;
 	UINT64 src = *r_dst;
 	UINT32 res = ROR_32(src, shift);
 
 	if (orig_shift != 0)
 	{
-		m68k->remaining_cycles -= orig_shift<<m68k->cyc_shift;
+		m68k->remaining_cycles -= orig_shift << m68k->cyc_shift;
 
 		*r_dst = res;
-		m68k->c_flag = (src >> ((shift - 1) & 31)) << 8;
+		m68k->c_flag = (src >> ((shift - 1) & 0x1f)) << 8;
 		m68k->n_flag = NFLAG_32(res);
 		m68k->not_z_flag = res;
 		m68k->v_flag = VFLAG_CLEAR;
@@ -18482,14 +18511,14 @@ static void m68k_op_ror_16_al(m68ki_cpu_core *m68k)
 
 static void m68k_op_rol_8_s(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DY;
-	UINT32 orig_shift = (((m68k->ir >> 9) - 1) & 7) + 1;
-	UINT32 shift = orig_shift & 7;
+	UINT32 *r_dst = &DY;
+	UINT32 orig_shift = (((m68k->ir >> 9) - 1) & 0x07) + 1;
+	UINT32 shift = orig_shift & 0x07;
 	UINT32 src = MASK_OUT_ABOVE_8(*r_dst);
 	UINT32 res = ROL_8(src, shift);
 
 	if (orig_shift != 0)
-		m68k->remaining_cycles -= orig_shift<<m68k->cyc_shift;
+		m68k->remaining_cycles -= orig_shift << m68k->cyc_shift;
 
 	*r_dst = MASK_OUT_BELOW_8(*r_dst) | res;
 
@@ -18502,53 +18531,53 @@ static void m68k_op_rol_8_s(m68ki_cpu_core *m68k)
 
 static void m68k_op_rol_16_s(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DY;
-	UINT32 shift = (((m68k->ir >> 9) - 1) & 7) + 1;
+	UINT32 *r_dst = &DY;
+	UINT32 shift = (((m68k->ir >> 9) - 1) & 0x07) + 1;
 	UINT32 src = MASK_OUT_ABOVE_16(*r_dst);
 	UINT32 res = ROL_16(src, shift);
 
 	if (shift != 0)
-		m68k->remaining_cycles -= shift<<m68k->cyc_shift;
+		m68k->remaining_cycles -= shift << m68k->cyc_shift;
 
 	*r_dst = MASK_OUT_BELOW_16(*r_dst) | res;
 
 	m68k->n_flag = NFLAG_16(res);
 	m68k->not_z_flag = res;
-	m68k->c_flag = src >> (8-shift);
+	m68k->c_flag = src >> (8 - shift);
 	m68k->v_flag = VFLAG_CLEAR;
 }
 
 
 static void m68k_op_rol_32_s(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DY;
-	UINT32 shift = (((m68k->ir >> 9) - 1) & 7) + 1;
+	UINT32 *r_dst = &DY;
+	UINT32 shift = (((m68k->ir >> 9) - 1) & 0x07) + 1;
 	UINT64 src = *r_dst;
 	UINT32 res = ROL_32(src, shift);
 
 	if (shift != 0)
-		m68k->remaining_cycles -= shift<<m68k->cyc_shift;
+		m68k->remaining_cycles -= shift << m68k->cyc_shift;
 
 	*r_dst = res;
 
 	m68k->n_flag = NFLAG_32(res);
 	m68k->not_z_flag = res;
-	m68k->c_flag = src >> (24-shift);
+	m68k->c_flag = src >> (24 - shift);
 	m68k->v_flag = VFLAG_CLEAR;
 }
 
 
 static void m68k_op_rol_8_r(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DY;
+	UINT32 *r_dst = &DY;
 	UINT32 orig_shift = DX & 0x3f;
-	UINT32 shift = orig_shift & 7;
+	UINT32 shift = orig_shift & 0x07;
 	UINT32 src = MASK_OUT_ABOVE_8(*r_dst);
 	UINT32 res = ROL_8(src, shift);
 
 	if (orig_shift != 0)
 	{
-		m68k->remaining_cycles -= orig_shift<<m68k->cyc_shift;
+		m68k->remaining_cycles -= orig_shift << m68k->cyc_shift;
 
 		if (shift != 0)
 		{
@@ -18559,7 +18588,7 @@ static void m68k_op_rol_8_r(m68ki_cpu_core *m68k)
 			m68k->v_flag = VFLAG_CLEAR;
 			return;
 		}
-		m68k->c_flag = (src & 1)<<8;
+		m68k->c_flag = (src & 0x01) << 8;
 		m68k->n_flag = NFLAG_8(src);
 		m68k->not_z_flag = src;
 		m68k->v_flag = VFLAG_CLEAR;
@@ -18575,15 +18604,15 @@ static void m68k_op_rol_8_r(m68ki_cpu_core *m68k)
 
 static void m68k_op_rol_16_r(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DY;
+	UINT32 *r_dst = &DY;
 	UINT32 orig_shift = DX & 0x3f;
-	UINT32 shift = orig_shift & 15;
+	UINT32 shift = orig_shift & 0x0f;
 	UINT32 src = MASK_OUT_ABOVE_16(*r_dst);
 	UINT32 res = MASK_OUT_ABOVE_16(ROL_16(src, shift));
 
 	if (orig_shift != 0)
 	{
-		m68k->remaining_cycles -= orig_shift<<m68k->cyc_shift;
+		m68k->remaining_cycles -= orig_shift << m68k->cyc_shift;
 
 		if (shift != 0)
 		{
@@ -18594,7 +18623,7 @@ static void m68k_op_rol_16_r(m68ki_cpu_core *m68k)
 			m68k->v_flag = VFLAG_CLEAR;
 			return;
 		}
-		m68k->c_flag = (src & 1)<<8;
+		m68k->c_flag = (src & 0x01) << 8;
 		m68k->n_flag = NFLAG_16(src);
 		m68k->not_z_flag = src;
 		m68k->v_flag = VFLAG_CLEAR;
@@ -18610,15 +18639,15 @@ static void m68k_op_rol_16_r(m68ki_cpu_core *m68k)
 
 static void m68k_op_rol_32_r(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DY;
+	UINT32 *r_dst = &DY;
 	UINT32 orig_shift = DX & 0x3f;
-	UINT32 shift = orig_shift & 31;
+	UINT32 shift = orig_shift & 0x1f;
 	UINT64 src = *r_dst;
 	UINT32 res = ROL_32(src, shift);
 
 	if (orig_shift != 0)
 	{
-		m68k->remaining_cycles -= orig_shift<<m68k->cyc_shift;
+		m68k->remaining_cycles -= orig_shift << m68k->cyc_shift;
 
 		*r_dst = res;
 
@@ -18743,13 +18772,13 @@ static void m68k_op_rol_16_al(m68ki_cpu_core *m68k)
 
 static void m68k_op_roxr_8_s(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DY;
-	UINT32 shift = (((m68k->ir >> 9) - 1) & 7) + 1;
+	UINT32 *r_dst = &DY;
+	UINT32 shift = (((m68k->ir >> 9) - 1) & 0x07) + 1;
 	UINT32 src = MASK_OUT_ABOVE_8(*r_dst);
 	UINT32 res = ROR_9(src | (XFLAG_AS_1(m68k) << 8), shift);
 
 	if (shift != 0)
-		m68k->remaining_cycles -= shift<<m68k->cyc_shift;
+		m68k->remaining_cycles -= shift << m68k->cyc_shift;
 
 	m68k->c_flag = m68k->x_flag = res;
 	res = MASK_OUT_ABOVE_8(res);
@@ -18764,13 +18793,13 @@ static void m68k_op_roxr_8_s(m68ki_cpu_core *m68k)
 
 static void m68k_op_roxr_16_s(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DY;
-	UINT32 shift = (((m68k->ir >> 9) - 1) & 7) + 1;
+	UINT32 *r_dst = &DY;
+	UINT32 shift = (((m68k->ir >> 9) - 1) & 0x07) + 1;
 	UINT32 src = MASK_OUT_ABOVE_16(*r_dst);
 	UINT32 res = ROR_17(src | (XFLAG_AS_1(m68k) << 16), shift);
 
 	if (shift != 0)
-		m68k->remaining_cycles -= shift<<m68k->cyc_shift;
+		m68k->remaining_cycles -= shift << m68k->cyc_shift;
 
 	m68k->c_flag = m68k->x_flag = res >> 8;
 	res = MASK_OUT_ABOVE_16(res);
@@ -18785,13 +18814,13 @@ static void m68k_op_roxr_16_s(m68ki_cpu_core *m68k)
 
 static void m68k_op_roxr_32_s(m68ki_cpu_core *m68k)
 {
-	UINT32*  r_dst = &DY;
-	UINT32   shift = (((m68k->ir >> 9) - 1) & 7) + 1;
+	UINT32 *r_dst = &DY;
+	UINT32 shift = (((m68k->ir >> 9) - 1) & 0x07) + 1;
 	UINT64 src   = *r_dst;
 	UINT64 res   = src | (((UINT64)XFLAG_AS_1(m68k)) << 32);
 
 	if (shift != 0)
-		m68k->remaining_cycles -= shift<<m68k->cyc_shift;
+		m68k->remaining_cycles -= shift << m68k->cyc_shift;
 
 	res = ROR_33_64(res, shift);
 
@@ -18808,7 +18837,7 @@ static void m68k_op_roxr_32_s(m68ki_cpu_core *m68k)
 
 static void m68k_op_roxr_8_r(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DY;
+	UINT32 *r_dst = &DY;
 	UINT32 orig_shift = DX & 0x3f;
 
 	if (orig_shift != 0)
@@ -18817,7 +18846,7 @@ static void m68k_op_roxr_8_r(m68ki_cpu_core *m68k)
 		UINT32 src   = MASK_OUT_ABOVE_8(*r_dst);
 		UINT32 res   = ROR_9(src | (XFLAG_AS_1(m68k) << 8), shift);
 
-		m68k->remaining_cycles -= orig_shift<<m68k->cyc_shift;
+		m68k->remaining_cycles -= orig_shift << m68k->cyc_shift;
 
 		m68k->c_flag = m68k->x_flag = res;
 		res = MASK_OUT_ABOVE_8(res);
@@ -18838,16 +18867,16 @@ static void m68k_op_roxr_8_r(m68ki_cpu_core *m68k)
 
 static void m68k_op_roxr_16_r(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DY;
+	UINT32 *r_dst = &DY;
 	UINT32 orig_shift = DX & 0x3f;
 
 	if (orig_shift != 0)
 	{
 		UINT32 shift = orig_shift % 17;
-		UINT32 src   = MASK_OUT_ABOVE_16(*r_dst);
-		UINT32 res   = ROR_17(src | (XFLAG_AS_1(m68k) << 16), shift);
+		UINT32 src = MASK_OUT_ABOVE_16(*r_dst);
+		UINT32 res = ROR_17(src | (XFLAG_AS_1(m68k) << 16), shift);
 
-		m68k->remaining_cycles -= orig_shift<<m68k->cyc_shift;
+		m68k->remaining_cycles -= orig_shift << m68k->cyc_shift;
 
 		m68k->c_flag = m68k->x_flag = res >> 8;
 		res = MASK_OUT_ABOVE_16(res);
@@ -18879,7 +18908,7 @@ static void m68k_op_roxr_32_r(m68ki_cpu_core *m68k)
 
 		res = ROR_33_64(res, shift);
 
-		m68k->remaining_cycles -= orig_shift<<m68k->cyc_shift;
+		m68k->remaining_cycles -= orig_shift << m68k->cyc_shift;
 
 		m68k->c_flag = m68k->x_flag = res >> 24;
 		res = MASK_OUT_ABOVE_32(res);
@@ -19019,13 +19048,13 @@ static void m68k_op_roxr_16_al(m68ki_cpu_core *m68k)
 
 static void m68k_op_roxl_8_s(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DY;
-	UINT32 shift = (((m68k->ir >> 9) - 1) & 7) + 1;
+	UINT32 *r_dst = &DY;
+	UINT32 shift = (((m68k->ir >> 9) - 1) & 0x07) + 1;
 	UINT32 src = MASK_OUT_ABOVE_8(*r_dst);
 	UINT32 res = ROL_9(src | (XFLAG_AS_1(m68k) << 8), shift);
 
 	if (shift != 0)
-		m68k->remaining_cycles -= shift<<m68k->cyc_shift;
+		m68k->remaining_cycles -= shift << m68k->cyc_shift;
 
 	m68k->c_flag = m68k->x_flag = res;
 	res = MASK_OUT_ABOVE_8(res);
@@ -19040,13 +19069,13 @@ static void m68k_op_roxl_8_s(m68ki_cpu_core *m68k)
 
 static void m68k_op_roxl_16_s(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DY;
-	UINT32 shift = (((m68k->ir >> 9) - 1) & 7) + 1;
+	UINT32 *r_dst = &DY;
+	UINT32 shift = (((m68k->ir >> 9) - 1) & 0x07) + 1;
 	UINT32 src = MASK_OUT_ABOVE_16(*r_dst);
 	UINT32 res = ROL_17(src | (XFLAG_AS_1(m68k) << 16), shift);
 
 	if (shift != 0)
-		m68k->remaining_cycles -= shift<<m68k->cyc_shift;
+		m68k->remaining_cycles -= shift << m68k->cyc_shift;
 
 	m68k->c_flag = m68k->x_flag = res >> 8;
 	res = MASK_OUT_ABOVE_16(res);
@@ -19061,13 +19090,13 @@ static void m68k_op_roxl_16_s(m68ki_cpu_core *m68k)
 
 static void m68k_op_roxl_32_s(m68ki_cpu_core *m68k)
 {
-	UINT32*  r_dst = &DY;
-	UINT32   shift = (((m68k->ir >> 9) - 1) & 7) + 1;
-	UINT64 src   = *r_dst;
-	UINT64 res   = src | (((UINT64)XFLAG_AS_1(m68k)) << 32);
+	UINT32 *r_dst = &DY;
+	UINT32 shift = (((m68k->ir >> 9) - 1) & 0x07) + 1;
+	UINT64 src = *r_dst;
+	UINT64 res = src | (((UINT64)XFLAG_AS_1(m68k)) << 32);
 
 	if (shift != 0)
-		m68k->remaining_cycles -= shift<<m68k->cyc_shift;
+		m68k->remaining_cycles -= shift << m68k->cyc_shift;
 
 	res = ROL_33_64(res, shift);
 
@@ -19084,7 +19113,7 @@ static void m68k_op_roxl_32_s(m68ki_cpu_core *m68k)
 
 static void m68k_op_roxl_8_r(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DY;
+	UINT32 *r_dst = &DY;
 	UINT32 orig_shift = DX & 0x3f;
 
 	if (orig_shift != 0)
@@ -19093,7 +19122,7 @@ static void m68k_op_roxl_8_r(m68ki_cpu_core *m68k)
 		UINT32 src   = MASK_OUT_ABOVE_8(*r_dst);
 		UINT32 res   = ROL_9(src | (XFLAG_AS_1(m68k) << 8), shift);
 
-		m68k->remaining_cycles -= orig_shift<<m68k->cyc_shift;
+		m68k->remaining_cycles -= orig_shift << m68k->cyc_shift;
 
 		m68k->c_flag = m68k->x_flag = res;
 		res = MASK_OUT_ABOVE_8(res);
@@ -19114,7 +19143,7 @@ static void m68k_op_roxl_8_r(m68ki_cpu_core *m68k)
 
 static void m68k_op_roxl_16_r(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DY;
+	UINT32 *r_dst = &DY;
 	UINT32 orig_shift = DX & 0x3f;
 
 	if (orig_shift != 0)
@@ -19123,7 +19152,7 @@ static void m68k_op_roxl_16_r(m68ki_cpu_core *m68k)
 		UINT32 src   = MASK_OUT_ABOVE_16(*r_dst);
 		UINT32 res   = ROL_17(src | (XFLAG_AS_1(m68k) << 16), shift);
 
-		m68k->remaining_cycles -= orig_shift<<m68k->cyc_shift;
+		m68k->remaining_cycles -= orig_shift << m68k->cyc_shift;
 
 		m68k->c_flag = m68k->x_flag = res >> 8;
 		res = MASK_OUT_ABOVE_16(res);
@@ -19144,18 +19173,18 @@ static void m68k_op_roxl_16_r(m68ki_cpu_core *m68k)
 
 static void m68k_op_roxl_32_r(m68ki_cpu_core *m68k)
 {
-	UINT32*  r_dst = &DY;
-	UINT32   orig_shift = DX & 0x3f;
+	UINT32 *r_dst = &DY;
+	UINT32 orig_shift = DX & 0x3f;
 
 	if (orig_shift != 0)
 	{
-		UINT32   shift = orig_shift % 33;
-		UINT64 src   = *r_dst;
-		UINT64 res   = src | (((UINT64)XFLAG_AS_1(m68k)) << 32);
+		UINT32 shift = orig_shift % 33;
+		UINT64 src = *r_dst;
+		UINT64 res = src | (((UINT64)XFLAG_AS_1(m68k)) << 32);
 
 		res = ROL_33_64(res, shift);
 
-		m68k->remaining_cycles -= orig_shift<<m68k->cyc_shift;
+		m68k->remaining_cycles -= orig_shift << m68k->cyc_shift;
 
 		m68k->c_flag = m68k->x_flag = res >> 24;
 		res = MASK_OUT_ABOVE_32(res);
@@ -19332,7 +19361,7 @@ static void m68k_op_rts_32(m68ki_cpu_core *m68k)
 
 static void m68k_op_sbcd_8_rr(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DX;
+	UINT32 *r_dst = &DX;
 	UINT32 src = DY;
 	UINT32 dst = *r_dst;
 	UINT32 res = LOW_NIBBLE(dst) - LOW_NIBBLE(src) - XFLAG_AS_1(m68k);
@@ -20536,7 +20565,7 @@ static void m68k_op_stop(m68ki_cpu_core *m68k)
 
 static void m68k_op_sub_8_er_d(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DX;
+	UINT32 *r_dst = &DX;
 	UINT32 src = MASK_OUT_ABOVE_8(DY);
 	UINT32 dst = MASK_OUT_ABOVE_8(*r_dst);
 	UINT32 res = dst - src;
@@ -20552,7 +20581,7 @@ static void m68k_op_sub_8_er_d(m68ki_cpu_core *m68k)
 
 static void m68k_op_sub_8_er_ai(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DX;
+	UINT32 *r_dst = &DX;
 	UINT32 src = OPER_AY_AI_8(m68k);
 	UINT32 dst = MASK_OUT_ABOVE_8(*r_dst);
 	UINT32 res = dst - src;
@@ -20568,7 +20597,7 @@ static void m68k_op_sub_8_er_ai(m68ki_cpu_core *m68k)
 
 static void m68k_op_sub_8_er_pi(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DX;
+	UINT32 *r_dst = &DX;
 	UINT32 src = OPER_AY_PI_8(m68k);
 	UINT32 dst = MASK_OUT_ABOVE_8(*r_dst);
 	UINT32 res = dst - src;
@@ -20584,7 +20613,7 @@ static void m68k_op_sub_8_er_pi(m68ki_cpu_core *m68k)
 
 static void m68k_op_sub_8_er_pi7(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DX;
+	UINT32 *r_dst = &DX;
 	UINT32 src = OPER_A7_PI_8(m68k);
 	UINT32 dst = MASK_OUT_ABOVE_8(*r_dst);
 	UINT32 res = dst - src;
@@ -20600,7 +20629,7 @@ static void m68k_op_sub_8_er_pi7(m68ki_cpu_core *m68k)
 
 static void m68k_op_sub_8_er_pd(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DX;
+	UINT32 *r_dst = &DX;
 	UINT32 src = OPER_AY_PD_8(m68k);
 	UINT32 dst = MASK_OUT_ABOVE_8(*r_dst);
 	UINT32 res = dst - src;
@@ -20616,7 +20645,7 @@ static void m68k_op_sub_8_er_pd(m68ki_cpu_core *m68k)
 
 static void m68k_op_sub_8_er_pd7(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DX;
+	UINT32 *r_dst = &DX;
 	UINT32 src = OPER_A7_PD_8(m68k);
 	UINT32 dst = MASK_OUT_ABOVE_8(*r_dst);
 	UINT32 res = dst - src;
@@ -20632,7 +20661,7 @@ static void m68k_op_sub_8_er_pd7(m68ki_cpu_core *m68k)
 
 static void m68k_op_sub_8_er_di(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DX;
+	UINT32 *r_dst = &DX;
 	UINT32 src = OPER_AY_DI_8(m68k);
 	UINT32 dst = MASK_OUT_ABOVE_8(*r_dst);
 	UINT32 res = dst - src;
@@ -20648,7 +20677,7 @@ static void m68k_op_sub_8_er_di(m68ki_cpu_core *m68k)
 
 static void m68k_op_sub_8_er_ix(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DX;
+	UINT32 *r_dst = &DX;
 	UINT32 src = OPER_AY_IX_8(m68k);
 	UINT32 dst = MASK_OUT_ABOVE_8(*r_dst);
 	UINT32 res = dst - src;
@@ -20664,7 +20693,7 @@ static void m68k_op_sub_8_er_ix(m68ki_cpu_core *m68k)
 
 static void m68k_op_sub_8_er_aw(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DX;
+	UINT32 *r_dst = &DX;
 	UINT32 src = OPER_AW_8(m68k);
 	UINT32 dst = MASK_OUT_ABOVE_8(*r_dst);
 	UINT32 res = dst - src;
@@ -20680,7 +20709,7 @@ static void m68k_op_sub_8_er_aw(m68ki_cpu_core *m68k)
 
 static void m68k_op_sub_8_er_al(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DX;
+	UINT32 *r_dst = &DX;
 	UINT32 src = OPER_AL_8(m68k);
 	UINT32 dst = MASK_OUT_ABOVE_8(*r_dst);
 	UINT32 res = dst - src;
@@ -20696,7 +20725,7 @@ static void m68k_op_sub_8_er_al(m68ki_cpu_core *m68k)
 
 static void m68k_op_sub_8_er_pcdi(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DX;
+	UINT32 *r_dst = &DX;
 	UINT32 src = OPER_PCDI_8(m68k);
 	UINT32 dst = MASK_OUT_ABOVE_8(*r_dst);
 	UINT32 res = dst - src;
@@ -20712,7 +20741,7 @@ static void m68k_op_sub_8_er_pcdi(m68ki_cpu_core *m68k)
 
 static void m68k_op_sub_8_er_pcix(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DX;
+	UINT32 *r_dst = &DX;
 	UINT32 src = OPER_PCIX_8(m68k);
 	UINT32 dst = MASK_OUT_ABOVE_8(*r_dst);
 	UINT32 res = dst - src;
@@ -20728,7 +20757,7 @@ static void m68k_op_sub_8_er_pcix(m68ki_cpu_core *m68k)
 
 static void m68k_op_sub_8_er_i(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DX;
+	UINT32 *r_dst = &DX;
 	UINT32 src = OPER_I_8(m68k);
 	UINT32 dst = MASK_OUT_ABOVE_8(*r_dst);
 	UINT32 res = dst - src;
@@ -20744,7 +20773,7 @@ static void m68k_op_sub_8_er_i(m68ki_cpu_core *m68k)
 
 static void m68k_op_sub_16_er_d(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DX;
+	UINT32 *r_dst = &DX;
 	UINT32 src = MASK_OUT_ABOVE_16(DY);
 	UINT32 dst = MASK_OUT_ABOVE_16(*r_dst);
 	UINT32 res = dst - src;
@@ -20760,7 +20789,7 @@ static void m68k_op_sub_16_er_d(m68ki_cpu_core *m68k)
 
 static void m68k_op_sub_16_er_a(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DX;
+	UINT32 *r_dst = &DX;
 	UINT32 src = MASK_OUT_ABOVE_16(AY);
 	UINT32 dst = MASK_OUT_ABOVE_16(*r_dst);
 	UINT32 res = dst - src;
@@ -20776,7 +20805,7 @@ static void m68k_op_sub_16_er_a(m68ki_cpu_core *m68k)
 
 static void m68k_op_sub_16_er_ai(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DX;
+	UINT32 *r_dst = &DX;
 	UINT32 src = OPER_AY_AI_16(m68k);
 	UINT32 dst = MASK_OUT_ABOVE_16(*r_dst);
 	UINT32 res = dst - src;
@@ -20792,7 +20821,7 @@ static void m68k_op_sub_16_er_ai(m68ki_cpu_core *m68k)
 
 static void m68k_op_sub_16_er_pi(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DX;
+	UINT32 *r_dst = &DX;
 	UINT32 src = OPER_AY_PI_16(m68k);
 	UINT32 dst = MASK_OUT_ABOVE_16(*r_dst);
 	UINT32 res = dst - src;
@@ -20808,7 +20837,7 @@ static void m68k_op_sub_16_er_pi(m68ki_cpu_core *m68k)
 
 static void m68k_op_sub_16_er_pd(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DX;
+	UINT32 *r_dst = &DX;
 	UINT32 src = OPER_AY_PD_16(m68k);
 	UINT32 dst = MASK_OUT_ABOVE_16(*r_dst);
 	UINT32 res = dst - src;
@@ -20824,7 +20853,7 @@ static void m68k_op_sub_16_er_pd(m68ki_cpu_core *m68k)
 
 static void m68k_op_sub_16_er_di(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DX;
+	UINT32 *r_dst = &DX;
 	UINT32 src = OPER_AY_DI_16(m68k);
 	UINT32 dst = MASK_OUT_ABOVE_16(*r_dst);
 	UINT32 res = dst - src;
@@ -20840,7 +20869,7 @@ static void m68k_op_sub_16_er_di(m68ki_cpu_core *m68k)
 
 static void m68k_op_sub_16_er_ix(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DX;
+	UINT32 *r_dst = &DX;
 	UINT32 src = OPER_AY_IX_16(m68k);
 	UINT32 dst = MASK_OUT_ABOVE_16(*r_dst);
 	UINT32 res = dst - src;
@@ -20856,7 +20885,7 @@ static void m68k_op_sub_16_er_ix(m68ki_cpu_core *m68k)
 
 static void m68k_op_sub_16_er_aw(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DX;
+	UINT32 *r_dst = &DX;
 	UINT32 src = OPER_AW_16(m68k);
 	UINT32 dst = MASK_OUT_ABOVE_16(*r_dst);
 	UINT32 res = dst - src;
@@ -20872,7 +20901,7 @@ static void m68k_op_sub_16_er_aw(m68ki_cpu_core *m68k)
 
 static void m68k_op_sub_16_er_al(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DX;
+	UINT32 *r_dst = &DX;
 	UINT32 src = OPER_AL_16(m68k);
 	UINT32 dst = MASK_OUT_ABOVE_16(*r_dst);
 	UINT32 res = dst - src;
@@ -20888,7 +20917,7 @@ static void m68k_op_sub_16_er_al(m68ki_cpu_core *m68k)
 
 static void m68k_op_sub_16_er_pcdi(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DX;
+	UINT32 *r_dst = &DX;
 	UINT32 src = OPER_PCDI_16(m68k);
 	UINT32 dst = MASK_OUT_ABOVE_16(*r_dst);
 	UINT32 res = dst - src;
@@ -20904,7 +20933,7 @@ static void m68k_op_sub_16_er_pcdi(m68ki_cpu_core *m68k)
 
 static void m68k_op_sub_16_er_pcix(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DX;
+	UINT32 *r_dst = &DX;
 	UINT32 src = OPER_PCIX_16(m68k);
 	UINT32 dst = MASK_OUT_ABOVE_16(*r_dst);
 	UINT32 res = dst - src;
@@ -20920,7 +20949,7 @@ static void m68k_op_sub_16_er_pcix(m68ki_cpu_core *m68k)
 
 static void m68k_op_sub_16_er_i(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DX;
+	UINT32 *r_dst = &DX;
 	UINT32 src = OPER_I_16(m68k);
 	UINT32 dst = MASK_OUT_ABOVE_16(*r_dst);
 	UINT32 res = dst - src;
@@ -20936,7 +20965,7 @@ static void m68k_op_sub_16_er_i(m68ki_cpu_core *m68k)
 
 static void m68k_op_sub_32_er_d(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DX;
+	UINT32 *r_dst = &DX;
 	UINT32 src = DY;
 	UINT32 dst = *r_dst;
 	UINT32 res = dst - src;
@@ -20952,7 +20981,7 @@ static void m68k_op_sub_32_er_d(m68ki_cpu_core *m68k)
 
 static void m68k_op_sub_32_er_a(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DX;
+	UINT32 *r_dst = &DX;
 	UINT32 src = AY;
 	UINT32 dst = *r_dst;
 	UINT32 res = dst - src;
@@ -20968,7 +20997,7 @@ static void m68k_op_sub_32_er_a(m68ki_cpu_core *m68k)
 
 static void m68k_op_sub_32_er_ai(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DX;
+	UINT32 *r_dst = &DX;
 	UINT32 src = OPER_AY_AI_32(m68k);
 	UINT32 dst = *r_dst;
 	UINT32 res = dst - src;
@@ -20984,7 +21013,7 @@ static void m68k_op_sub_32_er_ai(m68ki_cpu_core *m68k)
 
 static void m68k_op_sub_32_er_pi(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DX;
+	UINT32 *r_dst = &DX;
 	UINT32 src = OPER_AY_PI_32(m68k);
 	UINT32 dst = *r_dst;
 	UINT32 res = dst - src;
@@ -21000,7 +21029,7 @@ static void m68k_op_sub_32_er_pi(m68ki_cpu_core *m68k)
 
 static void m68k_op_sub_32_er_pd(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DX;
+	UINT32 *r_dst = &DX;
 	UINT32 src = OPER_AY_PD_32(m68k);
 	UINT32 dst = *r_dst;
 	UINT32 res = dst - src;
@@ -21016,7 +21045,7 @@ static void m68k_op_sub_32_er_pd(m68ki_cpu_core *m68k)
 
 static void m68k_op_sub_32_er_di(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DX;
+	UINT32 *r_dst = &DX;
 	UINT32 src = OPER_AY_DI_32(m68k);
 	UINT32 dst = *r_dst;
 	UINT32 res = dst - src;
@@ -21032,7 +21061,7 @@ static void m68k_op_sub_32_er_di(m68ki_cpu_core *m68k)
 
 static void m68k_op_sub_32_er_ix(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DX;
+	UINT32 *r_dst = &DX;
 	UINT32 src = OPER_AY_IX_32(m68k);
 	UINT32 dst = *r_dst;
 	UINT32 res = dst - src;
@@ -21048,7 +21077,7 @@ static void m68k_op_sub_32_er_ix(m68ki_cpu_core *m68k)
 
 static void m68k_op_sub_32_er_aw(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DX;
+	UINT32 *r_dst = &DX;
 	UINT32 src = OPER_AW_32(m68k);
 	UINT32 dst = *r_dst;
 	UINT32 res = dst - src;
@@ -21064,7 +21093,7 @@ static void m68k_op_sub_32_er_aw(m68ki_cpu_core *m68k)
 
 static void m68k_op_sub_32_er_al(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DX;
+	UINT32 *r_dst = &DX;
 	UINT32 src = OPER_AL_32(m68k);
 	UINT32 dst = *r_dst;
 	UINT32 res = dst - src;
@@ -21080,7 +21109,7 @@ static void m68k_op_sub_32_er_al(m68ki_cpu_core *m68k)
 
 static void m68k_op_sub_32_er_pcdi(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DX;
+	UINT32 *r_dst = &DX;
 	UINT32 src = OPER_PCDI_32(m68k);
 	UINT32 dst = *r_dst;
 	UINT32 res = dst - src;
@@ -21096,7 +21125,7 @@ static void m68k_op_sub_32_er_pcdi(m68ki_cpu_core *m68k)
 
 static void m68k_op_sub_32_er_pcix(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DX;
+	UINT32 *r_dst = &DX;
 	UINT32 src = OPER_PCIX_32(m68k);
 	UINT32 dst = *r_dst;
 	UINT32 res = dst - src;
@@ -21112,7 +21141,7 @@ static void m68k_op_sub_32_er_pcix(m68ki_cpu_core *m68k)
 
 static void m68k_op_sub_32_er_i(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DX;
+	UINT32 *r_dst = &DX;
 	UINT32 src = OPER_I_32(m68k);
 	UINT32 dst = *r_dst;
 	UINT32 res = dst - src;
@@ -21496,7 +21525,7 @@ static void m68k_op_sub_32_re_al(m68ki_cpu_core *m68k)
 
 static void m68k_op_suba_16_d(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &AX;
+	UINT32 *r_dst = &AX;
 
 	*r_dst = MASK_OUT_ABOVE_32(*r_dst - MAKE_INT_16(DY));
 }
@@ -21504,7 +21533,7 @@ static void m68k_op_suba_16_d(m68ki_cpu_core *m68k)
 
 static void m68k_op_suba_16_a(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &AX;
+	UINT32 *r_dst = &AX;
 
 	*r_dst = MASK_OUT_ABOVE_32(*r_dst - MAKE_INT_16(AY));
 }
@@ -21512,7 +21541,7 @@ static void m68k_op_suba_16_a(m68ki_cpu_core *m68k)
 
 static void m68k_op_suba_16_ai(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &AX;
+	UINT32 *r_dst = &AX;
 	UINT32 src = MAKE_INT_16(OPER_AY_AI_16(m68k));
 
 	*r_dst = MASK_OUT_ABOVE_32(*r_dst - src);
@@ -21521,7 +21550,7 @@ static void m68k_op_suba_16_ai(m68ki_cpu_core *m68k)
 
 static void m68k_op_suba_16_pi(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &AX;
+	UINT32 *r_dst = &AX;
 	UINT32 src = MAKE_INT_16(OPER_AY_PI_16(m68k));
 
 	*r_dst = MASK_OUT_ABOVE_32(*r_dst - src);
@@ -21530,7 +21559,7 @@ static void m68k_op_suba_16_pi(m68ki_cpu_core *m68k)
 
 static void m68k_op_suba_16_pd(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &AX;
+	UINT32 *r_dst = &AX;
 	UINT32 src = MAKE_INT_16(OPER_AY_PD_16(m68k));
 
 	*r_dst = MASK_OUT_ABOVE_32(*r_dst - src);
@@ -21539,7 +21568,7 @@ static void m68k_op_suba_16_pd(m68ki_cpu_core *m68k)
 
 static void m68k_op_suba_16_di(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &AX;
+	UINT32 *r_dst = &AX;
 	UINT32 src = MAKE_INT_16(OPER_AY_DI_16(m68k));
 
 	*r_dst = MASK_OUT_ABOVE_32(*r_dst - src);
@@ -21548,7 +21577,7 @@ static void m68k_op_suba_16_di(m68ki_cpu_core *m68k)
 
 static void m68k_op_suba_16_ix(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &AX;
+	UINT32 *r_dst = &AX;
 	UINT32 src = MAKE_INT_16(OPER_AY_IX_16(m68k));
 
 	*r_dst = MASK_OUT_ABOVE_32(*r_dst - src);
@@ -21557,7 +21586,7 @@ static void m68k_op_suba_16_ix(m68ki_cpu_core *m68k)
 
 static void m68k_op_suba_16_aw(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &AX;
+	UINT32 *r_dst = &AX;
 	UINT32 src = MAKE_INT_16(OPER_AW_16(m68k));
 
 	*r_dst = MASK_OUT_ABOVE_32(*r_dst - src);
@@ -21566,7 +21595,7 @@ static void m68k_op_suba_16_aw(m68ki_cpu_core *m68k)
 
 static void m68k_op_suba_16_al(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &AX;
+	UINT32 *r_dst = &AX;
 	UINT32 src = MAKE_INT_16(OPER_AL_16(m68k));
 
 	*r_dst = MASK_OUT_ABOVE_32(*r_dst - src);
@@ -21575,7 +21604,7 @@ static void m68k_op_suba_16_al(m68ki_cpu_core *m68k)
 
 static void m68k_op_suba_16_pcdi(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &AX;
+	UINT32 *r_dst = &AX;
 	UINT32 src = MAKE_INT_16(OPER_PCDI_16(m68k));
 
 	*r_dst = MASK_OUT_ABOVE_32(*r_dst - src);
@@ -21584,7 +21613,7 @@ static void m68k_op_suba_16_pcdi(m68ki_cpu_core *m68k)
 
 static void m68k_op_suba_16_pcix(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &AX;
+	UINT32 *r_dst = &AX;
 	UINT32 src = MAKE_INT_16(OPER_PCIX_16(m68k));
 
 	*r_dst = MASK_OUT_ABOVE_32(*r_dst - src);
@@ -21593,7 +21622,7 @@ static void m68k_op_suba_16_pcix(m68ki_cpu_core *m68k)
 
 static void m68k_op_suba_16_i(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &AX;
+	UINT32 *r_dst = &AX;
 	UINT32 src = MAKE_INT_16(OPER_I_16(m68k));
 
 	*r_dst = MASK_OUT_ABOVE_32(*r_dst - src);
@@ -21602,7 +21631,7 @@ static void m68k_op_suba_16_i(m68ki_cpu_core *m68k)
 
 static void m68k_op_suba_32_d(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &AX;
+	UINT32 *r_dst = &AX;
 
 	*r_dst = MASK_OUT_ABOVE_32(*r_dst - DY);
 }
@@ -21610,7 +21639,7 @@ static void m68k_op_suba_32_d(m68ki_cpu_core *m68k)
 
 static void m68k_op_suba_32_a(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &AX;
+	UINT32 *r_dst = &AX;
 
 	*r_dst = MASK_OUT_ABOVE_32(*r_dst - AY);
 }
@@ -21618,7 +21647,7 @@ static void m68k_op_suba_32_a(m68ki_cpu_core *m68k)
 
 static void m68k_op_suba_32_ai(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &AX;
+	UINT32 *r_dst = &AX;
 	UINT32 src = OPER_AY_AI_32(m68k);
 
 	*r_dst = MASK_OUT_ABOVE_32(*r_dst - src);
@@ -21627,7 +21656,7 @@ static void m68k_op_suba_32_ai(m68ki_cpu_core *m68k)
 
 static void m68k_op_suba_32_pi(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &AX;
+	UINT32 *r_dst = &AX;
 	UINT32 src = OPER_AY_PI_32(m68k);
 
 	*r_dst = MASK_OUT_ABOVE_32(*r_dst - src);
@@ -21636,7 +21665,7 @@ static void m68k_op_suba_32_pi(m68ki_cpu_core *m68k)
 
 static void m68k_op_suba_32_pd(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &AX;
+	UINT32 *r_dst = &AX;
 	UINT32 src = OPER_AY_PD_32(m68k);
 
 	*r_dst = MASK_OUT_ABOVE_32(*r_dst - src);
@@ -21645,7 +21674,7 @@ static void m68k_op_suba_32_pd(m68ki_cpu_core *m68k)
 
 static void m68k_op_suba_32_di(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &AX;
+	UINT32 *r_dst = &AX;
 	UINT32 src = OPER_AY_DI_32(m68k);
 
 	*r_dst = MASK_OUT_ABOVE_32(*r_dst - src);
@@ -21654,7 +21683,7 @@ static void m68k_op_suba_32_di(m68ki_cpu_core *m68k)
 
 static void m68k_op_suba_32_ix(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &AX;
+	UINT32 *r_dst = &AX;
 	UINT32 src = OPER_AY_IX_32(m68k);
 
 	*r_dst = MASK_OUT_ABOVE_32(*r_dst - src);
@@ -21663,7 +21692,7 @@ static void m68k_op_suba_32_ix(m68ki_cpu_core *m68k)
 
 static void m68k_op_suba_32_aw(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &AX;
+	UINT32 *r_dst = &AX;
 	UINT32 src = OPER_AW_32(m68k);
 
 	*r_dst = MASK_OUT_ABOVE_32(*r_dst - src);
@@ -21672,7 +21701,7 @@ static void m68k_op_suba_32_aw(m68ki_cpu_core *m68k)
 
 static void m68k_op_suba_32_al(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &AX;
+	UINT32 *r_dst = &AX;
 	UINT32 src = OPER_AL_32(m68k);
 
 	*r_dst = MASK_OUT_ABOVE_32(*r_dst - src);
@@ -21681,7 +21710,7 @@ static void m68k_op_suba_32_al(m68ki_cpu_core *m68k)
 
 static void m68k_op_suba_32_pcdi(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &AX;
+	UINT32 *r_dst = &AX;
 	UINT32 src = OPER_PCDI_32(m68k);
 
 	*r_dst = MASK_OUT_ABOVE_32(*r_dst - src);
@@ -21690,7 +21719,7 @@ static void m68k_op_suba_32_pcdi(m68ki_cpu_core *m68k)
 
 static void m68k_op_suba_32_pcix(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &AX;
+	UINT32 *r_dst = &AX;
 	UINT32 src = OPER_PCIX_32(m68k);
 
 	*r_dst = MASK_OUT_ABOVE_32(*r_dst - src);
@@ -21699,7 +21728,7 @@ static void m68k_op_suba_32_pcix(m68ki_cpu_core *m68k)
 
 static void m68k_op_suba_32_i(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &AX;
+	UINT32 *r_dst = &AX;
 	UINT32 src = OPER_I_32(m68k);
 
 	*r_dst = MASK_OUT_ABOVE_32(*r_dst - src);
@@ -21708,7 +21737,7 @@ static void m68k_op_suba_32_i(m68ki_cpu_core *m68k)
 
 static void m68k_op_subi_8_d(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DY;
+	UINT32 *r_dst = &DY;
 	UINT32 src = OPER_I_8(m68k);
 	UINT32 dst = MASK_OUT_ABOVE_8(*r_dst);
 	UINT32 res = dst - src;
@@ -21868,7 +21897,7 @@ static void m68k_op_subi_8_al(m68ki_cpu_core *m68k)
 
 static void m68k_op_subi_16_d(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DY;
+	UINT32 *r_dst = &DY;
 	UINT32 src = OPER_I_16(m68k);
 	UINT32 dst = MASK_OUT_ABOVE_16(*r_dst);
 	UINT32 res = dst - src;
@@ -21996,7 +22025,7 @@ static void m68k_op_subi_16_al(m68ki_cpu_core *m68k)
 
 static void m68k_op_subi_32_d(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DY;
+	UINT32 *r_dst = &DY;
 	UINT32 src = OPER_I_32(m68k);
 	UINT32 dst = *r_dst;
 	UINT32 res = dst - src;
@@ -22124,8 +22153,8 @@ static void m68k_op_subi_32_al(m68ki_cpu_core *m68k)
 
 static void m68k_op_subq_8_d(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DY;
-	UINT32 src = (((m68k->ir >> 9) - 1) & 7) + 1;
+	UINT32 *r_dst = &DY;
+	UINT32 src = (((m68k->ir >> 9) - 1) & 0x07) + 1;
 	UINT32 dst = MASK_OUT_ABOVE_8(*r_dst);
 	UINT32 res = dst - src;
 
@@ -22140,7 +22169,7 @@ static void m68k_op_subq_8_d(m68ki_cpu_core *m68k)
 
 static void m68k_op_subq_8_ai(m68ki_cpu_core *m68k)
 {
-	UINT32 src = (((m68k->ir >> 9) - 1) & 7) + 1;
+	UINT32 src = (((m68k->ir >> 9) - 1) & 0x07) + 1;
 	UINT32 ea = EA_AY_AI_8(m68k);
 	UINT32 dst = m68ki_read_8(m68k, ea);
 	UINT32 res = dst - src;
@@ -22156,7 +22185,7 @@ static void m68k_op_subq_8_ai(m68ki_cpu_core *m68k)
 
 static void m68k_op_subq_8_pi(m68ki_cpu_core *m68k)
 {
-	UINT32 src = (((m68k->ir >> 9) - 1) & 7) + 1;
+	UINT32 src = (((m68k->ir >> 9) - 1) & 0x07) + 1;
 	UINT32 ea = EA_AY_PI_8(m68k);
 	UINT32 dst = m68ki_read_8(m68k, ea);
 	UINT32 res = dst - src;
@@ -22172,7 +22201,7 @@ static void m68k_op_subq_8_pi(m68ki_cpu_core *m68k)
 
 static void m68k_op_subq_8_pi7(m68ki_cpu_core *m68k)
 {
-	UINT32 src = (((m68k->ir >> 9) - 1) & 7) + 1;
+	UINT32 src = (((m68k->ir >> 9) - 1) & 0x07) + 1;
 	UINT32 ea = EA_A7_PI_8(m68k);
 	UINT32 dst = m68ki_read_8(m68k, ea);
 	UINT32 res = dst - src;
@@ -22188,7 +22217,7 @@ static void m68k_op_subq_8_pi7(m68ki_cpu_core *m68k)
 
 static void m68k_op_subq_8_pd(m68ki_cpu_core *m68k)
 {
-	UINT32 src = (((m68k->ir >> 9) - 1) & 7) + 1;
+	UINT32 src = (((m68k->ir >> 9) - 1) & 0x07) + 1;
 	UINT32 ea = EA_AY_PD_8(m68k);
 	UINT32 dst = m68ki_read_8(m68k, ea);
 	UINT32 res = dst - src;
@@ -22204,7 +22233,7 @@ static void m68k_op_subq_8_pd(m68ki_cpu_core *m68k)
 
 static void m68k_op_subq_8_pd7(m68ki_cpu_core *m68k)
 {
-	UINT32 src = (((m68k->ir >> 9) - 1) & 7) + 1;
+	UINT32 src = (((m68k->ir >> 9) - 1) & 0x07) + 1;
 	UINT32 ea = EA_A7_PD_8(m68k);
 	UINT32 dst = m68ki_read_8(m68k, ea);
 	UINT32 res = dst - src;
@@ -22220,7 +22249,7 @@ static void m68k_op_subq_8_pd7(m68ki_cpu_core *m68k)
 
 static void m68k_op_subq_8_di(m68ki_cpu_core *m68k)
 {
-	UINT32 src = (((m68k->ir >> 9) - 1) & 7) + 1;
+	UINT32 src = (((m68k->ir >> 9) - 1) & 0x07) + 1;
 	UINT32 ea = EA_AY_DI_8(m68k);
 	UINT32 dst = m68ki_read_8(m68k, ea);
 	UINT32 res = dst - src;
@@ -22236,7 +22265,7 @@ static void m68k_op_subq_8_di(m68ki_cpu_core *m68k)
 
 static void m68k_op_subq_8_ix(m68ki_cpu_core *m68k)
 {
-	UINT32 src = (((m68k->ir >> 9) - 1) & 7) + 1;
+	UINT32 src = (((m68k->ir >> 9) - 1) & 0x07) + 1;
 	UINT32 ea = EA_AY_IX_8(m68k);
 	UINT32 dst = m68ki_read_8(m68k, ea);
 	UINT32 res = dst - src;
@@ -22252,7 +22281,7 @@ static void m68k_op_subq_8_ix(m68ki_cpu_core *m68k)
 
 static void m68k_op_subq_8_aw(m68ki_cpu_core *m68k)
 {
-	UINT32 src = (((m68k->ir >> 9) - 1) & 7) + 1;
+	UINT32 src = (((m68k->ir >> 9) - 1) & 0x07) + 1;
 	UINT32 ea = EA_AW_8(m68k);
 	UINT32 dst = m68ki_read_8(m68k, ea);
 	UINT32 res = dst - src;
@@ -22268,7 +22297,7 @@ static void m68k_op_subq_8_aw(m68ki_cpu_core *m68k)
 
 static void m68k_op_subq_8_al(m68ki_cpu_core *m68k)
 {
-	UINT32 src = (((m68k->ir >> 9) - 1) & 7) + 1;
+	UINT32 src = (((m68k->ir >> 9) - 1) & 0x07) + 1;
 	UINT32 ea = EA_AL_8(m68k);
 	UINT32 dst = m68ki_read_8(m68k, ea);
 	UINT32 res = dst - src;
@@ -22284,8 +22313,8 @@ static void m68k_op_subq_8_al(m68ki_cpu_core *m68k)
 
 static void m68k_op_subq_16_d(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DY;
-	UINT32 src = (((m68k->ir >> 9) - 1) & 7) + 1;
+	UINT32 *r_dst = &DY;
+	UINT32 src = (((m68k->ir >> 9) - 1) & 0x07) + 1;
 	UINT32 dst = MASK_OUT_ABOVE_16(*r_dst);
 	UINT32 res = dst - src;
 
@@ -22300,15 +22329,15 @@ static void m68k_op_subq_16_d(m68ki_cpu_core *m68k)
 
 static void m68k_op_subq_16_a(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &AY;
+	UINT32 *r_dst = &AY;
 
-	*r_dst = MASK_OUT_ABOVE_32(*r_dst - ((((m68k->ir >> 9) - 1) & 7) + 1));
+	*r_dst = MASK_OUT_ABOVE_32(*r_dst - ((((m68k->ir >> 9) - 1) & 0x07) + 1));
 }
 
 
 static void m68k_op_subq_16_ai(m68ki_cpu_core *m68k)
 {
-	UINT32 src = (((m68k->ir >> 9) - 1) & 7) + 1;
+	UINT32 src = (((m68k->ir >> 9) - 1) & 0x07) + 1;
 	UINT32 ea = EA_AY_AI_16(m68k);
 	UINT32 dst = m68ki_read_16(m68k, ea);
 	UINT32 res = dst - src;
@@ -22324,7 +22353,7 @@ static void m68k_op_subq_16_ai(m68ki_cpu_core *m68k)
 
 static void m68k_op_subq_16_pi(m68ki_cpu_core *m68k)
 {
-	UINT32 src = (((m68k->ir >> 9) - 1) & 7) + 1;
+	UINT32 src = (((m68k->ir >> 9) - 1) & 0x07) + 1;
 	UINT32 ea = EA_AY_PI_16(m68k);
 	UINT32 dst = m68ki_read_16(m68k, ea);
 	UINT32 res = dst - src;
@@ -22340,7 +22369,7 @@ static void m68k_op_subq_16_pi(m68ki_cpu_core *m68k)
 
 static void m68k_op_subq_16_pd(m68ki_cpu_core *m68k)
 {
-	UINT32 src = (((m68k->ir >> 9) - 1) & 7) + 1;
+	UINT32 src = (((m68k->ir >> 9) - 1) & 0x07) + 1;
 	UINT32 ea = EA_AY_PD_16(m68k);
 	UINT32 dst = m68ki_read_16(m68k, ea);
 	UINT32 res = dst - src;
@@ -22356,7 +22385,7 @@ static void m68k_op_subq_16_pd(m68ki_cpu_core *m68k)
 
 static void m68k_op_subq_16_di(m68ki_cpu_core *m68k)
 {
-	UINT32 src = (((m68k->ir >> 9) - 1) & 7) + 1;
+	UINT32 src = (((m68k->ir >> 9) - 1) & 0x07) + 1;
 	UINT32 ea = EA_AY_DI_16(m68k);
 	UINT32 dst = m68ki_read_16(m68k, ea);
 	UINT32 res = dst - src;
@@ -22372,7 +22401,7 @@ static void m68k_op_subq_16_di(m68ki_cpu_core *m68k)
 
 static void m68k_op_subq_16_ix(m68ki_cpu_core *m68k)
 {
-	UINT32 src = (((m68k->ir >> 9) - 1) & 7) + 1;
+	UINT32 src = (((m68k->ir >> 9) - 1) & 0x07) + 1;
 	UINT32 ea = EA_AY_IX_16(m68k);
 	UINT32 dst = m68ki_read_16(m68k, ea);
 	UINT32 res = dst - src;
@@ -22388,7 +22417,7 @@ static void m68k_op_subq_16_ix(m68ki_cpu_core *m68k)
 
 static void m68k_op_subq_16_aw(m68ki_cpu_core *m68k)
 {
-	UINT32 src = (((m68k->ir >> 9) - 1) & 7) + 1;
+	UINT32 src = (((m68k->ir >> 9) - 1) & 0x07) + 1;
 	UINT32 ea = EA_AW_16(m68k);
 	UINT32 dst = m68ki_read_16(m68k, ea);
 	UINT32 res = dst - src;
@@ -22404,7 +22433,7 @@ static void m68k_op_subq_16_aw(m68ki_cpu_core *m68k)
 
 static void m68k_op_subq_16_al(m68ki_cpu_core *m68k)
 {
-	UINT32 src = (((m68k->ir >> 9) - 1) & 7) + 1;
+	UINT32 src = (((m68k->ir >> 9) - 1) & 0x07) + 1;
 	UINT32 ea = EA_AL_16(m68k);
 	UINT32 dst = m68ki_read_16(m68k, ea);
 	UINT32 res = dst - src;
@@ -22420,8 +22449,8 @@ static void m68k_op_subq_16_al(m68ki_cpu_core *m68k)
 
 static void m68k_op_subq_32_d(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DY;
-	UINT32 src = (((m68k->ir >> 9) - 1) & 7) + 1;
+	UINT32 *r_dst = &DY;
+	UINT32 src = (((m68k->ir >> 9) - 1) & 0x07) + 1;
 	UINT32 dst = *r_dst;
 	UINT32 res = dst - src;
 
@@ -22436,7 +22465,7 @@ static void m68k_op_subq_32_d(m68ki_cpu_core *m68k)
 
 static void m68k_op_subq_32_a(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &AY;
+	UINT32 *r_dst = &AY;
 
 	*r_dst = MASK_OUT_ABOVE_32(*r_dst - ((((m68k->ir >> 9) - 1) & 7) + 1));
 }
@@ -22444,7 +22473,7 @@ static void m68k_op_subq_32_a(m68ki_cpu_core *m68k)
 
 static void m68k_op_subq_32_ai(m68ki_cpu_core *m68k)
 {
-	UINT32 src = (((m68k->ir >> 9) - 1) & 7) + 1;
+	UINT32 src = (((m68k->ir >> 9) - 1) & 0x07) + 1;
 	UINT32 ea = EA_AY_AI_32(m68k);
 	UINT32 dst = m68ki_read_32(m68k, ea);
 	UINT32 res = dst - src;
@@ -22460,7 +22489,7 @@ static void m68k_op_subq_32_ai(m68ki_cpu_core *m68k)
 
 static void m68k_op_subq_32_pi(m68ki_cpu_core *m68k)
 {
-	UINT32 src = (((m68k->ir >> 9) - 1) & 7) + 1;
+	UINT32 src = (((m68k->ir >> 9) - 1) & 0x07) + 1;
 	UINT32 ea = EA_AY_PI_32(m68k);
 	UINT32 dst = m68ki_read_32(m68k, ea);
 	UINT32 res = dst - src;
@@ -22476,7 +22505,7 @@ static void m68k_op_subq_32_pi(m68ki_cpu_core *m68k)
 
 static void m68k_op_subq_32_pd(m68ki_cpu_core *m68k)
 {
-	UINT32 src = (((m68k->ir >> 9) - 1) & 7) + 1;
+	UINT32 src = (((m68k->ir >> 9) - 1) & 0x07) + 1;
 	UINT32 ea = EA_AY_PD_32(m68k);
 	UINT32 dst = m68ki_read_32(m68k, ea);
 	UINT32 res = dst - src;
@@ -22492,7 +22521,7 @@ static void m68k_op_subq_32_pd(m68ki_cpu_core *m68k)
 
 static void m68k_op_subq_32_di(m68ki_cpu_core *m68k)
 {
-	UINT32 src = (((m68k->ir >> 9) - 1) & 7) + 1;
+	UINT32 src = (((m68k->ir >> 9) - 1) & 0x07) + 1;
 	UINT32 ea = EA_AY_DI_32(m68k);
 	UINT32 dst = m68ki_read_32(m68k, ea);
 	UINT32 res = dst - src;
@@ -22508,7 +22537,7 @@ static void m68k_op_subq_32_di(m68ki_cpu_core *m68k)
 
 static void m68k_op_subq_32_ix(m68ki_cpu_core *m68k)
 {
-	UINT32 src = (((m68k->ir >> 9) - 1) & 7) + 1;
+	UINT32 src = (((m68k->ir >> 9) - 1) & 0x07) + 1;
 	UINT32 ea = EA_AY_IX_32(m68k);
 	UINT32 dst = m68ki_read_32(m68k, ea);
 	UINT32 res = dst - src;
@@ -22524,7 +22553,7 @@ static void m68k_op_subq_32_ix(m68ki_cpu_core *m68k)
 
 static void m68k_op_subq_32_aw(m68ki_cpu_core *m68k)
 {
-	UINT32 src = (((m68k->ir >> 9) - 1) & 7) + 1;
+	UINT32 src = (((m68k->ir >> 9) - 1) & 0x07) + 1;
 	UINT32 ea = EA_AW_32(m68k);
 	UINT32 dst = m68ki_read_32(m68k, ea);
 	UINT32 res = dst - src;
@@ -22540,7 +22569,7 @@ static void m68k_op_subq_32_aw(m68ki_cpu_core *m68k)
 
 static void m68k_op_subq_32_al(m68ki_cpu_core *m68k)
 {
-	UINT32 src = (((m68k->ir >> 9) - 1) & 7) + 1;
+	UINT32 src = (((m68k->ir >> 9) - 1) & 0x07) + 1;
 	UINT32 ea = EA_AL_32(m68k);
 	UINT32 dst = m68ki_read_32(m68k, ea);
 	UINT32 res = dst - src;
@@ -22556,7 +22585,7 @@ static void m68k_op_subq_32_al(m68ki_cpu_core *m68k)
 
 static void m68k_op_subx_8_rr(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DX;
+	UINT32 *r_dst = &DX;
 	UINT32 src = MASK_OUT_ABOVE_8(DY);
 	UINT32 dst = MASK_OUT_ABOVE_8(*r_dst);
 	UINT32 res = dst - src - XFLAG_AS_1(m68k);
@@ -22574,7 +22603,7 @@ static void m68k_op_subx_8_rr(m68ki_cpu_core *m68k)
 
 static void m68k_op_subx_16_rr(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DX;
+	UINT32 *r_dst = &DX;
 	UINT32 src = MASK_OUT_ABOVE_16(DY);
 	UINT32 dst = MASK_OUT_ABOVE_16(*r_dst);
 	UINT32 res = dst - src - XFLAG_AS_1(m68k);
@@ -22592,7 +22621,7 @@ static void m68k_op_subx_16_rr(m68ki_cpu_core *m68k)
 
 static void m68k_op_subx_32_rr(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DX;
+	UINT32 *r_dst = &DX;
 	UINT32 src = DY;
 	UINT32 dst = *r_dst;
 	UINT32 res = dst - src - XFLAG_AS_1(m68k);
@@ -22718,9 +22747,9 @@ static void m68k_op_subx_32_mm(m68ki_cpu_core *m68k)
 
 static void m68k_op_swap_32(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DY;
+	UINT32 *r_dst = &DY;
 
-	m68k->not_z_flag = MASK_OUT_ABOVE_32(*r_dst<<16);
+	m68k->not_z_flag = MASK_OUT_ABOVE_32(*r_dst << 16);
 	*r_dst = (*r_dst>>16) | m68k->not_z_flag;
 
 	m68k->not_z_flag = *r_dst;
@@ -22732,7 +22761,7 @@ static void m68k_op_swap_32(m68ki_cpu_core *m68k)
 
 static void m68k_op_tas_8_d(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &DY;
+	UINT32 *r_dst = &DY;
 
 	m68k->not_z_flag = MASK_OUT_ABOVE_8(*r_dst);
 	m68k->n_flag = NFLAG_8(*r_dst);
@@ -23260,7 +23289,7 @@ static void m68k_op_unlk_32_a7(m68ki_cpu_core *m68k)
 
 static void m68k_op_unlk_32(m68ki_cpu_core *m68k)
 {
-	UINT32* r_dst = &AY;
+	UINT32 *r_dst = &AY;
 
 	REG_A[7] = *r_dst;
 	*r_dst = m68ki_pull_32(m68k);
@@ -23400,25 +23429,25 @@ static const opcode_handler_struct m68k_opcode_handler_table[] =
 	{ m68k_op_move_32_ai_pi       , 0xf1f8, 0x2098,  20 },
 	{ m68k_op_move_32_ai_pd       , 0xf1f8, 0x20a0,  22 },
 	{ m68k_op_move_32_ai_di       , 0xf1f8, 0x20a8,  24 },
-	{ m68k_op_move_32_ai_ix       , 0xf1f8, 0x20b0,  26 }, //,  26,  11,  11,  11}},
-	{ m68k_op_move_32_pi_d        , 0xf1f8, 0x20c0,  12 }, //,  12,   4,   4,   4}},
-	{ m68k_op_move_32_pi_a        , 0xf1f8, 0x20c8,  12 }, //,  12,   4,   4,   4}},
-	{ m68k_op_move_32_pi_ai       , 0xf1f8, 0x20d0,  20 }, //,  20,   8,   8,   8}},
-	{ m68k_op_move_32_pi_pi       , 0xf1f8, 0x20d8,  20 }, //,  20,   8,   8,   8}},
-	{ m68k_op_move_32_pi_pd       , 0xf1f8, 0x20e0,  22 }, //,  22,   9,   9,   9}},
-	{ m68k_op_move_32_pi_di       , 0xf1f8, 0x20e8,  24 }, //,  24,   9,   9,   9}},
-	{ m68k_op_move_32_pi_ix       , 0xf1f8, 0x20f0,  26 }, //,  26,  11,  11,  11}},
-	{ m68k_op_move_32_pd_d        , 0xf1f8, 0x2100,  12 }, //,  14,   5,   5,   5}},
-	{ m68k_op_move_32_pd_a        , 0xf1f8, 0x2108,  12 }, //,  14,   5,   5,   5}},
-	{ m68k_op_move_32_pd_ai       , 0xf1f8, 0x2110,  20 }, //,  22,   9,   9,   9}},
-	{ m68k_op_move_32_pd_pi       , 0xf1f8, 0x2118,  20 }, //,  22,   9,   9,   9}},
-	{ m68k_op_move_32_pd_pd       , 0xf1f8, 0x2120,  22 }, //,  24,  10,  10,  10}},
-	{ m68k_op_move_32_pd_di       , 0xf1f8, 0x2128,  24 }, //,  26,  10,  10,  10}},
-	{ m68k_op_move_32_pd_ix       , 0xf1f8, 0x2130,  26 }, //,  28,  12,  12,  12}},
-	{ m68k_op_move_32_di_d        , 0xf1f8, 0x2140,  16 }, //,  16,   5,   5,   5}},
-	{ m68k_op_move_32_di_a        , 0xf1f8, 0x2148,  16 }, //,  16,   5,   5,   5}},
-	{ m68k_op_move_32_di_ai       , 0xf1f8, 0x2150,  24 }, //,  24,   9,   9,   9}},
-	{ m68k_op_move_32_di_pi       , 0xf1f8, 0x2158,  24 }, //,  24,   9,   9,   9}},
+	{ m68k_op_move_32_ai_ix       , 0xf1f8, 0x20b0,  26 },
+	{ m68k_op_move_32_pi_d        , 0xf1f8, 0x20c0,  12 },
+	{ m68k_op_move_32_pi_a        , 0xf1f8, 0x20c8,  12 },
+	{ m68k_op_move_32_pi_ai       , 0xf1f8, 0x20d0,  20 },
+	{ m68k_op_move_32_pi_pi       , 0xf1f8, 0x20d8,  20 },
+	{ m68k_op_move_32_pi_pd       , 0xf1f8, 0x20e0,  22 },
+	{ m68k_op_move_32_pi_di       , 0xf1f8, 0x20e8,  24 },
+	{ m68k_op_move_32_pi_ix       , 0xf1f8, 0x20f0,  26 },
+	{ m68k_op_move_32_pd_d        , 0xf1f8, 0x2100,  12 },
+	{ m68k_op_move_32_pd_a        , 0xf1f8, 0x2108,  12 },
+	{ m68k_op_move_32_pd_ai       , 0xf1f8, 0x2110,  20 },
+	{ m68k_op_move_32_pd_pi       , 0xf1f8, 0x2118,  20 },
+	{ m68k_op_move_32_pd_pd       , 0xf1f8, 0x2120,  22 },
+	{ m68k_op_move_32_pd_di       , 0xf1f8, 0x2128,  24 },
+	{ m68k_op_move_32_pd_ix       , 0xf1f8, 0x2130,  26 },
+	{ m68k_op_move_32_di_d        , 0xf1f8, 0x2140,  16 },
+	{ m68k_op_move_32_di_a        , 0xf1f8, 0x2148,  16 },
+	{ m68k_op_move_32_di_ai       , 0xf1f8, 0x2150,  24 },
+	{ m68k_op_move_32_di_pi       , 0xf1f8, 0x2158,  24 },
 	{ m68k_op_move_32_di_pd       , 0xf1f8, 0x2160,  26 }, //,  26,  10,  10,  10}},
 	{ m68k_op_move_32_di_di       , 0xf1f8, 0x2168,  28 }, //,  28,  10,  10,  10}},
 	{ m68k_op_move_32_di_ix       , 0xf1f8, 0x2170,  30 }, //,  30,  12,  12,  12}},

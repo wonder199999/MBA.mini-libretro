@@ -1326,9 +1326,4 @@ INLINE void m68ki_check_interrupts(m68ki_cpu_core *m68k)
 /* ============================== END OF FILE ============================= */
 /* ======================================================================== */
 
-extern const UINT8  m68ki_shift_8_table[];
-extern const UINT16 m68ki_shift_16_table[];
-extern const UINT32 m68ki_shift_32_table[];
-extern const UINT8  m68ki_ea_idx_cycle_table[];
-
 #endif /* __M68KCPU_H__ */
