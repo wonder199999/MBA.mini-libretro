@@ -224,13 +224,21 @@ static WRITE16_HANDLER( slampic_layer_w )
 	cps_state *state = space->machine->driver_data<cps_state>();
 	switch (offset)
 	{
-		case 0x00:
-		case 0x01:
-		case 0x02:
-		case 0x03:
-		case 0x04:
-		case 0x05: dinopic_layer_w(space, offset, data, 0xffff); break;
-		case 0x06: state->cps_a_regs[0x04 / 2] = data << 4; break;
+		case 0x00: state->cps_a_regs[0x0e / 2] = data; break;	// Scroll 1y
+		case 0x01: state->cps_a_regs[0x0c / 2] = data; break;	// Scroll 1x
+		case 0x02: state->cps_a_regs[0x12 / 2] = state->cps_a_regs[CPS1_ROWSCROLL_OFFS] = data; break;	// Scroll 2y
+		case 0x03: state->cps_a_regs[0x10 / 2] = data; break;	// Scroll 2x
+		case 0x04: state->cps_a_regs[0x16 / 2] = data; break;	// Scroll 3y
+		case 0x05: state->cps_a_regs[0x14 / 2] = data; break;	// Scroll 3x
+		case 0x06:
+		{
+			state->cps_a_regs[0x04 / 2] = data << 4;	// Scroll 2 ram offset
+			state->cps_b_regs[state->layer_mask_reg[1] / 2] = state->mainram[0x8d74 / 2];
+			state->cps_b_regs[state->layer_mask_reg[2] / 2] = state->mainram[0x8d76 / 2];
+			state->cps_b_regs[state->layer_mask_reg[3] / 2] = state->mainram[0x8d78 / 2];
+			break;
+		}
+		default: logerror ("Unknown layer command - %X\n", offset); break;
 	}
 }
 
@@ -700,14 +708,14 @@ static ADDRESS_MAP_START( slampic_map, ADDRESS_SPACE_PROGRAM, 16 )
 	AM_RANGE(0x800140, 0x80017f) AM_READWRITE(cps1_cps_b_r, cps1_cps_b_w) AM_BASE_MEMBER(cps_state, cps_b_regs)
 	AM_RANGE(0x880000, 0x880001) AM_WRITENOP
 	AM_RANGE(0x900000, 0x92ffff) AM_RAM_WRITE(cps1_gfxram_w) AM_BASE_SIZE_MEMBER(cps_state, gfxram, gfxram_size)
-	AM_RANGE(0x980000, 0x98000d) AM_WRITE(slampic_layer_w)
+	AM_RANGE(0x980000, 0x98000f) AM_WRITE(slampic_layer_w)
 	AM_RANGE(0xf00000, 0xf0ffff) AM_READ(qsound_rom_r)
 	AM_RANGE(0xf18000, 0xf19fff) AM_RAM
 	AM_RANGE(0xf1c000, 0xf1c001) AM_READ_PORT("IN2")
 	AM_RANGE(0xf1c004, 0xf1c005) AM_WRITE(cpsq_coinctrl2_w)
 	AM_RANGE(0xf1c006, 0xf1c007) AM_READ_PORT("EEPROMIN") AM_WRITE_PORT("EEPROMOUT")
 	AM_RANGE(0xf1f000, 0xf1ffff) AM_NOP
-	AM_RANGE(0xff0000, 0xffffff) AM_RAM
+	AM_RANGE(0xff0000, 0xffffff) AM_RAM AM_BASE_MEMBER(cps_state, mainram)
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( captcommb2_map, ADDRESS_SPACE_PROGRAM, 16 )
