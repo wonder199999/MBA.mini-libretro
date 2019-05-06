@@ -38,6 +38,7 @@
 ***************************************************************************/
 
 #include "emu.h"
+#include "debugger.h"
 
 
 //**************************************************************************
@@ -802,6 +803,9 @@ int device_execute_interface::standard_irq_callback(int irqline)
 	// if there's a driver callback, run it to get the vector
 	if (m_driver_irq != NULL)
 		vector = (*m_driver_irq)(&m_device, irqline);
+
+	// notify the debugger
+	debugger_interrupt_hook(&m_device, irqline);
 
 	return vector;
 }

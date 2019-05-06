@@ -104,6 +104,7 @@
 ****************************************************************************/
 
 #include "emu.h"
+#include "debugger.h"
 
 typedef UINT8 BOOLEAN;
 typedef UINT8 BYTE;
@@ -389,6 +390,7 @@ static CPU_EXECUTE( necv )
 		if (nec_state->no_interrupt)
 			nec_state->no_interrupt--;
 
+		debugger_instruction_hook(device, (Sreg(PS) << 4) + nec_state->ip);
 		prev_ICount = nec_state->icount;
 		nec_instruction[fetchop(nec_state)](nec_state);
 		do_prefetch(nec_state, prev_ICount);

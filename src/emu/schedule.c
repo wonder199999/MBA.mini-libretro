@@ -38,6 +38,7 @@
 ***************************************************************************/
 
 #include "emu.h"
+#include "debugger.h"
 
 
 //**************************************************************************
@@ -110,6 +111,7 @@ device_scheduler::~device_scheduler()
 void device_scheduler::timeslice()
 {
 	timer_execution_state *timerexec = timer_get_execution_state(&m_machine);
+	bool call_debugger = ((m_machine.debug_flags & DEBUG_FLAG_ENABLED) != 0);
 
 	// build the execution list if we don't have one yet
 	if (m_execute_list == NULL)
@@ -173,7 +175,15 @@ void device_scheduler::timeslice()
 						exec->m_cycles_stolen = 0;
 						m_executing_device = exec;
 						*exec->m_icount = exec->m_cycles_running;
-						exec->execute_run();
+
+						if (!call_debugger)
+							exec->execute_run();
+						else
+						{
+							debugger_start_cpu_hook(&exec->device(), target);
+							exec->execute_run();
+							debugger_stop_cpu_hook(&exec->device());
+						}
 
 						// adjust for any cycles we took back
 						assert(ran >= *exec->m_icount);

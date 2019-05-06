@@ -79,10 +79,10 @@
 #include "ui.h"
 #include "uimenu.h"
 #include "cheat.h"
-#include "express.h"
+#include "debug/debugcpu.h"
+#include "debug/express.h"
 
 #include <ctype.h>
-
 
 
 
@@ -91,11 +91,11 @@
 ***************************************************************************/
 
 /* turn this on to enable removing duplicate cheats; not sure if we should */
-#define REMOVE_DUPLICATE_CHEATS	0
+#define REMOVE_DUPLICATE_CHEATS		0
 
 #define CHEAT_VERSION			1
 
-#define DEFAULT_TEMP_VARIABLES	10
+#define DEFAULT_TEMP_VARIABLES		10
 #define MAX_ARGUMENTS			32
 
 enum _script_state
@@ -118,11 +118,11 @@ DECLARE_ENUM_OPERATORS(script_state)
 typedef struct _parameter_item parameter_item;
 struct _parameter_item
 {
-	parameter_item *	next;							/* next item in list */
-	astring				text;							/* name of the item */
-	UINT64				value;							/* value of the item */
-	int					valformat;						/* format of value */
-	astring				curtext;						/* name of the current item */
+	parameter_item   *next;		/* next item in list */
+	astring		  text;		/* name of the item */
+	UINT64		  value;	/* value of the item */
+	int		  valformat;	/* format of value */
+	astring		  curtext;	/* name of the current item */
 };
 
 
@@ -130,15 +130,15 @@ struct _parameter_item
 typedef struct _cheat_parameter cheat_parameter;
 struct _cheat_parameter
 {
-	UINT64				minval;							/* minimum value */
-	int					minformat;						/* format of minimum value */
-	UINT64				maxval;							/* maximum value */
-	int					maxformat;						/* format of maximum value */
-	UINT64				stepval;						/* step value */
-	int					stepformat;						/* format of step value */
-	UINT64				value;							/* live value of the parameter */
-	char				valuestring[32];				/* small space for a value string */
-	parameter_item *	itemlist;						/* list of items */
+	UINT64			 minval;		/* minimum value */
+	int			 minformat;		/* format of minimum value */
+	UINT64			 maxval;		/* maximum value */
+	int			 maxformat;		/* format of maximum value */
+	UINT64			 stepval;		/* step value */
+	int			 stepformat;		/* format of step value */
+	UINT64			 value;			/* live value of the parameter */
+	char			 valuestring[32];	/* small space for a value string */
+	parameter_item		*itemlist;		/* list of items */
 };
 
 
@@ -146,9 +146,9 @@ struct _cheat_parameter
 typedef struct _output_argument output_argument;
 struct _output_argument
 {
-	output_argument *	next;							/* link to next argument */
-	parsed_expression *	expression;						/* expression for argument */
-	UINT64				count;							/* number of repetitions */
+	output_argument		*next;			/* link to next argument */
+	parsed_expression	*expression;		/* expression for argument */
+	UINT64			 count;			/* number of repetitions */
 };
 
 
@@ -156,13 +156,13 @@ struct _output_argument
 typedef struct _script_entry script_entry;
 struct _script_entry
 {
-	script_entry *		next;							/* link to next entry */
-	parsed_expression *	condition;						/* condition under which this is executed */
-	parsed_expression *	expression;						/* expression to execute */
-	astring				format;							/* string format to print */
-	output_argument *	arglist;						/* list of arguments */
-	INT8				line;							/* which line to print on */
-	UINT8				justify;						/* justification when printing */
+	script_entry		*next;			/* link to next entry */
+	parsed_expression	*condition;		/* condition under which this is executed */
+	parsed_expression	*expression;		/* expression to execute */
+	astring			 format;		/* string format to print */
+	output_argument		*arglist;		/* list of arguments */
+	INT8			 line;			/* which line to print on */
+	UINT8			 justify;		/* justification when printing */
 };
 
 
@@ -170,8 +170,8 @@ struct _script_entry
 typedef struct _cheat_script cheat_script;
 struct _cheat_script
 {
-	script_entry *		entrylist;						/* list of actions to perform */
-	script_state		state;							/* which state this script is for */
+	script_entry	*entrylist;	/* list of actions to perform */
+	script_state	 state;		/* which state this script is for */
 };
 
 
@@ -179,31 +179,30 @@ struct _cheat_script
 typedef struct _cheat_entry cheat_entry;
 struct _cheat_entry
 {
-	cheat_entry *		next;							/* next cheat entry */
-	astring				description;					/* string description/menu title */
-	astring				comment;						/* comment data */
-	cheat_parameter *	parameter;						/* parameter */
-	cheat_script *		script[SCRIPT_STATE_COUNT];		/* up to 1 script for each state */
-	symbol_table *		symbols;						/* symbol table for this cheat */
-	script_state		state;							/* current cheat state */
-	UINT32				numtemp;						/* number of temporary variables */
-	UINT64				argindex;						/* argument index variable */
-	UINT64 *			tempvar;						/* value of the temporary variables */
+	cheat_entry		*next;				/* next cheat entry */
+	astring			 description;			/* string description/menu title */
+	astring			 comment;			/* comment data */
+	cheat_parameter		*parameter;			/* parameter */
+	cheat_script		*script[SCRIPT_STATE_COUNT];	/* up to 1 script for each state */
+	symbol_table		*symbols;			/* symbol table for this cheat */
+	script_state		 state;				/* current cheat state */
+	UINT32			 numtemp;			/* number of temporary variables */
+	UINT64			 argindex;			/* argument index variable */
+	UINT64			*tempvar;			/* value of the temporary variables */
 };
 
 
 /* private machine-global data */
 struct _cheat_private
 {
-	cheat_entry *		cheatlist;						/* cheat list */
-	UINT64				framecount;						/* frame count */
-	astring				output[UI_TARGET_FONT_ROWS*2];	/* array of output strings */
-	UINT8				justify[UI_TARGET_FONT_ROWS*2];	/* justification for each string */
-	UINT8				numlines;						/* number of lines available for output */
-	INT8				lastline;						/* last line used for output */
-	UINT8				disabled;						/* true if the cheat engine is disabled */
+	cheat_entry    *cheatlist;			   /* cheat list */
+	UINT64		framecount;			   /* frame count */
+	astring		output[UI_TARGET_FONT_ROWS * 2];   /* array of output strings */
+	UINT8		justify[UI_TARGET_FONT_ROWS * 2];  /* justification for each string */
+	UINT8		numlines;			   /* number of lines available for output */
+	INT8		lastline;			   /* last line used for output */
+	UINT8		disabled;			   /* true if the cheat engine is disabled */
 };
-
 
 
 /***************************************************************************
@@ -238,7 +237,6 @@ static UINT64 execute_frombcd(void *globalref, void *ref, UINT32 params, const U
 static UINT64 execute_tobcd(void *globalref, void *ref, UINT32 params, const UINT64 *param);
 
 
-
 /***************************************************************************
     INLINE FUNCTIONS
 ***************************************************************************/
@@ -250,10 +248,8 @@ static UINT64 execute_tobcd(void *globalref, void *ref, UINT32 params, const UIN
 
 INLINE int is_text_only_cheat(const cheat_entry *cheat)
 {
-	return (cheat->parameter == NULL &&
-			cheat->script[SCRIPT_STATE_RUN] == NULL &&
-			cheat->script[SCRIPT_STATE_OFF] == NULL &&
-			cheat->script[SCRIPT_STATE_ON] == NULL);
+	return (cheat->parameter == NULL && cheat->script[SCRIPT_STATE_RUN] == NULL &&
+		cheat->script[SCRIPT_STATE_OFF] == NULL && cheat->script[SCRIPT_STATE_ON] == NULL);
 }
 
 
@@ -265,10 +261,8 @@ INLINE int is_text_only_cheat(const cheat_entry *cheat)
 
 INLINE int is_oneshot_cheat(const cheat_entry *cheat)
 {
-	return (cheat->parameter == NULL &&
-			cheat->script[SCRIPT_STATE_RUN] == NULL &&
-			cheat->script[SCRIPT_STATE_OFF] == NULL &&
-			cheat->script[SCRIPT_STATE_ON] != NULL);
+	return (cheat->parameter == NULL && cheat->script[SCRIPT_STATE_RUN] == NULL &&
+		cheat->script[SCRIPT_STATE_OFF] == NULL && cheat->script[SCRIPT_STATE_ON] != NULL);
 }
 
 
@@ -280,10 +274,8 @@ INLINE int is_oneshot_cheat(const cheat_entry *cheat)
 
 INLINE int is_onoff_cheat(const cheat_entry *cheat)
 {
-	return (cheat->parameter == NULL &&
-			(cheat->script[SCRIPT_STATE_RUN] != NULL ||
-			 (cheat->script[SCRIPT_STATE_OFF] != NULL &&
-			  cheat->script[SCRIPT_STATE_ON] != NULL)));
+	return  (cheat->parameter == NULL && (cheat->script[SCRIPT_STATE_RUN] != NULL ||
+		(cheat->script[SCRIPT_STATE_OFF] != NULL && cheat->script[SCRIPT_STATE_ON] != NULL)));
 }
 
 
@@ -320,10 +312,8 @@ INLINE int is_itemlist_parameter_cheat(const cheat_entry *cheat)
 
 INLINE int is_oneshot_parameter_cheat(const cheat_entry *cheat)
 {
-	return (cheat->parameter != NULL &&
-			cheat->script[SCRIPT_STATE_RUN] == NULL &&
-			cheat->script[SCRIPT_STATE_OFF] == NULL &&
-			cheat->script[SCRIPT_STATE_CHANGE] != NULL);
+	return (cheat->parameter != NULL && cheat->script[SCRIPT_STATE_RUN] == NULL &&
+		cheat->script[SCRIPT_STATE_OFF] == NULL && cheat->script[SCRIPT_STATE_CHANGE] != NULL);
 }
 
 
@@ -383,9 +373,9 @@ void cheat_init(running_machine *machine)
 	cheat_reload(machine);
 
 	/* we rely on the debugger expression callbacks; if the debugger isn't
-       enabled, we must jumpstart them manually */
-//	if ((machine->debug_flags & DEBUG_FLAG_ENABLED) == 0)
-//		debug_cpu_init(machine);
+	   enabled, we must jumpstart them manually */
+	if ((machine->debug_flags & DEBUG_FLAG_ENABLED) == 0)
+		debug_cpu_init(machine);
 }
 
 
@@ -406,7 +396,7 @@ void cheat_reload(running_machine *machine)
 	cheatinfo = machine->cheat_data = auto_alloc_clear(machine, cheat_private);
 
 	/* load the cheat file, MESS will load a crc32.xml ( eg. 01234567.xml )
-       and MAME will load gamename.xml */
+	   and MAME will load gamename.xml */
 	device_image_interface *image = NULL;
 	for (bool gotone = machine->m_devicelist.first(image); gotone; gotone = image->next(image))
 	{
@@ -513,18 +503,14 @@ void cheat_render_text(running_machine *machine, render_container *container)
 	cheat_private *cheatinfo = machine->cheat_data;
 	if (cheatinfo != NULL)
 	{
-		int linenum;
-
 		/* render any text and free it along the way */
-		for (linenum = 0; linenum < ARRAY_LENGTH(cheatinfo->output); linenum++)
+		for (int linenum = 0; linenum < ARRAY_LENGTH(cheatinfo->output); linenum++)
 			if (cheatinfo->output[linenum])
-			{
 				/* output the text */
-				ui_draw_text_full(container, cheatinfo->output[linenum],
-						0.0f, (float)linenum * ui_get_line_height(), 1.0f,
-						cheatinfo->justify[linenum], WRAP_NEVER, DRAW_OPAQUE,
-						ARGB_WHITE, ARGB_BLACK, NULL, NULL);
-			}
+				ui_draw_text_full(container, cheatinfo->output[linenum], 0.0f,
+					(float)linenum * ui_get_line_height(), 1.0f,
+					cheatinfo->justify[linenum],
+					WRAP_NEVER, DRAW_OPAQUE, ARGB_WHITE, ARGB_BLACK, NULL, NULL);
 	}
 }
 
@@ -555,8 +541,9 @@ void *cheat_get_next_menu_entry(running_machine *machine, void *previous, const 
 	{
 		if (description != NULL)
 		{
-			while (isspace((UINT8)**description))
+			while ( isspace((UINT8)**description) )
 				*description += 1;
+
 			if (**description == 0)
 				*description = MENU_SEPARATOR_ITEM;
 		}
@@ -629,6 +616,7 @@ void *cheat_get_next_menu_entry(running_machine *machine, void *previous, const 
 					break;
 			if (state != NULL)
 				*state = (item != NULL) ? item->text.cstr() : "??Invalid??";
+
 			if (flags != NULL)
 			{
 				*flags = MENU_FLAG_LEFT_ARROW;
@@ -1586,8 +1574,7 @@ static script_entry *script_entry_load(running_machine *machine, const char *fil
 	expression = xml_get_attribute_string(entrynode, "condition", NULL);
 	if (expression != NULL)
 	{
-		experr = EXPRERR_NONE;
-//		experr = expression_parse(expression, cheat->symbols, &debug_expression_callbacks, machine, &entry->condition);
+		experr = expression_parse(expression, cheat->symbols, &debug_expression_callbacks, machine, &entry->condition);
 		if (experr != EXPRERR_NONE)
 		{
 			mame_printf_error("%s.xml(%d): error parsing cheat expression \"%s\" (%s)\n", filename, entrynode->line, expression, exprerr_to_string(experr));
@@ -1604,8 +1591,7 @@ static script_entry *script_entry_load(running_machine *machine, const char *fil
 			mame_printf_error("%s.xml(%d): missing expression in action tag\n", filename, entrynode->line);
 			goto error;
 		}
-		experr = EXPRERR_NONE;
-//		experr = expression_parse(expression, cheat->symbols, &debug_expression_callbacks, machine, &entry->expression);
+		experr = expression_parse(expression, cheat->symbols, &debug_expression_callbacks, machine, &entry->expression);
 		if (experr != EXPRERR_NONE)
 		{
 			mame_printf_error("%s.xml(%d): error parsing cheat expression \"%s\" (%s)\n", filename, entrynode->line, expression, exprerr_to_string(experr));
@@ -1671,8 +1657,8 @@ static script_entry *script_entry_load(running_machine *machine, const char *fil
 				mame_printf_error("%s.xml(%d): missing expression in argument tag\n", filename, argnode->line);
 				goto error;
 			}
-			experr = EXPRERR_NONE;
-//			experr = expression_parse(expression, cheat->symbols, &debug_expression_callbacks, machine, &curarg->expression);
+
+			experr = expression_parse(expression, cheat->symbols, &debug_expression_callbacks, machine, &curarg->expression);
 			if (experr != EXPRERR_NONE)
 			{
 				mame_printf_error("%s.xml(%d): error parsing cheat expression \"%s\" (%s)\n", filename, argnode->line, expression, exprerr_to_string(experr));
@@ -1938,5 +1924,4 @@ static UINT64 execute_tobcd(void *globalref, void *ref, UINT32 params, const UIN
 	}
 	return result;
 }
-
 

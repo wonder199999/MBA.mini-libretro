@@ -104,6 +104,7 @@
 #include "emuopts.h"
 #include "osdepend.h"
 #include "config.h"
+#include "debugger.h"
 #include "image.h"
 #include "render.h"
 #include "cheat.h"
@@ -113,6 +114,7 @@
 #include "streams.h"
 #include "crsshair.h"
 #include "validity.h"
+#include "debug/debugcon.h"
 
 #include <time.h>
 
@@ -338,6 +340,10 @@ void running_machine::start()
 	crosshair_init(this);
 
 	sound_init(this);
+
+	// initialize the debugger
+	if ((debug_flags & DEBUG_FLAG_ENABLED) != 0)
+		debugger_init(this);
 
 	// call the driver's _START callbacks
 	m_driver_data->machine_start();
