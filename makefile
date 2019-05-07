@@ -569,7 +569,8 @@ BUILDOUT = $(BUILDOBJ)
 include makefile.libretro
 
 # combine the various definitions to one
-CCOMFLAGS += $(INCFLAGS) -fno-delete-null-pointer-checks
+# In the X64 GCC 7.4.0 build environment, some M92 games freeze when they start, and temporary solutions are used here.
+CCOMFLAGS += $(INCFLAGS) -fno-delete-null-pointer-checks -fno-optimize-strlen
 CDEFS = $(DEFS)
 
 #-------------------------------------------------
