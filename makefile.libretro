@@ -438,6 +438,12 @@ UTILOBJS = \
 
 $(OBJ)/libutil.a: $(UTILOBJS)
 
+ifeq ($(PTR64), 1)
+ifeq ($(shell echo `$(CC) -dumpversion` ">= 7" | bc -l), 1)
+$(LIBOBJ)/util/options.o: CFLAGS += -fno-optimize-strlen
+endif
+endif
+
 #-------------------------------------------------
 # expat library objects
 #-------------------------------------------------
