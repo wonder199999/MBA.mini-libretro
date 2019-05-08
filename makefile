@@ -106,20 +106,26 @@ OPTFLAG ?= 0
 
 # The default is software rendering.
 VRENDER ?= soft
+HW_RENDER ?= 0
 
 ifeq ($(VRENDER),opengl)
-	CCOMFLAGS  += -DHAVE_OPENGL
+	CCOMFLAGS += -DHAVE_OPENGL
+	HW_RENDER = 1
+else ifeq ($(VRENDER),gles)
+	CCOMFLAGS += -DHAVE_OPENGLES
+	HW_RENDER = 2
 endif
-
 
 # UNIX
 ifeq ($(platform), unix)
    TARGETLIB := $(TARGET_NAME)_libretro.so
-   TARGETOS=linux
+   TARGETOS = linux
    fpic = -fPIC
    SHARED := -shared -Wl,--version-script=src/osd/retro/link.T
-ifeq ($(VRENDER),opengl)
+ifeq ($(HW_RENDER), 1)
    LIBS += -lGL
+else ifeq ($(HW_RENDER), 2)
+   LIBS += -lGLESv2
 endif
    LDFLAGS += $(SHARED)
    NATIVELD = g++
@@ -139,7 +145,7 @@ endif
 # Android
 else ifeq ($(platform), android)
    TARGETLIB := $(TARGET_NAME)_libretro_android.so
-   TARGETOS=linux
+   TARGETOS = linux
    fpic = -fPIC
    SHARED := -shared -Wl,--version-script=src/osd/retro/link.T
    NATIVE = 1
@@ -167,7 +173,7 @@ else ifeq ($(platform), osx)
    TARGETLIB := $(TARGET_NAME)_libretro.dylib
    TARGETOS = macosx
    fpic = -fPIC
-   LDFLAGSEMULATOR +=  -stdlib=libc++
+   LDFLAGSEMULATOR += -stdlib=libc++
    SHARED := -dynamiclib
    CC = c++ -stdlib=libc++
    LD = c++ -stdlib=libc++
@@ -205,7 +211,7 @@ endif
 # QNX
 else ifeq ($(platform), qnx)
    TARGETLIB := $(TARGET_NAME)_libretro_$(platform).so
-   TARGETOS=linux 
+   TARGETOS = linux
    fpic = -fPIC
    SHARED := -shared -Wl,--version-script=src/osd/retro/link.T
    CC = qcc -Vgcc_ntoarmv7le
@@ -335,7 +341,7 @@ else ifeq ($(platform), wincross)
    CC_AS ?= gcc
    SHARED := -shared -static-libgcc -static-libstdc++ -s -Wl,--version-script=src/osd/retro/link.T
    CCOMFLAGS +=-D__WIN32__ -D__WIN32_LIBRETRO__
-ifeq ($(VRENDER),opengl)
+ifeq ($(HW_RENDER), 1)
    LIBS += -lopengl32
 endif
    LDFLAGS += $(SHARED)
@@ -356,10 +362,10 @@ ifneq ($(MDEBUG),1)
    SHARED += -s
 endif
    CCOMFLAGS += -D__WIN32__ -D__WIN32_LIBRETRO__
-ifeq ($(VRENDER),opengl) 
+ifeq ($(HW_RENDER), 1)
    LIBS += -lopengl32
 endif
-   LDFLAGS +=   $(SHARED)
+   LDFLAGS += $(SHARED)
    EXE = .exe
    DEFS = -DCRLF=3
    DEFS += -DX64_WINDOWS_ABI

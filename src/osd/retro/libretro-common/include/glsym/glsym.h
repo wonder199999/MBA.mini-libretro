@@ -26,13 +26,13 @@
 #include "rglgen.h"
 
 #ifndef HAVE_PSGL
-#if defined(HAVE_OPENGLES2)
-#include "glsym_es2.h"
-#elif defined(HAVE_OPENGLES3)
-#include "glsym_es3.h"
-#else
-#include "glsym_gl.h"
-#endif
+   #if defined(HAVE_OPENGLES2) || defined(HAVE_OPENGLES)
+	#include "glsym_es2.h"
+   #elif defined(HAVE_OPENGLES3)
+	#include "glsym_es3.h"
+   #else
+	#include "glsym_gl.h"
+   #endif
 #endif
 
 #endif

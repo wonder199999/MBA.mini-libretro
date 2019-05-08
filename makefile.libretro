@@ -499,12 +499,15 @@ $(LIBOBJ)/expat/%.o: $(LIBSRC)/explat/%.c | $(OSPREBUILD)
 
 MINISRC = $(SRC_DIR)/osd/$(OSD)
 MINIOBJ = $(OBJ)/osd/$(OSD)
-ifeq ($(VRENDER),opengl)
-	GLOBJ = $(OBJ)/osd/$(OSD)/glsym
-	OBJDIRS += $(GLOBJ)
-endif
 OBJDIRS += $(MINIOBJ) \
 		  $(OBJ)/osd/$(OSD)/libretro-common
+
+ifeq ($(HW_RENDER), 0)
+
+else
+	GLOBJ = $(OBJ)/osd/$(OSD)/libretro-common/glsym
+	OBJDIRS += $(GLOBJ)
+endif
 
 #-------------------------------------------------
 # OSD core library
@@ -522,13 +525,12 @@ OSDCOREOBJS := \
 # OSD mini library
 #-------------------------------------------------
 
-ifeq ($(VRENDER),opengl)
+ifeq ($(HW_RENDER), 1)
 	OSDOBJS += $(MINIOBJ)/libretro-common/glsym/rglgen.o
-	ifeq ($(GLES), 1)
-		OSDOBJS += $(MINIOBJ)/libretro-common/glsym/glsym_es2.o
-	else
-		OSDOBJS += $(MINIOBJ)/libretro-common/glsym/glsym_gl.o
-	endif
+	OSDOBJS += $(MINIOBJ)/libretro-common/glsym/glsym_gl.o
+else ifeq ($(HW_RENDER), 2)
+	OSDOBJS += $(MINIOBJ)/libretro-common/glsym/rglgen.o
+	OSDOBJS += $(MINIOBJ)/libretro-common/glsym/glsym_es2.o
 endif
 
 OSDOBJS += $(OBJ)/osd/retro/libretro.o

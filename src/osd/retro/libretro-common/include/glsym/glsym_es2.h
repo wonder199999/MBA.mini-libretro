@@ -19,7 +19,7 @@ typedef void (APIENTRY *RGLGENGLDEBUGPROC)(GLenum, GLenum, GLuint, GLenum, GLsiz
 #ifndef GL_OES_EGL_image
 typedef void *GLeglImageOES;
 #endif
-#if !defined(GL_OES_fixed_point) && !defined(HAVE_OPENGLES2)
+#if !defined(GL_OES_fixed_point) && !defined(HAVE_OPENGLES2) && !defined(HAVE_OPENGLES)
 typedef GLint GLfixed;
 #endif
 #if defined(OSX) && !defined(MAC_OS_X_VERSION_10_7)

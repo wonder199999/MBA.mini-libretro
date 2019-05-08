@@ -320,7 +320,7 @@ static void retro_poll_mame_input(void);
 	UINT16 videoBuffer[512 * 512];
 	#define PITCH 1
 #else
-	UINT32 videoBuffer[512 * 512];
+	UINT32 videoBuffer[1024 * 1024];
 	#define PITCH 1 * 2
 #endif
 
@@ -715,10 +715,16 @@ static void init_input_descriptors(void)
    	environ_cb(RETRO_ENVIRONMENT_SET_INPUT_DESCRIPTORS, desc);
 }
 
+
 void retro_get_system_info(struct retro_system_info *info)
 {
 	memset(info, 0, sizeof(*info));
+
+#if defined(HAVE_OPENGL) || defined(HAVE_OPENGLES)
+	info->library_name = "M.B.A mini(HW)";
+#else
 	info->library_name = "M.B.A mini";
+#endif
 #ifndef GIT_VERSION
 	#define GIT_VERSION "<test version>"
 #endif
@@ -826,9 +832,9 @@ bool retro_load_game(const struct retro_game_info *info)
 		exit(0);
    	}
 #ifdef M16B
-	memset(videoBuffer, 0, 512 * 512 * 2);
+	memset(videoBuffer, 0, 512*512*2);
 #else
-	memset(videoBuffer, 0, 512 * 512 * 2 * 2);
+	memset(videoBuffer, 0, 1024*1024*2*2);
 #endif
 	check_variables();
 
@@ -855,7 +861,7 @@ bool retro_load_game(const struct retro_game_info *info)
 
 	if (result != 1)
 	{
-		printf("Error: mame return an error\n");
+		LOGI("Error: mame return an error\n");
 		return 0;
 	}
 
