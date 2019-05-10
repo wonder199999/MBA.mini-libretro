@@ -47,6 +47,8 @@ In the current situation, M.B.A-mini supports 270 CPS1 games (including clones),
 
   Optimize for local machines when 64-bit building,
 	use: `make "OPTFLAG=1"`	
+  Enable hardware render,
+	use: `make "VRENDER=opengl"` or `make "VRENDER=gles"`
 
 * Build for arm linux:
   
@@ -58,7 +60,7 @@ In the current situation, M.B.A-mini supports 270 CPS1 games (including clones),
 
 * Build for android:
   
-	`make "NATIVE=1" buildtools`
+	`make "NATIVE=1" buildtools` then
 	`make platform=android`
 
 
