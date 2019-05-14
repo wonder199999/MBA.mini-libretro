@@ -228,6 +228,7 @@ static bool retro_load_ok = false;
 static bool keyboard_input = true;
 static bool macro_enable = true;
 static bool is_neogeo = false;
+static bool do_cheat = false;
 
 static INT32 rtwi = 320, rthe = 240, topw = 320;	/* DEFAULT TEXW/TEXH/PITCH */
 static INT32 ui_ipt_pushchar = -1;
@@ -455,6 +456,7 @@ void retro_set_environment(retro_environment_t cb)
 	{ "mba_mini_aspect_ratio",	"Core provided aspect ratio; DAR|PAR" },
 	{ "mba_mini_turbo_button", 	"Enable autofire; disabled|button 1|button 2|R2 to button 1 mapping|R2 to button 2 mapping" },
 	{ "mba_mini_turbo_delay", 	"Set autofire pulse speed; medium|slow|fast" },
+	{ "mba_mini_cheat_function",	"CHEAT(Restart); disabled|enabled" },
 	{ "mba_mini_kb_input",		"Keyboard input; enabled|disabled" },
 	{ "mba_mini_macro_button", 	"Use macro button; disabled|assign A+B to L|assign A+B to R|assign C+D to L|assign C+D to R|assign A+B to L & C+D to R|assign A+B to R & C+D to L" },
 	{ "mba_mini_tate_mode", 	"T.A.T.E mode(Restart); disabled|enabled" },
@@ -531,6 +533,16 @@ static void check_variables(void)
 			keyboard_input = true;
 		else
 			keyboard_input = false;
+	}
+
+	var.key = "mba_mini_cheat_function";
+	var.value = NULL;
+	if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
+	{
+		if (!strcmp(var.value, "enabled"))
+			do_cheat = true;
+		else
+			do_cheat = false;
 	}
 
 	var.key = "mba_mini_frame_skip";
@@ -1536,8 +1548,9 @@ static int executeGame(char *path)
 		LOGI("Current loaded NEOGEO BIOS is < %s >\n", neogeo_bioses[set_neogeo_bios].bios);
 	}
 
-	if (exist_dir)
+	if (exist_dir && do_cheat)
 	{
+		xargv[paramCount++] = (char *)"-cheat";
 		xargv[paramCount++] = (char *)"-cheatpath";
 		xargv[paramCount++] = (char *)retro_system_dir;
 	}

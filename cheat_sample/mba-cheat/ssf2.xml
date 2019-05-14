@@ -1,0 +1,303 @@
+<mamecheat version="1">
+
+  <cheat desc="Infinite Time">
+    <script state="run">
+      <action>maincpu.pb@FF8CCE=99</action>
+    </script>
+  </cheat>
+
+  <cheat desc="Finish this Round Now!">
+    <script state="on">
+      <action>maincpu.pb@FF8CCE=00</action>
+    </script>
+  </cheat>
+
+  <cheat desc="Always in Turbo Mode"> <comment>Characters move faster</comment>
+    <script state="run">
+      <action>maincpu.pb@FF82ED=01</action>
+    </script>
+  </cheat>
+
+  <cheat desc="Select Backdrop">
+    <parameter>
+      <item value="0x00">Japan (Castle)</item>
+      <item value="0x01">Japan (Bath House)</item>
+      <item value="0x02">Brazil</item>
+      <item value="0x03">USA (Air Base)</item>
+      <item value="0x04">USA (Pier)</item>
+      <item value="0x05">China</item>
+      <item value="0x06">USSR</item>
+      <item value="0x07">India (Dhalsim)</item>
+      <item value="0x08">USA (Las Vegas)</item>
+      <item value="0x09">Thailand (Statue)</item>
+      <item value="0x0A">Spain</item>
+      <item value="0x0B">Thailand (Temple)</item>
+      <item value="0x0C">England</item>
+      <item value="0x0D">Mexico</item>
+      <item value="0x0E">Hong Kong</item>
+      <item value="0x0F">Jamaica</item>
+    </parameter>
+    <script state="run">
+      <action>maincpu.pb@FFE08B=param</action> <!-- E. Honda -->
+    </script>
+  </cheat>
+
+  <cheat desc="Select Next Fight Now!"> <comment>Use during a match.</comment>
+    <parameter>
+      <item value="0x07">Balrog</item>
+      <item value="0x08">Vega</item>
+      <item value="0x09">Sagat</item>
+      <item value="0x0A">M. Bison</item>
+      <item value="0x0B">Ending</item>
+    </parameter>
+    <script state="change">
+      <action>maincpu.pb@FF8BD1=param</action>
+    </script>
+  </cheat>
+
+  <cheat desc=" "/>
+
+  <cheat desc="Infinite Energy PL1">
+    <script state="run">
+      <action>maincpu.pb@FF83F9=90</action>
+    </script>
+  </cheat>
+
+  <cheat desc="Drain All Energy Now! PL1">
+    <script state="on">
+      <action>maincpu.pb@FF83F9=00</action>
+    </script>
+  </cheat>
+
+  <cheat desc="Finish round to win match PL1">
+    <script state="run">
+      <action>maincpu.pb@FF875E=02</action>
+    </script>
+  </cheat>
+
+  <cheat desc="Rounds won always set = 0 PL1">
+    <script state="run">
+      <action>maincpu.pb@FF875E=00</action>
+    </script>
+  </cheat>
+
+  <cheat desc="Rounds won set = 0 Now! PL1">
+    <script state="on">
+      <action>maincpu.pb@FF875E=00</action>
+    </script>
+  </cheat>
+
+  <cheat desc="Invincibility PL1">
+    <script state="run">
+      <action>maincpu.pb@FF858D=01</action>
+    </script>
+  </cheat>
+
+  <cheat desc="Command during jump ON PL1">
+    <script state="run">
+      <action>maincpu.pb@FF854F=00</action>
+    </script>
+  </cheat>
+
+  <cheat desc="Hadou Ken motion Cancel PL1"> <comment>Buggy</comment>
+    <script state="run">
+      <action>maincpu.pb@FF83EC=01</action>
+    </script>
+  </cheat>
+
+  <cheat desc="No limit next shot PL1"> <comment>Buggy</comment>
+    <script state="run">
+      <action>maincpu.pb@FF85A2=00</action>
+      <action>maincpu.pb@FF85A3=00</action>
+    </script>
+  </cheat>
+
+  <cheat desc="Never Get Dizzied PL1">
+    <script state="run">
+      <action>maincpu.pb@FF842F=01</action>
+    </script>
+  </cheat>
+
+  <cheat desc="Select Character PL1">
+    <parameter>
+      <item value="0x00">Ryu</item>
+      <item value="0x01">Edmund Honda</item>
+      <item value="0x02">Blanka</item>
+      <item value="0x03">Guile</item>
+      <item value="0x04">Ken Masters</item>
+      <item value="0x05">Chun-Li</item>
+      <item value="0x06">Zangief</item>
+      <item value="0x07">Dhalsim</item>
+      <item value="0x08">Balrog</item>
+      <item value="0x09">Sagat</item>
+      <item value="0x0A">Vega</item>
+      <item value="0x0B">M. Bison</item>
+      <item value="0x0C">Cammy</item>
+      <item value="0x0D">Thunder Hawk</item>
+      <item value="0x0E">Fei Long</item>
+      <item value="0x0F">Dee Jay</item>
+    </parameter>
+    <script state="run">
+      <action>maincpu.pb@FF875F=param</action>
+    </script>
+  </cheat>
+
+  <cheat desc="Select Colour PL1">
+    <parameter>
+      <item value="0x00">Colour 1</item>
+      <item value="0x01">Colour 2</item>
+      <item value="0x02">Colour 3</item>
+      <item value="0x03">Colour 4</item>
+      <item value="0x04">Colour 5</item>
+      <item value="0x05">Colour 6</item>
+      <item value="0x06">Colour 7</item>
+      <item value="0x07">Colour 8</item>
+    </parameter>
+    <script state="run">
+      <action>maincpu.pb@FF877F=param</action>
+    </script>
+  </cheat>
+
+  <cheat desc=" "/>
+
+  <cheat desc="Infinite Energy PL2">
+    <script state="run">
+      <action>maincpu.pb@FF87F9=90</action>
+    </script>
+  </cheat>
+
+  <cheat desc="Drain All Energy Now! PL2">
+    <script state="on">
+      <action>maincpu.pb@FF87F9=00</action>
+    </script>
+  </cheat>
+
+  <cheat desc="Finish round to win match PL2">
+    <script state="run">
+      <action>maincpu.pb@FF8B5E=02</action>
+    </script>
+  </cheat>
+
+  <cheat desc="Rounds won always set = 0 PL2">
+    <script state="run">
+      <action>maincpu.pb@FF8B5E=00</action>
+    </script>
+  </cheat>
+
+  <cheat desc="Rounds won set = 0 Now! PL2">
+    <script state="on">
+      <action>maincpu.pb@FF8B5E=00</action>
+    </script>
+  </cheat>
+
+  <cheat desc="Invincibility PL2">
+    <script state="run">
+      <action>maincpu.pb@FF898D=01</action>
+    </script>
+  </cheat>
+
+  <cheat desc="Command during jump ON PL2">
+    <script state="run">
+      <action>maincpu.pb@FF894F=00</action>
+    </script>
+  </cheat>
+
+  <cheat desc="Hadou Ken motion Cancel PL2"> <comment>Buggy</comment>
+    <script state="run">
+      <action>maincpu.pb@FF87EC=01</action>
+    </script>
+  </cheat>
+
+  <cheat desc="No limit next shot PL2"> <comment>Buggy</comment>
+    <script state="run">
+      <action>maincpu.pb@FF89A2=00</action>
+      <action>maincpu.pb@FF89A3=00</action>
+    </script>
+  </cheat>
+
+  <cheat desc="Never Get Dizzied PL2">
+    <script state="run">
+      <action>maincpu.pb@FF882F=01</action>
+    </script>
+  </cheat>
+
+  <cheat desc="Select Character PL2">
+    <parameter>
+      <item value="0x00">Ryu</item>
+      <item value="0x01">Edmund Honda</item>
+      <item value="0x02">Blanka</item>
+      <item value="0x03">Guile</item>
+      <item value="0x04">Ken Masters</item>
+      <item value="0x05">Chun-Li</item>
+      <item value="0x06">Zangief</item>
+      <item value="0x07">Dhalsim</item>
+      <item value="0x08">Balrog</item>
+      <item value="0x09">Sagat</item>
+      <item value="0x0A">Vega</item>
+      <item value="0x0B">M. Bison</item>
+      <item value="0x0C">Cammy</item>
+      <item value="0x0D">Thunder Hawk</item>
+      <item value="0x0E">Fei Long</item>
+      <item value="0x0F">Dee Jay</item>
+    </parameter>
+    <script state="run">
+      <action>maincpu.pb@FF8B5F=param</action>
+    </script>
+  </cheat>
+
+  <cheat desc="Select Colour PL2">
+    <parameter>
+      <item value="0x00">Colour 1</item>
+      <item value="0x01">Colour 2</item>
+      <item value="0x02">Colour 3</item>
+      <item value="0x03">Colour 4</item>
+      <item value="0x04">Colour 5</item>
+      <item value="0x05">Colour 6</item>
+      <item value="0x06">Colour 7</item>
+      <item value="0x07">Colour 8</item>
+    </parameter>
+    <script state="run">
+      <action>maincpu.pb@FF8B7F=param</action>
+    </script>
+  </cheat>
+
+  <cheat desc=" "/>
+
+  <cheat desc="No Background Music">
+    <script state="run">
+      <action>audiocpu.pw@F018=0000</action>
+    </script>
+  </cheat>
+
+  <cheat desc="Select Region"> <comment>This cheat sets the machine region - the effectiveness may vary! You have to enable this ASAP - ON or before the ROM check screen! Or enable + RESET</comment>
+    <parameter>
+      <item value="0x00">Japan</item>
+      <item value="0x02">USA</item>
+      <item value="0x04">ETC</item>
+      <item value="0x06">Hispanic</item>
+      <item value="0x08">Asia</item>
+      <item value="0x0A">Asia TW</item>
+    </parameter>
+    <script state="run">
+      <action>maincpu.pb@FF82CF=param</action>
+    </script>
+  </cheat>
+
+  <cheat desc="Sound Test">
+    <parameter min="1" max="511" step="1"/>
+    <script state="change">
+      <action>audiocpu.pw@F007=0000</action>
+      <action>audiocpu.pq@F100=0000FF0000FF00FF</action>
+      <action>audiocpu.pq@F108=00FFFF0000000000</action>
+      <action>audiocpu.pq@F110=1000FF0000FF0000</action>
+      <action>audiocpu.pq@F118=00FFFF0000000000</action>
+      <action condition="(param LT 100)">audiocpu.pb@F111=param</action>
+      <action>temp0=param/100</action>
+      <action condition="(param GE 100)">audiocpu.pb@F110=temp0</action>
+      <action condition="(param GE 100)">audiocpu.pb@F111=param-(temp0*100)</action>
+      <action>audiocpu.pb@F007=20</action>
+    </script>
+  </cheat>
+
+</mamecheat>
+<!-- Cheat file downloaded from http://www.mamecheat.co.uk, see cheat.txt for list of contributors. -->

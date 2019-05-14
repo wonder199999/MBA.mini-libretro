@@ -146,6 +146,7 @@ void debug_view_memory::enumerate_sources()
 	// first add all the devices' address spaces
 	device_memory_interface *memintf = NULL;
 	for (bool gotone = m_machine.m_devicelist.first(memintf); gotone; gotone = memintf->next(memintf))
+	{
 		for (int spacenum = 0; spacenum < ADDRESS_SPACES; spacenum++)
 		{
 			address_space *space = memintf->space(spacenum);
@@ -155,6 +156,7 @@ void debug_view_memory::enumerate_sources()
 				m_source_list.append(*auto_alloc(&m_machine, debug_view_memory_source(name, *space)));
 			}
 		}
+	}
 
 	// then add all the memory regions
 	for (const region_info *region = m_machine.m_regionlist.first(); region != NULL; region = region->next())
@@ -273,13 +275,16 @@ void debug_view_memory::view_update()
 				UINT64 chunkdata;
 				bool ismapped = read(m_bytes_per_chunk, addrbyte + chunknum * m_bytes_per_chunk, chunkdata);
 				dest = destrow + m_section[1].m_pos + 1 + chunkindex * posdata.m_spacing;
+
 				for (int ch = 0; ch < posdata.m_spacing; ch++, dest++)
+				{
 					if (dest >= destmin && dest < destmax)
 					{
 						UINT8 shift = posdata.m_shift[ch];
 						if (shift < 64)
 							dest->byte = ismapped ? "0123456789ABCDEF"[(chunkdata >> shift) & 0x0f] : '*';
 					}
+				}
 			}
 
 			// generate the ASCII data
@@ -287,12 +292,14 @@ void debug_view_memory::view_update()
 			{
 				dest = destrow + m_section[2].m_pos + 1;
 				for (int ch = 0; ch < m_bytes_per_row; ch++, dest++)
+				{
 					if (dest >= destmin && dest < destmax)
 					{
 						UINT64 chval;
 						bool ismapped = read(1, addrbyte + ch, chval);
 						dest->byte = (ismapped && isprint(chval)) ? chval : '.';
 					}
+				}
 			}
 		}
 	}
@@ -324,20 +331,24 @@ void debug_view_memory::view_char(int chval)
 
 		case DCH_PUP:
 			for (UINT32 delta = (m_visible.y - 2) * m_bytes_per_row; delta > 0; delta -= m_bytes_per_row)
+			{
 				if (pos.m_address >= m_byte_offset + delta)
 				{
 					pos.m_address -= delta;
 					break;
 				}
+			}
 			break;
 
 		case DCH_PDOWN:
 			for (UINT32 delta = (m_visible.y - 2) * m_bytes_per_row; delta > 0; delta -= m_bytes_per_row)
+			{
 				if (pos.m_address <= m_maxaddr - delta)
 				{
 					pos.m_address += delta;
 					break;
 				}
+			}
 			break;
 
 		case DCH_HOME:
@@ -522,6 +533,7 @@ bool debug_view_memory::needs_recompute()
 
 	// expression is clean at this point, and future recomputation is not necessary
 	m_recompute = false;
+
 	return recompute;
 }
 
@@ -556,6 +568,7 @@ debug_view_memory::cursor_pos debug_view_memory::get_cursor_pos()
 	// compute the address and shift
 	pos.m_address += chunknum * m_bytes_per_chunk;
 	pos.m_shift = posdata.m_shift[chunkoffs] & 0x7f;
+
 	return pos;
 }
 

@@ -40,8 +40,6 @@
 #include "emu.h"
 #include "emuopts.h"
 #include "png.h"
-#include "debugger.h"
-#include "debugint/debugint.h"
 #include "rendutil.h"
 #include "ui.h"
 #include "aviio.h"
@@ -164,10 +162,6 @@ static void update_refresh_speed(running_machine *machine);
 /* screen snapshots */
 static void create_snapshot_bitmap(device_t *screen);
 static file_error mame_fopen_next(running_machine *machine, const char *pathoption, const char *extension, mame_file **file);
-
-/* movie recording */
-static void video_mng_record_frame(running_machine *machine);
-static void video_avi_record_frame(running_machine *machine);
 
 
 /***************************************************************************
@@ -404,9 +398,6 @@ void video_frame_update(running_machine *machine, int debug)
 	/* draw the user interface */
 	ui_update_and_render(machine, render_container_get_ui());
 
-	/* update the internal render debugger */
-	debugint_update_during_game(machine);
-
 	/* if we're throttling, synchronize before rendering */
 	if (effective_throttle(machine))
 		if (!skipped_it)
@@ -429,8 +420,7 @@ void video_frame_update(running_machine *machine, int debug)
 	if (phase == MACHINE_PHASE_RUNNING)
 	{
 		/* reset partial updates if we're paused or if the debugger is active */
-		if (machine->primary_screen != NULL && (machine->paused() || debug || debugger_within_instruction_hook(machine)))
-//		if (machine->primary_screen != NULL && (machine->paused() || debug))
+		if (machine->primary_screen != NULL && (machine->paused() || debug))
 			machine->primary_screen->scanline0_callback();
 		/* otherwise, call the video EOF callback */
 		else
@@ -460,17 +450,10 @@ static int finish_screen_updates(running_machine *machine)
 	/* update our movie recording and burn-in state */
 	if (!machine->paused())
 	{
-		video_mng_record_frame(machine);
-		video_avi_record_frame(machine);
-
 		/* iterate over screens and update the burnin for the ones that care */
 		for (screen_device *screen = screen_first(*machine); screen != NULL; screen = screen_next(screen))
 			screen->update_burnin();
 	}
-
-	/* draw any crosshairs */
-/*	for (screen_device *screen = screen_first(*machine); screen != NULL; screen = screen_next(screen))
-		crosshair_render(*screen);	*/
 
 	return anything_changed;
 }
@@ -879,7 +862,7 @@ static void update_frameskip(running_machine *machine)
 			else
 			{
 				/* if below 80% speed, be more aggressive */
-				if (global.speed_percent < 0.80 *  speed)
+				if (global.speed_percent < 0.80 * speed)
 					global.frameskip_adjust -= (0.90 * speed - global.speed_percent) / 0.05;
 				/* if we're close, only force it up to frameskip 8 */
 				else if (global.frameskip_level < 8)
@@ -1302,7 +1285,7 @@ void video_mng_end_recording(running_machine *machine)
     video_mng_record_frame - record a frame of a
     movie
 -------------------------------------------------*/
-
+#if 0
 static void video_mng_record_frame(running_machine *machine)
 {
 	/* only record if we have a file */
@@ -1347,7 +1330,7 @@ static void video_mng_record_frame(running_machine *machine)
 		}
 	}
 }
-
+#endif
 
 
 /***************************************************************************
@@ -1435,7 +1418,7 @@ void video_avi_end_recording(running_machine *machine)
     video_avi_record_frame - record a frame of a
     movie
 -------------------------------------------------*/
-
+#if 0
 static void video_avi_record_frame(running_machine *machine)
 {
 	/* only record if we have a file */
@@ -1464,7 +1447,7 @@ static void video_avi_record_frame(running_machine *machine)
 		}
 	}
 }
-
+#endif
 
 /*-------------------------------------------------
     video_avi_add_sound - add sound to an AVI

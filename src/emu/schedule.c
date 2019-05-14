@@ -38,18 +38,6 @@
 ***************************************************************************/
 
 #include "emu.h"
-#include "debugger.h"
-
-
-//**************************************************************************
-//  DEBUGGING
-//**************************************************************************
-
-#define VERBOSE		0
-
-#define LOG(x)		do { if (VERBOSE) logerror x; } while (0)
-
-#define TEMPLOG		0
 
 
 
@@ -66,7 +54,6 @@ enum
 };
 
 
-
 //**************************************************************************
 //  MACROS
 //**************************************************************************
@@ -74,7 +61,6 @@ enum
 // these are macros to ensure inlining in device_scheduler::timeslice
 #define ATTOTIME_LT(a,b)		((a).seconds < (b).seconds || ((a).seconds == (b).seconds && (a).attoseconds < (b).attoseconds))
 #define ATTOTIME_NORMALIZE(a)	do { if ((a).attoseconds >= ATTOSECONDS_PER_SECOND) { (a).seconds++; (a).attoseconds -= ATTOSECONDS_PER_SECOND; } } while (0)
-
 
 
 //**************************************************************************
@@ -111,17 +97,20 @@ device_scheduler::~device_scheduler()
 void device_scheduler::timeslice()
 {
 	timer_execution_state *timerexec = timer_get_execution_state(&m_machine);
-	bool call_debugger = ((m_machine.debug_flags & DEBUG_FLAG_ENABLED) != 0);
 
 	// build the execution list if we don't have one yet
 	if (m_execute_list == NULL)
 		rebuild_execute_list();
 
+	attotime target;
+	attoseconds_t delta, actualdelta;
+	UINT32 suspendchanged;
+	INT32 ran;
+
 	// loop until we hit the next timer
 	while (ATTOTIME_LT(timerexec->basetime, timerexec->nextfire))
 	{
 		// by default, assume our target is the end of the next quantum
-		attotime target;
 		target.seconds = timerexec->basetime.seconds;
 		target.attoseconds = timerexec->basetime.attoseconds + timerexec->curquantum;
 		ATTOTIME_NORMALIZE(target);
@@ -131,11 +120,8 @@ void device_scheduler::timeslice()
 		if (ATTOTIME_LT(timerexec->nextfire, target))
 			target = timerexec->nextfire;
 
-		LOG(("------------------\n"));
-		LOG(("cpu_timeslice: target = %s\n", attotime_string(target, 9)));
-
 		// apply pending suspension changes
-		UINT32 suspendchanged = 0;
+		suspendchanged = 0;
 		for (device_execute_interface *exec = m_execute_list; exec != NULL; exec = exec->m_nextexec)
 		{
 			suspendchanged |= (exec->m_suspend ^ exec->m_nextsuspend);
@@ -155,7 +141,7 @@ void device_scheduler::timeslice()
 			if (target.seconds >= exec->m_localtime.seconds)
 			{
 				// compute how many attoseconds to execute this CPU
-				attoseconds_t delta = target.attoseconds - exec->m_localtime.attoseconds;
+				delta = target.attoseconds - exec->m_localtime.attoseconds;
 				if (delta < 0 && target.seconds > exec->m_localtime.seconds)
 					delta += ATTOSECONDS_PER_SECOND;
 				assert(delta == attotime_to_attoseconds(attotime_sub(target, exec->m_localtime)));
@@ -164,8 +150,7 @@ void device_scheduler::timeslice()
 				if (delta >= exec->m_attoseconds_per_cycle)
 				{
 					// compute how many cycles we want to execute
-					int ran = exec->m_cycles_running = divu_64x32((UINT64)delta >> exec->m_divshift, exec->m_divisor);
-					LOG(("  cpu '%s': %d cycles\n", exec->device().tag(), exec->m_cycles_running));
+					ran = exec->m_cycles_running = divu_64x32((UINT64)delta >> exec->m_divshift, exec->m_divisor);
 
 					// if we're not suspended, actually execute
 					if (exec->m_suspend == 0)
@@ -176,18 +161,12 @@ void device_scheduler::timeslice()
 						m_executing_device = exec;
 						*exec->m_icount = exec->m_cycles_running;
 
-						if (!call_debugger)
-							exec->execute_run();
-						else
-						{
-							debugger_start_cpu_hook(&exec->device(), target);
-							exec->execute_run();
-							debugger_stop_cpu_hook(&exec->device());
-						}
+						exec->execute_run();
 
 						// adjust for any cycles we took back
 						assert(ran >= *exec->m_icount);
 						ran -= *exec->m_icount;
+
 						assert(ran >= exec->m_cycles_stolen);
 						ran -= exec->m_cycles_stolen;
 					}
@@ -196,10 +175,9 @@ void device_scheduler::timeslice()
 					exec->m_totalcycles += ran;
 
 					// update the local time for this CPU
-					attoseconds_t actualdelta = exec->m_attoseconds_per_cycle * ran;
+					actualdelta = exec->m_attoseconds_per_cycle * ran;
 					exec->m_localtime.attoseconds += actualdelta;
 					ATTOTIME_NORMALIZE(exec->m_localtime);
-					LOG(("         %d ran, %d total, time = %s\n", ran, (INT32)exec->m_totalcycles, attotime_string(exec->m_localtime, 9)));
 
 					// if the new local CPU time is less than our target, move the target up
 					if (ATTOTIME_LT(exec->m_localtime, target))
@@ -213,7 +191,6 @@ void device_scheduler::timeslice()
 							assert(attotime_compare(target, timerexec->basetime) < 0);
 							target = timerexec->basetime;
 						}
-						LOG(("         (new target)\n"));
 					}
 				}
 			}
@@ -322,11 +299,12 @@ void device_scheduler::compute_perfect_interleave()
 	{
 		attoseconds_t smallest = first->minimum_quantum();
 		attoseconds_t perfect = ATTOSECONDS_PER_SECOND - 1;
+		attoseconds_t curquantum;
 
 		// start with a huge time factor and find the 2nd smallest cycle time
 		for (device_execute_interface *exec = first->m_nextexec; exec != NULL; exec = exec->m_nextexec)
 		{
-			attoseconds_t curquantum = exec->minimum_quantum();
+			curquantum = exec->minimum_quantum();
 
 			// find the 2nd smallest cycle interval
 			if (curquantum < smallest)
@@ -340,8 +318,6 @@ void device_scheduler::compute_perfect_interleave()
 
 		// adjust the final value
 		timer_set_minimum_quantum(&m_machine, perfect);
-
-		LOG(("Perfect interleave = %.9f, smallest = %.9f\n", ATTOSECONDS_TO_DOUBLE(perfect), ATTOSECONDS_TO_DOUBLE(smallest)));
 	}
 }
 

@@ -1,0 +1,139 @@
+<mamecheat version="1">
+
+  <cheat desc="Infinite Time">
+    <script state="run">
+      <action>maincpu.pb@E92F0=3C</action>
+      <action>maincpu.pb@E92F4=FE</action>
+    </script>
+  </cheat>
+
+  <cheat desc=" "/>
+
+  <cheat desc="Infinite Lives PL1">
+    <script state="run">
+      <action>maincpu.pb@E831E=64</action>
+    </script>
+  </cheat>
+
+  <cheat desc="Infinite Energy PL1">
+    <script state="run">
+      <action>maincpu.pb@E8339=32</action>
+    </script>
+  </cheat>
+
+  <cheat desc="Invincibility PL1">
+    <script state="run">
+      <action>maincpu.pb@E856D=00</action>
+    </script>
+  </cheat>
+
+  <cheat desc="All Hits Combo PL1">
+    <script state="run">
+      <action>maincpu.pb@E8559=00</action>
+    </script>
+  </cheat>
+
+  <cheat desc="Easy Special Attack PL1">
+    <script state="run">
+      <action>maincpu.pb@E8559=01</action>
+    </script>
+  </cheat>
+
+  <cheat desc=" "/>
+
+  <cheat desc="Infinite Lives PL2">
+    <script state="run">
+      <action>maincpu.pb@E839E=64</action>
+    </script>
+  </cheat>
+
+  <cheat desc="Infinite Energy PL2">
+    <script state="run">
+      <action>maincpu.pb@E83B9=32</action>
+    </script>
+  </cheat>
+
+  <cheat desc="Invincibility PL2">
+    <script state="run">
+      <action>maincpu.pb@E866D=00</action>
+    </script>
+  </cheat>
+
+  <cheat desc="All Hits Combo PL2">
+    <script state="run">
+      <action>maincpu.pb@E8659=00</action>
+    </script>
+  </cheat>
+
+  <cheat desc="Easy Special Attack PL2">
+    <script state="run">
+      <action>maincpu.pb@E8659=01</action>
+    </script>
+  </cheat>
+
+  <cheat desc=" "/>
+
+  <cheat desc="Infinite Lives PL3">
+    <script state="run">
+      <action>maincpu.pb@E841E=64</action>
+    </script>
+  </cheat>
+
+  <cheat desc="Infinite Energy PL3">
+    <script state="run">
+      <action>maincpu.pb@E8439=32</action>
+    </script>
+  </cheat>
+
+  <cheat desc="Invincibility PL3">
+    <script state="run">
+      <action>maincpu.pb@E876D=00</action>
+    </script>
+  </cheat>
+
+  <cheat desc="All Hits Combo PL3">
+    <script state="run">
+      <action>maincpu.pb@E8759=00</action>
+    </script>
+  </cheat>
+
+  <cheat desc="Easy Special Attack PL3">
+    <script state="run">
+      <action>maincpu.pb@E8759=01</action>
+    </script>
+  </cheat>
+
+  <cheat desc=" "/>
+
+  <cheat desc="Infinite Lives PL4">
+    <script state="run">
+      <action>maincpu.pb@E849E=64</action>
+    </script>
+  </cheat>
+
+  <cheat desc="Infinite Energy PL4">
+    <script state="run">
+      <action>maincpu.pb@E84B9=32</action>
+    </script>
+  </cheat>
+
+  <cheat desc="Invincibility PL4">
+    <script state="run">
+      <action>maincpu.pb@E886D=00</action>
+    </script>
+  </cheat>
+
+  <cheat desc="All Hits Combo PL4">
+    <script state="run">
+      <action>maincpu.pb@E8859=00</action>
+    </script>
+  </cheat>
+
+  <cheat desc="Easy Special Attack PL4">
+    <script state="run">
+      <action>maincpu.pb@E8859=01</action>
+    </script>
+  </cheat>
+
+</mamecheat>
+<!-- Cheat file downloaded from http://www.mamecheat.co.uk, see cheat.txt for list of contributors. -->

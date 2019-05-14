@@ -136,7 +136,7 @@ endif
    CC = g++
    AR = @ar
    LD = g++
-   PLATCFLAGS += -fno-merge-constants -fsingle-precision-constant -fno-common -finline
+   PLATCFLAGS += -fno-common -fno-merge-constants -fsingle-precision-constant
    CCOMFLAGS += $(PLATCFLAGS) -ffast-math
    LIBS += -lstdc++ -lpthread
    ALIGNED = 1
@@ -308,7 +308,8 @@ else ifneq (,$(findstring rpi,$(platform)))
    fpic = -fPIC
    LDFLAGS += $(SHARED)
    LIBS += -lstdc++ -lpthread
-   CCOMFLAGS += -marm -fomit-frame-pointer -ffast-math -fsigned-char -falign-functions=16 -fno-merge-constants
+   CCOMFLAGS += -marm -fomit-frame-pointer -fsingle-precision-constant -ffast-math
+   CCOMFLAGS += -fsigned-char -falign-functions=16 -fno-merge-constants
    ARM_ENABLED = 1
    ALIGNED = 1
 ifneq (,$(findstring rpi2, $(platform)))

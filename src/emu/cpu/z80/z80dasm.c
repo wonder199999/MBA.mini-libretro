@@ -20,7 +20,6 @@
  *****************************************************************************/
 
 #include "emu.h"
-#include "debugger.h"
 #include "z80.h"
 
 enum e_mnemonics

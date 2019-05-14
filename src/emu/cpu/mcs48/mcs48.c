@@ -73,7 +73,6 @@ T0 output clock
 ***************************************************************************/
 
 #include "emu.h"
-#include "debugger.h"
 #include "mcs48.h"
 
 
@@ -1054,7 +1053,6 @@ static CPU_EXECUTE( mcs48 )
 	{
 		/* fetch next opcode */
 		cpustate->prevpc = cpustate->pc;
-		debugger_instruction_hook(device, cpustate->pc);
 		opcode = opcode_fetch(cpustate);
 
 		/* process opcode and count cycles */

@@ -235,9 +235,12 @@ offs_t debug_view_disasm::find_pc_backwards(offs_t targetpc, int numinstrs)
 
 	// compute the increment
 	int minlen = source.m_space->byte_to_address(source.m_disasmintf->min_opcode_bytes());
-	if (minlen == 0) minlen = 1;
+	if (minlen == 0)
+		minlen = 1;
+
 	int maxlen = source.m_space->byte_to_address(source.m_disasmintf->max_opcode_bytes());
-	if (maxlen == 0) maxlen = 1;
+	if (maxlen == 0)
+		maxlen = 1;
 
 	// start off numinstrs back
 	offs_t curpc = targetpc - minlen * numinstrs;
@@ -253,6 +256,7 @@ offs_t debug_view_disasm::find_pc_backwards(offs_t targetpc, int numinstrs)
 		// fill the buffer up to the target
 		offs_t curpcbyte = source.m_space->address_to_byte(curpc) & source.m_space->logbytemask();
 		UINT8 opbuf[1024], argbuf[1024];
+
 		while (curpcbyte < fillpcbyte)
 		{
 			fillpcbyte--;
@@ -447,6 +451,7 @@ bool debug_view_disasm::recompute(offs_t pc, int startline, int lines)
 
 	// now longer need to recompute
 	m_recompute = false;
+
 	return changed;
 }
 
@@ -499,6 +504,7 @@ void debug_view_disasm::view_update()
 
 	// if we need to recompute, do it
 	bool recomputed_this_time = false;
+
 recompute:
 	if (m_recompute)
 	{
@@ -688,11 +694,14 @@ void debug_view_disasm::set_selected_address(offs_t address)
 {
 	const debug_view_disasm_source &source = downcast<const debug_view_disasm_source &>(*m_source);
 	offs_t byteaddress = source.m_space->address_to_byte(address) & source.m_space->logbytemask();
+
 	for (int line = 0; line < m_total.y; line++)
+	{
 		if (m_byteaddress[line] == byteaddress)
 		{
 			m_cursor.y = line;
 			set_cursor_position(m_cursor);
 			break;
 		}
+	}
 }

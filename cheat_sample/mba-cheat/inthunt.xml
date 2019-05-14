@@ -1,0 +1,136 @@
+<mamecheat version="1">
+
+  <cheat desc="Infinite Time">
+    <script state="run">
+      <action>maincpu.pb@EB8A0=63</action>
+    </script>
+  </cheat>
+
+  <cheat desc="Select Starting Stage">
+    <parameter>
+      <item value="0x00">Stage 1</item>
+      <item value="0x01">Stage 2</item>
+      <item value="0x02">Stage 3</item>
+      <item value="0x03">Stage 4</item>
+      <item value="0x04">Stage 5</item>
+      <item value="0x05">Stage 6</item>
+      <item value="0x06">Stage 7 (Last Battle)</item>
+      <item value="0x07">Stage 8 (End Screen)</item>
+    </parameter>
+    <script state="run">
+      <action condition="(maincpu.pb@E0084==00)">maincpu.pb@E0084=param</action>
+    </script>
+  </cheat>
+
+  <cheat desc=" "/>
+
+  <cheat desc="Infinite Lives PL1">
+    <script state="run">
+      <action>maincpu.pb@E0118=09</action>
+    </script>
+  </cheat>
+
+  <cheat desc="Invincibility 'ON' PL1">
+    <script state="run">
+      <action>maincpu.pb@E0A0A=01</action>
+    </script>
+  </cheat>
+
+  <cheat desc="Invincibility 'OFF' PL1">
+    <script state="on">
+      <action>maincpu.pb@E0A0A=00</action>
+    </script>
+  </cheat>
+
+  <cheat desc="Select Front Weapon PL1">
+    <parameter>
+      <item value="0x01">Normal Torpedo</item>
+      <item value="0x02">Power Torpedo</item>
+      <item value="0x03">Wave Torpedo</item>
+      <item value="0x04">Spread Torpedo</item>
+    </parameter>
+    <script state="run">
+      <action condition="(param==01)">maincpu.pb@E0110=00</action>
+      <action condition="(param==01)">maincpu.pb@E0112=00</action>
+      <action condition="(param==02)">maincpu.pb@E0110=02</action>
+      <action condition="(param==02)">maincpu.pb@E0112=03</action>
+      <action condition="(param==03)">maincpu.pb@E0110=04</action>
+      <action condition="(param==03)">maincpu.pb@E0112=03</action>
+      <action condition="(param==04)">maincpu.pb@E0110=06</action>
+      <action condition="(param==04)">maincpu.pb@E0112=03</action>
+    </script>
+  </cheat>
+
+  <cheat desc="Select Top Weapon PL1">
+    <parameter>
+      <item value="0x01">Normal Ammo</item>
+      <item value="0x02">A Ammo</item>
+      <item value="0x03">M Ammo</item>
+    </parameter>
+    <script state="run">
+      <action condition="(param==01)">maincpu.pb@E0114=00</action>
+      <action condition="(param==01)">maincpu.pb@E0116=00</action>
+      <action condition="(param==02)">maincpu.pb@E0114=02</action>
+      <action condition="(param==02)">maincpu.pb@E0116=05</action>
+      <action condition="(param==03)">maincpu.pb@E0114=04</action>
+      <action condition="(param==03)">maincpu.pb@E0116=05</action>
+    </script>
+  </cheat>
+
+  <cheat desc=" "/>
+
+  <cheat desc="Infinite Lives PL2">
+    <script state="run">
+      <action>maincpu.pb@E0158=09</action>
+    </script>
+  </cheat>
+
+  <cheat desc="Invincibility 'ON' PL2">
+    <script state="run">
+      <action>maincpu.pb@E098A=01</action>
+    </script>
+  </cheat>
+
+  <cheat desc="Invincibility 'OFF' PL2">
+    <script state="on">
+      <action>maincpu.pb@E098A=00</action>
+    </script>
+  </cheat>
+
+  <cheat desc="Select Front Weapon PL2">
+    <parameter>
+      <item value="0x01">Normal Torpedo</item>
+      <item value="0x02">Power Torpedo</item>
+      <item value="0x03">Wave Torpedo</item>
+      <item value="0x04">Spread Torpedo</item>
+    </parameter>
+    <script state="run">
+      <action condition="(param==01)">maincpu.pb@E0150=00</action>
+      <action condition="(param==01)">maincpu.pb@E0152=00</action>
+      <action condition="(param==02)">maincpu.pb@E0150=02</action>
+      <action condition="(param==02)">maincpu.pb@E0152=03</action>
+      <action condition="(param==03)">maincpu.pb@E0150=04</action>
+      <action condition="(param==03)">maincpu.pb@E0152=03</action>
+      <action condition="(param==04)">maincpu.pb@E0150=06</action>
+      <action condition="(param==04)">maincpu.pb@E0152=03</action>
+    </script>
+  </cheat>
+
+  <cheat desc="Select Top Weapon PL2">
+    <parameter>
+      <item value="0x01">Normal Ammo</item>
+      <item value="0x02">A Ammo</item>
+      <item value="0x03">M Ammo</item>
+    </parameter>
+    <script state="run">
+      <action condition="(param==01)">maincpu.pb@E0154=00</action>
+      <action condition="(param==01)">maincpu.pb@E0156=00</action>
+      <action condition="(param==02)">maincpu.pb@E0154=02</action>
+      <action condition="(param==02)">maincpu.pb@E0156=05</action>
+      <action condition="(param==03)">maincpu.pb@E0154=04</action>
+      <action condition="(param==03)">maincpu.pb@E0156=05</action>
+    </script>
+  </cheat>
+
+</mamecheat>
+<!-- Cheat file downloaded from http://www.mamecheat.co.uk, see cheat.txt for list of contributors. -->

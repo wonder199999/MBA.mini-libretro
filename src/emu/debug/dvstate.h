@@ -43,9 +43,9 @@
 #include "debugvw.h"
 
 
-//**************************************************************************
-//  TYPE DEFINITIONS
-//**************************************************************************
+/*************************************************************************/
+/*	TYPE DEFINITIONS						 */
+/*************************************************************************/
 
 // data sources for state views
 class debug_view_state_source : public debug_view_source
@@ -61,9 +61,9 @@ public:
 
 private:
 	// internal state
-	device_t &			m_device;				// underlying device
-	device_state_interface *m_stateintf;		// state interface
-	device_execute_interface *m_execintf;		// execution interface
+	device_t			&m_device;	// underlying device
+	device_state_interface		*m_stateintf;	// state interface
+	device_execute_interface	*m_execintf;	// execution interface
 };
 
 
@@ -87,12 +87,12 @@ private:
 	{
 		state_item(int index, const char *name, UINT8 valuechars);
 
-		state_item *		m_next;				// next item
-		UINT64				m_lastval;			// last value
-		UINT64				m_currval;			// current value
-		int					m_index;			// index
-		UINT8				m_vallen;			// number of value chars
-		astring				m_symbol;			// symbol
+		state_item     *m_next;			// next item
+		UINT64		m_lastval;		// last value
+		UINT64		m_currval;		// current value
+		int		m_index;		// index
+		UINT8		m_vallen;		// number of value chars
+		astring		m_symbol;		// symbol
 	};
 
 	// internal helpers
@@ -101,12 +101,12 @@ private:
 	void recompute();
 
 	// internal state
-	int					m_divider;				// dividing column
-	UINT64				m_last_update;			// execution counter at last update
-	state_item *		m_state_list;			// state data
+	int			 m_divider;		// dividing column
+	UINT64			 m_last_update;		// execution counter at last update
+	state_item		*m_state_list;		// state data
 
 	// constants
-	static const int REG_DIVIDER	= -10;
+	static const int REG_DIVIDER		= -10;
 	static const int REG_CYCLES		= -11;
 	static const int REG_BEAMX		= -12;
 	static const int REG_BEAMY		= -13;
@@ -114,4 +114,4 @@ private:
 };
 
 
-#endif
+#endif	/* __DVSTATE_H__ */

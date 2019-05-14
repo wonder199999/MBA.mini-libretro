@@ -39,16 +39,16 @@
 typedef struct _debug_command debug_command;
 struct _debug_command
 {
-	debug_command *	next;
-	char			command[32];
-	const char *	params;
-	const char *	help;
-	void			(*handler)(running_machine *machine, int ref, int params, const char **param);
-	void			(*handler_ex)(int ref);
-	UINT32			flags;
-	int				ref;
-	int				minparams;
-	int				maxparams;
+	debug_command	*next;
+	char		 command[32];
+	const char	*params;
+	const char	*help;
+	void		(*handler)(running_machine *machine, int ref, int params, const char **param);
+	void		(*handler_ex)(int ref);
+	UINT32		 flags;
+	int		 ref;
+	int		 minparams;
+	int		 maxparams;
 };
 
 
@@ -182,7 +182,8 @@ static void trim_parameter(char **paramptr, int keep_quotes)
 			len--;
 			repeat = 1;
 		}
-	} while (repeat);
+	}
+	while (repeat);
 
 	*paramptr = param;
 }
@@ -195,9 +196,13 @@ static void trim_parameter(char **paramptr, int keep_quotes)
 
 static CMDERR internal_execute_command(running_machine *machine, int execute, int params, char **param)
 {
-	debug_command *cmd, *found = NULL;
-	int i, foundcount = 0;
-	char *p, *command;
+	debug_command *cmd;
+	debug_command *found = NULL;
+	char *p;
+	char *command;
+
+	INT32 foundcount = 0;
+	INT32 i;
 	size_t len;
 
 	/* no params is an error */
@@ -207,10 +212,12 @@ static CMDERR internal_execute_command(running_machine *machine, int execute, in
 	/* the first parameter has the command and the real first parameter; separate them */
 	for (p = param[0]; *p && isspace((UINT8)*p); p++) { }
 	for (command = p; *p && !isspace((UINT8)*p); p++) { }
+
 	if (*p != 0)
 	{
 		*p++ = 0;
 		for ( ; *p && isspace((UINT8)*p); p++) { }
+
 		if (*p != 0)
 			param[0] = p;
 		else
@@ -225,6 +232,7 @@ static CMDERR internal_execute_command(running_machine *machine, int execute, in
 	/* search the command list */
 	len = strlen(command);
 	for (cmd = commandlist; cmd != NULL; cmd = cmd->next)
+	{
 		if (!strncmp(command, cmd->command, len))
 		{
 			foundcount++;
@@ -235,6 +243,7 @@ static CMDERR internal_execute_command(running_machine *machine, int execute, in
 				break;
 			}
 		}
+	}
 
 	/* error if not found */
 	if (!found)
@@ -270,11 +279,14 @@ static CMDERR internal_execute_command(running_machine *machine, int execute, in
 
 static CMDERR internal_parse_command(running_machine *machine, const char *original_command, int execute)
 {
-	char command[MAX_COMMAND_LENGTH], parens[MAX_COMMAND_LENGTH];
+	char command[MAX_COMMAND_LENGTH];
+	char parens[MAX_COMMAND_LENGTH];
 	char *params[MAX_COMMAND_PARAMS] = { 0 };
-	CMDERR result = CMDERR_NONE;
+
 	char *command_start;
-	char *p, c = 0;
+	char *p;
+	CMDERR result = CMDERR_NONE;
+	char c = 0;
 
 	/* make a copy of the command */
 	strcpy(command, original_command);
@@ -323,7 +335,8 @@ static CMDERR internal_parse_command(running_machine *machine, const char *origi
 
 		/* NULL-terminate if we ended in a semicolon */
 		p--;
-		if (c == ';') *p++ = 0;
+		if (c == ';')
+			*p++ = 0;
 
 		/* process the command */
 		command_start = params[0];
@@ -385,6 +398,7 @@ CMDERR debug_console_execute_command(running_machine *machine, const char *comma
 		machine->m_debug_view->update_all();
 		debugger_refresh_display(machine);
 	}
+
 	return result;
 }
 
@@ -451,7 +465,7 @@ const char *debug_cmderr_to_string(CMDERR error)
 		case CMDERR_NOT_ENOUGH_PARAMS:		return "not enough parameters for command";
 		case CMDERR_TOO_MANY_PARAMS:		return "too many parameters for command";
 		case CMDERR_EXPRESSION_ERROR:		return "error in assignment expression";
-		default:							return "unknown error";
+		default:				return "unknown error";
 	}
 }
 

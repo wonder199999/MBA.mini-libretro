@@ -31,8 +31,8 @@
 typedef struct _help_item help_item;
 struct _help_item
 {
-	const char *		tag;
-	const char *		help;
+	const char *tag;
+	const char *help;
 };
 
 
@@ -1205,9 +1205,10 @@ const char *debug_get_help(const char *tag)
 {
 	static char ambig_message[1024];
 	const help_item *found = NULL;
-	int i, msglen, foundcount = 0;
-	int taglen = (int)strlen(tag);
 	char tagcopy[256];
+	int taglen = (int)strlen(tag);
+	int msglen, foundcount = 0;
+	int i;
 
 	/* make a lowercase copy of the tag */
 	for (i = 0; i <= taglen; i++)
@@ -1215,6 +1216,7 @@ const char *debug_get_help(const char *tag)
 
 	/* find a match */
 	for (i = 0; i < sizeof(static_help_list) / sizeof(static_help_list[0]); i++)
+	{
 		if (!strncmp(static_help_list[i].tag, tagcopy, taglen))
 		{
 			foundcount++;
@@ -1225,6 +1227,7 @@ const char *debug_get_help(const char *tag)
 				break;
 			}
 		}
+	}
 
 	/* only a single match makes sense */
 	if (foundcount == 1)
@@ -1236,9 +1239,10 @@ const char *debug_get_help(const char *tag)
 
 	/* otherwise, indicate ambiguous help */
 	msglen = sprintf(ambig_message, "Ambiguous help request, did you mean:\n");
+
 	for (i = 0; i < sizeof(static_help_list) / sizeof(static_help_list[0]); i++)
 		if (!strncmp(static_help_list[i].tag, tagcopy, taglen))
 			msglen += sprintf(&ambig_message[msglen], "  help %s?\n", static_help_list[i].tag);
+
 	return ambig_message;
 }
-

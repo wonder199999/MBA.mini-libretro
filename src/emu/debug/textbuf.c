@@ -18,8 +18,7 @@
     CONSTANTS
 ***************************************************************************/
 
-#define MAX_LINE_LENGTH			250
-
+#define MAX_LINE_LENGTH			(250)
 
 
 /***************************************************************************
@@ -29,16 +28,16 @@
 /* typedef struct _text_buffer text_buffer; -- declared in textbuf.h */
 struct _text_buffer
 {
-	char *					buffer;
-	INT32 *					lineoffs;
-	INT32					bufsize;
-	INT32					bufstart;
-	INT32					bufend;
-	INT32					linesize;
-	INT32					linestart;
-	INT32					lineend;
-	UINT32					linestartseq;
-	INT32					maxwidth;
+	char	       *buffer;
+	INT32	       *lineoffs;
+	INT32		bufsize;
+	INT32		bufstart;
+	INT32		bufend;
+	INT32		linesize;
+	INT32		linestart;
+	INT32		lineend;
+	UINT32		linestartseq;
+	INT32		maxwidth;
 };
 
 
@@ -296,6 +295,7 @@ UINT32 text_buffer_num_lines(text_buffer *text)
 	INT32 lines = text->lineend + 1 - text->linestart;
 	if (lines <= 0)
 		lines += text->linesize;
+
 	return lines;
 }
 
@@ -320,7 +320,9 @@ const char *text_buffer_get_seqnum_line(text_buffer *text, UINT32 seqnum)
 {
 	UINT32 numlines = text_buffer_num_lines(text);
 	UINT32 index = seqnum - text->linestartseq;
+
 	if (index >= numlines)
 		return NULL;
+
 	return &text->buffer[text->lineoffs[(text->linestart + index) % text->linesize]];
 }

@@ -37,4 +37,4 @@ UINT32 debug_comment_all_change_count(running_machine *machine);
 UINT32 debug_comment_get_opcode_crc32(device_t *device, offs_t address);	/* pull a crc for the opcode at a given address */
 void debug_comment_dump(device_t *device, offs_t addr);		/* dump all (or a single) comment to the command line */
 
-#endif
+#endif	/* __DEBUGCMT_H__ */

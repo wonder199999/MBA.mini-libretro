@@ -32,15 +32,6 @@
 
 
 /***************************************************************************
-    DEBUGGING
-***************************************************************************/
-
-#define VERBOSE 0
-#define LOG(x) do { if (VERBOSE) logerror x; } while (0)
-
-
-
-/***************************************************************************
     CONSTANTS
 ***************************************************************************/
 
@@ -66,9 +57,9 @@ struct _debug_comment
 class debug_cpu_comment_group
 {
 public:
-	int 			comment_count;
-	UINT32			change_count;
-	debug_comment *	comment_info[DEBUG_COMMENT_MAX_NUM];
+	int 		 comment_count;
+	UINT32		 change_count;
+	debug_comment	*comment_info[DEBUG_COMMENT_MAX_NUM];
 };
 
 
@@ -95,6 +86,7 @@ int debug_comment_init(running_machine *machine)
 {
 	/* allocate memory for the comments */
 	device_disasm_interface *disasm;
+
 	for (device_t *device = machine->m_devicelist.first(); device != NULL; device = device->next())
 		if (device->interface(disasm))
 			device->debug()->m_comments = auto_alloc_clear(machine, debug_cpu_comment_group);
@@ -102,6 +94,7 @@ int debug_comment_init(running_machine *machine)
 	/* automatically load em up */
 	debug_comment_load(machine);
 	machine->add_notifier(MACHINE_NOTIFY_EXIT, debug_comment_exit);
+
 	return 1;
 }
 
@@ -117,7 +110,7 @@ int debug_comment_add(device_t *device, offs_t addr, const char *comment, rgb_t 
 	debug_cpu_comment_group *comments = device->debug()->m_comments;
 	int insert_point = comments->comment_count;
 	int match = 0;
-	int i = 0;
+	INT32 i;
 
 	/* Create a new item to insert into the list */
 	debug_comment *insert_me = auto_alloc(device->machine, debug_comment);
@@ -135,8 +128,7 @@ int debug_comment_add(device_t *device, offs_t addr, const char *comment, rgb_t 
 			insert_point = i;
 			break;
 		}
-		else if (insert_me->address == comments->comment_info[i]->address &&
-				 insert_me->crc == comments->comment_info[i]->crc)
+		else if (insert_me->address == comments->comment_info[i]->address && insert_me->crc == comments->comment_info[i]->crc)
 		{
 			insert_point = i;
 			match = 1;
@@ -144,7 +136,7 @@ int debug_comment_add(device_t *device, offs_t addr, const char *comment, rgb_t 
 		}
 	}
 
-	/* Got an exact match?  Just replace */
+	/* Got an exact match? Just replace */
 	if (match == 1)
 	{
 		auto_free(device->machine, comments->comment_info[insert_point]);
@@ -159,7 +151,7 @@ int debug_comment_add(device_t *device, offs_t addr, const char *comment, rgb_t 
 	/* Otherwise insert */
 	/* First, shift the list down */
 	for (i = comments->comment_count; i >= insert_point; i--)
-		comments->comment_info[i] = comments->comment_info[i-1];
+		comments->comment_info[i] = comments->comment_info[i - 1];
 
 	/* do the insertion */
 	comments->comment_info[insert_point] = insert_me;
@@ -219,16 +211,17 @@ int debug_comment_remove(device_t *device, offs_t addr, UINT32 c_crc)
 const char *debug_comment_get_text(device_t *device, offs_t addr, UINT32 c_crc)
 {
 	debug_cpu_comment_group *comments = device->debug()->m_comments;
-	int i;
 
 	/* inefficient - should use bsearch - but will be a little tricky with multiple comments per addr */
-	for (i = 0; i < comments->comment_count; i++)
+	for (int i = 0; i < comments->comment_count; i++)
+	{
 		if (comments->comment_info[i]->address == addr)	/* got an address match */
 		{
 			/* now check the bank information to be sure */
 			if (comments->comment_info[i]->crc == c_crc)
 				return comments->comment_info[i]->text;
 		}
+	}
 
 	return 0x00;
 }
@@ -282,20 +275,19 @@ UINT32 debug_comment_all_change_count(running_machine *machine)
 UINT32 debug_comment_get_opcode_crc32(device_t *device, offs_t address)
 {
 	address_space *space = cpu_get_address_space(device, ADDRESS_SPACE_PROGRAM);
-	int i;
-	UINT32 crc;
-	UINT8 opbuf[64], argbuf[64];
+	cpu_device *cpudevice = downcast<cpu_device *>(device);
+
 	char buff[256];
 	offs_t numbytes;
-	cpu_device *cpudevice = downcast<cpu_device *>(device);
-	int maxbytes = cpudevice->max_opcode_bytes();
+	INT32 maxbytes = cpudevice->max_opcode_bytes();
 	UINT32 addrmask = space->logaddrmask();
+	UINT8 opbuf[64], argbuf[64];
 
 	memset(opbuf, 0x00, sizeof(opbuf));
 	memset(argbuf, 0x00, sizeof(argbuf));
 
 	// fetch the bytes up to the maximum
-	for (i = 0; i < maxbytes; i++)
+	for (int i = 0; i < maxbytes; i++)
 	{
 		opbuf[i] = debug_read_opcode(space, address + i, 1, FALSE);
 		argbuf[i] = debug_read_opcode(space, address + i, 1, TRUE);
@@ -304,7 +296,7 @@ UINT32 debug_comment_get_opcode_crc32(device_t *device, offs_t address)
 	numbytes = device->debug()->disassemble(buff, address & addrmask, opbuf, argbuf) & DASMFLAG_LENGTHMASK;
 	numbytes = space->address_to_byte(numbytes);
 
-	crc = crc32(0, argbuf, numbytes);
+	UINT32 crc = crc32(0, argbuf, numbytes);
 
 	return crc;
 }
@@ -325,28 +317,31 @@ void debug_comment_dump(device_t *device, offs_t addr)
 		for (i = 0; i < comments->comment_count; i++)
 			if (comments->comment_info[i]->is_valid)
 				logerror("%d : %s (%d %d)\n", i, comments->comment_info[i]->text,
-												 comments->comment_info[i]->address,
-												 comments->comment_info[i]->crc);
+								 comments->comment_info[i]->address,
+								 comments->comment_info[i]->crc);
 	}
 	else
 	{
 		UINT32 c_crc = debug_comment_get_opcode_crc32(device, addr);
 
 		for (i = 0; i < comments->comment_count; i++)
+		{
 			if (comments->comment_info[i]->address == addr)	/* got an address match */
 			{
 				/* now check the bank information to be sure */
 				if (comments->comment_info[i]->crc == c_crc)
 				{
 					logerror("%d : %s (%d %d)\n", addr,
-												  comments->comment_info[addr]->text,
-												  comments->comment_info[addr]->address,
-												  comments->comment_info[addr]->crc);
+								  comments->comment_info[addr]->text,
+								  comments->comment_info[addr]->address,
+								  comments->comment_info[addr]->crc);
 					ff = 1;
 				}
 			}
+		}
 
-		if (!ff) logerror("No comment exists for address : 0x%x\n", addr);
+		if (!ff)
+			logerror("No comment exists for address : 0x%x\n", addr);
 	}
 }
 
@@ -357,10 +352,11 @@ void debug_comment_dump(device_t *device, offs_t addr)
 
 int debug_comment_save(running_machine *machine)
 {
-	int j;
-	char crc_buf[20];
 	xml_data_node *root = xml_file_create();
-	xml_data_node *commentnode, *systemnode;
+	xml_data_node *commentnode;
+	xml_data_node *systemnode;
+
+	char crc_buf[20];
 	int total_comments = 0;
 
 	/* if we don't have a root, bail */
@@ -390,7 +386,7 @@ int debug_comment_save(running_machine *machine)
 				goto error;
 			xml_set_attribute(curnode, "tag", device->tag());
 
-			for (j = 0; j < comments->comment_count; j++)
+			for (int j = 0; j < comments->comment_count; j++)
 			{
 				xml_data_node *datanode = xml_add_child(curnode, "comment", xml_normalize_string(comments->comment_info[j]->text));
 				if (datanode == NULL)
@@ -442,7 +438,8 @@ int debug_comment_load(running_machine *machine)
 	astring fname(machine->basename(), ".cmt");
 	filerr = mame_fopen(SEARCHPATH_COMMENT, fname, OPEN_FLAG_READ, &fp);
 
-	if (filerr != FILERR_NONE) return 0;
+	if (filerr != FILERR_NONE)
+		return 0;
 	debug_comment_load_xml(machine, fp);
 	mame_fclose(fp);
 
@@ -451,8 +448,8 @@ int debug_comment_load(running_machine *machine)
 
 static int debug_comment_load_xml(running_machine *machine, mame_file *fp)
 {
-	int j;
 	xml_data_node *root, *commentnode, *systemnode, *cpunode, *datanode;
+
 	const char *name;
 	int version;
 
@@ -483,7 +480,7 @@ static int debug_comment_load_xml(running_machine *machine, mame_file *fp)
 		if (cpu != NULL)
 		{
 			debug_cpu_comment_group *comments = cpu->debug()->m_comments;
-			j = 0;
+			int j = 0;
 
 			for (datanode = xml_get_sibling(cpunode->child, "comment"); datanode; datanode = xml_get_sibling(datanode->next, "comment"))
 			{

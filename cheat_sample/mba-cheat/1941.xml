@@ -1,0 +1,147 @@
+<mamecheat version="1">
+
+  <cheat desc="Infinite Credits">
+    <script state="run">
+      <action>maincpu.pb@FF0D59=09</action>
+    </script>
+  </cheat>
+
+  <cheat desc="Invincibility - 1st Side Fighter">
+    <script state="run">
+      <action>maincpu.pb@FF9A64=02</action>
+      <action>maincpu.pb@FF9AE4=02</action>
+    </script>
+  </cheat>
+
+  <cheat desc="Invincibility - 2nd Side Fighter">
+    <script state="run">
+      <action>maincpu.pb@FF9964=02</action>
+      <action>maincpu.pb@FF99E4=02</action>
+    </script>
+  </cheat>
+
+  <cheat desc="Rapid Fire - 1st Side Fighter">
+    <script state="run">
+      <action>maincpu.pb@FF9A6D=03</action>
+      <action>maincpu.pb@FF9AED=03</action>
+    </script>
+  </cheat>
+
+  <cheat desc="Rapid Fire - 2nd Side Fighter">
+    <script state="run">
+      <action>maincpu.pb@FF996D=03</action>
+      <action>maincpu.pb@FF99ED=03</action>
+    </script>
+  </cheat>
+
+  <cheat desc=" "/>
+
+  <cheat desc="Infinite Energy PL1">
+    <script state="run">
+      <action>maincpu.pb@FF0DA5=07</action>
+    </script>
+  </cheat>
+
+  <cheat desc="Invincibility PL1">
+    <parameter>
+      <item value="0x01">Enabled</item>
+      <item value="0x00">Disabled</item>
+    </parameter>
+    <script state="run">
+      <action>maincpu.pb@FF0DFA=param</action>
+    </script>
+  </cheat>
+
+  <cheat desc="Rapid Fire PL1">
+    <script state="run">
+      <action>maincpu.pb@FF1471=03</action>
+      <action>maincpu.pb@FF3871=03</action> <!-- 1st = Player -->
+      <action>maincpu.pb@FF38F1=03</action> <!-- 2nd + 3rd = Afterimages -->
+    </script>
+  </cheat>
+
+  <cheat desc="Infinite Weapon Time PL1">
+    <script state="run">
+      <action>maincpu.pb@FF0DE7=99</action>
+    </script>
+  </cheat>
+
+  <cheat desc="Select Weapon PL1">
+    <parameter>
+      <item value="0x00">Normal</item>
+      <item value="0x01">M. Gun</item>
+      <item value="0x02">S. Shell</item>
+      <item value="0x03">Missile</item>
+    </parameter>
+    <script state="run">
+      <action>maincpu.pb@FF0DC8=param</action>
+    </script>
+  </cheat>
+
+  <cheat desc="Extreme Firepower PL1">
+    <script state="run">
+      <action>maincpu.pb@FFC578=06</action>
+    </script>
+  </cheat>
+
+  <cheat desc=" "/>
+
+  <cheat desc="Infinite Energy PL2">
+    <script state="run">
+      <action>maincpu.pb@FF0DA7=07</action>
+    </script>
+  </cheat>
+
+  <cheat desc="Invincibility PL2">
+    <parameter>
+      <item value="0x01">Enabled</item>
+      <item value="0x00">Disabled</item>
+    </parameter>
+    <script state="run">
+      <action>maincpu.pb@FF0DFB=param</action>
+    </script>
+  </cheat>
+
+  <cheat desc="Rapid Fire PL2">
+    <script state="run">
+      <action>maincpu.pb@FF14F1=03</action>
+      <action>maincpu.pb@FF3971=03</action> <!-- 1st = Player -->
+      <action>maincpu.pb@FF39F1=03</action> <!-- 2nd + 3rd = Afterimages -->
+    </script>
+  </cheat>
+
+  <cheat desc="Infinite Weapon Time PL2">
+    <script state="run">
+      <action>maincpu.pb@FF0DE8=99</action>
+    </script>
+  </cheat>
+
+  <cheat desc="Select Weapon PL2">
+    <parameter>
+      <item value="0x00">Normal</item>
+      <item value="0x01">M. Gun</item>
+      <item value="0x02">S. Shell</item>
+      <item value="0x03">Missile</item>
+    </parameter>
+    <script state="run">
+      <action>maincpu.pb@FF0DCB=param</action>
+    </script>
+  </cheat>
+
+  <cheat desc="Extreme Firepower PL2">
+    <script state="run">
+      <action>maincpu.pb@FFC57C=07</action>
+    </script>
+  </cheat>
+
+  <cheat desc=" "/>
+
+  <cheat desc="Sound Test">
+    <parameter min="1" max="255" step="1"/>
+    <script state="change">
+      <action>maincpu.pb@800181=param</action>
+    </script>
+  </cheat>
+
+</mamecheat>
+<!-- Cheat file downloaded from http://www.mamecheat.co.uk, see cheat.txt for list of contributors. -->

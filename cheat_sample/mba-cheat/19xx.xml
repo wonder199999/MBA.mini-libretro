@@ -1,0 +1,174 @@
+<mamecheat version="1">
+
+  <cheat desc="Infinite Credits">
+    <script state="run">
+      <action>maincpu.pb@FF4D15=09</action>
+    </script>
+  </cheat>
+
+  <cheat desc="Select the Starting Level"> <comment>Use on ship select screen. NOTE, Level 7 is usually linked from level 6 - ignore the strange effect if you jump directly to it.</comment>
+    <parameter min="1" max="7" step="1"/>
+    <script state="change">
+      <action>maincpu.pb@FF4DD4=(param-1)</action>
+    </script>
+  </cheat>
+
+  <cheat desc=" "/>
+
+  <cheat desc="Infinite Lives PL1">
+    <script state="run">
+      <action>maincpu.pb@FF82EC=06</action>
+    </script>
+  </cheat>
+
+  <cheat desc="Infinite Bombs PL1">
+    <script state="run">
+      <action>maincpu.pb@FF8305=06</action>
+    </script>
+  </cheat>
+
+  <cheat desc="Invincibility PL1">
+    <script state="run">
+      <action>maincpu.pb@FF8244=02</action>
+      <action>maincpu.pb@FF82F2=FF</action>
+    </script>
+  </cheat>
+
+  <cheat desc="Select Weapon PL1">
+    <parameter>
+      <item value="0x00">Normal</item>
+      <item value="0x04">Flames</item>
+      <item value="0x08">3-way</item>
+      <item value="0x0C">Shell</item>
+    </parameter>
+    <script state="run">
+      <action>maincpu.pb@FF82F1=param</action>
+    </script>
+  </cheat>
+
+  <cheat desc="Always have Max Bomb Power PL1">
+    <script state="run">
+      <action>maincpu.pb@FF830F=02</action>
+    </script>
+  </cheat>
+
+  <cheat desc="Always have Maximum Bonus PL1">
+    <script state="run">
+      <action>maincpu.pb@FF8328=1D</action>
+    </script>
+  </cheat>
+
+  <cheat desc="Always have Power up PL1">
+    <script state="run">
+      <action>maincpu.pb@FF8337=FF</action>
+    </script>
+  </cheat>
+
+  <cheat desc="Select Plane PL1"> <comment>You will need to die or complete the level to see any effect if you select during the game</comment>
+    <parameter>
+      <item value="0x00">Lightning</item>
+      <item value="0x01">Sinden</item>
+      <item value="0x02">Mosquito</item>
+    </parameter>
+    <script state="run">
+      <action>maincpu.pb@FF8247=param</action>
+    </script>
+  </cheat>
+
+  <cheat desc=" "/>
+
+  <cheat desc="Infinite Lives PL2">
+    <script state="run">
+      <action>maincpu.pb@FF83EC=06</action>
+    </script>
+  </cheat>
+
+  <cheat desc="Infinite Bombs PL2">
+    <script state="run">
+      <action>maincpu.pb@FF8405=06</action>
+    </script>
+  </cheat>
+
+  <cheat desc="Invincibility PL2">
+    <script state="run">
+      <action>maincpu.pb@FF8344=02</action>
+      <action>maincpu.pb@FF83F2=FF</action>
+    </script>
+  </cheat>
+
+  <cheat desc="Select Weapon PL2">
+    <parameter>
+      <item value="0x00">Normal</item>
+      <item value="0x04">Flames</item>
+      <item value="0x08">3-way</item>
+      <item value="0x0C">Shell</item>
+    </parameter>
+    <script state="run">
+      <action>maincpu.pb@FF83F1=param</action>
+    </script>
+  </cheat>
+
+  <cheat desc="Always have Max Bomb Power PL2">
+    <script state="run">
+      <action>maincpu.pb@FF840F=02</action>
+    </script>
+  </cheat>
+
+  <cheat desc="Always have Maximum Bonus PL2">
+    <script state="run">
+      <action>maincpu.pb@FF8428=1D</action>
+    </script>
+  </cheat>
+
+  <cheat desc="Always have Power up PL2">
+    <script state="run">
+      <action>maincpu.pb@FF8437=FF</action>
+    </script>
+  </cheat>
+
+  <cheat desc="Select Plane PL2"> <comment>You will need to die or complete the level to see any effect if you select during the game</comment>
+    <parameter>
+      <item value="0x00">Lightning</item>
+      <item value="0x01">Sinden</item>
+      <item value="0x02">Mosquito</item>
+    </parameter>
+    <script state="run">
+      <action>maincpu.pb@FF8347=param</action>
+    </script>
+  </cheat>
+
+  <cheat desc=" "/>
+
+  <cheat desc="Select Region"> <comment>This cheat sets the machine region - the effectiveness may vary! You have to enable this ASAP - ON or before the ROM check screen! Or enable + RESET</comment>
+    <parameter>
+      <item value="0x00">Japan</item>
+      <item value="0x01">USA</item>
+      <item value="0x02">Asia</item>
+      <item value="0x03">Hispanic</item>
+      <item value="0x04">Euro</item>
+      <item value="0x05">Brazil</item>
+    </parameter>
+    <script state="run">
+      <action>maincpu.pb@FF4D6E=param</action>
+    </script>
+  </cheat>
+
+  <cheat desc="Sound Test">
+    <parameter min="1" max="528" step="1"/>
+    <script state="change">
+      <action>audiocpu.pw@F007=0000</action>
+      <action>audiocpu.pq@F100=0000FF0000FF00FF</action>
+      <action>audiocpu.pq@F108=00FFFF0000000000</action>
+      <action>audiocpu.pq@F110=1000FF0000FF0000</action>
+      <action>audiocpu.pq@F118=00FFFF0000000000</action>
+      <action>audiocpu.pb@F111=param</action>
+      <action condition="(param LT 100)">audiocpu.pb@F111=param</action>
+      <action>temp0=param/100</action>
+      <action condition="(param GE 100)">audiocpu.pb@F110=temp0</action>
+      <action condition="(param GE 100)">audiocpu.pb@F111=param-(temp0*100)</action>
+      <action>audiocpu.pb@F007=20</action>
+    </script>
+  </cheat>
+
+</mamecheat>
+<!-- Cheat file downloaded from http://www.mamecheat.co.uk, see cheat.txt for list of contributors. -->

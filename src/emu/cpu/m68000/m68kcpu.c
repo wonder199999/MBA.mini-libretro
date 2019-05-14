@@ -3,7 +3,6 @@
 /* ======================================================================== */
 
 #include "emu.h"
-#include "debugger.h"
 #include <setjmp.h>
 #include "m68kcpu.h"
 #include "m68kops.h"
@@ -254,9 +253,6 @@ static CPU_EXECUTE( m68k )
 		{
 			/* Set tracing accodring to T1. (T0 is done inside instruction) */
 			m68ki_trace_t1(); /* auto-disable (see m68kcpu.h) */
-
-			/* Call external hook to peek at CPU */
-			debugger_instruction_hook(device, REG_PC);
 
 			/* Record previous program counter */
 			REG_PPC = REG_PC;

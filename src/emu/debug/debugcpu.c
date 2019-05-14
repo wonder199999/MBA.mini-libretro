@@ -65,29 +65,29 @@ enum
 /* in mame.h: typedef struct _debugcpu_private debugcpu_private; */
 struct _debugcpu_private
 {
-	device_t *livecpu;
-	device_t *visiblecpu;
-	device_t *breakcpu;
+	device_t	*livecpu;
+	device_t	*visiblecpu;
+	device_t	*breakcpu;
 
-	FILE *			source_file;				/* script source file */
+	FILE		*source_file;			/* script source file */
 
-	symbol_table *	symtable;					/* global symbol table */
+	symbol_table	*symtable;			/* global symbol table */
 
-	bool			within_instruction_hook;
-	bool			vblank_occurred;
-	bool			memory_modified;
-	bool			debugger_access;
+	bool		 within_instruction_hook;
+	bool		 vblank_occurred;
+	bool		 memory_modified;
+	bool		 debugger_access;
 
-	int				execution_state;
+	int		 execution_state;
 
-	UINT32			bpindex;
-	UINT32			wpindex;
+	UINT32		 bpindex;
+	UINT32		 wpindex;
 
-	UINT64			wpdata;
-	UINT64			wpaddr;
-	UINT64			tempvar[NUM_TEMP_VARIABLES];
+	UINT64		 wpdata;
+	UINT64		 wpaddr;
+	UINT64		 tempvar[NUM_TEMP_VARIABLES];
 
-	osd_ticks_t 	last_periodic_update_time;
+	osd_ticks_t 	 last_periodic_update_time;
 };
 
 
@@ -200,7 +200,7 @@ void debug_cpu_init(running_machine *machine)
 void debug_cpu_flush_traces(running_machine *machine)
 {
 	/* this can be called on exit even when no debugging is enabled, so
-     make sure the devdebug is valid before proceeding */
+	   make sure the devdebug is valid before proceeding */
 	for (device_t *device = machine->m_devicelist.first(); device != NULL; device = device->next())
 		if (device->debug() != NULL)
 			device->debug()->trace_flush();
@@ -320,6 +320,7 @@ int debug_cpu_translate(address_space *space, int intention, offs_t *address)
 	device_memory_interface *memory;
 	if (space->cpu->interface(memory))
 		return memory->translate(space->spacenum(), intention, *address);
+
 	return true;
 }
 
@@ -360,6 +361,7 @@ UINT8 debug_read_byte(address_space *_space, offs_t address, int apply_translati
 
 	/* no longer accessing via the debugger */
 	space->set_debugger_access(global->debugger_access = false);
+
 	return result;
 }
 
@@ -379,7 +381,7 @@ UINT16 debug_read_word(address_space *_space, offs_t address, int apply_translat
 	address &= space->logbytemask();
 
 	/* if this is misaligned read, or if there are no word readers, just read two bytes */
-	if ((address & 1) != 0)
+	if ((address & 0x01) != 0)
 	{
 		UINT8 byte0 = debug_read_byte(space, address + 0, apply_translation);
 		UINT8 byte1 = debug_read_byte(space, address + 1, apply_translation);
@@ -434,7 +436,7 @@ UINT32 debug_read_dword(address_space *_space, offs_t address, int apply_transla
 	address &= space->logbytemask();
 
 	/* if this is misaligned read, or if there are no dword readers, just read two words */
-	if ((address & 3) != 0)
+	if ((address & 0x03) != 0)
 	{
 		UINT16 word0 = debug_read_word(space, address + 0, apply_translation);
 		UINT16 word1 = debug_read_word(space, address + 2, apply_translation);
@@ -489,7 +491,7 @@ UINT64 debug_read_qword(address_space *_space, offs_t address, int apply_transla
 	address &= space->logbytemask();
 
 	/* if this is misaligned read, or if there are no qword readers, just read two dwords */
-	if ((address & 7) != 0)
+	if ((address & 0x07) != 0)
 	{
 		UINT32 dword0 = debug_read_dword(space, address + 0, apply_translation);
 		UINT32 dword1 = debug_read_dword(space, address + 4, apply_translation);
@@ -536,7 +538,7 @@ UINT64 debug_read_qword(address_space *_space, offs_t address, int apply_transla
 
 UINT64 debug_read_memory(address_space *space, offs_t address, int size, int apply_translation)
 {
-	UINT64 result = ~(UINT64)0 >> (64 - 8*size);
+	UINT64 result = ~(UINT64)0 >> (64 - 8 * size);
 	switch (size)
 	{
 		case 1:		result = debug_read_byte(space, address, apply_translation);	break;
@@ -596,7 +598,7 @@ void debug_write_word(address_space *_space, offs_t address, UINT16 data, int ap
 	address &= space->logbytemask();
 
 	/* if this is a misaligned write, or if there are no word writers, just read two bytes */
-	if ((address & 1) != 0)
+	if ((address & 0x01) != 0)
 	{
 		if (space->endianness() == ENDIANNESS_LITTLE)
 		{
@@ -649,7 +651,7 @@ void debug_write_dword(address_space *_space, offs_t address, UINT32 data, int a
 	address &= space->logbytemask();
 
 	/* if this is a misaligned write, or if there are no dword writers, just read two words */
-	if ((address & 3) != 0)
+	if ((address & 0x03) != 0)
 	{
 		if (space->endianness() == ENDIANNESS_LITTLE)
 		{
@@ -702,7 +704,7 @@ void debug_write_qword(address_space *_space, offs_t address, UINT64 data, int a
 	address &= space->logbytemask();
 
 	/* if this is a misaligned write, or if there are no qword writers, just read two dwords */
-	if ((address & 7) != 0)
+	if ((address & 0x07) != 0)
 	{
 		if (space->endianness() == ENDIANNESS_LITTLE)
 		{
@@ -766,8 +768,10 @@ void debug_write_memory(address_space *space, offs_t address, UINT64 data, int s
 UINT64 debug_read_opcode(address_space *_space, offs_t address, int size, int arg)
 {
 	address_space *space = const_cast<address_space *>(_space);
-	UINT64 result = ~(UINT64)0 & (~(UINT64)0 >> (64 - 8*size)), result2;
 	debugcpu_private *global = space->machine->debugcpu_data;
+
+	UINT64 result = ~(UINT64)0 & (~(UINT64)0 >> (64 - 8 * size));
+	UINT64 result2;
 
 	/* keep in logical range */
 	address &= space->logbytemask();
@@ -865,46 +869,47 @@ UINT64 debug_read_opcode(address_space *_space, offs_t address, int size, int ar
 			break;
 
 		case 2:
-			result = (arg) ? space->direct().read_raw_word(address & ~1) : space->direct().read_decrypted_word(address & ~1);
-			if ((address & 1) != 0)
+			result = (arg) ? space->direct().read_raw_word(address & ~0x01) : space->direct().read_decrypted_word(address & ~0x01);
+			if ((address & 0x01) != 0)
 			{
-				result2 = (arg) ? space->direct().read_raw_word((address & ~1) + 2) : space->direct().read_decrypted_word((address & ~1) + 2);
+				result2 = (arg) ? space->direct().read_raw_word((address & ~0x01) + 2) : space->direct().read_decrypted_word((address & ~0x01) + 2);
 				if (space->endianness() == ENDIANNESS_LITTLE)
-					result = (result >> (8 * (address & 1))) | (result2 << (16 - 8 * (address & 1)));
+					result = (result >> (8 * (address & 0x01))) | (result2 << (16 - 8 * (address & 0x01)));
 				else
-					result = (result << (8 * (address & 1))) | (result2 >> (16 - 8 * (address & 1)));
+					result = (result << (8 * (address & 0x01))) | (result2 >> (16 - 8 * (address & 0x01)));
 				result &= 0xffff;
 			}
 			break;
 
 		case 4:
-			result = (arg) ? space->direct().read_raw_dword(address & ~3) : space->direct().read_decrypted_dword(address & ~3);
-			if ((address & 3) != 0)
+			result = (arg) ? space->direct().read_raw_dword(address & ~0x03) : space->direct().read_decrypted_dword(address & ~0x03);
+			if ((address & 0x03) != 0)
 			{
-				result2 = (arg) ? space->direct().read_raw_dword((address & ~3) + 4) : space->direct().read_decrypted_dword((address & ~3) + 4);
+				result2 = (arg) ? space->direct().read_raw_dword((address & ~0x03) + 4) : space->direct().read_decrypted_dword((address & ~0x03) + 4);
 				if (space->endianness() == ENDIANNESS_LITTLE)
-					result = (result >> (8 * (address & 3))) | (result2 << (32 - 8 * (address & 3)));
+					result = (result >> (8 * (address & 0x03))) | (result2 << (32 - 8 * (address & 0x03)));
 				else
-					result = (result << (8 * (address & 3))) | (result2 >> (32 - 8 * (address & 3)));
+					result = (result << (8 * (address & 0x03))) | (result2 >> (32 - 8 * (address & 0x03)));
 				result &= 0xffffffff;
 			}
 			break;
 
 		case 8:
-			result = (arg) ? space->direct().read_raw_qword(address & ~7) : space->direct().read_decrypted_qword(address & ~7);
-			if ((address & 7) != 0)
+			result = (arg) ? space->direct().read_raw_qword(address & ~0x07) : space->direct().read_decrypted_qword(address & ~0x07);
+			if ((address & 0x07) != 0)
 			{
-				result2 = (arg) ? space->direct().read_raw_qword((address & ~7) + 8) : space->direct().read_decrypted_qword((address & ~7) + 8);
+				result2 = (arg) ? space->direct().read_raw_qword((address & ~0x07) + 8) : space->direct().read_decrypted_qword((address & ~0x07) + 8);
 				if (space->endianness() == ENDIANNESS_LITTLE)
-					result = (result >> (8 * (address & 7))) | (result2 << (64 - 8 * (address & 7)));
+					result = (result >> (8 * (address & 0x07))) | (result2 << (64 - 8 * (address & 0x07)));
 				else
-					result = (result << (8 * (address & 7))) | (result2 >> (64 - 8 * (address & 7)));
+					result = (result << (8 * (address & 0x07))) | (result2 >> (64 - 8 * (address & 0x07)));
 			}
 			break;
 	}
 
 	/* no longer accessing via the debugger */
 	space->set_debugger_access(global->debugger_access = false);
+
 	return result;
 }
 
@@ -962,13 +967,12 @@ static void process_source_file(running_machine *machine)
 {
 	debugcpu_private *global = machine->debugcpu_data;
 
+	char buf[512];
+	int i;
+	char *s;
 	/* loop until the file is exhausted or until we are executing again */
 	while (global->source_file != NULL && global->execution_state == EXECUTION_STATE_STOPPED)
 	{
-		char buf[512];
-		int i;
-		char *s;
-
 		/* stop at the end of file */
 		if (feof(global->source_file))
 		{
@@ -979,7 +983,15 @@ static void process_source_file(running_machine *machine)
 
 		/* fetch the next line */
 		memset(buf, 0, sizeof(buf));
+
+#if defined(__GNUC__) && (__GNUC__ >= 7)
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-result"
+#endif
 		fgets(buf, sizeof(buf), global->source_file);
+#if defined(__GNUC__) && (__GNUC__ >= 7)
+#pragma GCC diagnostic pop
+#endif
 
 		/* strip out comments (text after '//') */
 		s = strstr(buf, "//");
@@ -988,7 +1000,8 @@ static void process_source_file(running_machine *machine)
 
 		/* strip whitespace */
 		i = (int)strlen(buf);
-		while((i > 0) && (isspace((UINT8)buf[i-1])))
+
+		while ((i > 0) && (isspace((UINT8)buf[i - 1])))
 			buf[--i] = '\0';
 
 		/* execute the command */
@@ -996,7 +1009,6 @@ static void process_source_file(running_machine *machine)
 			debug_console_execute_command(machine, buf, 1);
 	}
 }
-
 
 
 /***************************************************************************
@@ -1039,6 +1051,7 @@ static UINT64 expression_read_memory(void *param, const char *name, int spacenum
 		case EXPSPACE_DATA_LOGICAL:
 		case EXPSPACE_IO_LOGICAL:
 		case EXPSPACE_SPACE3_LOGICAL:
+		{
 			if (name != NULL)
 				device = expression_get_device(machine, name);
 			if (device == NULL)
@@ -1047,11 +1060,12 @@ static UINT64 expression_read_memory(void *param, const char *name, int spacenum
 			if (space != NULL)
 				result = debug_read_memory(space, space->address_to_byte(address), size, true);
 			break;
-
+		}
 		case EXPSPACE_PROGRAM_PHYSICAL:
 		case EXPSPACE_DATA_PHYSICAL:
 		case EXPSPACE_IO_PHYSICAL:
 		case EXPSPACE_SPACE3_PHYSICAL:
+		{
 			if (name != NULL)
 				device = expression_get_device(machine, name);
 			if (device == NULL)
@@ -1060,22 +1074,26 @@ static UINT64 expression_read_memory(void *param, const char *name, int spacenum
 			if (space != NULL)
 				result = debug_read_memory(space, space->address_to_byte(address), size, false);
 			break;
-
+		}
 		case EXPSPACE_OPCODE:
 		case EXPSPACE_RAMWRITE:
+		{
 			if (name != NULL)
 				device = expression_get_device(machine, name);
 			if (device == NULL)
 				device = debug_cpu_get_visible_cpu(machine);
 			result = expression_read_program_direct(cpu_get_address_space(device, ADDRESS_SPACE_PROGRAM), (spacenum == EXPSPACE_OPCODE), address, size);
 			break;
-
+		}
 		case EXPSPACE_REGION:
+		{
 			if (name == NULL)
 				break;
 			result = expression_read_memory_region(machine, name, address, size);
 			break;
+		}
 	}
+
 	return result;
 }
 
@@ -1095,18 +1113,17 @@ static UINT64 expression_read_program_direct(address_space *_space, int opcode, 
 		UINT8 *base;
 
 		/* adjust the address into a byte address, but not if being called recursively */
-		if ((opcode & 2) == 0)
+		if ((opcode & 0x02) == 0)
 			address = space->address_to_byte(address);
 
 		/* call ourself recursively until we are byte-sized */
 		if (size > 1)
 		{
 			int halfsize = size / 2;
-			UINT64 r0, r1;
 
 			/* read each half, from lower address to upper address */
-			r0 = expression_read_program_direct(space, opcode | 2, address + 0, halfsize);
-			r1 = expression_read_program_direct(space, opcode | 2, address + halfsize, halfsize);
+			UINT64 r0 = expression_read_program_direct(space, opcode | 2, address + 0, halfsize);
+			UINT64 r1 = expression_read_program_direct(space, opcode | 2, address + halfsize, halfsize);
 
 			/* assemble based on the target endianness */
 			if (space->endianness() == ENDIANNESS_LITTLE)
@@ -1122,7 +1139,7 @@ static UINT64 expression_read_program_direct(address_space *_space, int opcode, 
 			offs_t lowmask = space->data_width() / 8 - 1;
 
 			/* get the base of memory, aligned to the address minus the lowbits */
-			if (opcode & 1)
+			if (opcode & 0x01)
 				base = (UINT8 *)space->direct().read_decrypted_ptr(address & ~lowmask);
 			else
 				base = (UINT8 *)space->get_read_ptr(address & ~lowmask);
@@ -1137,6 +1154,7 @@ static UINT64 expression_read_program_direct(address_space *_space, int opcode, 
 			}
 		}
 	}
+
 	return result;
 }
 
@@ -1158,11 +1176,10 @@ static UINT64 expression_read_memory_region(running_machine *machine, const char
 		if (size > 1)
 		{
 			int halfsize = size / 2;
-			UINT64 r0, r1;
 
 			/* read each half, from lower address to upper address */
-			r0 = expression_read_memory_region(machine, rgntag, address + 0, halfsize);
-			r1 = expression_read_memory_region(machine, rgntag, address + halfsize, halfsize);
+			UINT64 r0 = expression_read_memory_region(machine, rgntag, address + 0, halfsize);
+			UINT64 r1 = expression_read_memory_region(machine, rgntag, address + halfsize, halfsize);
 
 			/* assemble based on the target endianness */
 			if (region->endianness() == ENDIANNESS_LITTLE)
@@ -1185,6 +1202,7 @@ static UINT64 expression_read_memory_region(running_machine *machine, const char
 				result = base[BYTE8_XOR_BE(address) & lowmask];
 		}
 	}
+
 	return result;
 }
 
@@ -1207,6 +1225,7 @@ static void expression_write_memory(void *param, const char *name, int spacenum,
 		case EXPSPACE_DATA_LOGICAL:
 		case EXPSPACE_IO_LOGICAL:
 		case EXPSPACE_SPACE3_LOGICAL:
+		{
 			if (name != NULL)
 				device = expression_get_device(machine, name);
 			if (device == NULL)
@@ -1215,11 +1234,12 @@ static void expression_write_memory(void *param, const char *name, int spacenum,
 			if (space != NULL)
 				debug_write_memory(space, space->address_to_byte(address), data, size, true);
 			break;
-
+		}
 		case EXPSPACE_PROGRAM_PHYSICAL:
 		case EXPSPACE_DATA_PHYSICAL:
 		case EXPSPACE_IO_PHYSICAL:
 		case EXPSPACE_SPACE3_PHYSICAL:
+		{
 			if (name != NULL)
 				device = expression_get_device(machine, name);
 			if (device == NULL)
@@ -1228,21 +1248,24 @@ static void expression_write_memory(void *param, const char *name, int spacenum,
 			if (space != NULL)
 				debug_write_memory(space, space->address_to_byte(address), data, size, false);
 			break;
-
+		}
 		case EXPSPACE_OPCODE:
 		case EXPSPACE_RAMWRITE:
+		{
 			if (name != NULL)
 				device = expression_get_device(machine, name);
 			if (device == NULL)
 				device = debug_cpu_get_visible_cpu(machine);
 			expression_write_program_direct(cpu_get_address_space(device, ADDRESS_SPACE_PROGRAM), (spacenum == EXPSPACE_OPCODE), address, size, data);
 			break;
-
+		}
 		case EXPSPACE_REGION:
+		{
 			if (name == NULL)
 				break;
 			expression_write_memory_region(machine, name, address, size, data);
 			break;
+		}
 	}
 }
 
@@ -1261,17 +1284,17 @@ static void expression_write_program_direct(address_space *_space, int opcode, o
 		UINT8 *base;
 
 		/* adjust the address into a byte address, but not if being called recursively */
-		if ((opcode & 2) == 0)
+		if ((opcode & 0x02) == 0)
 			address = space->address_to_byte(address);
 
 		/* call ourself recursively until we are byte-sized */
 		if (size > 1)
 		{
 			int halfsize = size / 2;
-			UINT64 r0, r1, halfmask;
+			UINT64 r0, r1;
 
 			/* break apart based on the target endianness */
-			halfmask = ~(UINT64)0 >> (64 - 8 * halfsize);
+			UINT64 halfmask = ~(UINT64)0 >> (64 - 8 * halfsize);
 			if (space->endianness() == ENDIANNESS_LITTLE)
 			{
 				r0 = data & halfmask;
@@ -1295,7 +1318,7 @@ static void expression_write_program_direct(address_space *_space, int opcode, o
 			offs_t lowmask = space->data_width() / 8 - 1;
 
 			/* get the base of memory, aligned to the address minus the lowbits */
-			if (opcode & 1)
+			if (opcode & 0x01)
 				base = (UINT8 *)space->direct().read_decrypted_ptr(address & ~lowmask);
 			else
 				base = (UINT8 *)space->get_read_ptr(address & ~lowmask);
@@ -1307,6 +1330,7 @@ static void expression_write_program_direct(address_space *_space, int opcode, o
 					base[BYTE8_XOR_LE(address) & lowmask] = data;
 				else
 					base[BYTE8_XOR_BE(address) & lowmask] = data;
+
 				global->memory_modified = true;
 			}
 		}
@@ -1331,10 +1355,10 @@ static void expression_write_memory_region(running_machine *machine, const char 
 		if (size > 1)
 		{
 			int halfsize = size / 2;
-			UINT64 r0, r1, halfmask;
+			UINT64 r0, r1;
 
 			/* break apart based on the target endianness */
-			halfmask = ~(UINT64)0 >> (64 - 8 * halfsize);
+			UINT64 halfmask = ~(UINT64)0 >> (64 - 8 * halfsize);
 			if (region->endianness() == ENDIANNESS_LITTLE)
 			{
 				r0 = data & halfmask;
@@ -1363,6 +1387,7 @@ static void expression_write_memory_region(running_machine *machine, const char 
 				base[BYTE8_XOR_LE(address) & lowmask] = data;
 			else
 				base[BYTE8_XOR_BE(address) & lowmask] = data;
+
 			global->memory_modified = true;
 		}
 	}
@@ -1386,6 +1411,7 @@ static EXPRERR expression_validate(void *param, const char *name, int space)
 		case EXPSPACE_DATA_LOGICAL:
 		case EXPSPACE_IO_LOGICAL:
 		case EXPSPACE_SPACE3_LOGICAL:
+		{
 			if (name != NULL)
 			{
 				device = expression_get_device(machine, name);
@@ -1397,11 +1423,12 @@ static EXPRERR expression_validate(void *param, const char *name, int space)
 			if (cpu_get_address_space(device, ADDRESS_SPACE_PROGRAM + (space - EXPSPACE_PROGRAM_LOGICAL)) == NULL)
 				return EXPRERR_NO_SUCH_MEMORY_SPACE;
 			break;
-
+		}
 		case EXPSPACE_PROGRAM_PHYSICAL:
 		case EXPSPACE_DATA_PHYSICAL:
 		case EXPSPACE_IO_PHYSICAL:
 		case EXPSPACE_SPACE3_PHYSICAL:
+		{
 			if (name != NULL)
 			{
 				device = expression_get_device(machine, name);
@@ -1413,9 +1440,10 @@ static EXPRERR expression_validate(void *param, const char *name, int space)
 			if (cpu_get_address_space(device, ADDRESS_SPACE_PROGRAM + (space - EXPSPACE_PROGRAM_PHYSICAL)) == NULL)
 				return EXPRERR_NO_SUCH_MEMORY_SPACE;
 			break;
-
+		}
 		case EXPSPACE_OPCODE:
 		case EXPSPACE_RAMWRITE:
+		{
 			if (name != NULL)
 			{
 				device = expression_get_device(machine, name);
@@ -1427,14 +1455,17 @@ static EXPRERR expression_validate(void *param, const char *name, int space)
 			if (cpu_get_address_space(device, ADDRESS_SPACE_PROGRAM) == NULL)
 				return EXPRERR_NO_SUCH_MEMORY_SPACE;
 			break;
-
+		}
 		case EXPSPACE_REGION:
+		{
 			if (name == NULL)
 				return EXPRERR_MISSING_MEMORY_NAME;
 			if (memory_region(machine, name) == NULL)
 				return EXPRERR_INVALID_MEMORY_NAME;
 			break;
+		}
 	}
+
 	return EXPRERR_NONE;
 }
 
@@ -1532,8 +1563,8 @@ static UINT64 get_cpunum(void *globalref, void *ref)
 {
 	running_machine *machine = (running_machine *)globalref;
 	device_t *target = machine->debugcpu_data->visiblecpu;
-
 	device_execute_interface *exec = NULL;
+
 	int index = 0;
 	for (bool gotone = machine->m_devicelist.first(exec); gotone; gotone = exec->next(exec))
 	{
@@ -1541,9 +1572,9 @@ static UINT64 get_cpunum(void *globalref, void *ref)
 			return index;
 		index++;
 	}
+
 	return 0;
 }
-
 
 
 //**************************************************************************
@@ -1664,7 +1695,7 @@ void device_debug::start_hook(attotime endtime)
 	if (global->execution_state != EXECUTION_STATE_STOPPED)
 	{
 		// check for periodic updates
-		if (&m_device == global->visiblecpu && osd_ticks() > global->last_periodic_update_time + osd_ticks_per_second()/4)
+		if (&m_device == global->visiblecpu && osd_ticks() > global->last_periodic_update_time + osd_ticks_per_second() / 4)
 		{
 			m_device.machine->m_debug_view->update_all();
 			m_device.machine->m_debug_view->flush_osd_updates();
@@ -1860,6 +1891,7 @@ void device_debug::instruction_hook(offs_t curpc)
 				osd_wait_for_debugger(&m_device, firststop);
 			else if (m_device.machine->debug_flags & DEBUG_FLAG_ENABLED)
 				debugint_wait_for_debugger(&m_device, firststop);
+
 			firststop = false;
 
 			// if something modified memory, update the screen
@@ -1956,14 +1988,14 @@ offs_t device_debug::disassemble(char *buffer, offs_t pc, const UINT8 *oprom, co
 	// make sure we get good results
 	assert((result & DASMFLAG_LENGTHMASK) != 0);
 #ifdef MAME_DEBUG
-if (m_memory != NULL && m_disasm != NULL)
-{
-	address_space *space = m_memory->space(AS_PROGRAM);
-	int bytes = space->address_to_byte(result & DASMFLAG_LENGTHMASK);
-	assert(bytes >= m_disasm->min_opcode_bytes());
-	assert(bytes <= m_disasm->max_opcode_bytes());
-	(void) bytes; // appease compiler
-}
+	if (m_memory != NULL && m_disasm != NULL)
+	{
+		address_space *space = m_memory->space(AS_PROGRAM);
+		int bytes = space->address_to_byte(result & DASMFLAG_LENGTHMASK);
+		assert(bytes >= m_disasm->min_opcode_bytes());
+		assert(bytes <= m_disasm->max_opcode_bytes());
+		(void) bytes;		// appease compiler
+	}
 #endif
 
 	return result;
@@ -2193,6 +2225,7 @@ int device_debug::breakpoint_set(offs_t address, parsed_expression *condition, c
 
 	// update the flags and return the index
 	breakpoint_update_flags();
+
 	return bp->m_index;
 }
 
@@ -2206,6 +2239,7 @@ bool device_debug::breakpoint_clear(int index)
 {
 	// scan the list to see if we own this breakpoint
 	for (breakpoint **bp = &m_bplist; *bp != NULL; bp = &(*bp)->m_next)
+	{
 		if ((*bp)->m_index == index)
 		{
 			breakpoint *deleteme = *bp;
@@ -2214,6 +2248,7 @@ bool device_debug::breakpoint_clear(int index)
 			breakpoint_update_flags();
 			return true;
 		}
+	}
 
 	// we don't own it, return false
 	return false;
@@ -2241,12 +2276,14 @@ bool device_debug::breakpoint_enable(int index, bool enable)
 {
 	// scan the list to see if we own this breakpoint
 	for (breakpoint *bp = m_bplist; bp != NULL; bp = bp->next())
+	{
 		if (bp->m_index == index)
 		{
 			bp->m_enabled = enable;
 			breakpoint_update_flags();
 			return true;
 		}
+	}
 
 	// we don't own it, return false
 	return false;
@@ -2284,6 +2321,7 @@ int device_debug::watchpoint_set(address_space &space, int type, offs_t address,
 
 	// update the flags and return the index
 	watchpoint_update_flags(wp->m_space);
+
 	return wp->m_index;
 }
 
@@ -2297,7 +2335,9 @@ bool device_debug::watchpoint_clear(int index)
 {
 	// scan the list to see if we own this breakpoint
 	for (int spacenum = 0; spacenum < ARRAY_LENGTH(m_wplist); spacenum++)
+	{
 		for (watchpoint **wp = &m_wplist[spacenum]; *wp != NULL; wp = &(*wp)->m_next)
+		{
 			if ((*wp)->m_index == index)
 			{
 				watchpoint *deleteme = *wp;
@@ -2307,6 +2347,8 @@ bool device_debug::watchpoint_clear(int index)
 				watchpoint_update_flags(space);
 				return true;
 			}
+		}
+	}
 
 	// we don't own it, return false
 	return false;
@@ -2335,13 +2377,17 @@ bool device_debug::watchpoint_enable(int index, bool enable)
 {
 	// scan the list to see if we own this watchpoint
 	for (int spacenum = 0; spacenum < ARRAY_LENGTH(m_wplist); spacenum++)
+	{
 		for (watchpoint *wp = m_wplist[spacenum]; wp != NULL; wp = wp->next())
+		{
 			if (wp->m_index == index)
 			{
 				wp->m_enabled = enable;
 				watchpoint_update_flags(wp->m_space);
 				return true;
 			}
+		}
+	}
 
 	// we don't own it, return false
 	return false;
@@ -2402,6 +2448,7 @@ offs_t device_debug::history_pc(int index) const
 		index = 0;
 	if (index <= -HISTORY_SIZE)
 		index = -HISTORY_SIZE + 1;
+
 	return m_pc_history[(m_pc_history_index + ARRAY_LENGTH(m_pc_history) - 1 + index) % ARRAY_LENGTH(m_pc_history)];
 }
 
@@ -2496,6 +2543,7 @@ void device_debug::prepare_for_step_overout(offs_t pc)
 		// if we need to skip additional instructions, advance as requested
 		while (extraskip-- > 0)
 			pc += dasm_wrapped(dasmbuffer, pc) & DASMFLAG_LENGTHMASK;
+
 		m_stepaddr = pc;
 	}
 
@@ -2520,11 +2568,13 @@ void device_debug::breakpoint_update_flags()
 	// see if there are any enabled breakpoints
 	m_flags &= ~DEBUG_FLAG_LIVE_BP;
 	for (breakpoint *bp = m_bplist; bp != NULL; bp = bp->m_next)
+	{
 		if (bp->m_enabled)
 		{
 			m_flags |= DEBUG_FLAG_LIVE_BP;
 			break;
 		}
+	}
 
 	// push the flags out globally
 	debugcpu_private *global = m_device.machine->debugcpu_data;
@@ -2542,6 +2592,7 @@ void device_debug::breakpoint_check(offs_t pc)
 {
 	// see if we match
 	for (breakpoint *bp = m_bplist; bp != NULL; bp = bp->m_next)
+	{
 		if (bp->hit(pc))
 		{
 			// halt in the debugger by default
@@ -2557,6 +2608,7 @@ void device_debug::breakpoint_check(offs_t pc)
 				debug_console_printf(m_device.machine, "Stopped at breakpoint %X\n", bp->m_index);
 			break;
 		}
+	}
 }
 
 
@@ -2575,6 +2627,7 @@ void device_debug::watchpoint_update_flags(address_space &space)
 	// see if there are any enabled breakpoints
 	bool enablewrite = false;
 	for (watchpoint *wp = m_wplist[space.spacenum()]; wp != NULL; wp = wp->m_next)
+	{
 		if (wp->m_enabled)
 		{
 			if (wp->m_type & WATCHPOINT_READ)
@@ -2582,6 +2635,7 @@ void device_debug::watchpoint_update_flags(address_space &space)
 			if (wp->m_type & WATCHPOINT_WRITE)
 				enablewrite = true;
 		}
+	}
 
 	// push the flags out globally
 	space.enable_read_watchpoints(enableread);
@@ -2636,6 +2690,7 @@ void device_debug::watchpoint_check(address_space &space, int type, offs_t addre
 
 	// see if we match
 	for (watchpoint *wp = m_wplist[space.spacenum()]; wp != NULL; wp = wp->m_next)
+	{
 		if (wp->hit(type, address, size))
 		{
 			// halt in the debugger by default
@@ -2670,6 +2725,7 @@ void device_debug::watchpoint_check(address_space &space, int type, offs_t addre
 			}
 			break;
 		}
+	}
 
 	global->within_instruction_hook = false;
 }
@@ -2737,6 +2793,7 @@ UINT32 device_debug::dasm_wrapped(astring &buffer, offs_t pc)
 	// fetch the bytes up to the maximum
 	UINT8 opbuf[64], argbuf[64];
 	int maxbytes = max_opcode_bytes();
+
 	for (int numbytes = 0; numbytes < maxbytes; numbytes++)
 	{
 		opbuf[numbytes] = debug_read_opcode(space, pcbyte + numbytes, 1, false);

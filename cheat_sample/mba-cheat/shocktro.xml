@@ -1,0 +1,270 @@
+<mamecheat version="1">
+
+  <cheat desc=" "/>
+  <cheat desc="TM1 = Team Member 1 or Solo ,"/>
+  <cheat desc="TM2 = Team Member 2,  TM3 = Team Member 3"/>
+  <cheat desc=" "/>
+
+  <cheat desc="Infinite Time">
+    <script state="run">
+      <action>maincpu.pb@108D01=99</action>
+    </script>
+  </cheat>
+
+  <cheat desc="Infinite Credits (Home) PL1"> <comment>Home Version Only!</comment>
+    <script state="run">
+      <action>maincpu.pb@108342=99</action>
+    </script>
+  </cheat>
+
+  <cheat desc="Infinite Energy PL1">
+    <script state="run">
+      <action>maincpu.pb@1001B5=80</action>
+    </script>
+  </cheat>
+
+  <cheat desc="Invincibility PL1">
+    <script state="run">
+      <action>maincpu.pb@100127=FF</action>
+    </script>
+  </cheat>
+
+  <cheat desc="Infinite Normal Ammo PL1">
+    <script state="run">
+      <action>maincpu.pb@108DBB=D0</action>
+    </script>
+  </cheat>
+
+  <cheat desc="Select Normal Weapon PL1">
+    <parameter>
+      <item value="0x00">Normal Gun</item>
+      <item value="0x04">Heavy Gun</item>
+      <item value="0x08">Vulcan Gun</item>
+      <item value="0x0C">3-Way Gun</item>
+      <item value="0x10">Buster Gun</item>
+      <item value="0x14">Flame Gun</item>
+      <item value="0x18">Rocket Gun</item>
+      <item value="0x1C">Missile Gun</item>
+      <item value="0x20">Hyper Gun</item>
+    </parameter>
+    <script state="run">
+      <action>maincpu.pb@108DB9=param</action>
+    </script>
+  </cheat>
+
+  <cheat desc="Infinite Special Ammo TM1 PL1">
+    <script state="run">
+      <action>maincpu.pb@108DC3=63</action>
+    </script>
+  </cheat>
+
+  <cheat desc="Select Special Weapon TM1 PL1">
+    <parameter>
+      <item value="0x00">Grenade</item>
+      <item value="0x04">Smoke Can</item>
+      <item value="0x08">Can Gun</item>
+      <item value="0x0C">Boomerang</item>
+      <item value="0x10">Missile Launcher</item>
+      <item value="0x14">Bow + Arrow</item>
+      <item value="0x18">Chemical</item>
+      <item value="0x1C">Bazooka</item>
+    </parameter>
+    <script state="run">
+      <action>maincpu.pb@108DC1=param</action>
+    </script>
+  </cheat>
+
+  <cheat desc="Infinite Special Ammo TM2 PL1">
+    <script state="run">
+      <action>maincpu.pb@108DC7=63</action>
+    </script>
+  </cheat>
+
+  <cheat desc="Select Special Weapon TM2 PL1">
+    <parameter>
+      <item value="0x00">Grenade</item>
+      <item value="0x04">Smoke Can</item>
+      <item value="0x08">Can Gun</item>
+      <item value="0x0C">Boomerang</item>
+      <item value="0x10">Missile Launcher</item>
+      <item value="0x14">Bow + Arrow</item>
+      <item value="0x18">Chemical</item>
+      <item value="0x1C">Bazooka</item>
+    </parameter>
+    <script state="run">
+      <action>maincpu.pb@108DC5=param</action>
+    </script>
+  </cheat>
+
+  <cheat desc="Infinite Special Ammo TM3 PL1">
+    <script state="run">
+      <action>maincpu.pb@108DCB=63</action>
+    </script>
+  </cheat>
+
+  <cheat desc="Select Special Weapon TM3 PL1">
+    <parameter>
+      <item value="0x00">Grenade</item>
+      <item value="0x04">Smoke Can</item>
+      <item value="0x08">Can Gun</item>
+      <item value="0x0C">Boomerang</item>
+      <item value="0x10">Missile Launcher</item>
+      <item value="0x14">Bow + Arrow</item>
+      <item value="0x18">Chemical</item>
+      <item value="0x1C">Bazooka</item>
+    </parameter>
+    <script state="run">
+      <action>maincpu.pb@108DC9=param</action>
+    </script>
+  </cheat>
+
+  <cheat desc=" "/>
+
+  <cheat desc="Infinite Credits (Home) PL2"> <comment>Home Version Only!</comment>
+    <script state="run">
+      <action>maincpu.pb@108343=99</action>
+    </script>
+  </cheat>
+
+  <cheat desc="Infinite Energy PL2">
+    <script state="run">
+      <action>maincpu.pb@1021B5=80</action>
+    </script>
+  </cheat>
+
+  <cheat desc="Invincibility PL2">
+    <script state="run">
+      <action>maincpu.pb@102127=FF</action>
+    </script>
+  </cheat>
+
+  <cheat desc="Infinite Normal Ammo PL2">
+    <script state="run">
+      <action>maincpu.pb@108FBB=D0</action>
+    </script>
+  </cheat>
+
+  <cheat desc="Select Normal Weapon PL2">
+    <parameter>
+      <item value="0x00">Normal Gun</item>
+      <item value="0x04">Heavy Gun</item>
+      <item value="0x08">Vulcan Gun</item>
+      <item value="0x0C">3-Way Gun</item>
+      <item value="0x10">Buster Gun</item>
+      <item value="0x14">Flame Gun</item>
+      <item value="0x18">Rocket Gun</item>
+      <item value="0x1C">Missile Gun</item>
+      <item value="0x20">Hyper Gun</item>
+    </parameter>
+    <script state="run">
+      <action>maincpu.pb@108FB9=param</action>
+    </script>
+  </cheat>
+
+  <cheat desc="Infinite Special Ammo TM1 PL2">
+    <script state="run">
+      <action>maincpu.pb@108FC3=63</action>
+    </script>
+  </cheat>
+
+  <cheat desc="Select Special Weapon TM1 PL2">
+    <parameter>
+      <item value="0x00">Grenade</item>
+      <item value="0x04">Smoke Can</item>
+      <item value="0x08">Can Gun</item>
+      <item value="0x0C">Boomerang</item>
+      <item value="0x10">Missile Launcher</item>
+      <item value="0x14">Bow + Arrow</item>
+      <item value="0x18">Chemical</item>
+      <item value="0x1C">Bazooka</item>
+    </parameter>
+    <script state="run">
+      <action>maincpu.pb@108FC1=param</action>
+    </script>
+  </cheat>
+
+  <cheat desc="Infinite Special Ammo TM2 PL2">
+    <script state="run">
+      <action>maincpu.pb@108FC7=63</action>
+    </script>
+  </cheat>
+
+  <cheat desc="Select Special Weapon TM2 PL2">
+    <parameter>
+      <item value="0x00">Grenade</item>
+      <item value="0x04">Smoke Can</item>
+      <item value="0x08">Can Gun</item>
+      <item value="0x0C">Boomerang</item>
+      <item value="0x10">Missile Launcher</item>
+      <item value="0x14">Bow + Arrow</item>
+      <item value="0x18">Chemical</item>
+      <item value="0x1C">Bazooka</item>
+    </parameter>
+    <script state="run">
+      <action>maincpu.pb@108FC5=param</action>
+    </script>
+  </cheat>
+
+  <cheat desc="Infinite Special Ammo TM3 PL2">
+    <script state="run">
+      <action>maincpu.pb@108FCB=63</action>
+    </script>
+  </cheat>
+
+  <cheat desc="Select Special Weapon TM3 PL2">
+    <parameter>
+      <item value="0x00">Grenade</item>
+      <item value="0x04">Smoke Can</item>
+      <item value="0x08">Can Gun</item>
+      <item value="0x0C">Boomerang</item>
+      <item value="0x10">Missile Launcher</item>
+      <item value="0x14">Bow + Arrow</item>
+      <item value="0x18">Chemical</item>
+      <item value="0x1C">Bazooka</item>
+    </parameter>
+    <script state="run">
+      <action>maincpu.pb@108FC9=param</action>
+    </script>
+  </cheat>
+
+  <cheat desc=" "/>
+
+  <cheat desc="Select Cartridge/NeoGeo Type"> <comment>Use in conjuction with the 'Skip RAM/ROM Checks' cheat for the best effect, then enable it and reset. The Home (NEOGEO) setting may open up other aspects of the game or it may even make the game unplayable.</comment>
+    <parameter>
+      <item value="0x80">Arcade (MVS)</item>
+      <item value="0x00">Home (NEOGEO)</item>
+    </parameter>
+    <script state="run">
+      <action>maincpu.pb@10FD82=param</action>
+    </script>
+  </cheat>
+
+  <cheat desc="Skip RAM/ROM Checks"> <comment>Also allows a quicker start-up without the green screens. It's better to use together with Pre-Enable.</comment>
+    <script state="on">
+      <action>temp0 =maincpu.rd@C1315C</action>
+      <action>temp1 =maincpu.rd@C1314E</action>
+      <action>temp2 =maincpu.rd@C131E8</action>
+      <action>temp3 =maincpu.rd@C13184</action>
+      <action>temp4 =maincpu.rd@C1212E</action>
+      <action>temp5 =maincpu.rd@C134FA</action>
+    </script>
+    <script state="run">
+      <action condition="(maincpu.rd@C1315C==51CFFFF2)">maincpu.rd@C1315C=6000EB08</action> <!-- Euro + Japan-S2 BIOSs -->
+      <action condition="(maincpu.rd@C1314E==51CFFFF2)">maincpu.rd@C1314E=6000EB16</action> <!-- Euro-S1 + Japan-S1 BIOSs -->
+      <action condition="(maincpu.rd@C131E8==51CFFFF2)">maincpu.rd@C131E8=6000EA52</action> <!-- US BIOS -->
+      <action condition="(maincpu.rd@C13184==51CFFFF2)">maincpu.rd@C13184=6000EAB6</action> <!-- US-E BIOS -->
+      <action condition="(maincpu.rd@C1212E==51CFFFF2)">maincpu.rd@C1212E=6000EB36</action> <!-- Asia BIOS -->
+      <action condition="(maincpu.rd@C134FA==51CFFFF2)">maincpu.rd@C134FA=6000E892</action> <!-- Japan BIOS -->
+    </script>
+    <script state="off">
+      <action>maincpu.rd@C1315C=temp0 </action>
+      <action>maincpu.rd@C1314E=temp1 </action>
+      <action>maincpu.rd@C131E8=temp2 </action>
+      <action>maincpu.rd@C13184=temp3 </action>
+      <action>maincpu.rd@C1212E=temp4 </action>
+      <action>maincpu.rd@C134FA=temp5 </action>
+    </script>
+  </cheat>
+
+</mamecheat>
+<!-- Cheat file downloaded from http://www.mamecheat.co.uk, see cheat.txt for list of contributors. -->

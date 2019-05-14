@@ -44,9 +44,9 @@
 #include "textbuf.h"
 
 
-//**************************************************************************
-//  TYPE DEFINITIONS
-//**************************************************************************
+/*************************************************************************/
+/*	TYPE DEFINITIONS						 */
+/*************************************************************************/
 
 // debug_view_textbuf contains data specific to a textbuffer view
 class debug_view_textbuf : public debug_view
@@ -65,9 +65,9 @@ protected:
 
 private:
 	// internal state
-	text_buffer &		m_textbuf;				/* pointer to the text buffer */
-	bool				m_at_bottom;				/* are we tracking new stuff being added? */
-	UINT32				m_topseq;					/* sequence number of the top line */
+	text_buffer	&m_textbuf;		/* pointer to the text buffer */
+	bool		 m_at_bottom;		/* are we tracking new stuff being added? */
+	UINT32		 m_topseq;		/* sequence number of the top line */
 };
 
 
@@ -87,4 +87,4 @@ class debug_view_log : public debug_view_textbuf
 };
 
 
-#endif
+#endif	/* __DVTEXT_H__ */

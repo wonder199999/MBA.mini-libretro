@@ -19,7 +19,6 @@
 ****************************************************************************/
 
 #include "emu.h"
-#include "debugger.h"
 
 typedef UINT8	BOOLEAN;
 typedef UINT8	BYTE;
@@ -61,7 +60,7 @@ INLINE void prefetch(v25_state_t *nec_state)
 
 static void do_prefetch(v25_state_t *nec_state, int previous_ICount)
 {
-	int diff = previous_ICount - (int) nec_state->icount;
+	int diff = previous_ICount - (int)nec_state->icount;
 
 	/* The implementation is not accurate, but comes close.
 	 * It does not respect that the V30 will fetch two bytes
@@ -97,7 +96,7 @@ INLINE UINT8 fetch(v25_state_t *nec_state)
 {
 	prefetch(nec_state);
 
-	return nec_state->direct->read_raw_byte(FETCH_XOR((Sreg(PS)<<4)+nec_state->ip++));
+	return nec_state->direct->read_raw_byte(FETCH_XOR((Sreg(PS) << 4) + nec_state->ip++));
 }
 
 INLINE UINT16 fetchword(v25_state_t *nec_state)
@@ -361,7 +360,6 @@ static CPU_EXECUTE( v25 )
 		if (nec_state->no_interrupt)
 			nec_state->no_interrupt--;
 
-		debugger_instruction_hook(device, (Sreg(PS) << 4) + nec_state->ip);
 		prev_ICount = nec_state->icount;
 		nec_instruction[fetchop(nec_state)](nec_state);
 		do_prefetch(nec_state, prev_ICount);

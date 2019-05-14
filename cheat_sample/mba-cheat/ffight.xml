@@ -1,0 +1,155 @@
+<mamecheat version="1">
+
+  <cheat desc="Infinite Time">
+    <script state="run">
+      <action>maincpu.pb@FF80AF=99</action>
+    </script>
+  </cheat>
+
+  <cheat desc="Clear this Scene Now!"> <comment>Turn Off Bonus Stage</comment>
+    <script state="on">
+      <action>maincpu.pb@FF8129=01</action>
+    </script>
+  </cheat>
+
+  <cheat desc="Go to Final Stage Now!">
+    <script state="on">
+      <action>maincpu.pb@FF80BE=05</action>
+    </script>
+  </cheat>
+
+  <cheat desc="One Hit to Kill Goons">
+    <script state="run">
+      <action>maincpu.pb@FF8701=00</action>
+      <action>maincpu.pb@FF87C1=00</action>
+      <action>maincpu.pb@FF8881=00</action>
+      <action>maincpu.pb@FF8941=00</action>
+      <action>maincpu.pb@FF8A01=00</action>
+      <action>maincpu.pb@FF8AC1=00</action>
+      <action>maincpu.pb@FF8B81=00</action>
+      <action>maincpu.pb@FF8C41=00</action>
+      <action>maincpu.pb@FF8D01=00</action>
+      <action>maincpu.pb@FF8DC1=00</action>
+      <action>maincpu.pb@FF8E81=00</action>
+      <action>maincpu.pb@FF8F41=00</action>
+      <action>maincpu.pb@FF9001=00</action>
+    </script>
+  </cheat>
+
+  <cheat desc="Kill Boss Faster Now!">
+    <script state="on">
+      <action>maincpu.pw@FF9A80=0008</action>
+    </script>
+  </cheat>
+
+  <cheat desc=" "/>
+
+  <cheat desc="Infinite Lives PL1">
+    <script state="run">
+      <action>maincpu.pb@FF85E8=09</action>
+    </script>
+  </cheat>
+
+  <cheat desc="Invincibility PL1">
+    <script state="run">
+      <action>maincpu.pb@FF85C9=FE</action>
+    </script>
+  </cheat>
+
+  <cheat desc="Infinite Energy PL1">
+    <script state="run">
+      <action>maincpu.pb@FF8581=90</action>
+    </script>
+  </cheat>
+
+  <cheat desc="Punch Only Combo PL1">
+    <script state="run">
+      <action>maincpu.pb@FF860B=00</action>
+    </script>
+  </cheat>
+
+  <cheat desc="Bodyblow Only Combo PL1"> <comment>Haggar Finish</comment>
+    <script state="run">
+      <action>maincpu.pb@FF860B=02</action>
+    </script>
+  </cheat>
+
+  <cheat desc="Cody Finish PL1"> <comment>Haggar is Punch</comment>
+    <script state="run">
+      <action>maincpu.pb@FF860B=04</action>
+    </script>
+  </cheat>
+
+  <cheat desc="Guy Finish PL1"> <comment>Cody + Haggar is Punch</comment>
+    <script state="run">
+      <action>maincpu.pb@FF860B=06</action>
+    </script>
+  </cheat>
+
+  <cheat desc="Action Speed Up PL1">
+    <script state="run">
+      <action>maincpu.pb@FF8590=01</action>
+    </script>
+  </cheat>
+
+  <cheat desc=" "/>
+
+  <cheat desc="Infinite Lives PL2">
+    <script state="run">
+      <action>maincpu.pb@FF86A8=09</action>
+    </script>
+  </cheat>
+
+  <cheat desc="Invincibility PL2">
+    <script state="run">
+      <action>maincpu.pb@FF8689=FE</action>
+    </script>
+  </cheat>
+
+  <cheat desc="Infinite Energy PL2">
+    <script state="run">
+      <action>maincpu.pb@FF8641=90</action>
+    </script>
+  </cheat>
+
+  <cheat desc="Punch Only Combo PL2">
+    <script state="run">
+      <action>maincpu.pb@FF86CB=00</action>
+    </script>
+  </cheat>
+
+  <cheat desc="Bodyblow Only Combo PL2"> <comment>Haggar Finish</comment>
+    <script state="run">
+      <action>maincpu.pb@FF86CB=02</action>
+    </script>
+  </cheat>
+
+  <cheat desc="Cody Finish PL2"> <comment>Haggar is Punch</comment>
+    <script state="run">
+      <action>maincpu.pb@FF86CB=04</action>
+    </script>
+  </cheat>
+
+  <cheat desc="Guy Finish PL2"> <comment>Cody + Haggar is Punch</comment>
+    <script state="run">
+      <action>maincpu.pb@FF86CB=06</action>
+    </script>
+  </cheat>
+
+  <cheat desc="Action Speed Up PL2">
+    <script state="run">
+      <action>maincpu.pb@FF8650=01</action>
+    </script>
+  </cheat>
+
+  <cheat desc=" "/>
+
+  <cheat desc="Sound Test">
+    <parameter min="1" max="255" step="1"/>
+    <script state="change">
+      <action>maincpu.pb@800181=param</action>
+    </script>
+  </cheat>
+
+</mamecheat>
+<!-- Cheat file downloaded from http://www.mamecheat.co.uk, see cheat.txt for list of contributors. -->

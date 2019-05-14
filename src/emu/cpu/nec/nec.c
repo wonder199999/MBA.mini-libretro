@@ -104,7 +104,6 @@
 ****************************************************************************/
 
 #include "emu.h"
-#include "debugger.h"
 
 typedef UINT8 BOOLEAN;
 typedef UINT8 BYTE;
@@ -114,7 +113,7 @@ typedef UINT32 DWORD;
 #include "nec.h"
 #include "necpriv.h"
 
-#define PC(n)	((Sreg(PS)<<4)+(n)->ip)
+#define PC(n)	((Sreg(PS) << 4) + (n)->ip)
 /* The interrupt number of a pending external interrupt pending NMI is 2.   */
 /* For INTR interrupts, the level is caught on the bus during an INTA cycle */
 #define INT_IRQ 0x01
@@ -390,7 +389,6 @@ static CPU_EXECUTE( necv )
 		if (nec_state->no_interrupt)
 			nec_state->no_interrupt--;
 
-		debugger_instruction_hook(device, (Sreg(PS) << 4) + nec_state->ip);
 		prev_ICount = nec_state->icount;
 		nec_instruction[fetchop(nec_state)](nec_state);
 		do_prefetch(nec_state, prev_ICount);

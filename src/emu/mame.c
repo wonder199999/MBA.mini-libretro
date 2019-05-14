@@ -76,7 +76,6 @@
 #include "emuopts.h"
 #include "osdepend.h"
 #include "config.h"
-#include "debugger.h"
 #include "image.h"
 #include "profiler.h"
 #include "render.h"
@@ -87,7 +86,6 @@
 #include "streams.h"
 #include "crsshair.h"
 #include "validity.h"
-#include "debug/debugcon.h"
 
 #include <time.h>
 

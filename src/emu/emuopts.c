@@ -152,7 +152,7 @@ const options_entry mame_core_options[] =
 	/* misc options */
 	{ NULL,                          NULL,        OPTION_HEADER,     "CORE MISC OPTIONS" },
 	{ "bios",                        NULL,        0,                 "select the system BIOS to use" },
-	{ "cheat;c",                     "1",         OPTION_BOOLEAN,    "enable cheat subsystem" },
+	{ "cheat;c",                     "0",         OPTION_BOOLEAN,    "enable cheat subsystem" },
 	{ "skip_gameinfo",               "0",         OPTION_BOOLEAN,    "skip displaying the game information screen at startup" },
 	{ "skip_nagscreen",              "0",         OPTION_BOOLEAN,    "skip displaying the legal notice at startup" },
 	{ "skip_warnings",               "0",         OPTION_BOOLEAN,    "skip displaying the emulation status at startup" },

@@ -201,7 +201,6 @@
 ***************************************************************************/
 
 #include "emu.h"
-#include "debug/debugcpu.h"
 
 
 //*************************************************************************/
@@ -822,8 +821,6 @@ private:
 	template<typename _UintType>
 	void watchpoint_w(address_space &space, offs_t offset, _UintType data, _UintType mask)
 	{
-		m_space.device().debug()->memory_write_hook(m_space, offset *sizeof(_UintType), data, mask);
-
 		UINT8 *oldtable = m_live_lookup;
 		m_live_lookup = m_table;
 		switch (sizeof(_UintType))
