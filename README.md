@@ -39,6 +39,8 @@ In the current situation, M.B.A-mini supports 270 CPS1 games (including clones),
 * Set gamma: (default|+1%|+2%|+3%|+4%|+5%|+6%|+7%|+8%|+9%|+10%|+11%|+12%|+13%|+14%|+15%|+16%|+17%|+18%|+19%|+20%|-20%|-19%|-18%|-17%|-16%|-15%|-14%|-13%|-12%|-11%|-10%|-9%|-8%|-7%|-6%|-5%|-4%|-3%|-2%|-1%)
 
 ![T.A.T.E](https://raw.githubusercontent.com/wonder199999/images-repository/master/02-15-2019/1941-2.png)![UNIBIOS3.2](https://raw.githubusercontent.com/wonder199999/images-repository/master/02-15-2019/samsho5b-190215-220049.png)
+![CHEAT1](https://raw.githubusercontent.com/wonder199999/images-repository/master/05-14-2019/cheat1.png)
+![CHEAT2](https://raw.githubusercontent.com/wonder199999/images-repository/master/05-14-2019/cheat2.png)
 
 ***
 ## CHEAT function
