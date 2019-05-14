@@ -11,7 +11,7 @@ after the codes is streamlined, only CPS 1/2, NEOGEO, IREM M92 machines && roms 
 ![M92](https://raw.githubusercontent.com/wonder199999/images-repository/master/02-15-2019/inthuntu-1.png)
 ![NEOGEO](https://raw.githubusercontent.com/wonder199999/images-repository/master/02-15-2019/samsho5b-190215-220141.png)
 
-M.B.A-mini gave up the original mame0.139 romsets, but supported FBA02.97.38 romsets
+M.B.A-mini gave up the original mame0.139 romsets, but supported FBAlpha 02.97.38 romsets
 with more games (it's >= mame0.172 romsets). also in process, many roms graphics and
 sound issues have been fixed (especially for CPS1).
 
@@ -28,6 +28,7 @@ In the current situation, M.B.A-mini supports 270 CPS1 games (including clones),
 * Set autofire pulse speed: (medium|slow|fast)
 * Keyboard input: (enabled|disabled)
 * Use macro button: (disabled|assign A+B to L|assign A+B to R|assign C+D to L|assign C+D to R|assign A+B to L & C+D to R|assign A+B to R & C+D to L )
+* CHEAT: (disabled|enabled)
 * T.A.T.E mode: (disabled|enabled)
 * Set sample rate: (48000Hz|44100Hz|32000Hz|22050Hz)
 * Forced off ROM CRC verfiy: (No|Yes)
@@ -40,28 +41,29 @@ In the current situation, M.B.A-mini supports 270 CPS1 games (including clones),
 ![T.A.T.E](https://raw.githubusercontent.com/wonder199999/images-repository/master/02-15-2019/1941-2.png)![UNIBIOS3.2](https://raw.githubusercontent.com/wonder199999/images-repository/master/02-15-2019/samsho5b-190215-220049.png)
 
 ***
+## CHEAT function
+MBA-mini only supports cheat documents is xml format, and these xml files  need to be in a directory named 'mba-cheat' in the RetroArch or frontend's system directory.  
+The Repository only comes with samples of several xml files. for complete cheat files, please visit http://cheat.retrogames.com/mame_downloads.htm and select 'XML Cheat Collection for MAME 0.139'.
+
+***
 ## Building
-* Build for x86/x64 linux/win:
+* Build for x86/x64 linux/win:  
+	use:  `make` or `make -j4`
 
-	`make` or `make -j4`
+  Optimize for local machines when 64-bit building,  
+	use:  `make "OPTFLAG=1"`
 
-  Optimize for local machines when 64-bit building,
-	use: `make "OPTFLAG=1"`	
-  Enable hardware render,
-	use: `make "VRENDER=opengl"` or `make "VRENDER=gles"`
+* Build and enable hardware render,  
+	use:  `make "VRENDER=opengl"` or `make "VRENDER=gles"`
 
-* Build for arm linux:
-  
+* Build for arm linux:  
 	`make platform=armv`
 
-* Build for raspberry pi 2/3:
-  
+* Build for raspberry pi 2/3:  
 	`make platform=rpi2` or `make platform=rpi3`
 
-* Build for android:
-  
-	`make "NATIVE=1" buildtools` then
-	`make platform=android`
+* Build for android:  
+	`make "NATIVE=1" buildtools` then `make platform=android`
 
 
 ***
@@ -80,7 +82,9 @@ In the current situation, M.B.A-mini supports 270 CPS1 games (including clones),
 		RETRO_JOYPAD_LEFT     Joystick LEFT
 		RETRO_JOYPAD_RIGHT    Joystick RIGHT
 
-	tips:   P1 L2 to show MAMEUI
+*	tips:
+
+		P1 L2 to show MAMEUI
 		P1 R3 to show framerate
 		P1 L3 to access Service Mode
 
