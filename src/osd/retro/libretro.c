@@ -39,8 +39,8 @@ enum
 struct _keyboard_table
 {
 	const char	*mame_key_name;
-	INT32		retro_key_name;
-	input_item_id	mame_key;
+	INT32		 retro_key_name;
+	input_item_id	 mame_key;
 };
 
 static const _keyboard_table ktable[] = {
@@ -213,9 +213,8 @@ static input_device *KB_device = NULL;		// KEYBD
 static render_target *our_target = NULL;
 
 // state
-static UINT8  pad_state[4][KEY_TOTAL];
-static UINT16 retrokbd_state[RETROK_LAST];
-static UINT16 retrokbd_state2[RETROK_LAST];
+static UINT8 pad_state[4][KEY_TOTAL];
+static UINT8 retrokbd_state[2][RETROK_LAST];
 
 static char RETRO_GAME_PATH[512];
 static char MAME_GAME_PATH[1024];
@@ -228,22 +227,19 @@ static bool retro_load_ok = false;
 static bool keyboard_input = true;
 static bool macro_enable = true;
 static bool is_neogeo = false;
-static bool do_cheat = false;
+static bool enable_cheat = false;
 
 static INT32 rtwi = 320, rthe = 240, topw = 320;	/* DEFAULT TEXW/TEXH/PITCH */
 static INT32 ui_ipt_pushchar = -1;
 static INT32 set_frame_skip;
-static INT32 vertical;
-static INT32 orient;
+static INT32 vertical, orient;
 static INT32 set_neogeo_bios;
 static UINT32 tate;
 static UINT32 screenRot = 0;
 static UINT32 pauseg = 0;
 static UINT32 mame_reset = 0;
 static UINT32 FirstTimeUpdate = 1;
-static UINT32 turbo_enable;
-static UINT32 turbo_delay;
-static UINT32 turbo_state;
+static UINT32 turbo_enable, turbo_delay, turbo_state;
 static UINT32 macro_state;
 static UINT32 sample_rate = 48000;
 static UINT32 adjust_opt[7] = { 0/*Enable/Disable*/, 0/*Limit*/, 0/*GetRefreshRate*/, 0/*Brightness*/, 0/*Contrast*/, 0/*Gamma*/, 0/*Overclock*/ };
@@ -257,18 +253,19 @@ static double refresh_rate = 60.0;
 
 extern void retro_finish(void);
 extern void retro_main_loop(void);
-void osd_init( running_machine *machine );
-void osd_update( running_machine *machine, int skip_redraw );
-void osd_update_audio_stream( running_machine *machine, short *buffer, int samples_this_frame );
-void osd_set_mastervolume( int attenuation );
-void osd_customize_input_type_list( input_type_desc *typelist );
-void osd_exit( running_machine &machine );
+void osd_init(running_machine *machine);
+void osd_update(running_machine *machine, int skip_redraw);
+void osd_update_audio_stream(running_machine *machine, short *buffer, int samples_this_frame);
+void osd_set_mastervolume(int attenuation);
+void osd_customize_input_type_list(input_type_desc *typelist);
+void osd_exit(running_machine &machine);
 
 static void update_geometry(void);
 static int mmain(int argc, const char *argv);
 static int executeGame(char *path);
 static int iptdev_get_state(void *device_internal, void *item_internal);
-static void retro_poll_mame_input(void);
+static inline void retro_poll_mame_input(void);
+
 
 /**************************************************************************/
 //	MACROS
@@ -540,9 +537,9 @@ static void check_variables(void)
 	if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
 	{
 		if (!strcmp(var.value, "enabled"))
-			do_cheat = true;
+			enable_cheat = true;
 		else
-			do_cheat = false;
+			enable_cheat = false;
 	}
 
 	var.key = "mba_mini_frame_skip";
@@ -806,8 +803,6 @@ void retro_run (void)
 	if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE_UPDATE, &updated) && updated)
       		check_variables();
 
-	turbo_state > turbo_delay ? turbo_state = 0 : turbo_state++;
-
 	retro_poll_mame_input();
 	retro_main_loop();
 
@@ -918,27 +913,27 @@ static void initInput( running_machine *machine )
 
 	KB_device = input_device_add(machine, DEVICE_CLASS_KEYBOARD, "Retrokdb", NULL);
 	if (KB_device == NULL)
-		fatalerror("KBD Error creating keyboard device! \n");
+		fatalerror("KBD Error creating keyboard device!\n");
 
 	P1_device = input_device_add(machine, DEVICE_CLASS_KEYBOARD, "Pad1", NULL);
 	if (P1_device == NULL)
-		fatalerror("P1 Error creating joypad device! \n");
+		fatalerror("P1 Error creating joypad device!\n");
 
 	P2_device = input_device_add(machine, DEVICE_CLASS_KEYBOARD, "Pad2", NULL);
 	if (P2_device == NULL)
-		fatalerror("P2 Error creating joypad device! \n");
+		fatalerror("P2 Error creating joypad device!\n");
 
 	P3_device = input_device_add(machine, DEVICE_CLASS_KEYBOARD, "Pad3", NULL);
 	if (P3_device == NULL)
-		fatalerror("P3 Error creating joypad device! \n");
+		fatalerror("P3 Error creating joypad device!\n");
 
 	P4_device = input_device_add(machine, DEVICE_CLASS_KEYBOARD, "Pad4", NULL);
 	if (P4_device == NULL)
-		fatalerror("P4 Error creating joypad device! \n");
+		fatalerror("P4 Error creating joypad device!\n");
 
 	/* our faux keyboard only has a couple of keys (corresponding to the common defaults) */
 	for (i = 0; i < RETROK_LAST; i++)
-		retrokbd_state[i] = retrokbd_state2[i] = 0;
+		retrokbd_state[0][i] = retrokbd_state[1][i] = 0;
 
 	for (i = 0; i < MAX_JOYPADS; i++)
 	{
@@ -949,15 +944,8 @@ static void initInput( running_machine *machine )
 		pad_state[i][KEY_JOYSTICK_D] = pad_state[i][KEY_JOYSTICK_L] = pad_state[i][KEY_JOYSTICK_R] = 0;
 	}
 
-	fprintf(stderr, "SOURCE FILE: %s\n", machine->gamedrv->source_file);
-	fprintf(stderr, "PARENT: %s\n", machine->gamedrv->parent);
-	fprintf(stderr, "NAME: %s\n", machine->gamedrv->name);
-	fprintf(stderr, "DESCRIPTION: %s\n", machine->gamedrv->description);
-	fprintf(stderr, "YEAR: %s\n", machine->gamedrv->year);
-	fprintf(stderr, "MANUFACTURER: %s\n", machine->gamedrv->manufacturer);
-
 	for (i = 0; ktable[i].retro_key_name != -1; i++)
-      		input_device_item_add(KB_device, ktable[i].mame_key_name, &retrokbd_state[ktable[i].retro_key_name], ktable[i].mame_key, iptdev_get_state);
+      		input_device_item_add(KB_device, ktable[i].mame_key_name, &retrokbd_state[0][ktable[i].retro_key_name], ktable[i].mame_key, iptdev_get_state);
 
 	/* Only for P1 */
 	input_device_item_add(P1_device, "F11",	     &pad_state[0][KEY_F11], 	    ITEM_ID_F11,   iptdev_get_state);	/* Bind display fps */
@@ -1095,9 +1083,11 @@ static void initInput( running_machine *machine )
 FINISHED: ;
 }
 
-static inline void retro_poll_mame_input( void )
+static inline void retro_poll_mame_input(void)
 {
 	input_poll_cb();
+
+	turbo_state > turbo_delay ? turbo_state = 0 : turbo_state++;
 
 	UINT32 i;
 
@@ -1105,15 +1095,15 @@ static inline void retro_poll_mame_input( void )
 	{
 		for (i = 0; ktable[i].retro_key_name != -1; i++)
 		{
-			retrokbd_state[ktable[i].retro_key_name] = input_state_cb(0, RETRO_DEVICE_KEYBOARD, 0, ktable[i].retro_key_name) ? 0x80 : 0;
+			retrokbd_state[0][ktable[i].retro_key_name] = input_state_cb(0, RETRO_DEVICE_KEYBOARD, 0, ktable[i].retro_key_name) ? 0x80 : 0x00;
 
-			if (retrokbd_state[ktable[i].retro_key_name] && !retrokbd_state2[ktable[i].retro_key_name])
+			if (retrokbd_state[0][ktable[i].retro_key_name] && !retrokbd_state[1][ktable[i].retro_key_name])
 			{
 				ui_ipt_pushchar = ktable[i].retro_key_name;
-				retrokbd_state2[ktable[i].retro_key_name] = 1;
+				retrokbd_state[1][ktable[i].retro_key_name] = 0x01;
 			}
-			else if (!retrokbd_state[ktable[i].retro_key_name] && retrokbd_state2[ktable[i].retro_key_name])
-				retrokbd_state2[ktable[i].retro_key_name] = 0;
+			else if (!retrokbd_state[0][ktable[i].retro_key_name] && retrokbd_state[1][ktable[i].retro_key_name])
+				retrokbd_state[1][ktable[i].retro_key_name] = 0x00;
 		}
 	}
 
@@ -1193,14 +1183,20 @@ void osd_exit(running_machine &machine)
 void osd_init(running_machine *machine)
 {
 	machine->add_notifier(MACHINE_NOTIFY_EXIT, osd_exit);
-
 	our_target = render_target_alloc(machine, NULL, 0);
+
+	fprintf(stderr, "SOURCE FILE: %s\n", machine->gamedrv->source_file);
+	fprintf(stderr, "PARENT: %s\n", machine->gamedrv->parent);
+	fprintf(stderr, "NAME: %s\n", machine->gamedrv->name);
+	fprintf(stderr, "DESCRIPTION: %s\n", machine->gamedrv->description);
+	fprintf(stderr, "YEAR: %s\n", machine->gamedrv->year);
+	fprintf(stderr, "MANUFACTURER: %s\n", machine->gamedrv->manufacturer);
 
 	initInput(machine);
 
-	LOGI("machine screen orientation: %s\n", (machine->gamedrv->flags & ORIENTATION_SWAP_XY) ? "VERTICAL" : "HORIZONTAL");
 	orient = (machine->gamedrv->flags & ORIENTATION_MASK);
 	vertical = (machine->gamedrv->flags & ORIENTATION_SWAP_XY);
+	LOGI("machine screen orientation: %s\n", (machine->gamedrv->flags & ORIENTATION_SWAP_XY) ? "VERTICAL" : "HORIZONTAL");
 
 	INT32 gameRot = 0;
 	gameRot = (ROT270 == orient) ? 1 : gameRot;
@@ -1454,7 +1450,7 @@ static int executeGame(char *path)
 	int result = 0, gameRot = 0;
 	int paramCount, driverIndex;
 
-	const char *sysdir;
+	const char *sysdir = NULL;
 	char retro_system_dir[1024];
 	unsigned char exist_dir = 0;
 
@@ -1528,14 +1524,14 @@ static int executeGame(char *path)
 		{
 			case 1:
 				xargv[paramCount++] = (char *)"-ror";
-			break;
+				break;
 			case 2:
 				xargv[paramCount++] = (char *)"-rol";
-			break;
+				break;
 			case 3:
 				xargv[paramCount++] = (char *)"-flipx";
 				xargv[paramCount++] = (char *)"-flipy";
-			break;
+				break;
 		}
 	}
 
@@ -1548,21 +1544,13 @@ static int executeGame(char *path)
 		LOGI("Current loaded NEOGEO BIOS is < %s >\n", neogeo_bioses[set_neogeo_bios].bios);
 	}
 
-	if (exist_dir && do_cheat)
+	if (exist_dir && enable_cheat)
 	{
 		xargv[paramCount++] = (char *)"-cheat";
 		xargv[paramCount++] = (char *)"-cheatpath";
 		xargv[paramCount++] = (char *)retro_system_dir;
 	}
 
-/*	LOGI("executing frontend... params:%i\n", paramCount);
-
-	for (int i = 0; xargv[i] != NULL; i++)
-	{
-		LOGI("%s ", xargv[i]);
-		LOGI("\n");
-	}
-*/
 	result = cli_execute(paramCount, (char **)xargv, NULL);
 	xargv[paramCount - 2] = NULL;
 

@@ -78,9 +78,9 @@ const game_driver *const drivers[] =
 	DRIVER( dsoccr94j )		/* Dream Soccer'94 (Japan, M92 Hardware) */
 
 
-	/* ************************* */
-	/*  Part 2 - Capcom System 1 */
-	/* ************************* */
+	/* ************************** */
+	/*  Part 2 - Capcom System 1  */
+	/* ************************** */
 	DRIVER( 1941 )			/* 27/02/1990 (c) 1990 (World) */
 	DRIVER( 1941j )			/* 02/1990 (c) 1990 (Japan) */
 	DRIVER( 1941u )			/* 27/02/1990 (c) 1990 (USA) */
@@ -352,9 +352,9 @@ const game_driver *const drivers[] =
 	DRIVER( sf2ceuab7 )
 	DRIVER( cps1frog )		// Homebrew
 
-	/* ************************* */
-	/*  Part 3 - Capcom System 2 */
-	/* ************************* */
+	/* ************************** */
+	/*  Part 3 - Capcom System 2  */
+	/* ************************** */
 	DRIVER( 1944 )			/* 20/06/2000 (c) 2000 Eighting/Raizing (US) */
 	DRIVER( 1944j )			/* 20/06/2000 (c) 2000 Eighting/Raizing (Japan) */
 	DRIVER( 1944d )			/* 20/06/2000 - 1944 - the loop master (USA Phoenix Edition)*/
@@ -662,9 +662,9 @@ const game_driver *const drivers[] =
 	DRIVER( xmvsfu1d )		/* 04/10/1996 - X-Men vs Street Fighter (USA Phoenix Edition) */
 
 
-	/* ***************** */
-	/*  Part 4 - Neo Geo */
-	/* ***************** */
+	/* ****************** */
+	/*  Part 4 - Neo Geo  */
+	/* ****************** */
 	DRIVER( neogeo )		/* dummy entry for the dummy bios driver */
 	//
 	DRIVER( nam1975 )		/* 0001 (c) 1990 SNK */
@@ -987,9 +987,10 @@ const game_driver *const drivers[] =
 	DRIVER( zintrkcd )		/* Zintrick / Oshidashi Zentrix (NGCD Conversion) */
 	DRIVER( lastblada )		/* The Last Blade / Bakumatsu Roman - Gekka no Kenshi (NGM-2340, alternate board) */
 	DRIVER( unkneo )		/* unkneo (Dragon's Heaven), development board */
+					//
 	DRIVER( kof98ae )		/* (NOT_WORKING) The King of Fighters' 98 Anniversary Edition, EGHT hack  !!Note: It's very unstable. the graphics are flawed. these are said to be related to MAME's M68K CPU drivers. */
-	DRIVER( kof98ae2016 )		/* hackrom */
-	DRIVER( kof98cb )		/* hackrom */
+	DRIVER( kof98ae2016 )		/* (NOT_WORKING) hackrom */
+	DRIVER( kof98cb )		/* (NOT_WORKING) hackrom */
 
 
 #endif	/* DRIVER_RECURSIVE */
