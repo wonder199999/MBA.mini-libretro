@@ -485,11 +485,6 @@ else
    CCOMFLAGS += -O$(OPTIMIZE) -DNDEBUG
 endif
 
-# define MAME_PROFILER if we are a profiling build
-ifdef PROFILER
-   DEFS += -DMAME_PROFILER
-endif
-
 # add the error warning flag
 ifndef NOWERROR
    CCOMFLAGS += -Werror

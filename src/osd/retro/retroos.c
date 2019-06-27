@@ -37,25 +37,26 @@ osd_ticks_t osd_ticks(void)
 
 	// if we have a per second count, just go for it
 	if (ticks_per_second != 0)
-   {
-      QueryPerformanceCounter(&performance_count);
-      return (osd_ticks_t)performance_count.QuadPart - suspend_ticks;
-   }
+	{
+		QueryPerformanceCounter(&performance_count);
+		return (osd_ticks_t)performance_count.QuadPart - suspend_ticks;
+	}
 
 	// if not, we have to determine it
 	QueryPerformanceFrequency(&performance_count) && (performance_count.QuadPart != 0);
-   ticks_per_second = (osd_ticks_t)performance_count.QuadPart;
+	ticks_per_second = (osd_ticks_t)performance_count.QuadPart;
 
 	// call ourselves to get the first value
 	return osd_ticks();
 #else
-   struct timeval    tp;
-   static osd_ticks_t start_sec = 0;
+	struct timeval tp;
+	static osd_ticks_t start_sec = 0;
 
-   gettimeofday(&tp, NULL);
-   if (start_sec==0)
-      start_sec = tp.tv_sec;
-   return (tp.tv_sec - start_sec) * (osd_ticks_t) 1000000 + tp.tv_usec;
+	gettimeofday(&tp, NULL);
+	if (start_sec == 0)
+		start_sec = tp.tv_sec;
+
+	return (tp.tv_sec - start_sec) * (osd_ticks_t)1000000 + tp.tv_usec;
 #endif
 }
 
@@ -112,7 +113,7 @@ void osd_sleep(osd_ticks_t duration)
 	{
 		// take a couple of msecs off the top for good measure
 		msec -= 2;
-		usleep(msec*1000);
+		usleep(msec * 1000);
 	}
 #endif
 }
@@ -124,7 +125,6 @@ void osd_sleep(osd_ticks_t duration)
 int osd_num_processors(void)
 {
 #ifdef WIN32
-
 	SYSTEM_INFO info;
 
 	// otherwise, fetch the info from the system
@@ -200,25 +200,23 @@ char *osd_getenv(const char *name)
 int osd_setenv(const char *name, const char *value, int overwrite)
 {
 #if defined(WIN32)
-   char *buf;
-   int result;
+	char *buf;
+	int result;
 
-   if (!overwrite)
-   {
-      if (osd_getenv(name) != NULL)
-         return 0;
-   }
-   buf = (char *) osd_malloc_array(strlen(name)+strlen(value)+2);
-   sprintf(buf, "%s=%s", name, value);
-   result = putenv(buf);
+	if (!overwrite)
+		if (osd_getenv(name) != NULL)
+			return 0;
 
-   /* will be referenced by environment
-    * Therefore it is not freed here
-    */
+	buf = (char *) osd_malloc_array(strlen(name) + strlen(value) + 2);
+	sprintf(buf, "%s=%s", name, value);
+	result = putenv(buf);
 
-   return result;
+	/* will be referenced by environment
+	 * Therefore it is not freed here	*/
+
+	return result;
 #else
-   return setenv(name, value, overwrite);
+	return setenv(name, value, overwrite);
 #endif
 }
 
@@ -235,7 +233,7 @@ char *osd_get_clipboard_text(void)
 	if (SDL_HasClipboardText())
 	{
 		char *temp = SDL_GetClipboardText();
-		result = (char *) osd_malloc_array(strlen(temp) + 1);
+		result = (char *)osd_malloc_array(strlen(temp) + 1);
 		strcpy(result, temp);
 		SDL_free(temp);
 	}
@@ -251,15 +249,15 @@ char *osd_get_clipboard_text(void)
 char *osd_get_clipboard_text(void)
 {
 	SDL_SysWMinfo info;
-	Display* display;
+	Display *display;
 	Window our_win;
 	Window selection_win;
 	Atom data_type;
 	int data_format;
 	unsigned long nitems;
 	unsigned long bytes_remaining;
-	unsigned char* prop;
-	char* result;
+	unsigned char *prop;
+	char *result;
 	XEvent event;
 	Uint32 t0, t1;
 	Atom types[2];
@@ -351,17 +349,17 @@ osd_directory_entry *osd_stat(const char *path)
 {
 	int err;
 	osd_directory_entry *result = NULL;
-	#if defined(SDLMAME_NO64BITIO) || defined(ANDROID) || defined(WIN32) || defined(SDLMAME_BSD)
+#if defined(SDLMAME_NO64BITIO) || defined(ANDROID) || defined(WIN32) || defined(SDLMAME_BSD)
 	struct stat st;
-	#else
+#else
 	struct stat64 st;
-	#endif
+#endif
 
-	#if defined(SDLMAME_NO64BITIO) || defined(ANDROID) || defined(WIN32) || defined(SDLMAME_BSD)
+#if defined(SDLMAME_NO64BITIO) || defined(ANDROID) || defined(WIN32) || defined(SDLMAME_BSD)
 	err = stat(path, &st);
-	#else
+#else
 	err = stat64(path, &st);
-	#endif
+#endif
 
 	if( err == -1) return NULL;
 
@@ -382,7 +380,7 @@ osd_directory_entry *osd_stat(const char *path)
 
 const char *osd_get_volume_name(int idx)
 {
-	if (idx!=0) return NULL;
+	if (idx != 0) return NULL;
 	return "/";
 }
 
@@ -413,7 +411,7 @@ file_error osd_get_full_path(char **dst, const char *path)
 	}
 	else
 	{
-		*dst = (char *)osd_malloc_array(strlen(path_buffer)+strlen(path)+3);
+		*dst = (char *)osd_malloc_array(strlen(path_buffer) + strlen(path) + 3);
 
 		// if it's already a full path, just pass it through
 		if (path[0] == '/')

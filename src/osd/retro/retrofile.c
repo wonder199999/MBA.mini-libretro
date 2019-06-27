@@ -5,6 +5,7 @@
 #ifdef SDLMAME_LINUX
 #define __USE_LARGEFILE64
 #endif
+
 #ifndef SDLMAME_BSD
 #ifdef _XOPEN_SOURCE
 #undef _XOPEN_SOURCE
@@ -25,10 +26,7 @@
 //============================================================
 //  GLOBAL IDENTIFIERS
 //============================================================
-/*
-extern const char *sdlfile_socket_identifier;
-extern const char *sdlfile_ptty_identifier;
-*/
+
 //============================================================
 //  CONSTANTS
 //============================================================
@@ -64,9 +62,9 @@ file_error error_to_file_error(UINT32 error)
 
 	case EACCES:
 	case EROFS:
-	#ifndef WIN32
+#ifndef WIN32
 	case ETXTBSY:
-	#endif
+#endif
 	case EEXIST:
 	case EPERM:
 	case EISDIR:
@@ -92,11 +90,11 @@ file_error osd_open(const char *path, UINT32 openflags, osd_file **file, UINT64 
 	UINT32 access;
 	const char *src;
 	char *dst;
-	#if defined(__MACH__) || defined(WIN32) ||  defined(SDLMAME_NO64BITIO) || defined(ANDROID) || defined(SDLMAME_BSD) || defined(SDLMAME_OS2) || defined(SDLMAME_HAIKU)
+#if defined(__MACH__) || defined(WIN32) || defined(SDLMAME_NO64BITIO) || defined(ANDROID) || defined(SDLMAME_BSD) || defined(SDLMAME_OS2) || defined(SDLMAME_HAIKU)
 	struct stat st;
-	#else
+#else
 	struct stat64 st;
-	#endif
+#endif
 	char *tmpstr, *envstr;
 	int i, j;
 	file_error filerr = FILERR_NONE;
@@ -110,21 +108,7 @@ file_error osd_open(const char *path, UINT32 openflags, osd_file **file, UINT64 
 		filerr = FILERR_OUT_OF_MEMORY;
 		goto error;
 	}
-/*
-	if (sdl_check_socket_path(path))
-	{
-		(*file)->type = SDLFILE_SOCKET;
-		filerr = sdl_open_socket(path, openflags, file, filesize);
-		goto error;
-	}
 
-	if (strlen(sdlfile_ptty_identifier) > 0 && strncmp(path, sdlfile_ptty_identifier, strlen(sdlfile_ptty_identifier)) == 0)
-	{
-		(*file)->type = SDLFILE_PTTY;
-		filerr = sdl_open_ptty(path, openflags, file, filesize);
-		goto error;
-	}
-*/
 	(*file)->type = SDLFILE_FILE;
 
 	// convert the path into something compatible
@@ -149,22 +133,20 @@ file_error osd_open(const char *path, UINT32 openflags, osd_file **file, UINT64 
 		goto error;
 	}
 
-	tmpstr = (char *) osd_malloc/*_array*/(strlen((*file)->filename)+1);
+	tmpstr = (char *) osd_malloc/*_array*/(strlen((*file)->filename) + 1);
 	strcpy(tmpstr, (*file)->filename);
 
 	// does path start with an environment variable?
 	if (tmpstr[0] == '$')
 	{
 		char *envval;
-		envstr = (char *) osd_malloc/*_array*/(strlen(tmpstr)+1);
+		envstr = (char *) osd_malloc/*_array*/(strlen(tmpstr) + 1);
 
 		strcpy(envstr, tmpstr);
 
 		i = 0;
 		while (envstr[i] != PATHSEPCH && envstr[i] != 0 && envstr[i] != '.')
-		{
 			i++;
-		}
 
 		envstr[i] = '\0';
 
@@ -187,16 +169,16 @@ file_error osd_open(const char *path, UINT32 openflags, osd_file **file, UINT64 
 		osd_free(envstr);
 	}
 
-	#if defined(WIN32) || defined(SDLMAME_OS2)
+#if defined(WIN32) || defined(SDLMAME_OS2)
 	access |= O_BINARY;
-	#endif
+#endif
 
 	// attempt to open the file
-	#if defined(__MACH__) || defined(WIN32) || defined(SDLMAME_NO64BITIO) || defined(ANDROID) || defined(SDLMAME_BSD) || defined(SDLMAME_OS2) || defined(SDLMAME_HAIKU)
+#if defined(__MACH__) || defined(WIN32) || defined(SDLMAME_NO64BITIO) || defined(ANDROID) || defined(SDLMAME_BSD) || defined(SDLMAME_OS2) || defined(SDLMAME_HAIKU)
 	(*file)->handle = open(tmpstr, access, 0666);
-	#else
+#else
 	(*file)->handle = open64(tmpstr, access, 0666);
-	#endif
+#endif
 	if ((*file)->handle == -1)
 	{
 		// create the path if necessary
@@ -215,11 +197,11 @@ file_error osd_open(const char *path, UINT32 openflags, osd_file **file, UINT64 
 				// attempt to reopen the file
 				if (error == NO_ERROR)
 				{
-					#if defined(__MACH__) || defined(WIN32) || defined(SDLMAME_NO64BITIO) || defined(ANDROID) || defined(SDLMAME_BSD) || defined(SDLMAME_OS2) || defined(SDLMAME_HAIKU)
+#if defined(__MACH__) || defined(WIN32) || defined(SDLMAME_NO64BITIO) || defined(ANDROID) || defined(SDLMAME_BSD) || defined(SDLMAME_OS2) || defined(SDLMAME_HAIKU)
 					(*file)->handle = open(tmpstr, access, 0666);
-					#else
+#else
 					(*file)->handle = open64(tmpstr, access, 0666);
-					#endif
+#endif
 				}
 			}
 		}
@@ -235,11 +217,11 @@ file_error osd_open(const char *path, UINT32 openflags, osd_file **file, UINT64 
 	}
 
 	// get the file size
-	#if defined(__MACH__) || defined(WIN32) || defined(SDLMAME_NO64BITIO) || defined(ANDROID) || defined(SDLMAME_BSD) || defined(SDLMAME_OS2) || defined(SDLMAME_HAIKU)
+#if defined(__MACH__) || defined(WIN32) || defined(SDLMAME_NO64BITIO) || defined(ANDROID) || defined(SDLMAME_BSD) || defined(SDLMAME_OS2) || defined(SDLMAME_HAIKU)
 	fstat((*file)->handle, &st);
-	#else
+#else
 	fstat64((*file)->handle, &st);
-	#endif
+#endif
 
 	*filesize = (UINT64)st.st_size;
 
@@ -253,6 +235,7 @@ error:
 	}
 	if (tmpstr)
 		osd_free(tmpstr);
+
 	return filerr;
 }
 
@@ -272,7 +255,7 @@ file_error osd_read(osd_file *file, void *buffer, UINT64 offset, UINT32 count, U
 			result = pread(file->handle, buffer, count, offset);
 			if (result < 0)
 #elif defined(WIN32) || defined(SDLMAME_NO64BITIO) || defined(ANDROID) || defined(SDLMAME_OS2)
-			lseek(file->handle, (UINT32)offset&0xffffffff, SEEK_SET);
+			lseek(file->handle, (UINT32)offset & 0xffffffff, SEEK_SET);
 			result = read(file->handle, buffer, count);
 			if (result < 0)
 #elif defined(SDLMAME_UNIX)
@@ -284,19 +267,10 @@ file_error osd_read(osd_file *file, void *buffer, UINT64 offset, UINT32 count, U
 				return error_to_file_error(errno);
 
 			if (actual != NULL)
-			*actual = result;
+				*actual = result;
 
 			return FILERR_NONE;
 			break;
-/*
-		case SDLFILE_SOCKET:
-			return sdl_read_socket(file, buffer, offset, count, actual);
-			break;
-
-		case SDLFILE_PTTY:
-			return sdl_read_ptty(file, buffer, offset, count, actual);
-			break;
-*/
 		default:
 			return FILERR_FAILURE;
 	}
@@ -318,7 +292,7 @@ file_error osd_write(osd_file *file, const void *buffer, UINT64 offset, UINT32 c
 			result = pwrite(file->handle, buffer, count, offset);
 			if (!result)
 #elif defined(WIN32) || defined(SDLMAME_NO64BITIO) || defined(ANDROID) || defined(SDLMAME_OS2)
-			lseek(file->handle, (UINT32)offset&0xffffffff, SEEK_SET);
+			lseek(file->handle, (UINT32)offset & 0xffffffff, SEEK_SET);
 			result = write(file->handle, buffer, count);
 			if (!result)
 #elif defined(SDLMAME_UNIX)
@@ -327,21 +301,14 @@ file_error osd_write(osd_file *file, const void *buffer, UINT64 offset, UINT32 c
 #else
 #error Unknown SDL SUBARCH!
 #endif
-		return error_to_file_error(errno);
+			return error_to_file_error(errno);
 
 			if (actual != NULL)
-			*actual = result;
+				*actual = result;
+
 			return FILERR_NONE;
 			break;
-/*
-		case SDLFILE_SOCKET:
-			return sdl_write_socket(file, buffer, offset, count, actual);
-			break;
 
-		case SDLFILE_PTTY:
-			return sdl_write_ptty(file, buffer, offset, count, actual);
-			break;
-*/
 		default:
 			return FILERR_FAILURE;
 	}
@@ -362,15 +329,6 @@ file_error osd_close(osd_file *file)
 			osd_free(file);
 			return FILERR_NONE;
 			break;
-/*
-		case SDLFILE_SOCKET:
-			return sdl_close_socket(file);
-			break;
-
-		case SDLFILE_PTTY:
-			return sdl_close_ptty(file);
-			break;
-*/
 		default:
 			return FILERR_FAILURE;
 	}
@@ -415,12 +373,13 @@ static UINT32 create_path_recursive(char *path)
 		return NO_ERROR;
 
 	// create the path
-	#ifdef WIN32
+#ifdef WIN32
 	if (mkdir(path) != 0)
-	#else
+#else
 	if (mkdir(path, 0777) != 0)
-	#endif
+#endif
 		return error_to_file_error(errno);
+
 	return NO_ERROR;
 }
 
@@ -456,7 +415,7 @@ int osd_is_absolute_path(const char *path)
 	else if (path[0] == '.')
 		result = TRUE;
 #else
-	#ifndef UNDER_CE
+#ifndef UNDER_CE
 	else if (*path && path[1] == ':')
 		result = TRUE;
 	#endif
@@ -474,4 +433,3 @@ int osd_uchar_from_osdchar(UINT32 /* unicode_char */ *uchar, const char *osdchar
 	*uchar = (UINT8)*osdchar;
 	return 1;
 }
-

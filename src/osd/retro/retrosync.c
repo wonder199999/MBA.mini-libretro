@@ -325,8 +325,8 @@ void osd_event_set(osd_event *event)
 #else
 	SetEvent((HANDLE) event);
 #endif
-	
-	
+
+
 }
 
 //============================================================
@@ -340,7 +340,7 @@ void osd_event_reset(osd_event *event)
 	event->signalled = FALSE;
 	pthread_mutex_unlock(&event->mutex);
 #else
-	ResetEvent((HANDLE) event);	
+	ResetEvent((HANDLE) event);
 #endif
 }
 

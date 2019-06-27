@@ -30,14 +30,11 @@ LIBS += -lz
 # then the various core pieces
 MAMESRC = $(SRC_DIR)/mame
 MAMEOBJ = $(OBJ)/mame
-
-AUDIO   = $(MAMEOBJ)/audio
 DRIVERS = $(MAMEOBJ)/drivers
 MACHINE = $(MAMEOBJ)/machine
 VIDEO   = $(MAMEOBJ)/video
 
 OBJDIRS += \
-	$(AUDIO) \
 	$(DRIVERS) \
 	$(DRIVERS)/capcom		\
 	$(DRIVERS)/irem			\
@@ -207,11 +204,6 @@ EMUOBJS = \
 	$(EMUOBJ)/debug/express.o \
 	$(EMUOBJ)/debug/textbuf.o \
 	$(EMUOBJ)/debugint/debugint.o
-
-ifdef PROFILER
-EMUOBJS += \
-	$(EMUOBJ)/profiler.o
-endif
 
 EMUSOUNDOBJS = \
 	$(EMUOBJ)/sound/wavwrite.o \
@@ -522,9 +514,7 @@ endif
 OSDCOREOBJS := \
 	$(MINIOBJ)/retrodir.o \
 	$(MINIOBJ)/retrofile.o \
-	$(MINIOBJ)/retromisc.o \
 	$(MINIOBJ)/retrosync.o \
-	$(MINIOBJ)/retrowork.o \
 	$(MINIOBJ)/retroos.o
 
 #-------------------------------------------------

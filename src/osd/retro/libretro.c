@@ -1499,7 +1499,7 @@ static int executeGame(char *path)
 		strcat(retro_system_dir, "/mba-cheat");
 #endif
 		exist_dir = 1;
-		LOGI("SYSTEM Directory: %s\n", retro_system_dir);
+		LOGI("CHEAT Files Directory: %s\n", retro_system_dir);
 	}
 
 /*	LOGI("creating frontend...\n");	*/

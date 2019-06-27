@@ -101,11 +101,13 @@ static const options_entry cli_options[] =
 	{ NULL }
 };
 
-/*static*/ core_options *retro_global_options;
+
 
 /***************************************************************************
     CORE IMPLEMENTATION
 ***************************************************************************/
+
+core_options *retro_global_options = NULL;
 
 /*-------------------------------------------------
     cli_execute - execute a game via the standard
@@ -172,9 +174,10 @@ int cli_execute(int argc, char **argv, const options_entry *osd_options)
 		}
 
 		/* run the game */
-		retro_global_options=options;
-      result = mame_execute(retro_global_options);
-      return 0;
+		retro_global_options = options;
+		result = mame_execute(retro_global_options);
+
+		return 0;
 	}
 	catch (emu_fatalerror &fatal)
 	{
@@ -207,14 +210,17 @@ error:
 
 void retro_execute(void)
 {
-   mame_execute(retro_global_options);
+	mame_execute(retro_global_options);
 }
 
 void free_opt(void)
 {
-   if (retro_global_options != NULL)options_free(retro_global_options );
-   dump_unfreed_mem();
+	if (retro_global_options != NULL)
+		options_free(retro_global_options);
+
+	dump_unfreed_mem();
 }
+
 
 /*-------------------------------------------------
     help_output - output callback for printing
