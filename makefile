@@ -99,7 +99,7 @@ EXE =
 LIBS = 
 CORE_DIR = .
 
-CCOMFLAGS  += -D__LIBRETRO__
+CCOMFLAGS += -D__LIBRETRO__
 
 # When doing 64bit build, is it optimize for local machine (hence the result might not run on different machines).
 OPTFLAG ?= 0
@@ -528,6 +528,15 @@ CCOMFLAGS += \
 	-Wno-self-assign-field
 endif
 
+ifeq ($(ARM_ENABLED), 1)
+   CFLAGS += -DARM_ENABLED
+endif
+
+ifeq ($(NEOGEO_BIOS), 1)
+   CFLAGS += -DUSE_FULLY
+endif
+
+
 #-------------------------------------------------
 # define the standard object directory; other
 # projects can add their object directories to
@@ -632,45 +641,39 @@ ifeq ($(EXTRA_RULES), 1)
    endif
 endif
 
+
 #-------------------------------------------------
 # executable targets and dependencies
 #-------------------------------------------------
 $(EMULATOR): $(OBJECTS)
 	@echo Linking $(TARGETLIB)
-	$(LD) $(LDFLAGS) $(LDFLAGSEMULATOR) $^ $(LIBS) -o $(TARGETLIB)
+	@$(LD) $(LDFLAGS) $(LDFLAGSEMULATOR) $^ $(LIBS) -o $(TARGETLIB)
 
 #-------------------------------------------------
 # generic rules
 #-------------------------------------------------
 
-ifeq ($(ARM_ENABLED), 1)
-   CFLAGS += -DARM_ENABLED
-endif
-
-ifeq ($(NEOGEO_BIOS), 1)
-   CFLAGS += -DUSE_FULLY
-endif
-
 $(OBJ)/%.o: $(CORE_DIR)/src/%.c | $(OSPREBUILD)
-	$(CC) $(CDEFS) $(CFLAGS) -c $< -o $@
+	@$(shell echo echo Compiling:  $<)
+	@$(CC) $(CDEFS) $(CFLAGS) -c $< -o $@
 
 $(OBJ)/%.o: $(OBJ)/%.c | $(OSPREBUILD)
-	$(CC) $(CDEFS) $(CFLAGS) -c $< -o $@
+	@$(CC) $(CDEFS) $(CFLAGS) -c $< -o $@
 
 $(OBJ)/%.pp: $(CORE_DIR)/src/%.c | $(OSPREBUILD)
-	$(CC) $(CDEFS) $(CFLAGS) -E $< -o $@
+	@$(CC) $(CDEFS) $(CFLAGS) -E $< -o $@
 
 $(OBJ)/%.s: $(CORE_DIR)/src/%.c | $(OSPREBUILD)
-	$(CC) $(CDEFS) $(CFLAGS) -S $< -o $@
+	@$(CC) $(CDEFS) $(CFLAGS) -S $< -o $@
 
 $(DRIVLISTOBJ): $(DRIVLISTSRC)
-	$(CC) $(CDEFS) $(CFLAGS) -c $< -o $@
+	@$(CC) $(CDEFS) $(CFLAGS) -c $< -o $@
 
 $(DRIVLISTSRC): $(CORE_DIR)/src/$(TARGET)/$(SUBTARGET).lst $(MAKELIST_TARGET)
 	@echo Building driver list $<...
 	@$(MAKELIST) $< >$@
 
 $(OBJ)/%.a:
-	@echo Archiving $@...
+	@echo Archiving: $@...
 	$(RM) $@
 	$(AR) $(ARFLAGS) $@ $^
