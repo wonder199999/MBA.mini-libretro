@@ -304,7 +304,7 @@ else ifneq (,$(findstring rpi,$(platform)))
    NATIVELD = g++
    LD = g++
    TARGETLIB := $(TARGET_NAME)_libretro.so
-   SHARED := -shared -Wl,--no-undefined
+   SHARED := -shared -Wl,--version-script=src/osd/retro/link.T
    fpic = -fPIC
    LDFLAGS += $(SHARED)
    LIBS += -lstdc++ -lpthread
@@ -324,7 +324,7 @@ else ifneq (,$(findstring armv,$(platform)))
    CC = g++
    LD = g++
    TARGETLIB := $(TARGET_NAME)_libretro.so
-   SHARED := -shared -Wl,--no-undefined
+   SHARED := -shared -Wl,--version-script=src/osd/retro/link.T
    fpic = -fPIC
    LDFLAGS += -Wl,--fix-cortex-a8 $(SHARED)
    LIBS += -lstdc++ -lpthread
@@ -646,7 +646,7 @@ endif
 # executable targets and dependencies
 #-------------------------------------------------
 $(EMULATOR): $(OBJECTS)
-	@echo Linking $(TARGETLIB)
+	@echo Linking: $(TARGETLIB)
 	@$(LD) $(LDFLAGS) $(LDFLAGSEMULATOR) $^ $(LIBS) -o $(TARGETLIB)
 
 #-------------------------------------------------
@@ -675,5 +675,5 @@ $(DRIVLISTSRC): $(CORE_DIR)/src/$(TARGET)/$(SUBTARGET).lst $(MAKELIST_TARGET)
 
 $(OBJ)/%.a:
 	@echo Archiving: $@...
-	$(RM) $@
-	$(AR) $(ARFLAGS) $@ $^
+	@$(RM) $@
+	@$(AR) $(ARFLAGS) $@ $^
