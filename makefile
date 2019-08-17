@@ -630,7 +630,7 @@ tests: $(REGTESTS)
 #-------------------------------------------------
 
 $(sort $(OBJDIRS)):
-	$(MD) -p $@
+	@$(MD) -p $@
 
 ifeq ($(EXTRA_RULES), 1)
    ifeq ($(NATIVE), 0)
