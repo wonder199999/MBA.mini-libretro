@@ -984,12 +984,12 @@ static void process_source_file(running_machine *machine)
 		/* fetch the next line */
 		memset(buf, 0, sizeof(buf));
 
-#if defined(__GNUC__) && (__GNUC__ >= 7)
+#if defined(__GNUC__) && (__GNUC__ >= 4)
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunused-result"
 #endif
 		fgets(buf, sizeof(buf), global->source_file);
-#if defined(__GNUC__) && (__GNUC__ >= 7)
+#if defined(__GNUC__) && (__GNUC__ >= 4)
 #pragma GCC diagnostic pop
 #endif
 

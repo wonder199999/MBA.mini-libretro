@@ -196,12 +196,6 @@ bool verify_rom_hash = false;
 bool allow_select_newgame = false;
 bool RETRO_LOOP = true;
 
-#ifdef _WIN32
-	char slash = '\\';
-#else
-	char slash = '/';
-#endif
-
 // input device
 static input_device *P1_device = NULL;		// P1 JOYPAD
 static input_device *P2_device = NULL;		// P2 JOYPAD
@@ -1196,7 +1190,7 @@ void osd_init(running_machine *machine)
 
 	orient = (machine->gamedrv->flags & ORIENTATION_MASK);
 	vertical = (machine->gamedrv->flags & ORIENTATION_SWAP_XY);
-	LOGI("machine screen orientation: %s\n", (machine->gamedrv->flags & ORIENTATION_SWAP_XY) ? "VERTICAL" : "HORIZONTAL");
+	LOGI("Machine Screen Orientation: %s\n", (machine->gamedrv->flags & ORIENTATION_SWAP_XY) ? "VERTICAL" : "HORIZONTAL");
 
 	INT32 gameRot = 0;
 	gameRot = (ROT270 == orient) ? 1 : gameRot;
@@ -1214,9 +1208,6 @@ void osd_init(running_machine *machine)
 
 void osd_update(running_machine *machine, int skip_redraw)
 {
-	const render_primitive_list	*primlist;
-	UINT8				*surfptr;
-
 	if (mame_reset)
 	{
 		mame_reset = 0;
@@ -1230,23 +1221,24 @@ void osd_update(running_machine *machine, int skip_redraw)
 	}
 
 	if (FirstTimeUpdate)
-		skip_redraw = 0;		/* force redraw to make sure the video texture is created */
+		skip_redraw = 0;	/* force redraw to make sure the video texture is created */
 
 	if (!skip_redraw)
 	{
 		draw_this_frame = true;
-		INT32 minwidth, minheight;
-
-		/* get the minimum width/height for the current layout */
-		render_target_get_minimum_size(our_target, &minwidth, &minheight);
 
 		if (FirstTimeUpdate)
 		{
 			FirstTimeUpdate = 0;
-			LOGI("Game screen: width=%i, height=%i, rowPixels=%i\n", minwidth, minheight, minwidth);
+
+			INT32 minwidth, minheight;
+
+			/* get the minimum width/height for the current layout */
+			render_target_get_minimum_size(our_target, &minwidth, &minheight);
 
 			rtwi = topw = minwidth;
 			rthe = minheight;
+			LOGI("Game screen: width=%i, height=%i, rowPixels=%i\n", minwidth, minheight, minwidth);
 		}
 
 		if (adjust_opt[0])
@@ -1309,17 +1301,17 @@ void osd_update(running_machine *machine, int skip_redraw)
 		render_target_set_bounds(our_target, rtwi, rthe, 0);
 
 		/* get the list of primitives for the target at the current size */
-		primlist = render_target_get_primitives(our_target);
+		const render_primitive_list *primlist = render_target_get_primitives(our_target);
+		UINT8 *surfptr = (UINT8 *)videoBuffer;
 
 		/* lock them, and then render them */
 		osd_lock_acquire(primlist->lock);
-
-		surfptr = (UINT8 *)videoBuffer;
 #ifdef M16B
 		rgb565_draw_primitives(primlist->head, surfptr, rtwi, rthe, rtwi);
 #else
 		rgb888_draw_primitives(primlist->head, surfptr, rtwi, rthe, rtwi);
 #endif
+		/* do the drawing here */
 		osd_lock_release(primlist->lock);
 	}
 	else
@@ -1386,7 +1378,11 @@ static int parsePath(char *path, char *gamePath, char *gameName)
 	int slashIndex = -1;
 	int dotIndex = -1;
 	int len = strlen(path);
-
+#ifdef _WIN32
+	char slash = '\\';
+#else
+	char slash = '/';
+#endif
 	if (len < 1)
 		return 0;
 
