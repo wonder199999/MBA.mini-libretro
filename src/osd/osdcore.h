@@ -68,8 +68,8 @@ extern "C" {
 #define OPEN_FLAG_READ			0x0001		/* open for read */
 #define OPEN_FLAG_WRITE			0x0002		/* open for write */
 #define OPEN_FLAG_CREATE		0x0004		/* create & truncate file */
-#define OPEN_FLAG_CREATE_PATHS	0x0008		/* create paths as necessary */
-#define OPEN_FLAG_NO_PRELOAD	0x0010		/* do not decompress on open */
+#define OPEN_FLAG_CREATE_PATHS		0x0008		/* create paths as necessary */
+#define OPEN_FLAG_NO_PRELOAD		0x0010		/* do not decompress on open */
 
 /* error codes returned by routines below */
 enum _file_error
@@ -284,9 +284,9 @@ typedef struct _osd_directory osd_directory;
 typedef struct _osd_directory_entry osd_directory_entry;
 struct _osd_directory_entry
 {
-	const char *		name;			/* name of the entry */
-	osd_dir_entry_type	type;			/* type of the entry */
-	UINT64				size;			/* size of the entry */
+	const char			*name;		/* name of the entry */
+	osd_dir_entry_type			type;	/* type of the entry */
+	UINT64					size;	/* size of the entry */
 };
 
 
@@ -515,11 +515,11 @@ void osd_lock_free(osd_lock *lock);
 
 /* this is the maximum number of supported threads for a single work queue */
 /* threadid values are expected to range from 0..WORK_MAX_THREADS-1 */
-#define WORK_MAX_THREADS			16
+#define WORK_MAX_THREADS		16
 
 /* these flags can be set when creating a queue to give hints to the code about
    how to configure the queue */
-#define WORK_QUEUE_FLAG_IO			0x0001
+#define WORK_QUEUE_FLAG_IO		0x0001
 #define WORK_QUEUE_FLAG_MULTI		0x0002
 #define WORK_QUEUE_FLAG_HIGH_FREQ	0x0004
 

@@ -13,7 +13,6 @@
 #include "emuopts.h"
 #include "hash.h"
 #include "audit.h"
-// #include "harddisk.h"
 #include "sound/samples.h"
 
 
@@ -23,7 +22,6 @@
 ***************************************************************************/
 
 static void audit_one_rom(core_options *options, const rom_entry *rom, const char *regiontag, const game_driver *gamedrv, UINT32 validation, audit_record *record);
-static void audit_one_disk(core_options *options, const rom_entry *rom, const game_driver *gamedrv, UINT32 validation, audit_record *record);
 static int rom_used_by_parent(const game_driver *gamedrv, const rom_entry *romentry, const game_driver **parent);
 
 
@@ -102,20 +100,9 @@ int audit_images(core_options *options, const game_driver *gamedrv, UINT32 valid
 				{
 					/* audit a file */
 					if (ROMREGION_ISROMDATA(region))
-					{
 						audit_one_rom(options, rom, regiontag, gamedrv, validation, record);
-					}
-
-					/* audit a disk */
-					else if (ROMREGION_ISDISKDATA(region))
-					{
-						audit_one_disk(options, rom, gamedrv, validation, record);
-					}
-
 					else
-					{
 						continue;
-					}
 
 					if (source_is_gamedrv && record->status != AUDIT_STATUS_NOT_FOUND && (allshared || !rom_used_by_parent(gamedrv, rom, NULL)))
 						anyfound = TRUE;
@@ -435,78 +422,6 @@ static void audit_one_rom(core_options *options, const rom_entry *rom, const cha
 		/* just plain old good */
 		else
 			set_status(record, AUDIT_STATUS_GOOD, SUBSTATUS_GOOD);
-	}
-}
-
-
-/*-------------------------------------------------
-    audit_one_disk - validate a single disk entry
--------------------------------------------------*/
-
-static void audit_one_disk(core_options *options, const rom_entry *rom, const game_driver *gamedrv, UINT32 validation, audit_record *record)
-{
-	mame_file *source_file;
-	chd_file *source;
-	chd_error err;
-
-	/* fill in the record basics */
-	record->type = AUDIT_FILE_DISK;
-	record->name = ROM_GETNAME(rom);
-	record->exphash = ROM_GETHASHDATA(rom);
-
-	/* open the disk */
-	err = open_disk_image_options(options, gamedrv, rom, &source_file, &source);
-
-	/* if we failed, report the error */
-	if (err != CHDERR_NONE)
-	{
-		/* out of memory */
-		if (err == CHDERR_OUT_OF_MEMORY)
-			set_status(record, AUDIT_STATUS_ERROR, SUBSTATUS_ERROR);
-
-		/* not found but it's not good anyway */
-		else if (hash_data_has_info(record->exphash, HASH_INFO_NO_DUMP))
-			set_status(record, AUDIT_STATUS_NOT_FOUND, SUBSTATUS_NOT_FOUND_NODUMP);
-
-		/* not found but optional */
-		else if (DISK_ISOPTIONAL(rom))
-			set_status(record, AUDIT_STATUS_NOT_FOUND, SUBSTATUS_NOT_FOUND_OPTIONAL);
-
-		/* not found at all */
-		else
-			set_status(record, AUDIT_STATUS_NOT_FOUND, SUBSTATUS_NOT_FOUND);
-	}
-
-	/* if we succeeded, validate it */
-	else
-	{
-		static const UINT8 nullhash[HASH_BUF_SIZE] = { 0 };
-		chd_header header = *chd_get_header(source);
-
-		/* if there's an MD5 or SHA1 hash, add them to the output hash */
-		if (memcmp(nullhash, header.md5, sizeof(header.md5)) != 0)
-			hash_data_insert_binary_checksum(record->hash, HASH_MD5, header.md5);
-		if (memcmp(nullhash, header.sha1, sizeof(header.sha1)) != 0)
-			hash_data_insert_binary_checksum(record->hash, HASH_SHA1, header.sha1);
-
-		/* found but needs a dump */
-		if (hash_data_has_info(record->exphash, HASH_INFO_NO_DUMP))
-			set_status(record, AUDIT_STATUS_GOOD, SUBSTATUS_FOUND_NODUMP);
-
-		/* incorrect hash */
-		else if (!hash_data_is_equal(record->exphash, record->hash, 0))
-			set_status(record, AUDIT_STATUS_FOUND_INVALID, SUBSTATUS_FOUND_BAD_CHECKSUM);
-
-		/* correct hash but needs a redump */
-		else if (hash_data_has_info(record->exphash, HASH_INFO_BAD_DUMP))
-			set_status(record, AUDIT_STATUS_GOOD, SUBSTATUS_GOOD_NEEDS_REDUMP);
-
-		/* just plain good */
-		else
-			set_status(record, AUDIT_STATUS_GOOD, SUBSTATUS_GOOD);
-
-		chd_close(source);
-		mame_fclose(source_file);
 	}
 }
 

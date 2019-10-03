@@ -12,7 +12,6 @@
 #include "emu.h"
 #include "emuopts.h"
 #include "hash.h"
-#include "jedparse.h"
 #include "audit.h"
 #include "info.h"
 #include "unzip.h"
@@ -1397,24 +1396,8 @@ static void identify_file(core_options *options, const char *name, romident_stat
 static void identify_data(core_options *options, const char *name, const UINT8 *data, int length, romident_status *status)
 {
 	char hash[HASH_BUF_SIZE];
-	UINT8 *tempjed = NULL;
 	astring basename;
 	int found = 0;
-	jed_data jed;
-
-	/* if this is a '.jed' file, process it into raw bits first */
-	if (core_filename_ends_with(name, ".jed") && jed_parse(data, length, &jed) == JEDERR_NONE)
-	{
-		/* now determine the new data length and allocate temporary memory for it */
-		length = jedbin_output(&jed, NULL, 0);
-		tempjed = global_alloc_array(UINT8, length);
-		if (tempjed == NULL)
-			return;
-
-		/* create a binary output of the JED data and use that instead */
-		jedbin_output(&jed, tempjed, length);
-		data = tempjed;
-	}
 
 	/* compute the hash of the data */
 	hash_data_clear(hash);
@@ -1442,14 +1425,9 @@ static void identify_data(core_options *options, const char *name, const UINT8 *
 		else
 			mame_printf_info("NO MATCH\n");
 	}
-
 	/* if we did find it, count it as a match */
 	else
 		status->matches++;
-
-	/* free any temporary JED data */
-	if (tempjed != NULL)
-		global_free(tempjed);
 }
 
 

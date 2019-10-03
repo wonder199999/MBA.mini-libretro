@@ -567,7 +567,6 @@ all: default tools
 
 tests: maketree jedutil$(EXE_EXT) chdman$(EXE_EXT)
 
-7Z_LIB = $(OBJ)/lib7z.a
 
 #-------------------------------------------------
 # defines needed by multiple make files
@@ -577,7 +576,7 @@ BUILDSRC = $(CORE_DIR)/src/build
 BUILDOBJ = $(OBJ)/build
 BUILDOUT = $(BUILDOBJ)
 
-include makefile.libretro
+include makefile.common
 
 # combine the various definitions to one
 CCOMFLAGS += $(INCFLAGS) -fno-delete-null-pointer-checks
@@ -612,9 +611,8 @@ clean: $(OSDCLEAN)
 	@echo Deleting $(TOOLS)...
 	$(RM) $(TOOLS)
 	@echo Deleting dependencies...
-	$(RM) depend_mame.mak
-	$(RM) depend_mess.mak
-	$(RM) depend_ume.mak
+	$(RM) mba_mini_libretro.so
+	$(RM) mba_more_libretro.so
 
 checkautodetect:
 	@echo TARGETOS=$(TARGETOS)

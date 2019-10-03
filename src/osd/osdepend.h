@@ -136,7 +136,7 @@ void osd_wait_for_debugger(device_t *device, int firststop);
 
 ******************************************************************************/
 
-void osd_update(running_machine *machine, int skip_redraw);
+void osd_update(running_machine *machine, UINT8 skip_redraw);
 
 
 /******************************************************************************

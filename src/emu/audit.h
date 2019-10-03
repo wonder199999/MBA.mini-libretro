@@ -77,13 +77,13 @@ enum
 typedef struct _audit_record audit_record;
 struct _audit_record
 {
-	UINT8			type;					/* type of item that was audited */
-	UINT8			status;					/* status of audit on this item */
-	UINT8			substatus;				/* finer-detail status */
-	const char *	name;					/* name of item */
-	UINT32			explength;				/* expected length of item */
-	UINT32			length;					/* actual length of item */
-	const char *	exphash;        		/* expected hash data */
+	UINT8			type;			/* type of item that was audited */
+	UINT8			status;			/* status of audit on this item */
+	UINT8			substatus;		/* finer-detail status */
+	const char	*name;				/* name of item */
+	UINT32			explength;		/* expected length of item */
+	UINT32			length;			/* actual length of item */
+	const char	*exphash;			/* expected hash data */
 	char			hash[HASH_BUF_SIZE];	/* actual hash information */
 };
 

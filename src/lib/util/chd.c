@@ -38,7 +38,6 @@
 ***************************************************************************/
 
 #include "chd.h"
-#include "avcomp.h"
 #include "md5.h"
 #include "sha1.h"
 #include <zlib.h>
@@ -104,14 +103,14 @@
 typedef struct _codec_interface codec_interface;
 struct _codec_interface
 {
-	UINT32		compression;				/* type of compression */
-	const char *compname;					/* name of the algorithm */
-	UINT8		lossy;						/* is this a lossy algorithm? */
+	UINT32			compression;		/* type of compression */
+	const char	*compname;			/* name of the algorithm */
+	UINT8			lossy;			/* is this a lossy algorithm? */
 	chd_error	(*init)(chd_file *chd);		/* codec initialize */
 	void		(*free)(chd_file *chd);		/* codec free */
-	chd_error	(*compress)(chd_file *chd, const void *src, UINT32 *complen); /* compress data */
-	chd_error	(*decompress)(chd_file *chd, UINT32 complen, void *dst); /* decompress data */
-	chd_error	(*config)(chd_file *chd, int param, void *config); /* configure */
+	chd_error	(*compress)(chd_file *chd, const void *src, UINT32 *complen);	/* compress data */
+	chd_error	(*decompress)(chd_file *chd, UINT32 complen, void *dst);	/* decompress data */
+	chd_error	(*config)(chd_file *chd, int param, void *config);		/* configure */
 };
 
 
@@ -119,10 +118,10 @@ struct _codec_interface
 typedef struct _map_entry map_entry;
 struct _map_entry
 {
-	UINT64					offset;			/* offset within the file of the data */
-	UINT32					crc;			/* 32-bit CRC of the data */
-	UINT32					length;			/* length of the data */
-	UINT8					flags;			/* misc flags */
+	UINT64			offset;			/* offset within the file of the data */
+	UINT32			crc;			/* 32-bit CRC of the data */
+	UINT32			length;			/* length of the data */
+	UINT8			flags;			/* misc flags */
 };
 
 
@@ -130,8 +129,8 @@ struct _map_entry
 typedef struct _crcmap_entry crcmap_entry;
 struct _crcmap_entry
 {
-	UINT32					hunknum;		/* hunk number */
-	crcmap_entry *			next;			/* next entry in list */
+	UINT32			hunknum;		/* hunk number */
+	crcmap_entry			*next;		/* next entry in list */
 };
 
 
@@ -139,12 +138,12 @@ struct _crcmap_entry
 typedef struct _metadata_entry metadata_entry;
 struct _metadata_entry
 {
-	UINT64					offset;			/* offset within the file of the header */
-	UINT64					next;			/* offset within the file of the next header */
-	UINT64					prev;			/* offset within the file of the previous header */
-	UINT32					length;			/* length of the metadata */
-	UINT32					metatag;		/* metadata tag */
-	UINT8					flags;			/* flag bits */
+	UINT64			offset;			/* offset within the file of the header */
+	UINT64			next;			/* offset within the file of the next header */
+	UINT64			prev;			/* offset within the file of the previous header */
+	UINT32			length;			/* length of the metadata */
+	UINT32			metatag;		/* metadata tag */
+	UINT8			flags;			/* flag bits */
 };
 
 
@@ -204,22 +203,12 @@ struct _zlib_codec_data
 };
 
 
-/* codec-private data for the A/V codec */
-typedef struct _av_codec_data av_codec_data;
-struct _av_codec_data
-{
-	avcomp_state *			compstate;
-	av_codec_compress_config compress;
-	av_codec_decompress_config decompress;
-};
-
-
 /* a single metadata hash entry */
 typedef struct _metadata_hash metadata_hash;
 struct _metadata_hash
 {
-	UINT8					tag[4];			/* tag of the metadata in big-endian */
-	UINT8					sha1[CHD_SHA1_BYTES]; /* hash */
+	UINT8				tag[4];			/* tag of the metadata in big-endian */
+	UINT8				sha1[CHD_SHA1_BYTES];	/* hash */
 };
 
 
@@ -275,14 +264,6 @@ static chd_error zlib_codec_decompress(chd_file *chd, UINT32 srclength, void *de
 static voidpf zlib_fast_alloc(voidpf opaque, uInt items, uInt size);
 static void zlib_fast_free(voidpf opaque, voidpf address);
 
-/* A/V compression codec */
-static chd_error av_codec_init(chd_file *chd);
-static void av_codec_free(chd_file *chd);
-static chd_error av_codec_compress(chd_file *chd, const void *src, UINT32 *length);
-static chd_error av_codec_decompress(chd_file *chd, UINT32 srclength, void *dest);
-static chd_error av_codec_config(chd_file *chd, int param, void *config);
-static chd_error av_codec_postinit(chd_file *chd);
-
 
 
 /***************************************************************************
@@ -331,12 +312,12 @@ static const codec_interface codec_interfaces[] =
 	{
 		CHDCOMPRESSION_AV,
 		"A/V",
-		TRUE,
-		av_codec_init,
-		av_codec_free,
-		av_codec_compress,
-		av_codec_decompress,
-		av_codec_config
+		FALSE,
+		NULL,
+		NULL,
+		NULL,
+		NULL,
+		NULL
 	}
 };
 
@@ -2863,227 +2844,4 @@ static void zlib_fast_free(voidpf opaque, voidpf address)
 			*ptr &= ~1;
 			return;
 		}
-}
-
-
-
-/***************************************************************************
-    AV COMPRESSION CODEC
-***************************************************************************/
-
-/*-------------------------------------------------
-    av_raw_data_size - compute the raw data size
--------------------------------------------------*/
-
-INLINE UINT32 av_raw_data_size(const UINT8 *data)
-{
-	int size = 0;
-
-	/* make sure we have a correct header */
-	if (data[0] == 'c' && data[1] == 'h' && data[2] == 'a' && data[3] == 'v')
-	{
-		/* add in header size plus metadata length */
-		size = 12 + data[4];
-
-		/* add in channels * samples */
-		size += 2 * data[5] * ((data[6] << 8) + data[7]);
-
-		/* add in 2 * width * height */
-		size += 2 * ((data[8] << 8) + data[9]) * (((data[10] << 8) + data[11]) & 0x7fff);
-	}
-	return size;
-}
-
-
-/*-------------------------------------------------
-    av_codec_init - initialize the A/V codec
--------------------------------------------------*/
-
-static chd_error av_codec_init(chd_file *chd)
-{
-	av_codec_data *data;
-
-	/* allocate memory for the 2 stream buffers */
-	data = (av_codec_data *)malloc(sizeof(*data));
-	if (data == NULL)
-		return CHDERR_OUT_OF_MEMORY;
-
-	/* clear the buffers */
-	memset(data, 0, sizeof(*data));
-	chd->codecdata = data;
-
-	/* attempt to do a post-init now; if we're creating a new CHD, this won't work */
-	/* but that's ok */
-	av_codec_postinit(chd);
-	return CHDERR_NONE;
-}
-
-
-/*-------------------------------------------------
-    av_codec_free - free data for the A/V
-    codec
--------------------------------------------------*/
-
-static void av_codec_free(chd_file *chd)
-{
-	av_codec_data *data = (av_codec_data *)chd->codecdata;
-
-	/* deinit avcomp */
-	if (data != NULL)
-	{
-		if (data->compstate != NULL)
-			avcomp_free(data->compstate);
-		free(data);
-	}
-}
-
-
-/*-------------------------------------------------
-    av_codec_compress - compress data using the
-    A/V codec
--------------------------------------------------*/
-
-static chd_error av_codec_compress(chd_file *chd, const void *src, UINT32 *length)
-{
-	av_codec_data *data = (av_codec_data *)chd->codecdata;
-	int averr;
-	int size;
-
-	/* if we haven't yet set up the avcomp code, do it now */
-	if (data->compstate == NULL)
-	{
-		chd_error chderr = av_codec_postinit(chd);
-		if (chderr != CHDERR_NONE)
-			return chderr;
-	}
-
-	/* make sure short frames are padded with 0 */
-	if (src != NULL)
-	{
-		size = av_raw_data_size((const UINT8 *)src);
-		while (size < chd->header.hunkbytes)
-			if (((const UINT8 *)src)[size++] != 0)
-				return CHDERR_INVALID_DATA;
-	}
-
-	/* encode the audio and video */
-	averr = avcomp_encode_data(data->compstate, (const UINT8 *)src, chd->compressed, length);
-	if (averr != AVCERR_NONE || *length > chd->header.hunkbytes)
-		return CHDERR_COMPRESSION_ERROR;
-
-	return CHDERR_NONE;
-}
-
-
-/*-------------------------------------------------
-    av_codec_decompress - decomrpess data using
-    the A/V codec
--------------------------------------------------*/
-
-static chd_error av_codec_decompress(chd_file *chd, UINT32 srclength, void *dest)
-{
-	av_codec_data *data = (av_codec_data *)chd->codecdata;
-	const UINT8 *source;
-	avcomp_error averr;
-	int size;
-
-	/* if we haven't yet set up the avcomp code, do it now */
-	if (data->compstate == NULL)
-	{
-		chd_error chderr = av_codec_postinit(chd);
-		if (chderr != CHDERR_NONE)
-			return chderr;
-	}
-
-	/* decode the audio and video */
-	source = chd->compressed;
-	averr = avcomp_decode_data(data->compstate, source, srclength, (UINT8 *)dest);
-	if (averr != AVCERR_NONE)
-		return CHDERR_DECOMPRESSION_ERROR;
-
-	/* pad short frames with 0 */
-	if (dest != NULL)
-	{
-		size = av_raw_data_size((const UINT8 *)dest);
-		while (size < chd->header.hunkbytes)
-			((UINT8 *)dest)[size++] = 0;
-	}
-
-	return CHDERR_NONE;
-}
-
-
-/*-------------------------------------------------
-    av_codec_config - codec-specific configuration
-    for the A/V codec
--------------------------------------------------*/
-
-static chd_error av_codec_config(chd_file *chd, int param, void *config)
-{
-	av_codec_data *data = (av_codec_data *)chd->codecdata;
-
-	/* if we're getting the compression configuration, apply it now */
-	if (param == AV_CODEC_COMPRESS_CONFIG)
-	{
-		data->compress = *(av_codec_compress_config *)config;
-		if (data->compstate != NULL)
-			avcomp_config_compress(data->compstate, &data->compress);
-		return CHDERR_NONE;
-	}
-
-	/* if we're getting the decompression configuration, apply it now */
-	else if (param == AV_CODEC_DECOMPRESS_CONFIG)
-	{
-		data->decompress = *(av_codec_decompress_config *)config;
-		if (data->compstate != NULL)
-			avcomp_config_decompress(data->compstate, &data->decompress);
-		return CHDERR_NONE;
-	}
-
-	/* anything else is invalid */
-	return CHDERR_INVALID_PARAMETER;
-}
-
-
-/*-------------------------------------------------
-    av_codec_postinit - actual initialization of
-    avcomp happens here, on the first attempt
-    to compress or decompress data
--------------------------------------------------*/
-
-static chd_error av_codec_postinit(chd_file *chd)
-{
-	int fps, fpsfrac, width, height, interlaced, channels, rate;
-	UINT32 fps_times_1million, max_samples_per_frame, bytes_per_frame;
-	av_codec_data *data = (av_codec_data *)chd->codecdata;
-	char metadata[256];
-	chd_error err;
-
-	/* the code below won't work asynchronously */
-	if (chd->workitem != NULL)
-		return CHDERR_OPERATION_PENDING;
-
-	/* get the metadata */
-	err = chd_get_metadata(chd, AV_METADATA_TAG, 0, metadata, sizeof(metadata), NULL, NULL, NULL);
-	if (err != CHDERR_NONE)
-		return err;
-
-	/* extract the info */
-	if (sscanf(metadata, AV_METADATA_FORMAT, &fps, &fpsfrac, &width, &height, &interlaced, &channels, &rate) != 7)
-		return CHDERR_INVALID_METADATA;
-
-	/* compute the bytes per frame */
-	fps_times_1million = fps * 1000000 + fpsfrac;
-	max_samples_per_frame = ((UINT64)rate * 1000000 + fps_times_1million - 1) / fps_times_1million;
-	bytes_per_frame = 12 + channels * max_samples_per_frame * 2 + width * height * 2;
-	if (bytes_per_frame > chd->header.hunkbytes)
-		return CHDERR_INVALID_METADATA;
-
-	/* create the avcomp state */
-	data->compstate = avcomp_init(width, height, channels);
-
-	/* configure the codec */
-	avcomp_config_compress(data->compstate, &data->compress);
-	avcomp_config_decompress(data->compstate, &data->decompress);
-	return CHDERR_NONE;
 }

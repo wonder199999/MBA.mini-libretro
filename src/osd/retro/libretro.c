@@ -222,21 +222,22 @@ static bool keyboard_input = true;
 static bool macro_enable = true;
 static bool is_neogeo = false;
 static bool enable_cheat = false;
+static bool tate = false;
+static bool mame_stop = false;
+static bool mame_reset = false;
+static bool FirstTimeUpdate = true;
 
-static INT32 rtwi = 320, rthe = 240, topw = 320;	/* DEFAULT TEXW/TEXH/PITCH */
+static INT32 retro_width = 320, retro_height = 240, retro_topwidth = 320;	/* DEFAULT TEXW/TEXH/PITCH */
 static INT32 ui_ipt_pushchar = -1;
 static INT32 set_frame_skip;
 static INT32 vertical, orient;
 static INT32 set_neogeo_bios;
-static UINT32 tate;
 static UINT32 screenRot = 0;
-static UINT32 pauseg = 0;
-static UINT32 mame_reset = 0;
-static UINT32 FirstTimeUpdate = 1;
 static UINT32 turbo_enable, turbo_delay, turbo_state;
 static UINT32 macro_state;
 static UINT32 sample_rate = 48000;
 static UINT32 adjust_opt[7] = { 0/*Enable/Disable*/, 0/*Limit*/, 0/*GetRefreshRate*/, 0/*Brightness*/, 0/*Contrast*/, 0/*Gamma*/, 0/*Overclock*/ };
+
 static float arroffset[4] = { 0/*For brightness*/, 0/*For contrast*/, 0/*For gamma*/, 1.0/*For overclock*/ };
 static double refresh_rate = 60.0;
 
@@ -247,12 +248,6 @@ static double refresh_rate = 60.0;
 
 extern void retro_finish(void);
 extern void retro_main_loop(void);
-void osd_init(running_machine *machine);
-void osd_update(running_machine *machine, int skip_redraw);
-void osd_update_audio_stream(running_machine *machine, short *buffer, int samples_this_frame);
-void osd_set_mastervolume(int attenuation);
-void osd_customize_input_type_list(input_type_desc *typelist);
-void osd_exit(running_machine &machine);
 
 static void update_geometry(void);
 static int mmain(int argc, const char *argv);
@@ -309,11 +304,11 @@ static inline void retro_poll_mame_input(void);
 #endif
 
 #ifdef M16B
-	UINT16 videoBuffer[512 * 512];
+	UINT16 videoBuffer[512*512];
 	#define PITCH 1
 #else
-	UINT32 videoBuffer[1024 * 1024];
-	#define PITCH 1 * 2
+	UINT32 videoBuffer[1024*1024];
+	#define PITCH 1*2
 #endif
 
 #include "rendersw.c"
@@ -509,12 +504,10 @@ static void check_variables(void)
 	if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
 	{
 		if (!strcmp(var.value, "enabled"))
-			tate = 1;
+			tate = true;
 		else
-			tate = 0;
+			tate = false;
 	}
-	else
-		tate = 0;
 
 	var.key = "mba_mini_kb_input";
 	var.value = NULL;
@@ -739,8 +732,8 @@ void retro_get_system_info(struct retro_system_info *info)
 
 void retro_get_system_av_info(struct retro_system_av_info *info)
 {
-	int width =  (tate && vertical) ? rthe : rtwi;
-	int height = (tate && vertical) ? rtwi : rthe;
+	int width =  (tate && vertical) ? retro_height : retro_width;
+	int height = (tate && vertical) ? retro_width : retro_height;
 
 	info->geometry.base_width   = width;
 	info->geometry.base_height  = height;
@@ -758,8 +751,8 @@ void retro_get_system_av_info(struct retro_system_av_info *info)
 	int common_factor = 1;
 	if (set_par)
 	{
-		int temp_width = rtwi;
-		int temp_height = rthe;
+		int temp_width = retro_width;
+		int temp_height = retro_height;
 		while (temp_width != temp_height)
 		{
 			if (temp_width > temp_height)
@@ -788,7 +781,7 @@ void retro_deinit(void)
 
 void retro_reset (void)
 {
-	mame_reset = 1;
+	mame_reset = true;
 }
 
 void retro_run (void)
@@ -806,9 +799,9 @@ void retro_run (void)
 	do_gl2d();
 #else
 	if (draw_this_frame)
-		video_cb(videoBuffer, rtwi, rthe, topw << PITCH);
+		video_cb(videoBuffer, retro_width, retro_height, retro_topwidth << PITCH);
 	else
-		video_cb(	NULL, rtwi, rthe, topw << PITCH);
+		video_cb(	NULL, retro_width, retro_height, retro_topwidth << PITCH);
 #endif
 }
 
@@ -835,7 +828,7 @@ bool retro_load_game(const struct retro_game_info *info)
 #ifdef M16B
 	memset(videoBuffer, 0, 512*512*2);
 #else
-	memset(videoBuffer, 0, 1024*1024*2*2);
+	memset(videoBuffer, 0, 1024*1024*4);
 #endif
 	check_variables();
 
@@ -886,8 +879,8 @@ bool retro_load_game(const struct retro_game_info *info)
 
 void retro_unload_game(void)
 {
-	if (!pauseg)
-		pauseg = 1;
+	if (!mame_stop)
+		mame_stop = 1;
 
 	LOGI("M.B.A_mini has unload the game.\n");
 }
@@ -1158,25 +1151,8 @@ static inline void retro_poll_mame_input(void)
 
 /**************************************************************************/
 
-void osd_exit(running_machine &machine)
-{
-	LOGI("osd_exit called \n");
-
-	if (our_target != NULL)
-		render_target_free(our_target);
-
-	our_target = NULL;
-
-	global_free(KB_device);
-	global_free(P4_device);
-	global_free(P3_device);
-	global_free(P2_device);
-	global_free(P1_device);
-}
-
 void osd_init(running_machine *machine)
 {
-	machine->add_notifier(MACHINE_NOTIFY_EXIT, osd_exit);
 	our_target = render_target_alloc(machine, NULL, 0);
 
 	fprintf(stderr, "SOURCE FILE: %s\n", machine->gamedrv->source_file);
@@ -1206,15 +1182,15 @@ void osd_init(running_machine *machine)
 /*	LOGI("osd init done\n");	*/
 }
 
-void osd_update(running_machine *machine, int skip_redraw)
+void osd_update(running_machine *machine, UINT8 skip_redraw)
 {
 	if (mame_reset)
 	{
-		mame_reset = 0;
+		mame_reset = false;
 		machine->schedule_soft_reset();
 	}
 
-	if (pauseg)
+	if (mame_stop)
 	{
 		machine->schedule_exit();
 		return;
@@ -1229,15 +1205,15 @@ void osd_update(running_machine *machine, int skip_redraw)
 
 		if (FirstTimeUpdate)
 		{
-			FirstTimeUpdate = 0;
+			FirstTimeUpdate = false;
 
 			INT32 minwidth, minheight;
 
 			/* get the minimum width/height for the current layout */
 			render_target_get_minimum_size(our_target, &minwidth, &minheight);
 
-			rtwi = topw = minwidth;
-			rthe = minheight;
+			retro_width = retro_topwidth = minwidth;
+			retro_height = minheight;
 			LOGI("Game screen: width=%i, height=%i, rowPixels=%i\n", minwidth, minheight, minwidth);
 		}
 
@@ -1265,40 +1241,40 @@ void osd_update(running_machine *machine, int skip_redraw)
 					{
 						adjust_opt[3] = 0;
 						settings.brightness = arroffset[0] + 1.0f;
-						render_container_set_user_settings(container, &settings);
 					}
 					if (adjust_opt[4])
 					{
 						adjust_opt[4] = 0;
 						settings.contrast = arroffset[1] + 1.0f;
-						render_container_set_user_settings(container, &settings);
 					}
 					if (adjust_opt[5])
 					{
 						adjust_opt[5] = 0;
 						settings.gamma = arroffset[2] + 1.0f;
-						render_container_set_user_settings(container, &settings);
 					}
+					render_container_set_user_settings(container, &settings);
 				}
 
 				if (adjust_opt[6])
 				{
 					adjust_opt[6] = 0;
-					if (strcmp(machine->gamedrv->source_file, "src/mame/drivers/capcom/cps2.c") == 0)	/* RAM access waitstates etc. aren't emulated - slow the CPU to compensate */
+					/* RAM access waitstates etc. aren't emulated - slow the CPU to compensate */
+					if (strcmp(machine->gamedrv->source_file, "src/mame/drivers/capcom/cps2.c") == 0)
 						arroffset[3] *= 0.7375f;
 					else if (strcmp(machine->gamedrv->name, "sf2hf") == 0 || strcmp(machine->gamedrv->name, "sf2hfu") == 0 || strcmp(machine->gamedrv->name, "sf2hfj") == 0)
 						arroffset[3] *= (float)(8.7 / 12.0);
-					else if (strcmp(machine->gamedrv->name, "kog") == 0 || strcmp(machine->gamedrv->name, "kogplus") == 0 || strcmp(machine->gamedrv->name, "cthd2003") == 0)  /* fix garbage on intro */
-						arroffset[3] *= ((float)(10.0 / 256.0) + 1.0f);
+					/* fix garbage on intro */
+					else if (strcmp(machine->gamedrv->name, "kog") == 0 || strcmp(machine->gamedrv->name, "kogplus") == 0 || strcmp(machine->gamedrv->name, "cthd2003") == 0)
+						arroffset[3] *= (float)((10.0 / 256.0) + 1.0);
 					else if (strcmp(machine->gamedrv->name, "ct2k3sa") == 0 || strcmp(machine->gamedrv->name, "ct2k3sp") == 0)
-						arroffset[3] *= ((float)(13.0 / 256.0) + 1.0f);
+						arroffset[3] *= (float)((13.0 / 256.0) + 1.0);
 
 					machine->device("maincpu")->set_clock_scale(arroffset[3]);
 				}
 			}
 		}
 		/* make that the size of our target */
-		render_target_set_bounds(our_target, rtwi, rthe, 0);
+		render_target_set_bounds(our_target, retro_width, retro_height, 0);
 
 		/* get the list of primitives for the target at the current size */
 		const render_primitive_list *primlist = render_target_get_primitives(our_target);
@@ -1307,9 +1283,9 @@ void osd_update(running_machine *machine, int skip_redraw)
 		/* lock them, and then render them */
 		osd_lock_acquire(primlist->lock);
 #ifdef M16B
-		rgb565_draw_primitives(primlist->head, surfptr, rtwi, rthe, rtwi);
+		rgb565_draw_primitives(primlist->head, surfptr, retro_width, retro_height, retro_width);
 #else
-		rgb888_draw_primitives(primlist->head, surfptr, rtwi, rthe, rtwi);
+		rgb888_draw_primitives(primlist->head, surfptr, retro_width, retro_height, retro_width);
 #endif
 		/* do the drawing here */
 		osd_lock_release(primlist->lock);
@@ -1341,9 +1317,9 @@ void osd_wait_for_debugger(running_device *device, int firststop)
 //============================================================
 //  update_audio_stream
 //============================================================
-void osd_update_audio_stream(running_machine *machine, short *buffer, int samples_this_frame)
+void osd_update_audio_stream(running_machine *machine, INT16 *buffer, int samples_this_frame)
 {
-	if (!pauseg)
+	if (!mame_stop)
 		audio_batch_cb(buffer, samples_this_frame);
 }
 
@@ -1458,7 +1434,7 @@ static int executeGame(char *path)
 		NULL, NULL, NULL, NULL
 	};
 
-	FirstTimeUpdate = 1;
+	FirstTimeUpdate = true;
 
 	//split the path to directory and the name without the zip extension
 	result = parsePath(path, MAME_GAME_PATH, MAME_GAME_NAME);

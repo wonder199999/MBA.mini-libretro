@@ -1428,16 +1428,7 @@ static UINT32 handler_ingame(running_machine *machine, render_container *contain
 	/* toggle movie recording */
 	if (ui_input_pressed(machine, IPT_UI_RECORD_MOVIE))
 	{
-		if (!video_mng_is_movie_active(machine))
-		{
-			video_mng_begin_recording(machine, NULL);
-			popmessage("REC START");
-		}
-		else
-		{
-			video_mng_end_recording(machine);
-			popmessage("REC STOP");
-		}
+		/* do nothing */
 	}
 
 	/* toggle profiler display */

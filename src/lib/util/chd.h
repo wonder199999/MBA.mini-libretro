@@ -45,7 +45,6 @@
 #include "osdcore.h"
 #include "bitmap.h"
 #include "corefile.h"
-#include "avcomp.h"
 
 
 /***************************************************************************

@@ -11,7 +11,6 @@
 
 #include "emu.h"
 #include "ldcore.h"
-#include "avcomp.h"
 #include "streams.h"
 #include "vbiparse.h"
 #include "config.h"
@@ -64,6 +63,18 @@ struct _frame_data
 	INT32				lastfield;				/* last absolute field number */
 };
 
+/* decompression configuration */
+typedef struct _av_codec_decompress_config av_codec_decompress_config;
+struct _av_codec_decompress_config
+{
+	bitmap_t	*video;			/* pointer to video bitmap */
+	UINT32			maxsamples;	/* maximum number of samples per channel */
+	UINT32		*actsamples;		/* actual number of samples per channel */
+	INT16		*audio[16];		/* pointer to individual audio channels */
+	UINT32			maxmetalength;	/* maximum length of metadata */
+	UINT32		*actmetalength;		/* actual length of metadata */
+	UINT8		*metadata;		/* pointer to metadata buffer */
+};
 
 /* core-specific data */
 struct _ldcore_data
@@ -81,7 +92,7 @@ struct _ldcore_data
 	int					samplerate;				/* audio samplerate */
 	chd_error			readresult;				/* result of the most recent read */
 	UINT32				chdtracks;				/* number of tracks in the CHD */
-	av_codec_decompress_config avconfig;		/* decompression configuration */
+	av_codec_decompress_config	avconfig;		/* decompression configuration */
 
 	/* core states */
 	UINT8				audiosquelch;			/* audio squelch state: bit 0 = audio 1, bit 1 = audio 2 */
@@ -162,8 +173,8 @@ static const ldplayer_interface *const player_interfaces[] =
 	&pr8210_interface,
 	&simutrek_interface,
 	&ldv1000_interface,
-//  &ldp1450_interface,
-//  &vp932_interface,
+// &ldp1450_interface,
+// &vp932_interface,
 	&vp931_interface
 };
 
@@ -828,7 +839,6 @@ static void read_track_data(laserdisc_state *ld)
 		vbidata.line16 = 0;
 		vbidata.line17 = vbidata.line18 = vbidata.line1718 = VBI_CODE_LEADIN;
 	}
-//printf("track %5d.%d: %06X %06X %06X\n", tracknum, fieldnum, vbidata.line16, vbidata.line17, vbidata.line18);
 
 	/* if we're about to read the first field in a frame, advance */
 	frame = &ldcore->frame[ldcore->videoindex];
@@ -893,8 +903,8 @@ static void read_track_data(laserdisc_state *ld)
 	ldcore->readresult = CHDERR_FILE_NOT_FOUND;
 	if (ldcore->disc != NULL && !ldcore->videosquelch)
 	{
-		ldcore->readresult = chd_codec_config(ldcore->disc, AV_CODEC_DECOMPRESS_CONFIG, &ldcore->avconfig);
-		if (ldcore->readresult == CHDERR_NONE)
+//		ldcore->readresult = chd_codec_config(ldcore->disc, AV_CODEC_DECOMPRESS_CONFIG, &ldcore->avconfig);
+//		if (ldcore->readresult == CHDERR_NONE)
 			ldcore->readresult = chd_read_async(ldcore->disc, readhunk, NULL);
 	}
 }

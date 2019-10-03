@@ -278,50 +278,50 @@ extern const device_type SCREEN;
 //**************************************************************************/
 
 #define MDRV_SCREEN_ADD(_tag, _type) \
-	MDRV_DEVICE_ADD(_tag, SCREEN, 0) \
-	MDRV_SCREEN_TYPE(_type)
+		MDRV_DEVICE_ADD(_tag, SCREEN, 0) \
+		MDRV_SCREEN_TYPE(_type)
 
 #define MDRV_SCREEN_MODIFY(_tag) \
-	MDRV_DEVICE_MODIFY(_tag)
+		MDRV_DEVICE_MODIFY(_tag)
 
 #define MDRV_SCREEN_FORMAT(_format) \
-	MDRV_DEVICE_INLINE_DATA16(screen_device_config::INLINE_FORMAT, _format)
+		MDRV_DEVICE_INLINE_DATA16(screen_device_config::INLINE_FORMAT, _format)
 
 #define MDRV_SCREEN_TYPE(_type) \
-	MDRV_DEVICE_INLINE_DATA16(screen_device_config::INLINE_TYPE, SCREEN_TYPE_##_type)
+		MDRV_DEVICE_INLINE_DATA16(screen_device_config::INLINE_TYPE, SCREEN_TYPE_##_type)
 
 #define MDRV_SCREEN_RAW_PARAMS(_pixclock, _htotal, _hbend, _hbstart, _vtotal, _vbend, _vbstart) \
-	MDRV_DEVICE_INLINE_DATA64(screen_device_config::INLINE_REFRESH, HZ_TO_ATTOSECONDS(_pixclock) * (_htotal) * (_vtotal)) \
-	MDRV_DEVICE_INLINE_DATA64(screen_device_config::INLINE_VBLANK, ((HZ_TO_ATTOSECONDS(_pixclock) * (_htotal) * (_vtotal)) / (_vtotal)) * ((_vtotal) - ((_vbstart) - (_vbend)))) \
-	MDRV_DEVICE_INLINE_DATA16(screen_device_config::INLINE_WIDTH, _htotal)	\
-	MDRV_DEVICE_INLINE_DATA16(screen_device_config::INLINE_HEIGHT, _vtotal)	\
-	MDRV_DEVICE_INLINE_DATA16(screen_device_config::INLINE_VIS_MINX, _hbend) \
-	MDRV_DEVICE_INLINE_DATA16(screen_device_config::INLINE_VIS_MAXX, (_hbstart) - 1) \
-	MDRV_DEVICE_INLINE_DATA16(screen_device_config::INLINE_VIS_MINY, _vbend) \
-	MDRV_DEVICE_INLINE_DATA16(screen_device_config::INLINE_VIS_MAXY, (_vbstart) - 1)
+		MDRV_DEVICE_INLINE_DATA64(screen_device_config::INLINE_REFRESH, HZ_TO_ATTOSECONDS(_pixclock) * (_htotal) * (_vtotal)) \
+		MDRV_DEVICE_INLINE_DATA64(screen_device_config::INLINE_VBLANK, ((HZ_TO_ATTOSECONDS(_pixclock) * (_htotal) * (_vtotal)) / (_vtotal)) * ((_vtotal) - ((_vbstart) - (_vbend)))) \
+		MDRV_DEVICE_INLINE_DATA16(screen_device_config::INLINE_WIDTH, _htotal)	\
+		MDRV_DEVICE_INLINE_DATA16(screen_device_config::INLINE_HEIGHT, _vtotal)	\
+		MDRV_DEVICE_INLINE_DATA16(screen_device_config::INLINE_VIS_MINX, _hbend) \
+		MDRV_DEVICE_INLINE_DATA16(screen_device_config::INLINE_VIS_MAXX, (_hbstart) - 1) \
+		MDRV_DEVICE_INLINE_DATA16(screen_device_config::INLINE_VIS_MINY, _vbend) \
+		MDRV_DEVICE_INLINE_DATA16(screen_device_config::INLINE_VIS_MAXY, (_vbstart) - 1)
 
 #define MDRV_SCREEN_REFRESH_RATE(_rate) \
-	MDRV_DEVICE_INLINE_DATA64(screen_device_config::INLINE_REFRESH, HZ_TO_ATTOSECONDS(_rate))
+		MDRV_DEVICE_INLINE_DATA64(screen_device_config::INLINE_REFRESH, HZ_TO_ATTOSECONDS(_rate))
 
 #define MDRV_SCREEN_VBLANK_TIME(_time) \
-	MDRV_DEVICE_INLINE_DATA64(screen_device_config::INLINE_VBLANK, _time) \
-	MDRV_DEVICE_INLINE_DATA16(screen_device_config::INLINE_OLDVBLANK, true)
+		MDRV_DEVICE_INLINE_DATA64(screen_device_config::INLINE_VBLANK, _time) \
+		MDRV_DEVICE_INLINE_DATA16(screen_device_config::INLINE_OLDVBLANK, true)
 
 #define MDRV_SCREEN_SIZE(_width, _height) \
-	MDRV_DEVICE_INLINE_DATA16(screen_device_config::INLINE_WIDTH, _width) \
-	MDRV_DEVICE_INLINE_DATA16(screen_device_config::INLINE_HEIGHT, _height)
+		MDRV_DEVICE_INLINE_DATA16(screen_device_config::INLINE_WIDTH, _width) \
+		MDRV_DEVICE_INLINE_DATA16(screen_device_config::INLINE_HEIGHT, _height)
 
 #define MDRV_SCREEN_VISIBLE_AREA(_minx, _maxx, _miny, _maxy) \
-	MDRV_DEVICE_INLINE_DATA16(screen_device_config::INLINE_VIS_MINX, _minx) \
-	MDRV_DEVICE_INLINE_DATA16(screen_device_config::INLINE_VIS_MAXX, _maxx) \
-	MDRV_DEVICE_INLINE_DATA16(screen_device_config::INLINE_VIS_MINY, _miny) \
-	MDRV_DEVICE_INLINE_DATA16(screen_device_config::INLINE_VIS_MAXY, _maxy)
+		MDRV_DEVICE_INLINE_DATA16(screen_device_config::INLINE_VIS_MINX, _minx) \
+		MDRV_DEVICE_INLINE_DATA16(screen_device_config::INLINE_VIS_MAXX, _maxx) \
+		MDRV_DEVICE_INLINE_DATA16(screen_device_config::INLINE_VIS_MINY, _miny) \
+		MDRV_DEVICE_INLINE_DATA16(screen_device_config::INLINE_VIS_MAXY, _maxy)
 
 #define MDRV_SCREEN_DEFAULT_POSITION(_xscale, _xoffs, _yscale, _yoffs)	\
-	MDRV_DEVICE_INLINE_DATA32(screen_device_config::INLINE_XOFFSET, (INT32)((_xoffs) * (double)(1 << 24))) \
-	MDRV_DEVICE_INLINE_DATA32(screen_device_config::INLINE_XSCALE, (INT32)((_xscale) * (double)(1 << 24))) \
-	MDRV_DEVICE_INLINE_DATA32(screen_device_config::INLINE_YOFFSET, (INT32)((_yoffs) * (double)(1 << 24))) \
-	MDRV_DEVICE_INLINE_DATA32(screen_device_config::INLINE_YSCALE, (INT32)((_yscale) * (double)(1 << 24)))
+		MDRV_DEVICE_INLINE_DATA32(screen_device_config::INLINE_XOFFSET, (INT32)((_xoffs) * (double)(1 << 24))) \
+		MDRV_DEVICE_INLINE_DATA32(screen_device_config::INLINE_XSCALE, (INT32)((_xscale) * (double)(1 << 24))) \
+		MDRV_DEVICE_INLINE_DATA32(screen_device_config::INLINE_YOFFSET, (INT32)((_yoffs) * (double)(1 << 24))) \
+		MDRV_DEVICE_INLINE_DATA32(screen_device_config::INLINE_YSCALE, (INT32)((_yscale) * (double)(1 << 24)))
 
 
 
@@ -379,14 +379,14 @@ void video_save_active_screen_snapshots(running_machine *machine);
 
 
 /* ----- movie recording ----- */
-
+/*
 int video_mng_is_movie_active(running_machine *machine);
 void video_mng_begin_recording(running_machine *machine, const char *name);
 void video_mng_end_recording(running_machine *machine);
 
 void video_avi_begin_recording(running_machine *machine, const char *name);
 void video_avi_end_recording(running_machine *machine);
-void video_avi_add_sound(running_machine *machine, const INT16 *sound, int numsamples);
+void video_avi_add_sound(running_machine *machine, const INT16 *sound, int numsamples);			*/
 
 
 /* ----- configuration helpers ----- */
