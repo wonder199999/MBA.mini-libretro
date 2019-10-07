@@ -22,7 +22,6 @@ struct frame
 
 static struct frame frames[1];
 
-
 static void compile_program(void)
 {
 	const char *vertex_shader[] = {
@@ -129,14 +128,14 @@ static void context_destroy(void)
 static void do_gl2d()
 {
 	glBindTexture(GL_TEXTURE_2D, frames[0].tex);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, rtwi, rthe, 0, 0x80e1/* GL_BGRA */, 0x8367/* GL_UNSIGNED_INT_8_8_8_8_REV */, videoBuffer/* NULL */);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, retro_width, retro_height, 0, 0x80e1/* GL_BGRA */, 0x8367/* GL_UNSIGNED_INT_8_8_8_8_REV */, videoBuffer/* NULL */);
 	glBindTexture(GL_TEXTURE_2D, 0);
 	glBindFramebuffer(GL_FRAMEBUFFER, hw_render.get_current_framebuffer());
 
 	glClearColor(0, 0, 0, 1);
 	glClear(GL_COLOR_BUFFER_BIT);
 
-	glViewport(0, 0, rtwi, rthe);
+	glViewport(0, 0, retro_width, retro_height);
 	glUseProgram(prog);
 
 	glActiveTexture(GL_TEXTURE0);
@@ -158,5 +157,5 @@ static void do_gl2d()
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, 0);
 
-	video_cb(RETRO_HW_FRAME_BUFFER_VALID, rtwi, rthe, topw << PITCH);
+	video_cb(RETRO_HW_FRAME_BUFFER_VALID, retro_width, retro_height, retro_topwidth << PITCH);
 }
